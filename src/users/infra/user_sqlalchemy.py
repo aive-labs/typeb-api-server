@@ -1,0 +1,87 @@
+from contextlib import AbstractContextManager, contextmanager
+from typing import Any, Callable
+from sqlalchemy.orm import Session
+
+from users.domain.user import User
+from users.infra.entity.user_entity import UserEntity
+from users.infra.entity.user_password import UserPassword
+from users.infra.entity.user_whitelist import UserWhitelist
+
+
+class UserSqlAlchemy:
+
+    def __init__(self, db: Callable[..., AbstractContextManager[Session]]):
+        """_summary_
+
+        Args:
+            db (Callable[..., AbstractContextManager[Session]]):
+            - Callable 호출 가능한 객체
+            - AbstractContextManager[Session]: 세션 객체를 반환하는 컨텍스트 관리자
+            - Session: SQLAlchemy의 세션 객체
+
+        """
+        self.db = db
+
+    def register_user(self, user_entity: UserEntity):
+        with self.db() as db:
+            db.add(user_entity)
+            db.commit()
+
+            # commit을 하면 user_entity에 id값이 자동으로 할당이됨
+            return User.from_entity(user_entity=user_entity)
+
+    def find_user_by_email(self, email: str):
+        with self.db() as db:
+            user = (
+                db.query(UserEntity.email, UserEntity.user_id)
+                .filter(UserEntity.email == email)
+                .first()
+            )
+
+        return user
+
+    def get_user_signin(self, login_id: str):
+        return (
+            self.db.query(
+                UserEntity.user_id, UserEntity.login_id, UserPassword.login_pw
+            )
+            .join(UserPassword, UserEntity.login_id == UserPassword.login_id)
+            .filter(UserEntity.login_id == login_id)
+            .first()
+        )
+
+    def get_me(self, login_id: str):
+        return (
+            self.db.query(
+                UserEntity.user_id,
+                UserEntity.username,
+                UserEntity.email,
+                UserEntity.login_id,
+                UserEntity.role_id,
+                UserEntity.photo_uri,
+                UserEntity.sys_id,
+                UserEntity.erp_id,
+                UserEntity.department_id,
+                UserEntity.department_name.label("department_full_name"),
+                UserEntity.department_abb_name.label("department_name"),
+                UserEntity.branch_manager,
+                UserEntity.language,
+                UserEntity.test_callback_number,
+                UserEntity.parent_dept_cd,
+            )
+            .filter(UserEntity.login_id == login_id)
+            .first()
+        )
+
+    def get_whitelist_access(self, user_id: int, whitelist_field: str):
+
+        try:
+            selected_col = getattr(UserWhitelist, whitelist_field)
+        except AttributeError:
+            return {
+                "error": f"'{whitelist_field}' is not a valid field in UserWhitelist table"
+            }
+
+        return (
+            self.db.query(selected_col).filter(UserWhitelist.user_id == user_id).first()
+        )

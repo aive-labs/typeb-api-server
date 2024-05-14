@@ -211,3 +211,6 @@ chardet
 pytest
 pytest-asyncio
 httpx
+
+# dependency_injector
+dependency-injector
