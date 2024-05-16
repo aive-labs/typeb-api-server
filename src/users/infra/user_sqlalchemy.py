@@ -28,7 +28,7 @@ class UserSqlAlchemy:
             db.commit()
 
             # commit을 하면 user_entity에 id값이 자동으로 할당이됨
-            return User.from_entity(user_entity=user_entity)
+            return user_entity
 
     def find_user_by_email(self, email: str):
         with self.db() as db:
@@ -41,37 +41,52 @@ class UserSqlAlchemy:
         return user
 
     def get_user_signin(self, login_id: str):
-        return (
-            self.db.query(
-                UserEntity.user_id, UserEntity.login_id, UserPassword.login_pw
+        with self.db() as db:
+            return (
+                db.query(UserEntity.user_id, UserEntity.login_id, UserPassword.login_pw)
+                .join(UserPassword, UserEntity.login_id == UserPassword.login_id)
+                .filter(UserEntity.login_id == login_id)
+                .first()
             )
-            .join(UserPassword, UserEntity.login_id == UserPassword.login_id)
-            .filter(UserEntity.login_id == login_id)
-            .first()
-        )
+
+    def get_user_by_id(self, user_id: int):
+        with self.db() as db:
+            return db.query(UserEntity).filter(UserEntity.user_id == user_id).first()
+
+    def get_all_users(self):
+        with self.db() as db:
+            return db.query(UserEntity).all()
 
     def get_me(self, login_id: str):
-        return (
-            self.db.query(
-                UserEntity.user_id,
-                UserEntity.username,
-                UserEntity.email,
-                UserEntity.login_id,
-                UserEntity.role_id,
-                UserEntity.photo_uri,
-                UserEntity.sys_id,
-                UserEntity.erp_id,
-                UserEntity.department_id,
-                UserEntity.department_name.label("department_full_name"),
-                UserEntity.department_abb_name.label("department_name"),
-                UserEntity.branch_manager,
-                UserEntity.language,
-                UserEntity.test_callback_number,
-                UserEntity.parent_dept_cd,
+        with self.db() as db:
+            return (
+                db.query(
+                    UserEntity.user_id,
+                    UserEntity.username,
+                    UserEntity.email,
+                    UserEntity.login_id,
+                    UserEntity.role_id,
+                    UserEntity.photo_uri,
+                    UserEntity.sys_id,
+                    UserEntity.erp_id,
+                    UserEntity.department_id,
+                    UserEntity.department_name.label("department_full_name"),
+                    UserEntity.department_abb_name.label("department_name"),
+                    UserEntity.branch_manager,
+                    UserEntity.language,
+                    UserEntity.test_callback_number,
+                    UserEntity.parent_dept_cd,
+                )
+                .filter(UserEntity.login_id == login_id)
+                .first()
             )
-            .filter(UserEntity.login_id == login_id)
-            .first()
-        )
+
+    def delete_user(self, user_id: int):
+        with self.db() as db:
+            user = db.query(UserEntity).filter(UserEntity.user_id == user_id).first()
+            if user:
+                db.delete(user)
+                db.commit()
 
     def get_whitelist_access(self, user_id: int, whitelist_field: str):
 
@@ -82,6 +97,7 @@ class UserSqlAlchemy:
                 "error": f"'{whitelist_field}' is not a valid field in UserWhitelist table"
             }
 
-        return (
-            self.db.query(selected_col).filter(UserWhitelist.user_id == user_id).first()
-        )
+        with self.db() as db:
+            return (
+                db.query(selected_col).filter(UserWhitelist.user_id == user_id).first()
+            )

@@ -1,3 +1,4 @@
+from typing import List, Optional
 from users.domain.user import User
 from users.infra.entity.user_entity import UserEntity
 from users.infra.user_sqlalchemy import UserSqlAlchemy
@@ -13,23 +14,25 @@ class UserRepository(BaseUserRepository):
         self.user_sqlalchemy = user_sqlalchemy
 
     def register_user(self, user_create: UserCreate) -> User:
-        user = user_create.to_user()
-        saved_user = self.user_sqlalchemy.register_user(user.to_entity())
-        return saved_user
+        user: User = user_create.to_user()
+        user_entity: UserEntity = self.user_sqlalchemy.register_user(user.to_entity())
+        return User.from_entity(user_entity=user_entity)
 
     def update_user(self, user_id: int, user):
         raise NotImplementedError
 
     def delete_user(self, user_id: int):
-        raise NotImplementedError
+        # self.user_sqlalchemy.de
+        pass
 
-    def get_user_by_id(self, user_id: int):
-        raise NotImplementedError
+    def get_user_by_id(self, user_id: int) -> Optional[User]:
+        user_entity: UserEntity = self.user_sqlalchemy.get_user_by_id(user_id)
+        return User.from_entity(user_entity=user_entity)
 
-    def get_all_users(self):
-        raise NotImplementedError
+    def get_all_users(self) -> List[User]:
+        user_entities = self.user_sqlalchemy.get_all_users()
+        return [User.from_entity(user_entity) for user_entity in user_entities]
 
-    def get_user_by_email(self, email: str):
+    def get_user_by_email(self, email: str) -> Optional[User]:
         user = self.user_sqlalchemy.find_user_by_email(email)
-        print(user)
         return user

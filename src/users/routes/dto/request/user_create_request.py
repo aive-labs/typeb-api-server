@@ -16,7 +16,7 @@ class UserCreate(BaseModel):
     test_callback_number: Optional[str] = None
     language: str
 
-    def to_user(self) -> User:
+    def to_user(self) -> "User":
         return User(
             username=self.username,
             password=self.password,
