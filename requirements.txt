@@ -214,3 +214,6 @@ httpx
 
 # dependency_injector
 dependency-injector
+
+# pre-commit
+pre-commit 
