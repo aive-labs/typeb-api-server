@@ -2,11 +2,9 @@ from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 
 from core.container import Container
-from users.routes import user_router
-
 from users.routes.user_router import user_router
 
-
+# FastAPI 앱 초기화
 def create_app():
     container = Container()
     app = FastAPI()
