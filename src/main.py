@@ -6,11 +6,15 @@ from users.routes import user_router
 
 from users.routes.user_router import user_router
 
-container = Container()
 
-app = FastAPI()
-app.container = container
+def create_app():
+    container = Container()
+    app = FastAPI()
+    setattr(app, "container", container)
+    return app
 
+
+app = create_app()
 app.include_router(user_router, prefix="/users")
 
 origins = ["*"]
