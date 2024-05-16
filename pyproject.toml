@@ -1,4 +1,5 @@
 [tool.black]
+# black이 형식화할 파일을 지정. 정규 표현식으로 .py와 .pyi 파일을 포함하도록 설정
 include = '\.pyi?$'
 exclude = '''
 /(
@@ -14,22 +15,41 @@ exclude = '''
 )/
 '''
 
+
+[tool.ruff]
 # ref: https://beta.ruff.rs/docs/rules/
+# 설명: ruff가 선택적으로 적용할 규칙들을 지정. 각 문자와 숫자는 특정 규칙을 의미
+# 기능:
+#   B: 버그 위험 규칙 (Bugs)
+#   C4: 복잡성 관련 규칙 (Complexity)
+#   E: 코드 스타일 규칙 (Errors)
+#   F: 포맷 관련 규칙 (Formatting)
+#   N: 코드 스타일 규칙 (Naming)
+#   I: Import 관련 규칙
+#   W: 경고 규칙 (Warnings)
+#   UP: 언패킹 관련 규칙 (Unpacking)
 select = ["B", "C4", "E", "F", "N", "I", "W", "UP"]
+
+# 무시할 규칙 지정
+#  F403: from module import * 허용
+#  F405: import *한 모듈에서 사용된 이름을 무시
+#  E501: 라인 길이 초과 에러 무시
+#  E402: 모듈 수준의 import는 맨 위에 있어야 한다는 규칙 무시
 ignore = ["F403","F405","E501","E402"]
 
-# Allow autofix for all enabled rules (when `--fix`) is provided.
+# ruff가 자동으로 고칠 수 있는 규칙 지정
 fixable = ["A", "B", "C", "D", "E", "F", "I", "UP"]
 unfixable = []
 
 per-file-ignores = {}
 
-# Same as Black.
+# black과 ruff가 적용할 코드의 최대 라인 길이를 지정
 line-length = 88
 
-# Allow unused variables when underscore-prefixed.
-dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+# 사용되지 않는 변수 이름을 지정하는 정규 표현식
+# dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.ruff.mccabe]
-# Unlike Flake8, default to a complexity level of 10.
+# 맥케이브 복잡도 (McCabe complexity) 기준 지정
+# 함수나 메서드의 복잡도 수준을 10으로 설정. 즉, 복잡도가 10을 초과하면 경고를 발생시킴.
 max-complexity = 10
