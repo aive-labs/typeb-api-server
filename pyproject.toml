@@ -1,5 +1,6 @@
 [tool.black]
 # black이 형식화할 파일을 지정. 정규 표현식으로 .py와 .pyi 파일을 포함하도록 설정
+line-length = 88
 include = '\.pyi?$'
 exclude = '''
 /(
@@ -40,11 +41,6 @@ ignore = ["F403","F405","E501","E402"]
 # ruff가 자동으로 고칠 수 있는 규칙 지정
 fixable = ["A", "B", "C", "D", "E", "F", "I", "UP"]
 unfixable = []
-
-per-file-ignores = {}
-
-# black과 ruff가 적용할 코드의 최대 라인 길이를 지정
-line-length = 88
 
 # 사용되지 않는 변수 이름을 지정하는 정규 표현식
 # dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
