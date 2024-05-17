@@ -1,24 +1,23 @@
 from datetime import datetime
-from typing import Optional
-from pydantic import BaseModel
 
+from pydantic import BaseModel
 from users.infra.entity.user_entity import UserEntity
 
 
 class User(BaseModel):
-    user_id: Optional[int] = None
+    user_id: int | None = None
     username: str
-    password: Optional[str] = None
-    email: Optional[str] = None
-    photo_uri: Optional[str] = None
+    password: str | None = None
+    email: str
+    photo_uri: str | None = None
     role_id: str
-    permissions: Optional[dict] = None
-    department_id: Optional[str] = None
-    department_name: Optional[str] = None
-    parent_dept_cd: Optional[str] = None
+    permissions: dict | None = None
+    department_id: str | None = None
+    department_name: str | None = None
+    parent_dept_cd: str | None = None
     language: str
-    test_callback_number: Optional[str] = None
-    last_login: Optional[datetime] = None
+    test_callback_number: str | None = None
+    last_login: datetime | None = None
 
     def to_entity(self) -> UserEntity:
         return UserEntity(
@@ -37,7 +36,6 @@ class User(BaseModel):
         return User(
             user_id=user_entity.user_id,
             username=user_entity.username,
-            password=user_entity.password,
             email=user_entity.email,
             photo_uri=user_entity.photo_uri,
             role_id=user_entity.role_id,

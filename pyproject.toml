@@ -49,3 +49,7 @@ unfixable = []
 # 맥케이브 복잡도 (McCabe complexity) 기준 지정
 # 함수나 메서드의 복잡도 수준을 10으로 설정. 즉, 복잡도가 10을 초과하면 경고를 발생시킴.
 max-complexity = 10
+
+[tool.ruff.flake8-bugbear]
+# Allow default arguments like, e.g., `data: List[str] = fastapi.Query(None)`.
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query"]

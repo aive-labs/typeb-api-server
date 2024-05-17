@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional
 
-from src.users.domain.user import User
+from users.domain.user import User
 from users.routes.dto.request.user_create_request import UserCreate
 
 
@@ -19,13 +18,13 @@ class BaseUserRepository(ABC):
         pass
 
     @abstractmethod
-    def get_user_by_id(self, user_id: int) -> Optional[User]:
+    def get_user_by_id(self, user_id: int) -> User | None:
         pass
 
     @abstractmethod
-    def get_user_by_email(self, email: str) -> Optional[User]:
+    def get_user_by_email(self, email: str) -> User | None:
         pass
 
     @abstractmethod
-    def get_all_users(self) -> List[User]:
+    def get_all_users(self) -> list[User]:
         pass
