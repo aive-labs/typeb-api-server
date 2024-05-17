@@ -9,7 +9,9 @@ from users.routes.user_router import user_router
 def create_app():
     container = Container()
     app = FastAPI()
+    # app.container = container
     app.container = container
+
     return app
 
 

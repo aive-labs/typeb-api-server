@@ -1,13 +1,16 @@
+import logging
 import os
-from sqlalchemy import MetaData, create_engine
-from pydantic_settings import BaseSettings
-
+from collections.abc import Callable
 from contextlib import AbstractContextManager, contextmanager
-from typing import Any, Callable
 
-from sqlalchemy import create_engine, orm
+from pydantic_settings import BaseSettings
+from sqlalchemy import MetaData, create_engine, orm
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
+
+# SQLAlchemy의 로깅 수준을 디버그로 설정
+logging.basicConfig()
+logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
 
 class DBSettings(BaseSettings):
@@ -49,7 +52,6 @@ def get_db_url():
 ## check schema name for deployment
 metaobj = MetaData(schema="aivelabs_sv")
 BaseModel = declarative_base(metadata=metaobj)
-
 
 class Database:
     def __init__(self, db_url: str) -> None:

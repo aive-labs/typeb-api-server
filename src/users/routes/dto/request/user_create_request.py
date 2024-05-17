@@ -1,9 +1,6 @@
-from datetime import datetime
-from typing import Optional
 from pydantic import BaseModel
 
-from users.domain.user import User
-from users.infra.entity.user_entity import UserEntity
+from src.users.domain.user import User
 
 
 class UserCreate(BaseModel):
@@ -11,9 +8,9 @@ class UserCreate(BaseModel):
     password: str
     email: str
     role_id: str
-    photo_uri: Optional[str] = None
+    photo_uri: str | None = None
     department_id: str
-    test_callback_number: Optional[str] = None
+    test_callback_number: str | None = None
     language: str
 
     def to_user(self) -> "User":

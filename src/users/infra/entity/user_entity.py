@@ -1,18 +1,18 @@
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    DateTime,
-    ForeignKey,
-)
-from sqlalchemy.orm import relationship
 from datetime import datetime
 
-from core.database import BaseModel as Base
+from sqlalchemy import (
+    Column,
+    DateTime,
+    Integer,
+    String,
+)
+
+from src.core.database import BaseModel as Base
 
 
 class UserEntity(Base):
     __tablename__ = "users"
+    __table_args__ = {'extend_existing': True}
 
     user_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     username = Column(String(30), nullable=False)

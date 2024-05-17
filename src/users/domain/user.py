@@ -1,7 +1,8 @@
 from datetime import datetime
 
 from pydantic import BaseModel
-from users.infra.entity.user_entity import UserEntity
+
+from src.users.infra.entity.user_entity import UserEntity
 
 
 class User(BaseModel):
