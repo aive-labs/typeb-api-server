@@ -1,7 +1,24 @@
 {
-    "editor.defaultFormatter": "ms-python.black-formatter",
     "editor.formatOnSave": true,
+    "python.analysis.fixAll": [
+        "source.unusedImports"
+    ],
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "always"
+    },
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "always"
+        }
+    },
     "files.exclude": {
         "**/__pycache__": true
-    }
+    },
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportUnusedImport": "warning"
+    },
+    "python.languageServer": "Pylance",
+    "python.analysis.inlayHints.functionReturnTypes": true,
+    "python.analysis.autoImportCompletions": true
 }

@@ -6,10 +6,13 @@ from users.infra.user_repository import UserRepository
 from users.infra.user_sqlalchemy import UserSqlAlchemy
 from users.service.user_service import UserService
 
+from src.contents.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase
+
 
 class Container(containers.DeclarativeContainer):
-    wiring_config = containers.WiringConfiguration(modules=["users.routes.user_router",
-                                                            "auth.routes.auth_router"])
+    wiring_config = containers.WiringConfiguration(
+        modules=["users.routes.user_router", "auth.routes.auth_router"]
+    )
 
     # config 파일에 따라 다른 데이터베이스 주입
     db = providers.Singleton(Database, db_url=get_db_url())
@@ -19,4 +22,12 @@ class Container(containers.DeclarativeContainer):
     user_service = providers.Factory(UserService, user_repository=user_repository)
 
     token_service = providers.Factory(provides=TokenService)
-    auth_service = providers.Factory(provides=AuthService, token_service=token_service, user_repository=user_repository)
+    auth_service = providers.Factory(
+        provides=AuthService,
+        token_service=token_service,
+        user_repository=user_repository,
+    )
+
+    creatives_service = providers.Factory(
+        provides=AddCreativesUseCase, user_repository=user_repository
+    )
