@@ -1,10 +1,9 @@
 from datetime import datetime, timedelta, timezone
 
+from auth.routes.dto.response.token_response import TokenResponse
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
-
-from src.auth.routes.dto.response.token_response import TokenResponse
-from src.users.domain.user import User
+from users.domain.user import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 

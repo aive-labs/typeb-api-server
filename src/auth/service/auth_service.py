@@ -1,10 +1,9 @@
+from auth.routes.dto.response.token_response import TokenResponse
+from auth.service.token_service import TokenService
+from core.exceptions import AuthError, CredentialError, NotFoundError
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-
-from src.auth.routes.dto.response.token_response import TokenResponse
-from src.auth.service.token_service import TokenService
-from src.core.exceptions import AuthError, CredentialError, NotFoundError
-from src.users.service.port.base_user_repository import BaseUserRepository
+from users.service.port.base_user_repository import BaseUserRepository
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"

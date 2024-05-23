@@ -11,6 +11,7 @@ class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(modules=["users.routes.user_router",
                                                             "auth.routes.auth_router"])
 
+    # config 파일에 따라 다른 데이터베이스 주입
     db = providers.Singleton(Database, db_url=get_db_url())
 
     user_sqlalchemy = providers.Factory(UserSqlAlchemy, db=db.provided.session)

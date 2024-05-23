@@ -59,7 +59,7 @@ class Database:
             db_url, pool_recycle=60, pool_size=10, max_overflow=20, echo=True
         )
         self._session_factory = orm.scoped_session(
-            orm.sessionmaker(
+            session_factory=orm.sessionmaker(
                 autocommit=False,
                 autoflush=False,
                 bind=self._engine,

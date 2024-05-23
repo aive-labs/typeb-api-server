@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from src.users.domain.user import User
-from src.users.routes.dto.request.user_create_request import UserCreate
+from users.domain.user import User
+from users.routes.dto.request.user_create_request import UserCreate
 
 
 class BaseUserRepository(ABC):

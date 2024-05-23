@@ -1,3 +1,4 @@
+
 from auth.routes.auth_router import auth_router
 from core.container import Container
 from fastapi import FastAPI, status
@@ -10,7 +11,7 @@ def create_app():
     container = Container()
     app = FastAPI()
     # app.container = container
-    app.container = container
+    app.container = container # type: ignore
 
     return app
 
