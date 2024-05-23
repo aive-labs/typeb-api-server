@@ -10,17 +10,17 @@ from PIL import Image
 
 from src.contents.enums.image_asset_type import ImageAssetTypeEnum
 from src.contents.infra.entity.creatives_entity import Creatives
-from src.contents.routes.dto.request.creatives_create import CreateiveCreate
+from src.contents.routes.dto.request.creatives_create import CreativeCreate
 from src.contents.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase
 from src.users.service.port.base_user_repository import BaseUserRepository
 
 
-class CreateivesService(AddCreativesUseCase):
+class AddCreativesService(AddCreativesUseCase):
 
     def __init__(self, user_repository: BaseUserRepository):
         self.user_repository = user_repository
 
-    async def upload_image(self, asset_data: CreateiveCreate, files: list[UploadFile]):
+    async def upload_image(self, asset_data: CreativeCreate, files: list[UploadFile]):
 
         prefix = "non_style_creative"
         if asset_data.image_asset_type == ImageAssetTypeEnum.STYLE_IMAGE.value:

@@ -1,11 +1,11 @@
 # Role 테이블에 대한 SQLAlchemy 모델
+
+from core.database import Base
 from sqlalchemy import (
     Column,
     String,
 )
-from datetime import datetime
 
-from core.database import Base
 
 class Role(Base):
     __tablename__ = "role"

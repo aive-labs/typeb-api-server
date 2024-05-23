@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from src.contents.enums.image_asset_type import ImageAssetTypeEnum
 
 
-class CreateiveCreate(BaseModel):
+class CreativeCreate(BaseModel):
     """소재생성 API Object"""
 
     image_asset_type: ImageAssetTypeEnum

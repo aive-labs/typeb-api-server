@@ -1,11 +1,11 @@
-from sqlalchemy import (
-    Column,
-    String,
-    DateTime,
-)
 from datetime import datetime
 
 from core.database import BaseModel as Base
+from sqlalchemy import (
+    Column,
+    DateTime,
+    String,
+)
 
 
 class UserPassword(Base):

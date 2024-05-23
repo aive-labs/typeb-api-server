@@ -36,7 +36,7 @@ select = ["B", "C4", "E", "F", "N", "I", "W", "UP"]
 #  F405: import *한 모듈에서 사용된 이름을 무시
 #  E501: 라인 길이 초과 에러 무시
 #  E402: 모듈 수준의 import는 맨 위에 있어야 한다는 규칙 무시
-ignore = ["F403","F405","E501","E402"]
+ignore = ["F403", "F405", "E501", "E402"]
 
 # ruff가 자동으로 고칠 수 있는 규칙 지정
 fixable = ["A", "B", "C", "D", "E", "F", "I", "UP"]
@@ -51,5 +51,9 @@ unfixable = []
 max-complexity = 10
 
 [tool.ruff.flake8-bugbear]
-# Allow default arguments like, e.g., `data: List[str] = fastapi.Query(None)`.
-extend-immutable-calls = ["fastapi.Depends", "fastapi.Query"]
+extend-immutable-calls = [
+  "fastapi.Depends",
+  "fastapi.params.Depends",
+  "fastapi.Query",
+  "fastapi.params.Query",
+]

@@ -1,10 +1,10 @@
+
+from core.database import BaseModel as Base
 from sqlalchemy import (
     Column,
     Integer,
     String,
 )
-from datetime import datetime
-from core.database import BaseModel as Base
 
 
 # Users 접근 권한 화이트리스트

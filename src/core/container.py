@@ -7,6 +7,7 @@ from users.infra.user_sqlalchemy import UserSqlAlchemy
 from users.service.user_service import UserService
 
 from src.contents.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase
+from src.contents.routes.port.usecase.get_creatives_usecase import GetCreativesUseCase
 
 
 class Container(containers.DeclarativeContainer):
@@ -28,6 +29,10 @@ class Container(containers.DeclarativeContainer):
         user_repository=user_repository,
     )
 
-    creatives_service = providers.Factory(
+    add_creatives_service = providers.Factory(
         provides=AddCreativesUseCase, user_repository=user_repository
+    )
+
+    get_creatives_service = providers.Factory(
+        provides=GetCreativesUseCase, user_repository=user_repository
     )
