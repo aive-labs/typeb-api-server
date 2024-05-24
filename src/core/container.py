@@ -6,7 +6,11 @@ from users.infra.user_repository import UserRepository
 from users.infra.user_sqlalchemy import UserSqlAlchemy
 from users.service.user_service import UserService
 
+from src.contents.infra.contents_repository import ContentsRepository
+from src.contents.infra.contents_sqlalchemy_repository import ContentsSqlAlchemy
+from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUseCase
 from src.contents.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase
+from src.contents.routes.port.usecase.get_contents_usecase import GetContentsUseCase
 from src.contents.routes.port.usecase.get_creatives_usecase import GetCreativesUseCase
 
 
@@ -35,4 +39,23 @@ class Container(containers.DeclarativeContainer):
 
     get_creatives_service = providers.Factory(
         provides=GetCreativesUseCase, user_repository=user_repository
+    )
+
+    contents_sqlalchemy = providers.Factory(
+        provides=ContentsSqlAlchemy, db=db.provided.session
+    )
+    contents_repository = providers.Singleton(
+        ContentsRepository, contents_sqlalchemy=contents_sqlalchemy
+    )
+
+    add_contents_service = providers.Factory(
+        provides=AddContentsUseCase,
+        contents_repository=contents_repository,
+        user_repository=user_repository,
+    )
+
+    get_contents_service = providers.Factory(
+        provides=GetContentsUseCase,
+        contents_repository=contents_repository,
+        user_repository=user_repository,
     )

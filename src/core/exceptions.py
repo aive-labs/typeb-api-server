@@ -16,11 +16,14 @@ class AuthError(HTTPException):
     ) -> None:
         super().__init__(status.HTTP_403_FORBIDDEN, detail, headers)
 
+
 class CredentialError(HTTPException):
     def __init__(
         self, detail: Any = None, headers: dict[str, Any] | None = None
     ) -> None:
-        super().__init__(status.HTTP_401_UNAUTHORIZED, detail, {"WWW-Authenticate": "Bearer"})
+        super().__init__(
+            status.HTTP_401_UNAUTHORIZED, detail, {"WWW-Authenticate": "Bearer"}
+        )
 
 
 class NotFoundError(HTTPException):

@@ -1,5 +1,11 @@
-from dependency_injector.wiring import inject
-from fastapi import APIRouter
+
+from dependency_injector.wiring import Provide, inject
+from fastapi import APIRouter, Depends, UploadFile
+
+from src.auth.utils.permission_checker import get_permission_checker
+from src.contents.routes.dto.request.contents_create import ContentsCreate
+from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUseCase
+from src.core.container import Container
 
 contents_router = APIRouter(
     tags=["Contents"],
@@ -12,6 +18,19 @@ def generate_contents():
     pass
 
 
+@contents_router.post("/")
+@inject
+def create_contents(
+    content_create: ContentsCreate,
+    files: UploadFile | None = None,
+    user=Depends(get_permission_checker),
+    add_contents_service: AddContentsUseCase = Depends(
+        dependency=Provide[Container.add_contents_service]
+    ),
+):
+    add_contents_service.create_contents(content_create, user, files)
+
+
 @contents_router.get("/menu/subject")
 def get_contents_subject_list():
     pass
@@ -19,11 +38,6 @@ def get_contents_subject_list():
 
 @contents_router.get(path="/menu/with-subject")
 def get_contents_menu_list():
-    pass
-
-
-@contents_router.post("/")
-def create_contents():
     pass
 
 

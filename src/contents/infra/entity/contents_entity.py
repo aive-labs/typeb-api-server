@@ -1,4 +1,3 @@
-
 from core.database import BaseModel as Base
 from sqlalchemy import (
     ARRAY,
@@ -10,7 +9,7 @@ from sqlalchemy import (
 )
 
 
-class Contents(Base):
+class ContentsEntity(Base):
     __tablename__ = "contents"
 
     contents_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
