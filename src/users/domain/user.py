@@ -15,6 +15,7 @@ class User(BaseModel):
     department_id: str | None = None
     department_name: str | None = None
     parent_dept_cd: str | None = None
+    parent_dept_cd: str | None = None
     language: str
     test_callback_number: str | None = None
     last_login: datetime | None = None
