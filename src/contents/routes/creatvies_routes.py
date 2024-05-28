@@ -10,12 +10,12 @@ from src.contents.routes.port.usecase.add_creatives_usecase import AddCreativesU
 from src.contents.routes.port.usecase.get_creatives_usecase import GetCreativesUseCase
 from src.core.container import Container
 
-creative_router = APIRouter(
+creatives_router = APIRouter(
     tags=["Creatives"],
 )
 
 
-@creative_router.get(
+@creatives_router.get(
     "/",
     response_model=PaginationResponse,
     status_code=status.HTTP_200_OK,
@@ -44,7 +44,7 @@ def get_img_creatives_list(
     return pagination_result
 
 
-@creative_router.post("/", status_code=status.HTTP_201_CREATED)
+@creatives_router.post("/", status_code=status.HTTP_201_CREATED)
 @inject
 async def create_img_creatives(
     asset_data: CreativeCreate,
@@ -57,28 +57,28 @@ async def create_img_creatives(
     await add_creatives_service.upload_image(asset_data=asset_data, files=files)
 
 
-@creative_router.get("/creatives/list")
+@creatives_router.get("/creatives/list")
 def get_creatives_ilst():
     pass
 
 
-@creative_router.delete("/{creative_id}")
+@creatives_router.delete("/{creative_id}")
 def delete_img_creatives():
     pass
 
 
-@creative_router.put("/{creative_id}")
+@creatives_router.put("/{creative_id}")
 async def update_img_creatives():
     pass
 
 
-@creative_router.get("/{creative_id}")
+@creatives_router.get("/{creative_id}")
 def get_img_creatives():
     """이미지 에셋을 조회하는 API"""
     pass
 
 
-@creative_router.get("/style/list")
+@creatives_router.get("/style/list")
 def get_style_list():
     """스타일 목록을 조회하는 API"""
     pass

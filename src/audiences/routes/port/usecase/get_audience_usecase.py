@@ -10,5 +10,5 @@ class GetAudienceUsecase(ABC):
         pass
 
     @abstractmethod
-    def get_audience_details(self, audience_id: int):
+    def get_audience_details(self, audience_id: str):
         pass

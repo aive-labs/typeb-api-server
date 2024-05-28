@@ -6,16 +6,27 @@ from sqlalchemy.orm import Session
 
 from src.audiences.enums.audience_status import AudienceStatus
 from src.audiences.infra.dto.audience_info import AudienceInfo
+from src.audiences.infra.dto.linked_campaign import LinkedCampaign
 from src.audiences.infra.entity.audience_count_by_month_entity import (
     AudienceCountByMonthEntity,
 )
+from src.audiences.infra.entity.audience_customer_mapping_entity import (
+    AudienceCustomerMapping,
+)
 from src.audiences.infra.entity.audience_entity import AudienceEntity
+from src.audiences.infra.entity.audience_queries_entity import AudienceQueries
 from src.audiences.infra.entity.audience_stats_entity import AudienceStatsEntity
+from src.audiences.infra.entity.audience_upload_condition_entity import (
+    AudienceUploadConditions,
+)
 from src.audiences.infra.entity.primary_rep_product_entity import (
     PrimaryRepProductEntity,
 )
+from src.audiences.infra.entity.theme_audience import ThemeAudience
+from src.campaign.infra.entity.campaigns_entity import Campaigns
 from src.common.enums.role import RoleEnum
 from src.core.exceptions import NotFoundError
+from src.strategy.infra.entity.strategy_themes_entity import StrategyThemes
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
 
@@ -52,7 +63,7 @@ class AudienceSqlAlchemy:
                 ).label("audience_name")
 
             else:
-                conditions = self.object_access_condition(
+                conditions = self._object_access_condition(
                     db=db, user=user_entity, model=AudienceEntity
                 )
 
@@ -121,7 +132,87 @@ class AudienceSqlAlchemy:
             audiences = AudienceInfo.from_query(result)
             return audiences
 
-    def object_access_condition(
+    def get_audience(self, audience_id: str) -> AudienceEntity | None:
+        with self.db() as db:
+            return (
+                db.query(AudienceEntity)
+                .filter(AudienceEntity.audience_id == audience_id)
+                .first()
+            )
+
+    def get_linked_campaign(self, audience_id: str) -> list[LinkedCampaign]:
+        with self.db() as db:
+            results = (
+                db.query(ThemeAudience.audience_id, Campaigns.campaign_status_code)
+                .join(
+                    StrategyThemes,
+                    ThemeAudience.campaign_theme_id == StrategyThemes.campaign_theme_id,
+                )
+                .join(Campaigns, StrategyThemes.strategy_id == Campaigns.strategy_id)
+                .filter(ThemeAudience.audience_id == audience_id)
+                .all()
+            )
+
+            linked_campaigns = [
+                LinkedCampaign(audience_id=row[0], campaign_status_code=row[1])
+                for row in results
+            ]
+            return linked_campaigns
+
+    def update_expired_audience_status(self, audience_id: str):
+        with self.db() as db:
+            db.query(AudienceEntity).filter(
+                AudienceEntity.audience_id == audience_id
+            ).update(
+                {
+                    "audience_status_code": "notdisplay",
+                    "audience_status_name": "미표시",
+                },
+                synchronize_session=False,
+            )
+
+            db.commit()
+
+    def delete_audience(self, audience_id: str):
+        with self.db() as db:
+            # 타겟 오디언스
+            db.query(AudienceEntity).filter(
+                AudienceEntity.audience_id == audience_id
+            ).delete()
+
+            # 상세정보
+            db.query(AudienceStatsEntity).filter(
+                AudienceStatsEntity.audience_id == audience_id
+            ).delete()
+
+            # 오디언스 생성 쿼리
+            db.query(AudienceQueries).filter(
+                AudienceQueries.audience_id == audience_id
+            ).delete()
+
+            # 오디언스 업로드 정보
+            db.query(AudienceUploadConditions).filter(
+                AudienceUploadConditions.audience_id == audience_id
+            ).delete()
+
+            # 타겟 오디언스 수
+            db.query(AudienceCountByMonthEntity).filter(
+                AudienceCountByMonthEntity.audience_id == audience_id
+            ).delete()
+
+            # 타겟 오디언스 주 구매 대표상품
+            db.query(PrimaryRepProductEntity).filter(
+                PrimaryRepProductEntity.audience_id == audience_id
+            ).delete()
+
+            # 타겟오디언스 고객 리스트
+            db.query(AudienceCustomerMapping).filter(
+                AudienceCustomerMapping.audience_id == audience_id
+            ).delete()
+
+            db.commit()
+
+    def _object_access_condition(
         self, db: Session, user: UserEntity, model: AudienceEntity
     ):
         """Checks if the user has the required permissions for Object access.
@@ -151,9 +242,7 @@ class AudienceSqlAlchemy:
                     parent_teams_query = db.query(UserEntity).filter(
                         UserEntity.parent_dept_cd == user.parent_dept_cd
                     )
-                    department_ids = list(
-                        {i.department_id for i in parent_teams_query}
-                    )
+                    department_ids = list({i.department_id for i in parent_teams_query})
                     team_conditions = [model.owned_by_dept.in_(department_ids)]  # type: ignore
                     conditions.extend(team_conditions)
                     erp_ids = [i.erp_id for i in parent_teams_query]

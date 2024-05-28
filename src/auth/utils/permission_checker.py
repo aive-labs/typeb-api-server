@@ -100,7 +100,7 @@ class PermissionChecker:
         # requeired_permissions: API 호출시 필요한 권한 (하나 이상의 권한이 필요한 경우, 리스트로 입력)
         self.required_permissions = required_permissions
 
-    def __call__(self, user=Depends(get_current_user)) -> bool:
+    def __call__(self, user=Depends(get_current_user)):
         """Checks if the user has the required permissions for API access.
 
         Args:

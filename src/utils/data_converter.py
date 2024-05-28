@@ -113,3 +113,31 @@ class DataConverter:
         ]
 
         return res_dict
+
+    @staticmethod
+    def get_values_from_dict(dict_data, keys):
+        """
+        딕셔너리로부터 특정 key에 대한 key:value만 포함하는 딕셔너리를 만드는 함수
+        """
+        return {key: dict_data[key] for key in keys if key in dict_data}
+
+    @staticmethod
+    def extract_key_value_from_dict(listofdict, key, value):
+        """
+        List[Dict] 자료구조로부터 특정 value 2개를 key:value Dictionary로 변환하는 함수
+        """
+        res = {x[key]: x[value] for x in listofdict}
+        return res
+
+    @staticmethod
+    def id_name_converter(df, vals):
+        """
+        Args:
+            df : dataframe
+            vals : LIST[ ID(id) 컬럼명, Name 컬럼명 ]
+        """
+        df.rename(columns={vals[0]: "id", vals[1]: "name"}, inplace=True)
+
+        res = df.dropna(subset=["id"]).drop_duplicates(subset=["id"]).to_dict("records")
+
+        return res

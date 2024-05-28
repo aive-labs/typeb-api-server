@@ -2,6 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
+from src.audiences.infra.entity.audience_entity import AudienceEntity
 from src.audiences.routes.dto.response.audiences import CodeItems
 
 
@@ -21,3 +22,24 @@ class Audience(BaseModel):
     rep_list: list[CodeItems] | None = None
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
+
+    @staticmethod
+    def from_entity(entity: AudienceEntity) -> "Audience":
+        return Audience(
+            audience_id=entity.audience_id,
+            audience_name=entity.audience_name,
+            audience_type_code=entity.audience_type_code,
+            audience_type_name=entity.audience_type_name,
+            audience_status_code=entity.audience_status_code,
+            audience_status_name=entity.audience_status_name,
+            is_exclude=entity.is_exclude,
+            user_exc_deletable=entity.user_exc_deletable,
+            update_cycle=entity.update_cycle,
+            description=entity.description,
+            created_at=entity.created_at,
+            updated_at=entity.updated_at,
+            # 추가 필드에 대한 초기값 설정
+            audience_count=None,
+            audience_unit_price=None,
+            rep_list=None,
+        )
