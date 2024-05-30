@@ -43,7 +43,7 @@ from src.audiences.infra.entity.upload_condition_entity import UploadConditionsE
 from src.audiences.infra.entity.variable_table_mapping_entity import (
     VariableTableMappingEntity,
 )
-from src.campaign.infra.entity.campaigns_entity import Campaigns
+from src.campaign.infra.entity.campaigns_entity import CampaignsEntity
 from src.common.enums.role import RoleEnum
 from src.core.exceptions import NotFoundError
 from src.strategy.infra.entity.strategy_themes_entity import StrategyThemes
@@ -284,12 +284,17 @@ class AudienceSqlAlchemy:
     def get_linked_campaign(self, audience_id: str) -> list[LinkedCampaign]:
         with self.db() as db:
             results = (
-                db.query(ThemeAudience.audience_id, Campaigns.campaign_status_code)
+                db.query(
+                    ThemeAudience.audience_id, CampaignsEntity.campaign_status_code
+                )
                 .join(
                     StrategyThemes,
                     ThemeAudience.campaign_theme_id == StrategyThemes.campaign_theme_id,
                 )
-                .join(Campaigns, StrategyThemes.strategy_id == Campaigns.strategy_id)
+                .join(
+                    CampaignsEntity,
+                    StrategyThemes.strategy_id == CampaignsEntity.strategy_id,
+                )
                 .filter(ThemeAudience.audience_id == audience_id)
                 .all()
             )
