@@ -1,6 +1,7 @@
 from typing import Any
 
 from pandas import DataFrame
+from sqlalchemy.orm.query import Query
 
 from src.audiences.domain.audience import Audience
 from src.audiences.infra.audience_sqlalchemy_repository import AudienceSqlAlchemy
@@ -72,3 +73,53 @@ class AudienceRepository(BaseAudienceRepository):
 
     def delete_audience(self, audience_id: str):
         return self.audience_sqlalchemy.delete_audience(audience_id)
+
+    def get_audience_by_name(self, audience_name: str) -> Audience | None:
+        audience_entity = self.audience_sqlalchemy.get_audience_by_name(audience_name)
+
+        if audience_entity is not None:
+            audience = Audience.from_entity(audience_entity)
+            return audience
+        else:
+            return None
+
+    def create_audience(self, audience_dict, conditions) -> str:
+        audience_id = self.audience_sqlalchemy.create_audience(
+            audience_dict, conditions
+        )
+        return audience_id
+
+    def create_audience_by_upload(
+        self, audience_dict, insert_to_uploaded_audiences, upload_check_list
+    ) -> str:
+        audience_id = self.audience_sqlalchemy.create_audience_by_upload(
+            audience_dict, insert_to_uploaded_audiences, upload_check_list
+        )
+        return audience_id
+
+    def get_db_filter_conditions(self, audience_id: str):
+        return self.audience_sqlalchemy.get_db_filter_conditions(audience_id)
+
+    def save_audience_list(self, audience_id, query):
+        self.audience_sqlalchemy.save_audience_list(audience_id, query)
+
+    def get_all_customer_by_audience(self, user: User) -> Query[Any]:
+        if user.erp_id is not None and user.sys_id is not None:
+            return self.audience_sqlalchemy.get_all_customer(user.erp_id, user.sys_id)
+        else:
+            raise Exception()
+
+    def get_tablename_by_variable_id(self, variable_id: str):
+        return self.audience_sqlalchemy.get_tablename_by_variable_id(variable_id)
+
+    def get_subquery_with_select_query_list(self, table_obj, select_query_list, idx):
+        return self.audience_sqlalchemy.get_subquery_with_select_query_list(
+            table_obj, select_query_list, idx
+        )
+
+    def get_subquery_with_array_select_query_list(
+        self, table_obj, array_select_query_list, idx
+    ):
+        return self.audience_sqlalchemy.get_subquery_with_array_select_query_list(
+            table_obj, array_select_query_list, idx
+        )

@@ -11,6 +11,8 @@ class User(BaseModel):
     email: str
     photo_uri: str | None = None
     role_id: str
+    sys_id: str | None = None
+    erp_id: str | None = None
     permissions: dict | None = None
     department_id: str | None = None
     department_name: str | None = None
@@ -26,6 +28,8 @@ class User(BaseModel):
             email=self.email,
             password=self.password,
             role_id=self.role_id,
+            sys_id=self.sys_id,
+            erp_id=self.erp_id,
             photo_uri=self.photo_uri,
             department_id=self.department_id,
             language=self.language,
@@ -40,6 +44,8 @@ class User(BaseModel):
             email=user_entity.email,
             photo_uri=user_entity.photo_uri,
             role_id=user_entity.role_id,
+            sys_id=user_entity.erp_id,
+            erp_id=user_entity.sys_id,
             department_id=user_entity.department_id,
             department_name=user_entity.department_name,
             parent_dept_cd=user_entity.parent_dept_cd,

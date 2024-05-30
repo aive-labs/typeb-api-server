@@ -5,7 +5,7 @@ from sqlalchemy import ARRAY, JSON, Column, DateTime, Integer, String, text
 from src.core.database import BaseModel as Base
 
 
-class AudienceQueries(Base):
+class AudienceQueriesEntity(Base):
     __tablename__ = "audience_filter_conditions"
 
     audience_id = Column(String, primary_key=True, index=True)

@@ -1,8 +1,12 @@
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, BackgroundTasks, Depends, status
 
+from src.audiences.routes.dto.request.audience_create import AudienceCreate
 from src.audiences.routes.dto.response.audience_stat_info import AudienceStatsInfo
 from src.audiences.routes.dto.response.audiences import AudienceResponse
+from src.audiences.routes.port.usecase.create_audience_usecase import (
+    CreateAudienceUsecase,
+)
 from src.audiences.routes.port.usecase.delete_audience_usecase import (
     DeleteAudienceUsecase,
 )
@@ -44,6 +48,20 @@ def get_audience_detail(
     ),
 ):
     return get_audience_service.get_audience_details(audience_id)
+
+
+@audience_router.post("/audiences", status_code=status.HTTP_201_CREATED)
+def create_audience(
+    audience_create: AudienceCreate,
+    background_task: BackgroundTasks,
+    create_audience_service: CreateAudienceUsecase = Depends(
+        Provide[Container.create_audience_service]
+    ),
+    user=Depends(get_permission_checker(["gnb_permissions:target_audience:create"])),
+):
+    create_audience_service.create_audience(
+        audience_create=audience_create, user=user, background_task=background_task
+    )
 
 
 @audience_router.delete(

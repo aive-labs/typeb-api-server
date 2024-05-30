@@ -1,5 +1,6 @@
 from collections.abc import Callable
 from contextlib import AbstractContextManager
+from datetime import datetime
 
 from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session
@@ -14,15 +15,34 @@ from src.audiences.infra.entity.audience_customer_mapping_entity import (
     AudienceCustomerMapping,
 )
 from src.audiences.infra.entity.audience_entity import AudienceEntity
-from src.audiences.infra.entity.audience_queries_entity import AudienceQueries
+from src.audiences.infra.entity.audience_queries_entity import AudienceQueriesEntity
 from src.audiences.infra.entity.audience_stats_entity import AudienceStatsEntity
 from src.audiences.infra.entity.audience_upload_condition_entity import (
     AudienceUploadConditions,
 )
+from src.audiences.infra.entity.customer_info_status_entity import (
+    CustomerInfoStatusEntity,
+)
+from src.audiences.infra.entity.customer_product_purchase_summary_entity import (
+    CustomerProductPurchaseSummaryEntity,
+)
+from src.audiences.infra.entity.customer_promotion_master_entity import (
+    CustomerPromotionMasterEntity,
+)
+from src.audiences.infra.entity.customer_promotion_react_summary_entity import (
+    CustomerPromotionReactSummaryEntity,
+)
 from src.audiences.infra.entity.primary_rep_product_entity import (
     PrimaryRepProductEntity,
 )
+from src.audiences.infra.entity.purchase_analytics_master_style_entity import (
+    PurchaseAnalyticsMasterStyle,
+)
 from src.audiences.infra.entity.theme_audience import ThemeAudience
+from src.audiences.infra.entity.upload_condition_entity import UploadConditionsEntity
+from src.audiences.infra.entity.variable_table_mapping_entity import (
+    VariableTableMappingEntity,
+)
 from src.campaign.infra.entity.campaigns_entity import Campaigns
 from src.common.enums.role import RoleEnum
 from src.core.exceptions import NotFoundError
@@ -122,7 +142,7 @@ class AudienceSqlAlchemy:
                 .filter(
                     AudienceEntity.audience_status_code
                     != AudienceStatus.notdisplay.value,
-                    *conditions
+                    *conditions,
                 )
             )
 
@@ -139,6 +159,127 @@ class AudienceSqlAlchemy:
                 .filter(AudienceEntity.audience_id == audience_id)
                 .first()
             )
+
+    def get_audience_by_name(self, audience_name: str) -> AudienceEntity | None:
+        with self.db() as db:
+            return (
+                db.query(AudienceEntity)
+                .filter(AudienceEntity.audience_name == audience_name)
+                .first()
+            )
+
+    def create_audience(self, audience_dict, conditions):
+        with self.db() as db:
+            audiences_req = AudienceEntity(audience_dict)
+            db.add(audiences_req)
+
+            # 시퀀스 넘버를 가져오기 위해 flush()를 호출
+            db.flush()
+            audience_id = audiences_req.audience_id
+
+            # #audience_filter_conditions
+            conditions["audience_id"] = audience_id
+            audience_queries_req = AudienceQueriesEntity(**conditions)
+            db.add(audience_queries_req)
+
+            db.commit()
+
+            return audience_id
+
+    def create_audience_by_upload(
+        self, audience_dict, insert_to_uploaded_audiences, upload_check_list
+    ):
+        with self.db() as db:
+            audiences_req = AudienceEntity(**audience_dict)
+            db.add(audiences_req)
+
+            # 시퀀스 넘버를 가져오기 위해 flush()를 호출
+            db.flush()
+            audience_id = audiences_req.audience_id
+
+            insert_to_uploaded_audiences["audience_id"] = audience_id
+            audience_upload_condition = UploadConditionsEntity(
+                **insert_to_uploaded_audiences
+            )
+            db.add(audience_upload_condition)
+
+            # audience_cust_mapping
+            obj = [
+                AudienceCustomerMapping(
+                    cus_cd=item,  ##cus_cd
+                    audience_id=audience_id,
+                )
+                for item in upload_check_list
+            ]
+
+            db.bulk_save_objects(obj)
+
+            db.commit()
+
+            return audience_id
+
+    # TODO: 이거 뜻이지 ???
+    def get_db_filter_conditions(self, audience_id: str):
+        with self.db() as db:
+            return (
+                db.query(
+                    AudienceQueriesEntity.audience_id,
+                    AudienceEntity.audience_name,
+                    AudienceQueriesEntity.conditions,
+                    AudienceQueriesEntity.exclusion_condition,
+                    AudienceQueriesEntity.created_at,
+                    AudienceQueriesEntity.updated_at,
+                )
+                .join(
+                    AudienceEntity,
+                    AudienceQueriesEntity.audience_id == AudienceEntity.audience_id,
+                )
+                .filter(AudienceQueriesEntity.audience_id == audience_id)
+                .all()
+            )
+
+    def save_audience_list(self, audience_id, query):
+        # res List[tuple[str,]]
+        with self.db() as db:
+            try:
+                result = db.execute(query).fetchall()
+
+                obj = [
+                    AudienceCustomerMapping(cus_cd=item[0], audience_id=audience_id)
+                    for item in result
+                ]
+
+                db.bulk_save_objects(obj)
+                db.commit()
+            except Exception:
+                db.rollback()
+            finally:
+                db.close()
+
+    def get_all_customer(self, erp_id: str, sys_id: str):
+        with self.db() as db:
+            return db.query(
+                func.distinct(CustomerInfoStatusEntity.cus_cd).label("cus_cd")
+            ).filter(
+                *(
+                    [CustomerInfoStatusEntity.main_shop == erp_id]
+                    if sys_id == "WP"
+                    else []
+                )
+            )
+
+    def get_tablename_by_variable_id(self, variable_id: str):
+        with self.db() as db:
+            result = (
+                db.query(VariableTableMappingEntity.target_table)
+                .filter(VariableTableMappingEntity.variable_id == variable_id)
+                .first()
+            )
+
+            if result:
+                return result[0]
+            else:
+                return None
 
     def get_linked_campaign(self, audience_id: str) -> list[LinkedCampaign]:
         with self.db() as db:
@@ -158,6 +299,114 @@ class AudienceSqlAlchemy:
                 for row in results
             ]
             return linked_campaigns
+
+    def calculate_frequency(self, column, label):
+        """
+        구매횟수 select절 반환함수
+        """
+        label = label.replace("_freq", "")
+        frequency = func.count(func.distinct(column)).label(label)
+        return frequency
+
+    def calculate_recency(self, column, label):
+        """
+        구매경과일 select절 반환함수
+        """
+        label = label.replace("_recency", "")
+        today = datetime.now().date()
+        recency = (func.date(today) - func.to_date(func.max(column), "YYYYMMDD")).label(
+            label
+        )
+        return recency
+
+    def calculate_pur_cycle(self, column, label):
+        """
+        구매주기 select절 반환함수
+        """
+        label = label.replace("_pur_cycle", "")
+        pur_cycle = func.case(
+            func.count(func.distinct(column)) >= 2,
+            (
+                func.to_date(func.max(column), "YYYYMMDD")
+                - func.to_date(func.min(column), "YYYYMMDD")
+            )
+            / (func.count(func.distinct(column)) - 1),
+        ).label(label)
+        return pur_cycle
+
+    def get_calculate_method_by_label_name(self, column, label):
+        """
+        sale_dt_array unnest 컬럼 라벨에 따라 select 반환함수를 적용
+        """
+        if "freq" in label:
+            return self.calculate_frequency(column, label)
+        elif "recency" in label:
+            return self.calculate_recency(column, label)
+        elif "pur_cycle" in label:
+            return self.calculate_pur_cycle(column, label)
+        else:
+            return
+
+    def get_agg_value_with_subquery(self, subquery):
+        """
+        get_calculate_method_by_label_name 함수를 모든 서브쿼리 컬럼에 대해 적용
+        """
+        agg_select_query_list = [
+            self.get_calculate_method_by_label_name(column, column.key)
+            for column in subquery.c
+        ]
+        return agg_select_query_list
+
+    def get_subquery_without_groupby(self, select_query_list, variabletable):
+        with self.db() as db:
+            return db.query(
+                func.distinct(variabletable.cus_cd).label("cus_cd"), *select_query_list
+            ).subquery()
+
+    def get_subquery_with_groupby(self, select_query_list, variabletable):
+        with self.db() as db:
+            return (
+                db.query(variabletable.cus_cd, *select_query_list)
+                .group_by(variabletable.cus_cd)
+                .subquery()
+            )
+
+    def get_subquery_method(self, table_obj):
+        """
+        테이블에 따라 서브쿼리 생성 시 groupby 적용 여부를 지정하는 함수
+        """
+        if table_obj in (
+            CustomerProductPurchaseSummaryEntity,
+            PurchaseAnalyticsMasterStyle,
+            CustomerPromotionMasterEntity,
+            CustomerPromotionReactSummaryEntity,
+        ):
+            return self.get_subquery_with_groupby
+        else:
+            return self.get_subquery_without_groupby
+
+    def get_subquery_with_select_query_list(self, table_obj, select_query_list, idx):
+        """
+        서브쿼리가 필요없는 변수에 대한 집계쿼리 반환
+        """
+        with self.db():
+            subquery_method = self.get_subquery_method(table_obj)
+            subquery = subquery_method(select_query_list, table_obj)
+            sub_alias = subquery.alias(f"t{idx}")
+            return sub_alias
+
+    def get_subquery_with_array_select_query_list(
+        self, table_obj, array_select_query_list, idx
+    ):
+        """
+        서브쿼리가 필요한 변수에 대한 집계쿼리 반환
+        """
+        subquery = self.get_subquery_without_groupby(array_select_query_list, table_obj)
+        # agg_subquery = get_agg_value_with_subquery(db, subquery)
+        agg_select_query_list = self.get_agg_value_with_subquery(subquery)
+        agg_subquery = self.get_subquery_with_groupby(agg_select_query_list, subquery.c)
+        sub_alias = agg_subquery.alias(f"t{idx}")
+        return sub_alias
 
     def update_expired_audience_status(self, audience_id: str):
         with self.db() as db:
@@ -186,8 +435,8 @@ class AudienceSqlAlchemy:
             ).delete()
 
             # 오디언스 생성 쿼리
-            db.query(AudienceQueries).filter(
-                AudienceQueries.audience_id == audience_id
+            db.query(AudienceQueriesEntity).filter(
+                AudienceQueriesEntity.audience_id == audience_id
             ).delete()
 
             # 오디언스 업로드 정보

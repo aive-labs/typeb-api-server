@@ -8,6 +8,9 @@ from users.service.user_service import UserService
 
 from src.audiences.infra.audience_repository import AudienceRepository
 from src.audiences.infra.audience_sqlalchemy_repository import AudienceSqlAlchemy
+from src.audiences.routes.port.usecase.create_audience_usecase import (
+    CreateAudienceUsecase,
+)
 from src.audiences.routes.port.usecase.delete_audience_usecase import (
     DeleteAudienceUsecase,
 )
@@ -99,6 +102,10 @@ class Container(containers.DeclarativeContainer):
 
     get_audience_service = providers.Singleton(
         provides=GetAudienceUsecase, audience_repository=audience_repository
+    )
+
+    create_audience_service = providers.Singleton(
+        provides=CreateAudienceUsecase, audience_repository=audience_repository
     )
 
     delete_audience_service = providers.Singleton(
