@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship
 from src.core.database import BaseModel as Base
 
 
-class StrategyThemes(Base):
+class CampaignThemeEntity(Base):
     __tablename__ = "campaign_themes"
 
     campaign_theme_id = Column(
@@ -25,13 +25,16 @@ class StrategyThemes(Base):
 
     # 1:n relationship
     theme_audience_mapping = relationship(
-        "ThemeAudience",
+        "ThemeAudienceEntity",
         backref="campaign_themes",
         lazy=True,
         cascade="all, delete-orphan",
     )
     theme_offer_mapping = relationship(
-        "ThemeOffer", backref="campaign_themes", lazy=True, cascade="all, delete-orphan"
+        "ThemeOfferEntity",
+        backref="campaign_themes",
+        lazy=True,
+        cascade="all, delete-orphan",
     )
 
     def as_dict(self):

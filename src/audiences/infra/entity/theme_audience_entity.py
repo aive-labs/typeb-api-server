@@ -12,7 +12,7 @@ from sqlalchemy import (
 from src.core.database import BaseModel as Base
 
 
-class ThemeAudience(Base):
+class ThemeAudienceEntity(Base):
     __tablename__ = "themes_audiences"
 
     campaign_theme_id = Column(

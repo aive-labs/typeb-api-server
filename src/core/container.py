@@ -6,7 +6,6 @@ from users.infra.user_repository import UserRepository
 from users.infra.user_sqlalchemy import UserSqlAlchemy
 from users.service.user_service import UserService
 
-from src.audiences.infra.audience_repository import AudienceRepository
 from src.audiences.infra.audience_sqlalchemy_repository import AudienceSqlAlchemy
 from src.audiences.routes.port.usecase.create_audience_usecase import (
     CreateAudienceUsecase,
@@ -15,12 +14,17 @@ from src.audiences.routes.port.usecase.delete_audience_usecase import (
     DeleteAudienceUsecase,
 )
 from src.audiences.routes.port.usecase.get_audience_usecase import GetAudienceUsecase
+from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
 from src.contents.infra.contents_repository import ContentsRepository
 from src.contents.infra.contents_sqlalchemy_repository import ContentsSqlAlchemy
 from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUseCase
 from src.contents.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase
 from src.contents.routes.port.usecase.get_contents_usecase import GetContentsUseCase
 from src.contents.routes.port.usecase.get_creatives_usecase import GetCreativesUseCase
+from src.strategy.infra.strategy_sqlalchemy_repository import StrategySqlAlchemy
+from src.strategy.routes.port.create_strategy_usecase import CreateStrategyUsecase
+from src.strategy.routes.port.get_strategy_usecase import GetStrategyUsecase
+from src.strategy.service.port.base_strategy_repository import BaseStrategyRepository
 
 
 class Container(containers.DeclarativeContainer):
@@ -36,6 +40,7 @@ class Container(containers.DeclarativeContainer):
     """
     config 파일에 따라 다른 데이터베이스 주입
     """
+
     db = providers.Singleton(Database, db_url=get_db_url())
 
     """
@@ -97,7 +102,7 @@ class Container(containers.DeclarativeContainer):
     )
 
     audience_repository = providers.Singleton(
-        AudienceRepository, audience_sqlalchemy=audience_sqlalchemy
+        provides=BaseAudienceRepository, audience_sqlalchemy=audience_sqlalchemy
     )
 
     get_audience_service = providers.Singleton(
@@ -110,4 +115,24 @@ class Container(containers.DeclarativeContainer):
 
     delete_audience_service = providers.Singleton(
         provides=DeleteAudienceUsecase, audience_repository=audience_repository
+    )
+
+    """
+    전략 의존성 주입
+    """
+    strategy_sqlalchemy = providers.Singleton(
+        provides=StrategySqlAlchemy, db=db.provided.sesssion
+    )
+
+    strategy_repository = providers.Singleton(
+        provides=BaseStrategyRepository, strategy_sqlalchemy=strategy_sqlalchemy
+    )
+
+    get_strategy_service = providers.Singleton(
+        provides=GetStrategyUsecase,
+        strategy_repository=strategy_repository,
+    )
+
+    create_strategy_service = providers.Singleton(
+        provides=CreateStrategyUsecase, strategy_repository=strategy_repository
     )
