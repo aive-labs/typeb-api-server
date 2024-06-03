@@ -1,11 +1,7 @@
 from pydantic import BaseModel
 
 from src.audiences.domain.audience import Audience
-
-
-class CodeItems(BaseModel):
-    id: str | int | None = None
-    name: str | None = None
+from src.audiences.routes.dto.response.code_items import CodeItems
 
 
 class AudienceFilter(BaseModel):

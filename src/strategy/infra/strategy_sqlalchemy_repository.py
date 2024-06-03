@@ -99,12 +99,6 @@ class StrategySqlAlchemy:
                     contents_tags=theme.contents_tags,
                 )
 
-                # theme_audience
-                # campaign_theme_entity.theme_audiences = [
-                #     ThemeAudienceEntity(audience_id=audience.audience_id)
-                #     for audience in theme.theme_audience
-                # ]
-
                 theme_audience_entities = [
                     ThemeAudienceEntity(audience_id=audience.audience_id)
                     for audience in theme.theme_audience
@@ -114,12 +108,6 @@ class StrategySqlAlchemy:
                     campaign_theme_entity.theme_audience_mapping.append(
                         theme_audience_entity
                     )
-
-                # theme_offer
-                # campaign_theme_entity.theme_offers = [
-                #     ThemeOfferEntity(offer_id=offer.offer_id)
-                #     for offer in theme.theme_offer
-                # ]
 
                 theme_offer_entities = [
                     ThemeOfferEntity(offer_id=offer.offer_id)

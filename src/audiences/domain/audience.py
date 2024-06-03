@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic import BaseModel
 
 from src.audiences.infra.entity.audience_entity import AudienceEntity
-from src.audiences.routes.dto.response.audiences import CodeItems
+from src.audiences.routes.dto.response.code_items import CodeItems
 
 
 class Audience(BaseModel):

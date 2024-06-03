@@ -39,7 +39,6 @@ from src.audiences.infra.entity.purchase_analytics_master_style_entity import (
     PurchaseAnalyticsMasterStyle,
 )
 from src.audiences.infra.entity.theme_audience_entity import ThemeAudienceEntity
-from src.audiences.infra.entity.upload_condition_entity import UploadConditionsEntity
 from src.audiences.infra.entity.variable_table_mapping_entity import (
     VariableTableMappingEntity,
 )
@@ -198,7 +197,7 @@ class AudienceSqlAlchemy:
             audience_id = audiences_req.audience_id
 
             insert_to_uploaded_audiences["audience_id"] = audience_id
-            audience_upload_condition = UploadConditionsEntity(
+            audience_upload_condition = AudienceUploadConditions(
                 **insert_to_uploaded_audiences
             )
             db.add(audience_upload_condition)

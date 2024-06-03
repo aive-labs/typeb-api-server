@@ -1,11 +1,7 @@
-import os
-
-from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends
-
-print(os.getcwd())
 
 from core.container import Container
+from dependency_injector.wiring import Provide, inject
+from fastapi import APIRouter, Depends
 from users.routes.dto.request.user_create_request import UserCreate
 from users.routes.dto.response.user_response import UserResponse
 from users.routes.port.base_user_service import BaseUserService

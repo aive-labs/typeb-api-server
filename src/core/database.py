@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 # SQLAlchemy의 로깅 수준을 디버그로 설정
 logging.basicConfig()
-logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
 
 class DBSettings(BaseSettings):
@@ -52,6 +52,7 @@ def get_db_url():
 ## check schema name for deployment
 metaobj = MetaData(schema="aivelabs_sv")
 BaseModel = declarative_base(metadata=metaobj)
+
 
 class Database:
     def __init__(self, db_url: str) -> None:

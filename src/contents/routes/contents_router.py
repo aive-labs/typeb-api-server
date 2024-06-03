@@ -1,4 +1,3 @@
-
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, UploadFile
 
@@ -32,30 +31,36 @@ def create_contents(
 
 
 @contents_router.get("/menu/subject")
+@inject
 def get_contents_subject_list():
     pass
 
 
 @contents_router.get(path="/menu/with-subject")
+@inject
 def get_contents_menu_list():
     pass
 
 
 @contents_router.get("/")
+@inject
 def get_contents_list():
     pass
 
 
 @contents_router.get("/{contents_id}")
+@inject
 def get_contents():
     pass
 
 
 @contents_router.put("/{contents_id}")
+@inject
 def update_contents():
     pass
 
 
 @contents_router.delete("/{contents_id}")
+@inject
 def delete_contents():
     pass
