@@ -18,13 +18,12 @@ def get_last_day_of_month(date: datetime):
 
 
 def calculate_dates(
-    start_date: datetime,
-    period,
-    week_days: str | None = None,
-    datetosend: Literal["end_of_month"] | int | None = None,
-    timezone="UTC",
+        start_date: datetime,
+        period,
+        week_days: str | None = None,
+        datetosend: Literal["end_of_month"] | int | None = None,
+        timezone="UTC",
 ):
-
     # end_of_month -> 매월, 분기, 반기에만 말일이라는 필드가 존재
 
     # 타임존 설정
@@ -85,16 +84,14 @@ def calculate_dates(
             for month in [1, 4, 7, 10]:
                 if start_date.month <= month:
                     break
-
             last_day_of_month = get_last_day_of_month(start_date)
             pass
-
         else:
             if start_date.month in [1, 4, 7, 10] and start_date.day < datetosend:
                 start = start_date.replace(day=datetosend)
             else:
                 start = (
-                    start_date + relativedelta(months=3 - ((start_date.month - 1) % 3))
+                        start_date + relativedelta(months=3 - ((start_date.month - 1) % 3))
                 ).replace(day=datetosend)
         end = start
         next_start = start + relativedelta(months=3)
@@ -107,7 +104,7 @@ def calculate_dates(
             # 오늘 기준으로 반기 말일?
         else:
             if start_date.month < 7 or (
-                start_date.month == 7 and start_date.day < datetosend
+                    start_date.month == 7 and start_date.day < datetosend
             ):
                 start = (
                     datetime(start_date.year, 1, datetosend, tzinfo=tz)
@@ -124,7 +121,6 @@ def calculate_dates(
             datetosend,
             tzinfo=tz,
         )
-
     # TODO
     # 종료일은 다음 시작일의 전일로 설정
     start = start.strftime("%Y%m%d")
