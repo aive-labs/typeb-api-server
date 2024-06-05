@@ -26,8 +26,6 @@ class DBSettings(BaseSettings):
 
     class Config:
         env_type = os.environ.get("ENV_TYPE")
-        print(os.getcwd())
-        print(f"env_type: {env_type}")
 
         if not env_type:
             env_file = "../config/env/.env"

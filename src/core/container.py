@@ -15,6 +15,9 @@ from src.audiences.routes.port.usecase.delete_audience_usecase import (
 )
 from src.audiences.routes.port.usecase.get_audience_usecase import GetAudienceUsecase
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
+from src.auth.infra.cafe24_sqlalchemy_repository import Cafe24SqlAlchemyRepository
+from src.auth.routes.port.base_oauth_service import BaseOauthService
+from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.campaign.infra.campaign_sqlalchemy_repository import CampaignSqlAlchemy
 from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUsecase
 from src.campaign.routes.port.get_campaign_usecase import GetCampaignUsecase
@@ -58,7 +61,21 @@ class Container(containers.DeclarativeContainer):
 
     """
     인증 의존성 주입
+    카페 24 의존성 주입
     """
+    cafe24_sqlalchemy = providers.Singleton(
+        Cafe24SqlAlchemyRepository, db=db.provided.session
+    )
+    cafe24_repository = providers.Singleton(
+        BaseOauthRepository, cafe24_sqlalchemy=cafe24_sqlalchemy
+    )
+
+    cafe24_service = providers.Singleton(
+        provides=BaseOauthService,
+        user_repository=user_repository,
+        cafe24_repository=cafe24_repository,
+    )
+
     token_service = providers.Singleton(provides=TokenService)
     auth_service = providers.Singleton(
         provides=AuthService,

@@ -1,14 +1,24 @@
+import hashlib
+
 """패스워드를 해싱하는 클래스입니다.
 """
 
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+def generate_hash(input_string: str) -> str:
+    """
+    주어진 입력 문자열을 SHA-256 해시 값으로 변환합니다.
+
+    :param input_string: 해시할 입력 문자열
+    :return: SHA-256 해시 값
+    """
+    sha256_hash = hashlib.sha256()
+    sha256_hash.update(input_string.encode("utf-8"))
+    return sha256_hash.hexdigest()
 
 
-class HashPassword:
-    def create_hash(self, login_pw):
-        pass
+def create_hash(self, login_pw):
+    pass
 
-    def verify_hash(self, password: str, input_hashed_password: str):
-        pass
+
+def verify_hash(self, password: str, input_hashed_password: str):
+    pass

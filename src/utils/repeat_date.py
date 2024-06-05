@@ -78,7 +78,7 @@ def calculate_dates(
         next_start = start + relativedelta(months=1)
 
     elif period == RepeatType.QUARTER.value:
-
+        # TODO
         if datetosend == "end_of_month":
             # 오늘 기준으로 해당 분기 말일
 
@@ -101,6 +101,7 @@ def calculate_dates(
 
     elif period == RepeatType.HALFYEAR.value:
 
+        # TODO
         if datetosend == "end_of_month":
             pass
             # 오늘 기준으로 반기 말일?
@@ -124,6 +125,7 @@ def calculate_dates(
             tzinfo=tz,
         )
 
+    # TODO
     # 종료일은 다음 시작일의 전일로 설정
     start = start.strftime("%Y%m%d")
     end = (next_start - timedelta(days=1)).strftime("%Y%m%d")
