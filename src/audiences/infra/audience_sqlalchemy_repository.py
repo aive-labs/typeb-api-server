@@ -42,7 +42,7 @@ from src.audiences.infra.entity.theme_audience_entity import ThemeAudienceEntity
 from src.audiences.infra.entity.variable_table_mapping_entity import (
     VariableTableMappingEntity,
 )
-from src.campaign.infra.entity.campaigns_entity import CampaignsEntity
+from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.common.enums.role import RoleEnum
 from src.core.exceptions import NotFoundError
 from src.strategy.infra.entity.campaign_theme_entity import CampaignThemeEntity
@@ -285,7 +285,7 @@ class AudienceSqlAlchemy:
             results = (
                 db.query(
                     ThemeAudienceEntity.audience_id,
-                    CampaignsEntity.campaign_status_code,
+                    CampaignEntity.campaign_status_code,
                 )
                 .join(
                     CampaignThemeEntity,
@@ -293,8 +293,8 @@ class AudienceSqlAlchemy:
                     == CampaignThemeEntity.campaign_theme_id,
                 )
                 .join(
-                    CampaignsEntity,
-                    CampaignThemeEntity.strategy_id == CampaignsEntity.strategy_id,
+                    CampaignEntity,
+                    CampaignThemeEntity.strategy_id == CampaignEntity.strategy_id,
                 )
                 .filter(ThemeAudienceEntity.audience_id == audience_id)
                 .all()

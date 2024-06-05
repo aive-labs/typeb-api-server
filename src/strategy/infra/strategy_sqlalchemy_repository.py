@@ -190,3 +190,13 @@ class StrategySqlAlchemy:
                 .filter(StrategyEntity.strategy_name == name)
                 .count()
             )
+
+    def find_by_strategy_id(self, strategy_id: str) -> Strategy:
+        with self.db() as db:
+            entity = (
+                db.query(StrategyEntity)
+                .filter(StrategyEntity.strategy_id == strategy_id)
+                .first()
+            )
+
+            return Strategy.from_entity(entity)

@@ -57,3 +57,6 @@ class StrategyRepository(BaseStrategyRepository):
 
     def is_strategy_name_exists(self, name: str) -> int:
         return self.strategy_sqlalchemy_respository.is_strategy_name_exists(name)
+
+    def find_by_strategy_id(self, strategy_id: str) -> Strategy:
+        return self.strategy_sqlalchemy_respository.find_by_strategy_id(strategy_id)

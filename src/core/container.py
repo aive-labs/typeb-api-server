@@ -15,6 +15,10 @@ from src.audiences.routes.port.usecase.delete_audience_usecase import (
 )
 from src.audiences.routes.port.usecase.get_audience_usecase import GetAudienceUsecase
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
+from src.campaign.infra.campaign_sqlalchemy_repository import CampaignSqlAlchemy
+from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUsecase
+from src.campaign.routes.port.get_campaign_usecase import GetCampaignUsecase
+from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
 from src.contents.infra.contents_repository import ContentsRepository
 from src.contents.infra.contents_sqlalchemy_repository import ContentsSqlAlchemy
 from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUseCase
@@ -46,15 +50,17 @@ class Container(containers.DeclarativeContainer):
     """
     사용자 의존성 주입
     """
-    user_sqlalchemy = providers.Factory(UserSqlAlchemy, db=db.provided.session)
-    user_repository = providers.Factory(UserRepository, user_sqlalchemy=user_sqlalchemy)
-    user_service = providers.Factory(UserService, user_repository=user_repository)
+    user_sqlalchemy = providers.Singleton(UserSqlAlchemy, db=db.provided.session)
+    user_repository = providers.Singleton(
+        UserRepository, user_sqlalchemy=user_sqlalchemy
+    )
+    user_service = providers.Singleton(UserService, user_repository=user_repository)
 
     """
     인증 의존성 주입
     """
-    token_service = providers.Factory(provides=TokenService)
-    auth_service = providers.Factory(
+    token_service = providers.Singleton(provides=TokenService)
+    auth_service = providers.Singleton(
         provides=AuthService,
         token_service=token_service,
         user_repository=user_repository,
@@ -63,18 +69,18 @@ class Container(containers.DeclarativeContainer):
     """
     Creatives 의존성 주입
     """
-    add_creatives_service = providers.Factory(
+    add_creatives_service = providers.Singleton(
         provides=AddCreativesUseCase, user_repository=user_repository
     )
 
-    get_creatives_service = providers.Factory(
+    get_creatives_service = providers.Singleton(
         provides=GetCreativesUseCase, user_repository=user_repository
     )
 
     """
     컨텐츠 의존성 주입
     """
-    contents_sqlalchemy = providers.Factory(
+    contents_sqlalchemy = providers.Singleton(
         provides=ContentsSqlAlchemy, db=db.provided.session
     )
 
@@ -82,13 +88,13 @@ class Container(containers.DeclarativeContainer):
         ContentsRepository, contents_sqlalchemy=contents_sqlalchemy
     )
 
-    add_contents_service = providers.Factory(
+    add_contents_service = providers.Singleton(
         provides=AddContentsUseCase,
         contents_repository=contents_repository,
         user_repository=user_repository,
     )
 
-    get_contents_service = providers.Factory(
+    get_contents_service = providers.Singleton(
         provides=GetContentsUseCase,
         contents_repository=contents_repository,
         user_repository=user_repository,
@@ -135,4 +141,24 @@ class Container(containers.DeclarativeContainer):
 
     create_strategy_service = providers.Singleton(
         provides=CreateStrategyUsecase, strategy_repository=strategy_repository
+    )
+
+    """
+    캠페인 의존성 주입
+    """
+
+    campaign_sqlalchemy = providers.Singleton(
+        provides=CampaignSqlAlchemy, db=db.provided.session
+    )
+
+    campaign_repository = providers.Singleton(
+        provides=BaseCampaignRepository, campaign_sqlalchemy=campaign_sqlalchemy
+    )
+
+    get_campaign_service = providers.Singleton(
+        provides=GetCampaignUsecase, campaign_repository=campaign_repository
+    )
+
+    create_campaign_service = providers.Singleton(
+        provides=CreateCampaignUsecase, campaign_repository=campaign_repository
     )

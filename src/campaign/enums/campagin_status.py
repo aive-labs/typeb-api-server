@@ -12,6 +12,10 @@ class CampaignStatus(StrEnum):
     haltafter = ("s2", "진행중지", "s", "중지")
     expired = ("s3", "기간만료", "s", "중지")
 
+    description: str
+    group: str
+    group_description: str
+
     def __new__(cls, value, description, group, group_description):
         obj = str.__new__(cls)
         obj._value_ = value

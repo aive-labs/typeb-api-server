@@ -32,3 +32,7 @@ class BaseStrategyRepository(ABC):
     @abstractmethod
     def is_strategy_name_exists(self, name: str) -> int:
         pass
+
+    @abstractmethod
+    def find_by_strategy_id(self, strategy_id: str) -> Strategy:
+        pass

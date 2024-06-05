@@ -13,7 +13,7 @@ from sqlalchemy.orm import relationship
 from src.core.database import BaseModel as Base
 
 
-class CampaignsEntity(Base):
+class CampaignEntity(Base):
     __tablename__ = "campaigns"
 
     campaign_id = Column(

@@ -22,7 +22,7 @@ from src.audiences.infra.entity.primary_rep_product_entity import (
 from src.audiences.infra.entity.purchase_analytics_master_style_entity import (
     PurchaseAnalyticsMasterStyle,
 )
-from src.campaign.infra.entity.campaigns_entity import CampaignsEntity
+from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.campaign.infra.entity.send_reservation_entity import SendReservationEntity
 from src.core.container import Container
 from src.dashboard.infra.entity.dash_end_table_entity import DashEndTable
@@ -211,8 +211,8 @@ def get_puchase_records_3m(db, three_months_ago, today, cust_list):
 def get_response_data_3m(db, audience_id: str, three_months_ago, yst_date):
     with db() as db:
         campaigns_subquery = (
-            db.query(CampaignsEntity.campaign_id)
-            .filter(CampaignsEntity.send_date.between(three_months_ago, yst_date))
+            db.query(CampaignEntity.campaign_id)
+            .filter(CampaignEntity.send_date.between(three_months_ago, yst_date))
             .subquery()
         )
 
