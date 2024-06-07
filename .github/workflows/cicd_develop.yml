@@ -1,0 +1,77 @@
+name: CI/CD-develop 
+
+on:
+  push:
+    branches:
+    - develop
+  pull_request:
+    branches:
+    - develop 
+
+jobs:
+  lint_and_formatting:
+    runs-on: ubuntu-lastest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip instsall --upgrade pip 
+
+      - name: Run code formatting(Black)
+        run: |
+          pip install black
+          black --check .
+
+      - name: Run linting (Ruff)
+        run: |
+          pip install ruff
+          ruff check --fix
+
+      - name: Run static type checking (mypy)
+        run: |
+          pip install mypy
+          mypy .
+
+  build_and_deploy:
+    runs-on: ubuntu-lastest
+    needs: lint_and_formatting
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Copy files to Bastion Host
+        run: |
+          scp -o StrictHostKeyChecking=no -r ./* ubunutu@${{ secrets.BASTION_HOST }}:/home/ubuntu/typeb-api
+
+      - name: Copy files from Bastion Host to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ubunutu@${{ secrets.BASTION_HOST }} 'scp -o StrictHostKeyChecking=no -r /home/ubuntu/typeb-api/* ec2-user@private-ec2-instance:/home/ubuntu/typeb-api/'
+
+      - name: Delete files from Bastion Host
+        run: |
+          ssh -o StrictHostKeyChecking=no ubunutu@${{ secrets.BASTION_HOST }} 'rm -rf /home/ubuntu/typeb-api/*'
+
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ubunutu@${{ secrets.BASTION_HOST }} '
+            ssh -o StrictHostKeyChecking=no ubunutu@${{ secrets.PRIVATE_EC2_INSTANCE }} "
+              cd /home/ubuntu/typeb-api && \
+              docker build -t aice-app . && \
+              docker stop aice-app || true && \
+              docker rm aice-app || true && \
+              docker run -d --name aice-app -p 8000:8000 aice-app
+            "'
