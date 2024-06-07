@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from users.domain.user import User
-from users.routes.dto.request.user_create_request import UserCreate
+from src.users.domain.user import User
+from src.users.routes.dto.request.user_create_request import UserCreate
 
 
 class BaseUserRepository(ABC):
@@ -27,4 +27,8 @@ class BaseUserRepository(ABC):
 
     @abstractmethod
     def get_all_users(self) -> list[User]:
+        pass
+
+    @abstractmethod
+    def is_existing_user(self, email: str) -> bool:
         pass

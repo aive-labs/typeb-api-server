@@ -1,7 +1,10 @@
 from datetime import datetime
 
 from pydantic import BaseModel
-from users.infra.entity.user_entity import UserEntity
+
+from src.auth.utils.hash_password import generate_hash
+from src.users.infra.entity.user_entity import UserEntity
+from src.users.infra.entity.user_password import UserPasswordEntity
 
 
 class User(BaseModel):
@@ -26,7 +29,6 @@ class User(BaseModel):
         return UserEntity(
             username=self.username,
             email=self.email,
-            password=self.password,
             role_id=self.role_id,
             sys_id=self.sys_id,
             erp_id=self.erp_id,
@@ -34,6 +36,13 @@ class User(BaseModel):
             department_id=self.department_id,
             language=self.language,
             test_callback_number=self.test_callback_number,
+        )
+
+    def to_password_entity(self) -> UserPasswordEntity:
+        return UserPasswordEntity(
+            login_id=self.email,
+            login_pw=generate_hash(self.password),
+            email=self.email,
         )
 
     @staticmethod

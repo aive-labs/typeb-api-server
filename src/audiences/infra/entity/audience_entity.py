@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import Boolean, Column, DateTime, String, text
 from sqlalchemy.orm import relationship
 
-from src.core.database import BaseModel as Base
+from src.core.database import Base as Base
 
 
 class AudienceEntity(Base):
@@ -37,4 +37,4 @@ class AudienceEntity(Base):
     default_excl_on_camp = Column(Boolean, nullable=False, default=False)
     user_exc_deletable = Column(Boolean, nullable=True)
 
-    mapping = relationship("ThemeAudience", backref="audiences")
+    mapping = relationship("ThemeAudienceEntity", backref="audiences")

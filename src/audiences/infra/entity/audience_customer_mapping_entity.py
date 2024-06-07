@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import Column, DateTime, String, text
 
-from src.core.database import BaseModel as Base
+from src.core.database import Base as Base
 
 
 class AudienceCustomerMapping(Base):

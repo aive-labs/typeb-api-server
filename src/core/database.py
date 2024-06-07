@@ -14,42 +14,33 @@ logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
 
 class DBSettings(BaseSettings):
-    # app_name: str = "tt"
     env: str
-    # drivername: str
-    # host: str
-    # dbuser: str
-    # password: str
-    # database: str
-    # port: str
     database_url: str
 
     class Config:
         env_type = os.environ.get("ENV_TYPE")
+        env_file_encoding = "utf-8"
+        extra = "ignore"
 
         if not env_type:
-            env_file = "../config/env/.env"
+            env_file = "config/env/.env"
         elif env_type == "test_code":
-            env_file = "../config/env/test.env"
-        elif env_type == "nepa-stg":
-            env_file = "../config/env/local_nepa.env"
+            env_file = "config/env/test.env"
         else:
-            env_file = f"../config/env/{env_type}.env"
+            env_file = f"config/env/{env_type}.env"
 
         print(f"env_file: {env_file}")
-        env_file_encoding = "utf-8"
 
 
 def get_db_url():
-    db_settings = DBSettings()  # type: ignore
-    print(db_settings.env)
+    db_settings = DBSettings()
     print(f"database_connection: {db_settings.database_url}")
     return db_settings.database_url
 
 
 ## check schema name for deployment
 metaobj = MetaData(schema="aivelabs_sv")
-BaseModel = declarative_base(metadata=metaobj)
+Base = declarative_base(metadata=metaobj)
 
 
 class Database:
@@ -64,9 +55,10 @@ class Database:
                 bind=self._engine,
             ),
         )
+        self._create_database()
 
-    def create_database(self) -> None:
-        BaseModel.metadata.create_all(self._engine)  # type: ignore
+    def _create_database(self) -> None:
+        Base.metadata.create_all(self._engine)  # type: ignore
 
     @contextmanager  # type: ignore
     def session(self) -> Callable[..., AbstractContextManager[Session]]:  # type: ignore

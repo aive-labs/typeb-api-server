@@ -1,14 +1,13 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import Field
+from pydantic import BaseModel, Field
 
 from src.campaign.enums.campaign_type import CampaignTypeEnum
 from src.campaign.enums.repeat_type import RepeatType
 from src.campaign.enums.send_type import SendtypeEnum
 from src.campaign.routes.dto.request.campaign_remind import CampaignRemind
 from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
-from src.core.database import BaseModel
 from src.utils.date_utils import localtime_converter
 
 

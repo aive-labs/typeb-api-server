@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String
 
-from src.core.database import BaseModel as Base
+from src.core.database import Base as Base
 
 
 class PrimaryRepProductEntity(Base):

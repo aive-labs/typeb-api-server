@@ -1,7 +1,6 @@
-
 from sqlalchemy import Column, Integer, String
 
-from src.core.database import BaseModel as Base
+from src.core.database import Base as Base
 
 
 class CustomerInfoStatusEntity(Base):

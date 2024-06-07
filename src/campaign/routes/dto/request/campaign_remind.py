@@ -1,6 +1,6 @@
+from pydantic import BaseModel
 
 from src.campaign.enums.campaign_media import CampaignMediaEnum
-from src.core.database import BaseModel
 
 
 class CampaignRemind(BaseModel):

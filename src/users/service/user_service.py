@@ -1,11 +1,12 @@
-from core.exceptions import DuplicatedError, NotFoundError
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
-from users.domain.user import User
-from users.routes.dto.request.user_create_request import UserCreate
-from users.routes.dto.response.user_response import UserResponse
-from users.routes.port.base_user_service import BaseUserService
-from users.service.port.base_user_repository import BaseUserRepository
+
+from src.core.exceptions import DuplicatedError, NotFoundError
+from src.users.domain.user import User
+from src.users.routes.dto.request.user_create_request import UserCreate
+from src.users.routes.dto.response.user_response import UserResponse
+from src.users.routes.port.base_user_service import BaseUserService
+from src.users.service.port.base_user_repository import BaseUserRepository
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -22,7 +23,7 @@ class UserService(BaseUserService):
     def register_user(self, user_create: UserCreate) -> UserResponse:
 
         # 1. 가입 아이디로 사용자 존재 유무 확인
-        existing_user = self.user_repository.get_user_by_email(user_create.email)
+        existing_user = self.user_repository.is_existing_user(user_create.email)
 
         if existing_user:
             raise DuplicatedError("동일한 이메일이 존재합니다.")

@@ -10,7 +10,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 
-from src.core.database import BaseModel as Base
+from src.core.database import Base as Base
 
 
 class CampaignEntity(Base):
@@ -74,12 +74,12 @@ class CampaignEntity(Base):
 
     # 1:n relationship
     remind_list = relationship(
-        "CampaignRemind", backref="campaigns", lazy=True, cascade="all, delete-orphan"
+        "CampaignRemindEntity", backref="campaigns", lazy=True, cascade="all, delete-orphan"
     )
 
     # 1:n relationship
     camp_sets = relationship(
-        "CampaignSets", backref="campaigns", lazy=True, cascade="all, delete-orphan"
+        "CampaignSetsEntity", backref="campaigns", lazy=True, cascade="all, delete-orphan"
     )
 
     def as_dict(self):

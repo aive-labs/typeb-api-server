@@ -9,6 +9,13 @@ from src.campaign.enums.repeat_type import RepeatType
 
 
 def get_last_day_of_month(date: datetime) -> int:
+    """
+
+    Args:
+        date: date는 현재 날짜를 의미
+
+    Returns: 현월의 마지막 날짜를 리턴
+    """
     # monthrange 함수는 주어진 연도와 월에 대한 (첫 번째 요일, 마지막 날짜)를 반환
     return calendar.monthrange(date.year, date.month)[1]
 

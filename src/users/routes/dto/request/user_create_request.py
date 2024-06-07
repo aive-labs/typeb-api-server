@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from users.domain.user import User
+
+from src.users.domain.user import User
 
 
 class UserCreate(BaseModel):

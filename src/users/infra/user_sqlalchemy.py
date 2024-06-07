@@ -2,9 +2,11 @@ from collections.abc import Callable
 from contextlib import AbstractContextManager
 
 from sqlalchemy.orm import Session
-from users.infra.entity.user_entity import UserEntity
-from users.infra.entity.user_password import UserPassword
-from users.infra.entity.user_whitelist import UserWhitelist
+
+from src.users.domain.user import User
+from src.users.infra.entity.user_entity import UserEntity
+from src.users.infra.entity.user_password import UserPasswordEntity
+from src.users.infra.entity.user_whitelist import UserWhitelist
 
 
 class UserSqlAlchemy:
@@ -21,27 +23,28 @@ class UserSqlAlchemy:
         """
         self.db = db
 
-    def register_user(self, user_entity: UserEntity):
+    def register_user(self, user_entity: UserEntity, user_password_entity: UserPasswordEntity):
         with self.db() as db:
             db.add(user_entity)
+            db.add(user_password_entity)
             db.commit()
 
             # commit을 하면 user_entity에 id값이 자동으로 할당이됨
-            return user_entity
+            return User.from_entity(user_entity=user_entity)
 
     def find_user_by_email(self, email: str):
         with self.db() as db:
-            user = db.query(UserEntity,  UserPassword.login_pw)\
-                    .join(UserPassword, UserEntity.login_id == UserPassword.login_id)\
-                    .filter(UserEntity.email == email)\
-                    .first()
+            user = db.query(UserEntity, UserPasswordEntity.login_pw) \
+                .join(UserPasswordEntity, UserEntity.login_id == UserPasswordEntity.login_id) \
+                .filter(UserEntity.email == email) \
+                .first()
         return user
 
     def get_user_signin(self, login_id: str):
         with self.db() as db:
             return (
-                db.query(UserEntity.user_id, UserEntity.login_id, UserPassword.login_pw)
-                .join(UserPassword, UserEntity.login_id == UserPassword.login_id)
+                db.query(UserEntity.user_id, UserEntity.login_id, UserPasswordEntity.login_pw)
+                .join(UserPasswordEntity, UserEntity.login_id == UserPasswordEntity.login_id)
                 .filter(UserEntity.login_id == login_id)
                 .first()
             )

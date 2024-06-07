@@ -1,4 +1,3 @@
-from core.database import BaseModel as Base
 from sqlalchemy import (
     ARRAY,
     Column,
@@ -7,6 +6,8 @@ from sqlalchemy import (
     Integer,
     String,
 )
+
+from src.core.database import Base
 
 
 class ContentsEntity(Base):

@@ -4,7 +4,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 
 from src.core.container import Container
-from src.core.exceptions import AuthError, CredentialError, NotFoundError
+from src.core.exceptions import AuthError, CredentialError
 from src.users.infra.user_repository import UserRepository
 
 reuseable_oauth = OAuth2PasswordBearer(tokenUrl="/token", scheme_name="JWT")
@@ -14,9 +14,9 @@ ALGORITHM = "HS256"
 
 @inject
 def get_current_user(
-    self,
-    token: str = Depends(reuseable_oauth),
-    user_repository: UserRepository = Depends(Provide[Container.user_repository]),
+        self,
+        token: str = Depends(reuseable_oauth),
+        user_repository: UserRepository = Depends(Provide[Container.user_repository]),
 ):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -27,7 +27,5 @@ def get_current_user(
         raise CredentialError("유효하지 않은 토큰입니다.") from e
 
     user = user_repository.get_user_by_email(email=email)
-    if user is None:
-        raise NotFoundError("해당하는 사용자를 찾지 못하였습니다.")
 
     return user

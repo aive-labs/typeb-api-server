@@ -1,4 +1,4 @@
-from src.core.database import BaseModel
+from pydantic import BaseModel
 
 
 class OauthAuthenticationRequest(BaseModel):

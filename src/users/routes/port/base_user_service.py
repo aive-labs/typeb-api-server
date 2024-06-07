@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from users.routes.dto.request.user_create_request import UserCreate
-from users.routes.dto.response.user_response import UserResponse
+from src.users.routes.dto.request.user_create_request import UserCreate
+from src.users.routes.dto.response.user_response import UserResponse
 
 
 class BaseUserService(ABC):

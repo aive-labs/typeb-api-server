@@ -1,8 +1,6 @@
 from datetime import datetime
 
-from pydantic import Field
-
-from src.core.database import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Cafe24TokenData(BaseModel):

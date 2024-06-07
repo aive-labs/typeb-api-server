@@ -1,6 +1,6 @@
 from sqlalchemy import ARRAY, Column, Integer, String
 
-from src.core.database import BaseModel as Base
+from src.core.database import Base as Base
 
 
 class CustomerProductPurchaseSummaryEntity(Base):

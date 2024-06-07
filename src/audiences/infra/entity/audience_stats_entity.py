@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Float, Integer, String
 
-from src.core.database import BaseModel as Base
+from src.core.database import Base as Base
 
 
 class AudienceStatsEntity(Base):

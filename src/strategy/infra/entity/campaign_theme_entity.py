@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import ARRAY, Column, DateTime, ForeignKey, Integer, String, text
 from sqlalchemy.orm import relationship
 
-from src.core.database import BaseModel as Base
+from src.core.database import Base as Base
 
 
 class CampaignThemeEntity(Base):

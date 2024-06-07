@@ -1,46 +1,29 @@
-from auth.service.auth_service import AuthService
-from auth.service.token_service import TokenService
-from core.database import Database, get_db_url
 from dependency_injector import containers, providers
-from users.infra.user_repository import UserRepository
-from users.infra.user_sqlalchemy import UserSqlAlchemy
-from users.service.user_service import UserService
 
-from src.audiences.infra.audience_sqlalchemy_repository import AudienceSqlAlchemy
-from src.audiences.routes.port.usecase.create_audience_usecase import (
-    CreateAudienceUsecase,
-)
-from src.audiences.routes.port.usecase.delete_audience_usecase import (
-    DeleteAudienceUsecase,
-)
-from src.audiences.routes.port.usecase.get_audience_usecase import GetAudienceUsecase
-from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
 from src.auth.infra.cafe24_sqlalchemy_repository import Cafe24SqlAlchemyRepository
 from src.auth.routes.port.base_oauth_service import BaseOauthService
+from src.auth.service.auth_service import AuthService
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
-from src.campaign.infra.campaign_sqlalchemy_repository import CampaignSqlAlchemy
-from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUsecase
-from src.campaign.routes.port.get_campaign_usecase import GetCampaignUsecase
-from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
+from src.auth.service.token_service import TokenService
 from src.contents.infra.contents_repository import ContentsRepository
 from src.contents.infra.contents_sqlalchemy_repository import ContentsSqlAlchemy
 from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUseCase
 from src.contents.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase
 from src.contents.routes.port.usecase.get_contents_usecase import GetContentsUseCase
 from src.contents.routes.port.usecase.get_creatives_usecase import GetCreativesUseCase
-from src.strategy.infra.strategy_sqlalchemy_repository import StrategySqlAlchemy
-from src.strategy.routes.port.create_strategy_usecase import CreateStrategyUsecase
-from src.strategy.routes.port.get_strategy_usecase import GetStrategyUsecase
-from src.strategy.service.port.base_strategy_repository import BaseStrategyRepository
+from src.core.database import Database, get_db_url
+from src.users.infra.user_repository import UserRepository
+from src.users.infra.user_sqlalchemy import UserSqlAlchemy
+from src.users.service.user_service import UserService
 
 
 class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(
         modules=[
-            "users.routes.user_router",
-            "auth.routes.auth_router",
-            "contents.routes.contents_router",
-            "contents.routes.creatives_router",
+            "src.users.routes.user_router",
+            "src.auth.routes.auth_router",
+            # "src.contents.routes.contents_router",
+            # "src.contents.routes.creatives_router",
         ]
     )
 
@@ -120,62 +103,62 @@ class Container(containers.DeclarativeContainer):
     """
     타겟 오디언스 의존성 주입
     """
-    audience_sqlalchemy = providers.Singleton(
-        provides=AudienceSqlAlchemy, db=db.provided.session
-    )
-
-    audience_repository = providers.Singleton(
-        provides=BaseAudienceRepository, audience_sqlalchemy=audience_sqlalchemy
-    )
-
-    get_audience_service = providers.Singleton(
-        provides=GetAudienceUsecase, audience_repository=audience_repository
-    )
-
-    create_audience_service = providers.Singleton(
-        provides=CreateAudienceUsecase, audience_repository=audience_repository
-    )
-
-    delete_audience_service = providers.Singleton(
-        provides=DeleteAudienceUsecase, audience_repository=audience_repository
-    )
+    # audience_sqlalchemy = providers.Singleton(
+    #     provides=AudienceSqlAlchemy, db=db.provided.session
+    # )
+    #
+    # audience_repository = providers.Singleton(
+    #     provides=BaseAudienceRepository, audience_sqlalchemy=audience_sqlalchemy
+    # )
+    #
+    # get_audience_service = providers.Singleton(
+    #     provides=GetAudienceUsecase, audience_repository=audience_repository
+    # )
+    #
+    # create_audience_service = providers.Singleton(
+    #     provides=CreateAudienceUsecase, audience_repository=audience_repository
+    # )
+    #
+    # delete_audience_service = providers.Singleton(
+    #     provides=DeleteAudienceUsecase, audience_repository=audience_repository
+    # )
 
     """
     전략 의존성 주입
     """
-    strategy_sqlalchemy = providers.Singleton(
-        provides=StrategySqlAlchemy, db=db.provided.sesssion
-    )
-
-    strategy_repository = providers.Singleton(
-        provides=BaseStrategyRepository, strategy_sqlalchemy=strategy_sqlalchemy
-    )
-
-    get_strategy_service = providers.Singleton(
-        provides=GetStrategyUsecase,
-        strategy_repository=strategy_repository,
-    )
-
-    create_strategy_service = providers.Singleton(
-        provides=CreateStrategyUsecase, strategy_repository=strategy_repository
-    )
+    # strategy_sqlalchemy = providers.Singleton(
+    #     provides=StrategySqlAlchemy, db=db.provided.sesssion
+    # )
+    #
+    # strategy_repository = providers.Singleton(
+    #     provides=BaseStrategyRepository, strategy_sqlalchemy=strategy_sqlalchemy
+    # )
+    #
+    # get_strategy_service = providers.Singleton(
+    #     provides=GetStrategyUsecase,
+    #     strategy_repository=strategy_repository,
+    # )
+    #
+    # create_strategy_service = providers.Singleton(
+    #     provides=CreateStrategyUsecase, strategy_repository=strategy_repository
+    # )
 
     """
     캠페인 의존성 주입
     """
 
-    campaign_sqlalchemy = providers.Singleton(
-        provides=CampaignSqlAlchemy, db=db.provided.session
-    )
-
-    campaign_repository = providers.Singleton(
-        provides=BaseCampaignRepository, campaign_sqlalchemy=campaign_sqlalchemy
-    )
-
-    get_campaign_service = providers.Singleton(
-        provides=GetCampaignUsecase, campaign_repository=campaign_repository
-    )
-
-    create_campaign_service = providers.Singleton(
-        provides=CreateCampaignUsecase, campaign_repository=campaign_repository
-    )
+    # campaign_sqlalchemy = providers.Singleton(
+    #     provides=CampaignSqlAlchemy, db=db.provided.session
+    # )
+    #
+    # campaign_repository = providers.Singleton(
+    #     provides=BaseCampaignRepository, campaign_sqlalchemy=campaign_sqlalchemy
+    # )
+    #
+    # get_campaign_service = providers.Singleton(
+    #     provides=GetCampaignUsecase, campaign_repository=campaign_repository
+    # )
+    #
+    # create_campaign_service = providers.Singleton(
+    #     provides=CreateCampaignUsecase, campaign_repository=campaign_repository
+    # )

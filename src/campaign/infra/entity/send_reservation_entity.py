@@ -9,7 +9,7 @@ from sqlalchemy import (
     text,
 )
 
-from src.core.database import BaseModel as Base
+from src.core.database import Base as Base
 
 
 class SendReservationEntity(Base):

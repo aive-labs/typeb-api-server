@@ -1,11 +1,12 @@
-from auth.routes.dto.response.token_response import TokenResponse
-from auth.service.token_service import TokenService
-from core.exceptions import AuthError, CredentialError, NotFoundError
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from users.service.port.base_user_repository import BaseUserRepository
+
+from src.auth.routes.dto.response.token_response import TokenResponse
+from src.auth.service.token_service import TokenService
+from src.core.exceptions import AuthError, CredentialError, NotFoundError
+from src.users.service.port.base_user_repository import BaseUserRepository
 
 reuseable_oauth = OAuth2PasswordBearer(tokenUrl="/token", scheme_name="JWT")
 
@@ -18,7 +19,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 class AuthService:
 
     def __init__(
-        self, token_service: TokenService, user_repository: BaseUserRepository
+            self, token_service: TokenService, user_repository: BaseUserRepository
     ):
         self.token_service = token_service
         self.user_repository = user_repository

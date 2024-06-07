@@ -1,22 +1,23 @@
-from auth.routes.auth_router import auth_router
-from core.container import Container
+import logging
+
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
-from users.routes.user_router import user_router
+
+from src.auth.routes.auth_router import auth_router
+from src.core.container import Container
+from src.users.routes.user_router import user_router
 
 
 # FastAPI 앱 초기화
 def create_app():
-    container = Container()
+    logging.basicConfig(level=logging.DEBUG)  # DEBUG 레벨로 로깅 설정
     app = FastAPI()
-    # app.container = container
-    app.container = container  # type: ignore
-
+    app.container = Container()
     return app
 
 
 app = create_app()
-app.include_router(user_router, prefix="/users")
+app.include_router(router=user_router, prefix="/users")
 app.include_router(router=auth_router, prefix="/auth")
 
 origins = ["*"]

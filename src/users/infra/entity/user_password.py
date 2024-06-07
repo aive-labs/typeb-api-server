@@ -1,14 +1,15 @@
 from datetime import datetime
 
-from core.database import BaseModel as Base
 from sqlalchemy import (
     Column,
     DateTime,
     String,
 )
 
+from src.core.database import Base
 
-class UserPassword(Base):
+
+class UserPasswordEntity(Base):
     __tablename__ = "user_passwords"
 
     login_id = Column(String(20), primary_key=True, index=True)
