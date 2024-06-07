@@ -57,6 +57,7 @@ jobs:
 
       - name: Copy files to Bastion Host
         run: |
+          mkdir /home/ubuntu/typeb-api
           scp -o StrictHostKeyChecking=no -i /tmp/pem.key -r ./* ubuntu@${{ secrets.BASTION_HOST }}:/home/ubuntu/typeb-api
 
       - name: Copy files from Bastion Host to EC2
@@ -67,7 +68,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i /tmp/pem.key ubuntu@${{ secrets.BASTION_HOST }} 'rm -rf /home/ubuntu/typeb-api'
 
-      - name: Deploy Container on EC2 
+      - name: Deploy Container on EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
