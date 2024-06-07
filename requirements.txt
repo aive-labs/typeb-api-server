@@ -16,7 +16,6 @@ backcall==0.2.0
 backports.functools-lru-cache==1.6.6
 bcrypt==4.0.1
 beautifulsoup4==4.12.2
-black==23.9.1
 blinker==1.6.3
 blosc2==2.2.9
 bokeh==3.3.0
@@ -217,3 +216,4 @@ dependency-injector
 
 # pre-commit
 pre-commit
+black

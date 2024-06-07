@@ -14,4 +14,3 @@ repos:
     rev: 22.3.0  # Use the latest stable version or specify a version
     hooks:
       - id: black
-        args: [ "." ]
