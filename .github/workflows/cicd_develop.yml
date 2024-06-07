@@ -55,11 +55,15 @@ jobs:
 
       - name: Copy files to Bastion Host
         run: |
-          scp -o StrictHostKeyChecking=no -r ./* ubunutu@${{ secrets.BASTION_HOST }}:/home/ubuntu/typeb-api
+          # GitHub Secrets에 저장된 SSH_PRIVATE_KEY 값을 파일로 저장
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/pem.key
+          # 파일 권한 설정
+          chmod 600 /tmp/pem.key
+          scp -o StrictHostKeyChecking=no -i /tmp/pem.key -r ./* ubunutu@${{ secrets.BASTION_HOST }}:/home/ubuntu/typeb-api
 
       - name: Copy files from Bastion Host to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ubunutu@${{ secrets.BASTION_HOST }} 'scp -o StrictHostKeyChecking=no -r /home/ubuntu/typeb-api/* ec2-user@private-ec2-instance:/home/ubuntu/typeb-api/'
+          ssh -o StrictHostKeyChecking=no -i /tmp/pem.key ubunutu@${{ secrets.BASTION_HOST }} 'scp -o StrictHostKeyChecking=no -r /home/ubuntu/typeb-api/* ubunutu@${{ secrets.PRIVATE_EC2_INSTANCE }}:/home/ubuntu/typeb-api/'
 
       - name: Delete files from Bastion Host
         run: |
