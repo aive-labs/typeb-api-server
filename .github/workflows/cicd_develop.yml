@@ -67,14 +67,17 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i /tmp/pem.key ubuntu@${{ secrets.BASTION_HOST }} 'rm -rf /home/ubuntu/typeb-api'
 
-      - name: Deploy on EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no -i /tmp/pem.key -L 2222:${{ secrets.DEV_API_SERVER }}:22 ubuntu@${{ secrets.BASTION_HOST }} '
-            ssh -o StrictHostKeyChecking=no -i ~/.ssh/aice-backend.pem -p 2222 ubuntu@localhost "
+      - name: Deploy Container on EC2 
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.BASTION_HOST }}
+          username: ubuntu
+          script: |
+            ssh -i ~/.ssh/aice-backend.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.DEV_API_SERVER }} '
               cd /home/ubuntu/typeb-api && \
               docker build -t aice-app-image . && \
               docker stop aice-container || true && \
               docker rm aice-container || true && \
               docker run -d --name aice-container -p 8000:8000 aice-app-image
-            "
-          '
+            '
