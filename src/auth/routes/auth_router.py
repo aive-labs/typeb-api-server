@@ -17,8 +17,8 @@ auth_router = APIRouter(
 @auth_router.post("/login")
 @inject  # UserService 주입
 def sign_up(
-        form_data: OAuth2PasswordRequestForm = Depends(),
-        auth_service: AuthService = Depends(dependency=Provide[Container.auth_service]),
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    auth_service: AuthService = Depends(dependency=Provide[Container.auth_service]),
 ) -> TokenResponse:
     login_id = form_data.username
     password = form_data.password
@@ -30,8 +30,8 @@ def sign_up(
 @auth_router.post("/token")
 @inject  # TokenService 주입
 def get_access_token(
-        refresh_token: str,
-        auth_service: AuthService = Depends(Provide[Container.auth_service]),
+    refresh_token: str,
+    auth_service: AuthService = Depends(Provide[Container.auth_service]),
 ) -> TokenResponse:
     # user: get_me
     auth_service.get_new_token(refresh_token=refresh_token)
@@ -44,13 +44,13 @@ def get_access_token(
 @auth_router.get("/oauth/cafe24")
 @inject
 def get_cafe24_authentication_url(
-        mall_id: str,
-        cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
-        user=Depends(
-            get_permission_checker(
-                required_permissions=["gnb_permissions:strategy_manager:read"]
-            )
-        ),
+    mall_id: str,
+    cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
+    user=Depends(
+        get_permission_checker(
+            required_permissions=["gnb_permissions:strategy_manager:read"]
+        )
+    ),
 ) -> str:
     authentication_url = cafe24_service.get_oauth_authentication_url(mall_id, user)
     return authentication_url
@@ -59,12 +59,12 @@ def get_cafe24_authentication_url(
 @auth_router.post("/oauth/cafe24/token", status_code=status.HTTP_201_CREATED)
 @inject
 def get_cafe24_access_token(
-        cafe_authentication_request: OauthAuthenticationRequest,
-        cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
-        user=Depends(
-            get_permission_checker(
-                required_permissions=["gnb_permissions:strategy_manager:read"]
-            )
-        ),
+    cafe_authentication_request: OauthAuthenticationRequest,
+    cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
+    user=Depends(
+        get_permission_checker(
+            required_permissions=["gnb_permissions:strategy_manager:read"]
+        )
+    ),
 ) -> None:
     cafe24_service.get_oauth_access_token(cafe_authentication_request)

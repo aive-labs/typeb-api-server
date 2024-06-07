@@ -16,7 +16,6 @@ from src.utils.date_utils import localtime_converter, localtime_from_str
 
 
 class AddContentsService(AddContentsUseCase):
-
     def __init__(
         self, content_repository: ContentsRepository, user_repository: UserRepository
     ):
@@ -29,7 +28,6 @@ class AddContentsService(AddContentsUseCase):
         user: User,
         files: UploadFile | None = None,
     ):
-
         # 콘텐츠 uuid 생성
         uuid = "1234"
 

@@ -9,7 +9,6 @@ from src.contents.infra.entity.style_master_entity import StyleMaster
 
 
 class CreativesSqlAlchemy:
-
     def __init__(self, db: Callable[..., AbstractContextManager[Session]]):
         """_summary_
 

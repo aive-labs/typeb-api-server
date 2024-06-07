@@ -3,7 +3,6 @@ from src.contents.service.port.base_creatives_repository import BaseCreativesRep
 
 
 class CreativesRepository(BaseCreativesRepository):
-
     def __init__(self, creative_sqlalchemy: CreativesSqlAlchemy):
         self.creative_sqlalchemy = creative_sqlalchemy
 

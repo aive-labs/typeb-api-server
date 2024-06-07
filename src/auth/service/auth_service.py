@@ -17,15 +17,13 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 class AuthService:
-
     def __init__(
-            self, token_service: TokenService, user_repository: BaseUserRepository
+        self, token_service: TokenService, user_repository: BaseUserRepository
     ):
         self.token_service = token_service
         self.user_repository = user_repository
 
     def login(self, login_id: str, password: str) -> TokenResponse:
-
         # 사용자 존재 유무 확인
         user = self.user_repository.get_user_by_email(login_id)
         if user is None:

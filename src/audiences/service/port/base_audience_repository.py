@@ -9,7 +9,6 @@ from src.users.domain.user import User
 
 
 class BaseAudienceRepository(ABC):
-
     @abstractmethod
     def get_audiences(
         self, user: User, is_exclude: bool | None = None

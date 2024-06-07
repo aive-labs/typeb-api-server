@@ -13,11 +13,10 @@ from src.users.service.port.base_user_repository import BaseUserRepository
 
 
 class Cafe24Service(BaseOauthService):
-
     def __init__(
-            self,
-            user_repository: BaseUserRepository,
-            cafe24_repository: BaseOauthRepository,
+        self,
+        user_repository: BaseUserRepository,
+        cafe24_repository: BaseOauthRepository,
     ):
         self.user_repository = user_repository
         self.cafe24_repository = cafe24_repository
@@ -72,7 +71,7 @@ class Cafe24Service(BaseOauthService):
         self.cafe24_repository.save_tokens(cafe24_tokens)
 
     def _generate_authentication_url(
-            self, mall_id: str, client_id: str, state: str, redirect_uri: str, scope: str
+        self, mall_id: str, client_id: str, state: str, redirect_uri: str, scope: str
     ) -> str:
         return (
             f"https://{mall_id}.cafe24api.com/api/v2/oauth/authorize?"

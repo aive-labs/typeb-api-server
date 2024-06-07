@@ -34,7 +34,6 @@ def execute_target_audience_summary(
     audience_id,
     db=Provide[Container.db],
 ):
-
     today = datetime.now()
     yesterday = today - timedelta(days=1)
     three_months_ago = yesterday - timedelta(days=3 * 30)

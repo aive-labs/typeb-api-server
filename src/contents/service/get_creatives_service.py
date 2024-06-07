@@ -7,7 +7,6 @@ from src.users.service.port.base_user_repository import BaseUserRepository
 
 
 class GetCreativesService(GetCreativesUseCase):
-
     def __init__(
         self,
         creatives_repository: BaseCreativesRepository,

@@ -4,7 +4,6 @@ from src.users.domain.user import User
 
 
 class CampaignRepository(BaseCampaignRepository):
-
     def __init__(self, campaign_sqlalchemy: CampaignSqlAlchemy):
         self.campagin_sqlalchemy = campaign_sqlalchemy
 

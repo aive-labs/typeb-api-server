@@ -74,12 +74,18 @@ class CampaignEntity(Base):
 
     # 1:n relationship
     remind_list = relationship(
-        "CampaignRemindEntity", backref="campaigns", lazy=True, cascade="all, delete-orphan"
+        "CampaignRemindEntity",
+        backref="campaigns",
+        lazy=True,
+        cascade="all, delete-orphan",
     )
 
     # 1:n relationship
     camp_sets = relationship(
-        "CampaignSetsEntity", backref="campaigns", lazy=True, cascade="all, delete-orphan"
+        "CampaignSetsEntity",
+        backref="campaigns",
+        lazy=True,
+        cascade="all, delete-orphan",
     )
 
     def as_dict(self):

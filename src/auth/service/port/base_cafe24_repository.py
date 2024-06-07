@@ -5,7 +5,6 @@ from src.auth.infra.dto.cafe24_token import Cafe24TokenData
 
 
 class BaseOauthRepository(ABC):
-
     @abstractmethod
     def get_state_token(self, state_token: str) -> Cafe24StateToken:
         pass

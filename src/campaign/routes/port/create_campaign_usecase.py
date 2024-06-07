@@ -5,7 +5,6 @@ from src.users.domain.user import User
 
 
 class CreateCampaignUsecase(ABC):
-
     @abstractmethod
     def create_campaign(self, campaign_create: CampaignCreate, user: User):
         pass

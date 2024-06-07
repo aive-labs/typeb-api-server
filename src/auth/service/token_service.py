@@ -14,17 +14,16 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 class TokenService:
-
     def __init__(self):
         pass
 
     def create_token(self, user: User):
         payload = {
-            'email': user.email,
-            'department': user.department_name,
-            'language': user.language,
-            'permissions': user.permissions,
-            'role': user.role_id,
+            "email": user.email,
+            "department": user.department_name,
+            "language": user.language,
+            "permissions": user.permissions,
+            "role": user.role_id,
         }
 
         access_token = self.create_access_token(payload)
@@ -33,18 +32,23 @@ class TokenService:
         return TokenResponse(
             access_token=access_token,
             refresh_token=refresh_token,
-            token_type='Bearer',
-            expires_in=ACCESS_TOKEN_EXPIRE_MINUTES)
+            token_type="Bearer",
+            expires_in=ACCESS_TOKEN_EXPIRE_MINUTES,
+        )
 
     def create_access_token(self, data: dict):
         to_encode = data.copy()
-        expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = datetime.now(timezone.utc) + timedelta(
+            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+        )
         to_encode.update({"exp": expire})
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
         return encoded_jwt
 
     def create_refresh_token(self, email: str):
-        expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES * 2)
-        to_encode = {'email': email, "exp": expire}
+        expire = datetime.now(timezone.utc) + timedelta(
+            minutes=ACCESS_TOKEN_EXPIRE_MINUTES * 2
+        )
+        to_encode = {"email": email, "exp": expire}
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
         return encoded_jwt

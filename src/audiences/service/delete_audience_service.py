@@ -9,7 +9,6 @@ from src.campaign.enums.campagin_status import CampaignStatus
 
 
 class DeleteAudienceService(DeleteAudienceUsecase):
-
     def __init__(self, audience_repository: BaseAudienceRepository):
         self.audience_repository = audience_repository
 

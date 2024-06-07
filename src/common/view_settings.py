@@ -1,10 +1,8 @@
-
 from app.core import utils
 from pydantic import BaseModel
 
 
 class FilterColumns(BaseModel):
-
     campaign: dict = {
         "audience_type": ["audience_type_code", "audience_type_name"],
         "rep_list": ["main_product_id", "main_product_name"],
@@ -59,7 +57,6 @@ class FilterProcessing:
         filter_dict = self.get_filter_attribute()
         res = {}
         for key, vals in filter_dict.items():
-
             try:
                 df_filter = df[vals]
                 res[key] = utils.id_name_converter(df_filter, vals)

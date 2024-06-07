@@ -18,8 +18,12 @@ class CampaignSetsEntity(Base):
     set_sort_num = Column(Integer, nullable=False)
     is_group_added = Column(Boolean, nullable=False)
     campaign_group_id = Column(String, nullable=False)
-    campaign_id = Column(String, ForeignKey('aivelabs_sv.campaigns.campaign_id'), index=True)
-    campaign_theme_id = Column(Integer, ForeignKey('aivelabs_sv.campaign_themes.campaign_theme_id'))
+    campaign_id = Column(
+        String, ForeignKey("aivelabs_sv.campaigns.campaign_id"), index=True
+    )
+    campaign_theme_id = Column(
+        Integer, ForeignKey("aivelabs_sv.campaign_themes.campaign_theme_id")
+    )
     campaign_theme_name = Column(String, nullable=True)
     recsys_model_id = Column(Integer, nullable=True)
     audience_id = Column(String, nullable=False)
@@ -39,8 +43,14 @@ class CampaignSetsEntity(Base):
     updated_by = Column(String, nullable=False)
 
     # 1:n relationship
-    set_group_list = relationship('CampaignSetGroupsEntity', backref='campaign_sets', lazy=True,
-                                  cascade="all, delete-orphan")
+    set_group_list = relationship(
+        "CampaignSetGroupsEntity",
+        backref="campaign_sets",
+        lazy=True,
+        cascade="all, delete-orphan",
+    )
 
     def as_dict(self):
-        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+        return {
+            column.name: getattr(self, column.name) for column in self.__table__.columns
+        }

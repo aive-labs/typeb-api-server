@@ -13,7 +13,6 @@ from src.users.domain.user import User
 
 
 class CampaignSqlAlchemy:
-
     def __init__(self, db: Callable[..., AbstractContextManager[Session]]):
         """_summary_
 
@@ -37,7 +36,6 @@ class CampaignSqlAlchemy:
         self, start_date: str, end_date: str, user: User
     ) -> list[Campaign]:
         with self.db() as db:
-
             conditions = object_access_condition(db=db, user=user, model=CampaignEntity)
 
             campaign_entities = (

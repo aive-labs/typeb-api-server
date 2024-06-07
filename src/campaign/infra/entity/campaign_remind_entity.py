@@ -14,7 +14,9 @@ class CampaignRemindEntity(Base):
     __tablename__ = "campaign_remind"
 
     remind_seq = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    campaign_id = Column(String, ForeignKey('aivelabs_sv.campaigns.campaign_id'), index=True)
+    campaign_id = Column(
+        String, ForeignKey("aivelabs_sv.campaigns.campaign_id"), index=True
+    )
     send_type_code = Column(String, nullable=False)
     remind_media = Column(String, nullable=False)
     remind_step = Column(Integer, nullable=False)

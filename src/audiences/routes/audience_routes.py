@@ -30,7 +30,6 @@ def get_audiences(
         )
     ),
 ):
-
     # get_all_audience에서 리턴 타입이 dictionary 형태임
     return get_audience_service.get_all_audiences(user, is_exclude)
 

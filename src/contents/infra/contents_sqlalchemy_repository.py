@@ -7,7 +7,6 @@ from src.contents.infra.entity.contents_entity import ContentsEntity
 
 
 class ContentsSqlAlchemy:
-
     def __init__(self, db: Callable[..., AbstractContextManager[Session]]):
         """_summary_
 

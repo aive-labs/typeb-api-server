@@ -5,7 +5,6 @@ from src.users.domain.user import User
 
 
 class CreateStrategyUsecase(ABC):
-
     @abstractmethod
     def create_strategy_object(
         self, create_strategy_service: StrategyCreate, user: User

@@ -7,14 +7,15 @@ from src.users.service.port.base_user_repository import BaseUserRepository
 
 
 class UserRepository(BaseUserRepository):
-
     def __init__(self, user_sqlalchemy: UserSqlAlchemy):
         self.user_sqlalchemy = user_sqlalchemy
 
     def register_user(self, user_create: UserCreate) -> User:
         user: User = user_create.to_user()
 
-        return self.user_sqlalchemy.register_user(user.to_entity(), user.to_password_entity())
+        return self.user_sqlalchemy.register_user(
+            user.to_entity(), user.to_password_entity()
+        )
 
     def update_user(self, user_id: int, user):
         raise NotImplementedError

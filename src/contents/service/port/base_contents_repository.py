@@ -4,7 +4,6 @@ from src.contents.domain.contents import Contents
 
 
 class BaseContentsRepository(ABC):
-
     @abstractmethod
     def find_by_id(self, id: int):
         pass

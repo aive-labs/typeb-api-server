@@ -16,12 +16,10 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 class UserService(BaseUserService):
-
     def __init__(self, user_repository: BaseUserRepository):
         self.user_repository = user_repository
 
     def register_user(self, user_create: UserCreate) -> UserResponse:
-
         # 1. 가입 아이디로 사용자 존재 유무 확인
         existing_user = self.user_repository.is_existing_user(user_create.email)
 

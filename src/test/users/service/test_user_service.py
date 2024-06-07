@@ -3,7 +3,7 @@ import os
 import pytest
 from fastapi import HTTPException
 
-print(f'ff {os.getcwd()}')
+print(f"ff {os.getcwd()}")
 
 
 from users.domain.user import User
@@ -19,7 +19,6 @@ from users.service.user_service import UserService
 
 
 class FakeUserRepository(BaseUserRepository):
-
     def __init__(self):
         self.users: list[User] = []
         self.auto_increment_id = 2
@@ -80,7 +79,6 @@ class FakeUserRepository(BaseUserRepository):
 
 
 class FakeUserService(BaseUserService):
-
     def __init__(self, user_repository: BaseUserRepository):
         self.user_service = UserService(user_repository=user_repository)
 
@@ -108,7 +106,6 @@ def test_user_service():
 
 @pytest.mark.describe("사용자 등록을 한다.")
 def test_signin_user(test_user_service: FakeUserService):
-
     user_create: UserCreate = UserCreate(
         username="테스트",
         password="테스트",
@@ -169,7 +166,6 @@ def test_get_user_by_id(test_user_service: FakeUserService):
 
 @pytest.mark.describe("user_id를 가진 사용자가 없으면 예외를 던진다.")
 def test_not_found_user_by_id(test_user_service: FakeUserService):
-
     with pytest.raises(HTTPException) as exc_info:
         test_user_service.get_user_by_id(99999)
 

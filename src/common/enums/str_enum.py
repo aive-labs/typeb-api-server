@@ -2,7 +2,6 @@ from enum import Enum
 
 
 class StrEnum(str, Enum):
-
     @classmethod
     def get_eums(cls):
         return [member.__dict__ for member in cls]

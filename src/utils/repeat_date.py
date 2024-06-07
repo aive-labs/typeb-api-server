@@ -21,11 +21,11 @@ def get_last_day_of_month(date: datetime) -> int:
 
 
 def calculate_dates(
-        start_date: datetime,
-        period,
-        week_days: str | None = None,
-        datetosend: Literal["end_of_month"] | int | None = None,
-        timezone="UTC",
+    start_date: datetime,
+    period,
+    week_days: str | None = None,
+    datetosend: Literal["end_of_month"] | int | None = None,
+    timezone="UTC",
 ):
     # end_of_month -> 매월, 분기, 반기에만 말일이라는 필드가 존재
 
@@ -83,7 +83,7 @@ def calculate_dates(
             start = start_date.replace(day=datetosend)
         else:
             start = (
-                    start_date + relativedelta(months=3 - ((start_date.month - 1) % 3))
+                start_date + relativedelta(months=3 - ((start_date.month - 1) % 3))
             ).replace(day=datetosend)
 
         end = start
@@ -91,7 +91,7 @@ def calculate_dates(
 
     elif period == RepeatType.HALFYEAR.value:
         if start_date.month < 7 or (
-                start_date.month == 7 and start_date.day < datetosend
+            start_date.month == 7 and start_date.day < datetosend
         ):
             start = (
                 datetime(start_date.year, 1, datetosend, tzinfo=tz)

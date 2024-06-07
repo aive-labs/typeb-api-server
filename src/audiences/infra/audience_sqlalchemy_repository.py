@@ -51,7 +51,6 @@ from src.users.infra.entity.user_entity import UserEntity
 
 
 class AudienceSqlAlchemy:
-
     def __init__(self, db: Callable[..., AbstractContextManager[Session]]):
         """_summary_
 
@@ -68,7 +67,6 @@ class AudienceSqlAlchemy:
         self, user: User, is_exclude: bool | None = None
     ) -> list[AudienceInfo]:
         with self.db() as db:
-
             user_entity = (
                 db.query(UserEntity).filter(UserEntity.id == user.user_id).first()
             )
@@ -491,7 +489,6 @@ class AudienceSqlAlchemy:
 
             # 일반 이용자
             if user.sys_id == "HO":
-
                 if user.parent_dept_cd:
                     ##본부 하위 팀 부서 리소스
                     parent_teams_query = db.query(UserEntity).filter(

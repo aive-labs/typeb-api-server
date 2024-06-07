@@ -10,7 +10,6 @@ from src.users.domain.user import User
 
 
 class StrategyRepository(BaseStrategyRepository):
-
     def __init__(self, strategy_sqlalchemy: StrategySqlAlchemy):
         self.strategy_sqlalchemy_respository = strategy_sqlalchemy
 
@@ -50,7 +49,6 @@ class StrategyRepository(BaseStrategyRepository):
     def create_strategy(
         self, strategy: Strategy, campaign_themes: list[CampaignTheme], user: User
     ):
-
         self.strategy_sqlalchemy_respository.create_strategy(
             strategy, campaign_themes, user
         )

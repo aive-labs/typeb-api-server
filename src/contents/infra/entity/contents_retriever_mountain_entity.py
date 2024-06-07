@@ -1,4 +1,3 @@
-
 from core.database import BaseModel as Base
 from sqlalchemy import (
     Column,

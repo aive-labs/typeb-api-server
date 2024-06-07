@@ -6,7 +6,6 @@ from src.utils.data_converter import DataConverter
 
 
 class GetAudienceService(GetAudienceUsecase):
-
     def __init__(self, audience_repository: BaseAudienceRepository):
         self.audience_repository = audience_repository
 
@@ -26,7 +25,6 @@ class GetAudienceService(GetAudienceUsecase):
         return res
 
     def get_audience_details(self, audience_id: str):
-
         res = {}
 
         audience_filtered = self.audience_repository.get_audience_stats(audience_id)

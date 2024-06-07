@@ -18,8 +18,8 @@ user_router = APIRouter(
 @user_router.post("/signup")
 @inject  # UserService 주입
 def sign_up(
-        user_create: UserCreate,
-        user_service: BaseUserService = Depends(dependency=Provide[Container.user_service]),
+    user_create: UserCreate,
+    user_service: BaseUserService = Depends(dependency=Provide[Container.user_service]),
 ) -> UserResponse:
     logger.debug(f"user_service: {user_service}")
     saved_user = user_service.register_user(user_create)

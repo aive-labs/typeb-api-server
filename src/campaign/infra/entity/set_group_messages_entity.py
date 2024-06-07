@@ -15,8 +15,12 @@ from src.core.database import Base as Base
 class SetGroupMessagesEntity(Base):
     __tablename__ = "set_group_messages"
 
-    set_group_msg_seq = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    set_group_seq = Column(Integer, ForeignKey('aivelabs_sv.campaign_set_groups.set_group_seq'), index=True)
+    set_group_msg_seq = Column(
+        Integer, primary_key=True, index=True, autoincrement=True
+    )
+    set_group_seq = Column(
+        Integer, ForeignKey("aivelabs_sv.campaign_set_groups.set_group_seq"), index=True
+    )
     msg_send_type = Column(String, nullable=False)
     remind_step = Column(Integer, nullable=True)
     remind_seq = Column(Integer, nullable=True)
@@ -41,7 +45,15 @@ class SetGroupMessagesEntity(Base):
     updated_by = Column(String, nullable=False)
 
     # 1:n relationship
-    kakao_button_links = relationship('KakaoLinkButtonsEntity', backref='set_group_messages', lazy=True,
-                                      cascade="all, delete-orphan")
-    msg_resources = relationship('MessageResourceEntity', backref='set_group_messages', lazy=True,
-                                 cascade="all, delete-orphan")
+    kakao_button_links = relationship(
+        "KakaoLinkButtonsEntity",
+        backref="set_group_messages",
+        lazy=True,
+        cascade="all, delete-orphan",
+    )
+    msg_resources = relationship(
+        "MessageResourceEntity",
+        backref="set_group_messages",
+        lazy=True,
+        cascade="all, delete-orphan",
+    )

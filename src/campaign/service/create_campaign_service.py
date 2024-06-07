@@ -21,7 +21,6 @@ from src.utils.repeat_date import calculate_dates
 
 
 class CreateCampaignService(CreateCampaignUsecase):
-
     def __init__(
         self,
         campaign_repository: BaseCampaignRepository,
@@ -75,7 +74,6 @@ class CreateCampaignService(CreateCampaignUsecase):
             repeat_type = campaign_create.repeat_type.value
 
         if campaign_create.send_type_code == SendtypeEnum.RECURRING.value:
-
             created_date = datetime.now(selected_timezone)
             start_date, end_date = calculate_dates(
                 start_date=created_date,
@@ -105,9 +103,7 @@ class CreateCampaignService(CreateCampaignUsecase):
             remind_dict_list = self._convert_to_campaign_remind(
                 user.user_id, send_date, end_date, remind_list, send_type_code
             )
-            [
-                CampaignRemind(**remind_dict) for remind_dict in remind_dict_list
-            ]
+            [CampaignRemind(**remind_dict) for remind_dict in remind_dict_list]
 
         Campaign(
             # from reqeust model

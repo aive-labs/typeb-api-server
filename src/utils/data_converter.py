@@ -7,7 +7,6 @@ from src.audiences.infra.dto.audience_info import AudienceInfo
 
 
 class DataConverter:
-
     @staticmethod
     def pydantic_to_df(audiences: list[AudienceInfo]) -> pd.DataFrame:
         """

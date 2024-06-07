@@ -10,7 +10,6 @@ from src.users.infra.entity.user_whitelist import UserWhitelist
 
 
 class UserSqlAlchemy:
-
     def __init__(self, db: Callable[..., AbstractContextManager[Session]]):
         """_summary_
 
@@ -23,7 +22,9 @@ class UserSqlAlchemy:
         """
         self.db = db
 
-    def register_user(self, user_entity: UserEntity, user_password_entity: UserPasswordEntity):
+    def register_user(
+        self, user_entity: UserEntity, user_password_entity: UserPasswordEntity
+    ):
         with self.db() as db:
             db.add(user_entity)
             db.add(user_password_entity)
@@ -34,17 +35,27 @@ class UserSqlAlchemy:
 
     def find_user_by_email(self, email: str):
         with self.db() as db:
-            user = db.query(UserEntity, UserPasswordEntity.login_pw) \
-                .join(UserPasswordEntity, UserEntity.login_id == UserPasswordEntity.login_id) \
-                .filter(UserEntity.email == email) \
+            user = (
+                db.query(UserEntity, UserPasswordEntity.login_pw)
+                .join(
+                    UserPasswordEntity,
+                    UserEntity.login_id == UserPasswordEntity.login_id,
+                )
+                .filter(UserEntity.email == email)
                 .first()
+            )
         return user
 
     def get_user_signin(self, login_id: str):
         with self.db() as db:
             return (
-                db.query(UserEntity.user_id, UserEntity.login_id, UserPasswordEntity.login_pw)
-                .join(UserPasswordEntity, UserEntity.login_id == UserPasswordEntity.login_id)
+                db.query(
+                    UserEntity.user_id, UserEntity.login_id, UserPasswordEntity.login_pw
+                )
+                .join(
+                    UserPasswordEntity,
+                    UserEntity.login_id == UserPasswordEntity.login_id,
+                )
                 .filter(UserEntity.login_id == login_id)
                 .first()
             )
@@ -89,7 +100,6 @@ class UserSqlAlchemy:
                 db.commit()
 
     def get_whitelist_access(self, user_id: int, whitelist_field: str):
-
         try:
             selected_col = getattr(UserWhitelist, whitelist_field)
         except AttributeError:

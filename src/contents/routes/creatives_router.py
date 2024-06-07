@@ -32,7 +32,6 @@ def get_img_creatives_list(
         Provide[Container.get_creatives_service]
     ),
 ) -> PaginationResponse[CreativeBase]:
-
     pagination_result = get_creatives_service.get_creatives(
         based_on,
         sort_by,

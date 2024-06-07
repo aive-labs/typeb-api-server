@@ -8,14 +8,12 @@ from src.users.domain.user import User
 
 
 class GetStrategyService(GetStrategyUsecase):
-
     def __init__(self, strategy_repository: StrategyRepository):
         self.strategy_repository = strategy_repository
 
     def get_strategies(
         self, start_date: str, end_date: str, user: User
     ) -> list[StrategyResponse]:
-
         # TODO: 생성 부서 오브젝트 필터링 추가 작업 필요
 
         strategies = self.strategy_repository.get_all_strategies(

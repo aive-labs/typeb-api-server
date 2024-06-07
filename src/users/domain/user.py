@@ -43,7 +43,7 @@ class User(BaseModel):
 
     def to_password_entity(self) -> UserPasswordEntity:
         hashed_password = pwd_context.hash(self.password)
-        print('to entity')
+        print("to entity")
         print(hashed_password)
         return UserPasswordEntity(
             login_id=self.email,

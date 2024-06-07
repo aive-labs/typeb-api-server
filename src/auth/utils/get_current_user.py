@@ -14,8 +14,8 @@ ALGORITHM = "HS256"
 
 @inject
 def get_current_user(
-        token: str = Depends(reuseable_oauth),
-        user_repository: UserRepository = Depends(Provide[Container.user_repository]),
+    token: str = Depends(reuseable_oauth),
+    user_repository: UserRepository = Depends(Provide[Container.user_repository]),
 ):
     print(user_repository)
     try:

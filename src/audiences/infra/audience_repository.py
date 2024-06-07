@@ -12,7 +12,6 @@ from src.utils.data_converter import DataConverter
 
 
 class AudienceRepository(BaseAudienceRepository):
-
     def __init__(self, audience_sqlalchemy: AudienceSqlAlchemy):
         self.audience_sqlalchemy = audience_sqlalchemy
 

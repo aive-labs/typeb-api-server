@@ -4,7 +4,6 @@ from src.campaign.domain.campaign import Campaign
 
 
 class BaseCampaignRepository(ABC):
-
     @abstractmethod
     def create_campaign():
         pass

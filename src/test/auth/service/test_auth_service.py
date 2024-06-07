@@ -1,4 +1,3 @@
-
 import pytest
 from auth.service.auth_service import AuthService
 from auth.service.token_service import TokenService
@@ -9,7 +8,6 @@ from users.service.port.base_user_repository import BaseUserRepository
 
 
 class FakeUserRepository(BaseUserRepository):
-
     def __init__(self):
         self.users: list[User] = []
         self.auto_increment_id = 2
@@ -67,7 +65,6 @@ class FakeUserRepository(BaseUserRepository):
 
     def get_all_users(self) -> list[User]:
         return self.users
-
 
 
 @pytest.fixture

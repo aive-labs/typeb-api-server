@@ -9,7 +9,6 @@ from src.users.domain.user import User
 
 
 class BaseStrategyRepository(ABC):
-
     @abstractmethod
     def get_all_strategies(self, start_date, end_date, user: User) -> list[Strategy]:
         pass

@@ -5,7 +5,6 @@ from src.users.domain.user import User
 
 
 class GetCampaignService(GetCampaignUsecase):
-
     def __init__(self, campaign_repository: BaseCampaignRepository):
         self.campaign_repository = campaign_repository
 

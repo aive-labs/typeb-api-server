@@ -4,7 +4,6 @@ from src.contents.service.port.base_contents_repository import BaseContentsRepos
 
 
 class ContentsRepository(BaseContentsRepository):
-
     def __init__(self, content_sqlalchemy: ContentsSqlAlchemy):
         self.content_sqlalchemy: ContentsSqlAlchemy
 

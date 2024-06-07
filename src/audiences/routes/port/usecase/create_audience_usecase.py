@@ -7,7 +7,6 @@ from src.users.domain.user import User
 
 
 class CreateAudienceUsecase(ABC):
-
     @abstractmethod
     def create_audience(
         self,

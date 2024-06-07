@@ -5,7 +5,6 @@ from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 
 
 class Cafe24Repository(BaseOauthRepository):
-
     def __init__(self, cafe24_sqlalchemy: Cafe24SqlAlchemyRepository):
         self.cafe24_sqlalchemy = cafe24_sqlalchemy
 

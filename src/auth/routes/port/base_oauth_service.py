@@ -4,7 +4,6 @@ from src.auth.routes.dto.request.cafe24_token_request import OauthAuthentication
 
 
 class BaseOauthService(ABC):
-
     @abstractmethod
     def get_oauth_authentication_url(self, mall_id, user) -> str:
         pass

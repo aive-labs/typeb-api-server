@@ -19,7 +19,9 @@ class CampaignSetGroupsEntity(Base):
     set_sort_num = Column(Integer, nullable=False)
     contents_id = Column(Integer, nullable=True)
     contents_name = Column(String, nullable=True)
-    set_seq = Column(Integer, ForeignKey('aivelabs_sv.campaign_sets.set_seq'), index=True)
+    set_seq = Column(
+        Integer, ForeignKey("aivelabs_sv.campaign_sets.set_seq"), index=True
+    )
     campaign_id = Column(String, nullable=False)
     media = Column(String, nullable=True)
     msg_type = Column(String, nullable=True)
@@ -36,5 +38,9 @@ class CampaignSetGroupsEntity(Base):
     updated_by = Column(String, nullable=False)
 
     # 1:n relationship
-    group_msg = relationship('SetGroupMessagesEntity', backref='campaign_set_groups', lazy=True,
-                             cascade="all, delete-orphan")
+    group_msg = relationship(
+        "SetGroupMessagesEntity",
+        backref="campaign_set_groups",
+        lazy=True,
+        cascade="all, delete-orphan",
+    )

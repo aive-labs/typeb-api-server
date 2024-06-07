@@ -19,7 +19,6 @@ from src.utils.date_utils import localtime_converter
 
 
 class StrategySqlAlchemy:
-
     def __init__(self, db: Callable[..., AbstractContextManager[Session]]):
         """_summary_
 
@@ -36,7 +35,6 @@ class StrategySqlAlchemy:
         self, start_date, end_date, user: User
     ) -> list[StrategyEntity]:
         with self.db() as db:
-
             user_entity = (
                 db.query(UserEntity).filter(UserEntity.id == user.user_id).first()
             )
@@ -145,7 +143,6 @@ class StrategySqlAlchemy:
 
             # 일반 이용자
             if user.sys_id == "HO":
-
                 if user.parent_dept_cd:
                     ##본부 하위 팀 부서 리소스
                     parent_teams_query = db.query(UserEntity).filter(

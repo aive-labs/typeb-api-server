@@ -7,7 +7,6 @@ from src.users.domain.user import User
 
 
 class AddContentsUseCase(ABC):
-
     @abstractmethod
     def create_contents(self, contet_create: ContentsCreate, user: User, files: UploadFile | None = None):  # type: ignore
         pass

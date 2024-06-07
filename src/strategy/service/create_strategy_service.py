@@ -16,12 +16,10 @@ from src.users.domain.user import User
 
 
 class CreateStrategyService(CreateStrategyUsecase):
-
     def __init__(self, strategy_repository: StrategyRepository):
         self.strategy_repository = strategy_repository
 
     def create_strategy_object(self, strategy_create: StrategyCreate, user: User):
-
         # 1. 전략명 중복 확인
         strategy_name = strategy_create.strategy_name
         if self.strategy_repository.is_strategy_name_exists(strategy_name):
@@ -78,7 +76,6 @@ class CreateStrategyService(CreateStrategyUsecase):
         campaign_themes: list[CampaignTheme] = []
         recommend_model_ids: list[int] = []
         for _idx, theme in enumerate(strategy_create.campaign_themes):
-
             # 1. 테마모델 중복 점검
             self._check_duplicate_recommend_model(
                 recommend_model_id=theme.recsys_model_id,

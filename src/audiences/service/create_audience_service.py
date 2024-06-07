@@ -28,7 +28,6 @@ from src.users.domain.user import User
 
 
 class CreateAudienceService(CreateAudienceUsecase):
-
     def __init__(self, audience_repository: AudienceRepository):
         self.audience_repository = audience_repository
 
@@ -246,12 +245,10 @@ class CreateAudienceService(CreateAudienceUsecase):
         insert_to_audiences["audience_type_name"] = AudienceType.custom.description
         insert_to_audiences["create_type_code"] = ctype
         insert_to_audiences["audience_status_code"] = AudienceStatus.inactive.value
-        insert_to_audiences["audience_status_name"] = (
-            AudienceStatus.inactive.description
-        )
-        insert_to_audiences["user_exc_deletable"] = (
-            True  # 제외오디언스 파란색 표시 -True
-        )
+        insert_to_audiences[
+            "audience_status_name"
+        ] = AudienceStatus.inactive.description
+        insert_to_audiences["user_exc_deletable"] = True  # 제외오디언스 파란색 표시 -True
         insert_to_audiences["description"] = None
         insert_to_audiences["owned_by_dept"] = user.department_id
         insert_to_audiences["created_by"] = str(user.user_id)

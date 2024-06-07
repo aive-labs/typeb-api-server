@@ -3,7 +3,6 @@ from typing import Any
 
 
 class BaseCreativesRepository(ABC):
-
     @abstractmethod
     def find_by_id(self, id: int):
         pass

@@ -16,12 +16,10 @@ from src.users.service.port.base_user_repository import BaseUserRepository
 
 
 class AddCreativesService(AddCreativesUseCase):
-
     def __init__(self, user_repository: BaseUserRepository):
         self.user_repository = user_repository
 
     async def upload_image(self, asset_data: CreativeCreate, files: list[UploadFile]):
-
         prefix = "non_style_creative"
         if asset_data.image_asset_type == ImageAssetTypeEnum.STYLE_IMAGE.value:
             prefix = asset_data.style_cd
@@ -36,7 +34,6 @@ class AddCreativesService(AddCreativesUseCase):
 
         try:
             for file in files:
-
                 image_uri, image_path = await save_image_asset(file, prefix)
 
                 # TODO: get user
