@@ -57,20 +57,20 @@ jobs:
 
       - name: Copy files to Bastion Host
         run: |
-          scp -o StrictHostKeyChecking=no -i /tmp/pem.key -r ./* ubunutu@${{ secrets.BASTION_HOST }}:/home/ubuntu/typeb-api
+          scp -o StrictHostKeyChecking=no -i /tmp/pem.key -r ./* ubuntu@${{ secrets.BASTION_HOST }}:/home/ubuntu/typeb-api
 
       - name: Copy files from Bastion Host to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -i /tmp/pem.key ubunutu@${{ secrets.BASTION_HOST }} 'scp -o StrictHostKeyChecking=no -r /home/ubuntu/typeb-api/* ubunutu@${{ secrets.PRIVATE_EC2_INSTANCE }}:/home/ubuntu/typeb-api/'
+          ssh -o StrictHostKeyChecking=no -i /tmp/pem.key ubuntu@${{ secrets.BASTION_HOST }} 'scp -o StrictHostKeyChecking=no -r /home/ubuntu/typeb-api/* ubuntu@${{ secrets.PRIVATE_EC2_INSTANCE }}:/home/ubuntu/typeb-api/'
 
       - name: Delete files from Bastion Host
         run: |
-          ssh -o StrictHostKeyChecking=no ubunutu@${{ secrets.BASTION_HOST }} 'rm -rf /home/ubuntu/typeb-api/*'
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.BASTION_HOST }} 'rm -rf /home/ubuntu/typeb-api/*'
 
       - name: Deploy to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ubunutu@${{ secrets.BASTION_HOST }} '
-            ssh -o StrictHostKeyChecking=no ubunutu@${{ secrets.PRIVATE_EC2_INSTANCE }} "
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.BASTION_HOST }} '
+            ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.PRIVATE_EC2_INSTANCE }} "
               cd /home/ubuntu/typeb-api && \
               docker build -t aice-app . && \
               docker stop aice-app || true && \
