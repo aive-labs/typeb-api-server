@@ -10,7 +10,7 @@ on:
 
 jobs:
   lint_and_formatting:
-    runs-on: ubuntu-lastest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -41,7 +41,7 @@ jobs:
           mypy .
 
   build_and_deploy:
-    runs-on: ubuntu-lastest
+    runs-on: ubuntu-latest
     needs: lint_and_formatting
 
     steps:
