@@ -46,6 +46,13 @@ class Cafe24SqlAlchemyRepository:
                 mall_id=token.mall_id, state_token=token.state_token
             )
 
+    def get_state_token(self, state_token: str) -> Cafe24StateToken:
+        with self.db() as db:
+            entity = db.query(Cafe24TokenEntity).filter(Cafe24TokenEntity.state_token == state_token).first()
+            return Cafe24StateToken(
+                mall_id=entity.mall_id, state_token=entity.state_token
+            )
+
     def save_tokens(self, cafe24_tokens: Cafe24TokenData):
         with self.db() as db:
             entity = (

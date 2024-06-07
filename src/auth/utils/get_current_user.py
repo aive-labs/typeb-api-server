@@ -7,17 +7,17 @@ from src.core.container import Container
 from src.core.exceptions import AuthError, CredentialError
 from src.users.infra.user_repository import UserRepository
 
-reuseable_oauth = OAuth2PasswordBearer(tokenUrl="/token", scheme_name="JWT")
+reuseable_oauth = OAuth2PasswordBearer(tokenUrl="/auth/login", scheme_name="JWT")
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
 
 
 @inject
 def get_current_user(
-        self,
         token: str = Depends(reuseable_oauth),
         user_repository: UserRepository = Depends(Provide[Container.user_repository]),
 ):
+    print(user_repository)
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email = payload.get("email")

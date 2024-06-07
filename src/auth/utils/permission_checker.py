@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException
+from fastapi import Depends
 
 from src.auth.utils.get_current_user import get_current_user
 from src.users.domain.gnb_permission import ContentsManager, GNBPermissions
@@ -110,37 +110,38 @@ class PermissionChecker:
             HTTPException: 퍼미션 권한이 없는 케이스가 Null 이거나 Empty list 인 경우, 403 에러를 발생시킵니다.
             HTTPException: 필요한 권한이 없는 경우, 필요한 권한을 알려주고 403 에러를 발생시킵니다.
         """
-        user_role = create_user_role(user.role_id)
-        permissions = get_user_permissions(user_role, user).model_dump()
-        for r_perm in self.required_permissions:
-            parts = r_perm.split(":")
-            current_json = permissions
-
-            for part in parts:
-                if isinstance(current_json, dict):
-                    current_json = current_json.get(part)
-                else:
-                    break
-
-            if current_json is None or len(current_json) == 0:
-                raise HTTPException(
-                    status_code=403,
-                    detail={
-                        "code": "access/denied",
-                        "message": "접근 권한이 존재하지 않습니다.",
-                    },
-                )
-
-            if parts[-1] in current_json:
-                continue
-            else:
-                raise HTTPException(
-                    status_code=403,
-                    detail={
-                        "code": "access/invalid",
-                        "message": f"권한이 부족합니다. ({r_perm}) 권한이 필요합니다.",
-                    },
-                )
+        print(user.role_id)
+        create_user_role(user.role_id)
+        # permissions = get_user_permissions(user_role, user).model_dump()
+        # for r_perm in self.required_permissions:
+        #     parts = r_perm.split(":")
+        #     current_json = permissions
+        #
+        #     for part in parts:
+        #         if isinstance(current_json, dict):
+        #             current_json = current_json.get(part)
+        #         else:
+        #             break
+        #
+        #     if current_json is None or len(current_json) == 0:
+        #         raise HTTPException(
+        #             status_code=403,
+        #             detail={
+        #                 "code": "access/denied",
+        #                 "message": "접근 권한이 존재하지 않습니다.",
+        #             },
+        #         )
+        #
+        #     if parts[-1] in current_json:
+        #         continue
+        #     else:
+        #         raise HTTPException(
+        #             status_code=403,
+        #             detail={
+        #                 "code": "access/invalid",
+        #                 "message": f"권한이 부족합니다. ({r_perm}) 권한이 필요합니다.",
+        #             },
+        #         )
         return user
 
 

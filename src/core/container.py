@@ -1,9 +1,9 @@
 from dependency_injector import containers, providers
 
+from src.auth.infra.cafe24_repository import Cafe24Repository
 from src.auth.infra.cafe24_sqlalchemy_repository import Cafe24SqlAlchemyRepository
-from src.auth.routes.port.base_oauth_service import BaseOauthService
 from src.auth.service.auth_service import AuthService
-from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
+from src.auth.service.cafe24_service import Cafe24Service
 from src.auth.service.token_service import TokenService
 from src.contents.infra.contents_repository import ContentsRepository
 from src.contents.infra.contents_sqlalchemy_repository import ContentsSqlAlchemy
@@ -20,6 +20,7 @@ from src.users.service.user_service import UserService
 class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(
         modules=[
+            "src.auth.utils.get_current_user",
             "src.users.routes.user_router",
             "src.auth.routes.auth_router",
             # "src.contents.routes.contents_router",
@@ -50,11 +51,11 @@ class Container(containers.DeclarativeContainer):
         Cafe24SqlAlchemyRepository, db=db.provided.session
     )
     cafe24_repository = providers.Singleton(
-        BaseOauthRepository, cafe24_sqlalchemy=cafe24_sqlalchemy
+        Cafe24Repository, cafe24_sqlalchemy=cafe24_sqlalchemy
     )
 
     cafe24_service = providers.Singleton(
-        provides=BaseOauthService,
+        provides=Cafe24Service,
         user_repository=user_repository,
         cafe24_repository=cafe24_repository,
     )

@@ -15,9 +15,9 @@ from src.users.service.port.base_user_repository import BaseUserRepository
 class Cafe24Service(BaseOauthService):
 
     def __init__(
-        self,
-        user_repository: BaseUserRepository,
-        cafe24_repository: BaseOauthRepository,
+            self,
+            user_repository: BaseUserRepository,
+            cafe24_repository: BaseOauthRepository,
     ):
         self.user_repository = user_repository
         self.cafe24_repository = cafe24_repository
@@ -34,23 +34,23 @@ class Cafe24Service(BaseOauthService):
         env_type = os.getenv("ENV_TYPE")
 
         env_files = {
-            None: "../config/env/.env",
-            "test_code": "../config/env/test.env",
-            "nepa-stg": "../config/env/local_nepa.env",
+            None: "config/env/.env",
+            "test_code": "config/env/test.env",
+            "nepa-stg": "config/env/local_nepa.env",
         }
-        env_file = env_files.get(env_type, f"../config/env/{env_type}.env")
+        env_file = env_files.get(env_type, f"config/env/{env_type}.env")
 
         load_dotenv(env_file)
 
     def _get_env_variable(self, var_name: str) -> str:
         value = os.getenv(var_name)
+        print(value, var_name)
         if value is None:
             raise ValueError(f"{var_name} cannot be None")
         return value
 
     def get_oauth_authentication_url(self, mall_id, user):
         # 만들고 나서 DB에 저장해야함
-
         hashed_state = generate_hash(self.state + mall_id)
 
         self.cafe24_repository.insert_basic_info(
@@ -72,7 +72,7 @@ class Cafe24Service(BaseOauthService):
         self.cafe24_repository.save_tokens(cafe24_tokens)
 
     def _generate_authentication_url(
-        self, mall_id: str, client_id: str, state: str, redirect_uri: str, scope: str
+            self, mall_id: str, client_id: str, state: str, redirect_uri: str, scope: str
     ) -> str:
         return (
             f"https://{mall_id}.cafe24api.com/api/v2/oauth/authorize?"

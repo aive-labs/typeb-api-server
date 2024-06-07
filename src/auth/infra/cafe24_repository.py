@@ -16,7 +16,7 @@ class Cafe24Repository(BaseOauthRepository):
         self.cafe24_sqlalchemy.insert_basic_info(user_id, mall_id, state_token)
 
     def get_state_token(self, state_token: str) -> Cafe24StateToken:
-        raise NotImplementedError
+        return self.cafe24_sqlalchemy.get_state_token(state_token)
 
     def save_tokens(self, cafe24_tokens: Cafe24TokenData):
         self.cafe24_sqlalchemy.save_tokens(cafe24_tokens)

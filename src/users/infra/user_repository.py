@@ -20,7 +20,6 @@ class UserRepository(BaseUserRepository):
         raise NotImplementedError
 
     def delete_user(self, user_id: int):
-        # self.user_sqlalchemy.de
         pass
 
     def get_user_by_id(self, user_id: int) -> User | None:
