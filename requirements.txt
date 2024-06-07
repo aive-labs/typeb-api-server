@@ -214,6 +214,7 @@ httpx
 # dependency_injector
 dependency-injector
 
-# pre-commit
+# pre-commit & foramtting & linting & static
 pre-commit
 black
+mypy

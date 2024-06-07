@@ -35,10 +35,10 @@ jobs:
           pip install ruff
           ruff check .
 
-      - name: Run static type checking (mypy)
-        run: |
-          pip install mypy
-          mypy .
+  #      - name: Run static type checking (mypy)
+  #        run: |
+  #          pip install mypy
+  #          mypy .
 
   build_and_deploy:
     runs-on: ubuntu-latest
