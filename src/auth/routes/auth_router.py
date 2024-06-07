@@ -20,8 +20,6 @@ def sign_up(
         form_data: OAuth2PasswordRequestForm = Depends(),
         auth_service: AuthService = Depends(dependency=Provide[Container.auth_service]),
 ) -> TokenResponse:
-    print(f"auth_service: {auth_service}")
-
     login_id = form_data.username
     password = form_data.password
 

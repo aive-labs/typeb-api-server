@@ -10,7 +10,7 @@ from src.users.routes.user_router import user_router
 
 # FastAPI 앱 초기화
 def create_app():
-    logging.basicConfig(level=logging.DEBUG)  # DEBUG 레벨로 로깅 설정
+    logging.basicConfig(level=logging.INFO)
     app = FastAPI()
     app.container = Container()
     return app

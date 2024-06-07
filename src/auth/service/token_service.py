@@ -24,7 +24,7 @@ class TokenService:
             'department': user.department_name,
             'language': user.language,
             'permissions': user.permissions,
-            'role': user.role_id
+            'role': user.role_id,
         }
 
         access_token = self.create_access_token(payload)

@@ -1,10 +1,12 @@
 from datetime import datetime
 
+from passlib.context import CryptContext
 from pydantic import BaseModel
 
-from src.auth.utils.hash_password import generate_hash
 from src.users.infra.entity.user_entity import UserEntity
 from src.users.infra.entity.user_password import UserPasswordEntity
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class User(BaseModel):
@@ -29,6 +31,7 @@ class User(BaseModel):
         return UserEntity(
             username=self.username,
             email=self.email,
+            login_id=self.email,
             role_id=self.role_id,
             sys_id=self.sys_id,
             erp_id=self.erp_id,
@@ -39,9 +42,12 @@ class User(BaseModel):
         )
 
     def to_password_entity(self) -> UserPasswordEntity:
+        hashed_password = pwd_context.hash(self.password)
+        print('to entity')
+        print(hashed_password)
         return UserPasswordEntity(
             login_id=self.email,
-            login_pw=generate_hash(self.password),
+            login_pw=hashed_password,
             email=self.email,
         )
 
