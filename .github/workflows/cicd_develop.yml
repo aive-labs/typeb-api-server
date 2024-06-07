@@ -23,7 +23,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          python -m pip instsall --upgrade pip 
+          python -m pip install --upgrade pip 
 
       - name: Run code formatting(Black)
         run: |
