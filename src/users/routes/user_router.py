@@ -63,6 +63,7 @@ def sign_in(
 
 
 @user_router.put("/me", status_code=status.HTTP_200_OK)
+@inject
 def update_user_profile(
     user_modify: UserModify,
     user=Depends(get_permission_checker(required_permissions=[])),

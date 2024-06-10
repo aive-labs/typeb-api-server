@@ -19,7 +19,7 @@ class UserRepository(BaseUserRepository):
         )
 
     def update_user(self, user_modify: UserModify):
-        self.user_sqlalchemy.update(user_modify)
+        self.user_sqlalchemy.update_user(user_modify)
 
     def delete_user(self, user_id: int):
         pass
