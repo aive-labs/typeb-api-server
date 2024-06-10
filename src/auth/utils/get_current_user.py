@@ -13,7 +13,6 @@ def get_current_user(
     token: str = Depends(reuseable_oauth),
     user_repository: UserRepository = Depends(Provide[Container.user_repository]),
 ):
-    print(user_repository)
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email = payload.get("email")
