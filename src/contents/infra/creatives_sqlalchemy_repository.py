@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from contextlib import AbstractContextManager
 
-from sqlalchemy import case, func, or_
+from sqlalchemy import case, func, or_, update
 from sqlalchemy.orm import Session
 
 from src.contents.domain.creatives import Creatives
@@ -29,7 +29,7 @@ class CreativesSqlAlchemy:
         with self.db() as db:
             entity = (
                 db.query(CreativesEntity)
-                .filter(CreativesEntity.creative_id == id)
+                .filter(CreativesEntity.creative_id == id, ~CreativesEntity.is_deleted)
                 .first()
             )
 
@@ -45,32 +45,36 @@ class CreativesSqlAlchemy:
             """
             sort_col = getattr(CreativesEntity, based_on)
 
-            base_query = db.query(
-                CreativesEntity.creative_id,
-                CreativesEntity.image_asset_type,
-                CreativesEntity.image_uri,
-                CreativesEntity.image_path,
-                StyleMaster.sty_nm,
-                StyleMaster.sty_cd,
-                StyleMaster.rep_nm,
-                case(
-                    (
-                        StyleMaster.year2 is not None,
-                        func.concat(
-                            StyleMaster.year2, "(", StyleMaster.sty_season_nm, ")"
+            base_query = (
+                db.query(
+                    CreativesEntity.creative_id,
+                    CreativesEntity.image_asset_type,
+                    CreativesEntity.image_uri,
+                    CreativesEntity.image_path,
+                    StyleMaster.sty_nm,
+                    StyleMaster.sty_cd,
+                    StyleMaster.rep_nm,
+                    case(
+                        (
+                            StyleMaster.year2 is not None,
+                            func.concat(
+                                StyleMaster.year2, "(", StyleMaster.sty_season_nm, ")"
+                            ),
                         ),
-                    ),
-                    else_=None,
-                ).label("year_season"),
-                StyleMaster.it_gb_nm,
-                StyleMaster.item_nm,
-                StyleMaster.item_sb_nm,
-                StyleMaster.purpose1.label("purpose"),
-                StyleMaster.cons_pri.label("price"),
-                CreativesEntity.creative_tags.label("creative_tags"),
-                CreativesEntity.updated_by.label("updated_by"),
-                CreativesEntity.updated_at.label("updated_at"),
-            ).outerjoin(StyleMaster, StyleMaster.sty_cd == CreativesEntity.style_cd)
+                        else_=None,
+                    ).label("year_season"),
+                    StyleMaster.it_gb_nm,
+                    StyleMaster.item_nm,
+                    StyleMaster.item_sb_nm,
+                    StyleMaster.purpose1.label("purpose"),
+                    StyleMaster.cons_pri.label("price"),
+                    CreativesEntity.creative_tags.label("creative_tags"),
+                    CreativesEntity.updated_by.label("updated_by"),
+                    CreativesEntity.updated_at.label("updated_at"),
+                )
+                .outerjoin(StyleMaster, StyleMaster.sty_cd == CreativesEntity.style_cd)
+                .filter(~CreativesEntity.is_deleted)
+            )
 
             if sort_by == "desc":
                 sort_col = sort_col.desc()
@@ -111,3 +115,36 @@ class CreativesSqlAlchemy:
                 )
                 for item in style_masters
             ]
+
+    def update(self, creative_id, creative_update, pre_fix):
+        with self.db() as db:
+            creative_data = (
+                db.query(Creatives)
+                .filter(
+                    Creatives.creative_id == creative_id, ~CreativesEntity.is_deleted
+                )
+                .first()
+            )
+
+            if creative_data is None:
+                raise NotFoundError("Creative를 찾지 못했습니다.")
+
+            updated_values = {
+                "image_asset_type": creative_update.image_asset_type.value,
+                "style_cd": creative_update.style_cd,
+                "style_object_name": creative_update.style_object_name,
+                "creative_tags": creative_update.creative_tags,
+                "updated_by": creative_update.username,
+                "updated_at": creative_update.now(),
+            }
+
+            # git
+
+            update_statement = (
+                update(CreativesEntity)
+                .where(CreativesEntity.creative_id == creative_id)
+                .values(update_values=updated_values)
+            )
+
+            db.execute(update_statement)
+            db.commit()

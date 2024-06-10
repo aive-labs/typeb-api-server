@@ -49,17 +49,12 @@ def get_img_creatives_list(
 async def create_img_creatives(
     asset_data: CreativeCreate,
     files: list[UploadFile],
-    user=Depends(get_permission_checker),
+    user=Depends(get_permission_checker(required_permissions=[])),
     add_creatives_service: AddCreativesUseCase = Depends(
         dependency=Provide[Container.add_creatives_service]
     ),
 ):
     await add_creatives_service.upload_image(asset_data=asset_data, files=files)
-
-
-@creatives_router.get("/creatives/list")
-def get_creatives_ilst():
-    pass
 
 
 @creatives_router.delete("/{creative_id}")
@@ -68,7 +63,14 @@ def delete_img_creatives():
 
 
 @creatives_router.put("/{creative_id}")
-async def update_img_creatives():
+def update_img_creatives(
+    creative_id: str,
+    creative_update: CreativeCreate,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    add_creatives_service: AddCreativesUseCase = Depends(
+        dependency=Provide[Container.add_creatives_service]
+    ),
+):
     pass
 
 

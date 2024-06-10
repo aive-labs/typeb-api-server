@@ -1,4 +1,5 @@
 from src.contents.infra.creatives_sqlalchemy_repository import CreativesSqlAlchemy
+from src.contents.routes.dto.request.creatives_create import CreativeCreate
 from src.contents.service.port.base_creatives_repository import BaseCreativesRepository
 
 
@@ -17,3 +18,9 @@ class CreativesRepository(BaseCreativesRepository):
 
     def get_simple_style_list(self):
         return self.creative_sqlalchemy.get_simple_style_list()
+
+    def update_creatives(
+        self, creative_id: str, creative_update: CreativeCreate, pre_fix: str
+    ):
+        return self.creative_sqlalchemy.update(creative_id, creative_update, pre_fix)
+        pass

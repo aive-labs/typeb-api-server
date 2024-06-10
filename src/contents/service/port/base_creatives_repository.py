@@ -14,3 +14,7 @@ class BaseCreativesRepository(ABC):
     @abstractmethod
     def get_simple_style_list(self) -> list:
         pass
+
+    @abstractmethod
+    def update_creatives(self, creative_id, creative_update, pre_fix):
+        pass
