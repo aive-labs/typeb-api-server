@@ -4,8 +4,12 @@ from contextlib import AbstractContextManager
 from sqlalchemy import case, func, or_
 from sqlalchemy.orm import Session
 
-from src.contents.infra.entity.creatives_entity import Creatives
+from src.contents.domain.creatives import Creatives
+from src.contents.infra.entity.creatives_entity import CreativesEntity
 from src.contents.infra.entity.style_master_entity import StyleMaster
+from src.contents.routes.dto.request.contents_create import StyleObjectBase
+from src.contents.routes.dto.response.creative_base import CreativeBase
+from src.core.exceptions import NotFoundError
 
 
 class CreativesSqlAlchemy:
@@ -21,18 +25,31 @@ class CreativesSqlAlchemy:
         """
         self.db = db
 
+    def find_by_id(self, id: int) -> Creatives:
+        with self.db() as db:
+            entity = (
+                db.query(CreativesEntity)
+                .filter(CreativesEntity.creative_id == id)
+                .first()
+            )
+
+            if entity is None:
+                raise NotFoundError("Not found CreativesEntity")
+
+            return Creatives.model_validate(entity)
+
     def get_all_creatives(self, based_on, sort_by, asset_type=None, query=None):
         with self.db() as db:
             """소재 목록을 조회하는 함수, style_master와 left 조인하여 데이터 조회
             # add based_on, sort_by options
             """
-            sort_col = getattr(Creatives, based_on)
+            sort_col = getattr(CreativesEntity, based_on)
 
             base_query = db.query(
-                Creatives.creative_id,
-                Creatives.image_asset_type,
-                Creatives.image_uri,
-                Creatives.image_path,
+                CreativesEntity.creative_id,
+                CreativesEntity.image_asset_type,
+                CreativesEntity.image_uri,
+                CreativesEntity.image_path,
                 StyleMaster.sty_nm,
                 StyleMaster.sty_cd,
                 StyleMaster.rep_nm,
@@ -50,10 +67,10 @@ class CreativesSqlAlchemy:
                 StyleMaster.item_sb_nm,
                 StyleMaster.purpose1.label("purpose"),
                 StyleMaster.cons_pri.label("price"),
-                Creatives.creative_tags.label("creative_tags"),
-                Creatives.updated_by.label("updated_by"),
-                Creatives.updated_at.label("updated_at"),
-            ).outerjoin(StyleMaster, StyleMaster.sty_cd == Creatives.style_cd)
+                CreativesEntity.creative_tags.label("creative_tags"),
+                CreativesEntity.updated_by.label("updated_by"),
+                CreativesEntity.updated_at.label("updated_at"),
+            ).outerjoin(StyleMaster, StyleMaster.sty_cd == CreativesEntity.style_cd)
 
             if sort_by == "desc":
                 sort_col = sort_col.desc()
@@ -63,7 +80,7 @@ class CreativesSqlAlchemy:
 
             if asset_type:
                 base_query = base_query.filter(
-                    Creatives.image_asset_type == asset_type.value
+                    CreativesEntity.image_asset_type == asset_type.value
                 )
             if query:
                 query = f"%{query}%"
@@ -72,8 +89,25 @@ class CreativesSqlAlchemy:
                     or_(
                         StyleMaster.sty_nm.ilike(query),
                         StyleMaster.sty_cd.ilike(query),
-                        Creatives.creative_tags.ilike(query),
-                        Creatives.image_uri.ilike(query),
+                        CreativesEntity.creative_tags.ilike(query),
+                        CreativesEntity.image_uri.ilike(query),
                     )
                 )
-            return base_query.all()
+
+            return [CreativeBase.model_validate(item) for item in base_query.all()]
+
+    def get_simple_style_list(self) -> list[StyleObjectBase]:
+        with self.db() as db:
+            style_masters = db.query(
+                StyleMaster.sty_cd.label("style_cd"),
+                func.concat("(", StyleMaster.sty_cd, ")", " ", StyleMaster.sty_nm)
+                .label("style_object_name")
+                .all(),
+            )
+
+            return [
+                StyleObjectBase(
+                    style_cd=item.style_cd, style_object_name=item.style_object_name
+                )
+                for item in style_masters
+            ]

@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from core.database import BaseModel as Base
 from sqlalchemy import (
     Column,
     DateTime,
@@ -9,8 +8,10 @@ from sqlalchemy import (
     text,
 )
 
+from src.core.database import Base
 
-class Creatives(Base):
+
+class CreativesEntity(Base):
     __tablename__ = "creatives"
 
     creative_id = Column(Integer, primary_key=True, index=True, autoincrement=True)

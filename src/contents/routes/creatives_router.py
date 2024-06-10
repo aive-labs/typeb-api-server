@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, UploadFile, status
 from src.auth.utils.permission_checker import get_permission_checker
 from src.common.pagination.pagination_response import PaginationResponse
 from src.contents.enums.image_asset_type import ImageAssetTypeEnum
+from src.contents.routes.dto.request.contents_create import StyleObjectBase
 from src.contents.routes.dto.request.creatives_create import CreativeCreate
 from src.contents.routes.dto.response.creative_base import CreativeBase
 from src.contents.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase
@@ -72,12 +73,22 @@ async def update_img_creatives():
 
 
 @creatives_router.get("/{creative_id}")
-def get_img_creatives():
+def get_img_creatives(
+    creative_id: int,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    get_creatives_service: GetCreativesUseCase = Depends(
+        Provide[Container.get_creatives_service]
+    ),
+):
     """이미지 에셋을 조회하는 API"""
-    pass
+    return get_creatives_service.get_creatives_detail(creative_id)
 
 
 @creatives_router.get("/style/list")
-def get_style_list():
-    """스타일 목록을 조회하는 API"""
-    pass
+def get_style_list(
+    user=Depends(get_permission_checker(required_permissions=[])),
+    get_creatives_service: GetCreativesUseCase = Depends(
+        Provide[Container.get_creatives_service]
+    ),
+) -> list[StyleObjectBase]:
+    return get_creatives_service.get_style_list()

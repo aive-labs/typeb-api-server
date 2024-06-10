@@ -9,7 +9,7 @@ from fastapi import HTTPException, UploadFile
 from PIL import Image
 
 from src.contents.enums.image_asset_type import ImageAssetTypeEnum
-from src.contents.infra.entity.creatives_entity import Creatives
+from src.contents.infra.entity.creatives_entity import CreativesEntity
 from src.contents.routes.dto.request.creatives_create import CreativeCreate
 from src.contents.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase
 from src.users.service.port.base_user_repository import BaseUserRepository
@@ -38,7 +38,7 @@ class AddCreativesService(AddCreativesUseCase):
 
                 # TODO: get user
 
-                Creatives(
+                CreativesEntity(
                     image_uri=image_uri,
                     image_path=image_path,
                     image_asset_type=asset_data.image_asset_type.value,

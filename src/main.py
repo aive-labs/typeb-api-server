@@ -4,6 +4,7 @@ from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.auth.routes.auth_router import auth_router
+from src.contents.routes.creatives_router import creatives_router
 from src.core.container import Container
 from src.users.routes.user_router import user_router
 
@@ -19,6 +20,7 @@ def create_app():
 app = create_app()
 app.include_router(router=user_router, prefix="/users")
 app.include_router(router=auth_router, prefix="/auth")
+app.include_router(router=creatives_router, prefix="/creatives")
 
 origins = ["*"]
 

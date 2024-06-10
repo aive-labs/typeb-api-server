@@ -10,7 +10,7 @@ from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
 
 auth_router = APIRouter(
-    tags=["auth"],
+    tags=["Auth"],
 )
 
 

@@ -7,10 +7,13 @@ class CreativesRepository(BaseCreativesRepository):
         self.creative_sqlalchemy = creative_sqlalchemy
 
     def find_by_id(self, id: int):
-        raise NotImplementedError
+        return self.creative_sqlalchemy.find_by_id(id)
 
     def find_all(self, based_on, sort_by, asset_type=None, query=None):
         creatives = self.creative_sqlalchemy.get_all_creatives(
             based_on=based_on, sort_by=sort_by, asset_type=asset_type, query=query
         )
         return creatives
+
+    def get_simple_style_list(self):
+        return self.creative_sqlalchemy.get_simple_style_list()
