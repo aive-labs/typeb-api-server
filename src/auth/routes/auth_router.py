@@ -61,10 +61,6 @@ def get_cafe24_authentication_url(
 def get_cafe24_access_token(
     cafe_authentication_request: OauthAuthenticationRequest,
     cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
-    user=Depends(
-        get_permission_checker(
-            required_permissions=["gnb_permissions:strategy_manager:read"]
-        )
-    ),
+    user=Depends(get_permission_checker(required_permissions=[])),
 ) -> None:
     cafe24_service.get_oauth_access_token(cafe_authentication_request)

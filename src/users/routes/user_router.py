@@ -2,9 +2,17 @@ import logging
 
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 
+from src.auth.routes.dto.response.token_response import TokenResponse
+from src.auth.service.auth_service import AuthService
+from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
+from src.users.domain.gnb_permission import GNBPermissions
+from src.users.domain.resource_permission import ResourcePermission
+from src.users.domain.user_role import UserPermissions
 from src.users.routes.dto.request.user_create_request import UserCreate
+from src.users.routes.dto.response.user_profile_response import UserProfileResponse
 from src.users.routes.dto.response.user_response import UserResponse
 from src.users.routes.port.base_user_service import BaseUserService
 
@@ -24,3 +32,27 @@ def sign_up(
     logger.debug(f"user_service: {user_service}")
     saved_user = user_service.register_user(user_create)
     return saved_user
+
+
+@user_router.get("/me")
+def get_me(user=Depends(get_permission_checker(required_permissions=[]))):
+    permissions = UserPermissions(
+        gnb_permissions=GNBPermissions.with_admin(),
+        resource_permission=ResourcePermission("all_access", "전체"),
+        user_role=user.role_id,
+    )
+
+    return UserProfileResponse.from_user(user, permissions)
+
+
+@user_router.post("/signin")
+@inject  # UserService 주입
+def sign_in(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    auth_service: AuthService = Depends(dependency=Provide[Container.auth_service]),
+) -> TokenResponse:
+    login_id = form_data.username
+    password = form_data.password
+
+    token_response = auth_service.login(login_id, password)
+    return token_response

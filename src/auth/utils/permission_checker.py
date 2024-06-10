@@ -145,5 +145,5 @@ class PermissionChecker:
         return user
 
 
-def get_permission_checker(required_permissions):
+def get_permission_checker(required_permissions: list[str]):
     return PermissionChecker(required_permissions)
