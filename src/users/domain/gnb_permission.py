@@ -28,7 +28,7 @@ class GNBPermissions(BaseModel):
     contents_manager: ContentsManager | None = None
 
     @staticmethod
-    def with_admin(self) -> "GNBPermissions":
+    def with_admin() -> "GNBPermissions":
         contents_manager = ContentsManager(
             contents_library=["create", "read", "update", "delete"]
         )
