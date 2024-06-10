@@ -15,6 +15,7 @@ from src.users.routes.dto.request.user_create_request import UserCreate
 from src.users.routes.dto.response.user_profile_response import UserProfileResponse
 from src.users.routes.dto.response.user_response import UserResponse
 from src.users.routes.port.base_user_service import BaseUserService
+from src.users.utils.user_role_mapping import get_user_role_from_mapping
 
 logger = logging.getLogger(__name__)
 
@@ -38,8 +39,10 @@ def sign_up(
 def get_me(user=Depends(get_permission_checker(required_permissions=[]))):
     permissions = UserPermissions(
         gnb_permissions=GNBPermissions.with_admin(),
-        resource_permission=ResourcePermission("all_access", "전체"),
-        user_role=user.role_id,
+        resource_permission=ResourcePermission(
+            resource_permission_id="all_access", resource_permission_name="전체"
+        ),
+        user_role=get_user_role_from_mapping(user.role_id),
     )
 
     return UserProfileResponse.from_user(user, permissions)
