@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
-from src.users.routes.dto.request.user_create_request import UserCreate
+from src.users.routes.dto.request.user_create import UserCreate
+from src.users.routes.dto.request.user_modify import UserModify
 from src.users.routes.dto.response.user_response import UserResponse
 
 
@@ -10,7 +11,7 @@ class BaseUserService(ABC):
         pass
 
     @abstractmethod
-    def update_user(self, user_id: int, user):
+    def update_user(self, user_modify: UserModify):
         pass
 
     @abstractmethod

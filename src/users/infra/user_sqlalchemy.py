@@ -7,6 +7,7 @@ from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
 from src.users.infra.entity.user_password import UserPasswordEntity
 from src.users.infra.entity.user_whitelist import UserWhitelist
+from src.users.routes.dto.request.user_modify import UserModify
 
 
 class UserSqlAlchemy:
@@ -111,3 +112,16 @@ class UserSqlAlchemy:
             return (
                 db.query(selected_col).filter(UserWhitelist.user_id == user_id).first()
             )
+
+    def update_user(self, user_modify: UserModify):
+        with self.db() as db:
+            modified_user_dict = {
+                key: value
+                for key, value in user_modify.dict().items()
+                if (key != "user_id") and (value is not None)
+            }
+
+            db.query(UserEntity).filter(
+                UserEntity.user_id == user_modify.user_id
+            ).update(modified_user_dict)
+            db.commit()

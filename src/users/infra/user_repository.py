@@ -2,7 +2,8 @@ from src.core.exceptions import NotFoundError
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
 from src.users.infra.user_sqlalchemy import UserSqlAlchemy
-from src.users.routes.dto.request.user_create_request import UserCreate
+from src.users.routes.dto.request.user_create import UserCreate
+from src.users.routes.dto.request.user_modify import UserModify
 from src.users.service.port.base_user_repository import BaseUserRepository
 
 
@@ -17,8 +18,8 @@ class UserRepository(BaseUserRepository):
             user.to_entity(), user.to_password_entity()
         )
 
-    def update_user(self, user_id: int, user):
-        raise NotImplementedError
+    def update_user(self, user_modify: UserModify):
+        self.user_sqlalchemy.update(user_modify)
 
     def delete_user(self, user_id: int):
         pass

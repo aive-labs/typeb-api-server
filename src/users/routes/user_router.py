@@ -1,7 +1,7 @@
 import logging
 
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from src.auth.routes.dto.response.token_response import TokenResponse
@@ -11,7 +11,8 @@ from src.core.container import Container
 from src.users.domain.gnb_permission import GNBPermissions
 from src.users.domain.resource_permission import ResourcePermission
 from src.users.domain.user_role import UserPermissions
-from src.users.routes.dto.request.user_create_request import UserCreate
+from src.users.routes.dto.request.user_create import UserCreate
+from src.users.routes.dto.request.user_modify import UserModify
 from src.users.routes.dto.response.user_profile_response import UserProfileResponse
 from src.users.routes.dto.response.user_response import UserResponse
 from src.users.routes.port.base_user_service import BaseUserService
@@ -59,3 +60,12 @@ def sign_in(
 
     token_response = auth_service.login(login_id, password)
     return token_response
+
+
+@user_router.put("/me", status_code=status.HTTP_200_OK)
+def update_user_profile(
+    user_modify: UserModify,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    user_service: BaseUserService = Depends(dependency=Provide[Container.user_service]),
+):
+    user_service.update_user(user_modify)
