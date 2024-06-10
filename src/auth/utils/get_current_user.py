@@ -1,15 +1,11 @@
 from dependency_injector.wiring import Provide, inject
 from fastapi import Depends
-from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 
+from src.auth.service.auth_service import ALGORITHM, SECRET_KEY, reuseable_oauth
 from src.core.container import Container
 from src.core.exceptions import AuthError, CredentialError
 from src.users.infra.user_repository import UserRepository
-
-reuseable_oauth = OAuth2PasswordBearer(tokenUrl="/users/signin", scheme_name="JWT")
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-ALGORITHM = "HS256"
 
 
 @inject

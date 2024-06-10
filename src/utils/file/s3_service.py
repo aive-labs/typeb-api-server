@@ -20,13 +20,11 @@ class S3Service:
         )
 
     def generate_presigned_url(self, files: list[str]):
-        expiration = 30
         try:
             return [
                 self.s3_client.generate_presigned_url(
                     "put_object",
                     Params={"Bucket": self.AWS_BUCKET_NAME, "Key": file},
-                    ExpiresIn=expiration,
                 )
                 for file in files
             ]
