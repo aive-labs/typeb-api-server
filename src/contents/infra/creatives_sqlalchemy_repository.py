@@ -148,3 +148,11 @@ class CreativesSqlAlchemy:
 
             db.execute(update_statement)
             db.commit()
+
+    def save_creatives(self, creatives_list):
+        with self.db() as db:
+            entities = [
+                CreativesEntity.from_model(creatives) for creatives in creatives_list
+            ]
+            db.add_all(entities)
+            db.commit()

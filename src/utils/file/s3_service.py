@@ -1,33 +1,35 @@
-import logging
 import os
 
 import boto3
-from botocore.exceptions import ClientError
 
 
 class S3Service:
 
-    def __init__(self):
-        self.AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
-        self.AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-        self.AWS_BUCKET_NAME = os.getenv("AWS_BUCKET_NAME")
-
+    def __init__(self, bucket_name):
+        os.environ["AWS_PROFILE"] = "wally"
         # S3 클라이언트 생성
-        self.s3_client = boto3.client(
-            "s3",
-            aws_access_key_id=self.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=self.AWS_SECRET_ACCESS_KEY,
+        self.s3_client = boto3.client("s3")
+        self.bucket_name = bucket_name
+
+    def generate_presigned_url_for_put(self, file_path: str) -> str:
+        # ClientError처리
+        return self.s3_client.generate_presigned_url(
+            "put_object",
+            Params={
+                "Bucket": self.bucket_name,
+                "Key": file_path,
+            },
+            ExpiresIn=600,
         )
 
-    def generate_presigned_url(self, files: list[str]):
+    def generate_presigned_url_for_get(self, file_path: str):
         try:
-            return [
-                self.s3_client.generate_presigned_url(
-                    "put_object",
-                    Params={"Bucket": self.AWS_BUCKET_NAME, "Key": file},
-                )
-                for file in files
-            ]
-        except ClientError as e:
-            logging.error(e)
+            response = self.s3_client.generate_presigned_url(
+                "get_object",
+                Params={"Bucket": self.bucket_name, "Key": file_path},
+                ExpiresIn=86400,
+            )
+        except Exception as e:
+            print(f"Error generating presigned URL: {e}")
             return None
+        return response

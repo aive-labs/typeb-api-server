@@ -2,24 +2,35 @@ import io
 import os
 import pathlib
 import time
-from pathlib import Path
 
 import aiofiles
-from fastapi import HTTPException, UploadFile
+from fastapi import HTTPException
 from PIL import Image
 
+from src.auth.infra.cafe24_repository import Cafe24Repository
+from src.contents.domain.creatives import Creatives
 from src.contents.enums.image_asset_type import ImageAssetTypeEnum
-from src.contents.infra.entity.creatives_entity import CreativesEntity
 from src.contents.routes.dto.request.creatives_create import CreativeCreate
 from src.contents.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase
-from src.users.service.port.base_user_repository import BaseUserRepository
+from src.contents.service.port.base_creatives_repository import BaseCreativesRepository
+from src.utils.file.s3_service import S3Service
 
 
 class AddCreativesService(AddCreativesUseCase):
-    def __init__(self, user_repository: BaseUserRepository):
-        self.user_repository = user_repository
+    def __init__(
+        self,
+        creatives_repository: BaseCreativesRepository,
+        cafe24_repository: Cafe24Repository,
+    ):
+        self.creatives_repository = creatives_repository
+        self.cafe24_repository = cafe24_repository
 
-    async def upload_image(self, asset_data: CreativeCreate, files: list[UploadFile]):
+        # todo dot env service
+        self.s3_service = S3Service("aice-asset-dev")
+
+    def create_creatives(self, asset_data: CreativeCreate, files: list[str], user):
+        cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(user.user_id)
+
         prefix = "non_style_creative"
         if asset_data.image_asset_type == ImageAssetTypeEnum.STYLE_IMAGE.value:
             prefix = asset_data.style_cd
@@ -27,35 +38,29 @@ class AddCreativesService(AddCreativesUseCase):
         if prefix is None:
             raise Exception()
 
-        resource_path = Path("app/resources/image_asset")
+        new_creatives_list = [
+            Creatives(
+                image_uri=f"{cafe24_info.mall_id}/image_asset/{prefix}/{file_name}",
+                image_path=f"{cafe24_info.mall_id}/image_asset/{prefix}/{file_name}",
+                image_asset_type=asset_data.image_asset_type.value,
+                style_cd=asset_data.style_cd,
+                style_object_name=asset_data.style_object_name,
+                creative_tags=asset_data.creative_tags,
+                created_by=user.user_id,
+                updated_by=user.user_id,
+            )
+            for file_name in files
+        ]
 
-        if not resource_path.exists():
-            resource_path.mkdir(parents=True)
+        self.creatives_repository.create_creatives(new_creatives_list)
 
-        try:
-            for file in files:
-                image_uri, image_path = await save_image_asset(file, prefix)
+        # todo save
+        s3_presigned_url_list = [
+            self.s3_service.generate_presigned_url_for_put(creative.image_path)
+            for creative in new_creatives_list
+        ]
 
-                # TODO: get user
-
-                CreativesEntity(
-                    image_uri=image_uri,
-                    image_path=image_path,
-                    image_asset_type=asset_data.image_asset_type.value,
-                    style_cd=asset_data.style_cd,
-                    style_object_name=asset_data.style_object_name,
-                    creative_tags=asset_data.creative_tags,
-                    created_by="123",
-                    updated_by="123",
-                )
-
-        except Exception as e:
-            for file in files:
-                await delete_image_asset(file.filename)
-            raise HTTPException(
-                status_code=500,
-                detail={"code": "image_asset/upload", "message": str(e)},
-            ) from e
+        return s3_presigned_url_list
 
 
 async def save_image_asset(

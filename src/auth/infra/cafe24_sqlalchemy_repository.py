@@ -1,10 +1,12 @@
 from collections.abc import Callable
 from contextlib import AbstractContextManager
+from typing import List
 
 from sqlalchemy import func, update
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
+from src.auth.infra.dto.cafe24_mall_info import Cafe24MallInfo
 from src.auth.infra.dto.cafe24_state_token import Cafe24StateToken
 from src.auth.infra.dto.cafe24_token import Cafe24TokenData
 from src.auth.infra.entity.cafe24_token_entity import Cafe24TokenEntity
@@ -52,6 +54,27 @@ class Cafe24SqlAlchemyRepository:
             return Cafe24StateToken(
                 mall_id=token.mall_id, state_token=token.state_token
             )
+
+    def get_cafe24_info_by_user_id(self, user_id: str):
+        with self.db() as db:
+            entities: List[Cafe24TokenEntity] = (
+                db.query(Cafe24TokenEntity)
+                .filter(Cafe24TokenEntity.user_id == user_id)
+                .all()
+            )
+
+            if len(entities) == 0:
+                raise NotFoundError("user_id에 해당하는 mall을 찾지 못했습니다.")
+            elif len(entities) > 1:
+                raise Exception("user_id는 1개만 가질 수 있습니다.")
+            else:
+                entity = entities[0]
+                return Cafe24MallInfo(
+                    mall_id=entity.mall_id,
+                    user_id=str(entity.user_id),
+                    scopes=entity.scopes.split(","),
+                    shop_no=entity.shop_no,
+                )
 
     def get_state_token(self, state_token: str) -> Cafe24StateToken:
         with self.db() as db:

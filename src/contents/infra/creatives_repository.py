@@ -4,6 +4,7 @@ from src.contents.service.port.base_creatives_repository import BaseCreativesRep
 
 
 class CreativesRepository(BaseCreativesRepository):
+
     def __init__(self, creative_sqlalchemy: CreativesSqlAlchemy):
         self.creative_sqlalchemy = creative_sqlalchemy
 
@@ -23,4 +24,6 @@ class CreativesRepository(BaseCreativesRepository):
         self, creative_id: str, creative_update: CreativeCreate, pre_fix: str
     ):
         return self.creative_sqlalchemy.update(creative_id, creative_update, pre_fix)
-        pass
+
+    def create_creatives(self, creatives_list):
+        return self.creative_sqlalchemy.create_creatives(creatives_list)

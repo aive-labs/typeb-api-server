@@ -4,22 +4,7 @@ from src.auth.utils.get_current_user import get_current_user
 from src.users.domain.gnb_permission import ContentsManager, GNBPermissions
 from src.users.domain.resource_permission import ResourcePermission
 from src.users.domain.user_role import UserPermissions, UserRole
-
-
-def create_user_role(role: str) -> UserRole:
-    role_mapping = {
-        "admin": ("admin", "관리자"),
-        "operator": ("operator", "운영자"),
-        "user": ("user", "본사 사용자"),
-        "branch_user": ("branch_user", "매장 사용자"),
-        # User role 추가시 role_mapping에 추가
-    }
-
-    if role not in role_mapping:
-        raise ValueError("Invalid role provided")
-
-    role_id, role_name = role_mapping[role]
-    return UserRole(role_id=role_id, role_name=role_name)
+from src.users.utils.user_role_mapping import get_user_role_from_mapping
 
 
 def create_resource_permission(user_role: UserRole) -> ResourcePermission:
@@ -110,8 +95,7 @@ class PermissionChecker:
             HTTPException: 퍼미션 권한이 없는 케이스가 Null 이거나 Empty list 인 경우, 403 에러를 발생시킵니다.
             HTTPException: 필요한 권한이 없는 경우, 필요한 권한을 알려주고 403 에러를 발생시킵니다.
         """
-        print(user.role_id)
-        create_user_role(user.role_id)
+        get_user_role_from_mapping(user.role_id)
         # permissions = get_user_permissions(user_role, user).model_dump()
         # for r_perm in self.required_permissions:
         #     parts = r_perm.split(":")

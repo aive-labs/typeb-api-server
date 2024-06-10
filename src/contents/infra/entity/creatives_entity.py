@@ -9,6 +9,7 @@ from sqlalchemy import (
     text,
 )
 
+from src.contents.domain.creatives import Creatives
 from src.core.database import Base
 
 
@@ -29,3 +30,16 @@ class CreativesEntity(Base):
     )
     updated_by = Column(String, nullable=False, default=text("(user)"))
     is_deleted = Column(Boolean, nullable=False, default=False)  # New field
+
+    @staticmethod
+    def from_model(creatives: Creatives):
+        return CreativesEntity(
+            image_asset_type=creatives.image_asset_type,
+            style_cd=creatives.style_cd,
+            style_object_name=creatives.style_object_name,
+            image_uri=creatives.image_uri,
+            image_path=creatives.image_path,
+            creative_tags=creatives.creative_tags,
+            created_by=creatives.created_by,
+            updated_by=creatives.updated_by,
+        )

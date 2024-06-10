@@ -18,3 +18,7 @@ class BaseCreativesRepository(ABC):
     @abstractmethod
     def update_creatives(self, creative_id, creative_update, pre_fix):
         pass
+
+    @abstractmethod
+    def create_creatives(self, creatives_list):
+        pass

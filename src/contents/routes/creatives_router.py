@@ -46,7 +46,7 @@ def get_img_creatives_list(
 
 @creatives_router.post("/", status_code=status.HTTP_201_CREATED)
 @inject
-async def create_img_creatives(
+def create_img_creatives(
     asset_data: CreativeCreate,
     files: list[UploadFile],
     user=Depends(get_permission_checker(required_permissions=[])),
@@ -54,15 +54,19 @@ async def create_img_creatives(
         dependency=Provide[Container.add_creatives_service]
     ),
 ):
-    await add_creatives_service.upload_image(asset_data=asset_data, files=files)
+    return add_creatives_service.create_creatives(
+        asset_data=asset_data, files=files, user=user
+    )
 
 
 @creatives_router.delete("/{creative_id}")
+@inject
 def delete_img_creatives():
     pass
 
 
 @creatives_router.put("/{creative_id}")
+@inject
 def update_img_creatives(
     creative_id: str,
     creative_update: CreativeCreate,
@@ -75,6 +79,7 @@ def update_img_creatives(
 
 
 @creatives_router.get("/{creative_id}")
+@inject
 def get_img_creatives(
     creative_id: int,
     user=Depends(get_permission_checker(required_permissions=[])),
@@ -87,6 +92,7 @@ def get_img_creatives(
 
 
 @creatives_router.get("/style/list")
+@inject
 def get_style_list(
     user=Depends(get_permission_checker(required_permissions=[])),
     get_creatives_service: GetCreativesUseCase = Depends(
