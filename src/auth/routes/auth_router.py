@@ -46,11 +46,7 @@ def get_access_token(
 def get_cafe24_authentication_url(
     mall_id: str,
     cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
-    user=Depends(
-        get_permission_checker(
-            required_permissions=["gnb_permissions:strategy_manager:read"]
-        )
-    ),
+    user=Depends(get_permission_checker(required_permissions=[])),
 ) -> str:
     authentication_url = cafe24_service.get_oauth_authentication_url(mall_id, user)
     return authentication_url

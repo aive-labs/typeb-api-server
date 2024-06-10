@@ -2,6 +2,7 @@ from collections.abc import Callable
 from contextlib import AbstractContextManager
 
 from sqlalchemy import func, update
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
 from src.auth.infra.dto.cafe24_state_token import Cafe24StateToken
@@ -25,10 +26,16 @@ class Cafe24SqlAlchemyRepository:
 
     def insert_basic_info(self, user_id: str, mall_id: str, state_token: str):
         with self.db() as db:
-            entity = Cafe24TokenEntity(
+            insert_statement = insert(Cafe24TokenEntity).values(
                 user_id=user_id, mall_id=mall_id, state_token=state_token
             )
-            db.add(entity)
+
+            upsert_statement = insert_statement.on_conflict_do_update(
+                index_elements=["mall_id"],  # conflict 대상 열
+                set_={"user_id": user_id, "state_token": state_token},  # 업데이트할 열
+            )
+
+            db.execute(upsert_statement)
             db.commit()
 
     def is_existing_state_token(self, state_token: str) -> Cafe24StateToken:
