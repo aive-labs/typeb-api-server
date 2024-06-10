@@ -9,7 +9,7 @@ from src.users.routes.dto.response.user_response import UserResponse
 from src.users.routes.port.base_user_service import BaseUserService
 from src.users.service.port.base_user_repository import BaseUserRepository
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/signin")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"

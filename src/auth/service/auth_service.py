@@ -8,7 +8,7 @@ from src.auth.service.token_service import TokenService
 from src.core.exceptions import AuthError, CredentialError, NotFoundError
 from src.users.service.port.base_user_repository import BaseUserRepository
 
-reuseable_oauth = OAuth2PasswordBearer(tokenUrl="/auth/login", scheme_name="JWT")
+reuseable_oauth = OAuth2PasswordBearer(tokenUrl="/users/signin", scheme_name="JWT")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
