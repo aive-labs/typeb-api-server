@@ -30,10 +30,14 @@ COPY . /app/
 # Expose the application port
 EXPOSE 8000
 
-# AWS 설정
-RUN aws configure set aws_access_key_id "$DEV_AWS_ACCESS_KEY_ID" && \
-    aws configure set aws_secret_access_key "$DEV_AWS_SECRET_ACCESS_KEY" && \
-    aws configure set default.region "$DEV_AWS_REGION"
+# Entrypoint 스크립트 복사
+COPY entrypoint.sh /app/
+
+# Entrypoint 스크립트 실행 권한 부여
+RUN chmod +x /app/entrypoint.sh
+
+# Entrypoint 설정
+ENTRYPOINT ["/app/entrypoint.sh"]
 
 # Command to run the application
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
