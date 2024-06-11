@@ -5,8 +5,10 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# AWS CLI
-RUN pip install awscli
+# AWS CLI 설치
+RUN apt-get update && \
+    apt-get install -y awscli && \
+    rm -rf /var/lib/apt/lists/* \
 
 # Create and set the working directory
 WORKDIR /app
@@ -22,9 +24,10 @@ ENV DEV_AWS_ACCESS_KEY_ID=${DEV_AWS_ACCESS_KEY_ID}
 ENV DEV_AWS_SECRET_ACCESS_KEY=${DEV_AWS_SECRET_ACCESS_KEY}
 ENV DEV_AWS_REGION=${DEV_AWS_REGION}
 
-RUN aws configure set aws_access_key_id $DEV_AWS_ACCESS_KEY_ID && \
-    aws configure set aws_secret_access_key $DEV_AWS_SECRET_ACCESS_KEY && \
-    aws configure set default.region $DEV_AWS_REGION
+# AWS 설정
+RUN aws configure set aws_access_key_id "$DEV_AWS_ACCESS_KEY_ID" && \
+    aws configure set aws_secret_access_key "$DEV_AWS_SECRET_ACCESS_KEY" && \
+    aws configure set default.region "$DEV_AWS_REGION"
 
 
 # Expose the application port
