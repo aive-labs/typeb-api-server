@@ -21,9 +21,34 @@ class AddCreativesService(AddCreativesUseCase):
         # todo dot env service
         self.s3_service = S3Service("aice-asset-dev")
 
-    def create_creatives(
+    def generate_s3_url(
         self, asset_data: CreativeCreate, user
     ) -> list[S3PresignedResponse]:
+        cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(
+            str(user.user_id)
+        )
+        files = asset_data.files
+
+        prefix = "non_style_creative"
+        if asset_data.image_asset_type == ImageAssetTypeEnum.STYLE_IMAGE.value:
+            prefix = asset_data.style_cd
+
+        if prefix is None:
+            raise Exception()
+
+        s3_presigned_url_list = [
+            S3PresignedResponse(
+                original_file_name=file_name,
+                s3_presigned_url=self.s3_service.generate_presigned_url_for_put(
+                    f"{cafe24_info.mall_id}/image_asset/{prefix}/{get_unix_timestamp()}_{file_name}"
+                ),
+            )
+            for file_name in files
+        ]
+
+        return s3_presigned_url_list
+
+    def create_creatives(self, asset_data: CreativeCreate, user) -> list[Creatives]:
         cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(
             str(user.user_id)
         )
@@ -52,17 +77,7 @@ class AddCreativesService(AddCreativesUseCase):
 
         self.creatives_repository.create_creatives(new_creatives_list)
 
-        s3_presigned_url_list = [
-            S3PresignedResponse(
-                original_file_name=creative.image_path.split("/")[-1].split("_")[-1],
-                s3_presigned_url=self.s3_service.generate_presigned_url_for_put(
-                    creative.image_path
-                ),
-            )
-            for creative in new_creatives_list
-        ]
-
-        return s3_presigned_url_list
+        return new_creatives_list
 
 
 # async def save_image_asset(

@@ -15,7 +15,7 @@ class S3Service:
                 "Bucket": self.bucket_name,
                 "Key": file_path,
             },
-            ExpiresIn=600,
+            ExpiresIn=300,
         )
 
     def generate_presigned_url_for_get(self, file_path: str):

@@ -67,7 +67,7 @@ def sign_in(
         value=token_response.access_token,
         httponly=True,
         # secure=True,
-        samesite="Lax",
+        samesite="Lax",  # pyright: ignore [reportArgumentType]
     )
 
     return response

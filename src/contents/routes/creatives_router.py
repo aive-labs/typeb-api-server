@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, status
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.common.pagination.pagination_response import PaginationResponse
+from src.contents.domain.creatives import Creatives
 from src.contents.enums.image_asset_type import ImageAssetTypeEnum
 from src.contents.infra.dto.response.s3_presigned_response import S3PresignedResponse
 from src.contents.routes.dto.request.contents_create import StyleObjectBase
@@ -45,6 +46,18 @@ def get_img_creatives_list(
     return pagination_result
 
 
+@creatives_router.post("/upload", status_code=status.HTTP_200_OK)
+@inject
+def generate_s3_presigned_url(
+    asset_data: CreativeCreate,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    add_creatives_service: AddCreativesUseCase = Depends(
+        dependency=Provide[Container.add_creatives_service]
+    ),
+) -> list[S3PresignedResponse]:
+    return add_creatives_service.generate_s3_url(asset_data, user)
+
+
 @creatives_router.post("", status_code=status.HTTP_201_CREATED)
 @inject
 def create_img_creatives(
@@ -53,7 +66,7 @@ def create_img_creatives(
     add_creatives_service: AddCreativesUseCase = Depends(
         dependency=Provide[Container.add_creatives_service]
     ),
-) -> list[S3PresignedResponse]:
+) -> list[Creatives]:
     return add_creatives_service.create_creatives(asset_data=asset_data, user=user)
 
 
