@@ -10,6 +10,7 @@ from src.contents.infra.entity.style_master_entity import StyleMaster
 from src.contents.routes.dto.request.contents_create import StyleObjectBase
 from src.contents.routes.dto.response.creative_base import CreativeBase
 from src.core.exceptions import NotFoundError
+from src.utils.file.model_converter import ModelConverter
 
 
 class CreativesSqlAlchemy:
@@ -36,7 +37,7 @@ class CreativesSqlAlchemy:
             if entity is None:
                 raise NotFoundError("Not found CreativesEntity")
 
-            return Creatives.model_validate(entity)
+            return ModelConverter.entity_to_model(entity, Creatives)
 
     def get_all_creatives(self, based_on, sort_by, asset_type=None, query=None):
         with self.db() as db:
