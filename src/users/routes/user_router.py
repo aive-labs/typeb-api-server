@@ -85,6 +85,7 @@ def update_user_profile(
 
 
 @user_router.post("/refresh")
+@inject
 def refresh_access_token(
     user=Depends(get_permission_checker(required_permissions=[])),
     token_service: TokenService = Depends(dependency=Provide[Container.user_service]),
