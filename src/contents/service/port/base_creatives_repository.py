@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Any
 
 from src.contents.domain.creatives import Creatives
+from src.contents.routes.dto.response.creative_base import CreativeBase
 
 
 class BaseCreativesRepository(ABC):
@@ -10,7 +10,9 @@ class BaseCreativesRepository(ABC):
         pass
 
     @abstractmethod
-    def find_all(self, based_on, sort_by, asset_type=None, query=None) -> list[Any]:
+    def find_all(
+        self, based_on, sort_by, asset_type=None, query=None
+    ) -> list[CreativeBase]:
         pass
 
     @abstractmethod

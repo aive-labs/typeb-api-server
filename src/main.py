@@ -20,7 +20,7 @@ def create_app():
 app = create_app()
 app.include_router(router=user_router, prefix="/users")
 app.include_router(router=auth_router, prefix="/auth")
-app.include_router(router=creatives_router, prefix="/creatives")
+app.include_router(router=creatives_router, prefix="/contents-management/creatives")
 
 origins = ["*"]
 
