@@ -38,6 +38,7 @@ def sign_up(
 
 
 @user_router.get("/me")
+@inject
 def get_me(user=Depends(get_permission_checker(required_permissions=[]))):
     permissions = UserPermissions(
         gnb_permissions=GNBPermissions.with_admin(),
@@ -51,7 +52,7 @@ def get_me(user=Depends(get_permission_checker(required_permissions=[]))):
 
 
 @user_router.post("/signin")
-@inject  # UserService 주입
+@inject
 def sign_in(
     form_data: OAuth2PasswordRequestForm = Depends(),
     auth_service: AuthService = Depends(dependency=Provide[Container.auth_service]),
