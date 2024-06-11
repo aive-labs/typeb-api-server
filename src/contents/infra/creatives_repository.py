@@ -1,3 +1,4 @@
+from src.contents.domain.creatives import Creatives
 from src.contents.infra.creatives_sqlalchemy_repository import CreativesSqlAlchemy
 from src.contents.routes.dto.request.creatives_create import CreativeCreate
 from src.contents.service.port.base_creatives_repository import BaseCreativesRepository
@@ -8,7 +9,7 @@ class CreativesRepository(BaseCreativesRepository):
     def __init__(self, creative_sqlalchemy: CreativesSqlAlchemy):
         self.creative_sqlalchemy = creative_sqlalchemy
 
-    def find_by_id(self, id: int):
+    def find_by_id(self, id: int) -> Creatives:
         return self.creative_sqlalchemy.find_by_id(id)
 
     def find_all(self, based_on, sort_by, asset_type=None, query=None):
@@ -26,4 +27,4 @@ class CreativesRepository(BaseCreativesRepository):
         return self.creative_sqlalchemy.update(creative_id, creative_update, pre_fix)
 
     def create_creatives(self, creatives_list):
-        return self.creative_sqlalchemy.create_creatives(creatives_list)
+        return self.creative_sqlalchemy.save_creatives(creatives_list)

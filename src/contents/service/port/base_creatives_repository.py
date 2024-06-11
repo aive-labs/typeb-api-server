@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
+from src.contents.domain.creatives import Creatives
+
 
 class BaseCreativesRepository(ABC):
     @abstractmethod
-    def find_by_id(self, id: int):
+    def find_by_id(self, id: int) -> Creatives:
         pass
 
     @abstractmethod

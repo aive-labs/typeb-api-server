@@ -7,7 +7,6 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from src.auth.service.auth_service import AuthService
 from src.auth.service.token_service import TokenService
-from src.auth.utils.jwt_settings import JwtSettings
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
 from src.users.domain.gnb_permission import GNBPermissions
@@ -68,6 +67,7 @@ def sign_in(
         value=token_response.access_token,
         httponly=True,
         secure=True,
+        samesite=None,
     )
 
     return response
@@ -88,12 +88,9 @@ def refresh_access_token(
     user=Depends(get_permission_checker(required_permissions=[])),
     token_service: TokenService = Depends(dependency=Provide[Container.user_service]),
 ):
-    jwt_setting = JwtSettings()
     access_token, access_token_expires = token_service.create_refresh_token(
         subject=user.login_id,
         subject_userid=str(user.user_id),
-        expires_delta=jwt_setting.refresh_token_expired,
-        secret_key=jwt_setting.secret_key,
     )
 
     response = JSONResponse(
