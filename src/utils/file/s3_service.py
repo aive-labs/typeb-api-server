@@ -1,13 +1,9 @@
-import os
-
 import boto3
 
 
 class S3Service:
 
     def __init__(self, bucket_name):
-        os.environ["AWS_PROFILE"] = "wally"
-        # S3 클라이언트 생성
         self.s3_client = boto3.client("s3")
         self.bucket_name = bucket_name
 
