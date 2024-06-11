@@ -49,22 +49,12 @@ class AddCreativesService(AddCreativesUseCase):
         return s3_presigned_url_list
 
     def create_creatives(self, asset_data: CreativeCreate, user) -> list[Creatives]:
-        cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(
-            str(user.user_id)
-        )
         files = asset_data.files
-
-        prefix = "non_style_creative"
-        if asset_data.image_asset_type == ImageAssetTypeEnum.STYLE_IMAGE.value:
-            prefix = asset_data.style_cd
-
-        if prefix is None:
-            raise Exception()
 
         new_creatives_list = [
             Creatives(
-                image_uri=f"{cafe24_info.mall_id}/image_asset/{prefix}/{get_unix_timestamp()}_{file_name}",
-                image_path=f"{cafe24_info.mall_id}/image_asset/{prefix}/{get_unix_timestamp()}_{file_name}",
+                image_uri=file_name,
+                image_path=file_name,
                 image_asset_type=asset_data.image_asset_type.value,
                 style_cd=asset_data.style_cd,
                 style_object_name=asset_data.style_object_name,
