@@ -2,9 +2,9 @@ import logging
 
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
+from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 
-from src.auth.routes.dto.response.token_response import TokenResponse
 from src.auth.service.auth_service import AuthService
 from src.auth.service.token_service import TokenService
 from src.auth.utils.jwt_settings import JwtSettings
@@ -56,12 +56,21 @@ def get_me(user=Depends(get_permission_checker(required_permissions=[]))):
 def sign_in(
     form_data: OAuth2PasswordRequestForm = Depends(),
     auth_service: AuthService = Depends(dependency=Provide[Container.auth_service]),
-) -> TokenResponse:
+):
     login_id = form_data.username
     password = form_data.password
 
     token_response = auth_service.login(login_id, password)
-    return token_response
+
+    response = JSONResponse(content=token_response.model_dump())
+    response.set_cookie(
+        key="access_token",
+        value=token_response.access_token,
+        httponly=True,
+        secure=True,
+    )
+
+    return response
 
 
 @user_router.put("/me", status_code=status.HTTP_200_OK)
@@ -87,8 +96,15 @@ def refresh_access_token(
         secret_key=jwt_setting.secret_key,
     )
 
-    return {
-        "access_token": access_token,
-        "token_type": "Bearer",
-        "access_token_expires_in": access_token_expires,
-    }
+    response = JSONResponse(
+        content={
+            "access_token": access_token,
+            "token_type": "Bearer",
+            "access_token_expires_in": access_token_expires,
+        }
+    )
+    response.set_cookie(
+        key="access_token", value=access_token, httponly=True, secure=True
+    )
+
+    return response

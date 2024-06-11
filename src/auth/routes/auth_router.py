@@ -1,6 +1,5 @@
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
-from fastapi.security import OAuth2PasswordRequestForm
 
 from src.auth.routes.dto.request.cafe24_token_request import OauthAuthenticationRequest
 from src.auth.routes.dto.response.token_response import TokenResponse
@@ -12,19 +11,6 @@ from src.core.container import Container
 auth_router = APIRouter(
     tags=["Auth"],
 )
-
-
-@auth_router.post("/login")
-@inject  # UserService 주입
-def sign_up(
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    auth_service: AuthService = Depends(dependency=Provide[Container.auth_service]),
-) -> TokenResponse:
-    login_id = form_data.username
-    password = form_data.password
-
-    token_response = auth_service.login(login_id, password)
-    return token_response
 
 
 @auth_router.post("/token")
