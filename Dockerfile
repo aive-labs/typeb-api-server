@@ -8,7 +8,24 @@ ENV PYTHONUNBUFFERED=1
 # AWS CLI 설치
 RUN apt-get update && \
     apt-get install -y awscli && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* \
+
+# AWS CLI
+RUN pip install awscli
+
+ENV DEV_AWS_ACCESS_KEY_ID=${DEV_AWS_ACCESS_KEY_ID}
+ENV DEV_AWS_SECRET_ACCESS_KEY=${DEV_AWS_SECRET_ACCESS_KEY}
+ENV DEV_AWS_REGION=${DEV_AWS_REGION}
+
+# 환경 변수 출력 (디버깅 용도)
+RUN echo "AWS_ACCESS_KEY_ID is set to: $DEV_AWS_ACCESS_KEY_ID" && \
+    echo "AWS_SECRET_ACCESS_KEY is set to: $DEV_AWS_SECRET_ACCESS_KEY" && \
+    echo "AWS_REGION is set to: $DEV_AWS_REGION"
+
+# AWS 설정
+RUN aws configure set aws_access_key_id DEV_AWS_ACCESS_KEY_ID && \
+    aws configure set aws_secret_access_key DEV_AWS_SECRET_ACCESS_KEY && \
+    aws configure set default.region DEV_AWS_REGION
 
 # Create and set the working directory
 WORKDIR /app
@@ -19,16 +36,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
 COPY . /app/
-
-ENV DEV_AWS_ACCESS_KEY_ID=${DEV_AWS_ACCESS_KEY_ID}
-ENV DEV_AWS_SECRET_ACCESS_KEY=${DEV_AWS_SECRET_ACCESS_KEY}
-ENV DEV_AWS_REGION=${DEV_AWS_REGION}
-
-# AWS 설정
-RUN aws configure set aws_access_key_id "$DEV_AWS_ACCESS_KEY_ID" && \
-    aws configure set aws_secret_access_key "$DEV_AWS_SECRET_ACCESS_KEY" && \
-    aws configure set default.region "$DEV_AWS_REGION"
-
 
 # Expose the application port
 EXPOSE 8000
