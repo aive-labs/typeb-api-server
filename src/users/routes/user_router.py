@@ -66,8 +66,8 @@ def sign_in(
         key="access_token",
         value=token_response.access_token,
         httponly=True,
-        secure=True,
-        samesite=None,
+        # secure=True,
+        samesite="Lax",
     )
 
     return response
