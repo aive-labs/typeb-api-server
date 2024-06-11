@@ -158,3 +158,14 @@ class CreativesSqlAlchemy:
             ]
             db.add_all(entities)
             db.commit()
+
+    def delete(self, creative_id):
+        with self.db() as db:
+            update_statement = (
+                update(CreativesEntity)
+                .where(CreativesEntity.creative_id == creative_id)
+                .values(is_deleted=True)
+            )
+
+            db.execute(update_statement)
+            db.commit()

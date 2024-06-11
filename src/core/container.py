@@ -8,6 +8,7 @@ from src.auth.service.token_service import TokenService
 from src.contents.infra.creatives_repository import CreativesRepository
 from src.contents.infra.creatives_sqlalchemy_repository import CreativesSqlAlchemy
 from src.contents.service.add_creatives_service import AddCreativesService
+from src.contents.service.delete_creatives_service import DeleteCreativesService
 from src.contents.service.get_creatives_service import GetCreativesService
 from src.core.database import Database, get_db_url
 from src.users.infra.user_repository import UserRepository
@@ -85,6 +86,10 @@ class Container(containers.DeclarativeContainer):
 
     get_creatives_service = providers.Singleton(
         provides=GetCreativesService, creatives_repository=creatives_repository
+    )
+
+    delete_creatives_service = providers.Singleton(
+        provides=DeleteCreativesService, creatives_repository=creatives_repository
     )
 
     # """

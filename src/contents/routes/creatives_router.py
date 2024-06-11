@@ -10,6 +10,9 @@ from src.contents.routes.dto.request.contents_create import StyleObjectBase
 from src.contents.routes.dto.request.creatives_create import CreativeCreate
 from src.contents.routes.dto.response.creative_base import CreativeBase
 from src.contents.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase
+from src.contents.routes.port.usecase.delete_creatives_usecase import (
+    DeleteCreativesUseCase,
+)
 from src.contents.routes.port.usecase.get_creatives_usecase import GetCreativesUseCase
 from src.core.container import Container
 
@@ -70,10 +73,16 @@ def create_img_creatives(
     return add_creatives_service.create_creatives(asset_data=asset_data, user=user)
 
 
-@creatives_router.delete("/{creative_id}")
+@creatives_router.delete("/{creative_id}", status_code=status.HTTP_204_NO_CONTENT)
 @inject
-def delete_img_creatives():
-    pass
+def delete_img_creatives(
+    creative_id: int,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    delete_creatives_service: DeleteCreativesUseCase = Depends(
+        Provide[Container.delete_creatives_service]
+    ),
+):
+    delete_creatives_service.delete_creative(creative_id)
 
 
 @creatives_router.put("/{creative_id}")

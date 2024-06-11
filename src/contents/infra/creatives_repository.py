@@ -31,3 +31,6 @@ class CreativesRepository(BaseCreativesRepository):
 
     def create_creatives(self, creatives_list):
         return self.creative_sqlalchemy.save_creatives(creatives_list)
+
+    def delete(self, creative_id):
+        self.creative_sqlalchemy.delete(creative_id)

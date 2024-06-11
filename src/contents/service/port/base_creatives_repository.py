@@ -26,3 +26,7 @@ class BaseCreativesRepository(ABC):
     @abstractmethod
     def create_creatives(self, creatives_list):
         pass
+
+    @abstractmethod
+    def delete(self, creative_id):
+        pass
