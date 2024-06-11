@@ -17,11 +17,6 @@ ENV DEV_AWS_ACCESS_KEY_ID=${DEV_AWS_ACCESS_KEY_ID}
 ENV DEV_AWS_SECRET_ACCESS_KEY=${DEV_AWS_SECRET_ACCESS_KEY}
 ENV DEV_AWS_REGION=${DEV_AWS_REGION}
 
-# AWS 설정
-RUN aws configure set aws_access_key_id "$DEV_AWS_ACCESS_KEY_ID" && \
-    aws configure set aws_secret_access_key "$DEV_AWS_SECRET_ACCESS_KEY" && \
-    aws configure set default.region "$DEV_AWS_REGION"
-
 # Create and set the working directory
 WORKDIR /app
 
@@ -34,6 +29,11 @@ COPY . /app/
 
 # Expose the application port
 EXPOSE 8000
+
+# AWS 설정
+RUN aws configure set aws_access_key_id "$DEV_AWS_ACCESS_KEY_ID" && \
+    aws configure set aws_secret_access_key "$DEV_AWS_SECRET_ACCESS_KEY" && \
+    aws configure set default.region "$DEV_AWS_REGION"
 
 # Command to run the application
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
