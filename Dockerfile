@@ -23,9 +23,9 @@ RUN echo "AWS_ACCESS_KEY_ID is set to: $DEV_AWS_ACCESS_KEY_ID" && \
     echo "AWS_REGION is set to: $DEV_AWS_REGION"
 
 # AWS 설정
-RUN aws configure set aws_access_key_id DEV_AWS_ACCESS_KEY_ID && \
-    aws configure set aws_secret_access_key DEV_AWS_SECRET_ACCESS_KEY && \
-    aws configure set default.region DEV_AWS_REGION
+RUN aws configure set aws_access_key_id $DEV_AWS_ACCESS_KEY_ID && \
+    aws configure set aws_secret_access_key $DEV_AWS_SECRET_ACCESS_KEY && \
+    aws configure set default.region $DEV_AWS_REGION
 
 # Create and set the working directory
 WORKDIR /app
