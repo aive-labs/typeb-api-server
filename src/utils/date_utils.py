@@ -24,3 +24,9 @@ def calculate_remind_date(end_date, remind_duration):
     remind_date = result_date.strftime("%Y%m%d")
 
     return remind_date
+
+
+def get_unix_timestamp() -> int:
+    # datetime 객체를 Unix 시간 (마이크로초 단위)로 변환
+    now = datetime.now()
+    return int(now.timestamp() * 1_000_000)

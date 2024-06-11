@@ -12,6 +12,7 @@ class CreativeCreate(BaseModel):
     style_cd: str | None
     style_object_name: str | None
     creative_tags: str
+    files: list[str]
 
     @classmethod
     def validate_to_json(cls, value):

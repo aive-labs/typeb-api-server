@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from core.database import BaseModel as Base
 from sqlalchemy import Column, DateTime, Integer, String
+
+from src.core.database import Base
 
 
 class StyleMaster(Base):

@@ -54,8 +54,8 @@ class CreativesSqlAlchemy:
                     StyleMaster.sty_nm,
                     StyleMaster.sty_cd,
                     StyleMaster.rep_nm,
-                    case(
-                        (
+                    case(  # pyright: ignore [reportCallIssue]
+                        (  # pyright: ignore [reportArgumentType]
                             StyleMaster.year2 is not None,
                             func.concat(
                                 StyleMaster.year2, "(", StyleMaster.sty_season_nm, ")"
@@ -86,6 +86,7 @@ class CreativesSqlAlchemy:
                 base_query = base_query.filter(
                     CreativesEntity.image_asset_type == asset_type.value
                 )
+
             if query:
                 query = f"%{query}%"
                 # check query in sty_nm, tags, image_name
@@ -104,10 +105,10 @@ class CreativesSqlAlchemy:
         with self.db() as db:
             style_masters = db.query(
                 StyleMaster.sty_cd.label("style_cd"),
-                func.concat("(", StyleMaster.sty_cd, ")", " ", StyleMaster.sty_nm)
-                .label("style_object_name")
-                .all(),
-            )
+                func.concat(
+                    "(", StyleMaster.sty_cd, ")", " ", StyleMaster.sty_nm
+                ).label("style_object_name"),
+            ).all()
 
             return [
                 StyleObjectBase(

@@ -1,9 +1,10 @@
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, UploadFile, status
+from fastapi import APIRouter, Depends, status
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.common.pagination.pagination_response import PaginationResponse
 from src.contents.enums.image_asset_type import ImageAssetTypeEnum
+from src.contents.infra.dto.response.s3_presigned_response import S3PresignedResponse
 from src.contents.routes.dto.request.contents_create import StyleObjectBase
 from src.contents.routes.dto.request.creatives_create import CreativeCreate
 from src.contents.routes.dto.response.creative_base import CreativeBase
@@ -17,7 +18,7 @@ creatives_router = APIRouter(
 
 
 @creatives_router.get(
-    "/",
+    "",
     response_model=PaginationResponse,
     status_code=status.HTTP_200_OK,
 )
@@ -34,29 +35,26 @@ def get_img_creatives_list(
     ),
 ) -> PaginationResponse[CreativeBase]:
     pagination_result = get_creatives_service.get_creatives(
-        based_on,
-        sort_by,
-        asset_type,
-        query,
-        current_page,
-        per_page,
+        based_on=based_on,
+        sort_by=sort_by,
+        asset_type=asset_type,
+        query=query,
+        current_page=current_page,
+        per_page=per_page,
     )
     return pagination_result
 
 
-@creatives_router.post("/", status_code=status.HTTP_201_CREATED)
+@creatives_router.post("", status_code=status.HTTP_201_CREATED)
 @inject
 def create_img_creatives(
     asset_data: CreativeCreate,
-    files: list[UploadFile],
     user=Depends(get_permission_checker(required_permissions=[])),
     add_creatives_service: AddCreativesUseCase = Depends(
         dependency=Provide[Container.add_creatives_service]
     ),
-):
-    return add_creatives_service.create_creatives(
-        asset_data=asset_data, files=files, user=user
-    )
+) -> list[S3PresignedResponse]:
+    return add_creatives_service.create_creatives(asset_data=asset_data, user=user)
 
 
 @creatives_router.delete("/{creative_id}")

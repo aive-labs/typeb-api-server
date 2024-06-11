@@ -13,7 +13,7 @@ from src.users.routes.user_router import user_router
 def create_app():
     logging.basicConfig(level=logging.INFO)
     app = FastAPI()
-    app.container = Container()
+    app.container = Container()  # pyright: ignore [reportAttributeAccessIssue]
     return app
 
 

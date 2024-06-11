@@ -5,12 +5,10 @@ from src.auth.infra.cafe24_sqlalchemy_repository import Cafe24SqlAlchemyReposito
 from src.auth.service.auth_service import AuthService
 from src.auth.service.cafe24_service import Cafe24Service
 from src.auth.service.token_service import TokenService
-from src.contents.infra.contents_repository import ContentsRepository
-from src.contents.infra.contents_sqlalchemy_repository import ContentsSqlAlchemy
-from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUseCase
-from src.contents.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase
-from src.contents.routes.port.usecase.get_contents_usecase import GetContentsUseCase
-from src.contents.routes.port.usecase.get_creatives_usecase import GetCreativesUseCase
+from src.contents.infra.creatives_repository import CreativesRepository
+from src.contents.infra.creatives_sqlalchemy_repository import CreativesSqlAlchemy
+from src.contents.service.add_creatives_service import AddCreativesService
+from src.contents.service.get_creatives_service import GetCreativesService
 from src.core.database import Database, get_db_url
 from src.users.infra.user_repository import UserRepository
 from src.users.infra.user_sqlalchemy import UserSqlAlchemy
@@ -24,7 +22,7 @@ class Container(containers.DeclarativeContainer):
             "src.users.routes.user_router",
             "src.auth.routes.auth_router",
             # "src.contents.routes.contents_router",
-            # "src.contents.routes.creatives_router",
+            "src.contents.routes.creatives_router",
         ]
     )
 
@@ -70,36 +68,47 @@ class Container(containers.DeclarativeContainer):
     """
     Creatives 의존성 주입
     """
+
+    creatives_sqlalchemy = providers.Singleton(
+        CreativesSqlAlchemy, db=db.provided.session
+    )
+
+    creatives_repository = providers.Singleton(
+        CreativesRepository, creative_sqlalchemy=creatives_sqlalchemy
+    )
+
     add_creatives_service = providers.Singleton(
-        provides=AddCreativesUseCase, user_repository=user_repository
+        provides=AddCreativesService,
+        creatives_repository=creatives_repository,
+        cafe24_repository=cafe24_repository,
     )
 
     get_creatives_service = providers.Singleton(
-        provides=GetCreativesUseCase, user_repository=user_repository
+        provides=GetCreativesService, creatives_repository=creatives_repository
     )
 
-    """
-    컨텐츠 의존성 주입
-    """
-    contents_sqlalchemy = providers.Singleton(
-        provides=ContentsSqlAlchemy, db=db.provided.session
-    )
-
-    contents_repository = providers.Singleton(
-        ContentsRepository, contents_sqlalchemy=contents_sqlalchemy
-    )
-
-    add_contents_service = providers.Singleton(
-        provides=AddContentsUseCase,
-        contents_repository=contents_repository,
-        user_repository=user_repository,
-    )
-
-    get_contents_service = providers.Singleton(
-        provides=GetContentsUseCase,
-        contents_repository=contents_repository,
-        user_repository=user_repository,
-    )
+    # """
+    # 컨텐츠 의존성 주입
+    # """
+    # contents_sqlalchemy = providers.Singleton(
+    #     provides=ContentsSqlAlchemy, db=db.provided.session
+    # )
+    #
+    # contents_repository = providers.Singleton(
+    #     ContentsRepository, contents_sqlalchemy=contents_sqlalchemy
+    # )
+    #
+    # add_contents_service = providers.Singleton(
+    #     provides=AddContentsUseCase,
+    #     contents_repository=contents_repository,
+    #     user_repository=user_repository,
+    # )
+    #
+    # get_contents_service = providers.Singleton(
+    #     provides=GetContentsUseCase,
+    #     contents_repository=contents_repository,
+    #     user_repository=user_repository,
+    # )
 
     """
     타겟 오디언스 의존성 주입
