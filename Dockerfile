@@ -8,7 +8,7 @@ ENV PYTHONUNBUFFERED=1
 # AWS CLI 설치
 RUN apt-get update && \
     apt-get install -y awscli && \
-    rm -rf /var/lib/apt/lists/* \
+    rm -rf /var/lib/apt/lists/*
 
 # Create and set the working directory
 WORKDIR /app
