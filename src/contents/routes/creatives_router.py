@@ -14,6 +14,9 @@ from src.contents.routes.port.usecase.delete_creatives_usecase import (
     DeleteCreativesUseCase,
 )
 from src.contents.routes.port.usecase.get_creatives_usecase import GetCreativesUseCase
+from src.contents.routes.port.usecase.update_creatives_usecase import (
+    UpdateCreativesUseCase,
+)
 from src.core.container import Container
 
 creatives_router = APIRouter(
@@ -85,17 +88,17 @@ def delete_img_creatives(
     delete_creatives_service.delete_creative(creative_id)
 
 
-@creatives_router.put("/{creative_id}")
+@creatives_router.put("/{creative_id}", status_code=status.HTTP_200_OK)
 @inject
 def update_img_creatives(
-    creative_id: str,
+    creative_id: int,
     creative_update: CreativeCreate,
     user=Depends(get_permission_checker(required_permissions=[])),
-    add_creatives_service: AddCreativesUseCase = Depends(
+    update_creatives_service: UpdateCreativesUseCase = Depends(
         dependency=Provide[Container.add_creatives_service]
     ),
-):
-    pass
+) -> Creatives:
+    return update_creatives_service.update_creative(creative_id, creative_update)
 
 
 @creatives_router.get("/{creative_id}")

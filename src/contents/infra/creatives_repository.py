@@ -25,9 +25,9 @@ class CreativesRepository(BaseCreativesRepository):
         return self.creative_sqlalchemy.get_simple_style_list()
 
     def update_creatives(
-        self, creative_id: str, creative_update: CreativeCreate, pre_fix: str
-    ):
-        return self.creative_sqlalchemy.update(creative_id, creative_update, pre_fix)
+        self, creative_id: int, creative_update: CreativeCreate
+    ) -> Creatives:
+        return self.creative_sqlalchemy.update(creative_id, creative_update)
 
     def create_creatives(self, creatives_list):
         return self.creative_sqlalchemy.save_creatives(creatives_list)

@@ -118,12 +118,13 @@ class CreativesSqlAlchemy:
                 for item in style_masters
             ]
 
-    def update(self, creative_id, creative_update, pre_fix):
+    def update(self, creative_id, creative_update) -> Creatives:
         with self.db() as db:
             creative_data = (
-                db.query(Creatives)
+                db.query(CreativesEntity)
                 .filter(
-                    Creatives.creative_id == creative_id, ~CreativesEntity.is_deleted
+                    CreativesEntity.creative_id == creative_id,
+                    ~CreativesEntity.is_deleted,
                 )
                 .first()
             )
@@ -140,8 +141,6 @@ class CreativesSqlAlchemy:
                 "updated_at": creative_update.now(),
             }
 
-            # git
-
             update_statement = (
                 update(CreativesEntity)
                 .where(CreativesEntity.creative_id == creative_id)
@@ -150,6 +149,8 @@ class CreativesSqlAlchemy:
 
             db.execute(update_statement)
             db.commit()
+
+            return ModelConverter.entity_to_model(creative_data, Creatives)
 
     def save_creatives(self, creatives_list):
         with self.db() as db:
