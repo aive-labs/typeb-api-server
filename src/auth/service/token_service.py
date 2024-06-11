@@ -66,8 +66,8 @@ class TokenService:
         )
 
         payload = {
-            "subject": subject,
-            "subject_userid": subject_userid,
+            "email": subject,
+            "user_id": subject_userid,
             "expires": expires_in,
         }
         encoded_jwt = jwt.encode(
