@@ -5,6 +5,7 @@ from sqlalchemy import case, func, or_, update
 from sqlalchemy.orm import Session
 
 from src.contents.domain.creatives import Creatives
+from src.contents.infra.dto.response.creative_recommend import CreativeRecommend
 from src.contents.infra.entity.creatives_entity import CreativesEntity
 from src.contents.infra.entity.style_master_entity import StyleMaster
 from src.contents.routes.dto.request.contents_create import StyleObjectBase
@@ -161,3 +162,78 @@ class CreativesSqlAlchemy:
 
             db.execute(update_statement)
             db.commit()
+
+    def get_creatives_for_contents(
+        self, style_cd_list, given_tag, tag_nm, limit
+    ) -> list[CreativeRecommend]:
+        with self.db() as db:
+            filter_conditions = []
+
+            if tag_nm != "":
+                filter_conditions.append(
+                    CreativesEntity.creative_tags.ilike(f"%{tag_nm}%")
+                )
+                filter_conditions.append(
+                    CreativesEntity.style_object_name.ilike(f"%{tag_nm}%")
+                )
+            elif len(style_cd_list) > 0:
+                filter_conditions.append(
+                    func.lower(CreativesEntity.style_cd).in_(style_cd_list)
+                )
+
+            query = db.query(
+                CreativesEntity.creative_id,
+                CreativesEntity.image_uri,
+                CreativesEntity.creative_tags,
+            ).filter(or_(*filter_conditions))
+
+            if style_cd_list:
+                query = self._add_style_order(query, style_cd_list)
+
+            if given_tag:
+                query = self._add_tag_order(given_tag, query)
+
+            query = self._add_file_order(query)
+
+            result = query.limit(limit).all()
+
+            return [
+                ModelConverter.entity_to_model(entity, CreativeRecommend)
+                for entity in result
+            ]
+
+    def _add_file_order(self, query):
+
+        # TODO
+        file_order = case(
+            (
+                or_(
+                    func.lower(Creatives.image_uri).endswith("1.jpg"),
+                    func.lower(Creatives.image_uri).endswith("1.png"),
+                ),
+                0,
+            ),
+            else_=1,
+        )
+        query = query.order_by(file_order)
+        return query
+
+    def _add_tag_order(self, given_tag, query):
+        tag_order = (
+            func.array_position(
+                func.string_to_array(CreativesEntity.creative_tags, ","), given_tag
+            )
+            .desc()
+            .nullslast()
+        )
+        query = query.order_by(tag_order)
+        return query
+
+    def _add_style_order(self, query, style_cd_list):
+        code_order = case(
+            {code: index for index, code in enumerate(style_cd_list)},
+            value=CreativesEntity.style_cd,
+            else_=len(style_cd_list),
+        )
+        query = query.order_by(code_order)
+        return query

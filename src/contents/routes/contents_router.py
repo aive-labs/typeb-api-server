@@ -1,11 +1,15 @@
-from typing import Optional
+from typing import Optional, Union
 
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.contents.infra.dto.response.contents_menu_response import ContentsMenuResponse
+from src.contents.infra.dto.response.creative_recommend import CreativeRecommend
 from src.contents.routes.port.usecase.get_contents_usecase import GetContentsUseCase
+from src.contents.routes.port.usecase.get_creative_recommendations_for_content_usecase import (
+    GetCreativeRecommendationsForContentUseCase,
+)
 from src.core.container import Container
 
 contents_router = APIRouter(
@@ -20,8 +24,21 @@ def generate_contents():
 
 
 @contents_router.get("/creatives/list")
-def get_img_creatives_list():
-    pass
+def get_img_creatives_list(
+    style_codes: Union[str, None] = None,
+    subject: Union[str, None] = "",
+    material1: Union[str, None] = "",
+    material2: Union[str, None] = "",
+    img_tag_nm: Union[str, None] = "",
+    limit: int = 30,
+    user=Depends(get_permission_checker),
+    get_creative_recommendation: GetCreativeRecommendationsForContentUseCase = Depends(
+        Provide[Container.get_contents_service]
+    ),
+) -> list[CreativeRecommend]:
+    return get_creative_recommendation.execute(
+        style_codes, subject, material1, material2, img_tag_nm, limit
+    )
 
 
 # @contents_router.post("/")

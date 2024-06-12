@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from src.contents.domain.creatives import Creatives
+from src.contents.infra.dto.response.creative_recommend import CreativeRecommend
 from src.contents.routes.dto.response.creative_base import CreativeBase
 
 
@@ -29,4 +30,10 @@ class BaseCreativesRepository(ABC):
 
     @abstractmethod
     def delete(self, creative_id):
+        pass
+
+    @abstractmethod
+    def get_creatives_for_contents(
+        self, style_cd_list, given_tag, tag_nm, limit
+    ) -> list[CreativeRecommend]:
         pass

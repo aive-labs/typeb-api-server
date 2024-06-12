@@ -1,5 +1,6 @@
 from src.contents.domain.creatives import Creatives
 from src.contents.infra.creatives_sqlalchemy_repository import CreativesSqlAlchemy
+from src.contents.infra.dto.response.creative_recommend import CreativeRecommend
 from src.contents.routes.dto.response.creative_base import CreativeBase
 from src.contents.service.port.base_creatives_repository import BaseCreativesRepository
 
@@ -33,3 +34,10 @@ class CreativesRepository(BaseCreativesRepository):
 
     def delete(self, creative_id):
         self.creative_sqlalchemy.delete(creative_id)
+
+    def get_creatives_for_contents(
+        self, style_cd_list, given_tag, tag_nm, limit
+    ) -> list[CreativeRecommend]:
+        return self.creative_sqlalchemy.get_creatives_for_contents(
+            style_cd_list, given_tag, tag_nm, limit
+        )
