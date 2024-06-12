@@ -52,7 +52,7 @@ class TokenService:
         self,
         email: Union[str, Any],
         user_id: Union[str, Any],
-    ) -> str:
+    ) -> tuple[str, str]:
         # KST 기준 토큰 만료시간 계산. datetime.now()
         expires_in = datetime.now() + timedelta(
             minutes=self.jwt_setting.refresh_token_expired

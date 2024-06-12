@@ -55,9 +55,9 @@ class CreativesSqlAlchemy:
                     StyleMaster.sty_nm,
                     StyleMaster.sty_cd,
                     StyleMaster.rep_nm,
-                    case(  # pyright: ignore [reportCallIssue]
-                        (  # pyright: ignore [reportArgumentType]
-                            StyleMaster.year2 is not None,
+                    case(
+                        (
+                            StyleMaster.year2.isnot(None),
                             func.concat(
                                 StyleMaster.year2, "(", StyleMaster.sty_season_nm, ")"
                             ),
