@@ -73,4 +73,4 @@ class TokenService:
         encoded_jwt = jwt.encode(
             claims=payload, key=self.jwt_setting.secret_key, algorithm="HS256"
         )
-        return encoded_jwt
+        return encoded_jwt, expires_in
