@@ -1,4 +1,4 @@
-from src.auth.infra.cafe24_repository import Cafe24Repository
+from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.contents.domain.creatives import Creatives
 from src.contents.enums.image_asset_type import ImageAssetTypeEnum
 from src.contents.infra.dto.response.s3_presigned_response import S3PresignedResponse
@@ -13,7 +13,7 @@ class AddCreativesService(AddCreativesUseCase):
     def __init__(
         self,
         creatives_repository: BaseCreativesRepository,
-        cafe24_repository: Cafe24Repository,
+        cafe24_repository: BaseOauthRepository,
     ):
         self.creatives_repository = creatives_repository
         self.cafe24_repository = cafe24_repository

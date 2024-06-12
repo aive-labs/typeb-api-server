@@ -83,6 +83,10 @@ class Cafe24SqlAlchemyRepository:
                 .filter(Cafe24TokenEntity.state_token == state_token)
                 .first()
             )
+
+            if not entity:
+                raise NotFoundError("state token에 해당하는 데이터를 찾지 못했습니다.")
+
             return Cafe24StateToken(
                 mall_id=entity.mall_id, state_token=entity.state_token
             )

@@ -81,7 +81,7 @@ def test_auth_service():
     return AuthService(TokenService(), FakeUserRepository())
 
 
-def describe_로그인_성공():
+def describe_로그인에_성공한다():
     def 로그인에_성공하면_토큰_응답을_받는다(test_auth_service: AuthService):
         token_response = test_auth_service.login("test0@test.com", "테스트0")
 
@@ -89,7 +89,7 @@ def describe_로그인_성공():
         assert token_response.token_type == "Bearer"
 
 
-def describe_로그인_실패():
+def describe_로그인에_실패한다():
     def 패스워드가_일치하지_않으면_예외를_던진다(test_auth_service: AuthService):
         with pytest.raises(AuthError) as exc_info:
             test_auth_service.login("test0@test.com", "테스트12341234")

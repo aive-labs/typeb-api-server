@@ -1,4 +1,5 @@
 from src.auth.infra.cafe24_sqlalchemy_repository import Cafe24SqlAlchemyRepository
+from src.auth.infra.dto.cafe24_mall_info import Cafe24MallInfo
 from src.auth.infra.dto.cafe24_state_token import Cafe24StateToken
 from src.auth.infra.dto.cafe24_token import Cafe24TokenData
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
@@ -20,5 +21,5 @@ class Cafe24Repository(BaseOauthRepository):
     def save_tokens(self, cafe24_tokens: Cafe24TokenData):
         self.cafe24_sqlalchemy.save_tokens(cafe24_tokens)
 
-    def get_cafe24_info_by_user_id(self, user_id: str):
+    def get_cafe24_info_by_user_id(self, user_id: str) -> Cafe24MallInfo:
         return self.cafe24_sqlalchemy.get_cafe24_info_by_user_id(user_id)

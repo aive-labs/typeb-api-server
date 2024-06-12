@@ -9,10 +9,6 @@ from src.users.routes.port.base_user_service import BaseUserService
 from src.users.service.port.base_user_repository import BaseUserRepository
 from src.users.service.user_service import UserService
 
-# Required
-# * FakeUserService
-# * FakeUserRepository
-
 
 class FakeUserRepository(BaseUserRepository):
 

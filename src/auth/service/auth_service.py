@@ -44,7 +44,11 @@ class AuthService:
         return pwd_context.hash(password)
 
     def verify_password(self, plain_password, hashed_password) -> bool:
-        return pwd_context.verify(plain_password, hashed_password)
+        result = pwd_context.verify(plain_password, hashed_password)
+        print(plain_password)
+        print(hashed_password)
+        print(result)
+        return result
 
     def get_current_user(self, token: str = Depends(reuseable_oauth)):
         try:
