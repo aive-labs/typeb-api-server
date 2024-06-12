@@ -9,8 +9,8 @@ from src.users.domain.user import User
 
 class UpdateCreativesService(UpdateCreativesUseCase):
 
-    def __init__(self, creative_repository: CreativesRepository):
-        self.creative_repository = creative_repository
+    def __init__(self, creatives_repository: CreativesRepository):
+        self.creatives_repository = creatives_repository
 
     def update_creative(
         self, creative_id: int, creative_update: CreativeCreate, user: User
@@ -28,6 +28,6 @@ class UpdateCreativesService(UpdateCreativesUseCase):
             creatives_update_dict["image_uri"] = creative_update.files[0]
             creatives_update_dict["image_path"] = creative_update.files[0]
 
-        return self.creative_repository.update_creatives(
+        return self.creatives_repository.update_creatives(
             creative_id, creatives_update_dict
         )

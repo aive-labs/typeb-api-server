@@ -135,7 +135,7 @@ class CreativesSqlAlchemy:
             update_statement = (
                 update(CreativesEntity)
                 .where(CreativesEntity.creative_id == creative_id)
-                .values(update_values=creative_update_dict)
+                .values(creative_update_dict)
             )
 
             db.execute(update_statement)

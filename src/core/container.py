@@ -10,6 +10,7 @@ from src.contents.infra.creatives_sqlalchemy_repository import CreativesSqlAlche
 from src.contents.service.add_creatives_service import AddCreativesService
 from src.contents.service.delete_creatives_service import DeleteCreativesService
 from src.contents.service.get_creatives_service import GetCreativesService
+from src.contents.service.update_creatives_service import UpdateCreativesService
 from src.core.database import Database, get_db_url
 from src.users.infra.user_repository import UserRepository
 from src.users.infra.user_sqlalchemy import UserSqlAlchemy
@@ -88,6 +89,9 @@ class Container(containers.DeclarativeContainer):
         provides=GetCreativesService, creatives_repository=creatives_repository
     )
 
+    update_creatives_service = providers.Singleton(
+        provides=UpdateCreativesService, creatives_repository=creatives_repository
+    )
     delete_creatives_service = providers.Singleton(
         provides=DeleteCreativesService, creatives_repository=creatives_repository
     )

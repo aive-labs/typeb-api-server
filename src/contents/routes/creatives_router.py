@@ -95,7 +95,7 @@ def update_img_creatives(
     creative_update: CreativeCreate,
     user=Depends(get_permission_checker(required_permissions=[])),
     update_creatives_service: UpdateCreativesUseCase = Depends(
-        dependency=Provide[Container.add_creatives_service]
+        dependency=Provide[Container.update_creatives_service]
     ),
 ) -> Creatives:
     if len(creative_update.files) > 1:
