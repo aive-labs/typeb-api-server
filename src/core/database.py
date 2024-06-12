@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 # SQLAlchemy의 로깅 수준을 디버그로 설정
 logging.basicConfig()
-logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
+logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
 
 
 class DBSettings(BaseSettings):
@@ -33,7 +33,7 @@ class DBSettings(BaseSettings):
 
 
 def get_db_url():
-    db_settings = DBSettings()
+    db_settings = DBSettings()  # pyright: ignore [reportCallIssue]
     print(f"database_connection: {db_settings.database_url}")
     return db_settings.database_url
 

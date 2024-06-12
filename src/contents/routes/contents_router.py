@@ -1,9 +1,9 @@
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, UploadFile
+from fastapi import APIRouter, Depends
 
 from src.auth.utils.permission_checker import get_permission_checker
-from src.contents.routes.dto.request.contents_create import ContentsCreate
-from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUseCase
+from src.contents.infra.dto.response.contents_menu_response import ContentsMenuResponse
+from src.contents.routes.port.usecase.get_contents_usecase import GetContentsUseCase
 from src.core.container import Container
 
 contents_router = APIRouter(
@@ -17,29 +17,42 @@ def generate_contents():
     pass
 
 
-@contents_router.post("/")
-@inject
-def create_contents(
-    content_create: ContentsCreate,
-    files: UploadFile | None = None,
-    user=Depends(get_permission_checker),
-    add_contents_service: AddContentsUseCase = Depends(
-        dependency=Provide[Container.add_contents_service]
-    ),
-):
-    add_contents_service.create_contents(content_create, user, files)
+# @contents_router.post("/")
+# @inject
+# def create_contents(
+#     content_create: ContentsCreate,
+#     files: UploadFile | None = None,
+#     user=Depends(get_permission_checker),
+#     add_contents_service: AddContentsUseCase = Depends(
+#         dependency=Provide[Container.add_contents_service]
+#     ),
+# ):
+#     add_contents_service.create_contents(content_create, user, files)
 
 
 @contents_router.get("/menu/subject")
 @inject
-def get_contents_subject_list():
-    pass
+def get_contents_subject_list(
+    style_yn: bool = True,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    get_contents_service: GetContentsUseCase = Depends(
+        Provide[Container.get_contents_service]
+    ),
+) -> list[ContentsMenuResponse]:
+    return get_contents_service.get_subjects(style_yn)
 
 
 @contents_router.get(path="/menu/with-subject")
 @inject
-def get_contents_menu_list():
-    pass
+def get_contents_menu_list(
+    code: str,
+    name: str,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    get_contents_service: GetContentsUseCase = Depends(
+        Provide[Container.get_contents_service]
+    ),
+):
+    get_contents_service.get_with_subject(code)
 
 
 @contents_router.get("/")

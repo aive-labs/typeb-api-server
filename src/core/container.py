@@ -9,10 +9,9 @@ from src.contents.infra.contents_repository import ContentsRepository
 from src.contents.infra.contents_sqlalchemy_repository import ContentsSqlAlchemy
 from src.contents.infra.creatives_repository import CreativesRepository
 from src.contents.infra.creatives_sqlalchemy_repository import CreativesSqlAlchemy
-from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUseCase
-from src.contents.routes.port.usecase.get_contents_usecase import GetContentsUseCase
 from src.contents.service.add_creatives_service import AddCreativesService
 from src.contents.service.delete_creatives_service import DeleteCreativesService
+from src.contents.service.get_contents_service import GetContentsService
 from src.contents.service.get_creatives_service import GetCreativesService
 from src.contents.service.update_creatives_service import UpdateCreativesService
 from src.core.database import Database, get_db_url
@@ -51,7 +50,6 @@ class Container(containers.DeclarativeContainer):
     인증 의존성 주입
     카페 24 의존성 주입
     """
-
     token_service = providers.Singleton(provides=TokenService)
 
     cafe24_sqlalchemy = providers.Singleton(
@@ -77,7 +75,6 @@ class Container(containers.DeclarativeContainer):
     """
     Creatives 의존성 주입
     """
-
     creatives_sqlalchemy = providers.Singleton(
         CreativesSqlAlchemy, db=db.provided.session
     )
@@ -114,16 +111,15 @@ class Container(containers.DeclarativeContainer):
         ContentsRepository, contents_sqlalchemy=contents_sqlalchemy
     )
 
-    add_contents_service = providers.Singleton(
-        provides=AddContentsUseCase,
-        contents_repository=contents_repository,
-        user_repository=user_repository,
-    )
+    # add_contents_service = providers.Singleton(
+    #     provides=AddContentsService,
+    #     contents_repository=contents_repository,
+    #     user_repository=user_repository,
+    # )
 
     get_contents_service = providers.Singleton(
-        provides=GetContentsUseCase,
+        provides=GetContentsService,
         contents_repository=contents_repository,
-        user_repository=user_repository,
     )
 
     """
