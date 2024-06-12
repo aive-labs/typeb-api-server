@@ -27,7 +27,7 @@ class TokenService:
         }
 
         access_token = self.create_access_token(payload)
-        refresh_token = self.create_refresh_token(
+        refresh_token, _ = self.create_refresh_token(
             email=user.email,
             user_id=str(user.user_id),
         )
