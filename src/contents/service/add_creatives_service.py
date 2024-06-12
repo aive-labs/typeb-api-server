@@ -1,6 +1,5 @@
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.contents.domain.creatives import Creatives
-from src.contents.enums.image_asset_type import ImageAssetTypeEnum
 from src.contents.infra.dto.response.s3_presigned_response import S3PresignedResponse
 from src.contents.routes.dto.request.creatives_create import CreativeCreate
 from src.contents.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase
@@ -29,19 +28,11 @@ class AddCreativesService(AddCreativesUseCase):
         )
         files = asset_data.files
 
-        if asset_data.image_asset_type.value == ImageAssetTypeEnum.STYLE_IMAGE.value:
-            prefix = asset_data.style_cd
-        else:
-            prefix = ImageAssetTypeEnum.NON_STYLE_IMAGE.value
-
-        if prefix is None:
-            raise Exception()
-
         s3_presigned_url_list = [
             S3PresignedResponse(
                 original_file_name=file_name,
                 s3_presigned_url=self.s3_service.generate_presigned_url_for_put(
-                    f"{cafe24_info.mall_id}/image_asset/{prefix}/{get_unix_timestamp()}_{file_name}"
+                    f"{cafe24_info.mall_id}/image_asset/{get_unix_timestamp()}_{file_name}"
                 ),
             )
             for file_name in files
