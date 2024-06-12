@@ -88,7 +88,7 @@ def update_user_profile(
 @inject
 def refresh_access_token(
     user=Depends(get_permission_checker(required_permissions=[])),
-    token_service: TokenService = Depends(dependency=Provide[Container.user_service]),
+    token_service: TokenService = Depends(dependency=Provide[Container.token_service]),
 ):
     access_token, access_token_expires = token_service.create_refresh_token(
         subject=user.login_id,

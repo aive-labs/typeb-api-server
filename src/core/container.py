@@ -47,6 +47,9 @@ class Container(containers.DeclarativeContainer):
     인증 의존성 주입
     카페 24 의존성 주입
     """
+
+    token_service = providers.Singleton(provides=TokenService)
+
     cafe24_sqlalchemy = providers.Singleton(
         Cafe24SqlAlchemyRepository, db=db.provided.session
     )
