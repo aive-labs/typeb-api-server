@@ -20,7 +20,7 @@ class BaseCreativesRepository(ABC):
         pass
 
     @abstractmethod
-    def update_creatives(self, creative_id, creative_update) -> Creatives:
+    def update_creatives(self, creative_id, creative_update_dict: dict) -> Creatives:
         pass
 
     @abstractmethod

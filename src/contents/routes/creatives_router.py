@@ -1,5 +1,5 @@
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.common.pagination.pagination_response import PaginationResponse
@@ -98,12 +98,16 @@ def update_img_creatives(
         dependency=Provide[Container.add_creatives_service]
     ),
 ) -> Creatives:
-    # TODO 업데이트 로직 확인 필요
-    # 1. 업데이트 할 때 값은 그냥 변경한다고 하고
-    # 2. 이미지를 새로 업로드 하는 경우, 기존 파일은 모두 삭제하고 새로 업로드 하는건지, 추가하는건지
-    # 3. 일부만 추가하고 일부는 삭제하는건지
+    if len(creative_update.files) > 1:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "code": "image_asset/update",
+                "message": "한번에 하나의 이미지만 수정할 수 있습니다.",
+            },
+        )
 
-    return update_creatives_service.update_creative(creative_id, creative_update)
+    return update_creatives_service.update_creative(creative_id, creative_update, user)
 
 
 @creatives_router.get("/{creative_id}")

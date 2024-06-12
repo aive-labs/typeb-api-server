@@ -118,7 +118,7 @@ class CreativesSqlAlchemy:
                 for item in style_masters
             ]
 
-    def update(self, creative_id, creative_update) -> Creatives:
+    def update(self, creative_id, creative_update_dict) -> Creatives:
         with self.db() as db:
             creative_data = (
                 db.query(CreativesEntity)
@@ -130,21 +130,12 @@ class CreativesSqlAlchemy:
             )
 
             if creative_data is None:
-                raise NotFoundError("Creative를 찾지 못했습니다.")
-
-            updated_values = {
-                "image_asset_type": creative_update.image_asset_type.value,
-                "style_cd": creative_update.style_cd,
-                "style_object_name": creative_update.style_object_name,
-                "creative_tags": creative_update.creative_tags,
-                "updated_by": creative_update.username,
-                "updated_at": creative_update.now(),
-            }
+                raise NotFoundError("Creative가 존재하지 않습니다")
 
             update_statement = (
                 update(CreativesEntity)
                 .where(CreativesEntity.creative_id == creative_id)
-                .values(update_values=updated_values)
+                .values(update_values=creative_update_dict)
             )
 
             db.execute(update_statement)
