@@ -46,6 +46,10 @@ lint.unfixable = []
 # 사용되지 않는 변수 이름을 지정하는 정규 표현식
 # dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
+[tool.ruff.lint.per-file-ignores]
+"src/test/*" = ["ALL"]
+
+
 [tool.ruff.lint.mccabe]
 # 맥케이브 복잡도 (McCabe complexity) 기준 지정
 # 함수나 메서드의 복잡도 수준을 10으로 설정. 즉, 복잡도가 10을 초과하면 경고를 발생시킴.

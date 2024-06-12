@@ -30,8 +30,7 @@ class AuthService:
             raise NotFoundError("가입되지 않은 사용자 입니다.")
 
         # 패스워드 일치 확인
-        hashed_password = self.get_password_hash(password)
-        if self.verify_password(user.password, hashed_password):
+        if not self.verify_password(password, user.password):
             raise AuthError("패스워드가 일치하지 않습니다.")
 
         # 토큰 발급

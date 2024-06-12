@@ -1,17 +1,13 @@
-import os
-
 import pytest
 from fastapi import HTTPException
 
-print(f"ff {os.getcwd()}")
-
-
-from users.domain.user import User
-from users.routes.dto.request.user_create_request import UserCreate
-from users.routes.dto.response.user_response import UserResponse
-from users.routes.port.base_user_service import BaseUserService
-from users.service.port.base_user_repository import BaseUserRepository
-from users.service.user_service import UserService
+from src.users.domain.user import User
+from src.users.routes.dto.request.user_create import UserCreate
+from src.users.routes.dto.request.user_modify import UserModify
+from src.users.routes.dto.response.user_response import UserResponse
+from src.users.routes.port.base_user_service import BaseUserService
+from src.users.service.port.base_user_repository import BaseUserRepository
+from src.users.service.user_service import UserService
 
 # Required
 # * FakeUserService
@@ -19,6 +15,7 @@ from users.service.user_service import UserService
 
 
 class FakeUserRepository(BaseUserRepository):
+
     def __init__(self):
         self.users: list[User] = []
         self.auto_increment_id = 2
@@ -58,8 +55,14 @@ class FakeUserRepository(BaseUserRepository):
 
         return user
 
-    def update_user(self, user_id: int, user_create: UserCreate):
-        raise NotImplementedError
+    def is_existing_user(self, email: str) -> bool:
+        for user in self.users:
+            if user.email == email:
+                return True
+        return False
+
+    def update_user(self, user_modify: UserModify):
+        pass
 
     def delete_user(self, user_id: int):
         self.users = [user for user in self.users if user.user_id != user_id]
@@ -79,6 +82,7 @@ class FakeUserRepository(BaseUserRepository):
 
 
 class FakeUserService(BaseUserService):
+
     def __init__(self, user_repository: BaseUserRepository):
         self.user_service = UserService(user_repository=user_repository)
 
@@ -86,11 +90,11 @@ class FakeUserService(BaseUserService):
         user = self.user_service.register_user(user_create)
         return UserResponse(**user.model_dump())
 
-    def update_user(self, user_id: int, user):
-        pass
-
     def delete_user(self, user_id: int):
         self.user_service.delete_user(user_id=user_id)
+
+    def update_user(self, user_modify: UserModify):
+        pass
 
     def get_user_by_id(self, user_id: int):
         return self.user_service.get_user_by_id(user_id=user_id)
@@ -129,7 +133,7 @@ def test_signin_user(test_user_service: FakeUserService):
 
 
 @pytest.mark.describe("사용자 이메일이 존재하면 예외를 던진다.")
-def test_sigin_duplicated_user(test_user_service: FakeUserService):
+def test_signin_duplicated_user(test_user_service: FakeUserService):
     user_create: UserCreate = UserCreate(
         username="테스트",
         password="테스트",
