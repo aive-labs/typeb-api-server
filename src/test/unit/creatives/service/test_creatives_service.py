@@ -269,7 +269,7 @@ def describe_소재_생성에_성공한다():
         parts = base_url.rsplit("/", 1)
         directory_path = parts[0].split("amazonaws.com/")[-1]
         file_name = parts[1].split("_")[-1]
-        assert directory_path == f"mall_001/image_asset/{creative_create.style_cd}"
+        assert directory_path == f"mall_001/image_asset"
         assert file_name == creative_create.files[0]
 
     def 스타일이_없는_경우_s3_presigned_url을_발급한다(
@@ -300,10 +300,7 @@ def describe_소재_생성에_성공한다():
         parts = base_url.rsplit("/", 1)
         directory_path = parts[0].split("amazonaws.com/")[-1]
         file_name = parts[1].split("_")[-1]
-        assert (
-            directory_path
-            == f"mall_001/image_asset/{creative_create.image_asset_type.NON_STYLE_IMAGE.value}"
-        )
+        assert directory_path == f"mall_001/image_asset"
         assert file_name == creative_create.files[0]
 
     def 소재를_생성한다():

@@ -1,4 +1,5 @@
 import boto3
+from botocore.exceptions import ClientError, NoCredentialsError
 
 
 class S3Service:
@@ -29,3 +30,12 @@ class S3Service:
             print(f"Error generating presigned URL: {e}")
             return None
         return response
+
+    def delete_object(self, key: str):
+        try:
+            # 파일 삭제
+            self.s3_client.delete_object(Bucket=self.bucket_name, Key=key)
+        except NoCredentialsError:
+            print("s3 delete - Credentials not available")
+        except ClientError as e:
+            print(f"Error: {e}")
