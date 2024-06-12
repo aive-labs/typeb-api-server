@@ -28,8 +28,8 @@ class TokenService:
 
         access_token = self.create_access_token(payload)
         refresh_token = self.create_refresh_token(
-            subject=user.email,
-            subject_userid=str(user.user_id),
+            email=user.email,
+            user_id=str(user.user_id),
         )
 
         return TokenResponse(
@@ -50,8 +50,8 @@ class TokenService:
 
     def create_refresh_token(
         self,
-        subject: Union[str, Any],
-        subject_userid: Union[str, Any],
+        email: Union[str, Any],
+        user_id: Union[str, Any],
     ) -> str:
         # KST 기준 토큰 만료시간 계산. datetime.now()
         expires_in = datetime.now() + timedelta(
@@ -66,8 +66,8 @@ class TokenService:
         )
 
         payload = {
-            "email": subject,
-            "user_id": subject_userid,
+            "email": email,
+            "user_id": user_id,
             "expires": expires_in,
         }
         encoded_jwt = jwt.encode(

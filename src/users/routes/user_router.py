@@ -91,8 +91,8 @@ def refresh_access_token(
     token_service: TokenService = Depends(dependency=Provide[Container.token_service]),
 ):
     access_token, access_token_expires = token_service.create_refresh_token(
-        subject=user.login_id,
-        subject_userid=str(user.user_id),
+        email=user.email,
+        user_id=str(user.user_id),
     )
 
     response = JSONResponse(
