@@ -35,8 +35,8 @@ def get_img_creatives_list(
     based_on: str = "updated_at",  # Enum으로 변경
     sort_by: str = "desc",  # Enum으로 변경
     query: str | None = None,
-    current_page: int | None = 1,
-    per_page: int | None = 10,
+    current_page: int = 1,
+    per_page: int = 10,
     get_creatives_service: GetCreativesUseCase = Depends(
         Provide[Container.get_creatives_service]
     ),

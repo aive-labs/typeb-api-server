@@ -1,3 +1,5 @@
+from typing import Optional
+
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
 
@@ -14,6 +16,11 @@ contents_router = APIRouter(
 @contents_router.post("/generate")
 @inject  # UserService 주입
 def generate_contents():
+    pass
+
+
+@contents_router.get("/creatives/list")
+def get_img_creatives_list():
     pass
 
 
@@ -46,19 +53,36 @@ def get_contents_subject_list(
 @inject
 def get_contents_menu_list(
     code: str,
-    name: str,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    get_contents_service: GetContentsUseCase = Depends(
+        Provide[Container.get_contents_service]
+    ),
+) -> dict:
+    return get_contents_service.get_with_subject(code)
+
+
+@contents_router.get("/")
+@inject
+def get_contents_list(
+    based_on="updated_at",
+    sort_by="desc",
+    query: Optional[str] = None,
+    current_page: int = 1,
+    per_page: int = 10,
     user=Depends(get_permission_checker(required_permissions=[])),
     get_contents_service: GetContentsUseCase = Depends(
         Provide[Container.get_contents_service]
     ),
 ):
-    get_contents_service.get_with_subject(code)
+    pagination_result = get_contents_service.get_contents_list(
+        based_on=based_on,
+        sort_by=sort_by,
+        query=query,
+        current_page=current_page,
+        per_page=per_page,
+    )
 
-
-@contents_router.get("/")
-@inject
-def get_contents_list():
-    pass
+    return pagination_result
 
 
 @contents_router.get("/{contents_id}")

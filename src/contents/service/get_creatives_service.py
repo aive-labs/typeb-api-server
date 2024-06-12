@@ -28,7 +28,9 @@ class GetCreativesService(GetCreativesUseCase):
             based_on, sort_by, asset_type, query
         )
 
-        for creative in creative_list:
+        items = creative_list[(current_page - 1) * per_page : current_page * per_page]
+
+        for creative in items:
             creative.set_presigned_url(
                 self.s3_service.generate_presigned_url_for_get(creative.image_path)
             )
@@ -40,9 +42,7 @@ class GetCreativesService(GetCreativesUseCase):
             total_page=len(creative_list) // per_page + 1,
         )
 
-        return PaginationResponse[CreativeBase](
-            status="success", items=creative_list, pagination=pagination
-        )
+        return PaginationResponse[CreativeBase](items=items, pagination=pagination)
 
     def get_style_list(self) -> list[StyleObjectBase]:
         return self.creatives_repository.get_simple_style_list()
