@@ -29,9 +29,10 @@ class AddCreativesService(AddCreativesUseCase):
         )
         files = asset_data.files
 
-        prefix = "non_style_creative"
-        if asset_data.image_asset_type == ImageAssetTypeEnum.STYLE_IMAGE.value:
+        if asset_data.image_asset_type.value == ImageAssetTypeEnum.STYLE_IMAGE.value:
             prefix = asset_data.style_cd
+        else:
+            prefix = ImageAssetTypeEnum.NON_STYLE_IMAGE.value
 
         if prefix is None:
             raise Exception()
