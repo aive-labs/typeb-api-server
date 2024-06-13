@@ -187,11 +187,7 @@ class CreativesSqlAlchemy:
                     func.lower(CreativesEntity.style_cd).in_(style_cd_list)
                 )
 
-            query = db.query(
-                CreativesEntity.creative_id,
-                CreativesEntity.image_uri,
-                CreativesEntity.creative_tags,
-            ).filter(or_(*filter_conditions))
+            query = db.query(CreativesEntity).filter(or_(*filter_conditions))
 
             if style_cd_list:
                 query = self._add_style_order(query, style_cd_list)
