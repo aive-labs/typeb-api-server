@@ -1,6 +1,6 @@
 import aiofiles
 from bs4 import BeautifulSoup
-from fastapi import HTTPException, UploadFile
+from fastapi import HTTPException
 
 from src.contents.domain.contents import Contents
 from src.contents.enums.contents_status import ContentsStatus
@@ -20,12 +20,7 @@ class AddContentsService(AddContentsUseCase):
         self.content_repository = content_repository
         self.user_repository = user_repository
 
-    async def create_contents(
-        self,
-        contents_create: ContentsCreate,
-        user: User,
-        files: UploadFile | None = None,
-    ):
+    async def create_contents(self, contents_create: ContentsCreate, user: User):
 
         contents_urls = self.content_repository.get_contents_url_list()
         contents_uuids = [url.split("=")[-1] for url in contents_urls]
