@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from src.common.pagination.pagination_response import PaginationResponse
 from src.contents.domain.creatives import Creatives
-from src.contents.routes.dto.request.contents_create import StyleObjectBase
+from src.contents.routes.dto.request.contents_create import StyleObject
 from src.contents.routes.dto.response.creative_base import CreativeBase
 
 
@@ -14,7 +14,7 @@ class GetCreativesUseCase(ABC):
         pass
 
     @abstractmethod
-    def get_style_list(self) -> list[StyleObjectBase]:
+    def get_style_list(self) -> list[StyleObject]:
         pass
 
     @abstractmethod

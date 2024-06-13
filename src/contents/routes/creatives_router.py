@@ -6,8 +6,11 @@ from src.common.pagination.pagination_response import PaginationResponse
 from src.contents.domain.creatives import Creatives
 from src.contents.enums.image_asset_type import ImageAssetTypeEnum
 from src.contents.infra.dto.response.s3_presigned_response import S3PresignedResponse
-from src.contents.routes.dto.request.contents_create import StyleObjectBase
+from src.contents.routes.dto.request.contents_create import StyleObject
 from src.contents.routes.dto.request.creatives_create import CreativeCreate
+from src.contents.routes.dto.request.s3_presigned_url_request import (
+    S3PresignedUrlRequest,
+)
 from src.contents.routes.dto.response.creative_base import CreativeBase
 from src.contents.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase
 from src.contents.routes.port.usecase.delete_creatives_usecase import (
@@ -55,7 +58,7 @@ def get_img_creatives_list(
 @creatives_router.post("/upload", status_code=status.HTTP_200_OK)
 @inject
 def generate_s3_presigned_url(
-    asset_data: CreativeCreate,
+    asset_data: S3PresignedUrlRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
     add_creatives_service: AddCreativesUseCase = Depends(
         dependency=Provide[Container.add_creatives_service]
@@ -130,5 +133,5 @@ def get_style_list(
     get_creatives_service: GetCreativesUseCase = Depends(
         Provide[Container.get_creatives_service]
     ),
-) -> list[StyleObjectBase]:
+) -> list[StyleObject]:
     return get_creatives_service.get_style_list()

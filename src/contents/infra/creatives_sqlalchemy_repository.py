@@ -8,7 +8,7 @@ from src.contents.domain.creatives import Creatives
 from src.contents.infra.dto.response.creative_recommend import CreativeRecommend
 from src.contents.infra.entity.creatives_entity import CreativesEntity
 from src.contents.infra.entity.style_master_entity import StyleMasterEntity
-from src.contents.routes.dto.request.contents_create import StyleObjectBase
+from src.contents.routes.dto.request.contents_create import StyleObject
 from src.contents.routes.dto.response.creative_base import CreativeBase
 from src.core.exceptions import NotFoundError
 from src.utils.file.model_converter import ModelConverter
@@ -109,7 +109,7 @@ class CreativesSqlAlchemy:
 
             return [CreativeBase.model_validate(item) for item in base_query.all()]
 
-    def get_simple_style_list(self) -> list[StyleObjectBase]:
+    def get_simple_style_list(self) -> list[StyleObject]:
         with self.db() as db:
             style_masters = db.query(
                 StyleMasterEntity.sty_cd.label("style_cd"),
@@ -119,7 +119,7 @@ class CreativesSqlAlchemy:
             ).all()
 
             return [
-                StyleObjectBase(
+                StyleObject(
                     style_cd=item.style_cd, style_object_name=item.style_object_name
                 )
                 for item in style_masters

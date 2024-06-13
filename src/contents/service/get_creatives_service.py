@@ -1,7 +1,7 @@
 from src.common.pagination.pagination_base import PaginationBase
 from src.common.pagination.pagination_response import PaginationResponse
 from src.contents.domain.creatives import Creatives
-from src.contents.routes.dto.request.contents_create import StyleObjectBase
+from src.contents.routes.dto.request.contents_create import StyleObject
 from src.contents.routes.dto.response.creative_base import CreativeBase
 from src.contents.routes.port.usecase.get_creatives_usecase import GetCreativesUseCase
 from src.contents.service.port.base_creatives_repository import BaseCreativesRepository
@@ -44,5 +44,5 @@ class GetCreativesService(GetCreativesUseCase):
 
         return PaginationResponse[CreativeBase](items=items, pagination=pagination)
 
-    def get_style_list(self) -> list[StyleObjectBase]:
+    def get_style_list(self) -> list[StyleObject]:
         return self.creatives_repository.get_simple_style_list()
