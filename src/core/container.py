@@ -13,6 +13,9 @@ from src.contents.service.add_contents_service import AddContentsService
 from src.contents.service.add_creatives_service import AddCreativesService
 from src.contents.service.delete_creatives_service import DeleteCreativesService
 from src.contents.service.get_contents_service import GetContentsService
+from src.contents.service.get_creative_recommendations_for_content import (
+    GetCreativeRecommendationsForContent,
+)
 from src.contents.service.get_creatives_service import GetCreativesService
 from src.contents.service.update_creatives_service import UpdateCreativesService
 from src.core.database import Database, get_db_url
@@ -121,6 +124,11 @@ class Container(containers.DeclarativeContainer):
     get_contents_service = providers.Singleton(
         provides=GetContentsService,
         contents_repository=contents_repository,
+    )
+
+    get_creative_recommendation = providers.Singleton(
+        provides=GetCreativeRecommendationsForContent,
+        creatives_repository=creatives_repository,
     )
 
     """

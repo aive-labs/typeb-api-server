@@ -57,7 +57,7 @@ def get_img_creatives_list(
     limit: int = 30,
     user=Depends(get_permission_checker(required_permissions=[])),
     get_creative_recommendation: GetCreativeRecommendationsForContentUseCase = Depends(
-        Provide[Container.get_contents_service]
+        Provide[Container.get_creative_recommendation]
     ),
 ) -> list[CreativeRecommend]:
     return get_creative_recommendation.execute(
