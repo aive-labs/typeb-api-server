@@ -42,27 +42,27 @@ class AddContentsService(AddContentsUseCase):
         ]
         external_html_body = contents_create.contents_body
 
-        url_from = "https://was.ttalk.biz/creatives"
-        url_to = "/assets"
-        external_html_body = external_html_body.replace(url_from, url_to)
+        # url_from = "https://was.ttalk.biz/creatives"
+        # url_to = "/assets"
+        # external_html_body = external_html_body.replace(url_from, url_to)
 
-        resource_domain = "aivelabs.com"
+        # resource_domain = "aivelabs.com"
 
         # 썸네일 저장
         # 썸네일 파일이 있는 경우
         if contents_create.thumbnail:
             # 파일을 저장한다.
             thumbnail_uri = contents_create.thumbnail
-            pass
         elif image_source:
             # 썸네일을 따로 저장하진 않는 경우
             thumbnail_uri = image_source[0]
         else:
-            thumbnail_uri = resource_domain + "contents/thumbnail/default.png"
+            thumbnail_uri = "contents/thumbnail/default.png"
 
         # save html
-        contents_domain = "s3.amazonaws.com"
-        contents_url = f"{contents_domain}/contents/?id={new_uuid}"
+        mall_id = "tinyhuman"
+        contents_url = f"{mall_id}/contents/?id={new_uuid}"
+
         html_path = f"app/resources/contents/{new_uuid}.html"
         # 파일로 html을 저장
         await save_html(html_path, external_html_body)
@@ -114,7 +114,7 @@ class AddContentsService(AddContentsUseCase):
 
         self.content_repository.add_contents(contents=contents)
 
-        return contents
+        # return contents
 
 
 async def save_html(html_path, body):
