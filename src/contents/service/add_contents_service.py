@@ -32,7 +32,7 @@ class AddContentsService(AddContentsUseCase):
         uuid = "1234"
 
         # contents_create
-        resource_path = Path("app/resources/")
+        resource_path = Path("app/generator/")
 
         # body 태그 내의 모든 텍스트를 추출합니다.
         soup = BeautifulSoup(contents_create.contents_body, "html.parser")
@@ -64,7 +64,7 @@ class AddContentsService(AddContentsUseCase):
             thumbnail_uri = resource_domain + "contents/thumbnail/default.png"
 
         contents_url = "contents_domain" + f"contents/?id={uuid}"
-        html_path = f"app/resources/contents/{uuid}.html"
+        html_path = f"app/generator/contents/{uuid}.html"
 
         await save_html(html_path, external_html_body)
 

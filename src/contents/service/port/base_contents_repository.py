@@ -29,3 +29,7 @@ class BaseContentsRepository(ABC):
     @abstractmethod
     def get_contents_list(self, based_on, sort_by, query) -> list[ContentsResponse]:
         pass
+
+    @abstractmethod
+    def get_subject_by_code(self, subject: str) -> ContentsMenu:
+        pass

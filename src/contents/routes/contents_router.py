@@ -17,13 +17,35 @@ contents_router = APIRouter(
 )
 
 
-@contents_router.post("/generate")
-@inject  # UserService 주입
-def generate_contents():
-    pass
+# @contents_router.post("/generate")
+# @inject  # UserService 주입
+# def generate_contents(
+#     contents_generate: ContentsGenerate,
+#     user=Depends(get_permission_checker(required_permissions=[])),
+# ):
+#     """
+#     문장 메시지 생성 API
+#     템플릿 : subject/material1,2 무관
+#     subject - 상품존재 RAG
+#     subject - 상품X
+#     트래킹코스 소개-등산용품이야기(sn1~sn7) RAG
+#     상품관리 TIP : DB데이터+GPT
+#     자유주제 : GPT
+#     """
+#
+#     selected_template = contents_template_prompts[contents_generate.template]
+#     chain = StreamingConversationChain(
+#         openai_api_key=get_env_variable("openai_api_key"),
+#     )
+#
+#     return StreamingResponse(
+#         chain.generate_response(selected_template, message, **kwargs_dict),
+#         media_type="text/event-stream"
+#     )
 
 
 @contents_router.get("/creatives/list")
+@inject
 def get_img_creatives_list(
     style_codes: Union[str, None] = None,
     subject: Union[str, None] = "",
@@ -31,7 +53,7 @@ def get_img_creatives_list(
     material2: Union[str, None] = "",
     img_tag_nm: Union[str, None] = "",
     limit: int = 30,
-    user=Depends(get_permission_checker),
+    user=Depends(get_permission_checker(required_permissions=[])),
     get_creative_recommendation: GetCreativeRecommendationsForContentUseCase = Depends(
         Provide[Container.get_contents_service]
     ),

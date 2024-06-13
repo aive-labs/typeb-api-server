@@ -65,7 +65,7 @@ class AddCreativesService(AddCreativesUseCase):
 # async def save_image_asset(
 #     file,
 #     prefix="",
-#     resource_path="app/resources/image_asset",
+#     resource_path="app/generator/image_asset",
 #     custom_name=None,
 # ) -> tuple[str, str]:
 #     """이미지 에셋을 업로드하는 함수
@@ -115,7 +115,7 @@ class AddCreativesService(AddCreativesUseCase):
 #     return str(image_name), str(image_path)
 #
 #
-# async def delete_image_asset(image_name, resource_path="app/resources/image_asset"):
+# async def delete_image_asset(image_name, resource_path="app/generator/image_asset"):
 #     """이미지 에셋을 삭제하는 함수
 #
 #     Args:

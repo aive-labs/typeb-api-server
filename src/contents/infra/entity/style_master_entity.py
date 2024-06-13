@@ -5,7 +5,7 @@ from sqlalchemy import Column, DateTime, Integer, String
 from src.core.database import Base
 
 
-class StyleMaster(Base):
+class StyleMasterEntity(Base):
     __tablename__ = "style_master"
 
     comp_cd = Column(String(4))

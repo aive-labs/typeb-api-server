@@ -1,12 +1,13 @@
-from core.database import BaseModel as Base
 from sqlalchemy import (
     Column,
     Integer,
     String,
 )
 
+from src.core.database import Base
 
-class ContentsRetrieverProductTip(Base):
+
+class ContentsRetrieverProductTipEntity(Base):
     __tablename__ = "contents_retriever_product_tip"
 
     id = Column(Integer, primary_key=True, index=True)

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class StyleObjectBase(BaseModel):
+class StyleObject(BaseModel):
     """Style 생성 API Object (Post)"""
 
     style_cd: str
@@ -13,7 +13,7 @@ class ContentsCreate(BaseModel):
 
     contents_name: str
     contents_body: str  # file로 할 수도 있음
-    sty_cd: list[StyleObjectBase] = []
+    sty_cd: list[StyleObject] = []
     subject: str
     material1: str | None = None
     material2: str | None = None

@@ -28,3 +28,6 @@ class ContentsRepository(BaseContentsRepository):
         return self.contents_sqlalchemy.get_contents_list(
             based_on, sort_by, query=query
         )
+
+    def get_subject_by_code(self, subject: str) -> ContentsMenu:
+        return self.contents_sqlalchemy.get_subject_by_code(subject)

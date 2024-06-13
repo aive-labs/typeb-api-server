@@ -1,12 +1,13 @@
-from core.database import BaseModel as Base
 from sqlalchemy import (
     Column,
     Integer,
     String,
 )
 
+from src.core.database import Base
 
-class ContentsRetrieverHikingCourse(Base):
+
+class ContentsRetrieverHikingCourseEntity(Base):
     __tablename__ = "contents_retriever_hiking_course"
 
     id = Column(Integer, primary_key=True, index=True)

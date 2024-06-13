@@ -129,3 +129,16 @@ class ContentsSqlAlchemy:
                 ModelConverter.entity_to_model(entity, ContentsResponse)
                 for entity in entities
             ]
+
+    def get_subject_by_code(self, subject) -> ContentsMenu:
+        with self.db() as db:
+            entity = (
+                db.query(ContentsMenuEntity)
+                .filter(ContentsMenuEntity.code == subject)
+                .first()
+            )
+
+            if not entity:
+                raise NotFoundError("해당하는 menu가 존재하지 않습니다.")
+
+            return ModelConverter.entity_to_model(entity, ContentsMenu)

@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from src.contents.domain.creatives import Creatives
 from src.contents.infra.dto.response.creative_recommend import CreativeRecommend
 from src.contents.infra.entity.creatives_entity import CreativesEntity
-from src.contents.infra.entity.style_master_entity import StyleMaster
+from src.contents.infra.entity.style_master_entity import StyleMasterEntity
 from src.contents.routes.dto.request.contents_create import StyleObjectBase
 from src.contents.routes.dto.response.creative_base import CreativeBase
 from src.core.exceptions import NotFoundError
@@ -53,28 +53,34 @@ class CreativesSqlAlchemy:
                     CreativesEntity.image_asset_type,
                     CreativesEntity.image_uri,
                     CreativesEntity.image_path,
-                    StyleMaster.sty_nm,
-                    StyleMaster.sty_cd,
-                    StyleMaster.rep_nm,
+                    StyleMasterEntity.sty_nm,
+                    StyleMasterEntity.sty_cd,
+                    StyleMasterEntity.rep_nm,
                     case(
                         (
-                            StyleMaster.year2.isnot(None),
+                            StyleMasterEntity.year2.isnot(None),
                             func.concat(
-                                StyleMaster.year2, "(", StyleMaster.sty_season_nm, ")"
+                                StyleMasterEntity.year2,
+                                "(",
+                                StyleMasterEntity.sty_season_nm,
+                                ")",
                             ),
                         ),
                         else_=None,
                     ).label("year_season"),
-                    StyleMaster.it_gb_nm,
-                    StyleMaster.item_nm,
-                    StyleMaster.item_sb_nm,
-                    StyleMaster.purpose1.label("purpose"),
-                    StyleMaster.cons_pri.label("price"),
+                    StyleMasterEntity.it_gb_nm,
+                    StyleMasterEntity.item_nm,
+                    StyleMasterEntity.item_sb_nm,
+                    StyleMasterEntity.purpose1.label("purpose"),
+                    StyleMasterEntity.cons_pri.label("price"),
                     CreativesEntity.creative_tags.label("creative_tags"),
                     CreativesEntity.updated_by.label("updated_by"),
                     CreativesEntity.updated_at.label("updated_at"),
                 )
-                .outerjoin(StyleMaster, StyleMaster.sty_cd == CreativesEntity.style_cd)
+                .outerjoin(
+                    StyleMasterEntity,
+                    StyleMasterEntity.sty_cd == CreativesEntity.style_cd,
+                )
                 .filter(~CreativesEntity.is_deleted)
             )
 
@@ -94,8 +100,8 @@ class CreativesSqlAlchemy:
                 # check query in sty_nm, tags, image_name
                 base_query = base_query.filter(
                     or_(
-                        StyleMaster.sty_nm.ilike(query),
-                        StyleMaster.sty_cd.ilike(query),
+                        StyleMasterEntity.sty_nm.ilike(query),
+                        StyleMasterEntity.sty_cd.ilike(query),
                         CreativesEntity.creative_tags.ilike(query),
                         CreativesEntity.image_uri.ilike(query),
                     )
@@ -106,9 +112,9 @@ class CreativesSqlAlchemy:
     def get_simple_style_list(self) -> list[StyleObjectBase]:
         with self.db() as db:
             style_masters = db.query(
-                StyleMaster.sty_cd.label("style_cd"),
+                StyleMasterEntity.sty_cd.label("style_cd"),
                 func.concat(
-                    "(", StyleMaster.sty_cd, ")", " ", StyleMaster.sty_nm
+                    "(", StyleMasterEntity.sty_cd, ")", " ", StyleMasterEntity.sty_nm
                 ).label("style_object_name"),
             ).all()
 
@@ -193,7 +199,7 @@ class CreativesSqlAlchemy:
             if given_tag:
                 query = self._add_tag_order(given_tag, query)
 
-            query = self._add_file_order(query)
+            # query = self._add_file_order(query)
 
             result = query.limit(limit).all()
 
@@ -202,21 +208,18 @@ class CreativesSqlAlchemy:
                 for entity in result
             ]
 
-    def _add_file_order(self, query):
-
-        # TODO
-        file_order = case(
-            (
-                or_(
-                    func.lower(Creatives.image_uri).endswith("1.jpg"),
-                    func.lower(Creatives.image_uri).endswith("1.png"),
-                ),
-                0,
-            ),
-            else_=1,
-        )
-        query = query.order_by(file_order)
-        return query
+    # def _add_file_order(self, query):
+    #
+    #     # TODO
+    #     file_order = case(
+    #         (or_(
+    #             func.lower(CreativesEntity.image_uri).endswith("1.jpg"),
+    #             func.lower(CreativesEntity.image_uri).endswith("1.png")),
+    #          0),
+    #         else_=1,
+    #     )
+    #     query = query.order_by(file_order)
+    #     return query
 
     def _add_tag_order(self, given_tag, query):
         tag_order = (
