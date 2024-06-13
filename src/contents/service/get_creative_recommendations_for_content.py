@@ -9,8 +9,8 @@ from src.contents.routes.port.usecase.get_creative_recommendations_for_content_u
 
 class GetCreativeRecommendationsForContent(GetCreativeRecommendationsForContentUseCase):
 
-    def __init__(self, creative_repository: CreativesRepository):
-        self.creative_repository = creative_repository
+    def __init__(self, creatives_repository: CreativesRepository):
+        self.creatives_repository = creatives_repository
 
     def execute(
         self,
@@ -25,6 +25,6 @@ class GetCreativeRecommendationsForContent(GetCreativeRecommendationsForContentU
         tag_list = [var for var in [subject, material1, material2] if var]
         given_tag = ",".join(tag_list)
 
-        return self.creative_repository.get_creatives_for_contents(
+        return self.creatives_repository.get_creatives_for_contents(
             style_cd_list, given_tag, img_tag_nm, limit
         )
