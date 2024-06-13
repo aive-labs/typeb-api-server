@@ -24,4 +24,4 @@ class ContentsCreate(BaseModel):
     publication_end: str | None = None
     is_public: bool
     contents_tags: str | None = None
-    file: str | None = None
+    thumbnail: str | None = None

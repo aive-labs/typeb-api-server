@@ -50,8 +50,9 @@ class AddContentsService(AddContentsUseCase):
 
         # 썸네일 저장
         # 썸네일 파일이 있는 경우
-        if contents_create.file:
+        if contents_create.thumbnail:
             # 파일을 저장한다.
+            thumbnail_uri = contents_create.thumbnail
             pass
         elif image_source:
             # 썸네일을 따로 저장하진 않는 경우
