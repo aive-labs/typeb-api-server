@@ -31,3 +31,6 @@ class ContentsRepository(BaseContentsRepository):
 
     def get_subject_by_code(self, subject: str) -> ContentsMenu:
         return self.contents_sqlalchemy.get_subject_by_code(subject)
+
+    def get_contents_url_list(self) -> list[str]:
+        return self.contents_sqlalchemy.get_contents_url_list()

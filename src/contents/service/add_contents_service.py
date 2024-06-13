@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import aiofiles
 from bs4 import BeautifulSoup
 from fastapi import HTTPException, UploadFile
@@ -9,10 +7,10 @@ from src.contents.enums.contents_status import ContentsStatus
 from src.contents.infra.contents_repository import ContentsRepository
 from src.contents.routes.dto.request.contents_create import ContentsCreate
 from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUseCase
-from src.contents.service.add_creatives_service import save_image_asset
 from src.users.domain.user import User
 from src.users.infra.user_repository import UserRepository
 from src.utils.date_utils import localtime_converter, localtime_from_str
+from src.utils.utils import generate_random_string
 
 
 class AddContentsService(AddContentsUseCase):
@@ -28,11 +26,16 @@ class AddContentsService(AddContentsUseCase):
         user: User,
         files: UploadFile | None = None,
     ):
-        # 콘텐츠 uuid 생성
-        uuid = "1234"
+
+        contents_urls = self.content_repository.get_contents_url_list()
+        contents_uuids = [url.split("=")[-1] for url in contents_urls]
+
+        new_uuid = str(generate_random_string(5))
+        while new_uuid in contents_uuids:
+            new_uuid = str(generate_random_string(5))
 
         # contents_create
-        resource_path = Path("app/generator/")
+        # resource_path = Path("app/generator/")
 
         # body 태그 내의 모든 텍스트를 추출합니다.
         soup = BeautifulSoup(contents_create.contents_body, "html.parser")
@@ -49,35 +52,30 @@ class AddContentsService(AddContentsUseCase):
         external_html_body = external_html_body.replace(url_from, url_to)
 
         resource_domain = "aivelabs.com"
-        if files:
-            thumbnail = f"{uuid}.png"
-            thumbnail_path = resource_path / "contents/thumbnail"
 
-            # save thumbnail
-            thumbnail_file_name, thumbnail_path = await save_image_asset(
-                files, resource_path=str(thumbnail_path), custom_name=thumbnail
-            )
-            thumbnail_uri = f"{resource_domain}contents/thumbnail/{thumbnail_file_name}"
-        elif len(image_source) > 0:
+        # 썸네일 저장
+        # 썸네일 파일이 있는 경우
+        if contents_create.file:
+            # 파일을 저장한다.
+            pass
+        elif image_source:
+            # 썸네일을 따로 저장하진 않는 경우
             thumbnail_uri = image_source[0]
         else:
             thumbnail_uri = resource_domain + "contents/thumbnail/default.png"
 
-        contents_url = "contents_domain" + f"contents/?id={uuid}"
-        html_path = f"app/generator/contents/{uuid}.html"
-
+        # save html
+        contents_domain = "s3.amazonaws.com"
+        contents_url = f"{contents_domain}/contents/?id={new_uuid}"
+        html_path = f"app/resources/contents/{new_uuid}.html"
+        # 파일로 html을 저장
         await save_html(html_path, external_html_body)
 
         contents_status = ContentsStatus.DRAFT.value
-
+        # root_source = "app/resources/image_asset"
         if contents_create.is_public:
-            try:
-                # 1. connect ssh client
-                # 2. send file to remote path
-
-                pass
-            finally:
-                pass
+            # s3에 저장하자!
+            pass
 
         new_style_code = (
             [item.style_cd for item in contents_create.sty_cd]
@@ -120,7 +118,7 @@ class AddContentsService(AddContentsUseCase):
 
         self.content_repository.add_contents(contents=contents)
 
-        return {"status": "success", "res": "res"}
+        return contents
 
 
 async def save_html(html_path, body):

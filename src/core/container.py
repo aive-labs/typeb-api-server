@@ -9,6 +9,7 @@ from src.contents.infra.contents_repository import ContentsRepository
 from src.contents.infra.contents_sqlalchemy_repository import ContentsSqlAlchemy
 from src.contents.infra.creatives_repository import CreativesRepository
 from src.contents.infra.creatives_sqlalchemy_repository import CreativesSqlAlchemy
+from src.contents.service.add_contents_service import AddContentsService
 from src.contents.service.add_creatives_service import AddCreativesService
 from src.contents.service.delete_creatives_service import DeleteCreativesService
 from src.contents.service.get_contents_service import GetContentsService
@@ -111,11 +112,11 @@ class Container(containers.DeclarativeContainer):
         ContentsRepository, contents_sqlalchemy=contents_sqlalchemy
     )
 
-    # add_contents_service = providers.Singleton(
-    #     provides=AddContentsService,
-    #     contents_repository=contents_repository,
-    #     user_repository=user_repository,
-    # )
+    add_contents_service = providers.Singleton(
+        provides=AddContentsService,
+        contents_repository=contents_repository,
+        user_repository=user_repository,
+    )
 
     get_contents_service = providers.Singleton(
         provides=GetContentsService,

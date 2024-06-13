@@ -33,3 +33,7 @@ class BaseContentsRepository(ABC):
     @abstractmethod
     def get_subject_by_code(self, subject: str) -> ContentsMenu:
         pass
+
+    @abstractmethod
+    def get_contents_url_list(self) -> list[str]:
+        pass

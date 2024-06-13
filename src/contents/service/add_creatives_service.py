@@ -2,6 +2,9 @@ from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.contents.domain.creatives import Creatives
 from src.contents.infra.dto.response.s3_presigned_response import S3PresignedResponse
 from src.contents.routes.dto.request.creatives_create import CreativeCreate
+from src.contents.routes.dto.request.s3_presigned_url_request import (
+    S3PresignedUrlRequest,
+)
 from src.contents.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase
 from src.contents.service.port.base_creatives_repository import BaseCreativesRepository
 from src.utils.date_utils import get_unix_timestamp
@@ -21,18 +24,20 @@ class AddCreativesService(AddCreativesUseCase):
         self.s3_service = S3Service("aice-asset-dev")
 
     def generate_s3_url(
-        self, asset_data: CreativeCreate, user
+        self, s3_presigned_url_request: S3PresignedUrlRequest, user
     ) -> list[S3PresignedResponse]:
         cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(
             str(user.user_id)
         )
-        files = asset_data.files
+
+        files = s3_presigned_url_request.files
+        image_use_type = s3_presigned_url_request.use_type.value
 
         s3_presigned_url_list = [
             S3PresignedResponse(
                 original_file_name=file_name,
                 s3_presigned_url=self.s3_service.generate_presigned_url_for_put(
-                    f"{cafe24_info.mall_id}/image_asset/{get_unix_timestamp()}_{file_name}"
+                    f"{cafe24_info.mall_id}/{image_use_type}/{get_unix_timestamp()}_{file_name}"
                 ),
             )
             for file_name in files

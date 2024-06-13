@@ -12,7 +12,7 @@ class ContentsCreate(BaseModel):
     """콘텐츠 생성 API Object"""
 
     contents_name: str
-    contents_body: str  # file로 할 수도 있음
+    contents_body: str
     sty_cd: list[StyleObject] = []
     subject: str
     material1: str | None = None
@@ -24,3 +24,4 @@ class ContentsCreate(BaseModel):
     publication_end: str | None = None
     is_public: bool
     contents_tags: str | None = None
+    file: str | None = None

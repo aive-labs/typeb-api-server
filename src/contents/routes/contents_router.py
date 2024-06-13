@@ -6,6 +6,8 @@ from fastapi import APIRouter, Depends
 from src.auth.utils.permission_checker import get_permission_checker
 from src.contents.infra.dto.response.contents_menu_response import ContentsMenuResponse
 from src.contents.infra.dto.response.creative_recommend import CreativeRecommend
+from src.contents.routes.dto.request.contents_create import ContentsCreate
+from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUseCase
 from src.contents.routes.port.usecase.get_contents_usecase import GetContentsUseCase
 from src.contents.routes.port.usecase.get_creative_recommendations_for_content_usecase import (
     GetCreativeRecommendationsForContentUseCase,
@@ -63,17 +65,16 @@ def get_img_creatives_list(
     )
 
 
-# @contents_router.post("/")
-# @inject
-# def create_contents(
-#     content_create: ContentsCreate,
-#     files: UploadFile | None = None,
-#     user=Depends(get_permission_checker),
-#     add_contents_service: AddContentsUseCase = Depends(
-#         dependency=Provide[Container.add_contents_service]
-#     ),
-# ):
-#     add_contents_service.create_contents(content_create, user, files)
+@contents_router.post("/")
+@inject
+def create_contents(
+    content_create: ContentsCreate,
+    user=Depends(get_permission_checker),
+    add_contents_service: AddContentsUseCase = Depends(
+        dependency=Provide[Container.add_contents_service]
+    ),
+):
+    add_contents_service.create_contents(content_create, user)
 
 
 @contents_router.get("/menu/subject")

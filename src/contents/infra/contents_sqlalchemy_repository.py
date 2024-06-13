@@ -75,6 +75,11 @@ class ContentsSqlAlchemy:
                 for entity in entities
             ]
 
+    def get_contents_url_list(self):
+        with self.db() as db:
+            entities = db.query(ContentsEntity).all()
+            return [entity.contents_url for entity in entities]
+
     def get_contents_list(
         self, based_on, sort_by, contents_status=None, query=None
     ) -> list[ContentsResponse]:
