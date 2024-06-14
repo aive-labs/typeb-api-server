@@ -26,3 +26,9 @@ class ContentsResponse(BaseModel):
     created_at: Optional[datetime]
     updated_by: str
     updated_at: Optional[datetime]
+
+    def set_contents_url(self, url):
+        self.contents_url = url
+
+    def set_thumbnail_url(self, url):
+        self.thumbnail_uri = url

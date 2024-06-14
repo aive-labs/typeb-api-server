@@ -1,5 +1,6 @@
 from src.common.pagination.pagination_base import PaginationBase
 from src.common.pagination.pagination_response import PaginationResponse
+from src.common.utils.get_env_variable import get_env_variable
 from src.contents.infra.contents_repository import ContentsRepository
 from src.contents.infra.dto.response.contents_menu_response import ContentsMenuResponse
 from src.contents.infra.dto.response.contents_response import ContentsResponse
@@ -10,11 +11,21 @@ class GetContentsService(GetContentsUseCase):
 
     def __init__(self, contents_repository: ContentsRepository):
         self.contents_repository = contents_repository
+        self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
     def get_contents(self, contents_id) -> ContentsResponse:
         contents = self.contents_repository.get_contents_detail(contents_id)
+
         contents_dict = contents.model_dump()
-        return ContentsResponse(**contents_dict)
+        contents_response = ContentsResponse(**contents_dict)
+
+        contents_response.set_thumbnail_url(
+            f"{self.cloud_front_url}/{contents_response.thumbnail_uri}"
+        )
+        contents_response.set_contents_url(
+            f"{self.cloud_front_url}/{contents_response.contents_url}"
+        )
+        return contents_response
 
     def get_subjects(self, style_yn: bool) -> list[ContentsMenuResponse]:
         contents_menu_list = self.contents_repository.get_subject(style_yn)
@@ -50,6 +61,12 @@ class GetContentsService(GetContentsUseCase):
         self, based_on, sort_by, current_page, per_page, query=None
     ) -> PaginationResponse[ContentsResponse]:
         responses = self.contents_repository.get_contents_list(based_on, sort_by, query)
+
+        for response in responses:
+            response.set_thumbnail_url(
+                f"{self.cloud_front_url}/{response.thumbnail_uri}"
+            )
+            response.set_contents_url(f"{self.cloud_front_url}/{response.contents_url}")
 
         items = responses[(current_page - 1) * per_page : current_page * per_page]
 
