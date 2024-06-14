@@ -56,6 +56,14 @@ class AddContentsService(AddContentsUseCase):
         # url_to = "/assets"
         # external_html_body = external_html_body.replace(url_from, url_to)
 
+        cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(
+            str(user.user_id)
+        )
+        if cafe24_info is None:
+            raise NotFoundError("연동된 cafe24 계정이 없습니다.")
+
+        mall_id = cafe24_info.mall_id
+
         # 썸네일 저장
         # 썸네일 파일이 있는 경우
         if contents_create.thumbnail:
@@ -65,20 +73,9 @@ class AddContentsService(AddContentsUseCase):
             # 썸네일을 따로 저장하진 않는 경우
             thumbnail_uri = image_source[0]
         else:
-            thumbnail_uri = "contents/thumbnail/default.png"
-
-        cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(
-            str(user.user_id)
-        )
-
-        if cafe24_info is None:
-            raise NotFoundError("연동된 cafe24 계정이 없습니다.")
-
-        mall_id = cafe24_info.mall_id
+            thumbnail_uri = f"{mall_id}/contents/thumbnail/default.png"
 
         contents_url = f"{mall_id}/contents/{new_uuid}.html"
-        # html_path = f"app/resources/contents/{new_uuid}.html"
-        # await save_html(html_path, external_html_body)
 
         contents_status = ContentsStatus.DRAFT.value
         if contents_create.is_public:
