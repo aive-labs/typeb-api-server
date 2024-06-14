@@ -3,13 +3,13 @@ from bs4 import BeautifulSoup
 from fastapi import HTTPException
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from src.auth.infra.dto.cafe24_mall_info import Cafe24MallInfo
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.contents.domain.contents import Contents
 from src.contents.enums.contents_status import ContentsStatus
 from src.contents.infra.contents_repository import ContentsRepository
 from src.contents.routes.dto.request.contents_create import ContentsCreate
 from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUseCase
+from src.core.exceptions import NotFoundError
 from src.users.domain.user import User
 from src.users.infra.user_repository import UserRepository
 from src.utils.date_utils import localtime_converter, localtime_from_str
@@ -67,9 +67,13 @@ class AddContentsService(AddContentsUseCase):
         else:
             thumbnail_uri = "contents/thumbnail/default.png"
 
-        cafe24_info: Cafe24MallInfo = self.cafe24_repository.get_cafe24_info_by_user_id(
+        cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(
             str(user.user_id)
         )
+
+        if cafe24_info is None:
+            raise NotFoundError("연동된 cafe24 계정이 없습니다.")
+
         mall_id = cafe24_info.mall_id
 
         contents_url = f"{mall_id}/contents/{new_uuid}.html"

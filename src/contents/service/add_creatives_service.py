@@ -7,6 +7,7 @@ from src.contents.routes.dto.request.s3_presigned_url_request import (
 )
 from src.contents.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase
 from src.contents.service.port.base_creatives_repository import BaseCreativesRepository
+from src.core.exceptions import NotFoundError
 from src.utils.date_utils import get_unix_timestamp
 from src.utils.file.s3_service import S3Service
 
@@ -29,6 +30,9 @@ class AddCreativesService(AddCreativesUseCase):
         cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(
             str(user.user_id)
         )
+
+        if cafe24_info is None:
+            raise NotFoundError("연동된 cafe24 계정이 없습니다.")
 
         files = s3_presigned_url_request.files
         image_use_type = s3_presigned_url_request.use_type.value
