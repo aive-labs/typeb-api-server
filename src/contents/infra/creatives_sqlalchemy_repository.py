@@ -187,6 +187,8 @@ class CreativesSqlAlchemy:
                     func.lower(CreativesEntity.style_cd).in_(style_cd_list)
                 )
 
+            filter_conditions.append(~CreativesEntity.is_deleted)
+
             query = db.query(CreativesEntity).filter(or_(*filter_conditions))
 
             if style_cd_list:

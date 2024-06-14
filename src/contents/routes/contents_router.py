@@ -65,16 +65,16 @@ def get_img_creatives_list(
     )
 
 
-@contents_router.post("/")
+@contents_router.post("")
 @inject
-def create_contents(
+async def create_contents(
     content_create: ContentsCreate,
     user=Depends(get_permission_checker),
     add_contents_service: AddContentsUseCase = Depends(
         dependency=Provide[Container.add_contents_service]
     ),
 ):
-    add_contents_service.create_contents(content_create, user)
+    await add_contents_service.create_contents(content_create, user)
 
 
 @contents_router.get("/menu/subject")
@@ -101,7 +101,7 @@ def get_contents_menu_list(
     return get_contents_service.get_with_subject(code)
 
 
-@contents_router.get("/")
+@contents_router.get("")
 @inject
 def get_contents_list(
     based_on="updated_at",
