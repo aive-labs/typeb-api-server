@@ -20,19 +20,19 @@ from src.utils.utils import generate_random_string
 class AddContentsService(AddContentsUseCase):
     def __init__(
         self,
-        content_repository: ContentsRepository,
+        contents_repository: ContentsRepository,
         user_repository: UserRepository,
         cafe24_repository: BaseOauthRepository,
         s3_service: S3Service,
     ):
-        self.content_repository = content_repository
+        self.contents_repository = contents_repository
         self.user_repository = user_repository
         self.cafe24_repository = cafe24_repository
         self.s3_service = s3_service
 
     async def create_contents(self, contents_create: ContentsCreate, user: User):
 
-        contents_urls = self.content_repository.get_contents_url_list()
+        contents_urls = self.contents_repository.get_contents_url_list()
         contents_uuids = [url.split("=")[-1] for url in contents_urls]
 
         new_uuid = str(generate_random_string(5))
@@ -93,11 +93,11 @@ class AddContentsService(AddContentsUseCase):
         )
 
         contents = Contents(
-            name=contents_create.contents_name,
-            status=contents_status,
-            body=contents_create.contents_body,
+            contents_name=contents_create.contents_name,
+            contents_status=contents_status,
+            contents_body=contents_create.contents_body,
             plain_text=body_text,
-            style_code=new_style_code,
+            sty_cd=new_style_code,
             subject=contents_create.subject,
             material1=contents_create.material1 if contents_create.material1 else None,
             material2=contents_create.material2 if contents_create.material2 else None,
@@ -125,7 +125,7 @@ class AddContentsService(AddContentsUseCase):
             updated_at=localtime_converter(),
         )
 
-        self.content_repository.add_contents(contents=contents)
+        self.contents_repository.add_contents(contents=contents)
 
         # return contents
 
