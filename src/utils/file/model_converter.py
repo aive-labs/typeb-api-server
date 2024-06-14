@@ -2,6 +2,7 @@ class ModelConverter:
 
     @staticmethod
     def convert_entity_to_dict(entity):
+        print(entity)
         return {
             column.name: getattr(entity, column.name)
             for column in entity.__table__.columns

@@ -12,12 +12,11 @@ class ContentsResponse(BaseModel):
     plain_text: Optional[str]
     sty_cd: Optional[List[str]]
     subject: str
-    subject_name: str
+    subject_name: str | None = None
     material1: Optional[str]
     material2: Optional[str]
     template: Optional[str]
     additional_prompt: Optional[str]
-    emphasis_context: Optional[str]
     thumbnail_uri: str
     contents_url: str
     publication_start: Optional[datetime]

@@ -131,8 +131,32 @@ class ContentsSqlAlchemy:
                     )
                 )
             entities = base_query.all()
+            print("----")
+            print(entities[0].contents_id)
             return [
-                ModelConverter.entity_to_model(entity, ContentsResponse)
+                ContentsResponse(
+                    contents_id=entity.contents_id,
+                    contents_name=entity.contents_name,
+                    contents_status=entity.contents_status,
+                    contents_body=entity.contents_body,
+                    plain_text=entity.plain_text,
+                    sty_cd=entity.sty_cd,
+                    subject=entity.subject,
+                    subject_name=entity.subject_name,
+                    material1=entity.material1,
+                    material2=entity.material2,
+                    template=entity.template,
+                    additional_prompt=entity.additional_prompt,
+                    thumbnail_uri=entity.thumbnail_uri,
+                    contents_url=entity.contents_url,
+                    publication_start=entity.publication_start,
+                    publication_end=entity.publication_end,
+                    contents_tags=entity.contents_tags,
+                    created_by=entity.created_by,
+                    created_at=entity.created_at,
+                    updated_by=entity.updated_by,
+                    updated_at=entity.updated_at,
+                )
                 for entity in entities
             ]
 
