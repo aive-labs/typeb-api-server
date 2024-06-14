@@ -44,7 +44,7 @@ def get_img_creatives_list(
 @inject
 async def create_contents(
     contents_data: str = Body(...),
-    user=Depends(get_permission_checker),
+    user=Depends(get_permission_checker(required_permissions=[])),
     add_contents_service: AddContentsUseCase = Depends(
         dependency=Provide[Container.add_contents_service]
     ),
