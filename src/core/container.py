@@ -22,6 +22,7 @@ from src.core.database import Database, get_db_url
 from src.users.infra.user_repository import UserRepository
 from src.users.infra.user_sqlalchemy import UserSqlAlchemy
 from src.users.service.user_service import UserService
+from src.utils.file.s3_service import S3Service
 
 
 class Container(containers.DeclarativeContainer):
@@ -40,6 +41,14 @@ class Container(containers.DeclarativeContainer):
     """
 
     db = providers.Singleton(Database, db_url=get_db_url())
+
+    """
+    s3 객체
+    """
+    # todo 환경에 따라 버킷명 변경 필요
+    s3_asset_service = providers.Singleton(
+        provides=S3Service, bucket_name="aice-asset-dev"
+    )
 
     """
     사용자 의존성 주입
@@ -119,6 +128,8 @@ class Container(containers.DeclarativeContainer):
         provides=AddContentsService,
         contents_repository=contents_repository,
         user_repository=user_repository,
+        cafe24_reopsitory=cafe24_repository,
+        s3_service=s3_asset_service,
     )
 
     get_contents_service = providers.Singleton(

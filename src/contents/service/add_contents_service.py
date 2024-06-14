@@ -1,7 +1,10 @@
 import aiofiles
 from bs4 import BeautifulSoup
 from fastapi import HTTPException
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+from src.auth.infra.dto.cafe24_mall_info import Cafe24MallInfo
+from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.contents.domain.contents import Contents
 from src.contents.enums.contents_status import ContentsStatus
 from src.contents.infra.contents_repository import ContentsRepository
@@ -10,15 +13,22 @@ from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUse
 from src.users.domain.user import User
 from src.users.infra.user_repository import UserRepository
 from src.utils.date_utils import localtime_converter, localtime_from_str
+from src.utils.file.s3_service import S3Service
 from src.utils.utils import generate_random_string
 
 
 class AddContentsService(AddContentsUseCase):
     def __init__(
-        self, content_repository: ContentsRepository, user_repository: UserRepository
+        self,
+        content_repository: ContentsRepository,
+        user_repository: UserRepository,
+        cafe24_repository: BaseOauthRepository,
+        s3_service: S3Service,
     ):
         self.content_repository = content_repository
         self.user_repository = user_repository
+        self.cafe24_repository = cafe24_repository
+        self.s3_service = s3_service
 
     async def create_contents(self, contents_create: ContentsCreate, user: User):
 
@@ -46,8 +56,6 @@ class AddContentsService(AddContentsUseCase):
         # url_to = "/assets"
         # external_html_body = external_html_body.replace(url_from, url_to)
 
-        # resource_domain = "aivelabs.com"
-
         # 썸네일 저장
         # 썸네일 파일이 있는 경우
         if contents_create.thumbnail:
@@ -60,18 +68,20 @@ class AddContentsService(AddContentsUseCase):
             thumbnail_uri = "contents/thumbnail/default.png"
 
         # save html
-        mall_id = "tinyhuman"
-        contents_url = f"{mall_id}/contents/?id={new_uuid}"
+        cafe24_info: Cafe24MallInfo = self.cafe24_repository.get_cafe24_info_by_user_id(
+            str(user.user_id)
+        )
+        mall_id = cafe24_info.mall_id
 
-        html_path = f"app/resources/contents/{new_uuid}.html"
-        # 파일로 html을 저장
-        await save_html(html_path, external_html_body)
+        contents_url = f"{mall_id}/contents/{new_uuid}.html"
+        # html_path = f"app/resources/contents/{new_uuid}.html"
+        # await save_html(html_path, external_html_body)
 
         contents_status = ContentsStatus.DRAFT.value
-        # root_source = "app/resources/image_asset"
         if contents_create.is_public:
-            # s3에 저장하자!
-            pass
+            contents_html = create_contents_html(external_html_body)
+            self.s3_service.put_object(key=contents_url, body=contents_html)
+            contents_status = ContentsStatus.PUBLISHED.value
 
         new_style_code = (
             [item.style_cd for item in contents_create.sty_cd]
@@ -115,6 +125,26 @@ class AddContentsService(AddContentsUseCase):
         self.content_repository.add_contents(contents=contents)
 
         # return contents
+
+
+def create_contents_html(body: str) -> str:
+    body_bytes = body.encode("utf-8")
+
+    html_content = (
+        b"{% extends 'base.html' %}\n"
+        b"{% block content %}\n" + body_bytes + b"\n"
+        b"{% endblock %}"
+    )
+
+    env = Environment(
+        loader=FileSystemLoader(
+            searchpath="src/contents/resources/html_template"
+        ),  # 템플릿 파일이 위치한 경로 설정
+        autoescape=select_autoescape(["html", "xml"]),
+    )
+
+    template = env.from_string(html_content.decode("utf-8"))
+    return template.render()
 
 
 async def save_html(html_path, body):
