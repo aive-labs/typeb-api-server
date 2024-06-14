@@ -1,5 +1,6 @@
 from src.common.pagination.pagination_base import PaginationBase
 from src.common.pagination.pagination_response import PaginationResponse
+from src.common.utils.get_env_variable import get_env_variable
 from src.contents.domain.creatives import Creatives
 from src.contents.routes.dto.request.contents_create import StyleObject
 from src.contents.routes.dto.response.creative_base import CreativeBase
@@ -13,12 +14,12 @@ class GetCreativesService(GetCreativesUseCase):
     def __init__(self, creatives_repository: BaseCreativesRepository):
         self.creatives_repository = creatives_repository
         self.s3_service = S3Service("aice-asset-dev")
+        self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
     def get_creatives_detail(self, creative_id: int) -> Creatives:
         creative = self.creatives_repository.find_by_id(creative_id)
-        creative.set_presigned_url(
-            self.s3_service.generate_presigned_url_for_get(creative.image_path)
-        )
+
+        creative.set_image_url(f"{self.cloud_front_url}/{creative.image_path}")
         return creative
 
     def get_creatives(
@@ -31,9 +32,7 @@ class GetCreativesService(GetCreativesUseCase):
         items = creative_list[(current_page - 1) * per_page : current_page * per_page]
 
         for creative in items:
-            creative.set_presigned_url(
-                self.s3_service.generate_presigned_url_for_get(creative.image_path)
-            )
+            creative.set_image_url(f"{self.cloud_front_url}/{creative.image_path}")
 
         pagination = PaginationBase(
             total=len(creative_list),

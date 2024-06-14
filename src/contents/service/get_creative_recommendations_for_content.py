@@ -1,5 +1,6 @@
 from typing import Union
 
+from src.common.utils.get_env_variable import get_env_variable
 from src.contents.infra.creatives_repository import CreativesRepository
 from src.contents.infra.dto.response.creative_recommend import CreativeRecommend
 from src.contents.routes.port.usecase.get_creative_recommendations_for_content_usecase import (
@@ -33,11 +34,10 @@ class GetCreativeRecommendationsForContent(GetCreativeRecommendationsForContentU
             style_cd_list, given_tag, img_tag_nm, limit
         )
 
+        cloud_front_url = get_env_variable("cloud_front_asset_url")
         for creatives_recommend in creatives_recommend_list:
-            creatives_recommend.set_presigned_url(
-                self.s3_service.generate_presigned_url_for_get(
-                    creatives_recommend.image_uri
-                )
+            creatives_recommend.set_image_url(
+                f"{cloud_front_url}/{creatives_recommend.image_uri}"
             )
 
         return creatives_recommend_list

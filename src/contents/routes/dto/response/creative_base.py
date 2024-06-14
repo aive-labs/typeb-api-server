@@ -28,6 +28,6 @@ class CreativeBase(BaseModel):
     creative_tags: str
     related_img_uri: list[str] | None = []  # 그때그때 계산하는게 좋을듯?
 
-    def set_presigned_url(self, s3_url):
+    def set_image_url(self, s3_url):
         self.image_uri = s3_url
         self.image_path = s3_url

@@ -17,6 +17,6 @@ class Creatives(BaseModel):
     updated_at: Optional[datetime] = None
     updated_by: str
 
-    def set_presigned_url(self, s3_url):
+    def set_image_url(self, s3_url):
         self.image_uri = s3_url
         self.image_path = s3_url
