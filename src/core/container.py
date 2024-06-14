@@ -128,7 +128,7 @@ class Container(containers.DeclarativeContainer):
         provides=AddContentsService,
         contents_repository=contents_repository,
         user_repository=user_repository,
-        cafe24_reopsitory=cafe24_repository,
+        cafe24_repository=cafe24_repository,
         s3_service=s3_asset_service,
     )
 
