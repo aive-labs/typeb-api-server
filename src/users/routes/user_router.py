@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 
+from src.auth.routes.port.base_oauth_service import BaseOauthService
 from src.auth.service.auth_service import AuthService
 from src.auth.service.token_service import TokenService
 from src.auth.utils.permission_checker import get_permission_checker
@@ -39,7 +40,10 @@ def sign_up(
 
 @user_router.get("/me")
 @inject
-def get_me(user=Depends(get_permission_checker(required_permissions=[]))):
+def get_me(
+    user=Depends(get_permission_checker(required_permissions=[])),
+    cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
+):
     permissions = UserPermissions(
         gnb_permissions=GNBPermissions.with_admin(),
         resource_permission=ResourcePermission(
@@ -48,7 +52,8 @@ def get_me(user=Depends(get_permission_checker(required_permissions=[]))):
         user_role=get_user_role_from_mapping(user.role_id),
     )
 
-    return UserProfileResponse.from_user(user, permissions)
+    cafe24_integration = cafe24_service.get_connected_info_by_user(user.user_id)
+    return UserProfileResponse.from_user(user, permissions, cafe24_integration)
 
 
 @user_router.post("/signin")

@@ -67,7 +67,6 @@ class AddContentsService(AddContentsUseCase):
         else:
             thumbnail_uri = "contents/thumbnail/default.png"
 
-        # save html
         cafe24_info: Cafe24MallInfo = self.cafe24_repository.get_cafe24_info_by_user_id(
             str(user.user_id)
         )

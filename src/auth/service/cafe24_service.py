@@ -5,6 +5,7 @@ import requests
 from dotenv import load_dotenv
 
 from src.auth.infra.dto.cafe24_token import Cafe24TokenData
+from src.auth.infra.dto.external_integration import ExternalIntegration
 from src.auth.routes.dto.request.cafe24_token_request import OauthAuthenticationRequest
 from src.auth.routes.port.base_oauth_service import BaseOauthService
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
@@ -13,6 +14,7 @@ from src.users.service.port.base_user_repository import BaseUserRepository
 
 
 class Cafe24Service(BaseOauthService):
+
     def __init__(
         self,
         user_repository: BaseUserRepository,
@@ -58,6 +60,17 @@ class Cafe24Service(BaseOauthService):
 
         return self._generate_authentication_url(
             mall_id, self.client_id, hashed_state, self.redirect_uri, self.scope
+        )
+
+    def get_connected_info_by_user(self, user_id: str) -> ExternalIntegration | None:
+        cafe24_mall_info = self.cafe24_repository.get_cafe24_info_by_user_id(user_id)
+
+        if cafe24_mall_info is None:
+            return None
+
+        return ExternalIntegration(
+            status="success" if cafe24_mall_info.scopes else "failure",
+            mall_id=cafe24_mall_info.mall_id,
         )
 
     def get_oauth_access_token(self, oauth_request: OauthAuthenticationRequest):

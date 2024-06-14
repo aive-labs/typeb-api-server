@@ -64,7 +64,7 @@ class Cafe24SqlAlchemyRepository:
             )
 
             if len(entities) == 0:
-                raise NotFoundError("user_id에 해당하는 mall을 찾지 못했습니다.")
+                return None
             elif len(entities) > 1:
                 raise Exception("user_id는 1개만 가질 수 있습니다.")
             else:

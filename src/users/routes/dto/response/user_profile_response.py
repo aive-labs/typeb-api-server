@@ -2,6 +2,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from src.auth.infra.dto.external_integration import ExternalIntegration
 from src.users.domain.user_role import UserPermissions
 
 
@@ -16,9 +17,14 @@ class UserProfileResponse(BaseModel):
     parent_dept_cd: Optional[str] = None
     language: str
     test_callback_number: str
+    cafe24: Optional[ExternalIntegration] | None = None
 
     @staticmethod
-    def from_user(user, permissions: UserPermissions):
+    def from_user(
+        user,
+        permissions: UserPermissions,
+        cafe24_integration: Optional[ExternalIntegration] | None,
+    ):
         return UserProfileResponse(
             user_id=user.user_id,
             username=user.username,
@@ -32,4 +38,5 @@ class UserProfileResponse(BaseModel):
             test_callback_number=(
                 user.test_callback_number if user.sys_id == "WP" else "1666-3096"
             ),
+            cafe24=cafe24_integration,
         )

@@ -15,12 +15,8 @@ def get_current_user(
 ):
     try:
         # "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-        print(token)
-        print("1234")
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        print("payload")
         email = payload.get("email")
-        print("5678")
         if email is None:
             raise AuthError("해당하는 이메일을 찾지 못하였습니다.")
     except JWTError as e:
