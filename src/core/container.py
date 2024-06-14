@@ -140,6 +140,7 @@ class Container(containers.DeclarativeContainer):
     get_creative_recommendation = providers.Singleton(
         provides=GetCreativeRecommendationsForContent,
         creatives_repository=creatives_repository,
+        s3_service=s3_asset_service,
     )
 
     """
