@@ -4,6 +4,7 @@ from contextlib import AbstractContextManager
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
+from src.contents.domain.contents import Contents
 from src.contents.domain.contents_menu import ContentsMenu
 from src.contents.infra.dto.response.contents_response import ContentsResponse
 from src.contents.infra.entity.contents_entity import ContentsEntity
@@ -147,3 +148,16 @@ class ContentsSqlAlchemy:
                 raise NotFoundError("해당하는 menu가 존재하지 않습니다.")
 
             return ModelConverter.entity_to_model(entity, ContentsMenu)
+
+    def get_contents_detail(self, contents_id):
+        with self.db() as db:
+            entity = (
+                db.query(ContentsEntity)
+                .filter(ContentsEntity.contents_id == contents_id)
+                .first()
+            )
+
+            if not entity:
+                raise NotFoundError("해당하는 menu가 존재하지 않습니다.")
+
+            return ModelConverter.entity_to_model(entity, Contents)

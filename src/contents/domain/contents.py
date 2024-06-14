@@ -6,12 +6,12 @@ from src.contents.infra.entity.contents_entity import ContentsEntity
 
 
 class Contents(BaseModel):
-    id: int | None = None
-    name: str
-    status: str
-    body: str
+    contents_id: int | None = None
+    contents_name: str
+    contents_status: str
+    contents_body: str
     plain_text: str
-    style_code: list[str]
+    sty_cd: list[str]
     subject: str | None = None
     material1: str | None
     material2: str | None
@@ -49,12 +49,12 @@ class Contents(BaseModel):
         )
 
         return ContentsEntity(
-            contents_id=self.id,
-            contents_name=self.name,
-            contents_status=self.status,
-            contents_body=self.body,
+            contents_id=self.contents_id,
+            contents_name=self.contents_name,
+            contents_status=self.contents_status,
+            contents_body=self.contents_body,
             plain_text=self.plain_text,
-            sty_cd=self.style_code,
+            sty_cd=self.sty_cd,
             subject=self.subject,
             material1=self.material1,
             material2=self.material2,

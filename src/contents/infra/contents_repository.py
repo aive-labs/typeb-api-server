@@ -34,3 +34,6 @@ class ContentsRepository(BaseContentsRepository):
 
     def get_contents_url_list(self) -> list[str]:
         return self.contents_sqlalchemy.get_contents_url_list()
+
+    def get_contents_detail(self, contents_id: int) -> Contents:
+        return self.contents_sqlalchemy.get_contents_detail(contents_id)

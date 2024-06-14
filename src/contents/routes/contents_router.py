@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.contents.infra.dto.response.contents_menu_response import ContentsMenuResponse
+from src.contents.infra.dto.response.contents_response import ContentsResponse
 from src.contents.infra.dto.response.creative_recommend import CreativeRecommend
 from src.contents.routes.dto.request.contents_create import ContentsCreate
 from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUseCase
@@ -17,33 +18,6 @@ from src.core.container import Container
 contents_router = APIRouter(
     tags=["Contents"],
 )
-
-
-# @contents_router.post("/generate")
-# @inject  # UserService 주입
-# def generate_contents(
-#     contents_generate: ContentsGenerate,
-#     user=Depends(get_permission_checker(required_permissions=[])),
-# ):
-#     """
-#     문장 메시지 생성 API
-#     템플릿 : subject/material1,2 무관
-#     subject - 상품존재 RAG
-#     subject - 상품X
-#     트래킹코스 소개-등산용품이야기(sn1~sn7) RAG
-#     상품관리 TIP : DB데이터+GPT
-#     자유주제 : GPT
-#     """
-#
-#     selected_template = contents_template_prompts[contents_generate.template]
-#     chain = StreamingConversationChain(
-#         openai_api_key=get_env_variable("openai_api_key"),
-#     )
-#
-#     return StreamingResponse(
-#         chain.generate_response(selected_template, message, **kwargs_dict),
-#         media_type="text/event-stream"
-#     )
 
 
 @contents_router.get("/creatives/list")
@@ -127,8 +101,14 @@ def get_contents_list(
 
 @contents_router.get("/{contents_id}")
 @inject
-def get_contents():
-    pass
+def get_contents(
+    contents_id: int,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    get_contents_service: GetContentsUseCase = Depends(
+        Provide[Container.get_contents_service]
+    ),
+) -> ContentsResponse:
+    return get_contents_service.get_contents(contents_id)
 
 
 @contents_router.put("/{contents_id}")

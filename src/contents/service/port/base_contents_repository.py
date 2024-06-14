@@ -37,3 +37,7 @@ class BaseContentsRepository(ABC):
     @abstractmethod
     def get_contents_url_list(self) -> list[str]:
         pass
+
+    @abstractmethod
+    def get_contents_detail(self, contents_id: int) -> Contents:
+        pass

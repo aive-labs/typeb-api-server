@@ -11,8 +11,10 @@ class GetContentsService(GetContentsUseCase):
     def __init__(self, contents_repository: ContentsRepository):
         self.contents_repository = contents_repository
 
-    def get_contents(self):
-        pass
+    def get_contents(self, contents_id) -> ContentsResponse:
+        contents = self.contents_repository.get_contents_detail(contents_id)
+        contents_dict = contents.model_dump()
+        return ContentsResponse(**contents_dict)
 
     def get_subjects(self, style_yn: bool) -> list[ContentsMenuResponse]:
         contents_menu_list = self.contents_repository.get_subject(style_yn)

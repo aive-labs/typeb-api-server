@@ -7,7 +7,7 @@ from src.contents.infra.dto.response.contents_response import ContentsResponse
 
 class GetContentsUseCase(ABC):
     @abstractmethod
-    def get_contents(self):
+    def get_contents(self, contents_id) -> ContentsResponse:
         pass
 
     @abstractmethod
