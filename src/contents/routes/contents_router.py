@@ -2,7 +2,7 @@ import json
 from typing import Optional, Union
 
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Depends, Form
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.contents.infra.dto.response.contents_menu_response import ContentsMenuResponse
@@ -43,14 +43,16 @@ def get_img_creatives_list(
 @contents_router.post("")
 @inject
 async def create_contents(
-    contents_data: str = Body(...),
+    contents_data: str = Form(...),
     user=Depends(get_permission_checker(required_permissions=[])),
     add_contents_service: AddContentsUseCase = Depends(
         dependency=Provide[Container.add_contents_service]
     ),
 ):
+    print(contents_data)
     contents_dict = json.loads(contents_data)
     content_create = ContentsCreate(**contents_dict)
+    print(content_create)
     await add_contents_service.create_contents(content_create, user)
 
 
