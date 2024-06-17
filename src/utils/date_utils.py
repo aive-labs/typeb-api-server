@@ -3,6 +3,12 @@ from datetime import datetime, timedelta
 import pytz
 
 
+def get_localtime():
+    local_timezone = pytz.timezone("Asia/Seoul")
+    datetime_now = datetime.now(local_timezone)
+    return datetime_now
+
+
 def localtime_converter():
     local_timezone = pytz.timezone("Asia/Seoul")
     datetime_now = datetime.now(local_timezone)

@@ -202,3 +202,11 @@ class ContentsSqlAlchemy:
 
             db.execute(update_statement)
             db.commit()
+
+    def update_contents(self, contents_id: int, contents: Contents):
+        with self.db() as db:
+            # merge는 같은 기본 키를 가진 엔티티가 이미 존재하면 업데이트하고, 존재하지 않으면 새로 추가
+            updated_entity = db.merge(contents.to_entity())
+            db.commit()
+            db.refresh(updated_entity)
+            return ModelConverter.entity_to_model(updated_entity, Contents)

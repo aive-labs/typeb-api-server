@@ -20,8 +20,8 @@ class Contents(BaseModel):
     emphasis_context: str | None = None
     thumbnail_uri: str | None = None
     contents_url: str | None = None
-    publication_start: datetime | None = None
-    publication_end: datetime | None = None
+    publication_start: str | None = None
+    publication_end: str | None = None
     contents_tags: str | None = None
     coverage_score: float | None = None
     contents_type: str | None = None

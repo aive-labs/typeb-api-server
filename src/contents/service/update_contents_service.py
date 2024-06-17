@@ -6,7 +6,9 @@ from src.contents.domain.contents import Contents
 from src.contents.enums.contents_status import ContentsStatus
 from src.contents.infra.contents_repository import ContentsRepository
 from src.contents.routes.dto.request.contents_create import ContentsCreate
-from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUseCase
+from src.contents.routes.port.usecase.update_contents_usecase import (
+    UpdateContentsUseCase,
+)
 from src.contents.utils.create_html import create_contents_html
 from src.core.exceptions import NotFoundError
 from src.users.domain.user import User
@@ -16,7 +18,8 @@ from src.utils.file.s3_service import S3Service
 from src.utils.utils import generate_random_string
 
 
-class AddContentsService(AddContentsUseCase):
+class UpdateContentsService(UpdateContentsUseCase):
+
     def __init__(
         self,
         contents_repository: ContentsRepository,
@@ -30,7 +33,10 @@ class AddContentsService(AddContentsUseCase):
         self.s3_service = s3_service
         self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
-    async def create_contents(self, contents_create: ContentsCreate, user: User):
+    def exec(self, contents_id: int, contents_create: ContentsCreate, user: User):
+
+        if not self.contents_repository.find_by_id(contents_id):
+            raise NotFoundError("해당하는 콘텐츠가 존재하지 않습니다.")
 
         contents_urls = self.contents_repository.get_contents_url_list()
         contents_uuids = [url.split("/")[-1] for url in contents_urls]
@@ -38,9 +44,6 @@ class AddContentsService(AddContentsUseCase):
         new_uuid = str(generate_random_string(5))
         while new_uuid in contents_uuids:
             new_uuid = str(generate_random_string(5))
-
-        # contents_create
-        # resource_path = Path("app/generator/")
 
         # body 태그 내의 모든 텍스트를 추출합니다.
         soup = BeautifulSoup(contents_create.contents_body, "html.parser")
@@ -52,10 +55,6 @@ class AddContentsService(AddContentsUseCase):
         ]
         external_html_body = contents_create.contents_body
 
-        # url_from = "https://was.ttalk.biz/creatives"
-        # url_to = "/assets"
-        # external_html_body = external_html_body.replace(url_from, url_to)
-
         cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(
             str(user.user_id)
         )
@@ -65,10 +64,12 @@ class AddContentsService(AddContentsUseCase):
         mall_id = cafe24_info.mall_id
 
         # 썸네일 저장
-        # 썸네일 파일이 있는 경우
         if contents_create.thumbnail:
-            # 파일을 저장한다.
-            thumbnail_uri = contents_create.thumbnail
+            # 썸네일이 있는 경우
+            #   - s3_presigned_url 인 경우
+            #   - thumbnail이 기존 이미지와 동일한 경우
+            replace_url = f"{self.cloud_front_url}/"
+            thumbnail_uri = contents_create.thumbnail.replace(replace_url, "")
         elif image_source:
             # 썸네일을 따로 저장하진 않는 경우
             replace_url = f"{self.cloud_front_url}/"
@@ -123,6 +124,4 @@ class AddContentsService(AddContentsUseCase):
             updated_at=get_localtime(),
         )
 
-        self.contents_repository.add_contents(contents=contents)
-
-        # return contents
+        self.contents_repository.update(contents_id, contents)

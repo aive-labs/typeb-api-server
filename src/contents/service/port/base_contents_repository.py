@@ -45,3 +45,7 @@ class BaseContentsRepository(ABC):
     @abstractmethod
     def delete(self, contents_id: int):
         pass
+
+    @abstractmethod
+    def update(self, contents_id: int, contents: Contents):
+        pass

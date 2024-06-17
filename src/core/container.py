@@ -143,6 +143,14 @@ class Container(containers.DeclarativeContainer):
         s3_service=s3_asset_service,
     )
 
+    update_contents_service = providers.Singleton(
+        provides=AddContentsService,
+        contents_repository=contents_repository,
+        user_repository=user_repository,
+        cafe24_repository=cafe24_repository,
+        s3_service=s3_asset_service,
+    )
+
     delete_contents_service = providers.Singleton(
         provides=DeleteContentsService,
         contents_repository=contents_repository,

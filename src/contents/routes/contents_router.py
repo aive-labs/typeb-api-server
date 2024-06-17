@@ -17,6 +17,9 @@ from src.contents.routes.port.usecase.get_contents_usecase import GetContentsUse
 from src.contents.routes.port.usecase.get_creative_recommendations_for_content_usecase import (
     GetCreativeRecommendationsForContentUseCase,
 )
+from src.contents.routes.port.usecase.update_contents_usecase import (
+    UpdateContentsUseCase,
+)
 from src.core.container import Container
 
 contents_router = APIRouter(
@@ -121,8 +124,17 @@ def get_contents(
 
 @contents_router.put("/{contents_id}")
 @inject
-def update_contents():
-    pass
+def update_contents(
+    contents_id: int,
+    contents_data: str = Form(...),
+    user=Depends(get_permission_checker(required_permissions=[])),
+    update_contents_service: UpdateContentsUseCase = Depends(
+        Provide[Container.update_contents_service]
+    ),
+):
+    contents_dict = json.loads(contents_data)
+    content_create = ContentsCreate(**contents_dict)
+    update_contents_service.exec(contents_id, content_create, user)
 
 
 @contents_router.delete("/{contents_id}", status_code=status.HTTP_204_NO_CONTENT)
