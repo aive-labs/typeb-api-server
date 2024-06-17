@@ -4,14 +4,23 @@ from src.audiences.routes.dto.response.audiences import (
     AudienceResponse,
     FilterItem,
 )
-from src.audiences.routes.port.usecase.get_audience_usecase import GetAudienceUsecase
+from src.audiences.routes.port.usecase.get_audience_usecase import GetAudienceUseCase
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
 from src.common.view_settings import FilterProcessing
 from src.users.domain.user import User
 from src.utils.data_converter import DataConverter
 
 
-class GetAudienceService(GetAudienceUsecase):
+def transform_data(data_dict):
+    # Handling rep_list transformation if necessary
+
+    if data_dict["rep_list"] is not None:
+        data_dict["rep_list"] = [FilterItem(**item) for item in data_dict["rep_list"]]
+
+    return AudienceRes(**data_dict)
+
+
+class GetAudienceService(GetAudienceUseCase):
     def __init__(self, audience_repository: BaseAudienceRepository):
         self.audience_repository = audience_repository
 
@@ -22,18 +31,24 @@ class GetAudienceService(GetAudienceUsecase):
             user, is_exclude
         )
 
-        audience_response = [AudienceRes(**audience) for audience in audiences]
+        audience_response = [transform_data(audience) for audience in audiences]
 
         filter_obj = FilterProcessing("target_audience")
         filters = filter_obj.filter_converter(df=audience_df)
 
-        representative_items = [
-            FilterItem(id=item["id"], name=item["name"]) for item in filters["rep_list"]
-        ]
-        item_owned_by = [
-            FilterItem(id=item["id"], name=item["name"])
-            for item in filters["owned_by_dept_list"]
-        ]
+        representative_items = []
+        if "rep_list" in filters:
+            representative_items = [
+                FilterItem(id=item["id"], name=item["name"])
+                for item in filters["rep_list"]
+            ]
+
+        item_owned_by = []
+        if "owned_by_dept_list" in filters:
+            item_owned_by = [
+                FilterItem(id=item["id"], name=item["name"])
+                for item in filters["owned_by_dept_list"]
+            ]
 
         response = AudienceResponse(
             audiences=audience_response,

@@ -9,6 +9,8 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 
+from src.campaign.infra.entity.kakao_link_buttons_entity import KakaoLinkButtonsEntity
+from src.campaign.infra.entity.message_resource_entity import MessageResourceEntity
 from src.core.database import Base as Base
 
 
@@ -46,13 +48,13 @@ class SetGroupMessagesEntity(Base):
 
     # 1:n relationship
     kakao_button_links = relationship(
-        "KakaoLinkButtonsEntity",
+        KakaoLinkButtonsEntity,
         backref="set_group_messages",
         lazy=True,
         cascade="all, delete-orphan",
     )
     msg_resources = relationship(
-        "MessageResourceEntity",
+        MessageResourceEntity,
         backref="set_group_messages",
         lazy=True,
         cascade="all, delete-orphan",

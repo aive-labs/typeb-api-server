@@ -27,10 +27,10 @@ class AudienceRes(BaseModel):
     description: Optional[str]
     audience_count: int
     audience_unit_price: float
-    rep_list: list[FilterItem]
+    rep_list: list[FilterItem] | None = None
     created_at: datetime
     updated_at: datetime
-    owned_by_dept: str
+    owned_by_dept: str | None = None
 
 
 class AudienceResponse(BaseModel):

@@ -7,7 +7,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 
-from src.core.database import Base as Base
+from src.core.database import Base
 
 
 class CampaignRemindEntity(Base):
@@ -27,4 +27,4 @@ class CampaignRemindEntity(Base):
     updated_at = Column(DateTime(timezone=True))
     updated_by = Column(String, nullable=False)
 
-    campaign = relationship("CampaignEntity", back_populates="remind_list")
+    campaigns = relationship("CampaignEntity", back_populates="remind_list")

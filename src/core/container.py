@@ -39,6 +39,7 @@ class Container(containers.DeclarativeContainer):
             "src.auth.routes.auth_router",
             "src.contents.routes.contents_router",
             "src.contents.routes.creatives_router",
+            "src.audiences.routes.audience_router",
         ]
     )
 

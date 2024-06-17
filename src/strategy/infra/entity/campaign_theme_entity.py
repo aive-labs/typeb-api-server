@@ -3,7 +3,9 @@ from datetime import datetime
 from sqlalchemy import ARRAY, Column, DateTime, ForeignKey, Integer, String, text
 from sqlalchemy.orm import relationship
 
+from src.audiences.infra.entity.theme_audience_entity import ThemeAudienceEntity
 from src.core.database import Base as Base
+from src.strategy.infra.entity.theme_offers_entity import ThemeOfferEntity
 
 
 class CampaignThemeEntity(Base):
@@ -25,13 +27,13 @@ class CampaignThemeEntity(Base):
 
     # 1:n relationship
     theme_audience_mapping = relationship(
-        "ThemeAudienceEntity",
+        ThemeAudienceEntity,
         backref="campaign_themes",
         lazy=True,
         cascade="all, delete-orphan",
     )
     theme_offer_mapping = relationship(
-        "ThemeOfferEntity",
+        ThemeOfferEntity,
         backref="campaign_themes",
         lazy=True,
         cascade="all, delete-orphan",

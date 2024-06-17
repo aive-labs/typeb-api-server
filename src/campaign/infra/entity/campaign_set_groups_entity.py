@@ -8,6 +8,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 
+from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.core.database import Base as Base
 
 
@@ -39,7 +40,7 @@ class CampaignSetGroupsEntity(Base):
 
     # 1:n relationship
     group_msg = relationship(
-        "SetGroupMessagesEntity",
+        SetGroupMessagesEntity,
         backref="campaign_set_groups",
         lazy=True,
         cascade="all, delete-orphan",

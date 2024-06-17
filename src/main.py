@@ -3,7 +3,7 @@ import logging
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.audiences.routes.audience_routes import audience_router
+from src.audiences.routes.audience_router import audience_router
 from src.auth.routes.auth_router import auth_router
 from src.contents.routes.contents_router import contents_router
 from src.contents.routes.creatives_router import creatives_router

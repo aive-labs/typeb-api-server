@@ -10,7 +10,7 @@ from src.audiences.routes.port.usecase.create_audience_usecase import (
 from src.audiences.routes.port.usecase.delete_audience_usecase import (
     DeleteAudienceUsecase,
 )
-from src.audiences.routes.port.usecase.get_audience_usecase import GetAudienceUsecase
+from src.audiences.routes.port.usecase.get_audience_usecase import GetAudienceUseCase
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
 
@@ -21,7 +21,7 @@ audience_router = APIRouter(tags=["audience"])
 @inject
 def get_audiences(
     is_exclude: bool | None = None,
-    get_audience_service: GetAudienceUsecase = Depends(
+    get_audience_service: GetAudienceUseCase = Depends(
         Provide[Container.get_audience_service]
     ),
     user=Depends(get_permission_checker(required_permissions=[])),
@@ -34,7 +34,7 @@ def get_audiences(
 def get_audience_detail(
     audience_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
-    get_audience_service: GetAudienceUsecase = Depends(
+    get_audience_service: GetAudienceUseCase = Depends(
         Provide[Container.get_audience_service]
     ),
 ):

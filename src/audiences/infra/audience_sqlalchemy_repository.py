@@ -68,7 +68,7 @@ class AudienceSqlAlchemy:
     ) -> list[AudienceInfo]:
         with self.db() as db:
             user_entity = (
-                db.query(UserEntity).filter(UserEntity.id == user.user_id).first()
+                db.query(UserEntity).filter(UserEntity.user_id == user.user_id).first()
             )
             if user_entity is None:
                 raise NotFoundError("사용자를 찾지 못했습니다.")
@@ -119,6 +119,7 @@ class AudienceSqlAlchemy:
                     AudienceEntity.description,
                     AudienceEntity.created_at,
                     AudienceEntity.updated_at,
+                    AudienceEntity.owned_by_dept,
                     subq_maxdate.c.audience_count,
                     AudienceStatsEntity.audience_unit_price,
                     PrimaryRepProductEntity.main_product_id,

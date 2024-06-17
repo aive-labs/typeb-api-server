@@ -4,18 +4,19 @@ from pydantic import BaseModel
 
 
 class AudienceInfo(BaseModel):
-    audience_id: int
+    audience_id: str
     audience_name: str
     audience_type_code: str
     audience_type_name: str
     audience_status_code: str
     audience_status_name: str
     is_exclude: bool
-    user_exc_deletable: bool
+    user_exc_deletable: bool | None
     update_cycle: str | None
     description: str | None
     created_at: datetime
     updated_at: datetime
+    owned_by_dept: str | None
     audience_count: int
     audience_unit_price: float
     main_product_id: int | None
@@ -39,6 +40,7 @@ class AudienceInfo(BaseModel):
                 description=row.description,
                 created_at=row.created_at,
                 updated_at=row.updated_at,
+                owned_by_dept=row.owned_by_dept,
                 audience_count=row.audience_count,
                 audience_unit_price=row.audience_unit_price,
                 main_product_id=row.main_product_id,

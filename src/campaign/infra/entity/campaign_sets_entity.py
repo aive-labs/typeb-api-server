@@ -8,6 +8,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 
+from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
 from src.core.database import Base as Base
 
 
@@ -44,7 +45,7 @@ class CampaignSetsEntity(Base):
 
     # 1:n relationship
     set_group_list = relationship(
-        "CampaignSetGroupsEntity",
+        CampaignSetGroupsEntity,
         backref="campaign_sets",
         lazy=True,
         cascade="all, delete-orphan",

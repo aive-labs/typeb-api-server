@@ -10,7 +10,9 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 
-from src.core.database import Base as Base
+from src.campaign.infra.entity.campaign_remind_entity import CampaignRemindEntity
+from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
+from src.core.database import Base
 
 
 class CampaignEntity(Base):
@@ -73,16 +75,18 @@ class CampaignEntity(Base):
     updated_by = Column(String, nullable=False)
 
     # 1:n relationship
+
+    # 1:n relationship
     remind_list = relationship(
-        "CampaignRemindEntity",
-        backref="campaigns",
+        CampaignRemindEntity,
+        back_populates="campaigns",
         lazy=True,
         cascade="all, delete-orphan",
     )
 
     # 1:n relationship
     camp_sets = relationship(
-        "CampaignSetsEntity",
+        CampaignSetsEntity,
         backref="campaigns",
         lazy=True,
         cascade="all, delete-orphan",
