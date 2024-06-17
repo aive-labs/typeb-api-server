@@ -1,3 +1,9 @@
+from src.audiences.routes.dto.response.audiences import (
+    AudienceFilter,
+    AudienceRes,
+    AudienceResponse,
+    FilterItem,
+)
 from src.audiences.routes.port.usecase.get_audience_usecase import GetAudienceUsecase
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
 from src.common.view_settings import FilterProcessing
@@ -9,20 +15,35 @@ class GetAudienceService(GetAudienceUsecase):
     def __init__(self, audience_repository: BaseAudienceRepository):
         self.audience_repository = audience_repository
 
-    def get_all_audiences(self, user: User, is_exclude: bool | None = None):
+    def get_all_audiences(
+        self, user: User, is_exclude: bool | None = None
+    ) -> AudienceResponse:
         audiences, audience_df = self.audience_repository.get_audiences(
             user, is_exclude
         )
 
-        res = {}
+        audience_response = [AudienceRes(**audience) for audience in audiences]
 
         filter_obj = FilterProcessing("target_audience")
         filters = filter_obj.filter_converter(df=audience_df)
 
-        res["audiences"] = audiences
-        res["filters"] = filters
+        representative_items = [
+            FilterItem(id=item["id"], name=item["name"]) for item in filters["rep_list"]
+        ]
+        item_owned_by = [
+            FilterItem(id=item["id"], name=item["name"])
+            for item in filters["owned_by_dept_list"]
+        ]
 
-        return res
+        response = AudienceResponse(
+            audiences=audience_response,
+            filters=AudienceFilter(
+                representative_items=representative_items,
+                audience_created_by=item_owned_by,
+            ),
+        )
+
+        return response
 
     def get_audience_details(self, audience_id: str):
         res = {}

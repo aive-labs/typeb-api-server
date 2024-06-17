@@ -1,5 +1,10 @@
 from dependency_injector import containers, providers
 
+from src.audiences.infra.audience_repository import AudienceRepository
+from src.audiences.infra.audience_sqlalchemy_repository import AudienceSqlAlchemy
+from src.audiences.service.create_audience_service import CreateAudienceService
+from src.audiences.service.delete_audience_service import DeleteAudienceService
+from src.audiences.service.get_audience_service import GetAudienceService
 from src.auth.infra.cafe24_repository import Cafe24Repository
 from src.auth.infra.cafe24_sqlalchemy_repository import Cafe24SqlAlchemyRepository
 from src.auth.service.auth_service import AuthService
@@ -160,25 +165,25 @@ class Container(containers.DeclarativeContainer):
     """
     타겟 오디언스 의존성 주입
     """
-    # audience_sqlalchemy = providers.Singleton(
-    #     provides=AudienceSqlAlchemy, db=db.provided.session
-    # )
-    #
-    # audience_repository = providers.Singleton(
-    #     provides=BaseAudienceRepository, audience_sqlalchemy=audience_sqlalchemy
-    # )
-    #
-    # get_audience_service = providers.Singleton(
-    #     provides=GetAudienceUsecase, audience_repository=audience_repository
-    # )
-    #
-    # create_audience_service = providers.Singleton(
-    #     provides=CreateAudienceUsecase, audience_repository=audience_repository
-    # )
-    #
-    # delete_audience_service = providers.Singleton(
-    #     provides=DeleteAudienceUsecase, audience_repository=audience_repository
-    # )
+    audience_sqlalchemy = providers.Singleton(
+        provides=AudienceSqlAlchemy, db=db.provided.session
+    )
+
+    audience_repository = providers.Singleton(
+        provides=AudienceRepository, audience_sqlalchemy=audience_sqlalchemy
+    )
+
+    get_audience_service = providers.Singleton(
+        provides=GetAudienceService, audience_repository=audience_repository
+    )
+
+    create_audience_service = providers.Singleton(
+        provides=CreateAudienceService, audience_repository=audience_repository
+    )
+
+    delete_audience_service = providers.Singleton(
+        provides=DeleteAudienceService, audience_repository=audience_repository
+    )
 
     """
     전략 의존성 주입

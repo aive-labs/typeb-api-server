@@ -12,7 +12,7 @@ from src.audiences.infra.entity.customer_info_status_entity import (
 )
 from src.audiences.routes.dto.request.audience_create import AudienceCreate
 from src.audiences.routes.port.usecase.create_audience_usecase import (
-    CreateAudienceUsecase,
+    CreateAudienceUseCase,
 )
 from src.audiences.service.background.execute_target_audience_summary import (
     execute_target_audience_summary,
@@ -27,7 +27,7 @@ from src.audiences.utils.query_builder import (
 from src.users.domain.user import User
 
 
-class CreateAudienceService(CreateAudienceUsecase):
+class CreateAudienceService(CreateAudienceUseCase):
     def __init__(self, audience_repository: AudienceRepository):
         self.audience_repository = audience_repository
 

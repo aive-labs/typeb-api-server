@@ -1,5 +1,6 @@
-from app.core import utils
 from pydantic import BaseModel
+
+from src.utils.data_converter import DataConverter
 
 
 class FilterColumns(BaseModel):
@@ -55,11 +56,15 @@ class FilterProcessing:
 
     def filter_converter(self, df):
         filter_dict = self.get_filter_attribute()
+
+        if filter_dict is None:
+            return {}
+
         res = {}
         for key, vals in filter_dict.items():
             try:
                 df_filter = df[vals]
-                res[key] = utils.id_name_converter(df_filter, vals)
+                res[key] = DataConverter.id_name_converter(df_filter, vals)
 
             except KeyError as e:
                 print(f"Column '{e.args[0]}' does not exist in the DataFrame")

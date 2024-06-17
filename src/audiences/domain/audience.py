@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic import BaseModel
 
 from src.audiences.infra.entity.audience_entity import AudienceEntity
-from src.audiences.routes.dto.response.code_items import CodeItems
+from src.audiences.routes.dto.response.code_items import RepresentativeItems
 
 
 class Audience(BaseModel):
@@ -19,7 +19,7 @@ class Audience(BaseModel):
     description: str | None = None
     audience_count: int | None = None
     audience_unit_price: float | None = None
-    rep_list: list[CodeItems] | None = None
+    rep_list: list[RepresentativeItems] | None = None
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
 

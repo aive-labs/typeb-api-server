@@ -5,7 +5,7 @@ from src.audiences.routes.dto.request.audience_create import AudienceCreate
 from src.audiences.routes.dto.response.audience_stat_info import AudienceStatsInfo
 from src.audiences.routes.dto.response.audiences import AudienceResponse
 from src.audiences.routes.port.usecase.create_audience_usecase import (
-    CreateAudienceUsecase,
+    CreateAudienceUseCase,
 )
 from src.audiences.routes.port.usecase.delete_audience_usecase import (
     DeleteAudienceUsecase,
@@ -24,11 +24,7 @@ def get_audiences(
     get_audience_service: GetAudienceUsecase = Depends(
         Provide[Container.get_audience_service]
     ),
-    user=Depends(
-        get_permission_checker(
-            required_permissions=["gnb_permissions:target_audience:read"]
-        )
-    ),
+    user=Depends(get_permission_checker(required_permissions=[])),
 ):
     # get_all_audience에서 리턴 타입이 dictionary 형태임
     return get_audience_service.get_all_audiences(user, is_exclude)
@@ -37,11 +33,7 @@ def get_audiences(
 @audience_router.get("/audiences/{audience_id}/info", response_model=AudienceStatsInfo)
 def get_audience_detail(
     audience_id: str,
-    user=Depends(
-        get_permission_checker(
-            required_permissions=["gnb_permissions:target_audience:read"]
-        )
-    ),
+    user=Depends(get_permission_checker(required_permissions=[])),
     get_audience_service: GetAudienceUsecase = Depends(
         Provide[Container.get_audience_service]
     ),
@@ -53,10 +45,10 @@ def get_audience_detail(
 def create_audience(
     audience_create: AudienceCreate,
     background_task: BackgroundTasks,
-    create_audience_service: CreateAudienceUsecase = Depends(
+    create_audience_service: CreateAudienceUseCase = Depends(
         Provide[Container.create_audience_service]
     ),
-    user=Depends(get_permission_checker(["gnb_permissions:target_audience:create"])),
+    user=Depends(get_permission_checker([])),
 ):
     create_audience_service.create_audience(
         audience_create=audience_create, user=user, background_task=background_task
@@ -68,11 +60,7 @@ def create_audience(
 )
 def delete_audience(
     audience_id: str,
-    user=Depends(
-        get_permission_checker(
-            required_permissions=["gnb_permissions:target_audience:delete"]
-        )
-    ),
+    user=Depends(get_permission_checker(required_permissions=[])),
     delete_audience_service: DeleteAudienceUsecase = Depends(
         Provide[Container.delete_audience_service]
     ),

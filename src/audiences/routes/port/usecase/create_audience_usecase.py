@@ -6,12 +6,12 @@ from src.audiences.routes.dto.request.audience_create import AudienceCreate
 from src.users.domain.user import User
 
 
-class CreateAudienceUsecase(ABC):
+class CreateAudienceUseCase(ABC):
     @abstractmethod
     def create_audience(
         self,
         audience_create: AudienceCreate,
         user: User,
         background_task: BackgroundTasks,
-    ):
+    ) -> str:
         pass
