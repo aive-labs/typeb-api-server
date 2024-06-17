@@ -31,23 +31,6 @@ class Contents(BaseModel):
     updated_at: datetime | None = None
 
     def to_entity(self) -> ContentsEntity:
-        # publication_start_dt = (
-        #     datetime.fromisoformat(self.publication_start)
-        #     if self.publication_start
-        #     else None
-        # )
-        # publication_end_dt = (
-        #     datetime.fromisoformat(self.publication_end)
-        #     if self.publication_end
-        #     else None
-        # )
-        # created_at_dt = (
-        #     datetime.fromisoformat(self.created_at) if self.created_at else None
-        # )
-        # updated_at_dt = (
-        #     datetime.fromisoformat(self.updated_at) if self.updated_at else None
-        # )
-
         return ContentsEntity(
             contents_id=self.contents_id,
             contents_name=self.contents_name,
@@ -63,13 +46,13 @@ class Contents(BaseModel):
             emphasis_context=self.emphasis_context,
             thumbnail_uri=self.thumbnail_uri,
             contents_url=self.contents_url,
-            publication_start=self.publication_start_dt,
-            publication_end=self.publication_end_dt,
+            publication_start=self.publication_start,
+            publication_end=self.publication_end,
             contents_tags=self.contents_tags,
             coverage_score=self.coverage_score,
             contents_type=self.contents_type,
             created_by=self.created_by,
-            created_at=self.created_at_dt,
+            created_at=self.created_at,
             updated_by=self.updated_by,
-            updated_at=self.updated_at_dt,
+            updated_at=self.updated_at,
         )
