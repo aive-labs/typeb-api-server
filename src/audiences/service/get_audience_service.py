@@ -1,3 +1,4 @@
+from src.audiences.routes.dto.response.audience_stat_info import AudienceStatsInfo, AudienceStats, AudienceSummary
 from src.audiences.routes.dto.response.audiences import (
     AudienceFilter,
     AudienceRes,
@@ -60,7 +61,8 @@ class GetAudienceService(GetAudienceUseCase):
 
         return response
 
-    def get_audience_details(self, audience_id: str):
+    def get_audience_details(self, audience_id: str) -> AudienceStatsInfo:
+
         res = {}
 
         audience_filtered = self.audience_repository.get_audience_stats(audience_id)
@@ -137,6 +139,7 @@ class GetAudienceService(GetAudienceUseCase):
         res["audience_stat"]["excluded_audience_info"] = excluded_audience_info
 
         # audience_summary
+
         res["audience_summary"] = {}
         keys_to_get = [
             "revenue_per_audience",
@@ -155,7 +158,6 @@ class GetAudienceService(GetAudienceUseCase):
         audience_summary_dict = DataConverter.get_values_from_dict(
             audience_base, keys_to_get
         )
-
         keys_to_get = ["agg_period_start", "agg_period_end"]
         audience_agg_peri_dict = DataConverter.get_values_from_dict(
             audience_base, keys_to_get
@@ -169,4 +171,13 @@ class GetAudienceService(GetAudienceUseCase):
         res["audience_summary"]["agg_period"] = audience_agg_peri_dict
         res["audience_summary"]["rep_list"] = audience_rep_dict
 
-        return res
+        return AudienceStatsInfo(
+            audience_id=res["audience_id"],
+            audience_name = res["audience_name"],
+            audience_type_code = res["audience_type_code"],
+            audience_type_name = res["audience_type_name"],
+            description = res["description"],
+            audience_stat = AudienceStats(**res["audience_stat"]),
+            audience_summary = AudienceSummary(**res["audience_summary"])
+        )
+

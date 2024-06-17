@@ -2,7 +2,7 @@ from collections.abc import Callable
 from contextlib import AbstractContextManager
 from datetime import datetime
 
-from sqlalchemy import and_, func, or_
+from sqlalchemy import and_, func, or_, String
 from sqlalchemy.orm import Session
 
 from src.audiences.enums.audience_status import AudienceStatus
@@ -489,8 +489,8 @@ class AudienceSqlAlchemy:
             conditions = [model.owned_by_dept == user.department_id]
 
             # 일반 이용자
-            if user.sys_id == "HO":
-                if user.parent_dept_cd:
+            if "HO" == user.sys_id:
+                if user.parent_dept_cd:  # pyright: ignore [reportGeneralTypeIssues]
                     ##본부 하위 팀 부서 리소스
                     parent_teams_query = db.query(UserEntity).filter(
                         UserEntity.parent_dept_cd == user.parent_dept_cd
@@ -507,7 +507,7 @@ class AudienceSqlAlchemy:
 
                 # 해당 본사 팀이 관리하는 매장 리소스
                 shops_query = (
-                    db.query(User.department_id)
+                    db.query(UserEntity.department_id)
                     .filter(
                         UserEntity.branch_manager.in_(erp_ids),
                         UserEntity.branch_manager.isnot(None),
@@ -526,3 +526,62 @@ class AudienceSqlAlchemy:
                 res_cond = conditions
 
         return res_cond
+
+    def get_audience_stats(self, audience_id):
+        with self.db() as db:
+            return db.query(
+                AudienceEntity.audience_id,
+                AudienceEntity.audience_name,
+                AudienceEntity.audience_type_code,
+                AudienceEntity.audience_type_name,
+                AudienceEntity.audience_status_code,
+                AudienceEntity.audience_status_name,
+                AudienceEntity.create_type_code,
+                AudienceEntity.description,
+                AudienceEntity.created_at,
+                AudienceEntity.created_by,  # 생성 유저
+                UserEntity.username.label('created_by_name'),  # 생성 부서
+                UserEntity.department_name.label('owned_by_dept_name'),  # 생성 부서 abb명
+                UserEntity.department_abb_name.label('owned_by_dept_abb_name'),  # 생성 부서 abb명
+                AudienceStatsEntity.audience_count,
+                AudienceStatsEntity.audience_count_gap,
+                AudienceStatsEntity.net_audience_count,
+                AudienceStatsEntity.agg_period_start,
+                AudienceStatsEntity.agg_period_end,
+                AudienceStatsEntity.excluded_customer_count,
+                AudienceStatsEntity.audience_portion,
+                AudienceStatsEntity.audience_portion_gap,
+                AudienceStatsEntity.audience_unit_price,
+                AudienceStatsEntity.audience_unit_price_gap,
+                AudienceStatsEntity.revenue_per_audience,
+                AudienceStatsEntity.purchase_per_audience,
+                AudienceStatsEntity.revenue_per_purchase,
+                AudienceStatsEntity.avg_pur_item_count,
+                AudienceStatsEntity.retention_rate_3m,
+                AudienceStatsEntity.response_rate,
+                AudienceStatsEntity.stat_updated_at
+            ).outerjoin(
+                AudienceStatsEntity,
+                AudienceEntity.audience_id == AudienceStatsEntity.audience_id
+            ).outerjoin(
+                UserEntity,
+                AudienceEntity.created_by == func.cast(UserEntity.user_id, String)
+            ).filter(
+                AudienceEntity.audience_id == audience_id
+            )
+
+    def get_audience_products(self, audience_id):
+        with self.db() as db:
+            return db.query(
+                PrimaryRepProductEntity
+            ).filter(
+                PrimaryRepProductEntity.audience_id == audience_id
+            )
+
+    def get_audience_count(self, audience_id):
+        with self.db() as db:
+            return db.query(
+                AudienceCountByMonthEntity
+            ).filter(
+                AudienceCountByMonthEntity.audience_id == audience_id
+            )

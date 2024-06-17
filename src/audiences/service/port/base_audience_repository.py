@@ -16,15 +16,15 @@ class BaseAudienceRepository(ABC):
         pass
 
     @abstractmethod
-    def get_audience_stats(self, audience_id: str):
+    def get_audience_stats(self, audience_id: str) -> object:
         pass
 
     @abstractmethod
-    def get_audience_products(self, audience_id: str):
+    def get_audience_products(self, audience_id: str) -> object:
         pass
 
     @abstractmethod
-    def get_audience_count(self, audience_id: str):
+    def get_audience_count(self, audience_id: str) -> object:
         pass
 
     @abstractmethod

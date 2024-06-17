@@ -52,14 +52,14 @@ class AudienceRepository(BaseAudienceRepository):
 
         return merged_data, audience_df
 
-    def get_audience_stats(self, audience_id: str):
-        raise NotImplementedError
+    def get_audience_stats(self, audience_id: str) -> object:
+        return self.audience_sqlalchemy.get_audience_stats(audience_id)
 
-    def get_audience_products(self, audience_id: str):
-        raise NotImplementedError
+    def get_audience_products(self, audience_id: str) -> object:
+        return self.audience_sqlalchemy.get_audience_products(audience_id)
 
-    def get_audience_count(self, audience_id: str):
-        raise NotImplementedError
+    def get_audience_count(self, audience_id: str) -> object:
+        return self.audience_sqlalchemy.get_audience_count(audience_id)
 
     def get_audience(self, audience_id: str) -> Audience:
         audience_entity = self.audience_sqlalchemy.get_audience(audience_id=audience_id)

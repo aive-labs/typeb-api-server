@@ -34,10 +34,14 @@ class AudienceSummary(BaseModel):
     stat_updated_at: str
     agg_period: dict
     rep_list: list[FilterItem] | None = None
-    created_by_name: str  # 생성자
+
+    # TODO 진짜 None 가능한지
+    created_by_name: str | None  # 생성자
     owned_by_dept_name: str | None  # 생성부서
     owned_by_dept_abb_name: str | None  # 생성부서 약어
-    create_type_code: AudienceCreateType  # 생성방법
+
+    # TODO 진짜 None 가능한지
+    create_type_code: AudienceCreateType | None  # 생성방법
 
 
 class AudienceStatsInfo(BaseModel):

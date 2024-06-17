@@ -31,6 +31,7 @@ def get_audiences(
 
 
 @audience_router.get("/audiences/{audience_id}/info", response_model=AudienceStatsInfo)
+@inject
 def get_audience_detail(
     audience_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
@@ -42,6 +43,7 @@ def get_audience_detail(
 
 
 @audience_router.post("/audiences", status_code=status.HTTP_201_CREATED)
+@inject
 def create_audience(
     audience_create: AudienceCreate,
     background_task: BackgroundTasks,
@@ -58,6 +60,7 @@ def create_audience(
 @audience_router.delete(
     "/audiences/{audience_id}", status_code=status.HTTP_204_NO_CONTENT
 )
+@inject
 def delete_audience(
     audience_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
