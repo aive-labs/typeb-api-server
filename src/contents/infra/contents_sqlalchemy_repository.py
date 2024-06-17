@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from contextlib import AbstractContextManager
 
-from sqlalchemy import or_
+from sqlalchemy import or_, update
 from sqlalchemy.orm import Session
 
 from src.contents.domain.contents import Contents
@@ -87,29 +87,33 @@ class ContentsSqlAlchemy:
         with self.db() as db:
             sort_col = getattr(ContentsEntity, based_on)
             # get all contents_data
-            base_query = db.query(
-                ContentsEntity.contents_id,
-                ContentsEntity.contents_name,
-                ContentsEntity.contents_status,
-                ContentsEntity.contents_body,
-                ContentsEntity.plain_text,
-                ContentsEntity.sty_cd,
-                ContentsEntity.subject,
-                ContentsMenuEntity.name.label("subject_name"),
-                ContentsEntity.material1,
-                ContentsEntity.material2,
-                ContentsEntity.template,
-                ContentsEntity.thumbnail_uri,
-                ContentsEntity.contents_url,
-                ContentsEntity.publication_start,
-                ContentsEntity.publication_end,
-                ContentsEntity.additional_prompt,
-                ContentsEntity.contents_tags,
-                ContentsEntity.created_by,
-                ContentsEntity.created_at,
-                ContentsEntity.updated_by,
-                ContentsEntity.updated_at,
-            ).join(ContentsEntity, ContentsMenuEntity.code == ContentsEntity.subject)
+            base_query = (
+                db.query(
+                    ContentsEntity.contents_id,
+                    ContentsEntity.contents_name,
+                    ContentsEntity.contents_status,
+                    ContentsEntity.contents_body,
+                    ContentsEntity.plain_text,
+                    ContentsEntity.sty_cd,
+                    ContentsEntity.subject,
+                    ContentsMenuEntity.name.label("subject_name"),
+                    ContentsEntity.material1,
+                    ContentsEntity.material2,
+                    ContentsEntity.template,
+                    ContentsEntity.thumbnail_uri,
+                    ContentsEntity.contents_url,
+                    ContentsEntity.publication_start,
+                    ContentsEntity.publication_end,
+                    ContentsEntity.additional_prompt,
+                    ContentsEntity.contents_tags,
+                    ContentsEntity.created_by,
+                    ContentsEntity.created_at,
+                    ContentsEntity.updated_by,
+                    ContentsEntity.updated_at,
+                )
+                .join(ContentsEntity, ContentsMenuEntity.code == ContentsEntity.subject)
+                .filter(~ContentsEntity.is_deleted)
+            )
 
             if sort_by == "desc":
                 sort_col = sort_col.desc()
@@ -131,8 +135,7 @@ class ContentsSqlAlchemy:
                     )
                 )
             entities = base_query.all()
-            print("----")
-            print(entities[0].contents_id)
+
             return [
                 ContentsResponse(
                     contents_id=entity.contents_id,
@@ -177,11 +180,25 @@ class ContentsSqlAlchemy:
         with self.db() as db:
             entity = (
                 db.query(ContentsEntity)
-                .filter(ContentsEntity.contents_id == contents_id)
+                .filter(
+                    ContentsEntity.contents_id == contents_id,
+                    ~ContentsEntity.is_deleted,
+                )
                 .first()
             )
 
             if not entity:
-                raise NotFoundError("해당하는 menu가 존재하지 않습니다.")
+                raise NotFoundError("해당하는 콘텐츠가 존재하지 않습니다.")
 
             return ModelConverter.entity_to_model(entity, Contents)
+
+    def delete_contents(self, contents_id):
+        with self.db() as db:
+            update_statement = (
+                update(ContentsEntity)
+                .where(ContentsEntity.contents_id == contents_id)
+                .values(is_deleted=True)
+            )
+
+            db.execute(update_statement)
+            db.commit()

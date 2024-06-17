@@ -8,9 +8,8 @@ from sqlalchemy import MetaData, create_engine, orm
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
 
-# SQLAlchemy의 로깅 수준을 디버그로 설정
 logging.basicConfig()
-logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
+logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
 
 class DBSettings(BaseSettings):
@@ -39,8 +38,8 @@ def get_db_url():
 
 
 ## check schema name for deployment
-metaobj = MetaData(schema="aivelabs_sv")
-Base = declarative_base(metadata=metaobj)
+meta_obj = MetaData(schema="aivelabs_sv")
+Base = declarative_base(metadata=meta_obj)
 
 
 class Database:
@@ -58,7 +57,9 @@ class Database:
         self._create_database()
 
     def _create_database(self) -> None:
-        Base.metadata.create_all(self._engine)  # type: ignore
+        logging.info(f"CREATING DATABASE: {self._engine}")
+        # SQLAlchemy의 create_all 메서드는 테이블이 없는 경우에만 테이블을 생성. 기존 테이블의 스키마를 업데이트하지 않음
+        Base.metadata.create_all(self._engine)
 
     @contextmanager  # type: ignore
     def session(self) -> Callable[..., AbstractContextManager[Session]]:  # type: ignore

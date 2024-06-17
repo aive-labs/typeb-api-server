@@ -41,3 +41,7 @@ class BaseContentsRepository(ABC):
     @abstractmethod
     def get_contents_detail(self, contents_id: int) -> Contents:
         pass
+
+    @abstractmethod
+    def delete(self, contents_id: int):
+        pass

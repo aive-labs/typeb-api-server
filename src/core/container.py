@@ -11,6 +11,7 @@ from src.contents.infra.creatives_repository import CreativesRepository
 from src.contents.infra.creatives_sqlalchemy_repository import CreativesSqlAlchemy
 from src.contents.service.add_contents_service import AddContentsService
 from src.contents.service.add_creatives_service import AddCreativesService
+from src.contents.service.delete_contents_service import DeleteContentsService
 from src.contents.service.delete_creatives_service import DeleteCreativesService
 from src.contents.service.get_contents_service import GetContentsService
 from src.contents.service.get_creative_recommendations_for_content import (
@@ -39,7 +40,6 @@ class Container(containers.DeclarativeContainer):
     """
     config 파일에 따라 다른 데이터베이스 주입
     """
-
     db = providers.Singleton(Database, db_url=get_db_url())
 
     """
@@ -140,6 +140,12 @@ class Container(containers.DeclarativeContainer):
     get_creative_recommendation = providers.Singleton(
         provides=GetCreativeRecommendationsForContent,
         creatives_repository=creatives_repository,
+        s3_service=s3_asset_service,
+    )
+
+    delete_contents_service = providers.Singleton(
+        provides=DeleteContentsService,
+        contents_repository=contents_repository,
         s3_service=s3_asset_service,
     )
 

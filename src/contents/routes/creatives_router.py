@@ -88,7 +88,7 @@ def delete_img_creatives(
         Provide[Container.delete_creatives_service]
     ),
 ):
-    delete_creatives_service.delete_creative(creative_id)
+    delete_creatives_service.exec(creative_id)
 
 
 @creatives_router.put("/{creative_id}", status_code=status.HTTP_200_OK)

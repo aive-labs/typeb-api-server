@@ -1,5 +1,6 @@
 from sqlalchemy import (
     ARRAY,
+    Boolean,
     Column,
     DateTime,
     Float,
@@ -36,3 +37,4 @@ class ContentsEntity(Base):
     created_at = Column(DateTime(timezone=True))
     updated_by = Column(String, nullable=False)
     updated_at = Column(DateTime(timezone=True))
+    is_deleted = Column(Boolean, nullable=False, default=False)

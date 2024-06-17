@@ -6,6 +6,7 @@ from src.contents.service.port.base_contents_repository import BaseContentsRepos
 
 
 class ContentsRepository(BaseContentsRepository):
+
     def __init__(self, contents_sqlalchemy: ContentsSqlAlchemy):
         self.contents_sqlalchemy = contents_sqlalchemy
 
@@ -37,3 +38,6 @@ class ContentsRepository(BaseContentsRepository):
 
     def get_contents_detail(self, contents_id: int) -> Contents:
         return self.contents_sqlalchemy.get_contents_detail(contents_id)
+
+    def delete(self, contents_id: int):
+        self.contents_sqlalchemy.delete_contents(contents_id)

@@ -2,7 +2,7 @@ import json
 from typing import Optional, Union
 
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, Form
+from fastapi import APIRouter, Depends, Form, status
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.contents.infra.dto.response.contents_menu_response import ContentsMenuResponse
@@ -10,6 +10,9 @@ from src.contents.infra.dto.response.contents_response import ContentsResponse
 from src.contents.infra.dto.response.creative_recommend import CreativeRecommend
 from src.contents.routes.dto.request.contents_create import ContentsCreate
 from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUseCase
+from src.contents.routes.port.usecase.delete_contents_usecase import (
+    DeleteContentsUseCase,
+)
 from src.contents.routes.port.usecase.get_contents_usecase import GetContentsUseCase
 from src.contents.routes.port.usecase.get_creative_recommendations_for_content_usecase import (
     GetCreativeRecommendationsForContentUseCase,
@@ -122,7 +125,13 @@ def update_contents():
     pass
 
 
-@contents_router.delete("/{contents_id}")
+@contents_router.delete("/{contents_id}", status_code=status.HTTP_204_NO_CONTENT)
 @inject
-def delete_contents():
-    pass
+def delete_contents(
+    contents_id: int,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    delete_contents_service: DeleteContentsUseCase = Depends(
+        Provide[Container.delete_contents_service]
+    ),
+):
+    delete_contents_service.exec(contents_id)
