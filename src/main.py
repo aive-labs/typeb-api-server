@@ -3,6 +3,7 @@ import logging
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.audiences.routes.audience_routes import audience_router
 from src.auth.routes.auth_router import auth_router
 from src.contents.routes.contents_router import contents_router
 from src.contents.routes.creatives_router import creatives_router
@@ -23,6 +24,7 @@ app.include_router(router=user_router, prefix="/users")
 app.include_router(router=auth_router, prefix="/auth")
 app.include_router(router=creatives_router, prefix="/contents-management/creatives")
 app.include_router(router=contents_router, prefix="/contents-management/contents")
+app.include_router(router=audience_router, prefix="/audience-management")
 
 origins = ["*"]
 

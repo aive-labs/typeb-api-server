@@ -34,10 +34,12 @@ class AudienceRepository(BaseAudienceRepository):
             ["audience_id", "main_product_id", "main_product_name"]
         ]
 
-        audience_reps_dict = audience_reps.to_dict("records")
+        audience_reps_dict = audience_reps.to_dict(
+            "records"
+        )  # pyright: ignore [reportArgumentType]
 
         added_dict = DataConverter.iditems_group_conv_by_key(
-            audience_reps_dict,
+            audience_reps_dict,  # pyright: ignore [reportArgumentType]
             key_field="audience_id",
             items_group_name="rep_list",
             code_field="main_product_id",
