@@ -4,6 +4,7 @@ from fastapi import HTTPException
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
+from src.common.utils.get_env_variable import get_env_variable
 from src.contents.domain.contents import Contents
 from src.contents.enums.contents_status import ContentsStatus
 from src.contents.infra.contents_repository import ContentsRepository
@@ -29,6 +30,7 @@ class AddContentsService(AddContentsUseCase):
         self.user_repository = user_repository
         self.cafe24_repository = cafe24_repository
         self.s3_service = s3_service
+        self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
     async def create_contents(self, contents_create: ContentsCreate, user: User):
 
@@ -71,7 +73,8 @@ class AddContentsService(AddContentsUseCase):
             thumbnail_uri = contents_create.thumbnail
         elif image_source:
             # 썸네일을 따로 저장하진 않는 경우
-            thumbnail_uri = image_source[0]
+            replace_url = f"{self.cloud_front_url}/"
+            thumbnail_uri = image_source[0].replace(replace_url, "")
         else:
             thumbnail_uri = f"{mall_id}/contents/thumbnail/default.png"
 
