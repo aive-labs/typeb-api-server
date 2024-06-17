@@ -35,8 +35,8 @@ class AudienceRepository(BaseAudienceRepository):
         ]
 
         audience_reps_dict = audience_reps.to_dict(
-            "records"
-        )  # pyright: ignore [reportArgumentType]
+            "records"  # pyright: ignore [reportArgumentType]
+        )
 
         added_dict = DataConverter.iditems_group_conv_by_key(
             audience_reps_dict,  # pyright: ignore [reportArgumentType]

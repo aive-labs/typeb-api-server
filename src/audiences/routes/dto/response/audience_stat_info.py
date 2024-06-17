@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic import BaseModel
 
 from src.audiences.enums.audience_create_type import AudienceCreateType
-from src.audiences.routes.dto.response.audiences import RepresentativeItems
+from src.audiences.routes.dto.response.audiences import FilterItem
 
 
 class AudienceCountTrend(BaseModel):
@@ -33,7 +33,7 @@ class AudienceSummary(BaseModel):
     created_at: datetime
     stat_updated_at: str
     agg_period: dict
-    rep_list: list[RepresentativeItems] | None = None
+    rep_list: list[FilterItem] | None = None
     created_by_name: str  # 생성자
     owned_by_dept_name: str | None  # 생성부서
     owned_by_dept_abb_name: str | None  # 생성부서 약어
