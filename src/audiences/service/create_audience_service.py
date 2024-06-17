@@ -14,9 +14,10 @@ from src.audiences.routes.dto.request.audience_create import AudienceCreate
 from src.audiences.routes.port.usecase.create_audience_usecase import (
     CreateAudienceUseCase,
 )
-from src.audiences.service.background.execute_target_audience_summary import (
-    execute_target_audience_summary,
-)
+
+# from src.audiences.service.background.execute_target_audience_summary import (
+#     execute_target_audience_summary,
+# )
 from src.audiences.utils.query_builder import (
     build_select_query,
     classify_conditions_based_on_tablename,
@@ -133,7 +134,7 @@ class CreateAudienceService(CreateAudienceUseCase):
         else:
             raise ValueError("Invalid create typecode provided")
 
-        background_task.add_task(execute_target_audience_summary, new_audience_id)
+        # background_task.add_task(execute_target_audience_summary, new_audience_id)
         return new_audience_id
 
     def _get_final_query(self, user, filter_condition):
