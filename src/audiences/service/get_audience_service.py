@@ -1,4 +1,8 @@
-from src.audiences.routes.dto.response.audience_stat_info import AudienceStatsInfo, AudienceStats, AudienceSummary
+from src.audiences.routes.dto.response.audience_stat_info import (
+    AudienceStats,
+    AudienceStatsInfo,
+    AudienceSummary,
+)
 from src.audiences.routes.dto.response.audiences import (
     AudienceFilter,
     AudienceRes,
@@ -54,8 +58,8 @@ class GetAudienceService(GetAudienceUseCase):
         response = AudienceResponse(
             audiences=audience_response,
             filters=AudienceFilter(
-                representative_items=representative_items,
-                audience_created_by=item_owned_by,
+                rep_list=representative_items,
+                owned_by_dept_list=item_owned_by,
             ),
         )
 
@@ -173,11 +177,10 @@ class GetAudienceService(GetAudienceUseCase):
 
         return AudienceStatsInfo(
             audience_id=res["audience_id"],
-            audience_name = res["audience_name"],
-            audience_type_code = res["audience_type_code"],
-            audience_type_name = res["audience_type_name"],
-            description = res["description"],
-            audience_stat = AudienceStats(**res["audience_stat"]),
-            audience_summary = AudienceSummary(**res["audience_summary"])
+            audience_name=res["audience_name"],
+            audience_type_code=res["audience_type_code"],
+            audience_type_name=res["audience_type_name"],
+            description=res["description"],
+            audience_stat=AudienceStats(**res["audience_stat"]),
+            audience_summary=AudienceSummary(**res["audience_summary"]),
         )
-

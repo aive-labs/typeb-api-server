@@ -2,7 +2,7 @@ from collections.abc import Callable
 from contextlib import AbstractContextManager
 from datetime import datetime
 
-from sqlalchemy import and_, func, or_, String
+from sqlalchemy import String, and_, func, or_
 from sqlalchemy.orm import Session
 
 from src.audiences.enums.audience_status import AudienceStatus
@@ -15,10 +15,16 @@ from src.audiences.infra.entity.audience_customer_mapping_entity import (
     AudienceCustomerMapping,
 )
 from src.audiences.infra.entity.audience_entity import AudienceEntity
+from src.audiences.infra.entity.audience_predefined_variable_entity import (
+    AudiencePredefVariableEntity,
+)
 from src.audiences.infra.entity.audience_queries_entity import AudienceQueriesEntity
 from src.audiences.infra.entity.audience_stats_entity import AudienceStatsEntity
 from src.audiences.infra.entity.audience_upload_condition_entity import (
     AudienceUploadConditions,
+)
+from src.audiences.infra.entity.audience_variable_options_entity import (
+    AudienceVariableOptionsEntity,
 )
 from src.audiences.infra.entity.customer_info_status_entity import (
     CustomerInfoStatusEntity,
@@ -529,59 +535,90 @@ class AudienceSqlAlchemy:
 
     def get_audience_stats(self, audience_id):
         with self.db() as db:
-            return db.query(
-                AudienceEntity.audience_id,
-                AudienceEntity.audience_name,
-                AudienceEntity.audience_type_code,
-                AudienceEntity.audience_type_name,
-                AudienceEntity.audience_status_code,
-                AudienceEntity.audience_status_name,
-                AudienceEntity.create_type_code,
-                AudienceEntity.description,
-                AudienceEntity.created_at,
-                AudienceEntity.created_by,  # 생성 유저
-                UserEntity.username.label('created_by_name'),  # 생성 부서
-                UserEntity.department_name.label('owned_by_dept_name'),  # 생성 부서 abb명
-                UserEntity.department_abb_name.label('owned_by_dept_abb_name'),  # 생성 부서 abb명
-                AudienceStatsEntity.audience_count,
-                AudienceStatsEntity.audience_count_gap,
-                AudienceStatsEntity.net_audience_count,
-                AudienceStatsEntity.agg_period_start,
-                AudienceStatsEntity.agg_period_end,
-                AudienceStatsEntity.excluded_customer_count,
-                AudienceStatsEntity.audience_portion,
-                AudienceStatsEntity.audience_portion_gap,
-                AudienceStatsEntity.audience_unit_price,
-                AudienceStatsEntity.audience_unit_price_gap,
-                AudienceStatsEntity.revenue_per_audience,
-                AudienceStatsEntity.purchase_per_audience,
-                AudienceStatsEntity.revenue_per_purchase,
-                AudienceStatsEntity.avg_pur_item_count,
-                AudienceStatsEntity.retention_rate_3m,
-                AudienceStatsEntity.response_rate,
-                AudienceStatsEntity.stat_updated_at
-            ).outerjoin(
-                AudienceStatsEntity,
-                AudienceEntity.audience_id == AudienceStatsEntity.audience_id
-            ).outerjoin(
-                UserEntity,
-                AudienceEntity.created_by == func.cast(UserEntity.user_id, String)
-            ).filter(
-                AudienceEntity.audience_id == audience_id
+            return (
+                db.query(
+                    AudienceEntity.audience_id,
+                    AudienceEntity.audience_name,
+                    AudienceEntity.audience_type_code,
+                    AudienceEntity.audience_type_name,
+                    AudienceEntity.audience_status_code,
+                    AudienceEntity.audience_status_name,
+                    AudienceEntity.create_type_code,
+                    AudienceEntity.description,
+                    AudienceEntity.created_at,
+                    AudienceEntity.created_by,  # 생성 유저
+                    UserEntity.username.label("created_by_name"),  # 생성 부서
+                    UserEntity.department_name.label(
+                        "owned_by_dept_name"
+                    ),  # 생성 부서 abb명
+                    UserEntity.department_abb_name.label(
+                        "owned_by_dept_abb_name"
+                    ),  # 생성 부서 abb명
+                    AudienceStatsEntity.audience_count,
+                    AudienceStatsEntity.audience_count_gap,
+                    AudienceStatsEntity.net_audience_count,
+                    AudienceStatsEntity.agg_period_start,
+                    AudienceStatsEntity.agg_period_end,
+                    AudienceStatsEntity.excluded_customer_count,
+                    AudienceStatsEntity.audience_portion,
+                    AudienceStatsEntity.audience_portion_gap,
+                    AudienceStatsEntity.audience_unit_price,
+                    AudienceStatsEntity.audience_unit_price_gap,
+                    AudienceStatsEntity.revenue_per_audience,
+                    AudienceStatsEntity.purchase_per_audience,
+                    AudienceStatsEntity.revenue_per_purchase,
+                    AudienceStatsEntity.avg_pur_item_count,
+                    AudienceStatsEntity.retention_rate_3m,
+                    AudienceStatsEntity.response_rate,
+                    AudienceStatsEntity.stat_updated_at,
+                )
+                .outerjoin(
+                    AudienceStatsEntity,
+                    AudienceEntity.audience_id == AudienceStatsEntity.audience_id,
+                )
+                .outerjoin(
+                    UserEntity,
+                    AudienceEntity.created_by == func.cast(UserEntity.user_id, String),
+                )
+                .filter(AudienceEntity.audience_id == audience_id)
             )
 
     def get_audience_products(self, audience_id):
         with self.db() as db:
-            return db.query(
-                PrimaryRepProductEntity
-            ).filter(
+            return db.query(PrimaryRepProductEntity).filter(
                 PrimaryRepProductEntity.audience_id == audience_id
             )
 
     def get_audience_count(self, audience_id):
         with self.db() as db:
-            return db.query(
-                AudienceCountByMonthEntity
-            ).filter(
+            return db.query(AudienceCountByMonthEntity).filter(
                 AudienceCountByMonthEntity.audience_id == audience_id
+            )
+
+    def get_variables_options(self, access_lv):
+        with self.db() as db:
+            return (
+                db.query(
+                    AudienceVariableOptionsEntity.option_seq,
+                    AudienceVariableOptionsEntity.predef_var_seq,
+                    AudiencePredefVariableEntity.variable_id,
+                    AudiencePredefVariableEntity.variable_name,
+                    AudiencePredefVariableEntity.variable_group_code,
+                    AudiencePredefVariableEntity.variable_group_name,
+                    AudiencePredefVariableEntity.combination_type,
+                    AudiencePredefVariableEntity.additional_variable,
+                    AudienceVariableOptionsEntity.option_id,
+                    AudienceVariableOptionsEntity.option_name,
+                    AudienceVariableOptionsEntity.data_type,
+                    AudienceVariableOptionsEntity.data_type_desc,
+                    AudienceVariableOptionsEntity.cell_type,
+                    AudienceVariableOptionsEntity.component_order_cols,
+                    AudiencePredefVariableEntity.input_cell_type,
+                )
+                .outerjoin(
+                    AudienceVariableOptionsEntity,
+                    AudiencePredefVariableEntity.variable_id
+                    == AudienceVariableOptionsEntity.variable_id,
+                )
+                .filter(AudiencePredefVariableEntity.access_level >= access_lv)
             )

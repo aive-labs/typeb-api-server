@@ -124,3 +124,6 @@ class AudienceRepository(BaseAudienceRepository):
         return self.audience_sqlalchemy.get_subquery_with_array_select_query_list(
             table_obj, array_select_query_list, idx
         )
+
+    def get_variable_options(self, access_lv):
+        return self.audience_sqlalchemy.get_variables_options(access_lv)

@@ -3,6 +3,9 @@ from fastapi import APIRouter, BackgroundTasks, Depends, status
 
 from src.audiences.routes.dto.request.audience_create import AudienceCreate
 from src.audiences.routes.dto.response.audience_stat_info import AudienceStatsInfo
+from src.audiences.routes.dto.response.audience_variable_combinations import (
+    AudienceVariableCombinations,
+)
 from src.audiences.routes.dto.response.audiences import AudienceResponse
 from src.audiences.routes.port.usecase.create_audience_usecase import (
     CreateAudienceUseCase,
@@ -55,6 +58,20 @@ def create_audience(
     create_audience_service.create_audience(
         audience_create=audience_create, user=user, background_task=background_task
     )
+
+
+@audience_router.get(
+    "/variable_combinations", response_model=AudienceVariableCombinations
+)
+@inject
+def get_audience_variable_combinations(
+    user=Depends(get_permission_checker([])),
+    create_audience_service: CreateAudienceUseCase = Depends(
+        Provide[Container.create_audience_service]
+    ),
+):
+    """생성 변수 조합 정보 조회:  타겟 오디언스 생성 변수에 대한 옵션 정보를 내려주는 API"""
+    return create_audience_service.get_audience_variable_combinations(user)
 
 
 @audience_router.delete(

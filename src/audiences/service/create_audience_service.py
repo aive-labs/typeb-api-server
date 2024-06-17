@@ -5,6 +5,7 @@ from src.audiences.enums.audience_create_type import AudienceCreateType
 from src.audiences.enums.audience_status import AudienceStatus
 from src.audiences.enums.audience_type import AudienceType
 from src.audiences.enums.csv_template import CsvTemplates
+from src.audiences.enums.predefined_variable_access import PredefinedVariableAccess
 from src.audiences.infra import entity
 from src.audiences.infra.audience_repository import AudienceRepository
 from src.audiences.infra.entity.customer_info_status_entity import (
@@ -26,9 +27,11 @@ from src.audiences.utils.query_builder import (
     group_where_conditions,
 )
 from src.users.domain.user import User
+from src.utils.data_converter import DataConverter
 
 
 class CreateAudienceService(CreateAudienceUseCase):
+
     def __init__(self, audience_repository: AudienceRepository):
         self.audience_repository = audience_repository
 
@@ -213,7 +216,8 @@ class CreateAudienceService(CreateAudienceUseCase):
                                 sub_alias = self.audience_repository.get_subquery_with_select_query_list(
                                     variable_table, select_query_list, idx
                                 )
-                            elif temp_idx == 1:
+                            else:
+                                # temp_idx == 1
                                 sub_alias = self.audience_repository.get_subquery_with_array_select_query_list(
                                     variable_table, array_select_query_list, idx
                                 )
@@ -260,9 +264,11 @@ class CreateAudienceService(CreateAudienceUseCase):
         # audience_filter_conditions 저장 - 새로 생성 필요
         insert_to_filter_conditions = {}
 
+        filters = []
         if audience_create.filters is not None:
             filters = [i.model_dump() for i in audience_create.filters]
 
+        exclusions = []
         if audience_create.exclusions is not None:
             exclusions = [i.model_dump() for i in audience_create.exclusions]
 
@@ -279,3 +285,91 @@ class CreateAudienceService(CreateAudienceUseCase):
         ]
 
         return insert_to_audiences, insert_to_filter_conditions
+
+    def get_audience_variable_combinations(self, user: User) -> list[dict]:
+        access_lv = [
+            level.value
+            for level in PredefinedVariableAccess
+            if level.name == user.role_id
+        ][0]
+
+        variable_combinations = self.audience_repository.get_variable_options(access_lv)
+
+        variables_combination_list = DataConverter.convert_query_to_list(
+            variable_combinations
+        )
+
+        for item in variables_combination_list:
+            item["additional_variable"] = tuple(item["additional_variable"])
+
+        group_bys = [
+            "variable_id",
+            "variable_name",
+            "variable_group_code",
+            "variable_group_name",
+            "combination_type",
+            "additional_variable",
+        ]
+
+        # Group by the specified keys
+        grouped_variables = {}
+        for item in variables_combination_list:
+            key = tuple(item[col] for col in group_bys)
+            if key not in grouped_variables:
+                grouped_variables[key] = []
+            grouped_variables[key].append(item)
+
+        options_by_cell = []
+        for key, group in grouped_variables.items():
+            predefined_elem = {
+                "variable_id": key[0],
+                "variable_name": key[1],
+                "variable_group_code": key[2],
+                "variable_group_name": key[3],
+                "combination_type": key[4],
+                "additional_variable": key[5],
+                "combinations": [],
+            }
+
+            # Sorting and removing duplicates based on 'component_order_cols'
+            sub_groups = sorted(
+                {
+                    tuple(
+                        g[col]
+                        for col in [
+                            "data_type",
+                            "data_type_desc",
+                            "cell_type",
+                            "component_order_cols",
+                        ]
+                    )
+                    for g in group
+                },
+                key=lambda x: x[3],
+            )
+
+            for cell in sub_groups:
+                combination_elem = {}
+                if cell[2] in ["datepicker"]:
+                    combination_elem["data_type"] = None
+                    combination_elem["data_type_desc"] = None
+                    combination_elem["cell_type"] = cell[2]
+                else:
+                    combination_elem["data_type"] = cell[0]
+                    combination_elem["data_type_desc"] = cell[1]
+                    combination_elem["cell_type"] = cell[2]
+                predefined_elem["combinations"].append(combination_elem)
+
+            # Add input_cell_type if it exists
+            input_cells = {g["input_cell_type"] for g in group}
+            if input_cells:
+                input_cell_type = {
+                    "cell_type": input_cells.pop(),
+                    "data_type": None,
+                    "values": None,
+                }
+                predefined_elem["combinations"].append(input_cell_type)
+
+            options_by_cell.append(predefined_elem)
+
+        return options_by_cell

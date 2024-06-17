@@ -15,3 +15,7 @@ class CreateAudienceUseCase(ABC):
         background_task: BackgroundTasks,
     ) -> str:
         pass
+
+    @abstractmethod
+    def get_audience_variable_combinations(self, user: User) -> list[dict]:
+        pass

@@ -10,8 +10,8 @@ class FilterItem(BaseModel):
 
 
 class AudienceFilter(BaseModel):
-    representative_items: list[FilterItem] | None = None
-    audience_created_by: list[FilterItem] | None = None
+    rep_list: list[FilterItem] | None = None
+    owned_by_dept_list: list[FilterItem] | None = None
 
 
 class AudienceRes(BaseModel):

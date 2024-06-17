@@ -25,6 +25,12 @@ class DataConverter:
         return pd.read_sql(orm_stt.statement, orm_stt.session.bind)
 
     @staticmethod
+    def convert_query_to_list(result):
+        # Convert SQLAlchemy query result to list of dictionaries
+        keys = result[0].keys()
+        return [dict(zip(keys, row)) for row in result]
+
+    @staticmethod
     def convert_queries_to_df(*queries):
         """
         2개 이상의 query object를 dataframe으로 변환. 중복 허용 union
