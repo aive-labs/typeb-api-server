@@ -40,5 +40,5 @@ class BaseContentsRepository(ABC):
         pass
 
     @abstractmethod
-    def update(self, contents_id: int, contents: Contents):
+    def update(self, contents_id: int, contents: Contents) -> Contents:
         pass

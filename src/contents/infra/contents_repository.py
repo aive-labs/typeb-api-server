@@ -36,5 +36,5 @@ class ContentsRepository(BaseContentsRepository):
     def delete(self, contents_id: int):
         self.contents_sqlalchemy.delete_contents(contents_id)
 
-    def update(self, contents_id: int, contents: Contents):
-        self.contents_sqlalchemy.update_contents(contents_id, contents)
+    def update(self, contents_id: int, contents: Contents) -> Contents:
+        return self.contents_sqlalchemy.update_contents(contents_id, contents)

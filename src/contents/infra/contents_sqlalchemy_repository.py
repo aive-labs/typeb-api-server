@@ -1,5 +1,6 @@
 from collections.abc import Callable
 from contextlib import AbstractContextManager
+from typing import List
 
 from sqlalchemy import or_, update
 from sqlalchemy.orm import Session
@@ -78,10 +79,11 @@ class ContentsSqlAlchemy:
                 for entity in entities
             ]
 
-    def get_contents_url_list(self):
+    def get_contents_url_list(self) -> list[str]:
         with self.db() as db:
             entities = db.query(ContentsEntity).all()
-            return [entity.contents_url for entity in entities]
+            contents_urls: list[str] = [str(entity.contents_url) for entity in entities]
+            return contents_urls
 
     def get_contents_list(
         self, based_on, sort_by, contents_status=None, query=None
@@ -205,7 +207,7 @@ class ContentsSqlAlchemy:
             db.execute(update_statement)
             db.commit()
 
-    def update_contents(self, contents_id: int, contents: Contents):
+    def update_contents(self, contents_id: int, contents: Contents) -> Contents:
         with self.db() as db:
             # merge는 같은 기본 키를 가진 엔티티가 이미 존재하면 업데이트하고, 존재하지 않으면 새로 추가
             updated_entity = db.merge(contents.to_entity())
