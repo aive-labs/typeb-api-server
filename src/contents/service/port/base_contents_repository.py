@@ -15,7 +15,7 @@ class BaseContentsRepository(ABC):
         pass
 
     @abstractmethod
-    def add_contents(self, contents: Contents):
+    def add_contents(self, contents: Contents) -> Contents:
         pass
 
     @abstractmethod

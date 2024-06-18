@@ -16,7 +16,7 @@ class ContentsRepository(BaseContentsRepository):
     def find_all(self):
         raise NotImplementedError
 
-    def add_contents(self, contents: Contents):
+    def add_contents(self, contents: Contents) -> Contents:
         return self.contents_sqlalchemy.add_contents(contents.to_entity())
 
     def get_subject(self, style_yn) -> list[ContentsMenu]:

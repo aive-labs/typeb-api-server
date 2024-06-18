@@ -26,10 +26,12 @@ class ContentsSqlAlchemy:
         """
         self.db = db
 
-    def add_contents(self, contents: ContentsEntity):
+    def add_contents(self, contents: ContentsEntity) -> Contents:
         with self.db() as db:
             db.add(contents)
             db.commit()
+
+            return ModelConverter.entity_to_model(contents, Contents)
 
     def get_subject(self, style_yn) -> list[ContentsMenu]:
         style_yn = "y" if style_yn else "n"

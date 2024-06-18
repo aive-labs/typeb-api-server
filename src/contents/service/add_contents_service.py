@@ -119,6 +119,4 @@ class AddContentsService(AddContentsUseCase):
             updated_at=get_localtime(),
         )
 
-        self.contents_repository.add_contents(contents=contents)
-
-        return contents
+        return self.contents_repository.add_contents(contents=contents)
