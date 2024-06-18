@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
 
-from fastapi import BackgroundTasks
-
 from src.audiences.routes.dto.request.audience_create import AudienceCreate
 from src.audiences.routes.dto.response.audience_variable_combinations import (
     DataType,
@@ -16,7 +14,6 @@ class CreateAudienceUseCase(ABC):
         self,
         audience_create: AudienceCreate,
         user: User,
-        background_task: BackgroundTasks,
     ) -> str:
         pass
 

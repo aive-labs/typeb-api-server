@@ -82,7 +82,7 @@ class AudienceSqlAlchemy:
 
             if is_exclude:
                 conditions = [AudienceEntity.is_exclude == is_exclude]
-                func.concat(
+                audience_name_column = func.concat(
                     "(", AudienceEntity.audience_id, ") ", AudienceEntity.audience_name
                 ).label("audience_name")
 
@@ -90,6 +90,7 @@ class AudienceSqlAlchemy:
                 conditions = self._object_access_condition(
                     db=db, user=user_entity, model=AudienceEntity
                 )
+                audience_name_column = AudienceEntity.audience_name
 
             subq = (
                 db.query(
@@ -115,7 +116,7 @@ class AudienceSqlAlchemy:
             audience_filtered = (
                 db.query(
                     AudienceEntity.audience_id,
-                    AudienceEntity.audience_name,
+                    audience_name_column,
                     AudienceEntity.audience_type_code,
                     AudienceEntity.audience_type_name,
                     AudienceEntity.audience_status_code,
@@ -150,6 +151,9 @@ class AudienceSqlAlchemy:
                     *conditions,
                 )
             )
+
+            print("audience_filtered")
+            print(audience_filtered)
 
             result = audience_filtered.all()
 

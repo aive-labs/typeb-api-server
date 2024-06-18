@@ -2,6 +2,9 @@ from dependency_injector import containers, providers
 
 from src.audiences.infra.audience_repository import AudienceRepository
 from src.audiences.infra.audience_sqlalchemy_repository import AudienceSqlAlchemy
+from src.audiences.service.background.target_audience_summary_sqlalchemy import (
+    TargetAudienceSummarySqlAlchemy,
+)
 from src.audiences.service.create_audience_service import CreateAudienceService
 from src.audiences.service.delete_audience_service import DeleteAudienceService
 from src.audiences.service.get_audience_service import GetAudienceService
@@ -40,6 +43,7 @@ class Container(containers.DeclarativeContainer):
             "src.contents.routes.contents_router",
             "src.contents.routes.creatives_router",
             "src.audiences.routes.audience_router",
+            "src.audiences.service.background.execute_target_audience_summary",
         ]
     )
 
@@ -184,6 +188,13 @@ class Container(containers.DeclarativeContainer):
 
     delete_audience_service = providers.Singleton(
         provides=DeleteAudienceService, audience_repository=audience_repository
+    )
+
+    """
+    타겟 오디언스 백그라운드 태스크
+    """
+    target_audience_summary_sqlalchemy = providers.Singleton(
+        provides=TargetAudienceSummarySqlAlchemy, db=db.provided.session
     )
 
     """

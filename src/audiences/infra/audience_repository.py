@@ -23,6 +23,8 @@ class AudienceRepository(BaseAudienceRepository):
             user=user, is_exclude=is_exclude
         )
 
+        print(audiences_info)
+
         audience_df = DataConverter.pydantic_to_df(audiences_info)
 
         audience_base = (

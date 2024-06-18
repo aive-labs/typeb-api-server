@@ -1,6 +1,5 @@
 from collections import defaultdict
 
-from fastapi import BackgroundTasks
 from sqlalchemy import and_, except_, or_
 
 from src.audiences.enums.audience_create_type import AudienceCreateType
@@ -8,7 +7,6 @@ from src.audiences.enums.audience_status import AudienceStatus
 from src.audiences.enums.audience_type import AudienceType
 from src.audiences.enums.csv_template import CsvTemplates
 from src.audiences.enums.predefined_variable_access import PredefinedVariableAccess
-from src.audiences.infra import entity
 from src.audiences.infra.audience_repository import AudienceRepository
 from src.audiences.infra.entity import variable_table_list
 from src.audiences.infra.entity.variable_table_list import (
@@ -43,7 +41,6 @@ class CreateAudienceService(CreateAudienceUseCase):
         self,
         audience_create: AudienceCreate,
         user: User,
-        background_task: BackgroundTasks,
     ):
         audience = self.audience_repository.get_audience_by_name(
             audience_create.audience_name
@@ -133,9 +130,8 @@ class CreateAudienceService(CreateAudienceUseCase):
                 insert_to_audiences, insert_to_uploaded_audiences, upload_check_list
             )
         else:
-            raise ValueError("Invalid create typecode provided")
+            raise ValueError("타겟 오디언스 생성 미지원 타입입니다.")
 
-        # background_task.add_task(execute_target_audience_summary, new_audience_id)
         return new_audience_id
 
     def _get_final_query(self, user, filter_condition):
@@ -154,8 +150,6 @@ class CreateAudienceService(CreateAudienceUseCase):
                 all_customer = self.audience_repository.get_all_customer_by_audience(
                     user=user
                 )
-                print("-----")
-                print(all_customer)
 
                 # 조건 넘버링 n1
                 for n1, and_conditions in enumerate(and_conditions_list, 1):
@@ -170,14 +164,11 @@ class CreateAudienceService(CreateAudienceUseCase):
                             raise Exception()
 
                         # variable_type 고정 : target
-                        print("--- query_type_dict")
-                        print(query_type_dict["field"])
                         variable_table = (
                             self.audience_repository.get_tablename_by_variable_id(
                                 query_type_dict["field"]
                             )
                         )
-                        print(variable_table)
                         table_name = variable_table.target_table
 
                         query_type_dict["table_name"] = table_name
@@ -190,11 +181,7 @@ class CreateAudienceService(CreateAudienceUseCase):
                 idx = 0
                 for table_name, condition_list in table_condition_dict.items():
                     # 테이블 객체 불러오기
-                    print("entity-table")
-                    print(entity)
-                    print(table_name)
                     variable_table = getattr(variable_table_list, table_name)
-                    print(variable_table)
 
                     # 테이블별 select list 생성
                     select_query_list = []

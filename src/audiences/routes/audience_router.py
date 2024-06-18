@@ -14,6 +14,9 @@ from src.audiences.routes.port.usecase.delete_audience_usecase import (
     DeleteAudienceUsecase,
 )
 from src.audiences.routes.port.usecase.get_audience_usecase import GetAudienceUseCase
+from src.audiences.service.background.execute_target_audience_summary import (
+    execute_target_audience_summary,
+)
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
 
@@ -55,9 +58,11 @@ def create_audience(
     ),
     user=Depends(get_permission_checker([])),
 ):
-    create_audience_service.create_audience(
-        audience_create=audience_create, user=user, background_task=background_task
+    audience_id = create_audience_service.create_audience(
+        audience_create=audience_create, user=user
     )
+
+    background_task.add_task(execute_target_audience_summary, audience_id)
 
 
 @audience_router.get(
