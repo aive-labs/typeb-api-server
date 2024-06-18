@@ -5,7 +5,7 @@ from sqlalchemy import ARRAY, Column, DateTime, Integer, String, text
 from src.core.database import Base as Base
 
 
-class AudienceUploadConditions(Base):
+class AudienceUploadConditionsEntity(Base):
     __tablename__ = "audience_upload_conditions"
 
     audience_id = Column(String, primary_key=True, index=True)

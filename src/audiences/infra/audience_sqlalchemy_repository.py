@@ -26,7 +26,7 @@ from src.audiences.infra.entity.audience_predefined_variable_entity import (
 from src.audiences.infra.entity.audience_queries_entity import AudienceQueriesEntity
 from src.audiences.infra.entity.audience_stats_entity import AudienceStatsEntity
 from src.audiences.infra.entity.audience_upload_condition_entity import (
-    AudienceUploadConditions,
+    AudienceUploadConditionsEntity,
 )
 from src.audiences.infra.entity.audience_variable_options_entity import (
     AudienceVariableOptionsEntity,
@@ -44,7 +44,6 @@ from src.audiences.infra.entity.purchase_analytics_master_style_entity import (
     PurchaseAnalyticsMasterStyle,
 )
 from src.audiences.infra.entity.theme_audience_entity import ThemeAudienceEntity
-from src.audiences.infra.entity.upload_conditions_entity import UploadConditionsEntity
 from src.audiences.infra.entity.variable_table_list import (
     CustomerInfoStatusEntity,
     CustomerProductPurchaseSummaryEntity,
@@ -212,7 +211,7 @@ class AudienceSqlAlchemy:
             audience_id = audiences_req.audience_id
 
             insert_to_uploaded_audiences["audience_id"] = audience_id
-            audience_upload_condition = AudienceUploadConditions(
+            audience_upload_condition = AudienceUploadConditionsEntity(
                 **insert_to_uploaded_audiences
             )
             db.add(audience_upload_condition)
@@ -474,8 +473,8 @@ class AudienceSqlAlchemy:
             ).delete()
 
             # 오디언스 업로드 정보
-            db.query(AudienceUploadConditions).filter(
-                AudienceUploadConditions.audience_id == audience_id
+            db.query(AudienceUploadConditionsEntity).filter(
+                AudienceUploadConditionsEntity.audience_id == audience_id
             ).delete()
 
             # 타겟 오디언스 수
@@ -691,19 +690,20 @@ class AudienceSqlAlchemy:
             data = (
                 db.query(
                     AudienceEntity.audience_name,
-                    UploadConditionsEntity.audience_id,
-                    UploadConditionsEntity.template_type,
-                    UploadConditionsEntity.upload_count,
-                    UploadConditionsEntity.checked_count,
-                    UploadConditionsEntity.checked_list,
-                    UploadConditionsEntity.created_at,
-                    UploadConditionsEntity.updated_at,
+                    AudienceUploadConditionsEntity.audience_id,
+                    AudienceUploadConditionsEntity.template_type,
+                    AudienceUploadConditionsEntity.upload_count,
+                    AudienceUploadConditionsEntity.checked_count,
+                    AudienceUploadConditionsEntity.checked_list,
+                    AudienceUploadConditionsEntity.created_at,
+                    AudienceUploadConditionsEntity.updated_at,
                 )
                 .join(
                     AudienceEntity,
-                    UploadConditionsEntity.audience_id == AudienceEntity.audience_id,
+                    AudienceUploadConditionsEntity.audience_id
+                    == AudienceEntity.audience_id,
                 )
-                .filter(UploadConditionsEntity.audience_id == audience_id)
+                .filter(AudienceUploadConditionsEntity.audience_id == audience_id)
                 .all()
             )
 
