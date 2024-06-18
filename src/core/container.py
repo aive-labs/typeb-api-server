@@ -27,6 +27,7 @@ from src.contents.service.get_creative_recommendations_for_content import (
     GetCreativeRecommendationsForContent,
 )
 from src.contents.service.get_creatives_service import GetCreativesService
+from src.contents.service.update_contents_service import UpdateContentsService
 from src.contents.service.update_creatives_service import UpdateCreativesService
 from src.core.database import Database, get_db_url
 from src.users.infra.user_repository import UserRepository
@@ -155,7 +156,7 @@ class Container(containers.DeclarativeContainer):
     )
 
     update_contents_service = providers.Singleton(
-        provides=AddContentsService,
+        provides=UpdateContentsService,
         contents_repository=contents_repository,
         user_repository=user_repository,
         cafe24_repository=cafe24_repository,
