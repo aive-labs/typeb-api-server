@@ -37,6 +37,9 @@ class AddCreativesService(AddCreativesUseCase):
         files = s3_presigned_url_request.files
         image_use_type = s3_presigned_url_request.use_type.value
 
+        if image_use_type == "contents_thumbnail":
+            image_use_type = "contents/thumbnail"
+
         s3_presigned_url_list = [
             S3PresignedResponse(
                 original_file_name=file_name,
