@@ -30,7 +30,7 @@ class AddContentsService(AddContentsUseCase):
         self.s3_service = s3_service
         self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
-    async def create_contents(self, contents_create: ContentsCreate, user: User):
+    def create_contents(self, contents_create: ContentsCreate, user: User) -> Contents:
 
         contents_urls = self.contents_repository.get_contents_url_list()
         contents_uuids = [url.split("/")[-1] for url in contents_urls]
@@ -51,10 +51,6 @@ class AddContentsService(AddContentsUseCase):
             elem["src"] for elem in soup.find_all("img") if elem is not None
         ]
         external_html_body = contents_create.contents_body
-
-        # url_from = "https://was.ttalk.biz/creatives"
-        # url_to = "/assets"
-        # external_html_body = external_html_body.replace(url_from, url_to)
 
         cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(
             str(user.user_id)
@@ -125,4 +121,4 @@ class AddContentsService(AddContentsUseCase):
 
         self.contents_repository.add_contents(contents=contents)
 
-        # return contents
+        return contents

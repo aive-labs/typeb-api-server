@@ -78,8 +78,11 @@ def get_audience_variable_combinations(
     create_audience_service: CreateAudienceUseCase = Depends(
         Provide[Container.create_audience_service]
     ),
+    get_audience_service: GetAudienceUseCase = Depends(
+        Provide[Container.get_audience_service]
+    ),
 ):
-    """생성 변수 조합 정보 조회:  타겟 오디언스 생성 변수에 대한 옵션 정보를 내려주는 API"""
+    """생성 변수 조합 정보 조회:  타겟 오디언스가 어떤 생성 조건으로 만들어졌는지에 대한 옵션 정보를 내려주는 API"""
     predefined_variables = create_audience_service.get_audience_variable_combinations(
         user
     )
@@ -88,6 +91,28 @@ def get_audience_variable_combinations(
     return AudienceVariableCombinations(
         predefined_variables=predefined_variables, options_by_data_type=options_by_cell
     )
+
+
+@audience_router.get("/audiences/{audience_id}/creation-options")
+def get_audience_conditions(
+    audience_id: str,
+    user=Depends(get_permission_checker([])),
+):
+    """타겟 오디언스 생성조건 조회:  타겟 오디언스 생성 조건을 조회하는 API"""
+    # try:
+    #     audience_obj = get_audience_obj(db, audience_id)
+    #
+    #     if audience_obj.create_type_code == enums.AudienceCreateType.Filter.value:
+    #         return audience_processing.get_filter_conditions(db, audience_id)
+    #     else:
+    #         return audience_processing.get_csvuploaded_data(db, audience_id)
+    #
+    # except Exception as e:
+    #     raise HTTPException(
+    #         status_code=e.status_code,
+    #         detail={"code": e.detail.get("code"), "message": e.detail.get("message")},
+    #     )
+    pass
 
 
 @audience_router.delete(

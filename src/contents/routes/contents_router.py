@@ -47,14 +47,14 @@ def get_img_creatives_list(
 
 @contents_router.post("")
 @inject
-async def create_contents(
+def create_contents(
     content_create: ContentsCreate,
     user=Depends(get_permission_checker(required_permissions=[])),
     add_contents_service: AddContentsUseCase = Depends(
         dependency=Provide[Container.add_contents_service]
     ),
 ):
-    await add_contents_service.create_contents(content_create, user)
+    add_contents_service.create_contents(content_create, user)
 
 
 @contents_router.get("/menu/subject")
