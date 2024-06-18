@@ -65,12 +65,15 @@ class AddContentsService(AddContentsUseCase):
         if contents_create.thumbnail:
             # 파일을 저장한다.
             thumbnail_uri = contents_create.thumbnail
+            if thumbnail_uri == "contents_thumbnail":
+                thumbnail_uri = "contents/thumbnail"
+
         elif image_source:
             # 썸네일을 따로 저장하진 않는 경우
             replace_url = f"{self.cloud_front_url}/"
             thumbnail_uri = image_source[0].replace(replace_url, "")
         else:
-            thumbnail_uri = f"{mall_id}/contents/thumbnail/default.png"
+            thumbnail_uri = "common/default.png"
 
         contents_url = f"{mall_id}/contents/{new_uuid}.html"
 
