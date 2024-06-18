@@ -33,7 +33,9 @@ class UpdateContentsService(UpdateContentsUseCase):
         self.s3_service = s3_service
         self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
-    def exec(self, contents_id: int, contents_create: ContentsCreate, user: User) -> Contents:
+    def exec(
+        self, contents_id: int, contents_create: ContentsCreate, user: User
+    ) -> Contents:
 
         if not self.contents_repository.get_contents_detail(contents_id):
             raise NotFoundError("해당하는 콘텐츠가 존재하지 않습니다.")

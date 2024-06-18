@@ -8,5 +8,7 @@ from src.users.domain.user import User
 class UpdateContentsUseCase(ABC):
 
     @abstractmethod
-    def exec(self, contents_id: int, contents_create: ContentsCreate, user: User) -> Contents:
+    def exec(
+        self, contents_id: int, contents_create: ContentsCreate, user: User
+    ) -> Contents:
         pass
