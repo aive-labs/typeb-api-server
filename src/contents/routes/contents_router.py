@@ -54,7 +54,7 @@ def create_contents(
         dependency=Provide[Container.add_contents_service]
     ),
 ):
-    add_contents_service.create_contents(content_create, user)
+    return add_contents_service.create_contents(content_create, user)
 
 
 @contents_router.get("/menu/subject")
