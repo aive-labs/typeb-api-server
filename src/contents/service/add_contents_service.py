@@ -39,9 +39,6 @@ class AddContentsService(AddContentsUseCase):
         while new_uuid in contents_uuids:
             new_uuid = str(generate_random_string(5))
 
-        # contents_create
-        # resource_path = Path("app/generator/")
-
         # body 태그 내의 모든 텍스트를 추출합니다.
         soup = BeautifulSoup(contents_create.contents_body, "html.parser")
         text_list = [txt.text for txt in soup.find_all("p") if txt is not None]
@@ -119,4 +116,12 @@ class AddContentsService(AddContentsUseCase):
             updated_at=get_localtime(),
         )
 
-        return self.contents_repository.add_contents(contents=contents)
+        new_contents = self.contents_repository.add_contents(contents=contents)
+        new_contents.set_thumbnail_url(
+            f"{self.cloud_front_url}/{new_contents.thumbnail_uri}"
+        )
+        new_contents.set_contents_url(
+            f"{self.cloud_front_url}/{new_contents.contents_url}"
+        )
+
+        return new_contents

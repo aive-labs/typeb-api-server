@@ -56,3 +56,9 @@ class Contents(BaseModel):
             updated_by=self.updated_by,
             updated_at=self.updated_at,
         )
+
+    def set_contents_url(self, url):
+        self.contents_url = url
+
+    def set_thumbnail_url(self, url):
+        self.thumbnail_uri = url
