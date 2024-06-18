@@ -8,7 +8,7 @@ from src.audiences.infra.entity.audience_count_by_month_entity import (
     AudienceCountByMonthEntity,
 )
 from src.audiences.infra.entity.audience_customer_mapping_entity import (
-    AudienceCustomerMapping,
+    AudienceCustomerMappingEntity,
 )
 from src.audiences.infra.entity.audience_stats_entity import AudienceStatsEntity
 from src.audiences.infra.entity.primary_rep_product_entity import (
@@ -38,8 +38,8 @@ class TargetAudienceSummarySqlAlchemy:
 
     def get_audience_cust_with_audience_id(self, audience_id):
         with self.db() as db:
-            return db.query(AudienceCustomerMapping.cus_cd).filter(
-                AudienceCustomerMapping.audience_id == audience_id
+            return db.query(AudienceCustomerMappingEntity.cus_cd).filter(
+                AudienceCustomerMappingEntity.audience_id == audience_id
             )
 
     def get_all_customer_count(self):

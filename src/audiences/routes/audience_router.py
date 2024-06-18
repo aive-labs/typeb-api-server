@@ -1,5 +1,6 @@
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, BackgroundTasks, Depends, status
+from fastapi.responses import StreamingResponse
 
 from src.audiences.routes.dto.request.audience_create import AudienceCreate
 from src.audiences.routes.dto.response.audience_stat_info import AudienceStatsInfo
@@ -12,6 +13,9 @@ from src.audiences.routes.port.usecase.create_audience_usecase import (
 )
 from src.audiences.routes.port.usecase.delete_audience_usecase import (
     DeleteAudienceUsecase,
+)
+from src.audiences.routes.port.usecase.download_audience_usecase import (
+    DownloadAudienceUseCase,
 )
 from src.audiences.routes.port.usecase.get_audience_usecase import GetAudienceUseCase
 from src.audiences.service.background.execute_target_audience_summary import (
@@ -117,3 +121,23 @@ def delete_audience(
     1. cust_campaign_objects
     """
     delete_audience_service.delete_audience(audience_id=audience_id)
+
+
+@audience_router.get("/audiences/{audience_id}/download")
+@inject
+def download_audience(
+    audience_id: str,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    download_audience_service: DownloadAudienceUseCase = Depends(
+        Provide[Container.download_audience_service]
+    ),
+):
+    """타겟 오디언스 다운로드: 타겟 오디언스 다운로드 API"""
+
+    data = download_audience_service.exec(audience_id)
+
+    return StreamingResponse(
+        iter([data.to_csv(index=False)]),
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename={audience_id}.csv"},
+    )

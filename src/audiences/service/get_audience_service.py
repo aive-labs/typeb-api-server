@@ -26,6 +26,7 @@ def transform_data(data_dict):
 
 
 class GetAudienceService(GetAudienceUseCase):
+
     def __init__(self, audience_repository: BaseAudienceRepository):
         self.audience_repository = audience_repository
 

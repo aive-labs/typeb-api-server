@@ -133,3 +133,6 @@ class AudienceRepository(BaseAudienceRepository):
 
     def get_options(self):
         return self.audience_sqlalchemy.get_options()
+
+    def get_audience_cust_with_audience_id(self, audience_id: str) -> object:
+        return self.audience_sqlalchemy.get_audience_cust_with_audience_id(audience_id)

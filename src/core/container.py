@@ -7,6 +7,7 @@ from src.audiences.service.background.target_audience_summary_sqlalchemy import 
 )
 from src.audiences.service.create_audience_service import CreateAudienceService
 from src.audiences.service.delete_audience_service import DeleteAudienceService
+from src.audiences.service.download_audience_service import DownloadAudienceService
 from src.audiences.service.get_audience_service import GetAudienceService
 from src.auth.infra.cafe24_repository import Cafe24Repository
 from src.auth.infra.cafe24_sqlalchemy_repository import Cafe24SqlAlchemyRepository
@@ -188,6 +189,10 @@ class Container(containers.DeclarativeContainer):
 
     delete_audience_service = providers.Singleton(
         provides=DeleteAudienceService, audience_repository=audience_repository
+    )
+
+    download_audience_service = providers.Singleton(
+        provides=DownloadAudienceService, audience_repository=audience_repository
     )
 
     """

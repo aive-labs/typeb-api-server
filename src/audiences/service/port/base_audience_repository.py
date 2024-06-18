@@ -83,3 +83,7 @@ class BaseAudienceRepository(ABC):
         self, table_obj, array_select_query_list, idx
     ):
         pass
+
+    @abstractmethod
+    def get_audience_cust_with_audience_id(self, audience_id: str) -> object:
+        pass

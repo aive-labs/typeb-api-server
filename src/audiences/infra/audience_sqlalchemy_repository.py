@@ -13,7 +13,7 @@ from src.audiences.infra.entity.audience_count_by_month_entity import (
     AudienceCountByMonthEntity,
 )
 from src.audiences.infra.entity.audience_customer_mapping_entity import (
-    AudienceCustomerMapping,
+    AudienceCustomerMappingEntity,
 )
 from src.audiences.infra.entity.audience_entity import AudienceEntity
 from src.audiences.infra.entity.audience_predefined_variable_entity import (
@@ -214,7 +214,7 @@ class AudienceSqlAlchemy:
 
             # audience_cust_mapping
             obj = [
-                AudienceCustomerMapping(
+                AudienceCustomerMappingEntity(
                     cus_cd=item,  ##cus_cd
                     audience_id=audience_id,
                 )
@@ -254,7 +254,9 @@ class AudienceSqlAlchemy:
                 result = db.execute(query).fetchall()
 
                 obj = [
-                    AudienceCustomerMapping(cus_cd=item[0], audience_id=audience_id)
+                    AudienceCustomerMappingEntity(
+                        cus_cd=item[0], audience_id=audience_id
+                    )
                     for item in result
                 ]
 
@@ -471,8 +473,8 @@ class AudienceSqlAlchemy:
             ).delete()
 
             # 타겟오디언스 고객 리스트
-            db.query(AudienceCustomerMapping).filter(
-                AudienceCustomerMapping.audience_id == audience_id
+            db.query(AudienceCustomerMappingEntity).filter(
+                AudienceCustomerMappingEntity.audience_id == audience_id
             ).delete()
 
             db.commit()
@@ -647,4 +649,10 @@ class AudienceSqlAlchemy:
                 )
                 .order_by(AudienceVariableOptionsEntity.option_order_cols)
                 .distinct()
+            )
+
+    def get_audience_cust_with_audience_id(self, audience_id):
+        with self.db() as db:
+            return db.query(AudienceCustomerMappingEntity.cus_cd).filter(
+                AudienceCustomerMappingEntity.audience_id == audience_id
             )

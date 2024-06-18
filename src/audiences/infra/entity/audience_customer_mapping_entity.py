@@ -5,7 +5,7 @@ from sqlalchemy import Column, DateTime, String, text
 from src.core.database import Base as Base
 
 
-class AudienceCustomerMapping(Base):
+class AudienceCustomerMappingEntity(Base):
     __tablename__ = "audience_cust_mapping"
 
     cus_cd = Column(String(10), primary_key=True, index=True)
