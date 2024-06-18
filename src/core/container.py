@@ -6,6 +6,7 @@ from src.audiences.service.background.target_audience_summary_sqlalchemy import 
     TargetAudienceSummarySqlAlchemy,
 )
 from src.audiences.service.create_audience_service import CreateAudienceService
+from src.audiences.service.csv_upload_audience_service import CSVUploadAudienceService
 from src.audiences.service.delete_audience_service import DeleteAudienceService
 from src.audiences.service.download_audience_service import DownloadAudienceService
 from src.audiences.service.get_audience_creation_options import (
@@ -201,6 +202,10 @@ class Container(containers.DeclarativeContainer):
 
     download_audience_service = providers.Singleton(
         provides=DownloadAudienceService, audience_repository=audience_repository
+    )
+
+    csv_upload_service = providers.Singleton(
+        provides=CSVUploadAudienceService, audience_repository=audience_repository
     )
 
     """

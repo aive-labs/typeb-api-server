@@ -9,6 +9,7 @@ from src.audiences.domain.audience import Audience
 from src.audiences.domain.variable_table_mapping import VariableTableMapping
 from src.audiences.enums.audience_create_type import AudienceCreateType
 from src.audiences.enums.audience_status import AudienceStatus
+from src.audiences.enums.csv_template import CsvTemplates
 from src.audiences.infra.dto.audience_info import AudienceInfo
 from src.audiences.infra.dto.filter_condition import FilterCondition
 from src.audiences.infra.dto.linked_campaign import LinkedCampaign
@@ -724,3 +725,24 @@ class AudienceSqlAlchemy:
             ]
 
             return upload_conditions
+
+    def get_actual_list_from_csv(self, uploaded_rows, target_column, entity):
+        with self.db() as db:
+            selected_column = getattr(entity, target_column)
+
+            res = [
+                db.query(
+                    func.distinct(selected_column).filter(
+                        selected_column.in_(uploaded_rows)
+                    )
+                )
+            ]
+
+            if entity == CsvTemplates.shop_cd.source:
+                res.append(
+                    db.query(func.distinct(CsvTemplates.cus_cd.source.cus_cd)).filter(
+                        CsvTemplates.cus_cd.source.main_shop.in_(uploaded_rows)
+                    )
+                )
+
+            return res

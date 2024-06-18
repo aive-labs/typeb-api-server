@@ -1,8 +1,19 @@
+import pathlib
+from io import BytesIO
+
+import pandas as pd
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, BackgroundTasks, Depends, status
-from fastapi.responses import StreamingResponse
+from fastapi import (
+    APIRouter,
+    BackgroundTasks,
+    Depends,
+    UploadFile,
+    status,
+)
+from fastapi.responses import FileResponse, StreamingResponse
 
 from src.audiences.enums.audience_create_type import AudienceCreateType
+from src.audiences.enums.csv_template import CsvTemplates
 from src.audiences.routes.dto.request.audience_create import AudienceCreate
 from src.audiences.routes.dto.response.audience_stat_info import AudienceStatsInfo
 from src.audiences.routes.dto.response.audience_variable_combinations import (
@@ -15,6 +26,7 @@ from src.audiences.routes.dto.response.upload_condition_response import (
 from src.audiences.routes.port.usecase.create_audience_usecase import (
     CreateAudienceUseCase,
 )
+from src.audiences.routes.port.usecase.csv_upload_usecase import CSVUploadUseCase
 from src.audiences.routes.port.usecase.delete_audience_usecase import (
     DeleteAudienceUsecase,
 )
@@ -31,7 +43,7 @@ from src.audiences.service.background.execute_target_audience_summary import (
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
 
-audience_router = APIRouter(tags=["audience"])
+audience_router = APIRouter(tags=["Audience-management"])
 
 
 @audience_router.get("/audiences", response_model=AudienceResponse)
@@ -172,3 +184,51 @@ def download_audience(
         media_type="text/csv",
         headers={"Content-Disposition": f"attachment; filename={audience_id}.csv"},
     )
+
+
+@audience_router.get("/audiences/upload/template")
+def get_csv_template(user=Depends(get_permission_checker(required_permissions=[]))):
+    """타겟 오디언스 csv 템플릿 조회:  csv 템플릿 파일을 내려주는 API"""
+    template_dir = pathlib.Path.cwd() / "src/audiences/resources/template"
+    filename = f"{template_dir}/upload_templates.zip"
+
+    return FileResponse(
+        filename,
+        headers={"Content-Disposition": "attachment; filename=upload_templates"},
+    )
+
+
+@audience_router.post("/audiences/upload/check")
+@inject
+async def check_csv_template(
+    csv_file: UploadFile,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    csv_upload_service: CSVUploadUseCase = Depends(
+        Provide[Container.csv_upload_service]
+    ),
+):
+    """타겟 오디언스 csv 파일 업로드 체크:  오디언스 생성 대상 csv 업로드 후 결과를 체크하는 API"""
+
+    # 업로드 csv파일을 dataframe으로 로드
+    contents = await csv_file.read()
+    file_as_bytes = BytesIO(contents)
+    df = pd.read_csv(file_as_bytes, dtype=str)
+
+    template_type = list(df.columns)[0]  # cus_cd or shop_cd
+    uploaded_rows = list(df[template_type].astype(str))
+
+    # #업로드 템플릿 식별 후 결과 메세지 출력
+    templates_members = CsvTemplates.get_eums()
+    for template in templates_members:
+        if template["_name_"] == template_type.lower():
+            res_sentence, checked_list = csv_upload_service.check_audience_csv_file(
+                uploaded_rows=uploaded_rows, template_enum=template
+            )
+            return {
+                "result": res_sentence,
+                "type": template["_name_"],
+                "upload_count": len(uploaded_rows),
+                "checked_list": checked_list,
+            }
+
+    raise Exception("파일이 템플릿과 일치하지 않습니다.")

@@ -98,3 +98,7 @@ class BaseAudienceRepository(ABC):
     @abstractmethod
     def get_audience_upload_info(self, audience_id: str) -> list[UploadCondition]:
         pass
+
+    @abstractmethod
+    def get_actual_list_from_csv(self, uploaded_rows, target_column, entity):
+        pass
