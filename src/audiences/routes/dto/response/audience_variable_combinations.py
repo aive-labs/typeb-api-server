@@ -10,7 +10,7 @@ class ConditionOptions(BaseModel):
     values: Optional[List[str]] = None
 
 
-class PredefVariable(BaseModel):
+class PredefinedVariable(BaseModel):
     variable_id: str
     variable_name: str
     variable_group_code: str
@@ -32,5 +32,5 @@ class DataType(BaseModel):
 
 
 class AudienceVariableCombinations(BaseModel):
-    predefined_variables: list[PredefVariable]
+    predefined_variables: list[PredefinedVariable]
     options_by_data_type: list[DataType]

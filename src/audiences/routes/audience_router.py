@@ -71,7 +71,14 @@ def get_audience_variable_combinations(
     ),
 ):
     """생성 변수 조합 정보 조회:  타겟 오디언스 생성 변수에 대한 옵션 정보를 내려주는 API"""
-    return create_audience_service.get_audience_variable_combinations(user)
+    predefined_variables = create_audience_service.get_audience_variable_combinations(
+        user
+    )
+    options_by_cell = create_audience_service.get_option_items()
+
+    return AudienceVariableCombinations(
+        predefined_variables=predefined_variables, options_by_data_type=options_by_cell
+    )
 
 
 @audience_router.delete(

@@ -9,7 +9,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
 
 logging.basicConfig()
-logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
+logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
 
 
 class DBSettings(BaseSettings):

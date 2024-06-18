@@ -54,6 +54,7 @@ from src.core.exceptions import NotFoundError
 from src.strategy.infra.entity.campaign_theme_entity import CampaignThemeEntity
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
+from src.utils.data_converter import DataConverter
 
 
 class AudienceSqlAlchemy:
@@ -597,7 +598,7 @@ class AudienceSqlAlchemy:
 
     def get_variables_options(self, access_lv):
         with self.db() as db:
-            return (
+            data = (
                 db.query(
                     AudienceVariableOptionsEntity.option_seq,
                     AudienceVariableOptionsEntity.predef_var_seq,
@@ -621,4 +622,25 @@ class AudienceSqlAlchemy:
                     == AudienceVariableOptionsEntity.variable_id,
                 )
                 .filter(AudiencePredefVariableEntity.access_level >= access_lv)
+            )
+
+            return DataConverter.convert_query_to_df(data)
+
+    def get_options(self):
+        with self.db() as db:
+            return (
+                db.query(
+                    AudienceVariableOptionsEntity.option_id,
+                    AudienceVariableOptionsEntity.option_name,
+                    AudienceVariableOptionsEntity.data_type,
+                    AudienceVariableOptionsEntity.input_cell_type,
+                    AudienceVariableOptionsEntity.option_order_cols,
+                )
+                .join(
+                    AudiencePredefVariableEntity,
+                    AudienceVariableOptionsEntity.variable_id
+                    == AudiencePredefVariableEntity.variable_id,
+                )
+                .order_by(AudienceVariableOptionsEntity.option_order_cols)
+                .distinct()
             )

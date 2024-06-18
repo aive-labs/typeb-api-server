@@ -127,3 +127,6 @@ class AudienceRepository(BaseAudienceRepository):
 
     def get_variable_options(self, access_lv):
         return self.audience_sqlalchemy.get_variables_options(access_lv)
+
+    def get_options(self):
+        return self.audience_sqlalchemy.get_options()

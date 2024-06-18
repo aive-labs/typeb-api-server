@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from fastapi import BackgroundTasks, HTTPException
 from sqlalchemy import and_, except_, or_
 
@@ -12,6 +14,11 @@ from src.audiences.infra.entity.customer_info_status_entity import (
     CustomerInfoStatusEntity,
 )
 from src.audiences.routes.dto.request.audience_create import AudienceCreate
+from src.audiences.routes.dto.response.audience_variable_combinations import (
+    DataType,
+    Option,
+    PredefinedVariable,
+)
 from src.audiences.routes.port.usecase.create_audience_usecase import (
     CreateAudienceUseCase,
 )
@@ -27,7 +34,6 @@ from src.audiences.utils.query_builder import (
     group_where_conditions,
 )
 from src.users.domain.user import User
-from src.utils.data_converter import DataConverter
 
 
 class CreateAudienceService(CreateAudienceUseCase):
@@ -286,21 +292,20 @@ class CreateAudienceService(CreateAudienceUseCase):
 
         return insert_to_audiences, insert_to_filter_conditions
 
-    def get_audience_variable_combinations(self, user: User) -> list[dict]:
+    def get_audience_variable_combinations(
+        self, user: User
+    ) -> list[PredefinedVariable]:
         access_lv = [
             level.value
             for level in PredefinedVariableAccess
             if level.name == user.role_id
         ][0]
 
-        variable_combinations = self.audience_repository.get_variable_options(access_lv)
+        variables_combi_df = self.audience_repository.get_variable_options(access_lv)
 
-        variables_combination_list = DataConverter.convert_query_to_list(
-            variable_combinations
-        )
-
-        for item in variables_combination_list:
-            item["additional_variable"] = tuple(item["additional_variable"])
+        variables_combi_df["additional_variable"] = variables_combi_df[
+            "additional_variable"
+        ].apply(tuple)
 
         group_bys = [
             "variable_id",
@@ -311,65 +316,89 @@ class CreateAudienceService(CreateAudienceUseCase):
             "additional_variable",
         ]
 
-        # Group by the specified keys
-        grouped_variables = {}
-        for item in variables_combination_list:
-            key = tuple(item[col] for col in group_bys)
-            if key not in grouped_variables:
-                grouped_variables[key] = []
-            grouped_variables[key].append(item)
-
         options_by_cell = []
-        for key, group in grouped_variables.items():
-            predefined_elem = {
-                "variable_id": key[0],
-                "variable_name": key[1],
-                "variable_group_code": key[2],
-                "variable_group_name": key[3],
-                "combination_type": key[4],
-                "additional_variable": key[5],
-                "combinations": [],
-            }
+        for key, group in variables_combi_df.groupby(group_bys):
 
-            # Sorting and removing duplicates based on 'component_order_cols'
-            sub_groups = sorted(
-                {
-                    tuple(
-                        g[col]
-                        for col in [
-                            "data_type",
-                            "data_type_desc",
-                            "cell_type",
-                            "component_order_cols",
-                        ]
-                    )
-                    for g in group
-                },
-                key=lambda x: x[3],
+            if not isinstance(key, tuple):
+                # groupby 메서드를 사용할 때 key는 그룹화된 값들을 나타내며, 단일 값이거나 튜플일 수 있음
+                # 타입이 튜플인지 확인이 필요함
+                raise Exception("데이터 확인이 필요합니다.")
+
+            predefined_variable = PredefinedVariable(
+                variable_id=key[0],
+                variable_name=key[1],
+                variable_group_code=key[2],
+                variable_group_name=key[3],
+                combination_type=key[4],
+                additional_variable=key[5],
+                combinations=[],
             )
 
-            for cell in sub_groups:
-                combination_elem = {}
-                if cell[2] in ["datepicker"]:
-                    combination_elem["data_type"] = None
-                    combination_elem["data_type_desc"] = None
-                    combination_elem["cell_type"] = cell[2]
-                else:
-                    combination_elem["data_type"] = cell[0]
-                    combination_elem["data_type_desc"] = cell[1]
-                    combination_elem["cell_type"] = cell[2]
-                predefined_elem["combinations"].append(combination_elem)
-
-            # Add input_cell_type if it exists
-            input_cells = {g["input_cell_type"] for g in group}
-            if input_cells:
-                input_cell_type = {
-                    "cell_type": input_cells.pop(),
-                    "data_type": None,
-                    "values": None,
-                }
-                predefined_elem["combinations"].append(input_cell_type)
-
-            options_by_cell.append(predefined_elem)
+            combinations = self._create_combinations(group)
+            predefined_variable.combinations = combinations
+            options_by_cell.append(predefined_variable)
 
         return options_by_cell
+
+    def _create_combinations(self, group):
+
+        sub_groups = (  # pyright: ignore [reportCallIssue]
+            group.reset_index(drop=True)[
+                (["data_type", "data_type_desc", "cell_type", "component_order_cols"])
+            ]
+            .drop_duplicates()
+            .sort_values("component_order_cols")
+        )
+
+        combinations = []
+        # for cell, sub_group in sub_groups:
+        for cell in zip(
+            sub_groups["data_type"],
+            sub_groups["data_type_desc"],
+            sub_groups["cell_type"],
+        ):
+            combi_elem = {}
+            if cell[2] in ["datepicker"]:
+                combi_elem["data_type"] = None
+                combi_elem["data_type_desc"] = None
+                combi_elem["cell_type"] = cell[2]
+            else:
+                combi_elem["data_type"] = cell[0]
+                combi_elem["data_type_desc"] = cell[1]
+                combi_elem["cell_type"] = cell[2]
+            combinations.append(combi_elem)
+        if input_cell := group["input_cell_type"].unique()[0]:
+            input_cell_type = {
+                "cell_type": input_cell,
+                "data_type": None,
+                "values": None,
+            }
+            combinations.append(input_cell_type)
+        return combinations
+
+    def get_option_items(self) -> list[DataType]:
+        """data_type별로 옵션 name과 input_type을 내려주는 함수"""
+
+        options = self.audience_repository.get_options()
+
+        options_dict = [row._asdict() for row in options]
+
+        added_dict = defaultdict(list)
+
+        for item in options_dict:
+            key_field_val = item["data_type"]
+            if item.get("option_id") is not None:
+                added_dict[key_field_val].append(
+                    Option(
+                        id=item["option_id"],
+                        name=item["option_name"],
+                        input_cell_type=item["input_cell_type"],
+                    )
+                )
+            else:
+                added_dict[key_field_val].append(None)
+
+        data_type_list = [
+            DataType(data_type=key, options=value) for key, value in added_dict.items()
+        ]
+        return data_type_list
