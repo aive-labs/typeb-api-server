@@ -3,6 +3,7 @@ from datetime import datetime
 from pydantic import BaseModel
 
 from src.contents.infra.entity.contents_entity import ContentsEntity
+from src.utils.date_utils import localtime_from_str
 
 
 class Contents(BaseModel):
@@ -46,8 +47,16 @@ class Contents(BaseModel):
             emphasis_context=self.emphasis_context,
             thumbnail_uri=self.thumbnail_uri,
             contents_url=self.contents_url,
-            publication_start=self.publication_start,
-            publication_end=self.publication_end,
+            publication_start=(
+                localtime_from_str(self.publication_start)
+                if self.publication_start
+                else None
+            ),
+            publication_end=(
+                localtime_from_str(self.publication_end)
+                if self.publication_end
+                else None
+            ),
             contents_tags=self.contents_tags,
             coverage_score=self.coverage_score,
             contents_type=self.contents_type,

@@ -8,7 +8,7 @@ from src.contents.infra.dto.response.contents_response import ContentsResponse
 class BaseContentsRepository(ABC):
 
     @abstractmethod
-    def add_contents(self, contents: Contents) -> Contents:
+    def add_contents(self, contents: Contents) -> ContentsResponse:
         pass
 
     @abstractmethod
@@ -32,7 +32,7 @@ class BaseContentsRepository(ABC):
         pass
 
     @abstractmethod
-    def get_contents_detail(self, contents_id: int) -> Contents:
+    def get_contents_detail(self, contents_id: int) -> ContentsResponse:
         pass
 
     @abstractmethod
@@ -40,5 +40,5 @@ class BaseContentsRepository(ABC):
         pass
 
     @abstractmethod
-    def update(self, contents_id: int, contents: Contents) -> Contents:
+    def update(self, contents_id: int, contents: Contents) -> ContentsResponse:
         pass

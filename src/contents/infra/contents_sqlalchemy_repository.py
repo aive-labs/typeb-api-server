@@ -26,12 +26,12 @@ class ContentsSqlAlchemy:
         """
         self.db = db
 
-    def add_contents(self, contents: ContentsEntity) -> Contents:
+    def add_contents(self, contents: ContentsEntity) -> ContentsResponse:
         with self.db() as db:
             db.add(contents)
             db.commit()
 
-            return ModelConverter.entity_to_model(contents, Contents)
+            return ModelConverter.entity_to_model(contents, ContentsResponse)
 
     def get_subject(self, style_yn) -> list[ContentsMenu]:
         style_yn = "y" if style_yn else "n"
@@ -179,7 +179,7 @@ class ContentsSqlAlchemy:
 
             return ModelConverter.entity_to_model(entity, ContentsMenu)
 
-    def get_contents_detail(self, contents_id):
+    def get_contents_detail(self, contents_id) -> ContentsResponse:
         with self.db() as db:
             entity = (
                 db.query(ContentsEntity)
@@ -193,7 +193,7 @@ class ContentsSqlAlchemy:
             if not entity:
                 raise NotFoundError("해당하는 콘텐츠가 존재하지 않습니다.")
 
-            return ModelConverter.entity_to_model(entity, Contents)
+            return ModelConverter.entity_to_model(entity, ContentsResponse)
 
     def delete_contents(self, contents_id):
         with self.db() as db:
@@ -206,10 +206,10 @@ class ContentsSqlAlchemy:
             db.execute(update_statement)
             db.commit()
 
-    def update_contents(self, contents_id: int, contents: Contents) -> Contents:
+    def update_contents(self, contents_id: int, contents: Contents) -> ContentsResponse:
         with self.db() as db:
             # merge는 같은 기본 키를 가진 엔티티가 이미 존재하면 업데이트하고, 존재하지 않으면 새로 추가
             updated_entity = db.merge(contents.to_entity())
             db.commit()
             db.refresh(updated_entity)
-            return ModelConverter.entity_to_model(updated_entity, Contents)
+            return ModelConverter.entity_to_model(updated_entity, ContentsResponse)

@@ -10,7 +10,7 @@ class ContentsRepository(BaseContentsRepository):
     def __init__(self, contents_sqlalchemy: ContentsSqlAlchemy):
         self.contents_sqlalchemy = contents_sqlalchemy
 
-    def add_contents(self, contents: Contents) -> Contents:
+    def add_contents(self, contents: Contents) -> ContentsResponse:
         return self.contents_sqlalchemy.add_contents(contents.to_entity())
 
     def get_subject(self, style_yn) -> list[ContentsMenu]:
@@ -30,11 +30,11 @@ class ContentsRepository(BaseContentsRepository):
     def get_contents_url_list(self) -> list[str]:
         return self.contents_sqlalchemy.get_contents_url_list()
 
-    def get_contents_detail(self, contents_id: int) -> Contents:
+    def get_contents_detail(self, contents_id: int) -> ContentsResponse:
         return self.contents_sqlalchemy.get_contents_detail(contents_id)
 
     def delete(self, contents_id: int):
         self.contents_sqlalchemy.delete_contents(contents_id)
 
-    def update(self, contents_id: int, contents: Contents) -> Contents:
+    def update(self, contents_id: int, contents: Contents) -> ContentsResponse:
         return self.contents_sqlalchemy.update_contents(contents_id, contents)
