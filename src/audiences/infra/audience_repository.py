@@ -1,20 +1,24 @@
 from typing import Any
 
 from pandas import DataFrame
-from sqlalchemy.orm.query import Query
 
 from src.audiences.domain.audience import Audience
 from src.audiences.domain.variable_table_mapping import VariableTableMapping
 from src.audiences.infra.audience_sqlalchemy_repository import AudienceSqlAlchemy
 from src.audiences.infra.dto.linked_campaign import LinkedCampaign
+from src.audiences.infra.dto.upload_conditon import UploadCondition
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
 from src.users.domain.user import User
 from src.utils.data_converter import DataConverter
 
 
 class AudienceRepository(BaseAudienceRepository):
+
     def __init__(self, audience_sqlalchemy: AudienceSqlAlchemy):
         self.audience_sqlalchemy = audience_sqlalchemy
+
+    def get_audience_detail(self, audience_id: str) -> Audience:
+        return self.audience_sqlalchemy.get_audience_detail(audience_id)
 
     def get_audiences(
         self, user: User, is_exclude: bool | None = None
@@ -22,8 +26,6 @@ class AudienceRepository(BaseAudienceRepository):
         audiences_info = self.audience_sqlalchemy.get_audiences(
             user=user, is_exclude=is_exclude
         )
-
-        print(audiences_info)
 
         audience_df = DataConverter.pydantic_to_df(audiences_info)
 
@@ -107,7 +109,7 @@ class AudienceRepository(BaseAudienceRepository):
     def save_audience_list(self, audience_id, query):
         self.audience_sqlalchemy.save_audience_list(audience_id, query)
 
-    def get_all_customer_by_audience(self, user: User) -> Query[Any]:
+    def get_all_customer_by_audience(self, user: User) -> object:
         if user.erp_id is not None and user.sys_id is not None:
             return self.audience_sqlalchemy.get_all_customer(user.erp_id, user.sys_id)
         else:
@@ -136,3 +138,6 @@ class AudienceRepository(BaseAudienceRepository):
 
     def get_audience_cust_with_audience_id(self, audience_id: str) -> object:
         return self.audience_sqlalchemy.get_audience_cust_with_audience_id(audience_id)
+
+    def get_audience_upload_info(self, audience_id: str) -> list[UploadCondition]:
+        return self.audience_sqlalchemy.get_audience_upload_info(audience_id)

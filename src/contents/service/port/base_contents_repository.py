@@ -6,13 +6,6 @@ from src.contents.infra.dto.response.contents_response import ContentsResponse
 
 
 class BaseContentsRepository(ABC):
-    @abstractmethod
-    def find_by_id(self, id: int):
-        pass
-
-    @abstractmethod
-    def find_all(self):
-        pass
 
     @abstractmethod
     def add_contents(self, contents: Contents) -> Contents:

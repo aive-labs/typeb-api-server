@@ -35,7 +35,7 @@ class UpdateContentsService(UpdateContentsUseCase):
 
     def exec(self, contents_id: int, contents_create: ContentsCreate, user: User):
 
-        if not self.contents_repository.find_by_id(contents_id):
+        if not self.contents_repository.get_contents_detail(contents_id):
             raise NotFoundError("해당하는 콘텐츠가 존재하지 않습니다.")
 
         contents_urls = self.contents_repository.get_contents_url_list()

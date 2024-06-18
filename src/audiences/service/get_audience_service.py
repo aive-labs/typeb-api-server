@@ -1,3 +1,4 @@
+from src.audiences.domain.audience import Audience
 from src.audiences.routes.dto.response.audience_stat_info import (
     AudienceStats,
     AudienceStatsInfo,
@@ -29,6 +30,9 @@ class GetAudienceService(GetAudienceUseCase):
 
     def __init__(self, audience_repository: BaseAudienceRepository):
         self.audience_repository = audience_repository
+
+    def get_audience_details(self, audience_id: str) -> Audience:
+        return self.audience_repository.get_audience_detail(audience_id)
 
     def get_all_audiences(
         self, user: User, is_exclude: bool | None = None
@@ -66,7 +70,7 @@ class GetAudienceService(GetAudienceUseCase):
 
         return response
 
-    def get_audience_details(self, audience_id: str) -> AudienceStatsInfo:
+    def get_audience_stat_details(self, audience_id: str) -> AudienceStatsInfo:
 
         res = {}
 

@@ -5,10 +5,13 @@ from datetime import datetime
 from sqlalchemy import String, and_, func, or_
 from sqlalchemy.orm import Session
 
+from src.audiences.domain.audience import Audience
 from src.audiences.domain.variable_table_mapping import VariableTableMapping
+from src.audiences.enums.audience_create_type import AudienceCreateType
 from src.audiences.enums.audience_status import AudienceStatus
 from src.audiences.infra.dto.audience_info import AudienceInfo
 from src.audiences.infra.dto.linked_campaign import LinkedCampaign
+from src.audiences.infra.dto.upload_conditon import UploadCondition
 from src.audiences.infra.entity.audience_count_by_month_entity import (
     AudienceCountByMonthEntity,
 )
@@ -40,6 +43,7 @@ from src.audiences.infra.entity.purchase_analytics_master_style_entity import (
     PurchaseAnalyticsMasterStyle,
 )
 from src.audiences.infra.entity.theme_audience_entity import ThemeAudienceEntity
+from src.audiences.infra.entity.upload_conditions_entity import UploadConditionsEntity
 from src.audiences.infra.entity.variable_table_list import (
     CustomerInfoStatusEntity,
     CustomerProductPurchaseSummaryEntity,
@@ -656,3 +660,55 @@ class AudienceSqlAlchemy:
             return db.query(AudienceCustomerMappingEntity.cus_cd).filter(
                 AudienceCustomerMappingEntity.audience_id == audience_id
             )
+
+    def get_audience_detail(self, audience_id) -> Audience:
+        with self.db() as db:
+            entity = (
+                db.query(AudienceEntity)
+                .filter(AudienceEntity.audience_id == audience_id)
+                .first()
+            )
+
+            if not entity:
+                raise NotFoundError("타겟 오디언스를 찾지 못했습니다.")
+
+            return ModelConverter.entity_to_model(entity, Audience)
+
+    def get_audience_upload_info(self, audience_id) -> list[UploadCondition]:
+        with self.db() as db:
+            data = (
+                db.query(
+                    AudienceEntity.audience_name,
+                    UploadConditionsEntity.audience_id,
+                    UploadConditionsEntity.template_type,
+                    UploadConditionsEntity.upload_count,
+                    UploadConditionsEntity.checked_count,
+                    UploadConditionsEntity.checked_list,
+                    UploadConditionsEntity.created_at,
+                    UploadConditionsEntity.updated_at,
+                )
+                .join(
+                    AudienceEntity,
+                    UploadConditionsEntity.audience_id == AudienceEntity.audience_id,
+                )
+                .filter(UploadConditionsEntity.audience_id == audience_id)
+                .all()
+            )
+
+            upload_conditions = [
+                UploadCondition(
+                    audience_name=row.audience_name,
+                    audience_id=row.audience_id,
+                    template_type=row.template_type,
+                    upload_count=row.upload_count,
+                    checked_count=row.checked_count,
+                    create_type_code=AudienceCreateType.Upload.value,
+                    create_type_name=AudienceCreateType.Upload.description,
+                    checked_list=row.checked_list,
+                    created_at=row.created_at,
+                    updated_at=row.updated_at,
+                )
+                for row in data
+            ]
+
+            return upload_conditions

@@ -10,12 +10,6 @@ class ContentsRepository(BaseContentsRepository):
     def __init__(self, contents_sqlalchemy: ContentsSqlAlchemy):
         self.contents_sqlalchemy = contents_sqlalchemy
 
-    def find_by_id(self, id: int):
-        raise NotImplementedError
-
-    def find_all(self):
-        raise NotImplementedError
-
     def add_contents(self, contents: Contents) -> Contents:
         return self.contents_sqlalchemy.add_contents(contents.to_entity())
 

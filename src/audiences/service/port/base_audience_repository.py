@@ -6,10 +6,16 @@ from pandas import DataFrame
 from src.audiences.domain.audience import Audience
 from src.audiences.domain.variable_table_mapping import VariableTableMapping
 from src.audiences.infra.dto.linked_campaign import LinkedCampaign
+from src.audiences.infra.dto.upload_conditon import UploadCondition
 from src.users.domain.user import User
 
 
 class BaseAudienceRepository(ABC):
+
+    @abstractmethod
+    def get_audience_detail(self, audience_id: str) -> Audience:
+        pass
+
     @abstractmethod
     def get_audiences(
         self, user: User, is_exclude: bool | None = None
@@ -67,7 +73,7 @@ class BaseAudienceRepository(ABC):
         pass
 
     @abstractmethod
-    def get_all_customer_by_audience(self, user: User):
+    def get_all_customer_by_audience(self, user: User) -> object:
         pass
 
     @abstractmethod
@@ -86,4 +92,8 @@ class BaseAudienceRepository(ABC):
 
     @abstractmethod
     def get_audience_cust_with_audience_id(self, audience_id: str) -> object:
+        pass
+
+    @abstractmethod
+    def get_audience_upload_info(self, audience_id: str) -> list[UploadCondition]:
         pass

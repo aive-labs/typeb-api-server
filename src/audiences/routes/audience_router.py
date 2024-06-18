@@ -2,6 +2,7 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, BackgroundTasks, Depends, status
 from fastapi.responses import StreamingResponse
 
+from src.audiences.enums.audience_create_type import AudienceCreateType
 from src.audiences.routes.dto.request.audience_create import AudienceCreate
 from src.audiences.routes.dto.response.audience_stat_info import AudienceStatsInfo
 from src.audiences.routes.dto.response.audience_variable_combinations import (
@@ -16,6 +17,9 @@ from src.audiences.routes.port.usecase.delete_audience_usecase import (
 )
 from src.audiences.routes.port.usecase.download_audience_usecase import (
     DownloadAudienceUseCase,
+)
+from src.audiences.routes.port.usecase.get_audience_creation_options_usecase import (
+    GetAudienceCreationOptionsUseCase,
 )
 from src.audiences.routes.port.usecase.get_audience_usecase import GetAudienceUseCase
 from src.audiences.service.background.execute_target_audience_summary import (
@@ -49,7 +53,7 @@ def get_audience_detail(
         Provide[Container.get_audience_service]
     ),
 ):
-    return get_audience_service.get_audience_details(audience_id)
+    return get_audience_service.get_audience_stat_details(audience_id)
 
 
 @audience_router.post("/audiences", status_code=status.HTTP_201_CREATED)
@@ -94,25 +98,24 @@ def get_audience_variable_combinations(
 
 
 @audience_router.get("/audiences/{audience_id}/creation-options")
+@inject
 def get_audience_conditions(
     audience_id: str,
     user=Depends(get_permission_checker([])),
+    get_audience_service: GetAudienceUseCase = Depends(
+        Provide[Container.get_audience_service]
+    ),
+    get_audience_creation_option: GetAudienceCreationOptionsUseCase = Depends(
+        Provide[Container.get_audience_creation_option]
+    ),
 ):
     """타겟 오디언스 생성조건 조회:  타겟 오디언스 생성 조건을 조회하는 API"""
-    # try:
-    #     audience_obj = get_audience_obj(db, audience_id)
-    #
-    #     if audience_obj.create_type_code == enums.AudienceCreateType.Filter.value:
-    #         return audience_processing.get_filter_conditions(db, audience_id)
-    #     else:
-    #         return audience_processing.get_csvuploaded_data(db, audience_id)
-    #
-    # except Exception as e:
-    #     raise HTTPException(
-    #         status_code=e.status_code,
-    #         detail={"code": e.detail.get("code"), "message": e.detail.get("message")},
-    #     )
-    pass
+    audience = get_audience_service.get_audience_details(audience_id)
+
+    if audience.create_type_code == AudienceCreateType.Filter.value:
+        return get_audience_creation_option.get_filter_conditions(audience_id)
+    else:
+        return get_audience_creation_option.get_csv_uploaded_data(audience_id)
 
 
 @audience_router.delete(
