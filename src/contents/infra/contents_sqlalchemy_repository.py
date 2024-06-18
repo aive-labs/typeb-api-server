@@ -1,6 +1,5 @@
 from collections.abc import Callable
 from contextlib import AbstractContextManager
-from typing import List
 
 from sqlalchemy import or_, update
 from sqlalchemy.orm import Session
