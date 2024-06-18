@@ -5,6 +5,7 @@ from pandas import DataFrame
 from src.audiences.domain.audience import Audience
 from src.audiences.domain.variable_table_mapping import VariableTableMapping
 from src.audiences.infra.audience_sqlalchemy_repository import AudienceSqlAlchemy
+from src.audiences.infra.dto.filter_condition import FilterCondition
 from src.audiences.infra.dto.linked_campaign import LinkedCampaign
 from src.audiences.infra.dto.upload_conditon import UploadCondition
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
@@ -103,7 +104,7 @@ class AudienceRepository(BaseAudienceRepository):
         )
         return audience_id
 
-    def get_db_filter_conditions(self, audience_id: str):
+    def get_db_filter_conditions(self, audience_id: str) -> list[FilterCondition]:
         return self.audience_sqlalchemy.get_db_filter_conditions(audience_id)
 
     def save_audience_list(self, audience_id, query):

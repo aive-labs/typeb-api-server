@@ -1,3 +1,4 @@
+from src.audiences.enums.audience_create_type import AudienceCreateType
 from src.audiences.enums.csv_template import CsvTemplates
 from src.audiences.routes.dto.response.upload_condition_response import (
     AudienceCreationOptionsResponse,
@@ -14,24 +15,25 @@ class GetAudienceCreationOptions(GetAudienceCreationOptionsUseCase):
     def __init__(self, audience_repository: BaseAudienceRepository):
         self.audience_repository = audience_repository
 
-    def get_filter_conditions(self, audience_id: str):
+    def get_filter_conditions(
+        self, audience_id: str
+    ) -> AudienceCreationOptionsResponse:
         """타겟 오디언스 생성 정보를 내려주는 함수"""
 
-        # res = {}
-        # conditions_listofdic = [
-        #     row._asdict() for row in get_db_filter_conditions(db, audience_id)
-        # ][0]
-        #
-        # res["audience_name"] = conditions_listofdic["audience_name"]
-        # res["create_type_code"] = AudienceCreateType.Filter.value
-        # res["create_type_name"] = AudienceCreateType.Filter.desc
-        # res["filters"] = conditions_listofdic["conditions"]["filters"]
-        # res["exclusions"] = conditions_listofdic["conditions"]["exclusions"]
-        # res["upload"] = None
-        # res["created_at"] = conditions_listofdic["created_at"]
-        # res["updated_at"] = conditions_listofdic["updated_at"]
-        #
-        # return res
+        filter_condition = self.audience_repository.get_db_filter_conditions(
+            audience_id
+        )
+        filter_condition = filter_condition[0]
+
+        return AudienceCreationOptionsResponse(
+            audience_name=filter_condition.audience_name,
+            create_type_code=AudienceCreateType.Filter.value,
+            create_type_name=AudienceCreateType.Filter.description,
+            filters=filter_condition.conditions["filters"],
+            exclusions=filter_condition.conditions["exclusions"],
+            created_at=filter_condition.created_at,
+            updated_at=filter_condition.updated_at,
+        )
 
     def get_csv_uploaded_data(
         self, audience_id: str

@@ -9,6 +9,9 @@ from src.audiences.routes.dto.response.audience_variable_combinations import (
     AudienceVariableCombinations,
 )
 from src.audiences.routes.dto.response.audiences import AudienceResponse
+from src.audiences.routes.dto.response.upload_condition_response import (
+    AudienceCreationOptionsResponse,
+)
 from src.audiences.routes.port.usecase.create_audience_usecase import (
     CreateAudienceUseCase,
 )
@@ -108,7 +111,7 @@ def get_audience_conditions(
     get_audience_creation_option: GetAudienceCreationOptionsUseCase = Depends(
         Provide[Container.get_audience_creation_option]
     ),
-):
+) -> AudienceCreationOptionsResponse:
     """타겟 오디언스 생성조건 조회:  타겟 오디언스 생성 조건을 조회하는 API"""
     audience = get_audience_service.get_audience_details(audience_id)
 

@@ -5,6 +5,7 @@ from pandas import DataFrame
 
 from src.audiences.domain.audience import Audience
 from src.audiences.domain.variable_table_mapping import VariableTableMapping
+from src.audiences.infra.dto.filter_condition import FilterCondition
 from src.audiences.infra.dto.linked_campaign import LinkedCampaign
 from src.audiences.infra.dto.upload_conditon import UploadCondition
 from src.users.domain.user import User
@@ -65,7 +66,7 @@ class BaseAudienceRepository(ABC):
         pass
 
     @abstractmethod
-    def get_db_filter_conditions(self, audience_id: str):
+    def get_db_filter_conditions(self, audience_id: str) -> list[FilterCondition]:
         pass
 
     @abstractmethod

@@ -10,6 +10,7 @@ from src.audiences.domain.variable_table_mapping import VariableTableMapping
 from src.audiences.enums.audience_create_type import AudienceCreateType
 from src.audiences.enums.audience_status import AudienceStatus
 from src.audiences.infra.dto.audience_info import AudienceInfo
+from src.audiences.infra.dto.filter_condition import FilterCondition
 from src.audiences.infra.dto.linked_campaign import LinkedCampaign
 from src.audiences.infra.dto.upload_conditon import UploadCondition
 from src.audiences.infra.entity.audience_count_by_month_entity import (
@@ -231,10 +232,9 @@ class AudienceSqlAlchemy:
 
             return audience_id
 
-    # TODO: 이거 뜻이지 ???
-    def get_db_filter_conditions(self, audience_id: str):
+    def get_db_filter_conditions(self, audience_id: str) -> list[FilterCondition]:
         with self.db() as db:
-            return (
+            data = (
                 db.query(
                     AudienceQueriesEntity.audience_id,
                     AudienceEntity.audience_name,
@@ -250,6 +250,18 @@ class AudienceSqlAlchemy:
                 .filter(AudienceQueriesEntity.audience_id == audience_id)
                 .all()
             )
+
+            return [
+                FilterCondition(
+                    audience_id=row.audience_id,
+                    audience_name=row.audience_name,
+                    conditions=row.conditions,
+                    exclusion_condition=row.exclusion_condition,
+                    created_at=row.created_at,
+                    updated_at=row.updated_at,
+                )
+                for row in data
+            ]
 
     def save_audience_list(self, audience_id, query):
         # res List[tuple[str,]]
