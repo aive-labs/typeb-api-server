@@ -5,6 +5,7 @@ from datetime import datetime
 from sqlalchemy import String, and_, func, or_
 from sqlalchemy.orm import Session
 
+from src.audiences.domain.variable_table_mapping import VariableTableMapping
 from src.audiences.enums.audience_status import AudienceStatus
 from src.audiences.infra.dto.audience_info import AudienceInfo
 from src.audiences.infra.dto.linked_campaign import LinkedCampaign
@@ -26,12 +27,6 @@ from src.audiences.infra.entity.audience_upload_condition_entity import (
 from src.audiences.infra.entity.audience_variable_options_entity import (
     AudienceVariableOptionsEntity,
 )
-from src.audiences.infra.entity.customer_info_status_entity import (
-    CustomerInfoStatusEntity,
-)
-from src.audiences.infra.entity.customer_product_purchase_summary_entity import (
-    CustomerProductPurchaseSummaryEntity,
-)
 from src.audiences.infra.entity.customer_promotion_master_entity import (
     CustomerPromotionMasterEntity,
 )
@@ -45,6 +40,10 @@ from src.audiences.infra.entity.purchase_analytics_master_style_entity import (
     PurchaseAnalyticsMasterStyle,
 )
 from src.audiences.infra.entity.theme_audience_entity import ThemeAudienceEntity
+from src.audiences.infra.entity.variable_table_list import (
+    CustomerInfoStatusEntity,
+    CustomerProductPurchaseSummaryEntity,
+)
 from src.audiences.infra.entity.variable_table_mapping_entity import (
     VariableTableMappingEntity,
 )
@@ -55,6 +54,7 @@ from src.strategy.infra.entity.campaign_theme_entity import CampaignThemeEntity
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
 from src.utils.data_converter import DataConverter
+from src.utils.file.model_converter import ModelConverter
 
 
 class AudienceSqlAlchemy:
@@ -175,12 +175,12 @@ class AudienceSqlAlchemy:
 
     def create_audience(self, audience_dict, conditions):
         with self.db() as db:
-            audiences_req = AudienceEntity(audience_dict)
-            db.add(audiences_req)
+            entity = AudienceEntity(**audience_dict)
+            db.add(entity)
 
             # 시퀀스 넘버를 가져오기 위해 flush()를 호출
             db.flush()
-            audience_id = audiences_req.audience_id
+            audience_id = entity.audience_id
 
             # #audience_filter_conditions
             conditions["audience_id"] = audience_id
@@ -273,18 +273,18 @@ class AudienceSqlAlchemy:
                 )
             )
 
-    def get_tablename_by_variable_id(self, variable_id: str):
+    def get_tablename_by_variable_id(self, variable_id: str) -> VariableTableMapping:
         with self.db() as db:
-            result = (
-                db.query(VariableTableMappingEntity.target_table)
+            entity = (
+                db.query(VariableTableMappingEntity)
                 .filter(VariableTableMappingEntity.variable_id == variable_id)
                 .first()
             )
 
-            if result:
-                return result[0]
-            else:
-                return None
+            if not entity:
+                raise NotFoundError("변수-테이블 매핑 정보를 찾지 못했습니다.")
+
+            return ModelConverter.entity_to_model(entity, VariableTableMapping)
 
     def get_linked_campaign(self, audience_id: str) -> list[LinkedCampaign]:
         with self.db() as db:

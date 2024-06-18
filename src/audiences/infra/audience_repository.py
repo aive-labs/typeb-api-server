@@ -4,6 +4,7 @@ from pandas import DataFrame
 from sqlalchemy.orm.query import Query
 
 from src.audiences.domain.audience import Audience
+from src.audiences.domain.variable_table_mapping import VariableTableMapping
 from src.audiences.infra.audience_sqlalchemy_repository import AudienceSqlAlchemy
 from src.audiences.infra.dto.linked_campaign import LinkedCampaign
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
@@ -108,9 +109,9 @@ class AudienceRepository(BaseAudienceRepository):
         if user.erp_id is not None and user.sys_id is not None:
             return self.audience_sqlalchemy.get_all_customer(user.erp_id, user.sys_id)
         else:
-            raise Exception()
+            raise Exception("erp_id와 sys_id가 존재하지 않습니다.")
 
-    def get_tablename_by_variable_id(self, variable_id: str):
+    def get_tablename_by_variable_id(self, variable_id: str) -> VariableTableMapping:
         return self.audience_sqlalchemy.get_tablename_by_variable_id(variable_id)
 
     def get_subquery_with_select_query_list(self, table_obj, select_query_list, idx):

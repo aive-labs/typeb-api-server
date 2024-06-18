@@ -8,8 +8,8 @@ from sqlalchemy import MetaData, create_engine, orm
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
 
-logging.basicConfig()
-logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
+# logging.basicConfig()
+# logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
 
 
 class DBSettings(BaseSettings):

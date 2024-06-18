@@ -1,6 +1,4 @@
-from src.audiences.infra.entity.customer_info_status_entity import (
-    CustomerInfoStatusEntity,
-)
+from src.audiences.infra.entity.variable_table_list import CustomerInfoStatusEntity
 from src.common.enums.str_enum import StrEnum
 from src.common.infra.entity.channel_master_entity import ChannelMasterEntity
 

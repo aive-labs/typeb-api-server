@@ -1,11 +1,5 @@
 from sqlalchemy import and_, case, func, not_
 
-from src.audiences.infra.entity.customer_info_status_entity import (
-    CustomerInfoStatusEntity,
-)
-from src.audiences.infra.entity.customer_product_purchase_summary_entity import (
-    CustomerProductPurchaseSummaryEntity,
-)
 from src.audiences.infra.entity.customer_promotion_master_entity import (
     CustomerPromotionMasterEntity,
 )
@@ -14,6 +8,10 @@ from src.audiences.infra.entity.customer_promotion_react_summary_entity import (
 )
 from src.audiences.infra.entity.purchase_analytics_master_style_entity import (
     PurchaseAnalyticsMasterStyle,
+)
+from src.audiences.infra.entity.variable_table_list import (
+    CustomerInfoStatusEntity,
+    CustomerProductPurchaseSummaryEntity,
 )
 
 
@@ -148,6 +146,7 @@ def build_select_query(table_obj, condition, condition_name):
     additional_filters = condition.get("additional_filters")
 
     field = condition["field"]
+    field_list = []
     if is_event_variable := field.startswith("e_"):
         field = delete_event_field_check(field)
     if field.startswith(("freq", "recency", "purcycle")):
@@ -165,6 +164,7 @@ def build_select_query(table_obj, condition, condition_name):
 
     select_query_list = []
     and_conditions_in_case = []
+
     for field in field_list:
         if period := condition.get("period"):
             if is_event_variable:
@@ -193,8 +193,11 @@ def build_select_query(table_obj, condition, condition_name):
             )
 
         if and_conditions_in_case:
-            select_query = case(
-                [(and_(*and_conditions_in_case), getattr(table_obj, field))], else_=None
+            select_query = case(  # pyright: ignore [reportCallIssue]
+                (
+                    and_(*and_conditions_in_case),
+                    getattr(table_obj, field),
+                )  # pyright: ignore [reportArgumentType]
             )
         else:
             select_query = getattr(table_obj, field)

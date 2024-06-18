@@ -1,5 +1,3 @@
-import logging
-
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -13,7 +11,6 @@ from src.users.routes.user_router import user_router
 
 # FastAPI 앱 초기화
 def create_app():
-    logging.basicConfig(level=logging.ERROR)
     app = FastAPI()
     app.container = Container()  # pyright: ignore [reportAttributeAccessIssue]
     return app

@@ -4,6 +4,7 @@ from typing import Any
 from pandas import DataFrame
 
 from src.audiences.domain.audience import Audience
+from src.audiences.domain.variable_table_mapping import VariableTableMapping
 from src.audiences.infra.dto.linked_campaign import LinkedCampaign
 from src.users.domain.user import User
 
@@ -70,7 +71,7 @@ class BaseAudienceRepository(ABC):
         pass
 
     @abstractmethod
-    def get_tablename_by_variable_id(self, variable_id: str):
+    def get_tablename_by_variable_id(self, variable_id: str) -> VariableTableMapping:
         pass
 
     @abstractmethod

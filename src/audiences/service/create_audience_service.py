@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from fastapi import BackgroundTasks, HTTPException
+from fastapi import BackgroundTasks
 from sqlalchemy import and_, except_, or_
 
 from src.audiences.enums.audience_create_type import AudienceCreateType
@@ -10,7 +10,8 @@ from src.audiences.enums.csv_template import CsvTemplates
 from src.audiences.enums.predefined_variable_access import PredefinedVariableAccess
 from src.audiences.infra import entity
 from src.audiences.infra.audience_repository import AudienceRepository
-from src.audiences.infra.entity.customer_info_status_entity import (
+from src.audiences.infra.entity import variable_table_list
+from src.audiences.infra.entity.variable_table_list import (
     CustomerInfoStatusEntity,
 )
 from src.audiences.routes.dto.request.audience_create import AudienceCreate
@@ -22,10 +23,6 @@ from src.audiences.routes.dto.response.audience_variable_combinations import (
 from src.audiences.routes.port.usecase.create_audience_usecase import (
     CreateAudienceUseCase,
 )
-
-# from src.audiences.service.background.execute_target_audience_summary import (
-#     execute_target_audience_summary,
-# )
 from src.audiences.utils.query_builder import (
     build_select_query,
     classify_conditions_based_on_tablename,
@@ -33,6 +30,7 @@ from src.audiences.utils.query_builder import (
     get_query_type_with_additional_filters,
     group_where_conditions,
 )
+from src.core.exceptions import DuplicatedError
 from src.users.domain.user import User
 
 
@@ -52,14 +50,8 @@ class CreateAudienceService(CreateAudienceUseCase):
         )
 
         # 오디언스명 중복 체크
-        if audience is None:
-            raise HTTPException(
-                status_code=409,
-                detail={
-                    "code": "audience/create",
-                    "message": "동일한 오디언스명이 존재합니다.",
-                },
-            )
+        if audience:
+            raise DuplicatedError("동일한 오디언스명이 존재합니다.")
 
         if audience_create.create_type_code == AudienceCreateType.Filter.value:
             ctype = AudienceCreateType.Filter.value
@@ -162,6 +154,8 @@ class CreateAudienceService(CreateAudienceUseCase):
                 all_customer = self.audience_repository.get_all_customer_by_audience(
                     user=user
                 )
+                print("-----")
+                print(all_customer)
 
                 # 조건 넘버링 n1
                 for n1, and_conditions in enumerate(and_conditions_list, 1):
@@ -176,13 +170,15 @@ class CreateAudienceService(CreateAudienceUseCase):
                             raise Exception()
 
                         # variable_type 고정 : target
-                        table_name = (
+                        print("--- query_type_dict")
+                        print(query_type_dict["field"])
+                        variable_table = (
                             self.audience_repository.get_tablename_by_variable_id(
                                 query_type_dict["field"]
                             )
                         )
-                        if table_name is None:
-                            raise Exception()
+                        print(variable_table)
+                        table_name = variable_table.target_table
 
                         query_type_dict["table_name"] = table_name
                         condition_dict[f"condition_{n1}_{n2}"] = query_type_dict
@@ -194,7 +190,11 @@ class CreateAudienceService(CreateAudienceUseCase):
                 idx = 0
                 for table_name, condition_list in table_condition_dict.items():
                     # 테이블 객체 불러오기
-                    variable_table = getattr(entity, table_name)
+                    print("entity-table")
+                    print(entity)
+                    print(table_name)
+                    variable_table = getattr(variable_table_list, table_name)
+                    print(variable_table)
 
                     # 테이블별 select list 생성
                     select_query_list = []
