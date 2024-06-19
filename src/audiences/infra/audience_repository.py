@@ -147,3 +147,6 @@ class AudienceRepository(BaseAudienceRepository):
         return self.audience_sqlalchemy.get_actual_list_from_csv(
             uploaded_rows, target_column, entity
         )
+
+    def update_cycle(self, audience_id, update_cycle):
+        self.audience_sqlalchemy.update_cycle(audience_id, update_cycle)

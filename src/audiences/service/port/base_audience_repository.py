@@ -102,3 +102,7 @@ class BaseAudienceRepository(ABC):
     @abstractmethod
     def get_actual_list_from_csv(self, uploaded_rows, target_column, entity) -> list:
         pass
+
+    @abstractmethod
+    def update_cycle(self, audience_id, update_cycle):
+        pass

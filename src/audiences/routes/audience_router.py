@@ -7,6 +7,7 @@ from fastapi import (
     APIRouter,
     BackgroundTasks,
     Depends,
+    HTTPException,
     UploadFile,
     status,
 )
@@ -14,6 +15,7 @@ from fastapi.responses import FileResponse, StreamingResponse
 
 from src.audiences.enums.audience_create_type import AudienceCreateType
 from src.audiences.enums.csv_template import CsvTemplates
+from src.audiences.enums.target_audience_update_cycle import TargetAudienceUpdateCycle
 from src.audiences.routes.dto.request.audience_create import AudienceCreate
 from src.audiences.routes.dto.response.audience_stat_info import AudienceStatsInfo
 from src.audiences.routes.dto.response.audience_variable_combinations import (
@@ -37,6 +39,9 @@ from src.audiences.routes.port.usecase.get_audience_creation_options_usecase imp
     GetAudienceCreationOptionsUseCase,
 )
 from src.audiences.routes.port.usecase.get_audience_usecase import GetAudienceUseCase
+from src.audiences.routes.port.usecase.update_cycle_usecase import (
+    AudienceUpdateCycleUseCase,
+)
 from src.audiences.service.background.execute_target_audience_summary import (
     execute_target_audience_summary,
 )
@@ -96,9 +101,6 @@ def get_audience_variable_combinations(
     user=Depends(get_permission_checker([])),
     create_audience_service: CreateAudienceUseCase = Depends(
         Provide[Container.create_audience_service]
-    ),
-    get_audience_service: GetAudienceUseCase = Depends(
-        Provide[Container.get_audience_service]
     ),
 ):
     """생성 변수 조합 정보 조회:  타겟 오디언스가 어떤 생성 조건으로 만들어졌는지에 대한 옵션 정보를 내려주는 API"""
@@ -232,3 +234,25 @@ async def check_csv_template(
             }
 
     raise Exception("파일이 템플릿과 일치하지 않습니다.")
+
+
+@audience_router.patch(
+    "/audiences/{audience_id}/update-cycle", status_code=status.HTTP_204_NO_CONTENT
+)
+@inject
+def audience_update_cycles(
+    audience_id: str,
+    update_cycle: TargetAudienceUpdateCycle,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    audience_update_cycle_service: AudienceUpdateCycleUseCase = Depends(
+        Provide[Container.audience_update_cycle_service]
+    ),
+):
+    """타겟 오디언스 업데이트 주기: 타겟 오디언스의 업데이트 주기를 변경하는 API"""
+    if user.role_id not in ["admin", "operator"]:
+        raise HTTPException(
+            status_code=403,
+            detail={"code": "modify/03", "message": "수정 권한이 없는 사용자입니다."},
+        )
+
+    audience_update_cycle_service.exec(audience_id, update_cycle.value)

@@ -13,6 +13,7 @@ from src.audiences.service.get_audience_creation_options import (
     GetAudienceCreationOptions,
 )
 from src.audiences.service.get_audience_service import GetAudienceService
+from src.audiences.service.update_cycle_service import AudienceUpdateCycleService
 from src.auth.infra.cafe24_repository import Cafe24Repository
 from src.auth.infra.cafe24_sqlalchemy_repository import Cafe24SqlAlchemyRepository
 from src.auth.service.auth_service import AuthService
@@ -206,6 +207,10 @@ class Container(containers.DeclarativeContainer):
 
     csv_upload_service = providers.Singleton(
         provides=CSVUploadAudienceService, audience_repository=audience_repository
+    )
+
+    audience_update_cycle_service = providers.Singleton(
+        provides=AudienceUpdateCycleService, audience_repository=audience_repository
     )
 
     """

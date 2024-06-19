@@ -2,7 +2,7 @@ from collections.abc import Callable
 from contextlib import AbstractContextManager
 from datetime import datetime
 
-from sqlalchemy import String, and_, func, or_
+from sqlalchemy import String, and_, func, or_, update
 from sqlalchemy.orm import Session
 
 from src.audiences.domain.audience import Audience
@@ -156,9 +156,6 @@ class AudienceSqlAlchemy:
                     *conditions,
                 )
             )
-
-            print("audience_filtered")
-            print(audience_filtered)
 
             result = audience_filtered.all()
 
@@ -746,3 +743,16 @@ class AudienceSqlAlchemy:
                 )
 
             return res
+
+    def update_cycle(self, audience_id: str, update_cycle: str):
+        with self.db() as db:
+            update_statement = (
+                update(AudienceEntity)
+                .where(AudienceEntity.audience_id == audience_id)
+                .values(update_cycle=update_cycle)
+            )
+            result = db.execute(update_statement)
+            db.commit()
+
+            if result.rowcount == 0:
+                raise NotFoundError("타겟 오디언스를 찾지 못했습니다.")
