@@ -106,3 +106,17 @@ class BaseAudienceRepository(ABC):
     @abstractmethod
     def update_cycle(self, audience_id, update_cycle):
         pass
+
+    @abstractmethod
+    def delete_audience_info_for_update(self, audience_id):
+        pass
+
+    @abstractmethod
+    def update_by_upload(
+        self,
+        filter_audience,
+        insert_to_uploaded_audiences,
+        insert_to_audiences,
+        checked_list,
+    ):
+        pass

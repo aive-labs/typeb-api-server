@@ -17,6 +17,7 @@ from src.audiences.enums.audience_create_type import AudienceCreateType
 from src.audiences.enums.csv_template import CsvTemplates
 from src.audiences.enums.target_audience_update_cycle import TargetAudienceUpdateCycle
 from src.audiences.routes.dto.request.audience_create import AudienceCreate
+from src.audiences.routes.dto.request.audience_update import AudienceUpdate
 from src.audiences.routes.dto.response.audience_stat_info import AudienceStatsInfo
 from src.audiences.routes.dto.response.audience_variable_combinations import (
     AudienceVariableCombinations,
@@ -116,7 +117,7 @@ def get_audience_variable_combinations(
 
 @audience_router.get("/audiences/{audience_id}/creation-options")
 @inject
-def get_audience_conditions(
+def get_audience_creation_options(
     audience_id: str,
     user=Depends(get_permission_checker([])),
     get_audience_service: GetAudienceUseCase = Depends(
@@ -133,6 +134,41 @@ def get_audience_conditions(
         return get_audience_creation_option.get_filter_conditions(audience_id)
     else:
         return get_audience_creation_option.get_csv_uploaded_data(audience_id)
+
+
+@audience_router.put("/audiences/{audience_id}/creation-options")
+@inject
+def update_audience_creation_options(
+    audience_id: str,
+    audience_update: AudienceUpdate,
+    user=Depends(get_permission_checker([])),
+    # background_task: BackgroundTasks,
+):
+    """타겟 오디언스 생성조건 수정:  타겟 오디언스 생성 조건을 조회하는 API
+
+    -수정 가능 상태:
+     1. 미활성 ("inactive")
+
+    * create_type이 변경되는 경우 -> 삭제 & 재생성
+
+    삭제 테이블 (create_type이 변경되는 경우)
+    1. audience_filter_conditions | audience_upload_conditions
+
+
+    * create_type이 변경되지 않는 경우 -> 재생성
+
+    -수정 테이블:
+    1. audiences
+    2. audience_filter_conditions | audience_upload_conditions
+    3. audience_count_by_month
+    4. audience_stats
+    5. primary_rep_product
+
+    -update objectid for cus_cd
+    1. cust_campaign_objects
+    """
+
+    return {"result": True}
 
 
 @audience_router.delete(

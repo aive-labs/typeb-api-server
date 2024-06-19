@@ -17,7 +17,7 @@ from src.users.domain.user import User
 from src.utils.data_converter import DataConverter
 
 
-def transform_data(data_dict):
+def convert_to_audience_res(data_dict):
     # Handling rep_list transformation if necessary
 
     if data_dict["rep_list"] is not None:
@@ -44,7 +44,9 @@ class GetAudienceService(GetAudienceUseCase):
         if not audiences:
             return AudienceResponse(audiences=[], filters=None)
 
-        audience_response = [transform_data(audience) for audience in audiences]
+        audience_response = [
+            convert_to_audience_res(audience) for audience in audiences
+        ]
 
         filter_obj = FilterProcessing("target_audience")
         filters = filter_obj.filter_converter(df=audience_df)

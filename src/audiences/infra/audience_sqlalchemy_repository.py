@@ -263,22 +263,15 @@ class AudienceSqlAlchemy:
     def save_audience_list(self, audience_id, query):
         # res List[tuple[str,]]
         with self.db() as db:
-            try:
-                result = db.execute(query).fetchall()
+            result = db.execute(query).fetchall()
 
-                obj = [
-                    AudienceCustomerMappingEntity(
-                        cus_cd=item[0], audience_id=audience_id
-                    )
-                    for item in result
-                ]
+            obj = [
+                AudienceCustomerMappingEntity(cus_cd=item[0], audience_id=audience_id)
+                for item in result
+            ]
 
-                db.bulk_save_objects(obj)
-                db.commit()
-            except Exception:
-                db.rollback()
-            finally:
-                db.close()
+            db.bulk_save_objects(obj)
+            db.commit()
 
     def get_all_customer(self, erp_id: str, sys_id: str):
         with self.db() as db:
@@ -756,3 +749,109 @@ class AudienceSqlAlchemy:
 
             if result.rowcount == 0:
                 raise NotFoundError("타겟 오디언스를 찾지 못했습니다.")
+
+    def delete_audience_info_for_update(self, audience_id):
+        """
+        타겟오디언스 생성 조건 수정 후 기존 데이터 삭제 함수
+        """
+        with self.db() as db:
+            # 타겟 오디언스 고객 리스트
+            db.query(AudienceCustomerMappingEntity).filter(
+                AudienceCustomerMappingEntity.audience_id == audience_id
+            ).delete()
+            # 상세정보
+            db.query(AudienceStatsEntity).filter(
+                AudienceStatsEntity.audience_id == audience_id
+            ).delete()
+
+            # 타겟 오디언스 수
+            db.query(AudienceCountByMonthEntity).filter(
+                AudienceCountByMonthEntity.stnd_month
+                == func.to_char(func.current_date(), "YYYYMM"),
+                AudienceCountByMonthEntity.audience_id == audience_id,
+            ).delete()
+
+            # 타겟 오디언스 주 구매 대표상품
+            db.query(PrimaryRepProductEntity).filter(
+                PrimaryRepProductEntity.audience_id == audience_id
+            ).delete()
+
+            # 오디언스 CSV 삭제
+            db.query(AudienceUploadConditionsEntity).filter(
+                AudienceUploadConditionsEntity.audience_id == audience_id
+            ).delete()
+
+            # 오디언스 생성 쿼리 삭제
+            db.query(AudienceQueriesEntity).filter(
+                AudienceQueriesEntity.audience_id == audience_id
+            ).delete()
+
+    def update_by_upload(
+        self,
+        filter_audience,
+        insert_to_uploaded_audiences,
+        insert_to_audiences,
+        checked_list,
+    ):
+        with self.db() as db:
+            audience_id = filter_audience["audience_id"]
+
+            update_statement = (
+                update(AudienceEntity)
+                .where(AudienceEntity.audience_id == audience_id)
+                .values(insert_to_audiences)
+            )
+            update_result = db.execute(update_statement)
+
+            if update_result.rowcount == 0:
+                raise ValueError("해당 타겟 오디언스를 찾지 못했습니다.")
+
+            db.add(AudienceUploadConditionsEntity(**insert_to_uploaded_audiences))
+
+            # audience_cust_mapping
+            obj = [
+                AudienceCustomerMappingEntity(
+                    cus_cd=item,
+                    audience_id=audience_id,
+                )
+                for item in checked_list
+            ]
+
+            db.bulk_save_objects(obj)
+            db.commit()
+
+    def update_by_filter(
+        self, audience_id, insert_to_filter_conditions, insert_to_audiences
+    ):
+        with self.db() as db:
+            update_statement = (
+                update(AudienceEntity)
+                .where(AudienceEntity.audience_id == audience_id)
+                .values(insert_to_audiences)
+            )
+            update_result = db.execute(update_statement)
+
+            if update_result.rowcount == 0:
+                raise ValueError("해당 타겟 오디언스를 찾지 못했습니다.")
+
+            audience_query = (
+                db.query(AudienceQueriesEntity)
+                .filter(AudienceQueriesEntity.audience_id == audience_id)
+                .first()
+            )
+
+            if audience_query:
+                query_update_statement = (
+                    update(AudienceQueriesEntity)
+                    .where(AudienceQueriesEntity.audience_id == audience_id)
+                    .values(insert_to_filter_conditions)
+                )
+                query_update_result = db.execute(query_update_statement)
+
+                if query_update_result.rowcount == 0:
+                    raise ValueError("해당 타겟 오디언스를 찾지 못했습니다.")
+            else:
+                insert_to_filter_conditions["audience_id"] = audience_id
+                db.add(AudienceQueriesEntity(**insert_to_filter_conditions))
+
+            db.commit()

@@ -65,14 +65,14 @@ class CreateAudienceService(CreateAudienceUseCase):
             audience_filter_condition = (
                 self.audience_repository.get_db_filter_conditions(new_audience_id)
             )
-            conditions = audience_filter_condition[0][2]
+            conditions = audience_filter_condition[0].conditions
             query = self._get_final_query(user, conditions)
             execute_query_compiler(query)
 
             self.audience_repository.save_audience_list(new_audience_id, query)
 
         elif audience_create.create_type_code == AudienceCreateType.Upload.value:
-            ctype = AudienceCreateType.Upload.value
+            create_type_code = AudienceCreateType.Upload.value
             template_name = audience_create.upload["type"]  # type: ignore
 
             # 업로드 템플릿 식별 후 schema와 field 변수 할당
@@ -89,11 +89,9 @@ class CreateAudienceService(CreateAudienceUseCase):
             if not template:
                 raise ValueError("Invalid create typecode provided")
 
-            schema_md = template["source"]
-            if not schema_md:
+            entity = template["source"]
+            if not entity:
                 raise ValueError("Invalid create typecode provided")
-
-            template["_name_"]
 
             # 대상 고객 생성 로직
             """
@@ -108,7 +106,7 @@ class CreateAudienceService(CreateAudienceUseCase):
                 "audience_name": audience_create.audience_name,
                 "audience_type_code": AudienceType.custom.value,
                 "audience_type_name": AudienceType.custom.description,
-                "create_type_code": ctype,
+                "create_type_code": create_type_code,
                 "audience_status_code": AudienceStatus.inactive.value,
                 "audience_status_name": AudienceStatus.inactive.description,
                 "description": None,
@@ -220,7 +218,7 @@ class CreateAudienceService(CreateAudienceUseCase):
                                 condition_list,
                                 where_condition_dict,
                             )
-                            all_customer = all_customer.outerjoin(
+                            all_customer = all_customer.outerjoin(  # pyright: ignore [reportAttributeAccessIssue]
                                 sub_alias,
                                 CustomerInfoStatusEntity.cus_cd == sub_alias.c.cus_cd,
                             )
@@ -229,7 +227,11 @@ class CreateAudienceService(CreateAudienceUseCase):
                 total_where_condition = or_(
                     *[and_(*same_n1) for same_n1 in where_condition_dict.values()]
                 )
-                all_customer = all_customer.filter(total_where_condition)
+                all_customer = (
+                    all_customer.filter(  # pyright: ignore [reportAttributeAccessIssue]
+                        total_where_condition
+                    )
+                )
                 filter_or_exclutions_query_list.append(all_customer)
         result = except_(*filter_or_exclutions_query_list)
         return result

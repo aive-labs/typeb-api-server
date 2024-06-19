@@ -116,8 +116,8 @@ class AudienceRepository(BaseAudienceRepository):
     def get_all_customer_by_audience(self, user: User) -> object:
         if user.erp_id is not None and user.sys_id is not None:
             return self.audience_sqlalchemy.get_all_customer(user.erp_id, user.sys_id)
-        else:
-            raise Exception("erp_id와 sys_id가 존재하지 않습니다.")
+
+        raise Exception("erp_id와 sys_id가 존재하지 않습니다.")
 
     def get_tablename_by_variable_id(self, variable_id: str) -> VariableTableMapping:
         return self.audience_sqlalchemy.get_tablename_by_variable_id(variable_id)
@@ -153,3 +153,27 @@ class AudienceRepository(BaseAudienceRepository):
 
     def update_cycle(self, audience_id, update_cycle):
         self.audience_sqlalchemy.update_cycle(audience_id, update_cycle)
+
+    def delete_audience_info_for_update(self, audience_id):
+        self.audience_sqlalchemy.delete_audience_info_for_update(audience_id)
+
+    def update_by_filter(
+        self, audience_id, insert_to_filter_conditions, insert_to_audiences
+    ):
+        self.audience_sqlalchemy.update_by_filter(
+            audience_id, insert_to_filter_conditions, insert_to_audiences
+        )
+
+    def update_by_upload(
+        self,
+        filter_audience,
+        insert_to_uploaded_audiences,
+        insert_to_audiences,
+        checked_list,
+    ):
+        self.audience_sqlalchemy.update_by_upload(
+            filter_audience,
+            insert_to_uploaded_audiences,
+            insert_to_audiences,
+            checked_list,
+        )

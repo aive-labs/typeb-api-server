@@ -68,3 +68,6 @@ class User(BaseModel):
             test_callback_number=user_entity.test_callback_number,
             last_login=user_entity.last_login,
         )
+
+    def is_admin(self):
+        return self.role_id == "admin"
