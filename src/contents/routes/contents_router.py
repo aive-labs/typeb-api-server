@@ -4,7 +4,6 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
 
 from src.auth.utils.permission_checker import get_permission_checker
-from src.contents.domain.contents import Contents
 from src.contents.infra.dto.response.contents_menu_response import ContentsMenuResponse
 from src.contents.infra.dto.response.contents_response import ContentsResponse
 from src.contents.infra.dto.response.creative_recommend import CreativeRecommend
@@ -127,7 +126,7 @@ def update_contents(
     update_contents_service: UpdateContentsUseCase = Depends(
         Provide[Container.update_contents_service]
     ),
-) -> Contents:
+) -> ContentsResponse:
     return update_contents_service.exec(contents_id, content_create, user)
 
 

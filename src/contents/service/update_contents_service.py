@@ -5,6 +5,7 @@ from src.common.utils.get_env_variable import get_env_variable
 from src.contents.domain.contents import Contents
 from src.contents.enums.contents_status import ContentsStatus
 from src.contents.infra.contents_repository import ContentsRepository
+from src.contents.infra.dto.response.contents_response import ContentsResponse
 from src.contents.routes.dto.request.contents_create import ContentsCreate
 from src.contents.routes.port.usecase.update_contents_usecase import (
     UpdateContentsUseCase,
@@ -35,7 +36,7 @@ class UpdateContentsService(UpdateContentsUseCase):
 
     def exec(
         self, contents_id: int, contents_create: ContentsCreate, user: User
-    ) -> Contents:
+    ) -> ContentsResponse:
 
         if not self.contents_repository.get_contents_detail(contents_id):
             raise NotFoundError("해당하는 콘텐츠가 존재하지 않습니다.")
