@@ -100,5 +100,5 @@ class BaseAudienceRepository(ABC):
         pass
 
     @abstractmethod
-    def get_actual_list_from_csv(self, uploaded_rows, target_column, entity):
+    def get_actual_list_from_csv(self, uploaded_rows, target_column, entity) -> list:
         pass

@@ -726,7 +726,7 @@ class AudienceSqlAlchemy:
 
             return upload_conditions
 
-    def get_actual_list_from_csv(self, uploaded_rows, target_column, entity):
+    def get_actual_list_from_csv(self, uploaded_rows, target_column, entity) -> list:
         with self.db() as db:
             selected_column = getattr(entity, target_column)
 

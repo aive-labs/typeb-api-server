@@ -143,7 +143,7 @@ class AudienceRepository(BaseAudienceRepository):
     def get_audience_upload_info(self, audience_id: str) -> list[UploadCondition]:
         return self.audience_sqlalchemy.get_audience_upload_info(audience_id)
 
-    def get_actual_list_from_csv(self, uploaded_rows, target_column, entity):
+    def get_actual_list_from_csv(self, uploaded_rows, target_column, entity) -> list:
         return self.audience_sqlalchemy.get_actual_list_from_csv(
             uploaded_rows, target_column, entity
         )

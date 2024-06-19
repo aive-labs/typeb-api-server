@@ -13,7 +13,7 @@ class CSVUploadAudienceService(CSVUploadUseCase):
         template_type = template_enum["_name_"]
 
         res = self.audience_repository.get_actual_list_from_csv(
-            uploaded_rows, col=template_type, schma_md=entity_name
+            uploaded_rows, target_column=template_type, entity=entity_name
         )
 
         checked_list = [row[0] for row in res[-1]]

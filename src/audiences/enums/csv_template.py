@@ -1,6 +1,4 @@
-from typing import Type
-
-from sqlalchemy.ext.declarative import DeclarativeMeta
+from typing import Type, Union
 
 from src.audiences.infra.entity.variable_table_list import CustomerInfoStatusEntity
 from src.common.enums.str_enum import StrEnum
@@ -11,8 +9,7 @@ class CsvTemplates(StrEnum):
     cus_cd = ("고객번호", CustomerInfoStatusEntity)
     shop_cd = ("매장번호", ChannelMasterEntity)
 
-    # source: Union[Type[CustomerInfoStatusEntity], Type[ChannelMasterEntity]]
-    source: Type[DeclarativeMeta]
+    source: Union[Type[CustomerInfoStatusEntity], Type[ChannelMasterEntity]]
 
     def __new__(cls, value, source):
         obj = str.__new__(cls)
