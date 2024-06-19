@@ -1,6 +1,7 @@
 from typing import Any
 
 from pandas import DataFrame
+from sqlalchemy.sql import Alias
 
 from src.audiences.domain.audience import Audience
 from src.audiences.domain.variable_table_mapping import VariableTableMapping
@@ -122,14 +123,16 @@ class AudienceRepository(BaseAudienceRepository):
     def get_tablename_by_variable_id(self, variable_id: str) -> VariableTableMapping:
         return self.audience_sqlalchemy.get_tablename_by_variable_id(variable_id)
 
-    def get_subquery_with_select_query_list(self, table_obj, select_query_list, idx):
+    def get_subquery_with_select_query_list(
+        self, table_obj, select_query_list, idx
+    ) -> Alias:
         return self.audience_sqlalchemy.get_subquery_with_select_query_list(
             table_obj, select_query_list, idx
         )
 
     def get_subquery_with_array_select_query_list(
         self, table_obj, array_select_query_list, idx
-    ):
+    ) -> Alias:
         return self.audience_sqlalchemy.get_subquery_with_array_select_query_list(
             table_obj, array_select_query_list, idx
         )

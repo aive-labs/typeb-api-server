@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 from pandas import DataFrame
+from sqlalchemy.sql import Alias
 
 from src.audiences.domain.audience import Audience
 from src.audiences.domain.variable_table_mapping import VariableTableMapping
@@ -82,13 +83,15 @@ class BaseAudienceRepository(ABC):
         pass
 
     @abstractmethod
-    def get_subquery_with_select_query_list(self, table_obj, select_query_list, idx):
+    def get_subquery_with_select_query_list(
+        self, table_obj, select_query_list, idx
+    ) -> Alias:
         pass
 
     @abstractmethod
     def get_subquery_with_array_select_query_list(
         self, table_obj, array_select_query_list, idx
-    ):
+    ) -> Alias:
         pass
 
     @abstractmethod

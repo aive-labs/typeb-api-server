@@ -1,5 +1,6 @@
 from fastapi import HTTPException
-from sqlalchemy import Alias, and_, except_, or_
+from sqlalchemy import and_, except_, or_
+from sqlalchemy.sql.expression import Alias
 
 from src.audiences.enums.audience_create_type import AudienceCreateType
 from src.audiences.enums.audience_status import AudienceStatus

@@ -4,6 +4,7 @@ from datetime import datetime
 
 from sqlalchemy import String, and_, func, or_, update
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import Alias
 
 from src.audiences.domain.audience import Audience
 from src.audiences.domain.variable_table_mapping import VariableTableMapping
@@ -409,7 +410,9 @@ class AudienceSqlAlchemy:
         else:
             return self.get_subquery_without_groupby
 
-    def get_subquery_with_select_query_list(self, table_obj, select_query_list, idx):
+    def get_subquery_with_select_query_list(
+        self, table_obj, select_query_list, idx
+    ) -> Alias:
         """
         서브쿼리가 필요없는 변수에 대한 집계쿼리 반환
         """
@@ -434,17 +437,19 @@ class AudienceSqlAlchemy:
 
     def update_expired_audience_status(self, audience_id: str):
         with self.db() as db:
-            db.query(AudienceEntity).filter(
-                AudienceEntity.audience_id == audience_id
-            ).update(
-                {
-                    "audience_status_code": "notdisplay",
-                    "audience_status_name": "미표시",
-                },
-                synchronize_session=False,
+            update_statement = (
+                update(AudienceEntity)
+                .where(AudienceEntity.audience_id == audience_id)
+                .values(
+                    audience_status_code="notdisplay", audience_status_name="미표시"
+                )
             )
+            result = db.execute(update_statement)
 
             db.commit()
+
+            if result.rowcount == 0:
+                raise ValueError("해당하는 타겟 오디언스가 존재하지 않습니다.")
 
     def delete_audience(self, audience_id: str):
         with self.db() as db:
