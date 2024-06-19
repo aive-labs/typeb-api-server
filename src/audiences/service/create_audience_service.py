@@ -9,9 +9,7 @@ from src.audiences.enums.csv_template import CsvTemplates
 from src.audiences.enums.predefined_variable_access import PredefinedVariableAccess
 from src.audiences.infra.audience_repository import AudienceRepository
 from src.audiences.infra.entity import variable_table_list
-from src.audiences.infra.entity.variable_table_list import (
-    CustomerInfoStatusEntity,
-)
+from src.audiences.infra.entity.variable_table_list import CustomerInfoStatusEntity
 from src.audiences.routes.dto.request.audience_create import AudienceCreate
 from src.audiences.routes.dto.response.audience_variable_combinations import (
     DataType,
@@ -66,7 +64,7 @@ class CreateAudienceService(CreateAudienceUseCase):
                 self.audience_repository.get_db_filter_conditions(new_audience_id)
             )
             conditions = audience_filter_condition[0].conditions
-            query = self._get_final_query(user, conditions)
+            query = self.get_final_query(user, conditions)
             execute_query_compiler(query)
 
             self.audience_repository.save_audience_list(new_audience_id, query)
@@ -131,110 +129,6 @@ class CreateAudienceService(CreateAudienceUseCase):
             raise ValueError("타겟 오디언스 생성 미지원 타입입니다.")
 
         return new_audience_id
-
-    def _get_final_query(self, user, filter_condition):
-        # **variable_type 반환(target / event) : 추가 필요
-        # 인덱스 기준 넘버링된 조건 입력되는 딕셔너리(condition_1_1, condition_1_2, condition_2_1 ...)
-        condition_dict = {}
-        filter_or_exclutions_query_list = []
-        # filters, exclusions 키 별로 조건들을 저장
-        for set_operator in ["filters", "exclusions"]:
-            and_conditions_list = filter_condition[set_operator]
-
-            if and_conditions_list:
-                condition_dict = {}
-                where_condition_dict = {}
-                # 전체 고객 모수 조회
-                all_customer = self.audience_repository.get_all_customer_by_audience(
-                    user=user
-                )
-
-                # 조건 넘버링 n1
-                for n1, and_conditions in enumerate(and_conditions_list, 1):
-                    n2 = 0
-                    for and_condition in and_conditions["and_conditions"]:
-                        query_type_dict = get_query_type_with_additional_filters(
-                            and_condition
-                        )
-                        n2 += 1
-
-                        if query_type_dict is None:
-                            raise Exception()
-
-                        # variable_type 고정 : target
-                        variable_table = (
-                            self.audience_repository.get_tablename_by_variable_id(
-                                query_type_dict["field"]
-                            )
-                        )
-                        table_name = variable_table.target_table
-
-                        query_type_dict["table_name"] = table_name
-                        condition_dict[f"condition_{n1}_{n2}"] = query_type_dict
-
-                table_condition_dict = classify_conditions_based_on_tablename(
-                    condition_dict
-                )
-
-                idx = 0
-                for table_name, condition_list in table_condition_dict.items():
-                    # 테이블 객체 불러오기
-                    variable_table = getattr(variable_table_list, table_name)
-
-                    # 테이블별 select list 생성
-                    select_query_list = []
-                    array_select_query_list = []
-                    for condition_name in condition_list:
-                        condition = condition_dict[condition_name]
-                        # 각 select line(conditoin_n1_n2)을 select list 에 append
-                        temp_select_query = build_select_query(
-                            variable_table, condition, condition_name
-                        )
-
-                        if temp_select_query is None:
-                            raise Exception()
-
-                        if temp_select_query[0]:
-                            select_query_list.append(temp_select_query[1])
-                        elif not temp_select_query[0]:
-                            array_select_query_list.append(temp_select_query[1])
-
-                    for temp_idx, temp_select_list in enumerate(
-                        [select_query_list, array_select_query_list]
-                    ):
-                        if temp_select_list:
-                            if temp_idx == 0:
-                                sub_alias = self.audience_repository.get_subquery_with_select_query_list(
-                                    variable_table, select_query_list, idx
-                                )
-                            else:
-                                # temp_idx == 1
-                                sub_alias = self.audience_repository.get_subquery_with_array_select_query_list(
-                                    variable_table, array_select_query_list, idx
-                                )
-                            where_condition_dict = group_where_conditions(
-                                sub_alias,
-                                condition_dict,
-                                condition_list,
-                                where_condition_dict,
-                            )
-                            all_customer = all_customer.outerjoin(  # pyright: ignore [reportAttributeAccessIssue]
-                                sub_alias,
-                                CustomerInfoStatusEntity.cus_cd == sub_alias.c.cus_cd,
-                            )
-                            idx += 1
-
-                total_where_condition = or_(
-                    *[and_(*same_n1) for same_n1 in where_condition_dict.values()]
-                )
-                all_customer = (
-                    all_customer.filter(  # pyright: ignore [reportAttributeAccessIssue]
-                        total_where_condition
-                    )
-                )
-                filter_or_exclutions_query_list.append(all_customer)
-        result = except_(*filter_or_exclutions_query_list)
-        return result
 
     def _create_audience_by_filter(
         self, ctype: str, audience_create: AudienceCreate, user: User
@@ -391,3 +285,111 @@ class CreateAudienceService(CreateAudienceUseCase):
             DataType(data_type=key, options=value) for key, value in added_dict.items()
         ]
         return data_type_list
+
+    def get_final_query(self, user, filter_condition):
+        # **variable_type 반환(target / event) : 추가 필요
+        # 인덱스 기준 넘버링된 조건 입력되는 딕셔너리(condition_1_1, condition_1_2, condition_2_1 ...)
+        condition_dict = {}
+        filter_or_exclutions_query_list = []
+        # filters, exclusions 키 별로 조건들을 저장
+        for set_operator in ["filters", "exclusions"]:
+            and_conditions_list = filter_condition[set_operator]
+
+            if and_conditions_list:
+                condition_dict = {}
+                where_condition_dict = {}
+                # 전체 고객 모수 조회
+                all_customer = self.audience_repository.get_all_customer_by_audience(
+                    user=user
+                )
+
+                # 조건 넘버링 n1
+                for n1, and_conditions in enumerate(and_conditions_list, 1):
+                    n2 = 0
+                    for and_condition in and_conditions["and_conditions"]:
+                        query_type_dict = get_query_type_with_additional_filters(
+                            and_condition
+                        )
+                        n2 += 1
+
+                        if query_type_dict is None:
+                            raise Exception()
+
+                        # variable_type 고정 : target
+                        variable_table = (
+                            self.audience_repository.get_tablename_by_variable_id(
+                                query_type_dict["field"]
+                            )
+                        )
+                        table_name = variable_table.target_table
+
+                        query_type_dict["table_name"] = table_name
+                        condition_dict[f"condition_{n1}_{n2}"] = query_type_dict
+
+                table_condition_dict = classify_conditions_based_on_tablename(
+                    condition_dict
+                )
+
+                idx = 0
+                for table_name, condition_list in table_condition_dict.items():
+                    # 테이블 객체 불러오기
+                    variable_table = getattr(variable_table_list, table_name)
+
+                    # 테이블별 select list 생성
+                    select_query_list = []
+                    array_select_query_list = []
+                    for condition_name in condition_list:
+                        condition = condition_dict[condition_name]
+                        # 각 select line(conditoin_n1_n2)을 select list 에 append
+                        temp_select_query = build_select_query(
+                            variable_table, condition, condition_name
+                        )
+
+                        if temp_select_query is None:
+                            raise Exception()
+
+                        if temp_select_query[0]:
+                            select_query_list.append(temp_select_query[1])
+                        elif not temp_select_query[0]:
+                            array_select_query_list.append(temp_select_query[1])
+
+                    for temp_idx, temp_select_list in enumerate(
+                        [select_query_list, array_select_query_list]
+                    ):
+                        if temp_select_list:
+                            if temp_idx == 0:
+                                sub_alias = self.audience_repository.get_subquery_with_select_query_list(
+                                    variable_table, select_query_list, idx
+                                )
+                            else:
+                                # temp_idx == 1
+                                sub_alias = self.audience_repository.get_subquery_with_array_select_query_list(
+                                    variable_table, array_select_query_list, idx
+                                )
+
+                            if not sub_alias:
+                                raise Exception("sub alias is None")
+
+                            where_condition_dict = group_where_conditions(
+                                sub_alias,
+                                condition_dict,
+                                condition_list,
+                                where_condition_dict,
+                            )
+                            all_customer = all_customer.outerjoin(  # pyright: ignore [reportAttributeAccessIssue]
+                                sub_alias,
+                                CustomerInfoStatusEntity.cus_cd == sub_alias.c.cus_cd,
+                            )
+                            idx += 1
+
+                total_where_condition = or_(
+                    *[and_(*same_n1) for same_n1 in where_condition_dict.values()]
+                )
+                all_customer = (
+                    all_customer.filter(  # pyright: ignore [reportAttributeAccessIssue]
+                        total_where_condition
+                    )
+                )
+                filter_or_exclutions_query_list.append(all_customer)
+        result = except_(*filter_or_exclutions_query_list)
+        return result

@@ -112,6 +112,12 @@ class BaseAudienceRepository(ABC):
         pass
 
     @abstractmethod
+    def update_by_filter(
+        self, audience_id, insert_to_filter_conditions, insert_to_audiences
+    ):
+        pass
+
+    @abstractmethod
     def update_by_upload(
         self,
         filter_audience,

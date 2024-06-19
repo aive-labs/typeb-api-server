@@ -1,14 +1,23 @@
 from fastapi import HTTPException
+from sqlalchemy import and_, except_, or_
 
 from src.audiences.enums.audience_create_type import AudienceCreateType
 from src.audiences.enums.audience_status import AudienceStatus
 from src.audiences.enums.audience_type import AudienceType
 from src.audiences.enums.csv_template import CsvTemplates
+from src.audiences.infra.entity import variable_table_list
+from src.audiences.infra.entity.variable_table_list import CustomerInfoStatusEntity
 from src.audiences.routes.dto.request.audience_update import AudienceUpdate
 from src.audiences.routes.port.usecase.update_audience_usecase import (
     UpdateAudienceUseCase,
 )
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
+from src.audiences.utils.query_builder import (
+    build_select_query,
+    classify_conditions_based_on_tablename,
+    get_query_type_with_additional_filters,
+    group_where_conditions,
+)
 from src.users.domain.user import User
 
 
@@ -31,8 +40,6 @@ class UpdateAudienceService(UpdateAudienceUseCase):
         if create_type_code == AudienceCreateType.Filter.value:
             self.update_audience_by_filter(
                 create_type_code, audience_id, audience_update, user
-            ).update_audience_by_filter(
-                user, create_type_code, audience_id, audience_update
             )
             self.save_audience_customer_list(audience_id, user)
         elif create_type_code == AudienceCreateType.Upload.value:
@@ -45,15 +52,13 @@ class UpdateAudienceService(UpdateAudienceUseCase):
         # background_task.add_task(execute_target_audience_summary, db, res)
 
     def save_audience_customer_list(self, audience_id: str, user: User):
-        pass
-        # creation_options = self.audience_repository.get_db_filter_conditions(
-        #     audience_id
-        # )
-        # options = creation_options[0].conditions
-        # query = get_final_query(user, options)
-        # compiled_query = execute_query_compiler(query)
-        #
-        # self.audience_repository.save_audience_list(audience_id)
+        creation_options = self.audience_repository.get_db_filter_conditions(
+            audience_id
+        )
+        options = creation_options[0].conditions
+        query = self.get_final_query(user, options)
+
+        self.audience_repository.save_audience_list(audience_id, query)
 
     def check_duplicated_name(self, audience_id, audience_update):
         duplicated_name_audience = self.audience_repository.get_audience_by_name(
@@ -151,64 +156,143 @@ class UpdateAudienceService(UpdateAudienceUseCase):
         self, create_type_code, audience_id, audience_update, user
     ):
 
-        # # 생성
-        # """
-        # 생성 로직.. -> 임시 테이블에 저장
-        # -DB가 모두 정상적으로 업데이트 되었을 때, INSERT TO & 임시 테이블 삭제
-        # -DB 업데이트중 Fail 발생 시, 임시 테이블 삭제
-        # """
-        #
-        # # Audiences 저장
-        # insert_to_audiences = {
-        #     "audience_name": audience_update.audience_name,
-        #     "create_type_code": create_type_code,
-        #     "updated_by": str(user.user_id),
-        #     "updated_at": audience_update.updated_at,
-        # }
-        #
-        # # Audience filter conditions 저장 - 새로 생성 필요
-        # filters = [i.dict() for i in audience_update.filters]
-        # exclusions = [i.dict() for i in audience_update.exclusions]
-        #
-        # insert_to_filter_conditions = {
-        #     "conditions": {"filters": filters, "exclusions": exclusions},
-        #     "exclusion_condition": {"exclusion_condition": exclusions},
-        #     # TODO - 설명 문장 수정 필요
-        #     "exclusion_description": ["1샘플 수정문장입니다.", "2샘플 수정문장입니다."],
-        #     "updated_at": audience_update.updated_at,
-        # }
-        #
-        # # Filter 조건
-        # filter_audience = {"audience_id": audience_id}
-        #
-        # self.audience_repository.update_by_filter(
-        #     audience_id, insert_to_filter_conditions, insert_to_audiences
-        # )
-        #
-        # try:
-        #
-        #     # audiences
-        #     db.query(schema.Audience).filter_by(**filter_audience).update(
-        #         insert_to_audiences
-        #     )
-        #
-        #     # # #audience_filter_conditions
-        #     stt = db.query(schema.AudienceQueries).filter_by(**filter_audience).first()
-        #     if stt:
-        #         db.query(schema.AudienceQueries).filter_by(**filter_audience).update(
-        #             insert_to_filter_conditions
-        #         )
-        #     else:
-        #         insert_to_filter_conditions["audience_id"] = audience_id
-        #         db.add(schema.AudienceQueries(**insert_to_filter_conditions))
-        #
-        #     db.commit()
-        #
-        # except Exception:
-        #     db.rollback()
-        #     raise HTTPException(status_code=400, detail="audience creation failed")
-        #
-        # finally:
-        #     db.close()
+        # 생성
+        """
+        생성 로직.. -> 임시 테이블에 저장
+        -DB가 모두 정상적으로 업데이트 되었을 때, INSERT TO & 임시 테이블 삭제
+        -DB 업데이트중 Fail 발생 시, 임시 테이블 삭제
+        """
+
+        # Audiences 저장
+        insert_to_audiences = {
+            "audience_name": audience_update.audience_name,
+            "create_type_code": create_type_code,
+            "updated_by": str(user.user_id),
+            "updated_at": audience_update.updated_at,
+        }
+
+        # Audience filter conditions 저장 - 새로 생성 필요
+        filters = [i.dict() for i in audience_update.filters]
+        exclusions = [i.dict() for i in audience_update.exclusions]
+
+        insert_to_filter_conditions = {
+            "conditions": {"filters": filters, "exclusions": exclusions},
+            "exclusion_condition": {"exclusion_condition": exclusions},
+            # TODO - 설명 문장 수정 필요
+            "exclusion_description": ["1샘플 수정문장입니다.", "2샘플 수정문장입니다."],
+            "updated_at": audience_update.updated_at,
+        }
+
+        self.audience_repository.update_by_filter(
+            audience_id, insert_to_filter_conditions, insert_to_audiences
+        )
 
         return audience_id
+
+    def get_final_query(self, user, filter_condition):
+        # **variable_type 반환(target / event) : 추가 필요
+        # 인덱스 기준 넘버링된 조건 입력되는 딕셔너리(condition_1_1, condition_1_2, condition_2_1 ...)
+        condition_dict = {}
+        filter_or_exclutions_query_list = []
+        # filters, exclusions 키 별로 조건들을 저장
+        for set_operator in ["filters", "exclusions"]:
+            and_conditions_list = filter_condition[set_operator]
+
+            if and_conditions_list:
+                condition_dict = {}
+                where_condition_dict = {}
+                # 전체 고객 모수 조회
+                all_customer = self.audience_repository.get_all_customer_by_audience(
+                    user=user
+                )
+
+                # 조건 넘버링 n1
+                for n1, and_conditions in enumerate(and_conditions_list, 1):
+                    n2 = 0
+                    for and_condition in and_conditions["and_conditions"]:
+                        query_type_dict = get_query_type_with_additional_filters(
+                            and_condition
+                        )
+                        n2 += 1
+
+                        if query_type_dict is None:
+                            raise Exception()
+
+                        # variable_type 고정 : target
+                        variable_table = (
+                            self.audience_repository.get_tablename_by_variable_id(
+                                query_type_dict["field"]
+                            )
+                        )
+                        table_name = variable_table.target_table
+
+                        query_type_dict["table_name"] = table_name
+                        condition_dict[f"condition_{n1}_{n2}"] = query_type_dict
+
+                table_condition_dict = classify_conditions_based_on_tablename(
+                    condition_dict
+                )
+
+                idx = 0
+                for table_name, condition_list in table_condition_dict.items():
+                    # 테이블 객체 불러오기
+                    variable_table = getattr(variable_table_list, table_name)
+
+                    # 테이블별 select list 생성
+                    select_query_list = []
+                    array_select_query_list = []
+                    for condition_name in condition_list:
+                        condition = condition_dict[condition_name]
+                        # 각 select line(conditoin_n1_n2)을 select list 에 append
+                        temp_select_query = build_select_query(
+                            variable_table, condition, condition_name
+                        )
+
+                        if temp_select_query is None:
+                            raise Exception()
+
+                        if temp_select_query[0]:
+                            select_query_list.append(temp_select_query[1])
+                        elif not temp_select_query[0]:
+                            array_select_query_list.append(temp_select_query[1])
+
+                    for temp_idx, temp_select_list in enumerate(
+                        [select_query_list, array_select_query_list]
+                    ):
+                        if temp_select_list:
+                            if temp_idx == 0:
+                                sub_alias = self.audience_repository.get_subquery_with_select_query_list(
+                                    variable_table, select_query_list, idx
+                                )
+                            else:
+                                # temp_idx == 1
+                                sub_alias = self.audience_repository.get_subquery_with_array_select_query_list(
+                                    variable_table, array_select_query_list, idx
+                                )
+
+                            if not sub_alias:
+                                raise Exception("sub alias is None")
+
+                            where_condition_dict = group_where_conditions(
+                                sub_alias,
+                                condition_dict,
+                                condition_list,
+                                where_condition_dict,
+                            )
+                            all_customer = all_customer.outerjoin(  # pyright: ignore [reportAttributeAccessIssue]
+                                sub_alias,
+                                CustomerInfoStatusEntity.cus_cd == sub_alias.c.cus_cd,
+                            )
+                            idx += 1
+
+                total_where_condition = or_(
+                    *[and_(*same_n1) for same_n1 in where_condition_dict.values()]
+                )
+                all_customer = (
+                    all_customer.filter(  # pyright: ignore [reportAttributeAccessIssue]
+                        total_where_condition
+                    )
+                )
+                filter_or_exclutions_query_list.append(all_customer)
+        result = except_(*filter_or_exclutions_query_list)
+        return result
