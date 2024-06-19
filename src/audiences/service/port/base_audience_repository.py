@@ -20,7 +20,7 @@ class BaseAudienceRepository(ABC):
     @abstractmethod
     def get_audiences(
         self, user: User, is_exclude: bool | None = None
-    ) -> tuple[list[dict[Any, Any]], DataFrame]:
+    ) -> tuple[list[dict[Any, Any]] | None, DataFrame | None]:
         pass
 
     @abstractmethod

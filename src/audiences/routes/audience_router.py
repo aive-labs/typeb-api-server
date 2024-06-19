@@ -30,7 +30,7 @@ from src.audiences.routes.port.usecase.create_audience_usecase import (
 )
 from src.audiences.routes.port.usecase.csv_upload_usecase import CSVUploadUseCase
 from src.audiences.routes.port.usecase.delete_audience_usecase import (
-    DeleteAudienceUsecase,
+    DeleteAudienceUseCase,
 )
 from src.audiences.routes.port.usecase.download_audience_usecase import (
     DownloadAudienceUseCase,
@@ -142,7 +142,7 @@ def get_audience_conditions(
 def delete_audience(
     audience_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
-    delete_audience_service: DeleteAudienceUsecase = Depends(
+    delete_audience_service: DeleteAudienceUseCase = Depends(
         Provide[Container.delete_audience_service]
     ),
 ):
@@ -165,7 +165,7 @@ def delete_audience(
     -exclude objectid from cus_cd
     1. cust_campaign_objects
     """
-    delete_audience_service.delete_audience(audience_id=audience_id)
+    delete_audience_service.exec(audience_id=audience_id)
 
 
 @audience_router.get("/audiences/{audience_id}/download")
@@ -242,7 +242,7 @@ async def check_csv_template(
 @inject
 def audience_update_cycles(
     audience_id: str,
-    update_cycle: TargetAudienceUpdateCycle,
+    cycle: TargetAudienceUpdateCycle,
     user=Depends(get_permission_checker(required_permissions=[])),
     audience_update_cycle_service: AudienceUpdateCycleUseCase = Depends(
         Provide[Container.audience_update_cycle_service]
@@ -255,4 +255,4 @@ def audience_update_cycles(
             detail={"code": "modify/03", "message": "수정 권한이 없는 사용자입니다."},
         )
 
-    audience_update_cycle_service.exec(audience_id, update_cycle.value)
+    audience_update_cycle_service.exec(audience_id, cycle.value)

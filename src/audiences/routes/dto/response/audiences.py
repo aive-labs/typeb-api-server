@@ -35,7 +35,7 @@ class AudienceRes(BaseModel):
 
 class AudienceResponse(BaseModel):
     audiences: list[AudienceRes]
-    filters: AudienceFilter
+    filters: AudienceFilter | None = None
 
     class Config:
         from_attributes = True

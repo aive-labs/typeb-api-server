@@ -23,10 +23,13 @@ class AudienceRepository(BaseAudienceRepository):
 
     def get_audiences(
         self, user: User, is_exclude: bool | None = None
-    ) -> tuple[list[dict[Any, Any]], DataFrame]:
+    ) -> tuple[list[dict[Any, Any]] | None, DataFrame | None]:
         audiences_info = self.audience_sqlalchemy.get_audiences(
             user=user, is_exclude=is_exclude
         )
+
+        if not audiences_info:
+            return (None, None)
 
         audience_df = DataConverter.pydantic_to_df(audiences_info)
 

@@ -2,17 +2,17 @@ from fastapi import HTTPException
 
 from src.audiences.enums.audience_type import AudienceType
 from src.audiences.routes.port.usecase.delete_audience_usecase import (
-    DeleteAudienceUsecase,
+    DeleteAudienceUseCase,
 )
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
 from src.campaign.enums.campagin_status import CampaignStatus
 
 
-class DeleteAudienceService(DeleteAudienceUsecase):
+class DeleteAudienceService(DeleteAudienceUseCase):
     def __init__(self, audience_repository: BaseAudienceRepository):
         self.audience_repository = audience_repository
 
-    def delete_audience(self, audience_id: str):
+    def exec(self, audience_id: str):
         """타겟 오디언스 삭제 함수
 
         -연결된 캠페인이 존재하는 경우

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class DeleteAudienceUsecase(ABC):
+class DeleteAudienceUseCase(ABC):
     @abstractmethod
-    def delete_audience(self, audience_id: str):
+    def exec(self, audience_id: str):
         pass

@@ -41,6 +41,9 @@ class GetAudienceService(GetAudienceUseCase):
             user, is_exclude
         )
 
+        if not audiences:
+            return AudienceResponse(audiences=[], filters=None)
+
         audience_response = [transform_data(audience) for audience in audiences]
 
         filter_obj = FilterProcessing("target_audience")
