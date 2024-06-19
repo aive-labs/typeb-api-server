@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from sqlalchemy import and_, except_, or_
+from sqlalchemy import Alias, and_, except_, or_
 
 from src.audiences.enums.audience_create_type import AudienceCreateType
 from src.audiences.enums.audience_status import AudienceStatus
@@ -261,17 +261,18 @@ class UpdateAudienceService(UpdateAudienceUseCase):
                     ):
                         if temp_select_list:
                             if temp_idx == 0:
-                                sub_alias = self.audience_repository.get_subquery_with_select_query_list(
-                                    variable_table, select_query_list, idx
+                                sub_alias: Alias = (
+                                    self.audience_repository.get_subquery_with_select_query_list(
+                                        variable_table, select_query_list, idx
+                                    )
                                 )
                             else:
                                 # temp_idx == 1
-                                sub_alias = self.audience_repository.get_subquery_with_array_select_query_list(
-                                    variable_table, array_select_query_list, idx
+                                sub_alias: Alias = (
+                                    self.audience_repository.get_subquery_with_array_select_query_list(
+                                        variable_table, array_select_query_list, idx
+                                    )
                                 )
-
-                            if not sub_alias:
-                                raise Exception("sub alias is None")
 
                             where_condition_dict = group_where_conditions(
                                 sub_alias,

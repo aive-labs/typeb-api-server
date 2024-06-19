@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from sqlalchemy import and_, except_, or_
+from sqlalchemy import Alias, and_, except_, or_
 
 from src.audiences.enums.audience_create_type import AudienceCreateType
 from src.audiences.enums.audience_status import AudienceStatus
@@ -302,6 +302,9 @@ class CreateAudienceService(CreateAudienceUseCase):
                 all_customer = self.audience_repository.get_all_customer_by_audience(
                     user=user
                 )
+                print("all customer")
+                print(all_customer)
+                print(type(all_customer))
 
                 # 조건 넘버링 n1
                 for n1, and_conditions in enumerate(and_conditions_list, 1):
@@ -358,17 +361,18 @@ class CreateAudienceService(CreateAudienceUseCase):
                     ):
                         if temp_select_list:
                             if temp_idx == 0:
-                                sub_alias = self.audience_repository.get_subquery_with_select_query_list(
-                                    variable_table, select_query_list, idx
+                                sub_alias: Alias = (
+                                    self.audience_repository.get_subquery_with_select_query_list(
+                                        variable_table, select_query_list, idx
+                                    )
                                 )
                             else:
                                 # temp_idx == 1
-                                sub_alias = self.audience_repository.get_subquery_with_array_select_query_list(
-                                    variable_table, array_select_query_list, idx
+                                sub_alias: Alias = (
+                                    self.audience_repository.get_subquery_with_array_select_query_list(
+                                        variable_table, array_select_query_list, idx
+                                    )
                                 )
-
-                            if not sub_alias:
-                                raise Exception("sub alias is None")
 
                             where_condition_dict = group_where_conditions(
                                 sub_alias,
