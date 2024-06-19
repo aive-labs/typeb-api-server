@@ -95,6 +95,7 @@ class UpdateContentsService(UpdateContentsUseCase):
         )
 
         contents = Contents(
+            contents_id=contents_id,
             contents_name=contents_create.contents_name,
             contents_status=contents_status,
             contents_body=contents_create.contents_body,
