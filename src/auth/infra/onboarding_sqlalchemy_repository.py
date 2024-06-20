@@ -49,10 +49,20 @@ class OnboardingSqlAlchemyRepository:
             if not entity:
                 raise NotFoundError("온보딩 관련 데이터가 존재하지 않습니다.")
 
-            entity.onboarding_status = (
+            entity.onboarding_status = (  # pyright: ignore [reportAttributeAccessIssue]
                 status.value
-            )  # pyright: ignore [reportAttributeAccessIssue]
+            )
             db.commit()
             db.refresh(entity)
 
             return ModelConverter.entity_to_model(entity, Onboarding)
+
+    def insert_first_onboarding(self, mall_id):
+        with self.db() as db:
+            db.add(
+                OnboardingEntity(
+                    mall_id=mall_id,
+                    onboarding_status=OnboardingStatus.CAFE24_INTEGRATION_REQUIRED.value,
+                )
+            )
+            db.commit()

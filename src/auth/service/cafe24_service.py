@@ -62,6 +62,8 @@ class Cafe24Service(BaseOauthService):
             str(user.user_id), mall_id, hashed_state
         )
 
+        self.onboarding_repository.insert_first_onboarding(mall_id)
+
         return self._generate_authentication_url(
             mall_id, self.client_id, hashed_state, self.redirect_uri, self.scope
         )

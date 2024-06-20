@@ -18,3 +18,6 @@ class OnboardingRepository(BaseOnboardingRepository):
         self, mall_id: str, status: OnboardingStatus
     ) -> Onboarding:
         return self.onboarding_sqlalchemy.update_onboarding_status(mall_id, status)
+
+    def insert_first_onboarding(self, mall_id: str):
+        self.onboarding_sqlalchemy.insert_first_onboarding(mall_id)

@@ -12,3 +12,7 @@ class BaseOnboardingRepository(ABC):
     @abstractmethod
     def update_onboarding_status(self, mall_id, status) -> Onboarding:
         pass
+
+    @abstractmethod
+    def insert_first_onboarding(self, mall_id: str):
+        pass
