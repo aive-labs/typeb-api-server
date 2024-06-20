@@ -30,7 +30,10 @@ class Cafe24SqlAlchemyRepository:
     def insert_basic_info(self, user_id: str, mall_id: str, state_token: str):
         with self.db() as db:
             insert_statement = insert(Cafe24IntegrationEntity).values(
-                user_id=user_id, mall_id=mall_id, state_token=state_token
+                user_id=user_id,
+                mall_id=mall_id,
+                state_token=state_token,
+                data_migration_status=CAFE24DataMigrationStatus.PENDING.value,
             )
 
             upsert_statement = insert_statement.on_conflict_do_update(
