@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from src.auth.domain.onboarding import Onboarding
+from src.auth.routes.dto.response.message_sender_response import MessageSenderResponse
 
 
 class BaseOnboardingRepository(ABC):
@@ -15,4 +16,12 @@ class BaseOnboardingRepository(ABC):
 
     @abstractmethod
     def insert_first_onboarding(self, mall_id: str):
+        pass
+
+    @abstractmethod
+    def save_message_sender(self, mall_id, message_sender):
+        pass
+
+    @abstractmethod
+    def get_message_sender(self, mall_id) -> MessageSenderResponse | None:
         pass

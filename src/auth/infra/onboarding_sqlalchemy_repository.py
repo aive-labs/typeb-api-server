@@ -5,7 +5,10 @@ from sqlalchemy.orm import Session
 
 from src.auth.domain.onboarding import Onboarding
 from src.auth.enums.onboarding_status import OnboardingStatus
+from src.auth.infra.entity.message_integration_entity import MessageIntegrationEntity
 from src.auth.infra.entity.onboarding_entity import OnboardingEntity
+from src.auth.routes.dto.request.message_sender_request import MessageSenderRequest
+from src.auth.routes.dto.response.message_sender_response import MessageSenderResponse
 from src.core.exceptions import NotFoundError
 from src.utils.file.model_converter import ModelConverter
 
@@ -66,3 +69,33 @@ class OnboardingSqlAlchemyRepository:
                 )
             )
             db.commit()
+
+    def save_message_sender(self, mall_id, message_sender: MessageSenderRequest):
+        with self.db() as db:
+            db.add(
+                MessageIntegrationEntity(
+                    mall_id=mall_id,
+                    sender_name=message_sender.sender_name,
+                    sender_phone_number=message_sender.sender_phone_number,
+                    opt_out_phone_number=message_sender.opt_out_phone_number,
+                )
+            )
+
+            db.commit()
+
+    def get_message_sender(self, mall_id) -> MessageSenderResponse | None:
+        with self.db() as db:
+            entity = (
+                db.query(MessageIntegrationEntity)
+                .filter(MessageIntegrationEntity.mall_id == mall_id)
+                .first()
+            )
+
+            if not entity:
+                return None
+
+            return MessageSenderResponse(
+                sender_name=entity.sender_name,
+                sender_phone_number=entity.sender_phone_number,
+                opt_out_phone_number=entity.opt_out_phone_number,
+            )

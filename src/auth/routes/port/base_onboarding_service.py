@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 
 from src.auth.enums.onboarding_status import OnboardingStatus
-from src.auth.routes.dto.request.kakao_channel_request import KakaoChannelRequest
 from src.auth.routes.dto.request.message_sender_request import MessageSenderRequest
+from src.auth.routes.dto.response.message_sender_response import MessageSenderResponse
 from src.auth.routes.dto.response.onboarding_response import OnboardingResponse
 
 
@@ -19,17 +19,19 @@ class BaseOnboardingService(ABC):
         pass
 
     @abstractmethod
-    def register_message_sender(self, mall_id: str, sender: MessageSenderRequest):
+    def register_message_sender(
+        self, mall_id: str, message_sender: MessageSenderRequest
+    ):
+        pass
+
+    @abstractmethod
+    def get_message_sender(self, mall_id: str) -> MessageSenderResponse | None:
         pass
 
     # @abstractmethod
-    # def get_message_sender(self, mall_id: str) -> MessageSenderResponse:
+    # def register_kakao_channel(self, mall_id: str, kakao_channel: KakaoChannelRequest):
     #     pass
-
-    @abstractmethod
-    def register_kakao_channel(self, mall_id: str, kakao_channel: KakaoChannelRequest):
-        pass
-
+    #
     # @abstractmethod
     # def get_kakao_channel(self, mall_id: str) -> KakaoChannelResponse:
     #     pass
