@@ -4,11 +4,13 @@ import os
 import requests
 from dotenv import load_dotenv
 
+from src.auth.enums.onboarding_status import OnboardingStatus
 from src.auth.infra.dto.cafe24_token import Cafe24TokenData
 from src.auth.infra.dto.external_integration import ExternalIntegration
 from src.auth.routes.dto.request.cafe24_token_request import OauthAuthenticationRequest
 from src.auth.routes.port.base_oauth_service import BaseOauthService
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
+from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
 from src.auth.utils.hash_password import generate_hash
 from src.users.service.port.base_user_repository import BaseUserRepository
 
@@ -19,9 +21,11 @@ class Cafe24Service(BaseOauthService):
         self,
         user_repository: BaseUserRepository,
         cafe24_repository: BaseOauthRepository,
+        onboarding_repository: BaseOnboardingRepository,
     ):
         self.user_repository = user_repository
         self.cafe24_repository = cafe24_repository
+        self.onboarding_repository = onboarding_repository
 
         self._load_environment_variables()
 
@@ -82,6 +86,10 @@ class Cafe24Service(BaseOauthService):
         cafe24_tokens = Cafe24TokenData(**token_data)
 
         self.cafe24_repository.save_tokens(cafe24_tokens)
+
+        self.onboarding_repository.update_onboarding_status(
+            cafe24_state_token.mall_id, OnboardingStatus.MIGRATION_IN_PROGRESS
+        )
 
     def _generate_authentication_url(
         self, mall_id: str, client_id: str, state: str, redirect_uri: str, scope: str

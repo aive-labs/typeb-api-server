@@ -112,6 +112,7 @@ class Container(containers.DeclarativeContainer):
         provides=Cafe24Service,
         user_repository=user_repository,
         cafe24_repository=cafe24_repository,
+        onboarding_repository=onboarding_repository,
     )
 
     token_service = providers.Singleton(provides=TokenService)

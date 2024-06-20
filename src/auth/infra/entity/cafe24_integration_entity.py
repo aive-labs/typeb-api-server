@@ -3,8 +3,8 @@ from sqlalchemy import Column, DateTime, Integer, String, func
 from src.core.database import Base as Base
 
 
-class Cafe24TokenEntity(Base):
-    __tablename__ = "cafe24_token"
+class Cafe24IntegrationEntity(Base):
+    __tablename__ = "cafe24_integration"
 
     user_id = Column(Integer, nullable=False)
     mall_id = Column(String, primary_key=True, nullable=False)
@@ -16,5 +16,6 @@ class Cafe24TokenEntity(Base):
     scopes = Column(String)
     shop_no = Column(String)
     cafe24_user_id = Column(String)
+    data_migration_status = Column(String, nullable=False)
     created_dt = Column(DateTime, default=func.now())
     updated_dt = Column(DateTime, default=func.now(), onupdate=func.now())

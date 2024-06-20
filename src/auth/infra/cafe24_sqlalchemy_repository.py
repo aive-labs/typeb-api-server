@@ -6,10 +6,11 @@ from sqlalchemy import func, update
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
+from src.auth.enums.cafe24_data_migration_status import CAFE24DataMigrationStatus
 from src.auth.infra.dto.cafe24_mall_info import Cafe24MallInfo
 from src.auth.infra.dto.cafe24_state_token import Cafe24StateToken
 from src.auth.infra.dto.cafe24_token import Cafe24TokenData
-from src.auth.infra.entity.cafe24_token_entity import Cafe24TokenEntity
+from src.auth.infra.entity.cafe24_integration_entity import Cafe24IntegrationEntity
 from src.core.exceptions import NotFoundError
 
 
@@ -28,7 +29,7 @@ class Cafe24SqlAlchemyRepository:
 
     def insert_basic_info(self, user_id: str, mall_id: str, state_token: str):
         with self.db() as db:
-            insert_statement = insert(Cafe24TokenEntity).values(
+            insert_statement = insert(Cafe24IntegrationEntity).values(
                 user_id=user_id, mall_id=mall_id, state_token=state_token
             )
 
@@ -43,8 +44,8 @@ class Cafe24SqlAlchemyRepository:
     def is_existing_state_token(self, state_token: str) -> Cafe24StateToken:
         with self.db() as db:
             token = (
-                db.query(Cafe24TokenEntity)
-                .filter(Cafe24TokenEntity.state_token == state_token)
+                db.query(Cafe24IntegrationEntity)
+                .filter(Cafe24IntegrationEntity.state_token == state_token)
                 .first()
             )
 
@@ -57,9 +58,9 @@ class Cafe24SqlAlchemyRepository:
 
     def get_cafe24_info_by_user_id(self, user_id: str):
         with self.db() as db:
-            entities: List[Cafe24TokenEntity] = (
-                db.query(Cafe24TokenEntity)
-                .filter(Cafe24TokenEntity.user_id == user_id)
+            entities: List[Cafe24IntegrationEntity] = (
+                db.query(Cafe24IntegrationEntity)
+                .filter(Cafe24IntegrationEntity.user_id == user_id)
                 .all()
             )
 
@@ -79,8 +80,8 @@ class Cafe24SqlAlchemyRepository:
     def get_state_token(self, state_token: str) -> Cafe24StateToken:
         with self.db() as db:
             entity = (
-                db.query(Cafe24TokenEntity)
-                .filter(Cafe24TokenEntity.state_token == state_token)
+                db.query(Cafe24IntegrationEntity)
+                .filter(Cafe24IntegrationEntity.state_token == state_token)
                 .first()
             )
 
@@ -94,7 +95,7 @@ class Cafe24SqlAlchemyRepository:
     def save_tokens(self, cafe24_tokens: Cafe24TokenData):
         with self.db() as db:
             entity = (
-                db.query(Cafe24TokenEntity)
+                db.query(Cafe24IntegrationEntity)
                 .filter_by(mall_id=cafe24_tokens.mall_id)
                 .first()
             )
@@ -103,8 +104,8 @@ class Cafe24SqlAlchemyRepository:
                 raise NotFoundError("해당 state 토큰을 찾을 수 없습니다.")
 
             statement = (
-                update(Cafe24TokenEntity)
-                .where(Cafe24TokenEntity.mall_id == cafe24_tokens.mall_id)
+                update(Cafe24IntegrationEntity)
+                .where(Cafe24IntegrationEntity.mall_id == cafe24_tokens.mall_id)
                 .values(
                     access_token=cafe24_tokens.access_token,
                     access_token_expired_at=cafe24_tokens.expires_at,
@@ -113,6 +114,7 @@ class Cafe24SqlAlchemyRepository:
                     scopes=",".join(cafe24_tokens.scopes),
                     shop_no=cafe24_tokens.shop_no,
                     cafe24_user_id=cafe24_tokens.user_id,
+                    data_migration_status=CAFE24DataMigrationStatus.PENDING.value,
                     updated_dt=func.now(),
                 )
             )
