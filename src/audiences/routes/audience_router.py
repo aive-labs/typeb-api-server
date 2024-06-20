@@ -65,7 +65,9 @@ def get_audiences(
     return get_audience_service.get_all_audiences(user, is_exclude)
 
 
-@audience_router.get("/audiences/{audience_id}/info", response_model=AudienceStatsInfo)
+@audience_router.get(
+    "/audiences/{audience_id}/summary", response_model=AudienceStatsInfo
+)
 @inject
 def get_audience_detail(
     audience_id: str,
@@ -115,7 +117,7 @@ def get_audience_variable_combinations(
     )
 
 
-@audience_router.get("/audiences/{audience_id}/creation-options")
+@audience_router.get("/audiences/{audience_id}")
 @inject
 def get_audience_creation_options(
     audience_id: str,
