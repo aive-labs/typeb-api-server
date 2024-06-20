@@ -5,7 +5,9 @@ from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 
+from src.auth.enums.onboarding_status import OnboardingStatus
 from src.auth.routes.port.base_oauth_service import BaseOauthService
+from src.auth.routes.port.base_onboarding_service import BaseOnboardingService
 from src.auth.service.auth_service import AuthService
 from src.auth.service.token_service import TokenService
 from src.auth.utils.permission_checker import get_permission_checker
@@ -43,6 +45,9 @@ def sign_up(
 def get_me(
     user=Depends(get_permission_checker(required_permissions=[])),
     cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
+    onboarding_service: BaseOnboardingService = Depends(
+        Provide[Container.onboarding_service]
+    ),
 ):
     permissions = UserPermissions(
         gnb_permissions=GNBPermissions.with_admin(),
@@ -53,7 +58,18 @@ def get_me(
     )
 
     cafe24_integration = cafe24_service.get_connected_info_by_user(user.user_id)
-    return UserProfileResponse.from_user(user, permissions, cafe24_integration)
+
+    if cafe24_integration is None:
+        onboarding_status = OnboardingStatus.CAFE24_INTEGRATION_REQUIRED.value
+    else:
+        onboarding = onboarding_service.get_onboarding_status(
+            cafe24_integration.mall_id
+        )
+        onboarding_status = onboarding.onboarding_status.value
+
+    return UserProfileResponse.from_user(
+        user, permissions, cafe24_integration, onboarding_status
+    )
 
 
 @user_router.post("/signin")

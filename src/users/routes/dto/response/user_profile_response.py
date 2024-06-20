@@ -17,6 +17,8 @@ class UserProfileResponse(BaseModel):
     parent_dept_cd: Optional[str] = None
     language: str
     test_callback_number: str
+    mall_id: Optional[str] = None
+    onboarding_status: str
     cafe24: Optional[ExternalIntegration] | None = None
 
     @staticmethod
@@ -24,6 +26,7 @@ class UserProfileResponse(BaseModel):
         user,
         permissions: UserPermissions,
         cafe24_integration: Optional[ExternalIntegration] | None,
+        onboarding_status: str,
     ):
         return UserProfileResponse(
             user_id=user.user_id,
@@ -38,5 +41,7 @@ class UserProfileResponse(BaseModel):
             test_callback_number=(
                 user.test_callback_number if user.sys_id == "WP" else "1666-3096"
             ),
+            mall_id=None if cafe24_integration is None else cafe24_integration.mall_id,
+            onboarding_status=onboarding_status,
             cafe24=cafe24_integration,
         )
