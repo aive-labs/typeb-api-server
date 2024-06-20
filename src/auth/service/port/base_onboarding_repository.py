@@ -6,7 +6,7 @@ from src.auth.domain.onboarding import Onboarding
 class BaseOnboardingRepository(ABC):
 
     @abstractmethod
-    def get_onboarding_status(self, mall_id) -> Onboarding:
+    def get_onboarding_status(self, mall_id) -> Onboarding | None:
         pass
 
     @abstractmethod

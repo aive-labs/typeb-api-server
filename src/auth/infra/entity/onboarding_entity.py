@@ -1,6 +1,6 @@
 from sqlalchemy import Column, DateTime, String, func
 
-from src.core.database import Base as Base
+from src.core.database import Base
 
 
 class OnboardingEntity(Base):

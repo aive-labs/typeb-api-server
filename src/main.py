@@ -20,7 +20,7 @@ def create_app():
 app = create_app()
 app.include_router(router=user_router, prefix="/users")
 app.include_router(router=auth_router, prefix="/auth")
-app.include_router(router=onboarding_router, prefix="/auth/onboarding_response.py")
+app.include_router(router=onboarding_router, prefix="/auth/onboarding")
 app.include_router(router=creatives_router, prefix="/contents-management/creatives")
 app.include_router(router=contents_router, prefix="/contents-management/contents")
 app.include_router(router=audience_router, prefix="/audience-management")

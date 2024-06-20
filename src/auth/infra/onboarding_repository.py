@@ -11,7 +11,7 @@ class OnboardingRepository(BaseOnboardingRepository):
     def __init__(self, onboarding_sqlalchemy: OnboardingSqlAlchemyRepository):
         self.onboarding_sqlalchemy = onboarding_sqlalchemy
 
-    def get_onboarding_status(self, mall_id) -> Onboarding:
+    def get_onboarding_status(self, mall_id) -> Onboarding | None:
         return self.onboarding_sqlalchemy.get_onboarding_status(mall_id)
 
     def update_onboarding_status(

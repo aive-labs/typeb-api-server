@@ -20,7 +20,7 @@ def get_onboarding_status(
     onboarding_service: BaseOnboardingService = Depends(
         Provide[Container.onboarding_service]
     ),
-) -> OnboardingResponse:
+) -> OnboardingResponse | None:
     return onboarding_service.get_onboarding_status(mall_id)
 
 

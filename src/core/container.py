@@ -52,6 +52,7 @@ class Container(containers.DeclarativeContainer):
             "src.auth.utils.get_current_user",
             "src.users.routes.user_router",
             "src.auth.routes.auth_router",
+            "src.auth.routes.onboarding_router",
             "src.contents.routes.contents_router",
             "src.contents.routes.creatives_router",
             "src.audiences.routes.audience_router",
@@ -85,13 +86,13 @@ class Container(containers.DeclarativeContainer):
     온보딩 의존성 주입
     """
     onboarding_sqlalchemy = providers.Singleton(
-        OnboardingSqlAlchemyRepository, db=db.provided.session
+        provides=OnboardingSqlAlchemyRepository, db=db.provided.session
     )
     onboarding_repository = providers.Singleton(
-        OnboardingRepository, onboarding_sqlalchemy=onboarding_sqlalchemy
+        provides=OnboardingRepository, onboarding_sqlalchemy=onboarding_sqlalchemy
     )
     onboarding_service = providers.Singleton(
-        OnboardingService, onboarding_repository=onboarding_repository
+        provides=OnboardingService, onboarding_repository=onboarding_repository
     )
 
     """

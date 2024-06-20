@@ -22,13 +22,17 @@ class OnboardingSqlAlchemyRepository:
         """
         self.db = db
 
-    def get_onboarding_status(self, mall_id: str) -> Onboarding:
+    def get_onboarding_status(self, mall_id: str) -> Onboarding | None:
         with self.db() as db:
             entity = (
                 db.query(OnboardingEntity)
                 .filter(OnboardingEntity.mall_id == mall_id)
                 .first()
             )
+
+            if not entity:
+                return None
+
             return ModelConverter.entity_to_model(entity, Onboarding)
 
     def update_onboarding_status(

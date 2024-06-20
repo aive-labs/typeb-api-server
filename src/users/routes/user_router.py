@@ -59,13 +59,21 @@ def get_me(
 
     cafe24_integration = cafe24_service.get_connected_info_by_user(user.user_id)
 
+    print("1")
+
     if cafe24_integration is None:
+        print("2")
         onboarding_status = OnboardingStatus.CAFE24_INTEGRATION_REQUIRED.value
     else:
+        print("3")
         onboarding = onboarding_service.get_onboarding_status(
             cafe24_integration.mall_id
         )
-        onboarding_status = onboarding.onboarding_status.value
+
+        if not onboarding:
+            onboarding_status = OnboardingStatus.CAFE24_INTEGRATION_REQUIRED.value
+        else:
+            onboarding_status = onboarding.onboarding_status.value
 
     return UserProfileResponse.from_user(
         user, permissions, cafe24_integration, onboarding_status
