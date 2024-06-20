@@ -5,7 +5,11 @@ from passlib.context import CryptContext
 
 from src.auth.routes.dto.response.token_response import TokenResponse
 from src.auth.service.token_service import TokenService
-from src.core.exceptions import AuthError, CredentialError, NotFoundError
+from src.core.exceptions.exceptions import (
+    AuthException,
+    CredentialException,
+    NotFoundException,
+)
 from src.users.service.port.base_user_repository import BaseUserRepository
 
 reuseable_oauth = OAuth2PasswordBearer(tokenUrl="/users/signin", scheme_name="JWT")
@@ -27,11 +31,11 @@ class AuthService:
         # 사용자 존재 유무 확인
         user = self.user_repository.get_user_by_email(login_id)
         if user is None:
-            raise NotFoundError("가입되지 않은 사용자 입니다.")
+            raise NotFoundException("가입되지 않은 사용자 입니다.")
 
         # 패스워드 일치 확인
         if not self.verify_password(password, user.password):
-            raise AuthError("패스워드가 일치하지 않습니다.")
+            raise AuthException("패스워드가 일치하지 않습니다.")
 
         # 토큰 발급
         token_response = self.token_service.create_token(user)
@@ -55,13 +59,13 @@ class AuthService:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             email = payload.get("email")
             if email is None:
-                raise AuthError("해당하는 이메일을 찾지 못하였습니다.")
+                raise AuthException("해당하는 이메일을 찾지 못하였습니다.")
         except JWTError as e:
-            raise CredentialError("유효하지 않은 토큰입니다.") from e
+            raise CredentialException("유효하지 않은 토큰입니다.") from e
 
         user = self.user_repository.get_user_by_email(email)
         if user is None:
-            raise NotFoundError("해당하는 이메일을 찾지 못하였습니다.")
+            raise NotFoundException("해당하는 이메일을 찾지 못하였습니다.")
 
         return user
 

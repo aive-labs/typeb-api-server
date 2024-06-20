@@ -1,4 +1,4 @@
-from src.core.exceptions import NotFoundError
+from src.core.exceptions.exceptions import NotFoundException
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
 from src.users.infra.user_sqlalchemy import UserSqlAlchemy
@@ -36,7 +36,7 @@ class UserRepository(BaseUserRepository):
         user_info = self.user_sqlalchemy.find_user_by_email(email)
 
         if user_info is None:
-            raise NotFoundError("해당하는 사용자를 찾지 못하였습니다.")
+            raise NotFoundException("해당하는 사용자를 찾지 못하였습니다.")
 
         user = User.from_entity(user_info[0])
         user.password = user_info[1]

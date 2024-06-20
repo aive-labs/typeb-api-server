@@ -2,7 +2,11 @@ import pytest
 
 from src.auth.service.auth_service import AuthService
 from src.auth.service.token_service import TokenService
-from src.core.exceptions import AuthError, CredentialError, NotFoundError
+from src.core.exceptions.exceptions import (
+    AuthException,
+    CredentialException,
+    NotFoundException,
+)
 from src.users.domain.user import User
 from src.users.routes.dto.request.user_create import UserCreate
 from src.users.routes.dto.request.user_modify import UserModify
@@ -91,7 +95,7 @@ def describe_로그인에_성공한다():
 
 def describe_로그인에_실패한다():
     def 패스워드가_일치하지_않으면_예외를_던진다(test_auth_service: AuthService):
-        with pytest.raises(AuthError) as exc_info:
+        with pytest.raises(AuthException) as exc_info:
             test_auth_service.login("test0@test.com", "테스트12341234")
 
         assert str(exc_info.value.detail) == "패스워드가 일치하지 않습니다."
@@ -100,7 +104,7 @@ def describe_로그인에_실패한다():
     def 등록되지_않은_사용자인_경우_예외를_던진다(
         test_auth_service: AuthService,
     ):  # pyright: ignore
-        with pytest.raises(NotFoundError) as exc_info:
+        with pytest.raises(NotFoundException) as exc_info:
             test_auth_service.login("testtestetstet0@test.com", "테스트0")
 
         assert str(exc_info.value.detail) == "가입되지 않은 사용자 입니다."
@@ -146,7 +150,7 @@ def describe_토큰_사용():
             "3RyaW5nIiwicGVybWlzc2lvbnMiOm51bGwsInJvbGUiOiJhZG1pbiIsImV4cCI6MTcxODEyNDcyMH0."
             "-edZ4z6a5JJg7rRodKCtEFNm_t3FtNSjVvFAUSbS3tg"
         )
-        with pytest.raises(CredentialError) as exc_info:
+        with pytest.raises(CredentialException) as exc_info:
             test_auth_service.get_current_user(test_jwt)
 
         assert str(exc_info.value.detail) == "유효하지 않은 토큰입니다."
@@ -157,7 +161,7 @@ def describe_토큰_사용():
             "eyJlbWFpbCI6IluZyIsImRlcGFydG1lbnQiOm51bGwsImxhbmd1YWdlIjoic"
             "3RyaW5nIiwicG.-edZ4z6a5JJg7rRodKCtEFNm_t3FtNSjVvFAUSbS3tg"
         )
-        with pytest.raises(CredentialError) as exc_info:
+        with pytest.raises(CredentialException) as exc_info:
             test_auth_service.get_current_user(test_jwt)
 
         assert str(exc_info.value.detail) == "유효하지 않은 토큰입니다."

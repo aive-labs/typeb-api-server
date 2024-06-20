@@ -12,7 +12,7 @@ from src.auth.routes.dto.request.kakao_channel_request import KakaoChannelReques
 from src.auth.routes.dto.request.message_sender_request import MessageSenderRequest
 from src.auth.routes.dto.response.kakao_channel_response import KakaoChannelResponse
 from src.auth.routes.dto.response.message_sender_response import MessageSenderResponse
-from src.core.exceptions import NotFoundError
+from src.core.exceptions.exceptions import NotFoundException
 from src.utils.file.model_converter import ModelConverter
 
 
@@ -53,7 +53,7 @@ class OnboardingSqlAlchemyRepository:
             )
 
             if not entity:
-                raise NotFoundError("온보딩 관련 데이터가 존재하지 않습니다.")
+                raise NotFoundException("온보딩 관련 데이터가 존재하지 않습니다.")
 
             entity.onboarding_status = (  # pyright: ignore [reportAttributeAccessIssue]
                 status.value

@@ -1,4 +1,4 @@
-from src.core.exceptions import DuplicatedError, NotFoundError
+from src.core.exceptions.exceptions import DuplicatedException, NotFoundException
 from src.users.domain.user import User
 from src.users.routes.dto.request.user_create import UserCreate
 from src.users.routes.dto.request.user_modify import UserModify
@@ -16,7 +16,7 @@ class UserService(BaseUserService):
         existing_user = self.user_repository.is_existing_user(user_create.email)
 
         if existing_user:
-            raise DuplicatedError("동일한 이메일이 존재합니다.")
+            raise DuplicatedException("동일한 이메일이 존재합니다.")
 
         # 2. 회원 가입 진행
         saved_user: User = self.user_repository.register_user(user_create)
@@ -33,7 +33,7 @@ class UserService(BaseUserService):
         user: User | None = self.user_repository.get_user_by_id(user_id)
 
         if user is None:
-            raise NotFoundError("사용자를 찾지 못했습니다.")
+            raise NotFoundException("사용자를 찾지 못했습니다.")
 
         return UserResponse(**user.model_dump())
 

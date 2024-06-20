@@ -8,7 +8,7 @@ from src.contents.infra.contents_repository import ContentsRepository
 from src.contents.routes.dto.request.contents_create import ContentsCreate
 from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUseCase
 from src.contents.utils.create_html import create_contents_html
-from src.core.exceptions import NotFoundError
+from src.core.exceptions.exceptions import NotFoundException
 from src.users.domain.user import User
 from src.users.infra.user_repository import UserRepository
 from src.utils.date_utils import get_localtime, localtime_from_str
@@ -53,7 +53,7 @@ class AddContentsService(AddContentsUseCase):
             str(user.user_id)
         )
         if cafe24_info is None:
-            raise NotFoundError("연동된 cafe24 계정이 없습니다.")
+            raise NotFoundException("연동된 cafe24 계정이 없습니다.")
 
         mall_id = cafe24_info.mall_id
 

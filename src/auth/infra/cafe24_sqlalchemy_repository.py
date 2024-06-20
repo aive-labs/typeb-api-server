@@ -11,7 +11,7 @@ from src.auth.infra.dto.cafe24_mall_info import Cafe24MallInfo
 from src.auth.infra.dto.cafe24_state_token import Cafe24StateToken
 from src.auth.infra.dto.cafe24_token import Cafe24TokenData
 from src.auth.infra.entity.cafe24_integration_entity import Cafe24IntegrationEntity
-from src.core.exceptions import NotFoundError
+from src.core.exceptions.exceptions import NotFoundException
 
 
 class Cafe24SqlAlchemyRepository:
@@ -53,7 +53,7 @@ class Cafe24SqlAlchemyRepository:
             )
 
             if not token:
-                raise NotFoundError("해당 state은 유효하지 않습니다.")
+                raise NotFoundException("해당 state은 유효하지 않습니다.")
 
             return Cafe24StateToken(
                 mall_id=token.mall_id, state_token=token.state_token
@@ -89,7 +89,9 @@ class Cafe24SqlAlchemyRepository:
             )
 
             if not entity:
-                raise NotFoundError("state token에 해당하는 데이터를 찾지 못했습니다.")
+                raise NotFoundException(
+                    "state token에 해당하는 데이터를 찾지 못했습니다."
+                )
 
             return Cafe24StateToken(
                 mall_id=entity.mall_id, state_token=entity.state_token
@@ -104,7 +106,7 @@ class Cafe24SqlAlchemyRepository:
             )
 
             if not entity:
-                raise NotFoundError("해당 state 토큰을 찾을 수 없습니다.")
+                raise NotFoundException("해당 state 토큰을 찾을 수 없습니다.")
 
             statement = (
                 update(Cafe24IntegrationEntity)

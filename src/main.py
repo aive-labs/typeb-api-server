@@ -7,6 +7,7 @@ from src.auth.routes.onboarding_router import onboarding_router
 from src.contents.routes.contents_router import contents_router
 from src.contents.routes.creatives_router import creatives_router
 from src.core.container import Container
+from src.core.exceptions.register_exception_handler import register_exception_handlers
 from src.users.routes.user_router import user_router
 
 
@@ -34,6 +35,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+register_exception_handlers(app)
 
 
 @app.get("/health", status_code=status.HTTP_200_OK)

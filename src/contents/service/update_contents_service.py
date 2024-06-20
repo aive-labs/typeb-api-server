@@ -11,7 +11,7 @@ from src.contents.routes.port.usecase.update_contents_usecase import (
     UpdateContentsUseCase,
 )
 from src.contents.utils.create_html import create_contents_html
-from src.core.exceptions import NotFoundError
+from src.core.exceptions.exceptions import NotFoundException
 from src.users.domain.user import User
 from src.users.infra.user_repository import UserRepository
 from src.utils.date_utils import get_localtime, localtime_from_str
@@ -39,7 +39,7 @@ class UpdateContentsService(UpdateContentsUseCase):
     ) -> ContentsResponse:
 
         if not self.contents_repository.get_contents_detail(contents_id):
-            raise NotFoundError("해당하는 콘텐츠가 존재하지 않습니다.")
+            raise NotFoundException("해당하는 콘텐츠가 존재하지 않습니다.")
 
         contents_urls = self.contents_repository.get_contents_url_list()
         contents_uuids = [url.split("/")[-1] for url in contents_urls]
@@ -62,7 +62,7 @@ class UpdateContentsService(UpdateContentsUseCase):
             str(user.user_id)
         )
         if cafe24_info is None:
-            raise NotFoundError("연동된 cafe24 계정이 없습니다.")
+            raise NotFoundException("연동된 cafe24 계정이 없습니다.")
 
         mall_id = cafe24_info.mall_id
 

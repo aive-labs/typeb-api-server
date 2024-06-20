@@ -13,7 +13,7 @@ from src.contents.routes.dto.request.creatives_create import CreativeCreate
 from src.contents.routes.dto.response.creative_base import CreativeBase
 from src.contents.service.add_creatives_service import AddCreativesService
 from src.contents.service.port.base_creatives_repository import BaseCreativesRepository
-from src.core.exceptions import NotFoundError
+from src.core.exceptions.exceptions import NotFoundException
 from src.users.domain.user import User
 
 
@@ -69,7 +69,7 @@ class FakeCafe24Repository(BaseOauthRepository):
             if token.state_token == state_token:
                 return token
 
-        raise NotFoundError("state token에 해당하는 데이터를 찾지 못했습니다.")
+        raise NotFoundException("state token에 해당하는 데이터를 찾지 못했습니다.")
 
     def insert_basic_info(self, user_id: str, mall_id: str, state_token: str):
         self.cafe24_state_token.append(
@@ -83,7 +83,7 @@ class FakeCafe24Repository(BaseOauthRepository):
                 save_token = token
 
         if not save_token:
-            raise NotFoundError("해당 state 토큰을 찾을 수 없습니다.")
+            raise NotFoundException("해당 state 토큰을 찾을 수 없습니다.")
 
         self.cafe24_token_data.append(cafe24_tokens)
 
@@ -91,7 +91,7 @@ class FakeCafe24Repository(BaseOauthRepository):
         for token in self.cafe24_state_token:
             if token.state_token == state_token:
                 return token
-        raise NotFoundError("해당 state은 유효하지 않습니다.")
+        raise NotFoundException("해당 state은 유효하지 않습니다.")
 
     def get_cafe24_info_by_user_id(self, user_id: str) -> Cafe24MallInfo:
         filtered_tokens = list(
@@ -99,7 +99,7 @@ class FakeCafe24Repository(BaseOauthRepository):
         )
 
         if len(filtered_tokens) == 0:
-            raise NotFoundError("user_id에 해당하는 mall을 찾지 못했습니다.")
+            raise NotFoundException("user_id에 해당하는 mall을 찾지 못했습니다.")
         elif len(filtered_tokens) > 1:
             raise Exception("user_id는 1개만 가질 수 있습니다.")
         else:
@@ -203,7 +203,7 @@ class FakeCreativesRepository(BaseCreativesRepository):
         for creative in self.creatives:
             if creative.creative_id == id:
                 return creative
-        raise NotFoundError("Not found CreativesEntity")
+        raise NotFoundException("Not found CreativesEntity")
 
     def find_all(
         self, based_on, sort_by, asset_type=None, query=None
@@ -220,7 +220,7 @@ class FakeCreativesRepository(BaseCreativesRepository):
                 selected_creative = creative
 
         if selected_creative is None:
-            raise NotFoundError("Creative가 존재하지 않습니다")
+            raise NotFoundException("Creative가 존재하지 않습니다")
 
         updated_creative = selected_creative.model_copy(update=creative_update_dict)
         return updated_creative

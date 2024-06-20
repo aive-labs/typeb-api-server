@@ -55,7 +55,7 @@ from src.audiences.infra.entity.variable_table_mapping_entity import (
 )
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.common.enums.role import RoleEnum
-from src.core.exceptions import NotFoundError
+from src.core.exceptions.exceptions import NotFoundException
 from src.strategy.infra.entity.campaign_theme_entity import CampaignThemeEntity
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
@@ -84,7 +84,7 @@ class AudienceSqlAlchemy:
                 db.query(UserEntity).filter(UserEntity.user_id == user.user_id).first()
             )
             if user_entity is None:
-                raise NotFoundError("사용자를 찾지 못했습니다.")
+                raise NotFoundException("사용자를 찾지 못했습니다.")
 
             if is_exclude:
                 conditions = [AudienceEntity.is_exclude == is_exclude]
@@ -295,7 +295,7 @@ class AudienceSqlAlchemy:
             )
 
             if not entity:
-                raise NotFoundError("변수-테이블 매핑 정보를 찾지 못했습니다.")
+                raise NotFoundException("변수-테이블 매핑 정보를 찾지 못했습니다.")
 
             return ModelConverter.entity_to_model(entity, VariableTableMapping)
 
@@ -677,7 +677,7 @@ class AudienceSqlAlchemy:
             )
 
             if not entity:
-                raise NotFoundError("타겟 오디언스를 찾지 못했습니다.")
+                raise NotFoundException("타겟 오디언스를 찾지 못했습니다.")
 
             return ModelConverter.entity_to_model(entity, Audience)
 
@@ -753,7 +753,7 @@ class AudienceSqlAlchemy:
             db.commit()
 
             if result.rowcount == 0:
-                raise NotFoundError("타겟 오디언스를 찾지 못했습니다.")
+                raise NotFoundException("타겟 오디언스를 찾지 못했습니다.")
 
     def delete_audience_info_for_update(self, audience_id):
         """

@@ -13,7 +13,7 @@ from src.campaign.routes.dto.request.campaign_remind import CampaignRemind
 from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUsecase
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
 from src.common.timezone_setting import selected_timezone
-from src.core.exceptions import DuplicatedError
+from src.core.exceptions.exceptions import DuplicatedException
 from src.strategy.service.port.base_strategy_repository import BaseStrategyRepository
 from src.users.domain.user import User
 from src.utils.date_utils import calculate_remind_date, localtime_converter
@@ -35,7 +35,7 @@ class CreateCampaignService(CreateCampaignUsecase):
             campaign_create.campaign_name
         )
         if is_existing_campaign:
-            raise DuplicatedError("동일한 캠페인 명이 존재합니다.")
+            raise DuplicatedException("동일한 캠페인 명이 존재합니다.")
 
         if user.user_id is None:
             raise Exception("user_id는 none일 수 없습니다.")

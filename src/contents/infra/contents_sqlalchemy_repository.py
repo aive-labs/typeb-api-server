@@ -9,7 +9,7 @@ from src.contents.domain.contents_menu import ContentsMenu
 from src.contents.infra.dto.response.contents_response import ContentsResponse
 from src.contents.infra.entity.contents_entity import ContentsEntity
 from src.contents.infra.entity.contents_menu_entity import ContentsMenuEntity
-from src.core.exceptions import NotFoundError
+from src.core.exceptions.exceptions import NotFoundException
 from src.utils.file.model_converter import ModelConverter
 
 
@@ -59,7 +59,7 @@ class ContentsSqlAlchemy:
                 .first()
             )
             if not entity:
-                raise NotFoundError("해당 메뉴를 찾지 못했습니다.")
+                raise NotFoundException("해당 메뉴를 찾지 못했습니다.")
 
             subject_style_yn = entity.style_yn
 
@@ -175,7 +175,7 @@ class ContentsSqlAlchemy:
             )
 
             if not entity:
-                raise NotFoundError("해당하는 menu가 존재하지 않습니다.")
+                raise NotFoundException("해당하는 menu가 존재하지 않습니다.")
 
             return ModelConverter.entity_to_model(entity, ContentsMenu)
 
@@ -191,7 +191,7 @@ class ContentsSqlAlchemy:
             )
 
             if not entity:
-                raise NotFoundError("해당하는 콘텐츠가 존재하지 않습니다.")
+                raise NotFoundException("해당하는 콘텐츠가 존재하지 않습니다.")
 
             return ModelConverter.entity_to_model(entity, ContentsResponse)
 

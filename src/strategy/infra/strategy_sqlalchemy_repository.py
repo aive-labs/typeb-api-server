@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from src.audiences.infra.entity.theme_audience_entity import ThemeAudienceEntity
 from src.common.enums.role import RoleEnum
-from src.core.exceptions import NotFoundError
+from src.core.exceptions.exceptions import NotFoundException
 from src.strategy.domain.campaign_theme import CampaignTheme
 from src.strategy.domain.strategy import Strategy
 from src.strategy.enums.strategy_status import StrategyStatus
@@ -64,7 +64,7 @@ class StrategySqlAlchemy:
             )
 
             if result is None:
-                raise NotFoundError("전략을 찾지 못했습니다.")
+                raise NotFoundException("전략을 찾지 못했습니다.")
 
             return result
 

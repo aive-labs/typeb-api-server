@@ -10,7 +10,7 @@ from src.contents.infra.entity.creatives_entity import CreativesEntity
 from src.contents.infra.entity.style_master_entity import StyleMasterEntity
 from src.contents.routes.dto.request.contents_create import StyleObject
 from src.contents.routes.dto.response.creative_base import CreativeBase
-from src.core.exceptions import NotFoundError
+from src.core.exceptions.exceptions import NotFoundException
 from src.utils.file.model_converter import ModelConverter
 
 
@@ -36,7 +36,7 @@ class CreativesSqlAlchemy:
             )
 
             if entity is None:
-                raise NotFoundError("Not found CreativesEntity")
+                raise NotFoundException("Not found CreativesEntity")
 
             return ModelConverter.entity_to_model(entity, Creatives)
 
@@ -137,7 +137,7 @@ class CreativesSqlAlchemy:
             )
 
             if creative_data is None:
-                raise NotFoundError("Creative가 존재하지 않습니다")
+                raise NotFoundException("Creative가 존재하지 않습니다")
 
             update_statement = (
                 update(CreativesEntity)

@@ -27,7 +27,7 @@ from src.audiences.utils.query_builder import (
     get_query_type_with_additional_filters,
     group_where_conditions,
 )
-from src.core.exceptions import DuplicatedError
+from src.core.exceptions.exceptions import DuplicatedException
 from src.users.domain.user import User
 
 
@@ -47,7 +47,7 @@ class CreateAudienceService(CreateAudienceUseCase):
 
         # 오디언스명 중복 체크
         if audience:
-            raise DuplicatedError("동일한 오디언스명이 존재합니다.")
+            raise DuplicatedException("동일한 오디언스명이 존재합니다.")
 
         if audience_create.create_type_code == AudienceCreateType.Filter.value:
             ctype = AudienceCreateType.Filter.value
