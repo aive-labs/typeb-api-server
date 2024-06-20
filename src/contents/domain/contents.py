@@ -2,8 +2,8 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
+from src.common.utils.date_utils import localtime_from_str
 from src.contents.infra.entity.contents_entity import ContentsEntity
-from src.utils.date_utils import localtime_from_str
 
 
 class Contents(BaseModel):

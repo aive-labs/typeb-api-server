@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from src.utils.data_converter import DataConverter
+from src.common.utils.data_converter import DataConverter
 
 
 class FilterColumns(BaseModel):

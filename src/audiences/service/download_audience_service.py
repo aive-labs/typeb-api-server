@@ -4,7 +4,7 @@ from src.audiences.routes.port.usecase.download_audience_usecase import (
     DownloadAudienceUseCase,
 )
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
-from src.utils.data_converter import DataConverter
+from src.common.utils.data_converter import DataConverter
 
 
 class DownloadAudienceService(DownloadAudienceUseCase):

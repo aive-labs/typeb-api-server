@@ -1,12 +1,12 @@
 from src.common.pagination.pagination_base import PaginationBase
 from src.common.pagination.pagination_response import PaginationResponse
+from src.common.utils.file.s3_service import S3Service
 from src.common.utils.get_env_variable import get_env_variable
 from src.contents.domain.creatives import Creatives
 from src.contents.routes.dto.request.contents_create import StyleObject
 from src.contents.routes.dto.response.creative_base import CreativeBase
 from src.contents.routes.port.usecase.get_creatives_usecase import GetCreativesUseCase
 from src.contents.service.port.base_creatives_repository import BaseCreativesRepository
-from src.utils.file.s3_service import S3Service
 
 
 class GetCreativesService(GetCreativesUseCase):

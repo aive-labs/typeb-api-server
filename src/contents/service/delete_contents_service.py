@@ -1,8 +1,8 @@
+from src.common.utils.file.s3_service import S3Service
 from src.contents.routes.port.usecase.delete_contents_usecase import (
     DeleteContentsUseCase,
 )
 from src.contents.service.port.base_contents_repository import BaseContentsRepository
-from src.utils.file.s3_service import S3Service
 
 
 class DeleteContentsService(DeleteContentsUseCase):

@@ -24,6 +24,7 @@ from src.auth.service.auth_service import AuthService
 from src.auth.service.cafe24_service import Cafe24Service
 from src.auth.service.onboarding_service import OnboardingService
 from src.auth.service.token_service import TokenService
+from src.common.utils.file.s3_service import S3Service
 from src.contents.infra.contents_repository import ContentsRepository
 from src.contents.infra.contents_sqlalchemy_repository import ContentsSqlAlchemy
 from src.contents.infra.creatives_repository import CreativesRepository
@@ -43,7 +44,6 @@ from src.core.database import Database, get_db_url
 from src.users.infra.user_repository import UserRepository
 from src.users.infra.user_sqlalchemy import UserSqlAlchemy
 from src.users.service.user_service import UserService
-from src.utils.file.s3_service import S3Service
 
 
 class Container(containers.DeclarativeContainer):

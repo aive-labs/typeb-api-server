@@ -8,7 +8,7 @@ from src.campaign.enums.repeat_type import RepeatType
 from src.campaign.enums.send_type import SendtypeEnum
 from src.campaign.routes.dto.request.campaign_remind import CampaignRemind
 from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
-from src.utils.date_utils import localtime_converter
+from src.common.utils import localtime_converter
 
 
 class CampaignCreate(BaseModel):

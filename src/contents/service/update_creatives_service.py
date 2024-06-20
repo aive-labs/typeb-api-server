@@ -1,3 +1,4 @@
+from src.common.utils.file.s3_service import S3Service
 from src.contents.domain.creatives import Creatives
 from src.contents.infra.creatives_repository import CreativesRepository
 from src.contents.routes.dto.request.creatives_create import CreativeCreate
@@ -5,7 +6,6 @@ from src.contents.routes.port.usecase.update_creatives_usecase import (
     UpdateCreativesUseCase,
 )
 from src.users.domain.user import User
-from src.utils.file.s3_service import S3Service
 
 
 class UpdateCreativesService(UpdateCreativesUseCase):

@@ -10,8 +10,8 @@ from src.audiences.infra.dto.filter_condition import FilterCondition
 from src.audiences.infra.dto.linked_campaign import LinkedCampaign
 from src.audiences.infra.dto.upload_conditon import UploadCondition
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
+from src.common.utils.data_converter import DataConverter
 from src.users.domain.user import User
-from src.utils.data_converter import DataConverter
 
 
 class AudienceRepository(BaseAudienceRepository):

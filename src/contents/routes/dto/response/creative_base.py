@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from src.utils.date_utils import localtime_converter
+from src.common.utils.date_utils import localtime_converter
 
 
 class CreativeBase(BaseModel):

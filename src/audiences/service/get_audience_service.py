@@ -12,9 +12,9 @@ from src.audiences.routes.dto.response.audiences import (
 )
 from src.audiences.routes.port.usecase.get_audience_usecase import GetAudienceUseCase
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
+from src.common.utils.data_converter import DataConverter
 from src.common.view_settings import FilterProcessing
 from src.users.domain.user import User
-from src.utils.data_converter import DataConverter
 
 
 def convert_to_audience_res(data_dict):

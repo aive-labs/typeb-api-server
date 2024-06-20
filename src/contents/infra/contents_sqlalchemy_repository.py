@@ -4,13 +4,13 @@ from contextlib import AbstractContextManager
 from sqlalchemy import or_, update
 from sqlalchemy.orm import Session
 
+from src.common.utils.model_converter import ModelConverter
 from src.contents.domain.contents import Contents
 from src.contents.domain.contents_menu import ContentsMenu
 from src.contents.infra.dto.response.contents_response import ContentsResponse
 from src.contents.infra.entity.contents_entity import ContentsEntity
 from src.contents.infra.entity.contents_menu_entity import ContentsMenuEntity
 from src.core.exceptions.exceptions import NotFoundException
-from src.utils.file.model_converter import ModelConverter
 
 
 class ContentsSqlAlchemy:

@@ -12,8 +12,8 @@ from src.auth.routes.dto.request.kakao_channel_request import KakaoChannelReques
 from src.auth.routes.dto.request.message_sender_request import MessageSenderRequest
 from src.auth.routes.dto.response.kakao_channel_response import KakaoChannelResponse
 from src.auth.routes.dto.response.message_sender_response import MessageSenderResponse
+from src.common.utils.model_converter import ModelConverter
 from src.core.exceptions.exceptions import NotFoundException
-from src.utils.file.model_converter import ModelConverter
 
 
 class OnboardingSqlAlchemyRepository:

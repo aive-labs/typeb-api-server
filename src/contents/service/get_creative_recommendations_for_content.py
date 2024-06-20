@@ -1,12 +1,12 @@
 from typing import Union
 
+from src.common.utils.file.s3_service import S3Service
 from src.common.utils.get_env_variable import get_env_variable
 from src.contents.infra.creatives_repository import CreativesRepository
 from src.contents.infra.dto.response.creative_recommend import CreativeRecommend
 from src.contents.routes.port.usecase.get_creative_recommendations_for_content_usecase import (
     GetCreativeRecommendationsForContentUseCase,
 )
-from src.utils.file.s3_service import S3Service
 
 
 class GetCreativeRecommendationsForContent(GetCreativeRecommendationsForContentUseCase):

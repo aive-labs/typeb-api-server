@@ -4,6 +4,7 @@ from contextlib import AbstractContextManager
 from sqlalchemy import case, func, or_, update
 from sqlalchemy.orm import Session
 
+from src.common.utils.model_converter import ModelConverter
 from src.contents.domain.creatives import Creatives
 from src.contents.infra.dto.response.creative_recommend import CreativeRecommend
 from src.contents.infra.entity.creatives_entity import CreativesEntity
@@ -11,7 +12,6 @@ from src.contents.infra.entity.style_master_entity import StyleMasterEntity
 from src.contents.routes.dto.request.contents_create import StyleObject
 from src.contents.routes.dto.response.creative_base import CreativeBase
 from src.core.exceptions.exceptions import NotFoundException
-from src.utils.file.model_converter import ModelConverter
 
 
 class CreativesSqlAlchemy:

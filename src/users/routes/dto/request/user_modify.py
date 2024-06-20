@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from src.utils.date_utils import localtime_converter
+from src.common.utils.date_utils import localtime_converter
 
 
 class UserModify(BaseModel):

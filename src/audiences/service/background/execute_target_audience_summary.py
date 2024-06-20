@@ -4,8 +4,8 @@ from datetime import datetime, timedelta
 from dependency_injector.wiring import Provide, inject
 
 from src.audiences.enums.audience_type import AudienceType
+from src.common.utils.data_converter import DataConverter
 from src.core.container import Container
-from src.utils.data_converter import DataConverter
 
 
 @inject

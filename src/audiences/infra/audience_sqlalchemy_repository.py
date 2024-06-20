@@ -55,12 +55,12 @@ from src.audiences.infra.entity.variable_table_mapping_entity import (
 )
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.common.enums.role import RoleEnum
+from src.common.utils.data_converter import DataConverter
+from src.common.utils.model_converter import ModelConverter
 from src.core.exceptions.exceptions import NotFoundException
 from src.strategy.infra.entity.campaign_theme_entity import CampaignThemeEntity
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
-from src.utils.data_converter import DataConverter
-from src.utils.file.model_converter import ModelConverter
 
 
 class AudienceSqlAlchemy:
