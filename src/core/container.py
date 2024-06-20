@@ -16,8 +16,13 @@ from src.audiences.service.get_audience_service import GetAudienceService
 from src.audiences.service.update_cycle_service import AudienceUpdateCycleService
 from src.auth.infra.cafe24_repository import Cafe24Repository
 from src.auth.infra.cafe24_sqlalchemy_repository import Cafe24SqlAlchemyRepository
+from src.auth.infra.onboarding_repository import OnboardingRepository
+from src.auth.infra.onboarding_sqlalchemy_repository import (
+    OnboardingSqlAlchemyRepository,
+)
 from src.auth.service.auth_service import AuthService
 from src.auth.service.cafe24_service import Cafe24Service
+from src.auth.service.onboarding_service import OnboardingService
 from src.auth.service.token_service import TokenService
 from src.contents.infra.contents_repository import ContentsRepository
 from src.contents.infra.contents_sqlalchemy_repository import ContentsSqlAlchemy
@@ -75,6 +80,19 @@ class Container(containers.DeclarativeContainer):
         UserRepository, user_sqlalchemy=user_sqlalchemy
     )
     user_service = providers.Singleton(UserService, user_repository=user_repository)
+
+    """
+    온보딩 의존성 주입
+    """
+    onboarding_sqlalchemy = providers.Singleton(
+        OnboardingSqlAlchemyRepository, db=db.provided.session
+    )
+    onboarding_repository = providers.Singleton(
+        OnboardingRepository, onboarding_sqlalchemy=onboarding_sqlalchemy
+    )
+    onboarding_service = providers.Singleton(
+        OnboardingService, onboarding_repository=onboarding_repository
+    )
 
     """
     인증 의존성 주입
