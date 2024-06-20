@@ -1,5 +1,7 @@
 from src.auth.enums.onboarding_status import OnboardingStatus
+from src.auth.routes.dto.request.kakao_channel_request import KakaoChannelRequest
 from src.auth.routes.dto.request.message_sender_request import MessageSenderRequest
+from src.auth.routes.dto.response.kakao_channel_response import KakaoChannelResponse
 from src.auth.routes.dto.response.message_sender_response import MessageSenderResponse
 from src.auth.routes.dto.response.onboarding_response import OnboardingResponse
 from src.auth.routes.port.base_onboarding_service import BaseOnboardingService
@@ -19,10 +21,11 @@ class OnboardingService(BaseOnboardingService):
     def get_message_sender(self, mall_id: str) -> MessageSenderResponse | None:
         return self.onboarding_repository.get_message_sender(mall_id)
 
-    # def register_kakao_channel(self, mall_id: str, kakao_channel: KakaoChannelRequest):
-    #
-    # def get_kakao_channel(self, mall_id: str) -> KakaoChannelResponse:
-    #     pass
+    def register_kakao_channel(self, mall_id: str, kakao_channel: KakaoChannelRequest):
+        self.onboarding_repository.save_kakao_channel(mall_id, kakao_channel)
+
+    def get_kakao_channel(self, mall_id: str) -> KakaoChannelResponse | None:
+        return self.onboarding_repository.get_kakao_channel(mall_id)
 
     def get_onboarding_status(self, mall_id: str) -> OnboardingResponse | None:
         onboarding = self.onboarding_repository.get_onboarding_status(mall_id)

@@ -5,9 +5,12 @@ from sqlalchemy.orm import Session
 
 from src.auth.domain.onboarding import Onboarding
 from src.auth.enums.onboarding_status import OnboardingStatus
+from src.auth.infra.entity.kakao_integration_entity import KakaoIntegrationEntity
 from src.auth.infra.entity.message_integration_entity import MessageIntegrationEntity
 from src.auth.infra.entity.onboarding_entity import OnboardingEntity
+from src.auth.routes.dto.request.kakao_channel_request import KakaoChannelRequest
 from src.auth.routes.dto.request.message_sender_request import MessageSenderRequest
+from src.auth.routes.dto.response.kakao_channel_response import KakaoChannelResponse
 from src.auth.routes.dto.response.message_sender_response import MessageSenderResponse
 from src.core.exceptions import NotFoundError
 from src.utils.file.model_converter import ModelConverter
@@ -98,4 +101,32 @@ class OnboardingSqlAlchemyRepository:
                 sender_name=entity.sender_name,
                 sender_phone_number=entity.sender_phone_number,
                 opt_out_phone_number=entity.opt_out_phone_number,
+            )
+
+    def save_kakao_channel(self, mall_id, kakao_channel: KakaoChannelRequest):
+        with self.db() as db:
+            db.add(
+                KakaoIntegrationEntity(
+                    mall_id=mall_id,
+                    channel_id=kakao_channel.channel_id,
+                    search_id=kakao_channel.search_id,
+                    sender_phone_number=kakao_channel.sender_phone_number,
+                )
+            )
+
+    def get_kakao_channel(self, mall_id) -> KakaoChannelResponse | None:
+        with self.db() as db:
+            entity = (
+                db.query(KakaoIntegrationEntity)
+                .filter(KakaoIntegrationEntity.mall_id == mall_id)
+                .first()
+            )
+
+            if not entity:
+                return None
+
+            return KakaoChannelResponse(
+                channel_id=entity.channel_id,
+                search_id=entity.search_id,
+                sender_phone_number=entity.sender_phone_number,
             )

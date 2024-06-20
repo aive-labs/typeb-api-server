@@ -3,6 +3,7 @@ from src.auth.enums.onboarding_status import OnboardingStatus
 from src.auth.infra.onboarding_sqlalchemy_repository import (
     OnboardingSqlAlchemyRepository,
 )
+from src.auth.routes.dto.response.kakao_channel_response import KakaoChannelResponse
 from src.auth.routes.dto.response.message_sender_response import MessageSenderResponse
 from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
 
@@ -28,3 +29,9 @@ class OnboardingRepository(BaseOnboardingRepository):
 
     def get_message_sender(self, mall_id) -> MessageSenderResponse | None:
         return self.onboarding_sqlalchemy.get_message_sender(mall_id)
+
+    def save_kakao_channel(self, mall_id, kakao_channel):
+        self.onboarding_sqlalchemy.save_kakao_channel(mall_id, kakao_channel)
+
+    def get_kakao_channel(self, mall_id) -> KakaoChannelResponse | None:
+        return self.onboarding_sqlalchemy.get_kakao_channel(mall_id)
