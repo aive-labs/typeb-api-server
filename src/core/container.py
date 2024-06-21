@@ -41,6 +41,8 @@ from src.contents.service.get_creatives_service import GetCreativesService
 from src.contents.service.update_contents_service import UpdateContentsService
 from src.contents.service.update_creatives_service import UpdateCreativesService
 from src.core.database import Database, get_db_url
+from src.messages.infra.ppurio_message_repository import PpurioMessageRepository
+from src.messages.service.message_service import MessageService
 from src.users.infra.user_repository import UserRepository
 from src.users.infra.user_sqlalchemy import UserSqlAlchemy
 from src.users.service.user_service import UserService
@@ -49,6 +51,7 @@ from src.users.service.user_service import UserService
 class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(
         modules=[
+            "src.messages.routes.message_router",
             "src.auth.utils.get_current_user",
             "src.users.routes.user_router",
             "src.auth.routes.auth_router",
@@ -71,6 +74,16 @@ class Container(containers.DeclarativeContainer):
     # todo 환경에 따라 버킷명 변경 필요
     s3_asset_service = providers.Singleton(
         provides=S3Service, bucket_name="aice-asset-dev"
+    )
+
+    """
+    message 객체
+    """
+    message_repository = providers.Singleton(
+        provides=PpurioMessageRepository, db=db.provided.session
+    )
+    message_service = providers.Singleton(
+        provides=MessageService, message_repository=message_repository
     )
 
     """

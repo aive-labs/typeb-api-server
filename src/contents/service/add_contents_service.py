@@ -8,6 +8,7 @@ from src.common.utils.string_utils import generate_random_string
 from src.contents.domain.contents import Contents
 from src.contents.enums.contents_status import ContentsStatus
 from src.contents.infra.contents_repository import ContentsRepository
+from src.contents.infra.dto.response.contents_response import ContentsResponse
 from src.contents.routes.dto.request.contents_create import ContentsCreate
 from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUseCase
 from src.contents.utils.create_html import create_contents_html
@@ -30,7 +31,9 @@ class AddContentsService(AddContentsUseCase):
         self.s3_service = s3_service
         self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
-    def create_contents(self, contents_create: ContentsCreate, user: User) -> Contents:
+    def create_contents(
+        self, contents_create: ContentsCreate, user: User
+    ) -> ContentsResponse:
 
         contents_urls = self.contents_repository.get_contents_url_list()
         contents_uuids = [url.split("/")[-1] for url in contents_urls]
