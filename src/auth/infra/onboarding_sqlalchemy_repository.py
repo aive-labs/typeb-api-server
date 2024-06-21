@@ -1,6 +1,8 @@
+import datetime
 from contextlib import AbstractContextManager
 from typing import Callable
 
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
 from src.auth.domain.onboarding import Onboarding
@@ -65,12 +67,20 @@ class OnboardingSqlAlchemyRepository:
 
     def insert_first_onboarding(self, mall_id):
         with self.db() as db:
-            db.add(
-                OnboardingEntity(
-                    mall_id=mall_id,
-                    onboarding_status=OnboardingStatus.CAFE24_INTEGRATION_REQUIRED.value,
-                )
+            insert_statement = insert(OnboardingEntity).values(
+                mall_id=mall_id,
+                onboarding_status=OnboardingStatus.CAFE24_INTEGRATION_REQUIRED.value,
             )
+
+            upsert_statement = insert_statement.on_conflict_do_update(
+                index_elements=["mall_id"],  # conflict 대상 열
+                set_={
+                    "onboarding_status": OnboardingStatus.CAFE24_INTEGRATION_REQUIRED.value,
+                    "updated_dt": datetime.datetime.now(),
+                },  # 업데이트할 열
+            )
+
+            db.execute(upsert_statement)
             db.commit()
 
     def save_message_sender(self, mall_id, message_sender: MessageSenderRequest):
