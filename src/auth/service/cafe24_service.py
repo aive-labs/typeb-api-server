@@ -3,6 +3,7 @@ import os
 
 import requests
 from dotenv import load_dotenv
+from fastapi import HTTPException
 
 from src.auth.enums.onboarding_status import OnboardingStatus
 from src.auth.infra.dto.cafe24_token import Cafe24TokenData
@@ -126,6 +127,11 @@ class Cafe24Service(BaseOauthService):
             headers=headers,
             data=data,
         )
-        response.raise_for_status()  # Raise an exception for non-2xx status codes
+
+        if response.status_code != 200:
+            raise HTTPException(
+                status_code=response.status_code,
+                detail={"code": "cafe24 auth error", "message": response.text},
+            )
 
         return response.json()
