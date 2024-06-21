@@ -76,7 +76,7 @@ class Cafe24SqlAlchemyRepository:
                 return Cafe24MallInfo(
                     mall_id=entity.mall_id,
                     user_id=str(entity.user_id),
-                    scopes=entity.scopes.split(","),
+                    scopes=entity.scopes.split(",") if entity.scopes else [],
                     shop_no=entity.shop_no,
                 )
 

@@ -1,5 +1,5 @@
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 
 from src.core.container import Container
 from src.messages.routes.dto.ppurio_message_result import PpurioMessageResult
@@ -16,6 +16,23 @@ def get_client_ip(request: Request):
     if client is None:
         return "unknown ip"
     return client.host
+
+
+# 허용할 IP 목록
+ALLOWED_IPS = {"123.123.123.123", "124.124.124.124"}
+
+
+# IP 검증 의존성 정의
+def verify_ip(request: Request):
+    """의존성 사용"""
+    client = request.client
+    if client is None:
+        return "unknown ip"
+    client_ip = client.host
+
+    if client_ip not in ALLOWED_IPS:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    return client_ip
 
 
 @message_router.post("/result")
