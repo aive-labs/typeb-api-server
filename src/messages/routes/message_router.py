@@ -18,7 +18,7 @@ def get_client_ip(request: Request):
     return client.host
 
 
-@message_router.post("/message/result")
+@message_router.post("/result")
 @inject
 def get_message_result_from_ppurio(
     ppurio_message_result: PpurioMessageResult,
