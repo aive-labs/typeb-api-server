@@ -11,6 +11,7 @@ from src.audiences.infra.dto.linked_campaign import LinkedCampaign
 from src.audiences.infra.dto.upload_conditon import UploadCondition
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
 from src.common.utils.data_converter import DataConverter
+from src.search.routes.dto.id_with_label_response import IdWithLabel
 from src.users.domain.user import User
 
 
@@ -179,4 +180,21 @@ class AudienceRepository(BaseAudienceRepository):
             insert_to_uploaded_audiences,
             insert_to_audiences,
             checked_list,
+        )
+
+    def get_audiences_ids_by_strategy_id(self, strategy_id: str) -> list[str]:
+        return self.audience_sqlalchemy.get_audiences_ids_by_strategy_id(strategy_id)
+
+    def get_audiences_by_condition(
+        self, audience_ids: list[str], search_keyword: str, is_exclude: bool
+    ) -> list[IdWithLabel]:
+        return self.audience_sqlalchemy.get_audiences_by_condition(
+            audience_ids, search_keyword, is_exclude
+        )
+
+    def get_audiences_by_condition_without_strategy_id(
+        self, audience_type_code, search_keyword, is_exclude
+    ) -> list[IdWithLabel]:
+        return self.audience_sqlalchemy.get_audiences_by_condition_without_strategy_id(
+            audience_type_code, search_keyword, is_exclude
         )

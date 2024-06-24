@@ -1,0 +1,19 @@
+from abc import ABC, abstractmethod
+
+from src.search.routes.dto.id_with_label_response import IdWithLabel
+from src.users.domain.user import User
+
+
+class BaseSearchService(ABC):
+
+    @abstractmethod
+    def search_audience_with_strategy_id(
+        self, strategy_id: str, search_keyword, user: User, is_exclude=False
+    ) -> list[IdWithLabel]:
+        pass
+
+    @abstractmethod
+    def search_audience_without_strategy_id(
+        self, audience_type_code: str, search_keyword, is_exclude=False
+    ) -> list[IdWithLabel]:
+        pass

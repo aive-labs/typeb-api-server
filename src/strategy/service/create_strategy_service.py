@@ -3,12 +3,12 @@ import json
 from fastapi import HTTPException
 
 from src.audiences.enums.audience_type import AudienceType
-from src.strategy.domain.campaign_theme import CampaignTheme, ThemeAudience, ThemeOffer
+from src.strategy.domain.campaign_theme import StrategyTheme, ThemeAudience, ThemeOffer
 from src.strategy.domain.strategy import Strategy
 from src.strategy.enums.recommend_model import RecommendModels
 from src.strategy.enums.strategy_metrics import StrategyMetrics
 from src.strategy.enums.strategy_status import StrategyStatus
-from src.strategy.enums.target_group import TargetGroup
+from src.strategy.enums.strategy_target import TargetStrategy
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.routes.dto.request.strategy_create import StrategyCreate
 from src.strategy.routes.port.create_strategy_usecase import CreateStrategyUsecase
@@ -65,7 +65,7 @@ class CreateStrategyService(CreateStrategyUsecase):
                 strategy_create.audience_type_code
             ).description,
             target_group_code=strategy_create.target_group_code,
-            target_group_name=TargetGroup(
+            target_group_name=TargetStrategy(
                 strategy_create.target_group_code
             ).description,
         )
@@ -73,7 +73,7 @@ class CreateStrategyService(CreateStrategyUsecase):
         # 5. DB 저장
 
         # 6. 캠페인 테마 수만큼 반복
-        campaign_themes: list[CampaignTheme] = []
+        campaign_themes: list[StrategyTheme] = []
         recommend_model_ids: list[int] = []
         for _idx, theme in enumerate(strategy_create.campaign_themes):
             # 1. 테마모델 중복 점검
@@ -109,8 +109,8 @@ class CreateStrategyService(CreateStrategyUsecase):
             ]
 
             campaign_themes.append(
-                CampaignTheme(
-                    campaign_theme_name=theme.campaign_theme_name,
+                StrategyTheme(
+                    strategy_theme_name=theme.campaign_theme_name,
                     recsys_model_id=theme.recsys_model_id,
                     contents_tags=theme.theme_audience_set.contents_tags,
                     theme_audience=theme_audience,

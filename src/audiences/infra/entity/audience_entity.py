@@ -37,4 +37,4 @@ class AudienceEntity(Base):
     default_excl_on_camp = Column(Boolean, nullable=False, default=False)
     user_exc_deletable = Column(Boolean, nullable=True)
 
-    mapping = relationship("ThemeAudienceEntity", backref="audiences")
+    mapping = relationship("StrategyThemeAudienceMappingEntity", backref="audiences")

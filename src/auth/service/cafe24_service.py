@@ -14,7 +14,6 @@ from src.auth.routes.port.base_oauth_service import BaseOauthService
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
 from src.auth.utils.hash_password import generate_hash
-from src.common.utils.date_utils import get_unix_timestamp
 from src.common.utils.get_env_variable import get_env_variable
 from src.users.service.port.base_user_repository import BaseUserRepository
 
@@ -109,12 +108,10 @@ class Cafe24Service(BaseOauthService):
         cafe24_dag_id = get_env_variable("cafe24_migration_dag_id")
         username = get_env_variable("airflow_username")
         password = get_env_variable("airflow_password")
-        now_unix_timestamp = get_unix_timestamp()
         result = requests.post(
             url=f"{airflow_api}/dags/{cafe24_dag_id}/dagRuns",
             headers={"Content-Type": "application/json"},
             data={
-                "dag_run_id": f"data_migration_{mall_id}_{now_unix_timestamp}",
                 "conf": {"mall_id": mall_id},
             },
             auth=HTTPBasicAuth(username, password),

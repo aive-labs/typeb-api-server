@@ -19,14 +19,12 @@ class StrategyEntity(Base):
     )
     strategy_name = Column(String, nullable=False)
     strategy_tags = Column(ARRAY(String), nullable=False)
-    strategy_metric_code = Column(String, unique=False, nullable=True)
-    strategy_metric_name = Column(String, unique=False, nullable=True)
     strategy_status_code = Column(String, unique=False, nullable=False)
     strategy_status_name = Column(String, unique=False, nullable=False)
     audience_type_code = Column(String, unique=False, nullable=False)
     audience_type_name = Column(String, unique=False, nullable=False)
-    target_group_code = Column(String, unique=False, nullable=False)
-    target_group_name = Column(String, unique=False, nullable=False)
+    target_strategy_code = Column(String, unique=False, nullable=False)
+    target_strategy_name = Column(String, unique=False, nullable=False)
     owned_by_dept = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), default=datetime.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
@@ -39,8 +37,8 @@ class StrategyEntity(Base):
     camp_mapping = relationship("CampaignEntity", backref="strategies")
 
     # 1:n relationship
-    campaign_themes = relationship(
-        "CampaignThemeEntity",
+    strategy_themes = relationship(
+        "StrategyThemesEntity",
         backref="strategies",
         lazy=True,
         cascade="all, delete-orphan",

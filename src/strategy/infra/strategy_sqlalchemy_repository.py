@@ -5,16 +5,20 @@ from typing import Type
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
-from src.audiences.infra.entity.theme_audience_entity import ThemeAudienceEntity
+from src.audiences.infra.entity.strategy_theme_audience_entity import (
+    StrategyThemeAudienceMappingEntity,
+)
 from src.common.enums.role import RoleEnum
 from src.common.utils.date_utils import localtime_converter
 from src.core.exceptions.exceptions import NotFoundException
-from src.strategy.domain.campaign_theme import CampaignTheme
+from src.strategy.domain.campaign_theme import StrategyTheme
 from src.strategy.domain.strategy import Strategy
 from src.strategy.enums.strategy_status import StrategyStatus
-from src.strategy.infra.entity.campaign_theme_entity import CampaignThemeEntity
 from src.strategy.infra.entity.strategy_entity import StrategyEntity
-from src.strategy.infra.entity.theme_offers_entity import ThemeOfferEntity
+from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
+from src.strategy.infra.entity.strategy_theme_offers_entity import (
+    StrategyThemeOfferMappingEntity,
+)
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
 
@@ -69,7 +73,7 @@ class StrategySqlAlchemy:
             return result
 
     def create_strategy(
-        self, strategy: Strategy, campaign_themes: list[CampaignTheme], user: User
+        self, strategy: Strategy, campaign_themes: list[StrategyTheme], user: User
     ):
         with self.db() as db:
             strategy_entity = StrategyEntity(
@@ -91,31 +95,33 @@ class StrategySqlAlchemy:
             )
 
             for theme in campaign_themes:
-                campaign_theme_entity = CampaignThemeEntity(
-                    campaign_theme_name=theme.campaign_theme_name,
+                strategy_theme_entity = StrategyThemesEntity(
+                    strategy_theme_name=theme.strategy_theme_name,
                     recsys_model_id=theme.recsys_model_id,
                     contents_tags=theme.contents_tags,
                 )
 
                 theme_audience_entities = [
-                    ThemeAudienceEntity(audience_id=audience.audience_id)
+                    StrategyThemeAudienceMappingEntity(audience_id=audience.audience_id)
                     for audience in theme.theme_audience
                 ]
 
                 for theme_audience_entity in theme_audience_entities:
-                    campaign_theme_entity.theme_audience_mapping.append(
+                    strategy_theme_entity.strategy_theme_audience_mapping.append(
                         theme_audience_entity
                     )
 
                 theme_offer_entities = [
-                    ThemeOfferEntity(offer_id=offer.offer_id)
+                    StrategyThemeOfferMappingEntity(offer_id=offer.offer_id)
                     for offer in theme.theme_offer
                 ]
 
                 for theme_offer_entity in theme_offer_entities:
-                    campaign_theme_entity.theme_offer_mapping.append(theme_offer_entity)
+                    strategy_theme_entity.strategy_theme_offer_mapping.append(
+                        theme_offer_entity
+                    )
 
-                strategy_entity.campaign_themes.append(campaign_theme_entity)
+                strategy_entity.strategy_themes.append(strategy_theme_entity)
 
             db.add(strategy_entity)
 

@@ -1,4 +1,4 @@
-from src.strategy.domain.campaign_theme import CampaignTheme
+from src.strategy.domain.campaign_theme import StrategyTheme
 from src.strategy.domain.strategy import Strategy
 from src.strategy.infra.strategy_sqlalchemy_repository import StrategySqlAlchemy
 from src.strategy.routes.dto.common import ThemeDetail
@@ -27,8 +27,8 @@ class StrategyRepository(BaseStrategyRepository):
 
         campaign_theme_obj = [
             CampaignThemeSelectV2(
-                campaign_theme_id=theme.campaign_theme_id,
-                campaign_theme_name=theme.campaign_theme_name,
+                campaign_theme_id=theme.strategy_theme_id,
+                campaign_theme_name=theme.strategy_theme_name,
                 recsys_model_id=theme.recsys_model_id,
                 theme_audience_set=ThemeDetail(
                     audience_ids=[
@@ -45,7 +45,7 @@ class StrategyRepository(BaseStrategyRepository):
         return Strategy.from_entity(strategy_entity), campaign_theme_obj
 
     def create_strategy(
-        self, strategy: Strategy, campaign_themes: list[CampaignTheme], user: User
+        self, strategy: Strategy, campaign_themes: list[StrategyTheme], user: User
     ):
         self.strategy_sqlalchemy_respository.create_strategy(
             strategy, campaign_themes, user

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from src.strategy.domain.campaign_theme import CampaignTheme
+from src.strategy.domain.campaign_theme import StrategyTheme
 from src.strategy.domain.strategy import Strategy
 from src.strategy.routes.dto.response.strategy_with_campaign_theme_response import (
     CampaignThemeSelectV2,
@@ -23,7 +23,7 @@ class BaseStrategyRepository(ABC):
     def create_strategy(
         self,
         strategy: Strategy,
-        campaign_themes: list[CampaignTheme],
+        campaign_themes: list[StrategyTheme],
         user: User,
     ):
         pass

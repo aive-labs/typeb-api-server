@@ -2,15 +2,15 @@ from datetime import datetime
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, text
 
-from src.core.database import Base as Base
+from src.core.database import Base
 
 
-class ThemeOfferEntity(Base):
-    __tablename__ = "themes_offers"
+class StrategyThemeOfferMappingEntity(Base):
+    __tablename__ = "strategy_themes_offers_mapping"
 
-    campaign_theme_id = Column(
+    strategy_theme_id = Column(
         Integer,
-        ForeignKey("aivelabs_sv.campaign_themes.campaign_theme_id"),
+        ForeignKey("aivelabs_sv.strategy_themes.strategy_theme_id"),
         primary_key=True,
     )
     offer_id = Column(

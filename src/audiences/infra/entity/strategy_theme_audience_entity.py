@@ -12,12 +12,12 @@ from sqlalchemy import (
 from src.core.database import Base as Base
 
 
-class ThemeAudienceEntity(Base):
-    __tablename__ = "themes_audiences"
+class StrategyThemeAudienceMappingEntity(Base):
+    __tablename__ = "strategy_themes_audiences_mapping"
 
-    campaign_theme_id = Column(
+    strategy_theme_id = Column(
         Integer,
-        ForeignKey("aivelabs_sv.campaign_themes.campaign_theme_id"),
+        ForeignKey("aivelabs_sv.strategy_themes.strategy_theme_id"),
         primary_key=True,
     )
     audience_id = Column(

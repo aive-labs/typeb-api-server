@@ -43,6 +43,7 @@ from src.contents.service.update_creatives_service import UpdateCreativesService
 from src.core.database import Database, get_db_url
 from src.messages.infra.ppurio_message_repository import PpurioMessageRepository
 from src.messages.service.message_service import MessageService
+from src.search.service.search_service import SearchService
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.infra.strategy_sqlalchemy_repository import StrategySqlAlchemy
 from src.strategy.service.create_strategy_service import CreateStrategyService
@@ -65,6 +66,7 @@ class Container(containers.DeclarativeContainer):
             "src.audiences.routes.audience_router",
             "src.audiences.service.background.execute_target_audience_summary",
             "src.strategy.routes.strategy_router",
+            "src.search.routes.search_router",
         ]
     )
 
@@ -72,6 +74,7 @@ class Container(containers.DeclarativeContainer):
     config 파일에 따라 다른 데이터베이스 주입
     """
     db = providers.Singleton(Database, db_url=get_db_url())
+    print(db.provided._create_database())
 
     """
     s3 객체
@@ -276,6 +279,13 @@ class Container(containers.DeclarativeContainer):
 
     create_strategy_service = providers.Singleton(
         provides=CreateStrategyService, strategy_repository=strategy_repository
+    )
+
+    """
+    search 의존성
+    """
+    search_service = providers.Singleton(
+        provides=SearchService, audience_repository=audience_repository
     )
 
     """

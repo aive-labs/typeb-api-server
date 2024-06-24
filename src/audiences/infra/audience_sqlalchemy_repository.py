@@ -45,7 +45,9 @@ from src.audiences.infra.entity.primary_rep_product_entity import (
 from src.audiences.infra.entity.purchase_analytics_master_style_entity import (
     PurchaseAnalyticsMasterStyle,
 )
-from src.audiences.infra.entity.theme_audience_entity import ThemeAudienceEntity
+from src.audiences.infra.entity.strategy_theme_audience_entity import (
+    StrategyThemeAudienceMappingEntity,
+)
 from src.audiences.infra.entity.variable_table_list import (
     CustomerInfoStatusEntity,
     CustomerProductPurchaseSummaryEntity,
@@ -57,8 +59,10 @@ from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.common.enums.role import RoleEnum
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.model_converter import ModelConverter
+from src.common.utils.string_utils import is_convertible_to_int
 from src.core.exceptions.exceptions import NotFoundException
-from src.strategy.infra.entity.campaign_theme_entity import CampaignThemeEntity
+from src.search.routes.dto.id_with_label_response import IdWithLabel
+from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
 
@@ -303,19 +307,19 @@ class AudienceSqlAlchemy:
         with self.db() as db:
             results = (
                 db.query(
-                    ThemeAudienceEntity.audience_id,
+                    StrategyThemeAudienceMappingEntity.audience_id,
                     CampaignEntity.campaign_status_code,
                 )
                 .join(
-                    CampaignThemeEntity,
-                    ThemeAudienceEntity.campaign_theme_id
-                    == CampaignThemeEntity.campaign_theme_id,
+                    StrategyThemesEntity,
+                    StrategyThemeAudienceMappingEntity.strategy_theme_id
+                    == StrategyThemesEntity.strategy_theme_id,
                 )
                 .join(
                     CampaignEntity,
-                    CampaignThemeEntity.strategy_id == CampaignEntity.strategy_id,
+                    StrategyThemesEntity.strategy_id == CampaignEntity.strategy_id,
                 )
-                .filter(ThemeAudienceEntity.audience_id == audience_id)
+                .filter(StrategyThemeAudienceMappingEntity.audience_id == audience_id)
                 .all()
             )
 
@@ -860,3 +864,108 @@ class AudienceSqlAlchemy:
                 db.add(AudienceQueriesEntity(**insert_to_filter_conditions))
 
             db.commit()
+
+    def get_audiences_ids_by_strategy_id(self, strategy_id: str) -> list[str]:
+        with self.db() as db:
+            audience_ids = (
+                db.query(StrategyThemeAudienceMappingEntity.audience_id)
+                .join(
+                    StrategyThemesEntity,
+                    StrategyThemeAudienceMappingEntity.strategy_theme_id
+                    == StrategyThemesEntity.strategy_theme_id,
+                )
+                .filter(StrategyThemesEntity.strategy_id == strategy_id)
+                .all()
+            )
+            audience_ids = [aud[0] for aud in audience_ids]
+            return audience_ids
+
+    def get_audiences_by_condition(
+        self, audience_ids, search_keyword, is_exclude
+    ) -> list[IdWithLabel]:
+        with self.db() as db:
+            conditions = []
+            if is_exclude:
+                conditions.append(AudienceEntity.is_exclude == is_exclude)
+            if search_keyword:
+                modified_string = search_keyword.replace("aud-", "")
+                keyword = f"%{search_keyword}%"
+
+                if is_convertible_to_int(modified_string):
+                    conditions.append(
+                        AudienceEntity.audience_id.ilike(keyword)
+                    )  # audience_id
+                else:
+                    conditions.append(
+                        AudienceEntity.audience_name.ilike(keyword)
+                    )  # audience_name
+
+            result = (
+                db.query(
+                    AudienceEntity.audience_id.label("id"),
+                    AudienceEntity.audience_name.label("name"),
+                )
+                .filter(
+                    AudienceEntity.is_exclude.is_(False),
+                    AudienceEntity.audience_id.in_(audience_ids),
+                    AudienceEntity.audience_status_code
+                    != AudienceStatus.notdisplay.value,  # 캠페인 연결된 적 있는 삭제 오브젝트 제외
+                    *conditions,
+                )
+                .all()
+            )
+
+            return [
+                IdWithLabel(
+                    id=data.id,
+                    name=data.name,
+                    label=self._create_label(data),
+                )
+                for data in result
+            ]
+
+    def get_audiences_by_condition_without_strategy_id(
+        self, audience_type_code, search_keyword, is_exclude
+    ) -> list[IdWithLabel]:
+
+        with self.db() as db:
+            conditions = [AudienceEntity.is_exclude == is_exclude]
+
+            if search_keyword:
+                modified_string = search_keyword.replace("aud-", "")
+                keyword = f"%{search_keyword}%"
+
+                if is_convertible_to_int(modified_string):
+                    conditions.append(
+                        AudienceEntity.audience_id.ilike(keyword)
+                    )  # audience_id
+                else:
+                    conditions.append(
+                        AudienceEntity.audience_name.ilike(keyword)
+                    )  # audience_name
+
+            result = (
+                db.query(
+                    AudienceEntity.audience_id.label("id"),
+                    AudienceEntity.audience_name.label("name"),
+                )
+                .filter(
+                    AudienceEntity.audience_type_code == audience_type_code,
+                    AudienceEntity.audience_status_code
+                    != AudienceStatus.notdisplay.value,  # 캠페인 연결된 적 있는 삭제 오브젝트 제외
+                    *conditions,
+                )
+                .all()
+            )
+
+            return [
+                IdWithLabel(
+                    id=data.id,
+                    name=data.name,
+                    label=self._create_label(data),
+                )
+                for data in result
+            ]
+
+    def _create_label(self, data):
+        return f"({data.id}) {data.name}"

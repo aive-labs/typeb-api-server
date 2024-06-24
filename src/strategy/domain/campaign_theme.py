@@ -11,9 +11,9 @@ class ThemeOffer(BaseModel):
     campaign_theme_id: int | None = None
 
 
-class CampaignTheme(BaseModel):
-    campaign_theme_id: int | None = None
-    campaign_theme_name: str
+class StrategyTheme(BaseModel):
+    strategy_theme_id: int | None = None
+    strategy_theme_name: str
     recsys_model_id: int
     contents_tags: list[str]
     theme_audience: list[ThemeAudience] = []

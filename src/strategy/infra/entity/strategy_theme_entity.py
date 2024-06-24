@@ -3,18 +3,22 @@ from datetime import datetime
 from sqlalchemy import ARRAY, Column, DateTime, ForeignKey, Integer, String, text
 from sqlalchemy.orm import relationship
 
-from src.audiences.infra.entity.theme_audience_entity import ThemeAudienceEntity
-from src.core.database import Base as Base
-from src.strategy.infra.entity.theme_offers_entity import ThemeOfferEntity
+from src.audiences.infra.entity.strategy_theme_audience_entity import (
+    StrategyThemeAudienceMappingEntity,
+)
+from src.core.database import Base
+from src.strategy.infra.entity.strategy_theme_offers_entity import (
+    StrategyThemeOfferMappingEntity,
+)
 
 
-class CampaignThemeEntity(Base):
-    __tablename__ = "campaign_themes"
+class StrategyThemesEntity(Base):
+    __tablename__ = "strategy_themes"
 
-    campaign_theme_id = Column(
+    strategy_theme_id = Column(
         Integer, primary_key=True, index=True, autoincrement=True
     )
-    campaign_theme_name = Column(String, nullable=False)
+    strategy_theme_name = Column(String, nullable=False)
     strategy_id = Column(String, ForeignKey("aivelabs_sv.strategies.strategy_id"))
     recsys_model_id = Column(Integer, nullable=False)
     contents_tags = Column(ARRAY(String))
@@ -26,15 +30,15 @@ class CampaignThemeEntity(Base):
     updated_by = Column(String, nullable=False, default=text("(user)"))
 
     # 1:n relationship
-    theme_audience_mapping = relationship(
-        ThemeAudienceEntity,
-        backref="campaign_themes",
+    strategy_theme_audience_mapping = relationship(
+        StrategyThemeAudienceMappingEntity,
+        backref="strategy_themes",
         lazy=True,
         cascade="all, delete-orphan",
     )
-    theme_offer_mapping = relationship(
-        ThemeOfferEntity,
-        backref="campaign_themes",
+    strategy_theme_offer_mapping = relationship(
+        StrategyThemeOfferMappingEntity,
+        backref="strategy_themes",
         lazy=True,
         cascade="all, delete-orphan",
     )
