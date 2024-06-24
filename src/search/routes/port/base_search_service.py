@@ -17,3 +17,13 @@ class BaseSearchService(ABC):
         self, audience_type_code: str, search_keyword, is_exclude=False
     ) -> list[IdWithLabel]:
         pass
+
+    @abstractmethod
+    def search_offers_search_of_sets(
+        self, audience_type_code, strategy_id, keyword, user
+    ) -> list[IdWithLabel]:
+        pass
+
+    @abstractmethod
+    def search_offers(self, audience_type_code, keyword, user) -> list[IdWithLabel]:
+        pass

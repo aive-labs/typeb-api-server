@@ -25,3 +25,15 @@ class SearchService(BaseSearchService):
         return self.audience_repository.get_audiences_by_condition_without_strategy_id(
             audience_type_code, search_keyword, is_exclude
         )
+
+    def search_offers_search_of_sets(
+        self, audience_type_code, strategy_id, keyword, user: User
+    ) -> list[IdWithLabel]:
+        return self.audience_repository.search_offers_search_of_sets(
+            audience_type_code, strategy_id, keyword, user
+        )
+
+    def search_offers(
+        self, audience_type_code, keyword, user: User
+    ) -> list[IdWithLabel]:
+        return self.audience_repository.search_offers(audience_type_code, keyword, user)

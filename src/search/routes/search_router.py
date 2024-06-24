@@ -34,3 +34,23 @@ def get_strategies(
         return search_service.search_audience_without_strategy_id(
             audience_type_code, keyword, is_exclude
         )
+
+
+@search_router.get("/offers")
+def get_search_offers(
+    audience_type_code: str,
+    strategy_id: Optional[str] = None,
+    keyword: Optional[str] = None,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    search_service: BaseSearchService = Depends(
+        dependency=Provide[Container.search_service]
+    ),
+) -> list[IdWithLabel]:
+    """드롭다운 오퍼 목록을 조회하는 API"""
+
+    if strategy_id:
+        return search_service.search_offers_search_of_sets(
+            audience_type_code, strategy_id, keyword, user
+        )
+    else:
+        return search_service.search_offers(audience_type_code, keyword, user)
