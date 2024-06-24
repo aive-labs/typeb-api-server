@@ -1,12 +1,13 @@
 from collections.abc import Callable
 from contextlib import AbstractContextManager
+from typing import Type
 
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
 from src.audiences.infra.entity.theme_audience_entity import ThemeAudienceEntity
 from src.common.enums.role import RoleEnum
-from src.common.utils import localtime_converter
+from src.common.utils.date_utils import localtime_converter
 from src.core.exceptions.exceptions import NotFoundException
 from src.strategy.domain.campaign_theme import CampaignTheme
 from src.strategy.domain.strategy import Strategy
@@ -31,17 +32,15 @@ class StrategySqlAlchemy:
         """
         self.db = db
 
-    def get_all_strategies(
-        self, start_date, end_date, user: User
-    ) -> list[StrategyEntity]:
+    def get_all_strategies(self, start_date, end_date, user: User) -> list[Strategy]:
         with self.db() as db:
             user_entity = (
-                db.query(UserEntity).filter(UserEntity.id == user.user_id).first()
+                db.query(UserEntity).filter(UserEntity.user_id == user.user_id).first()
             )
 
             conditions = self._object_access_condition(db, user_entity, StrategyEntity)
 
-            return (
+            entities = (
                 db.query(StrategyEntity)
                 .filter(
                     or_(
@@ -54,6 +53,7 @@ class StrategySqlAlchemy:
                 )
                 .all()
             )
+            return [Strategy.from_entity(entity) for entity in entities]
 
     def get_strategy_detail(self, strategy_id: str) -> StrategyEntity:
         with self.db() as db:
@@ -120,7 +120,7 @@ class StrategySqlAlchemy:
             db.add(strategy_entity)
 
     def _object_access_condition(
-        self, db: Session, user: UserEntity, model: StrategyEntity
+        self, db: Session, user: UserEntity, model: Type[StrategyEntity]
     ):
         """Checks if the user has the required permissions for Object access.
         Return conditions based on object access permissions

@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
-from src.common.utils import localtime_converter
+from src.common.utils.date_utils import localtime_converter
 from src.strategy.routes.dto.common import CampaignThemeModel
 
 

@@ -1,11 +1,14 @@
 from abc import ABC, abstractmethod
 
+from src.strategy.routes.dto.response.strategy_response import StrategyResponse
 from src.users.domain.user import User
 
 
-class GetStrategyUsecase(ABC):
+class GetStrategyUseCase(ABC):
     @abstractmethod
-    def get_strategies(self, start_date: str, end_daste: str, user: User):
+    def get_strategies(
+        self, start_date: str, end_daste: str, user: User
+    ) -> list[StrategyResponse]:
         pass
 
     @abstractmethod

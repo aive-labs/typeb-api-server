@@ -43,6 +43,10 @@ from src.contents.service.update_creatives_service import UpdateCreativesService
 from src.core.database import Database, get_db_url
 from src.messages.infra.ppurio_message_repository import PpurioMessageRepository
 from src.messages.service.message_service import MessageService
+from src.strategy.infra.strategy_repository import StrategyRepository
+from src.strategy.infra.strategy_sqlalchemy_repository import StrategySqlAlchemy
+from src.strategy.service.create_strategy_service import CreateStrategyService
+from src.strategy.service.get_strategy_service import GetStrategyService
 from src.users.infra.user_repository import UserRepository
 from src.users.infra.user_sqlalchemy import UserSqlAlchemy
 from src.users.service.user_service import UserService
@@ -60,6 +64,7 @@ class Container(containers.DeclarativeContainer):
             "src.contents.routes.creatives_router",
             "src.audiences.routes.audience_router",
             "src.audiences.service.background.execute_target_audience_summary",
+            "src.strategy.routes.strategy_router",
         ]
     )
 
@@ -256,22 +261,22 @@ class Container(containers.DeclarativeContainer):
     """
     전략 의존성 주입
     """
-    # strategy_sqlalchemy = providers.Singleton(
-    #     provides=StrategySqlAlchemy, db=db.provided.sesssion
-    # )
-    #
-    # strategy_repository = providers.Singleton(
-    #     provides=BaseStrategyRepository, strategy_sqlalchemy=strategy_sqlalchemy
-    # )
-    #
-    # get_strategy_service = providers.Singleton(
-    #     provides=GetStrategyUsecase,
-    #     strategy_repository=strategy_repository,
-    # )
-    #
-    # create_strategy_service = providers.Singleton(
-    #     provides=CreateStrategyUsecase, strategy_repository=strategy_repository
-    # )
+    strategy_sqlalchemy = providers.Singleton(
+        provides=StrategySqlAlchemy, db=db.provided.sesssion
+    )
+
+    strategy_repository = providers.Singleton(
+        provides=StrategyRepository, strategy_sqlalchemy=strategy_sqlalchemy
+    )
+
+    get_strategy_service = providers.Singleton(
+        provides=GetStrategyService,
+        strategy_repository=strategy_repository,
+    )
+
+    create_strategy_service = providers.Singleton(
+        provides=CreateStrategyService, strategy_repository=strategy_repository
+    )
 
     """
     캠페인 의존성 주입

@@ -9,26 +9,22 @@ from src.strategy.routes.dto.response.strategy_with_campaign_theme_response impo
     StrategyWithCampaignThemeResponse,
 )
 from src.strategy.routes.port.create_strategy_usecase import CreateStrategyUsecase
-from src.strategy.routes.port.get_strategy_usecase import GetStrategyUsecase
+from src.strategy.routes.port.get_strategy_usecase import GetStrategyUseCase
 
 strategy_router = APIRouter(tags=["Strategy-management"])
 
 
-@strategy_router.get("/strategies", response_model=list[StrategyResponse])
+@strategy_router.get("/strategies")
 @inject
 def get_strategies(
     start_date: str,
     end_date: str,
-    get_strategy_service: GetStrategyUsecase = Depends(
+    get_strategy_service: GetStrategyUseCase = Depends(
         dependency=Provide[Container.get_strategy_service]
     ),
-    user=Depends(
-        get_permission_checker(
-            required_permissions=["gnb_permissions:strategy_manager:read"]
-        )
-    ),
-):
-    pass
+    user=Depends(get_permission_checker(required_permissions=[])),
+) -> list[StrategyResponse]:
+    return get_strategy_service.get_strategies(start_date, end_date, user)
 
 
 @strategy_router.post("/strategies")

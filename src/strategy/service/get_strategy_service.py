@@ -3,11 +3,11 @@ from src.strategy.routes.dto.response.strategy_response import StrategyResponse
 from src.strategy.routes.dto.response.strategy_with_campaign_theme_response import (
     StrategyWithCampaignThemeResponse,
 )
-from src.strategy.routes.port.get_strategy_usecase import GetStrategyUsecase
+from src.strategy.routes.port.get_strategy_usecase import GetStrategyUseCase
 from src.users.domain.user import User
 
 
-class GetStrategyService(GetStrategyUsecase):
+class GetStrategyService(GetStrategyUseCase):
     def __init__(self, strategy_repository: StrategyRepository):
         self.strategy_repository = strategy_repository
 

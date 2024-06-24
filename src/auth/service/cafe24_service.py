@@ -4,6 +4,7 @@ import os
 import requests
 from dotenv import load_dotenv
 from fastapi import HTTPException
+from requests.auth import HTTPBasicAuth
 
 from src.auth.enums.onboarding_status import OnboardingStatus
 from src.auth.infra.dto.cafe24_token import Cafe24TokenData
@@ -13,6 +14,8 @@ from src.auth.routes.port.base_oauth_service import BaseOauthService
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
 from src.auth.utils.hash_password import generate_hash
+from src.common.utils.date_utils import get_unix_timestamp
+from src.common.utils.get_env_variable import get_env_variable
 from src.users.service.port.base_user_repository import BaseUserRepository
 
 
@@ -82,17 +85,42 @@ class Cafe24Service(BaseOauthService):
 
     def get_oauth_access_token(self, oauth_request: OauthAuthenticationRequest):
         cafe24_state_token = self.cafe24_repository.get_state_token(oauth_request.state)
+        mall_id = cafe24_state_token.mall_id
 
-        token_data = self._request_token_to_cafe24(
-            oauth_request.code, cafe24_state_token.mall_id
-        )
+        token_data = self._request_token_to_cafe24(oauth_request.code, mall_id)
         cafe24_tokens = Cafe24TokenData(**token_data)
 
         self.cafe24_repository.save_tokens(cafe24_tokens)
 
         self.onboarding_repository.update_onboarding_status(
-            cafe24_state_token.mall_id, OnboardingStatus.MIGRATION_IN_PROGRESS
+            mall_id, OnboardingStatus.MIGRATION_IN_PROGRESS
         )
+
+        # airflow request
+        result = self.execute_cafe24_dag_run(mall_id)
+        if result.status_code != 200:
+            # 슬랙 알림 -> 수동 마이그레이션 진행
+            print("airflow error")
+            print(result.text)
+
+    def execute_cafe24_dag_run(self, mall_id):
+
+        airflow_api = get_env_variable("airflow_api")
+        cafe24_dag_id = get_env_variable("cafe24_migration_dag_id")
+        username = get_env_variable("airflow_username")
+        password = get_env_variable("airflow_password")
+        now_unix_timestamp = get_unix_timestamp()
+        result = requests.post(
+            url=f"{airflow_api}/dags/{cafe24_dag_id}/dagRuns",
+            headers={"Content-Type": "application/json"},
+            data={
+                "dag_run_id": f"data_migration_{mall_id}_{now_unix_timestamp}",
+                "conf": {"mall_id": mall_id},
+            },
+            auth=HTTPBasicAuth(username, password),
+            timeout=5,
+        )
+        return result
 
     def _generate_authentication_url(
         self, mall_id: str, client_id: str, state: str, redirect_uri: str, scope: str

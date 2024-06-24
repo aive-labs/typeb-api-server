@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import ARRAY, Column, DateTime, String, text
 from sqlalchemy.orm import relationship
 
-from src.core.database import Base as Base
+from src.core.database import Base
 
 
 class StrategyEntity(Base):
@@ -36,7 +36,7 @@ class StrategyEntity(Base):
     updated_by = Column(String, nullable=False, default=text("(user)"))
 
     # 1:1 relationship
-    camp_mapping = relationship("CampaignsEntity", backref="strategies")
+    camp_mapping = relationship("CampaignEntity", backref="strategies")
 
     # 1:n relationship
     campaign_themes = relationship(
