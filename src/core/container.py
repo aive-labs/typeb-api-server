@@ -24,6 +24,7 @@ from src.auth.service.auth_service import AuthService
 from src.auth.service.cafe24_service import Cafe24Service
 from src.auth.service.onboarding_service import OnboardingService
 from src.auth.service.token_service import TokenService
+from src.common.infra.recommend_products_repository import RecommendProductsRepository
 from src.common.utils.file.s3_service import S3Service
 from src.contents.infra.contents_repository import ContentsRepository
 from src.contents.infra.contents_sqlalchemy_repository import ContentsSqlAlchemy
@@ -284,8 +285,15 @@ class Container(containers.DeclarativeContainer):
     """
     search 의존성
     """
+
+    recommend_products_repository = providers.Singleton(
+        provides=RecommendProductsRepository, db=db.provided.session
+    )
+
     search_service = providers.Singleton(
-        provides=SearchService, audience_repository=audience_repository
+        provides=SearchService,
+        audience_repository=audience_repository,
+        recommend_products_repository=recommend_products_repository,
     )
 
     """

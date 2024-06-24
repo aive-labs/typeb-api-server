@@ -146,15 +146,3 @@ class BaseAudienceRepository(ABC):
         self, audience_type_code, search_keyword, is_exclude
     ) -> list[IdWithLabel]:
         pass
-
-    @abstractmethod
-    def search_offers_search_of_sets(
-        self, audience_type_code, strategy_id, keyword, user: User
-    ) -> list[IdWithLabel]:
-        pass
-
-    @abstractmethod
-    def search_offers(
-        self, audience_type_code, keyword, user: User
-    ) -> list[IdWithLabel]:
-        pass

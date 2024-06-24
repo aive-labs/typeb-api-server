@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
+from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.search.routes.dto.id_with_label_response import IdWithLabel
 from src.search.routes.port.base_search_service import BaseSearchService
 
@@ -54,3 +55,16 @@ def get_search_offers(
         )
     else:
         return search_service.search_offers(audience_type_code, keyword, user)
+
+
+@search_router.get("/recommend-products-models")
+async def get_search_products(
+    audience_type_code: str,
+    keyword: Optional[str] = None,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    search_service: BaseSearchService = Depends(
+        dependency=Provide[Container.search_service]
+    ),
+) -> list[IdWithItem]:
+    """드롭다운 추천모델 목록을 조회하는 API"""
+    return search_service.search_recommend_products(audience_type_code, keyword)

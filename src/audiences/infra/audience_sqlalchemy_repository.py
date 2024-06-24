@@ -10,7 +10,6 @@ from src.audiences.domain.audience import Audience
 from src.audiences.domain.variable_table_mapping import VariableTableMapping
 from src.audiences.enums.audience_create_type import AudienceCreateType
 from src.audiences.enums.audience_status import AudienceStatus
-from src.audiences.enums.audience_type import AudienceType
 from src.audiences.enums.csv_template import CsvTemplates
 from src.audiences.infra.dto.audience_info import AudienceInfo
 from src.audiences.infra.dto.filter_condition import FilterCondition
@@ -58,17 +57,12 @@ from src.audiences.infra.entity.variable_table_mapping_entity import (
 )
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.common.enums.role import RoleEnum
-from src.common.timezone_setting import selected_timezone
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.model_converter import ModelConverter
 from src.common.utils.string_utils import is_convertible_to_int
 from src.core.exceptions.exceptions import NotFoundException
-from src.offers.infra.entity.offers_entity import OffersEntity
 from src.search.routes.dto.id_with_label_response import IdWithLabel
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
-from src.strategy.infra.entity.strategy_theme_offers_entity import (
-    StrategyThemeOfferMappingEntity,
-)
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
 
@@ -975,106 +969,3 @@ class AudienceSqlAlchemy:
 
     def _create_label(self, data):
         return f"({data.id}) {data.name}"
-
-    def get_search_offers_of_sets(
-        self, audience_type_code: str, strategy_id: str, keyword: str, user: User
-    ):
-        with self.db() as db:
-
-            condition = self._add_search_offer_condition_by_user(
-                audience_type_code, user
-            )
-
-            offer_ids = (
-                db.query(StrategyThemeOfferMappingEntity.offer_id)
-                .join(
-                    StrategyThemesEntity,
-                    StrategyThemeOfferMappingEntity.strategy_theme_id
-                    == StrategyThemesEntity.strategy_theme_id,
-                )
-                .filter(StrategyThemesEntity.strategy_id == strategy_id)
-                .all()
-            )
-
-            offer_ids = [offef[0] for offef in offer_ids]
-
-            today = datetime.now(selected_timezone).strftime("%Y%m%d")
-            if keyword:
-                keyword = f"%{keyword}%"
-                if is_convertible_to_int(keyword):
-                    condition.append(OffersEntity.event_no.ilike(keyword))  # event_no
-                else:
-                    condition.append(
-                        OffersEntity.offer_name.ilike(keyword)
-                    )  # offer_name
-
-            result = db.query(
-                OffersEntity.offer_id.label("id"),
-                OffersEntity.offer_name.label("name"),
-                OffersEntity.event_no.label("code"),
-            ).filter(
-                OffersEntity.offer_id.in_(offer_ids),
-                OffersEntity.offer_type_code.isnot(None),
-                OffersEntity.event_end_dt >= today,  # 이벤트 기간 필터
-                *condition,
-            )
-
-            return [
-                IdWithLabel(
-                    id=data.id,
-                    name=data.name,
-                    label=self._create_label(data),
-                )
-                for data in result
-            ]
-
-    def _add_search_offer_condition_by_user(self, audience_type_code, user):
-        if user.role_id in ("admin", "operator"):
-            if audience_type_code == AudienceType.segment.value:
-                condition = [
-                    OffersEntity.offer_source == "AICRM",
-                    OffersEntity.campaign_id.is_(None),
-                ]
-            else:
-                condition = [OffersEntity.campaign_id.is_(None)]
-        else:
-            condition = [
-                OffersEntity.offer_source != "AICRM",
-                OffersEntity.campaign_id.is_(None),
-            ]
-        return condition
-
-    def get_search_offers(self, audience_type_code: str, keyword: str, user: User):
-        with self.db() as db:
-            condition = self._add_search_offer_condition_by_user(
-                audience_type_code, user
-            )
-
-            today = datetime.now(selected_timezone).strftime("%Y%m%d")
-            if keyword:
-                keyword = f"%{keyword}%"
-                if is_convertible_to_int(keyword):
-                    condition.append(OffersEntity.event_no.ilike(keyword))  # event_no
-                else:
-                    condition.append(
-                        OffersEntity.offer_name.ilike(keyword)
-                    )  # offer_name
-
-            result = db.query(
-                OffersEntity.offer_id.label("id"),
-                OffersEntity.offer_name.label("name"),
-                OffersEntity.event_no.label("code"),
-            ).filter(
-                OffersEntity.offer_type_code.isnot(None),
-                OffersEntity.event_end_dt >= today,  # 이벤트 기간 필터
-                *condition,
-            )
-
-            return [
-                IdWithLabel(
-                    id=data.id,
-                    name=data.name,
-                    label=self._create_label(data),
-                )
-                for data in result
-            ]

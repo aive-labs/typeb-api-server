@@ -1,4 +1,7 @@
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
+from src.common.infra.recommend_products_repository import RecommendProductsRepository
+from src.offers.infra.offer_repository import OfferRepository
+from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.search.routes.dto.id_with_label_response import IdWithLabel
 from src.search.routes.port.base_search_service import BaseSearchService
 from src.users.domain.user import User
@@ -6,8 +9,15 @@ from src.users.domain.user import User
 
 class SearchService(BaseSearchService):
 
-    def __init__(self, audience_repository: BaseAudienceRepository):
+    def __init__(
+        self,
+        audience_repository: BaseAudienceRepository,
+        recommend_products_repository: RecommendProductsRepository,
+        offer_repository: OfferRepository,
+    ):
         self.audience_repository = audience_repository
+        self.recommend_products_repository = recommend_products_repository
+        self.offer_repository = offer_repository
 
     def search_audience_with_strategy_id(
         self, strategy_id: str, search_keyword: str, user: User, is_exclude=False
@@ -29,11 +39,20 @@ class SearchService(BaseSearchService):
     def search_offers_search_of_sets(
         self, audience_type_code, strategy_id, keyword, user: User
     ) -> list[IdWithLabel]:
-        return self.audience_repository.search_offers_search_of_sets(
+        return self.offer_repository.get_search_offers_of_sets(
             audience_type_code, strategy_id, keyword, user
         )
 
     def search_offers(
         self, audience_type_code, keyword, user: User
     ) -> list[IdWithLabel]:
-        return self.audience_repository.search_offers(audience_type_code, keyword, user)
+        return self.offer_repository.get_search_offers(
+            audience_type_code, keyword, user
+        )
+
+    def search_recommend_products(
+        self, audience_type_code, keyword
+    ) -> list[IdWithItem]:
+        return self.recommend_products_repository.search_recommend_products(
+            audience_type_code, keyword
+        )

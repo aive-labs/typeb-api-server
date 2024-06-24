@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.search.routes.dto.id_with_label_response import IdWithLabel
 from src.users.domain.user import User
 
@@ -26,4 +27,10 @@ class BaseSearchService(ABC):
 
     @abstractmethod
     def search_offers(self, audience_type_code, keyword, user) -> list[IdWithLabel]:
+        pass
+
+    @abstractmethod
+    def search_recommend_products(
+        self, audience_type_code, keyword
+    ) -> list[IdWithItem]:
         pass
