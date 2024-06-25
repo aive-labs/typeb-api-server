@@ -14,7 +14,7 @@ class StrategyEntity(Base):
         primary_key=True,
         index=True,
         server_default=text(
-            "'stt-' || LPAD(nextval('aivelabs_sv.strategy_test_seq')::TEXT, 6, '0')"
+            "'stt-' || LPAD(nextval('aivelabs_sv.strategy_id_seq')::TEXT, 6, '0')"
         ),
     )
     strategy_name = Column(String, nullable=False)

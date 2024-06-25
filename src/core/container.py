@@ -44,6 +44,7 @@ from src.contents.service.update_creatives_service import UpdateCreativesService
 from src.core.database import Database, get_db_url
 from src.messages.infra.ppurio_message_repository import PpurioMessageRepository
 from src.messages.service.message_service import MessageService
+from src.offers.infra.offer_repository import OfferRepository
 from src.search.service.search_service import SearchService
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.infra.strategy_sqlalchemy_repository import StrategySqlAlchemy
@@ -266,7 +267,7 @@ class Container(containers.DeclarativeContainer):
     전략 의존성 주입
     """
     strategy_sqlalchemy = providers.Singleton(
-        provides=StrategySqlAlchemy, db=db.provided.sesssion
+        provides=StrategySqlAlchemy, db=db.provided.session
     )
 
     strategy_repository = providers.Singleton(
@@ -283,9 +284,15 @@ class Container(containers.DeclarativeContainer):
     )
 
     """
+    offer 의존성
+    """
+    offer_repository = providers.Singleton(
+        provides=OfferRepository, db=db.provided.session
+    )
+
+    """
     search 의존성
     """
-
     recommend_products_repository = providers.Singleton(
         provides=RecommendProductsRepository, db=db.provided.session
     )
@@ -294,6 +301,7 @@ class Container(containers.DeclarativeContainer):
         provides=SearchService,
         audience_repository=audience_repository,
         recommend_products_repository=recommend_products_repository,
+        offer_repository=offer_repository,
     )
 
     """

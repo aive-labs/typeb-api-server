@@ -11,17 +11,17 @@ from src.users.domain.user import User
 
 class StrategyRepository(BaseStrategyRepository):
     def __init__(self, strategy_sqlalchemy: StrategySqlAlchemy):
-        self.strategy_sqlalchemy_respository = strategy_sqlalchemy
+        self.strategy_sqlalchemy_repository = strategy_sqlalchemy
 
     def get_all_strategies(self, start_date, end_date, user: User) -> list[Strategy]:
-        return self.strategy_sqlalchemy_respository.get_all_strategies(
+        return self.strategy_sqlalchemy_repository.get_all_strategies(
             start_date, end_date, user
         )
 
     def get_strategy_detail(
         self, strategy_id: str
     ) -> tuple[Strategy, list[CampaignThemeSelectV2]]:
-        strategy_entity = self.strategy_sqlalchemy_respository.get_strategy_detail(
+        strategy_entity = self.strategy_sqlalchemy_repository.get_strategy_detail(
             strategy_id=strategy_id
         )
 
@@ -47,12 +47,12 @@ class StrategyRepository(BaseStrategyRepository):
     def create_strategy(
         self, strategy: Strategy, campaign_themes: list[StrategyTheme], user: User
     ):
-        self.strategy_sqlalchemy_respository.create_strategy(
+        self.strategy_sqlalchemy_repository.create_strategy(
             strategy, campaign_themes, user
         )
 
     def is_strategy_name_exists(self, name: str) -> int:
-        return self.strategy_sqlalchemy_respository.is_strategy_name_exists(name)
+        return self.strategy_sqlalchemy_repository.is_strategy_name_exists(name)
 
     def find_by_strategy_id(self, strategy_id: str) -> Strategy:
-        return self.strategy_sqlalchemy_respository.find_by_strategy_id(strategy_id)
+        return self.strategy_sqlalchemy_repository.find_by_strategy_id(strategy_id)

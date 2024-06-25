@@ -38,6 +38,7 @@ def get_strategies(
 
 
 @search_router.get("/offers")
+@inject
 def get_search_offers(
     audience_type_code: str,
     strategy_id: Optional[str] = None,
@@ -58,6 +59,7 @@ def get_search_offers(
 
 
 @search_router.get("/recommend-products-models")
+@inject
 async def get_search_products(
     audience_type_code: str,
     keyword: Optional[str] = None,

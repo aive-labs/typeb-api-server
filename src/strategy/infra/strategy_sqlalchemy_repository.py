@@ -73,20 +73,18 @@ class StrategySqlAlchemy:
             return result
 
     def create_strategy(
-        self, strategy: Strategy, campaign_themes: list[StrategyTheme], user: User
-    ):
+        self, strategy: Strategy, strategy_themes: list[StrategyTheme], user: User
+    ) -> StrategyEntity:
         with self.db() as db:
             strategy_entity = StrategyEntity(
                 strategy_name=strategy.strategy_name,
                 strategy_tags=strategy.strategy_tags,
-                strategy_metric_code=strategy.strategy_metric_code,
-                strategy_metric_name=strategy.strategy_metric_name,
                 strategy_status_code=strategy.strategy_status_code,
                 strategy_status_name=strategy.strategy_status_name,
                 audience_type_code=strategy.audience_type_code,
                 audience_type_name=strategy.audience_type_name,
-                target_group_code=strategy.target_group_code,
-                target_group_name=strategy.target_group_name,
+                target_strategy_code=strategy.target_strategy_code,
+                target_strategy_name=strategy.target_strategy_name,
                 created_by=user.username,
                 created_at=localtime_converter(),
                 updated_by=user.username,
@@ -94,7 +92,7 @@ class StrategySqlAlchemy:
                 owned_by_dept=user.department_id,
             )
 
-            for theme in campaign_themes:
+            for theme in strategy_themes:
                 strategy_theme_entity = StrategyThemesEntity(
                     strategy_theme_name=theme.strategy_theme_name,
                     recsys_model_id=theme.recsys_model_id,
@@ -124,6 +122,9 @@ class StrategySqlAlchemy:
                 strategy_entity.strategy_themes.append(strategy_theme_entity)
 
             db.add(strategy_entity)
+            db.commit()
+
+            return strategy_entity
 
     def _object_access_condition(
         self, db: Session, user: UserEntity, model: Type[StrategyEntity]

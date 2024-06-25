@@ -8,7 +8,7 @@ from src.strategy.routes.dto.response.strategy_response import StrategyResponse
 from src.strategy.routes.dto.response.strategy_with_campaign_theme_response import (
     StrategyWithCampaignThemeResponse,
 )
-from src.strategy.routes.port.create_strategy_usecase import CreateStrategyUsecase
+from src.strategy.routes.port.create_strategy_usecase import CreateStrategyUseCase
 from src.strategy.routes.port.get_strategy_usecase import GetStrategyUseCase
 
 strategy_router = APIRouter(tags=["Strategy-management"])
@@ -31,7 +31,7 @@ def get_strategies(
 @inject
 def create_strategies(
     strategy_create: StrategyCreate,
-    create_strategy_service: CreateStrategyUsecase = Depends(
+    create_strategy_service: CreateStrategyUseCase = Depends(
         dependency=Provide[Container.create_strategy_service]
     ),
     user=Depends(

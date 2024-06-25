@@ -4,6 +4,7 @@ from sqlalchemy import ARRAY, JSON, Column, DateTime, Integer, String
 from sqlalchemy.orm import relationship
 
 from src.core.database import Base
+from src.offers.infra.entity.offer_details import OfferDetailsEntity
 
 
 class OffersEntity(Base):
@@ -45,5 +46,5 @@ class OffersEntity(Base):
     offer_sale_tp = Column(ARRAY(String(2)), default=[])
 
     offer_detail_options = relationship(
-        "OfferDetailsEntity", backref="offers", lazy=True, cascade="all, delete-orphan"
+        OfferDetailsEntity, backref="offers", lazy=True, cascade="all, delete-orphan"
     )
