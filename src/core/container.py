@@ -45,6 +45,7 @@ from src.core.database import Database, get_db_url
 from src.messages.infra.ppurio_message_repository import PpurioMessageRepository
 from src.messages.service.message_service import MessageService
 from src.offers.infra.offer_repository import OfferRepository
+from src.offers.service.get_offer_service import GetOfferService
 from src.search.service.search_service import SearchService
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.infra.strategy_sqlalchemy_repository import StrategySqlAlchemy
@@ -69,6 +70,7 @@ class Container(containers.DeclarativeContainer):
             "src.audiences.service.background.execute_target_audience_summary",
             "src.strategy.routes.strategy_router",
             "src.search.routes.search_router",
+            "src.offers.routes.offer_router",
         ]
     )
 
@@ -169,6 +171,7 @@ class Container(containers.DeclarativeContainer):
     update_creatives_service = providers.Singleton(
         provides=UpdateCreativesService, creatives_repository=creatives_repository
     )
+
     delete_creatives_service = providers.Singleton(
         provides=DeleteCreativesService, creatives_repository=creatives_repository
     )
@@ -288,6 +291,10 @@ class Container(containers.DeclarativeContainer):
     """
     offer_repository = providers.Singleton(
         provides=OfferRepository, db=db.provided.session
+    )
+
+    get_offer_service = providers.Singleton(
+        provides=GetOfferService, offer_repository=offer_repository
     )
 
     """

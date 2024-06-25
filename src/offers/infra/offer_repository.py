@@ -2,11 +2,14 @@ from contextlib import AbstractContextManager
 from datetime import datetime
 from typing import Callable
 
+from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 
 from src.audiences.enums.audience_type import AudienceType
 from src.common.timezone_setting import selected_timezone
 from src.common.utils.string_utils import is_convertible_to_int
+from src.offers.domain.offer import Offer
+from src.offers.enums.offer_use_type import OfferUseType
 from src.offers.infra.entity.offers_entity import OffersEntity
 from src.search.routes.dto.id_with_label_response import IdWithLabel
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
@@ -28,6 +31,50 @@ class OfferRepository:
 
         """
         self.db = db
+
+    def get_all_offers(
+        self, based_on, sort_by, start_date, end_date, keyword
+    ) -> list[Offer]:
+        with self.db() as db:
+            base_query = (
+                db.query(OffersEntity)
+                .filter(
+                    and_(
+                        OffersEntity.event_end_dt >= start_date,
+                        OffersEntity.event_str_dt <= end_date,
+                    )
+                )
+                .order_by(OffersEntity.offer_source, OffersEntity.event_str_dt.desc())
+            )
+
+            if keyword:
+                base_query = base_query.filter(
+                    or_(
+                        OffersEntity.offer_name.ilike(f"%{keyword}%"),
+                        OffersEntity.event_no.ilike(f"%{keyword}%"),
+                        OffersEntity.offer_source.ilike(f"%{keyword}%"),
+                        OffersEntity.offer_type_name.ilike(f"%{keyword}%"),
+                    )
+                )
+
+            offer_entities = base_query.all()
+            use_type_dict = {
+                v.value: v.description for _, v in OfferUseType.__members__.items()
+            }
+
+            offers = []
+            for offer in offer_entities:
+                temp_offer = Offer.from_entity(offer)
+                temp_offer.offer_use_type = use_type_dict.get(
+                    temp_offer.offer_use_type, ""
+                )
+                temp_offer.offer_source = (
+                    temp_offer.offer_source if temp_offer.offer_source else ""
+                )
+
+                offers.append(temp_offer)
+
+            return offers
 
     def _create_label(self, data):
         return f"({data.id}) {data.name}"

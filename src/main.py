@@ -19,8 +19,8 @@ def create_app():
     app = FastAPI()
     print("create container..")
     container = Container()
-    container.init_resources()
-    print("initailize container..")
+    # container.init_resources()
+    # print("initailize container..")
     app.container = container  # pyright: ignore [reportAttributeAccessIssue]
 
     return app
