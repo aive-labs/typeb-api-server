@@ -1,6 +1,10 @@
 from src.core.exceptions.exceptions import DuplicatedException, ValidationError
-from src.strategy.domain.campaign_theme import StrategyTheme, ThemeAudience, ThemeOffer
 from src.strategy.domain.strategy import Strategy
+from src.strategy.domain.strategy_theme import (
+    StrategyTheme,
+    StrategyThemeAudienceMapping,
+    StrategyThemeOfferMapping,
+)
 from src.strategy.enums.recommend_model import RecommendModels
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.routes.dto.request.strategy_create import StrategyCreate
@@ -52,14 +56,14 @@ class CreateStrategyService(CreateStrategyUseCase):
             )
 
             theme_audience = [
-                ThemeAudience(
+                StrategyThemeAudienceMapping(
                     audience_id=audience_id,
                 )
                 for audience_id in theme.theme_audience_set.audience_ids
             ]
 
             theme_offer = [
-                ThemeOffer(
+                StrategyThemeOfferMapping(
                     offer_id=offer_id,
                 )
                 for offer_id in theme.theme_audience_set.offer_ids
@@ -70,8 +74,8 @@ class CreateStrategyService(CreateStrategyUseCase):
                     strategy_theme_name=theme.strategy_theme_name,
                     recsys_model_id=theme.recsys_model_id,
                     contents_tags=theme.theme_audience_set.contents_tags,
-                    theme_audience=theme_audience,
-                    theme_offer=theme_offer,
+                    strategy_theme_audience_mapping=theme_audience,
+                    strategy_theme_offer_mapping=theme_offer,
                 )
             )
 

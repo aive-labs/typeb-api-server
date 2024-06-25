@@ -4,7 +4,7 @@ from pydantic import BaseModel
 class ThemeDetail(BaseModel):
     audience_ids: list[str]
     offer_ids: list[str]
-    contents_tags: list[str]
+    contents_tags: list[str] | None = None
 
 
 class StrategyThemeModel(BaseModel):

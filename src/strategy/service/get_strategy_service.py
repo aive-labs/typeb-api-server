@@ -1,3 +1,4 @@
+from src.core.exceptions.exceptions import ConvertValueError
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.routes.dto.response.strategy_response import StrategyResponse
 from src.strategy.routes.dto.response.strategy_with_campaign_theme_response import (
@@ -25,22 +26,25 @@ class GetStrategyService(GetStrategyUseCase):
     def get_strategy_detail(
         self, strategy_id: str
     ) -> StrategyWithCampaignThemeResponse:
-        strategy, campaign_theme_obj = self.strategy_repository.get_strategy_detail(
+        strategy, strategy_themes = self.strategy_repository.get_strategy_detail(
             strategy_id
         )
+
+        if strategy.created_at is None or strategy.updated_at is None:
+            raise ConvertValueError(
+                detail={"message": "created_at and updated_at cannot be None"}
+            )
 
         response = StrategyWithCampaignThemeResponse(
             strategy_name=strategy.strategy_name,
             strategy_tags=strategy.strategy_tags,
-            strategy_metric_code=strategy.strategy_metric_code,
-            strategy_metric_name=strategy.strategy_metric_name,
             strategy_status_code=strategy.strategy_status_code,
             strategy_status_name=strategy.strategy_status_name,
             audience_type_code=strategy.audience_type_code,
             audience_type_name=strategy.audience_type_name,
-            target_group_code=strategy.target_group_code,
-            target_group_name=strategy.target_group_name,
-            campaign_themes=campaign_theme_obj,
+            target_strategy_code=strategy.target_strategy_code,
+            target_strategy_name=strategy.target_strategy_name,
+            strategy_themes=strategy_themes,
             created_at=strategy.created_at,
             updated_at=strategy.updated_at,
         )

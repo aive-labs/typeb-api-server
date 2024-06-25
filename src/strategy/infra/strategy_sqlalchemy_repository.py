@@ -11,8 +11,8 @@ from src.audiences.infra.entity.strategy_theme_audience_entity import (
 from src.common.enums.role import RoleEnum
 from src.common.utils.date_utils import localtime_converter
 from src.core.exceptions.exceptions import NotFoundException
-from src.strategy.domain.campaign_theme import StrategyTheme
 from src.strategy.domain.strategy import Strategy
+from src.strategy.domain.strategy_theme import StrategyTheme
 from src.strategy.enums.strategy_status import StrategyStatus
 from src.strategy.infra.entity.strategy_entity import StrategyEntity
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
@@ -59,18 +59,18 @@ class StrategySqlAlchemy:
             )
             return [Strategy.from_entity(entity) for entity in entities]
 
-    def get_strategy_detail(self, strategy_id: str) -> StrategyEntity:
+    def get_strategy_detail(self, strategy_id: str) -> Strategy:
         with self.db() as db:
-            result = (
+            entity: StrategyEntity = (
                 db.query(StrategyEntity)
                 .filter(StrategyEntity.strategy_id == strategy_id)
                 .first()
             )
 
-            if result is None:
+            if entity is None:
                 raise NotFoundException("전략을 찾지 못했습니다.")
 
-            return result
+            return Strategy.from_entity(entity)
 
     def create_strategy(
         self, strategy: Strategy, strategy_themes: list[StrategyTheme], user: User
@@ -101,7 +101,7 @@ class StrategySqlAlchemy:
 
                 theme_audience_entities = [
                     StrategyThemeAudienceMappingEntity(audience_id=audience.audience_id)
-                    for audience in theme.theme_audience
+                    for audience in theme.strategy_theme_audience_mapping
                 ]
 
                 for theme_audience_entity in theme_audience_entities:
@@ -111,7 +111,7 @@ class StrategySqlAlchemy:
 
                 theme_offer_entities = [
                     StrategyThemeOfferMappingEntity(offer_id=offer.offer_id)
-                    for offer in theme.theme_offer
+                    for offer in theme.strategy_theme_offer_mapping
                 ]
 
                 for theme_offer_entity in theme_offer_entities:
