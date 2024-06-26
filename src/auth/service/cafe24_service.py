@@ -111,8 +111,7 @@ class Cafe24Service(BaseOauthService):
 
         result = requests.post(
             url=f"{airflow_api}/dags/{cafe24_dag_id}/dagRuns",
-            headers={"Content-Type": "application/json"},
-            data={
+            json={
                 "conf": {"mall_id": mall_id},
             },
             auth=HTTPBasicAuth(username, password),
