@@ -1,4 +1,4 @@
-from src.core.exceptions.exceptions import DuplicatedException, ValidationError
+from src.core.exceptions.exceptions import DuplicatedException, ValidationException
 from src.strategy.domain.strategy import Strategy
 from src.strategy.domain.strategy_theme import (
     StrategyTheme,
@@ -123,7 +123,7 @@ class CreateStrategyService(CreateStrategyUseCase):
         if (RecommendModels.new_collection_rec.value in recommend_model_list) and len(
             set(recommend_model_list)
         ) > 1:
-            raise ValidationError(
+            raise ValidationException(
                 detail={
                     "code": "strategy/create",
                     "message": "신상품 추천 모델은 전략 내 단독으로만 사용 가능합니다. (다른 추천 모델 사용 불가)",
@@ -132,7 +132,7 @@ class CreateStrategyService(CreateStrategyUseCase):
 
     def _check_single_offer_per_custom_theme(self, audience_type_code, offer_id_list):
         if audience_type_code == "c" and len(offer_id_list) > 1:
-            raise ValidationError(
+            raise ValidationException(
                 detail={
                     "code": "strategy/create",
                     "message": "커스텀 전략의 테마 별 오퍼는 1개까지 사용가능합니다.",

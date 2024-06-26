@@ -229,7 +229,7 @@ def download_audience(
 @audience_router.get("/audiences/upload/template")
 def get_csv_template(user=Depends(get_permission_checker(required_permissions=[]))):
     """타겟 오디언스 csv 템플릿 조회:  csv 템플릿 파일을 내려주는 API"""
-    template_dir = pathlib.Path.cwd() / "src/audiences/resources/template"
+    template_dir = pathlib.Path.cwd() / "src/audiences/resources/message_template"
     filename = f"{template_dir}/upload_templates.zip"
 
     return FileResponse(

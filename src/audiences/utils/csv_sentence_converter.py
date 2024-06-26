@@ -11,5 +11,5 @@ def csv_check_sentence_converter(
     elif template_type == CsvTemplates.shop_cd.name:
         result_sentence = f"{upload_count}개의 주관리 매장 중 {checked_shop_cnt:,}개가 확인되었으며, {checked_shop_cnt:,}개의 주관리 매장에 해당되는 고객번호 {actual_count:,}개가 확인되었습니다."
     else:
-        raise ValueError("Invalid template type provided")
+        raise ValueError("Invalid message_template type provided")
     return result_sentence

@@ -33,14 +33,14 @@ class NotFoundException(HTTPException):
         super().__init__(status.HTTP_404_NOT_FOUND, detail, headers)
 
 
-class ValidationError(HTTPException):
+class ValidationException(HTTPException):
     def __init__(
         self, detail: Any = None, headers: dict[str, Any] | None = None
     ) -> None:
         super().__init__(status.HTTP_422_UNPROCESSABLE_ENTITY, detail, headers)
 
 
-class ConvertValueError(HTTPException):
+class ConvertValueExeption(HTTPException):
     def __init__(
         self, detail: Any = None, headers: dict[str, Any] | None = None
     ) -> None:

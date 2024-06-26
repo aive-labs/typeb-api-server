@@ -15,3 +15,7 @@ class BaseCampaignRepository(ABC):
     @abstractmethod
     def is_existing_campaign_by_name(self, name: str) -> bool:
         pass
+
+    @abstractmethod
+    def is_existing_campaign_by_offer_event_no(self, offer_event_no: str) -> bool:
+        pass

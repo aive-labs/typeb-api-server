@@ -42,10 +42,17 @@ from src.contents.service.get_creatives_service import GetCreativesService
 from src.contents.service.update_contents_service import UpdateContentsService
 from src.contents.service.update_creatives_service import UpdateCreativesService
 from src.core.database import Database, get_db_url
+from src.message_template.infra.message_template_repository import (
+    MessageTemplateRepository,
+)
+from src.message_template.service.create_message_template_service import (
+    CreateMessageTemplateService,
+)
 from src.messages.infra.ppurio_message_repository import PpurioMessageRepository
 from src.messages.service.message_service import MessageService
 from src.offers.infra.offer_repository import OfferRepository
 from src.offers.service.get_offer_service import GetOfferService
+from src.offers.service.update_offer_service import UpdateOfferService
 from src.search.service.search_service import SearchService
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.infra.strategy_sqlalchemy_repository import StrategySqlAlchemy
@@ -71,6 +78,7 @@ class Container(containers.DeclarativeContainer):
             "src.strategy.routes.strategy_router",
             "src.search.routes.search_router",
             "src.offers.routes.offer_router",
+            "src.message_template.routes.message_template_router",
         ]
     )
 
@@ -295,6 +303,21 @@ class Container(containers.DeclarativeContainer):
 
     get_offer_service = providers.Singleton(
         provides=GetOfferService, offer_repository=offer_repository
+    )
+
+    update_offer_service = providers.Singleton(
+        provides=UpdateOfferService, offer_repository=offer_repository
+    )
+
+    """
+    template 의존성
+    """
+    message_template_repository = providers.Singleton(
+        provides=MessageTemplateRepository, db=db.provided.session
+    )
+    create_template_service = providers.Singleton(
+        provides=CreateMessageTemplateService,
+        message_template_repository=message_template_repository,
     )
 
     """

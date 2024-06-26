@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
-from src.offers.routes.dto.offer_response import OfferResponse
+from src.offers.routes.dto.response.offer_detail_response import OfferDetailResponse
+from src.offers.routes.dto.response.offer_response import OfferResponse
 
 
 class GetOfferUseCase(ABC):
@@ -12,5 +13,5 @@ class GetOfferUseCase(ABC):
         pass
 
     @abstractmethod
-    def get_offer_detail(self, offer_id):
+    def get_offer_detail(self, offer_id) -> OfferDetailResponse:
         pass

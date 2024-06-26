@@ -115,7 +115,7 @@ class UpdateAudienceService(UpdateAudienceUseCase):
         생성 로직.. -> 임시 테이블에 저장
         -DB가 모두 정상적으로 업데이트 되었을 때, INSERT TO & 임시 테이블 삭제
         -DB 업데이트중 Fail 발생 시, 임시 테이블 삭제
-         template 코드(cus_cd, shop_code, ...) 에 따른 대상 cust_ids 추출
+         message_template 코드(cus_cd, shop_code, ...) 에 따른 대상 cust_ids 추출
         """
 
         # Audience 데이터 저장

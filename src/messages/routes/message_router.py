@@ -18,7 +18,7 @@ def get_client_ip(request: Request):
     return client.host
 
 
-# 허용할 IP 목록
+# TODO: 허용할 IP 목록
 ALLOWED_IPS = {"123.123.123.123", "124.124.124.124"}
 
 

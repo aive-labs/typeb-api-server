@@ -8,6 +8,7 @@ from src.campaign.domain.campaign import Campaign
 from src.campaign.enums.campagin_status import CampaignStatus
 from src.campaign.enums.send_type import SendType
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
+from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
 from src.common.sqlalchemy.object_access_condition import object_access_condition
 from src.users.domain.user import User
 
@@ -87,3 +88,23 @@ class CampaignSqlAlchemy:
             ]
 
             return campaigns
+
+    def is_existing_campaign_by_offer_event_no(self, offer_event_no):
+        with self.db() as db:
+            used_event_no = (
+                db.query(CampaignSetsEntity)
+                .join(
+                    CampaignEntity,
+                    CampaignSetsEntity.campaign_id == CampaignEntity.campaign_id,
+                )
+                .filter(
+                    CampaignEntity.campaign_status_code.notin_(["o2", "s3"]),
+                    CampaignSetsEntity.event_no == offer_event_no,
+                )
+                .first()
+            )
+
+            if used_event_no is None:
+                return False
+
+            return True

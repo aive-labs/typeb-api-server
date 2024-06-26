@@ -1,5 +1,6 @@
 from src.offers.infra.offer_repository import OfferRepository
-from src.offers.routes.dto.offer_response import OfferResponse
+from src.offers.routes.dto.response.offer_detail_response import OfferDetailResponse
+from src.offers.routes.dto.response.offer_response import OfferResponse
 from src.offers.routes.port.get_offer_usecase import GetOfferUseCase
 
 
@@ -16,5 +17,5 @@ class GetOfferService(GetOfferUseCase):
         )
         return [OfferResponse.from_model(offer) for offer in offers]
 
-    def get_offer_detail(self, offer_id):
-        pass
+    def get_offer_detail(self, offer_key) -> OfferDetailResponse:
+        return self.offer_repository.get_offer_detail(offer_key)
