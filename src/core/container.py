@@ -1,5 +1,7 @@
 from dependency_injector import containers, providers
 
+from src.admin.infra.admin_repository import AdminRepository
+from src.admin.service.get_personal_variables_service import GetPersonalVariablesService
 from src.audiences.infra.audience_repository import AudienceRepository
 from src.audiences.infra.audience_sqlalchemy_repository import AudienceSqlAlchemy
 from src.audiences.service.background.target_audience_summary_sqlalchemy import (
@@ -88,6 +90,7 @@ class Container(containers.DeclarativeContainer):
             "src.search.routes.search_router",
             "src.offers.routes.offer_router",
             "src.message_template.routes.message_template_router",
+            "src.admin.routes.admin_router",
         ]
     )
 
@@ -341,6 +344,14 @@ class Container(containers.DeclarativeContainer):
     delete_template_service = providers.Singleton(
         provides=DeleteMessageTemplateService,
         message_template_repository=message_template_repository,
+    )
+
+    admin_repository = providers.Singleton(
+        provides=AdminRepository, db=db.provided.session
+    )
+
+    get_personal_variables_service = providers.Singleton(
+        provides=GetPersonalVariablesService, admin_repository=admin_repository
     )
 
     """

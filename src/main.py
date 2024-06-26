@@ -1,6 +1,7 @@
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.admin.routes.admin_router import admin_router
 from src.audiences.routes.audience_router import audience_router
 from src.auth.routes.auth_router import auth_router
 from src.auth.routes.onboarding_router import onboarding_router
@@ -40,6 +41,7 @@ app.include_router(router=search_router, prefix="/search")
 app.include_router(router=message_router, prefix="/message")
 app.include_router(router=offer_router, prefix="/settings/offers")
 app.include_router(router=message_template_router, prefix="/settings/templates")
+app.include_router(router=admin_router, prefix="/settings/admin")
 
 origins = ["*"]
 
