@@ -3,6 +3,7 @@ from typing import Callable
 
 from sqlalchemy.orm import Session
 
+from src.core.exceptions.exceptions import NotFoundException
 from src.message_template.domain.message_template import MessageTemplate
 from src.message_template.infra.entity.message_template_button_detail_entity import (
     MessageTemplateButtonDetailEntity,
@@ -62,3 +63,23 @@ class MessageTemplateRepository(BaseMessageTemplateRepository):
             db.commit()
 
             return MessageTemplate.model_validate(template_entity)
+
+    def get_all_templates(self) -> list[MessageTemplate]:
+        with self.db() as db:
+            entities = db.query(MessageTemplateEntity).all()
+            return [MessageTemplate.model_validate(entity) for entity in entities]
+
+    def get_template_detail(self, template_id: str) -> MessageTemplate:
+        with self.db() as db:
+            entity = (
+                db.query(MessageTemplateEntity)
+                .filter(MessageTemplateEntity.template_id == template_id)
+                .first()
+            )
+
+            if entity is None:
+                raise NotFoundException(
+                    detail={"message": "존재하지 않는 템플릿입니다."}
+                )
+
+            return MessageTemplate.model_validate(entity)

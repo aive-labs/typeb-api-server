@@ -10,6 +10,9 @@ from src.message_template.routes.dto.request.message_template_create import (
 from src.message_template.service.create_message_template_service import (
     CreateMessageTemplateService,
 )
+from src.message_template.service.get_message_template_service import (
+    GetMessageTemplateService,
+)
 
 message_template_router = APIRouter(
     tags=["Settings-message-template"],
@@ -30,14 +33,25 @@ def create_message_template(
 
 @message_template_router.get("")
 @inject
-def get_all_templates():
-    pass
+def get_all_templates(
+    user=Depends(get_permission_checker(required_permissions=[])),
+    get_template_service: GetMessageTemplateService = Depends(
+        Provide[Container.get_template_service]
+    ),
+):
+    return get_template_service.get_all_templates()
 
 
 @message_template_router.get("/{template_id}")
 @inject
-def get_template_detail(template_id):
-    pass
+def get_template_detail(
+    template_id: str,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    get_template_service: GetMessageTemplateService = Depends(
+        Provide[Container.get_template_service]
+    ),
+):
+    return get_template_service.get_template_detail(template_id)
 
 
 @message_template_router.put("/{template_id}")

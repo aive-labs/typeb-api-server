@@ -48,6 +48,9 @@ from src.message_template.infra.message_template_repository import (
 from src.message_template.service.create_message_template_service import (
     CreateMessageTemplateService,
 )
+from src.message_template.service.get_message_template_service import (
+    GetMessageTemplateService,
+)
 from src.messages.infra.ppurio_message_repository import PpurioMessageRepository
 from src.messages.service.message_service import MessageService
 from src.offers.infra.offer_repository import OfferRepository
@@ -86,8 +89,6 @@ class Container(containers.DeclarativeContainer):
     config 파일에 따라 다른 데이터베이스 주입
     """
     db = providers.Singleton(Database, db_url=get_db_url())
-    print(db.provided._create_database())
-
     """
     s3 객체
     """
@@ -315,8 +316,14 @@ class Container(containers.DeclarativeContainer):
     message_template_repository = providers.Singleton(
         provides=MessageTemplateRepository, db=db.provided.session
     )
+
     create_template_service = providers.Singleton(
         provides=CreateMessageTemplateService,
+        message_template_repository=message_template_repository,
+    )
+
+    get_template_service = providers.Singleton(
+        provides=GetMessageTemplateService,
         message_template_repository=message_template_repository,
     )
 
