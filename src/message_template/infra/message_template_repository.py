@@ -1,6 +1,7 @@
 from contextlib import AbstractContextManager
 from typing import Callable
 
+from sqlalchemy import update
 from sqlalchemy.orm import Session
 
 from src.core.exceptions.exceptions import NotFoundException
@@ -66,13 +67,18 @@ class MessageTemplateRepository(BaseMessageTemplateRepository):
 
     def get_all_templates(self) -> list[MessageTemplate]:
         with self.db() as db:
-            entities = db.query(MessageTemplateEntity).all()
+            entities = (
+                db.query(MessageTemplateEntity)
+                .filter(~MessageTemplateEntity.is_deleted)
+                .all()
+            )
             return [MessageTemplate.model_validate(entity) for entity in entities]
 
     def get_template_detail(self, template_id: str) -> MessageTemplate:
         with self.db() as db:
             entity = (
                 db.query(MessageTemplateEntity)
+                .filter(~MessageTemplateEntity.is_deleted)
                 .filter(MessageTemplateEntity.template_id == template_id)
                 .first()
             )
@@ -83,3 +89,26 @@ class MessageTemplateRepository(BaseMessageTemplateRepository):
                 )
 
             return MessageTemplate.model_validate(entity)
+
+    def delete(self, template_id: str):
+        with self.db() as db:
+            entity = (
+                db.query(MessageTemplateEntity)
+                .filter(~MessageTemplateEntity.is_deleted)
+                .filter(MessageTemplateEntity.template_id == template_id)
+                .first()
+            )
+
+            if entity is None:
+                raise NotFoundException(
+                    detail={"message": "존재하지 않는 템플릿입니다."}
+                )
+
+            update_statement = (
+                update(MessageTemplateEntity)
+                .where(MessageTemplateEntity.template_id == template_id)
+                .values(is_deleted=True)
+            )
+
+            db.execute(update_statement)
+            db.commit()

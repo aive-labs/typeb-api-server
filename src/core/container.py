@@ -48,6 +48,9 @@ from src.message_template.infra.message_template_repository import (
 from src.message_template.service.create_message_template_service import (
     CreateMessageTemplateService,
 )
+from src.message_template.service.delete_message_template_service import (
+    DeleteMessageTemplateService,
+)
 from src.message_template.service.get_message_template_service import (
     GetMessageTemplateService,
 )
@@ -324,6 +327,11 @@ class Container(containers.DeclarativeContainer):
 
     get_template_service = providers.Singleton(
         provides=GetMessageTemplateService,
+        message_template_repository=message_template_repository,
+    )
+
+    delete_template_service = providers.Singleton(
+        provides=DeleteMessageTemplateService,
         message_template_repository=message_template_repository,
     )
 
