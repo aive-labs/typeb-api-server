@@ -7,6 +7,9 @@ from src.message_template.domain.message_template import MessageTemplate
 from src.message_template.routes.dto.request.message_template_create import (
     TemplateCreate,
 )
+from src.message_template.routes.dto.request.message_template_update import (
+    TemplateUpdate,
+)
 from src.message_template.service.create_message_template_service import (
     CreateMessageTemplateService,
 )
@@ -15,6 +18,9 @@ from src.message_template.service.delete_message_template_service import (
 )
 from src.message_template.service.get_message_template_service import (
     GetMessageTemplateService,
+)
+from src.message_template.service.update_message_template_service import (
+    UpdateMessageTemplateService,
 )
 
 message_template_router = APIRouter(
@@ -58,8 +64,16 @@ def get_template_detail(
 
 
 @message_template_router.put("/{template_id}")
-def update_template():
-    pass
+@inject
+def update_template(
+    template_id: str,
+    template_update: TemplateUpdate,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    update_template_service: UpdateMessageTemplateService = Depends(
+        Provide[Container.update_template_service]
+    ),
+):
+    update_template_service.exec(template_id, template_update, user)
 
 
 @message_template_router.delete(

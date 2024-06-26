@@ -54,6 +54,9 @@ from src.message_template.service.delete_message_template_service import (
 from src.message_template.service.get_message_template_service import (
     GetMessageTemplateService,
 )
+from src.message_template.service.update_message_template_service import (
+    UpdateMessageTemplateService,
+)
 from src.messages.infra.ppurio_message_repository import PpurioMessageRepository
 from src.messages.service.message_service import MessageService
 from src.offers.infra.offer_repository import OfferRepository
@@ -327,6 +330,11 @@ class Container(containers.DeclarativeContainer):
 
     get_template_service = providers.Singleton(
         provides=GetMessageTemplateService,
+        message_template_repository=message_template_repository,
+    )
+
+    update_template_service = providers.Singleton(
+        provides=UpdateMessageTemplateService,
         message_template_repository=message_template_repository,
     )
 

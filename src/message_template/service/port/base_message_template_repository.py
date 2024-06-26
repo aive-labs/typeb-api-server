@@ -18,5 +18,9 @@ class BaseMessageTemplateRepository(ABC):
         pass
 
     @abstractmethod
+    def update(self, template_id: str, model: MessageTemplate):
+        pass
+
+    @abstractmethod
     def delete(self, template_id: str):
         pass
