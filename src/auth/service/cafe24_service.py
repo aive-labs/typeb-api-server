@@ -108,6 +108,7 @@ class Cafe24Service(BaseOauthService):
         cafe24_dag_id = get_env_variable("cafe24_migration_dag_id")
         username = get_env_variable("airflow_username")
         password = get_env_variable("airflow_password")
+
         result = requests.post(
             url=f"{airflow_api}/dags/{cafe24_dag_id}/dagRuns",
             headers={"Content-Type": "application/json"},
