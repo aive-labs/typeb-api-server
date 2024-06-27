@@ -1,3 +1,4 @@
+from core.database import Database, get_db_url
 from dependency_injector import containers, providers
 
 from src.admin.infra.admin_repository import AdminRepository
@@ -43,7 +44,6 @@ from src.contents.service.get_creative_recommendations_for_content import (
 from src.contents.service.get_creatives_service import GetCreativesService
 from src.contents.service.update_contents_service import UpdateContentsService
 from src.contents.service.update_creatives_service import UpdateCreativesService
-from src.core.database import Database, get_db_url
 from src.message_template.infra.message_template_repository import (
     MessageTemplateRepository,
 )
@@ -73,6 +73,17 @@ from src.users.infra.user_repository import UserRepository
 from src.users.infra.user_sqlalchemy import UserSqlAlchemy
 from src.users.service.user_service import UserService
 
+# class CachedFactory(providers.Factory):
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self._cache = lru_cache(maxsize=None)(self._provide)
+#
+#     def _provide(self, *args, **kwargs):
+#         return super()._provide(*args, **kwargs)  # pyright: ignore [reportAttributeAccessIssue]
+#
+#     def __call__(self, *args, **kwargs):
+#         return self._cache(*args, **kwargs)
+
 
 class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(
@@ -98,6 +109,20 @@ class Container(containers.DeclarativeContainer):
     config 파일에 따라 다른 데이터베이스 주입
     """
     db = providers.Singleton(Database, db_url=get_db_url())
+
+    """
+    온보딩 의존성 주입
+    """
+    onboarding_sqlalchemy = providers.Factory(
+        provides=OnboardingSqlAlchemyRepository, db=db.provided.session
+    )
+    onboarding_repository = providers.Factory(
+        provides=OnboardingRepository, onboarding_sqlalchemy=onboarding_sqlalchemy
+    )
+    onboarding_service = providers.Factory(
+        provides=OnboardingService, onboarding_repository=onboarding_repository
+    )
+
     """
     s3 객체
     """
@@ -124,19 +149,6 @@ class Container(containers.DeclarativeContainer):
         UserRepository, user_sqlalchemy=user_sqlalchemy
     )
     user_service = providers.Singleton(UserService, user_repository=user_repository)
-
-    """
-    온보딩 의존성 주입
-    """
-    onboarding_sqlalchemy = providers.Singleton(
-        provides=OnboardingSqlAlchemyRepository, db=db.provided.session
-    )
-    onboarding_repository = providers.Singleton(
-        provides=OnboardingRepository, onboarding_sqlalchemy=onboarding_sqlalchemy
-    )
-    onboarding_service = providers.Singleton(
-        provides=OnboardingService, onboarding_repository=onboarding_repository
-    )
 
     """
     인증 의존성 주입

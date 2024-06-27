@@ -1,5 +1,8 @@
+from core.database import get_db_session
+from core.schema import set_current_schema
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
+from sqlalchemy.orm import Session
 
 from src.auth.routes.dto.request.kakao_channel_request import KakaoChannelRequest
 from src.auth.routes.dto.request.message_sender_request import MessageSenderRequest
@@ -16,15 +19,17 @@ onboarding_router = APIRouter(
 
 
 @onboarding_router.get("/{mall_id}")
-@inject  # TokenService 주입
+@inject
 def get_onboarding_status(
     mall_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     onboarding_service: BaseOnboardingService = Depends(
         Provide[Container.onboarding_service]
     ),
 ) -> OnboardingResponse | None:
-    return onboarding_service.get_onboarding_status(mall_id)
+    set_current_schema(user.mall_id)
+    return onboarding_service.get_onboarding_status(mall_id=mall_id, user=user, db=db)
 
 
 @onboarding_router.patch("/{mall_id}")

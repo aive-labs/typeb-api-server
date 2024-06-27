@@ -19,7 +19,7 @@ class StrategyThemesEntity(Base):
         Integer, primary_key=True, index=True, autoincrement=True
     )
     strategy_theme_name = Column(String, nullable=False)
-    strategy_id = Column(String, ForeignKey("aivelabs_sv.strategies.strategy_id"))
+    strategy_id = Column(String, ForeignKey("strategies.strategy_id"))
     recsys_model_id = Column(Integer, nullable=False)
     contents_tags = Column(ARRAY(String))
     created_at = Column(DateTime(timezone=True), default=datetime.now())

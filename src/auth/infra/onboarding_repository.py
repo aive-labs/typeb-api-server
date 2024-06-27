@@ -1,3 +1,6 @@
+from sqlalchemy import text
+from sqlalchemy.orm import Session
+
 from src.auth.domain.onboarding import Onboarding
 from src.auth.enums.onboarding_status import OnboardingStatus
 from src.auth.infra.onboarding_sqlalchemy_repository import (
@@ -13,8 +16,12 @@ class OnboardingRepository(BaseOnboardingRepository):
     def __init__(self, onboarding_sqlalchemy: OnboardingSqlAlchemyRepository):
         self.onboarding_sqlalchemy = onboarding_sqlalchemy
 
-    def get_onboarding_status(self, mall_id) -> Onboarding | None:
-        return self.onboarding_sqlalchemy.get_onboarding_status(mall_id)
+    def get_onboarding_status(self, mall_id, db: Session) -> Onboarding | None:
+        print(f"repository_db_session: {db}")
+        result = db.execute(text("SHOW search_path")).fetchone()
+        print(f"Current search_path: {result}")
+
+        return self.onboarding_sqlalchemy.get_onboarding_status(mall_id, db)
 
     def update_onboarding_status(
         self, mall_id: str, status: OnboardingStatus

@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from sqlalchemy.orm import Session
+
 from src.auth.domain.onboarding import Onboarding
 from src.auth.routes.dto.response.kakao_channel_response import KakaoChannelResponse
 from src.auth.routes.dto.response.message_sender_response import MessageSenderResponse
@@ -8,7 +10,7 @@ from src.auth.routes.dto.response.message_sender_response import MessageSenderRe
 class BaseOnboardingRepository(ABC):
 
     @abstractmethod
-    def get_onboarding_status(self, mall_id) -> Onboarding | None:
+    def get_onboarding_status(self, mall_id, db: Session) -> Onboarding | None:
         pass
 
     @abstractmethod

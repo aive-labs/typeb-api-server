@@ -20,9 +20,7 @@ class CampaignSetGroupsEntity(Base):
     set_sort_num = Column(Integer, nullable=False)
     contents_id = Column(Integer, nullable=True)
     contents_name = Column(String, nullable=True)
-    set_seq = Column(
-        Integer, ForeignKey("aivelabs_sv.campaign_sets.set_seq"), index=True
-    )
+    set_seq = Column(Integer, ForeignKey("campaign_sets.set_seq"), index=True)
     campaign_id = Column(String, nullable=False)
     media = Column(String, nullable=True)
     msg_type = Column(String, nullable=True)

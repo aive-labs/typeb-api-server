@@ -17,7 +17,7 @@ class SendReservationEntity(Base):
 
     send_resv_seq = Column(Integer, primary_key=True, index=True, autoincrement=True)
     set_group_msg_seq = Column(
-        Integer, ForeignKey("aivelabs_sv.set_group_messages.set_group_msg_seq")
+        Integer, ForeignKey("set_group_messages.set_group_msg_seq")
     )
     campaign_id = Column(String(10), nullable=False)
     campaign_name = Column(String(100))

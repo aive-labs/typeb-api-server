@@ -21,7 +21,7 @@ class SetGroupMessagesEntity(Base):
         Integer, primary_key=True, index=True, autoincrement=True
     )
     set_group_seq = Column(
-        Integer, ForeignKey("aivelabs_sv.campaign_set_groups.set_group_seq"), index=True
+        Integer, ForeignKey("campaign_set_groups.set_group_seq"), index=True
     )
     msg_send_type = Column(String, nullable=False)
     remind_step = Column(Integer, nullable=True)

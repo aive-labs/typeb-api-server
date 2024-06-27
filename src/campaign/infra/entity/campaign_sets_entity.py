@@ -19,12 +19,8 @@ class CampaignSetsEntity(Base):
     set_sort_num = Column(Integer, nullable=False)
     is_group_added = Column(Boolean, nullable=False)
     campaign_group_id = Column(String, nullable=False)
-    campaign_id = Column(
-        String, ForeignKey("aivelabs_sv.campaigns.campaign_id"), index=True
-    )
-    campaign_theme_id = Column(
-        Integer, ForeignKey("aivelabs_sv.campaign_themes.campaign_theme_id")
-    )
+    campaign_id = Column(String, ForeignKey("campaigns.campaign_id"), index=True)
+    campaign_theme_id = Column(Integer, ForeignKey("campaign_themes.campaign_theme_id"))
     campaign_theme_name = Column(String, nullable=True)
     recsys_model_id = Column(Integer, nullable=True)
     audience_id = Column(String, nullable=False)

@@ -25,6 +25,7 @@ class User(BaseModel):
     language: str
     test_callback_number: str | None = None
     last_login: datetime | None = None
+    mall_id: str | None = None
 
     def to_entity(self) -> UserEntity:
         return UserEntity(

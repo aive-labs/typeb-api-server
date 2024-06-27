@@ -1,4 +1,3 @@
-import logging
 import os
 from collections.abc import Callable
 from contextlib import AbstractContextManager, contextmanager
@@ -7,9 +6,6 @@ from pydantic_settings import BaseSettings
 from sqlalchemy import MetaData, create_engine, orm
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
-
-# logging.basicConfig()
-# logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
 
 
 class DBSettings(BaseSettings):
@@ -38,7 +34,7 @@ def get_db_url():
 
 
 ## check schema name for deployment
-meta_obj = MetaData(schema="aivelabs_sv")
+meta_obj = MetaData()
 Base = declarative_base(metadata=meta_obj)
 
 
@@ -57,17 +53,26 @@ class Database:
         self._create_database()
 
     def _create_database(self) -> None:
-        logging.info(f"CREATING DATABASE: {self._engine}")
         # SQLAlchemy의 create_all 메서드는 테이블이 없는 경우에만 테이블을 생성. 기존 테이블의 스키마를 업데이트하지 않음
+        print(f"CREATING DATABASE: {self._engine}")
         Base.metadata.create_all(self._engine)
 
     @contextmanager  # type: ignore
     def session(self) -> Callable[..., AbstractContextManager[Session]]:  # type: ignore
         session: Session = self._session_factory()
         try:
-            yield session  # type: ignore
+            yield session  # pyright: ignore [reportReturnType]
         except Exception:
             session.rollback()
             raise
         finally:
             session.close()
+
+
+db = Database(get_db_url())
+
+
+# 의존성 주입을 위한 함수
+def get_db_session():
+    with db.session() as session:
+        yield session

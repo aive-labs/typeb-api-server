@@ -1,3 +1,7 @@
+from sqlalchemy import text
+from sqlalchemy.orm import Session
+from users.domain.user import User
+
 from src.auth.enums.onboarding_status import OnboardingStatus
 from src.auth.routes.dto.request.kakao_channel_request import KakaoChannelRequest
 from src.auth.routes.dto.request.message_sender_request import MessageSenderRequest
@@ -6,6 +10,7 @@ from src.auth.routes.dto.response.message_sender_response import MessageSenderRe
 from src.auth.routes.dto.response.onboarding_response import OnboardingResponse
 from src.auth.routes.port.base_onboarding_service import BaseOnboardingService
 from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
+from src.core.transactional import transactional
 
 
 class OnboardingService(BaseOnboardingService):
@@ -42,8 +47,15 @@ class OnboardingService(BaseOnboardingService):
     def get_kakao_channel(self, mall_id: str) -> KakaoChannelResponse | None:
         return self.onboarding_repository.get_kakao_channel(mall_id)
 
-    def get_onboarding_status(self, mall_id: str) -> OnboardingResponse | None:
-        onboarding = self.onboarding_repository.get_onboarding_status(mall_id)
+    @transactional
+    def get_onboarding_status(
+        self, mall_id: str, user: User, db: Session
+    ) -> OnboardingResponse | None:
+        print(f"service_db_session: {db}")
+        result = db.execute(text("SHOW search_path")).fetchone()
+        print(f"Current search_path: {result}")
+
+        onboarding = self.onboarding_repository.get_onboarding_status(mall_id, db)
 
         if not onboarding:
             return None

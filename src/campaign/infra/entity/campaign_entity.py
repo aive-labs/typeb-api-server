@@ -22,16 +22,14 @@ class CampaignEntity(Base):
         String,
         primary_key=True,
         index=True,
-        server_default=text(
-            "'cam-' || LPAD(nextval('aivelabs_sv.campaign_seq')::TEXT, 6, '0')"
-        ),
+        server_default=text("'cam-' || LPAD(nextval('campaign_seq')::TEXT, 6, '0')"),
     )
     campaign_name = Column(String, nullable=False)
     campaign_group_id = Column(
         String,
         nullable=False,
         server_default=text(
-            "'grp-' || LPAD(nextval('aivelabs_sv.campaign_grp_seq')::TEXT, 6, '0')"
+            "'grp-' || LPAD(nextval('campaign_grp_seq')::TEXT, 6, '0')"
         ),
     )
     budget = Column(Integer, nullable=True)
@@ -58,7 +56,7 @@ class CampaignEntity(Base):
     has_remind = Column(Boolean, nullable=False)
     campaigns_exc = Column(ARRAY(String), nullable=True)
     audiences_exc = Column(ARRAY(String), nullable=True)
-    strategy_id = Column(String, ForeignKey("aivelabs_sv.strategies.strategy_id"))
+    strategy_id = Column(String, ForeignKey("strategies.strategy_id"))
     campaign_theme_ids = Column(ARRAY(Integer), nullable=True)
     is_personalized = Column(Boolean, nullable=False)
     progress = Column(String, nullable=False)
