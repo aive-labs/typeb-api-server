@@ -6,7 +6,7 @@ from src.auth.infra.cafe24_repository import Cafe24Repository
 from src.auth.service.auth_service import ALGORITHM, SECRET_KEY, reuseable_oauth
 from src.core.container import Container
 from src.core.exceptions.exceptions import AuthException, CredentialException
-from src.core.schema import get_current_schema, set_current_schema
+from src.core.schema import schema_context
 from src.users.infra.user_repository import UserRepository
 
 
@@ -39,11 +39,9 @@ def get_current_user(
         user.mall_id = mall_id
 
         print(f"Cafe24: Login Mall Id -> Schema: {mall_id}")
-        set_current_schema(mall_id if mall_id else "aivelabs_sv")
+        schema_context.set(mall_id if mall_id else "aivelabs_sv")
     else:
         print("Non Cafe24: Login Mall Id -> Schema: aivelabs_sv")
-        set_current_schema("aivelabs_sv")
-
-    print(get_current_schema())
+        schema_context.set("aivelabs_sv")
 
     return user

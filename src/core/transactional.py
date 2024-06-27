@@ -1,7 +1,6 @@
 from functools import wraps
 
 from fastapi import HTTPException
-from sqlalchemy import text
 
 
 def transactional(func):
@@ -19,26 +18,18 @@ def transactional(func):
                 status_code=500, detail={"message": "서버 내부 문제가 발생했습니다."}
             )
 
-        print(f"db_session: {new_session}")
-        print("in @transanctional")
+        print(f"[in transaction] db_session: {new_session}")
 
         try:
-            print(f"[in transaction] SET search_path TO {user.mall_id}")
-            new_session.execute(text(f"SET search_path TO {user.mall_id}"))
-            new_session.commit()
-
-            result = new_session.execute(text("SHOW search_path")).fetchone()
-            print(f"Current search_path: {result}")
-
             result = func(*args, **kwargs)
             new_session.commit()
-            print("transaction commit")
+            print("[in transaction] transaction commit")
         except Exception as e:
             new_session.rollback()
             raise e
         finally:
             new_session.close()
-            print("transaction close")
+            print("[in transaction] transaction close")
 
         return result
 

@@ -1,5 +1,4 @@
 from core.database import get_db_session
-from core.schema import set_current_schema
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
@@ -28,7 +27,6 @@ def get_onboarding_status(
         Provide[Container.onboarding_service]
     ),
 ) -> OnboardingResponse | None:
-    set_current_schema(user.mall_id)
     return onboarding_service.get_onboarding_status(mall_id=mall_id, user=user, db=db)
 
 

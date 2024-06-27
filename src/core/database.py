@@ -2,8 +2,9 @@ import os
 from collections.abc import Callable
 from contextlib import AbstractContextManager, contextmanager
 
+from core.schema import schema_context
 from pydantic_settings import BaseSettings
-from sqlalchemy import MetaData, create_engine, orm
+from sqlalchemy import MetaData, create_engine, orm, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
 
@@ -33,7 +34,6 @@ def get_db_url():
     return db_settings.database_url
 
 
-## check schema name for deployment
 meta_obj = MetaData()
 Base = declarative_base(metadata=meta_obj)
 
@@ -75,4 +75,10 @@ db = Database(get_db_url())
 # 의존성 주입을 위한 함수
 def get_db_session():
     with db.session() as session:
+        schema_name = schema_context.get()
+        print(f"[get_db_session] {schema_name}")
+        print(f"[get_db_session] SET search_path TO {schema_name}")
+        session.execute(text(f"SET search_path TO {schema_name}"))
+        print("--------")
+
         yield session
