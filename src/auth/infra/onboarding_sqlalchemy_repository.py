@@ -51,98 +51,101 @@ class OnboardingSqlAlchemyRepository:
         return ModelConverter.entity_to_model(entity, Onboarding)
 
     def update_onboarding_status(
-        self, mall_id: str, status: OnboardingStatus
+        self, mall_id: str, status: OnboardingStatus, db: Session
     ) -> Onboarding:
-        with self.db() as db:
-            entity = (
-                db.query(OnboardingEntity)
-                .filter(OnboardingEntity.mall_id == mall_id)
-                .first()
-            )
 
-            if not entity:
-                raise NotFoundException("온보딩 관련 데이터가 존재하지 않습니다.")
+        entity = (
+            db.query(OnboardingEntity)
+            .filter(OnboardingEntity.mall_id == mall_id)
+            .first()
+        )
 
-            entity.onboarding_status = (  # pyright: ignore [reportAttributeAccessIssue]
-                status.value
-            )
-            db.commit()
-            db.refresh(entity)
+        if not entity:
+            raise NotFoundException("온보딩 관련 데이터가 존재하지 않습니다.")
 
-            return ModelConverter.entity_to_model(entity, Onboarding)
+        entity.onboarding_status = (  # pyright: ignore [reportAttributeAccessIssue]
+            status.value
+        )
+        db.commit()
+        db.refresh(entity)
 
-    def insert_first_onboarding(self, mall_id):
-        with self.db() as db:
-            insert_statement = insert(OnboardingEntity).values(
+        return ModelConverter.entity_to_model(entity, Onboarding)
+
+    def insert_first_onboarding(self, mall_id, db: Session):
+
+        insert_statement = insert(OnboardingEntity).values(
+            mall_id=mall_id,
+            onboarding_status=OnboardingStatus.CAFE24_INTEGRATION_REQUIRED.value,
+        )
+
+        upsert_statement = insert_statement.on_conflict_do_update(
+            index_elements=["mall_id"],  # conflict 대상 열
+            set_={
+                "onboarding_status": OnboardingStatus.CAFE24_INTEGRATION_REQUIRED.value,
+                "updated_dt": datetime.datetime.now(),
+            },  # 업데이트할 열
+        )
+
+        db.execute(upsert_statement)
+        db.commit()
+
+    def save_message_sender(
+        self, mall_id, message_sender: MessageSenderRequest, db: Session
+    ):
+
+        db.add(
+            MessageIntegrationEntity(
                 mall_id=mall_id,
-                onboarding_status=OnboardingStatus.CAFE24_INTEGRATION_REQUIRED.value,
+                sender_name=message_sender.sender_name,
+                sender_phone_number=message_sender.sender_phone_number,
+                opt_out_phone_number=message_sender.opt_out_phone_number,
             )
+        )
 
-            upsert_statement = insert_statement.on_conflict_do_update(
-                index_elements=["mall_id"],  # conflict 대상 열
-                set_={
-                    "onboarding_status": OnboardingStatus.CAFE24_INTEGRATION_REQUIRED.value,
-                    "updated_dt": datetime.datetime.now(),
-                },  # 업데이트할 열
+        db.commit()
+
+    def get_message_sender(self, mall_id, db: Session) -> MessageSenderResponse | None:
+
+        entity = (
+            db.query(MessageIntegrationEntity)
+            .filter(MessageIntegrationEntity.mall_id == mall_id)
+            .first()
+        )
+
+        if not entity:
+            return None
+
+        return MessageSenderResponse(
+            sender_name=entity.sender_name,
+            sender_phone_number=entity.sender_phone_number,
+            opt_out_phone_number=entity.opt_out_phone_number,
+        )
+
+    def save_kakao_channel(
+        self, mall_id, kakao_channel: KakaoChannelRequest, db: Session
+    ):
+
+        db.add(
+            KakaoIntegrationEntity(
+                mall_id=mall_id,
+                channel_id=kakao_channel.channel_id,
+                search_id=kakao_channel.search_id,
+                sender_phone_number=kakao_channel.sender_phone_number,
             )
+        )
 
-            db.execute(upsert_statement)
-            db.commit()
+    def get_kakao_channel(self, mall_id, db: Session) -> KakaoChannelResponse | None:
+        entity = (
+            db.query(KakaoIntegrationEntity)
+            .filter(KakaoIntegrationEntity.mall_id == mall_id)
+            .first()
+        )
 
-    def save_message_sender(self, mall_id, message_sender: MessageSenderRequest):
-        with self.db() as db:
-            db.add(
-                MessageIntegrationEntity(
-                    mall_id=mall_id,
-                    sender_name=message_sender.sender_name,
-                    sender_phone_number=message_sender.sender_phone_number,
-                    opt_out_phone_number=message_sender.opt_out_phone_number,
-                )
-            )
+        if not entity:
+            return None
 
-            db.commit()
-
-    def get_message_sender(self, mall_id) -> MessageSenderResponse | None:
-        with self.db() as db:
-            entity = (
-                db.query(MessageIntegrationEntity)
-                .filter(MessageIntegrationEntity.mall_id == mall_id)
-                .first()
-            )
-
-            if not entity:
-                return None
-
-            return MessageSenderResponse(
-                sender_name=entity.sender_name,
-                sender_phone_number=entity.sender_phone_number,
-                opt_out_phone_number=entity.opt_out_phone_number,
-            )
-
-    def save_kakao_channel(self, mall_id, kakao_channel: KakaoChannelRequest):
-        with self.db() as db:
-            db.add(
-                KakaoIntegrationEntity(
-                    mall_id=mall_id,
-                    channel_id=kakao_channel.channel_id,
-                    search_id=kakao_channel.search_id,
-                    sender_phone_number=kakao_channel.sender_phone_number,
-                )
-            )
-
-    def get_kakao_channel(self, mall_id) -> KakaoChannelResponse | None:
-        with self.db() as db:
-            entity = (
-                db.query(KakaoIntegrationEntity)
-                .filter(KakaoIntegrationEntity.mall_id == mall_id)
-                .first()
-            )
-
-            if not entity:
-                return None
-
-            return KakaoChannelResponse(
-                channel_id=entity.channel_id,
-                search_id=entity.search_id,
-                sender_phone_number=entity.sender_phone_number,
-            )
+        return KakaoChannelResponse(
+            channel_id=entity.channel_id,
+            search_id=entity.search_id,
+            sender_phone_number=entity.sender_phone_number,
+        )

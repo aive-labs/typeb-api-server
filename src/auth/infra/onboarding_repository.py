@@ -24,21 +24,21 @@ class OnboardingRepository(BaseOnboardingRepository):
         return self.onboarding_sqlalchemy.get_onboarding_status(mall_id, db)
 
     def update_onboarding_status(
-        self, mall_id: str, status: OnboardingStatus
+        self, mall_id: str, status: OnboardingStatus, db: Session
     ) -> Onboarding:
-        return self.onboarding_sqlalchemy.update_onboarding_status(mall_id, status)
+        return self.onboarding_sqlalchemy.update_onboarding_status(mall_id, status, db)
 
-    def insert_first_onboarding(self, mall_id: str):
-        self.onboarding_sqlalchemy.insert_first_onboarding(mall_id)
+    def insert_first_onboarding(self, mall_id: str, db: Session):
+        self.onboarding_sqlalchemy.insert_first_onboarding(mall_id, db)
 
-    def save_message_sender(self, mall_id, message_sender):
-        self.onboarding_sqlalchemy.save_message_sender(mall_id, message_sender)
+    def save_message_sender(self, mall_id, message_sender, db: Session):
+        self.onboarding_sqlalchemy.save_message_sender(mall_id, message_sender, db)
 
-    def get_message_sender(self, mall_id) -> MessageSenderResponse | None:
-        return self.onboarding_sqlalchemy.get_message_sender(mall_id)
+    def get_message_sender(self, mall_id, db: Session) -> MessageSenderResponse | None:
+        return self.onboarding_sqlalchemy.get_message_sender(mall_id, db)
 
-    def save_kakao_channel(self, mall_id, kakao_channel):
-        self.onboarding_sqlalchemy.save_kakao_channel(mall_id, kakao_channel)
+    def save_kakao_channel(self, mall_id, kakao_channel, db: Session):
+        self.onboarding_sqlalchemy.save_kakao_channel(mall_id, kakao_channel, db)
 
-    def get_kakao_channel(self, mall_id) -> KakaoChannelResponse | None:
-        return self.onboarding_sqlalchemy.get_kakao_channel(mall_id)
+    def get_kakao_channel(self, mall_id, db: Session) -> KakaoChannelResponse | None:
+        return self.onboarding_sqlalchemy.get_kakao_channel(mall_id, db)

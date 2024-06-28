@@ -23,24 +23,30 @@ class BaseOnboardingService(ABC):
 
     @abstractmethod
     def update_onboarding_status(
-        self, mall_id: str, status: OnboardingStatus
+        self, mall_id: str, status: OnboardingStatus, db: Session
     ) -> OnboardingResponse:
         pass
 
     @abstractmethod
     def register_message_sender(
-        self, mall_id: str, message_sender: MessageSenderRequest
+        self, mall_id: str, message_sender: MessageSenderRequest, db: Session
     ):
         pass
 
     @abstractmethod
-    def get_message_sender(self, mall_id: str) -> MessageSenderResponse | None:
+    def get_message_sender(
+        self, mall_id: str, db: Session
+    ) -> MessageSenderResponse | None:
         pass
 
     @abstractmethod
-    def register_kakao_channel(self, mall_id: str, kakao_channel: KakaoChannelRequest):
+    def register_kakao_channel(
+        self, mall_id: str, kakao_channel: KakaoChannelRequest, db: Session
+    ):
         pass
 
     @abstractmethod
-    def get_kakao_channel(self, mall_id: str) -> KakaoChannelResponse | None:
+    def get_kakao_channel(
+        self, mall_id: str, db: Session
+    ) -> KakaoChannelResponse | None:
         pass

@@ -14,25 +14,25 @@ class BaseOnboardingRepository(ABC):
         pass
 
     @abstractmethod
-    def update_onboarding_status(self, mall_id, status) -> Onboarding:
+    def update_onboarding_status(self, mall_id, status, db: Session) -> Onboarding:
         pass
 
     @abstractmethod
-    def insert_first_onboarding(self, mall_id: str):
+    def insert_first_onboarding(self, mall_id: str, db: Session):
         pass
 
     @abstractmethod
-    def save_message_sender(self, mall_id, message_sender):
+    def save_message_sender(self, mall_id, message_sender, db: Session):
         pass
 
     @abstractmethod
-    def get_message_sender(self, mall_id) -> MessageSenderResponse | None:
+    def get_message_sender(self, mall_id, db: Session) -> MessageSenderResponse | None:
         pass
 
     @abstractmethod
-    def save_kakao_channel(self, mall_id, kakao_channel):
+    def save_kakao_channel(self, mall_id, kakao_channel, db: Session):
         pass
 
     @abstractmethod
-    def get_kakao_channel(self, mall_id) -> KakaoChannelResponse | None:
+    def get_kakao_channel(self, mall_id, db: Session) -> KakaoChannelResponse | None:
         pass

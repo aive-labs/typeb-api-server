@@ -36,12 +36,13 @@ def update_onboarding_status(
     mall_id: str,
     onboarding_request: OnboardingRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     onboarding_service: BaseOnboardingService = Depends(
         Provide[Container.onboarding_service]
     ),
 ) -> OnboardingResponse:
     return onboarding_service.update_onboarding_status(
-        mall_id=mall_id, status=onboarding_request.onboarding_status
+        mall_id=mall_id, status=onboarding_request.onboarding_status, db=db
     )
 
 
@@ -51,11 +52,12 @@ def register_message_sender(
     mall_id: str,
     message_sender_request: MessageSenderRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     onboarding_service: BaseOnboardingService = Depends(
         Provide[Container.onboarding_service]
     ),
 ):
-    onboarding_service.register_message_sender(mall_id, message_sender_request)
+    onboarding_service.register_message_sender(mall_id, message_sender_request, db=db)
 
 
 @onboarding_router.get("/{mall_id}/message")
@@ -63,19 +65,22 @@ def register_message_sender(
 def get_message_sender(
     mall_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     onboarding_service: BaseOnboardingService = Depends(
         Provide[Container.onboarding_service]
     ),
 ) -> MessageSenderResponse | None:
-    return onboarding_service.get_message_sender(mall_id)
+    return onboarding_service.get_message_sender(mall_id, db=db)
 
 
 @onboarding_router.post("/{mall_id}/kakao", status_code=status.HTTP_201_CREATED)
 def register_kakao_channel(
     mall_id: str,
     kakao_channel_request: KakaoChannelRequest,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     onboarding_service: BaseOnboardingService = Depends(
         Provide[Container.onboarding_service]
     ),
 ):
-    onboarding_service.register_kakao_channel(mall_id, kakao_channel_request)
+    onboarding_service.register_kakao_channel(mall_id, kakao_channel_request, db=db)
