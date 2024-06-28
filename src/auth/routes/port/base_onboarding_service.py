@@ -14,49 +14,56 @@ from src.core.transactional import transactional
 
 class BaseOnboardingService(ABC):
 
-    @abstractmethod
     @transactional
+    @abstractmethod
     def get_onboarding_status(
         self, mall_id: str, user: User, db: Session
     ) -> OnboardingResponse | None:
         pass
 
+    @transactional
     @abstractmethod
     def update_onboarding_status(
         self, mall_id: str, status: OnboardingStatus, db: Session
     ) -> OnboardingResponse:
         pass
 
+    @transactional
     @abstractmethod
     def register_message_sender(
         self, mall_id: str, message_sender: MessageSenderRequest, db: Session
     ):
         pass
 
+    @transactional
     @abstractmethod
     def get_message_sender(
         self, mall_id: str, db: Session
     ) -> MessageSenderResponse | None:
         pass
 
+    @transactional
     @abstractmethod
     def update_message_sender(
         self, mall_id: str, message_sender: MessageSenderRequest, db: Session
     ):
         pass
 
+    @transactional
     @abstractmethod
     def register_kakao_channel(
         self, mall_id: str, kakao_channel: KakaoChannelRequest, db: Session
     ):
         pass
 
+    @transactional
     @abstractmethod
     def update_kakao_channel(
         self, mall_id: str, kakao_channel: KakaoChannelRequest, db: Session
     ):
         pass
 
+    @transactional
     @abstractmethod
     def get_kakao_channel(
         self, mall_id: str, db: Session

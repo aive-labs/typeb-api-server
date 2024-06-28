@@ -18,6 +18,7 @@ class OnboardingService(BaseOnboardingService):
     def __init__(self, onboarding_repository: BaseOnboardingRepository):
         self.onboarding_repository = onboarding_repository
 
+    @transactional
     def register_message_sender(
         self, mall_id: str, message_sender: MessageSenderRequest, db: Session
     ):
@@ -31,11 +32,13 @@ class OnboardingService(BaseOnboardingService):
 
         self.onboarding_repository.save_message_sender(mall_id, message_sender, db)
 
+    @transactional
     def get_message_sender(
         self, mall_id: str, db: Session
     ) -> MessageSenderResponse | None:
         return self.onboarding_repository.get_message_sender(mall_id, db)
 
+    @transactional
     def update_message_sender(
         self, mall_id: str, message_sender: MessageSenderRequest, db: Session
     ):
@@ -48,6 +51,7 @@ class OnboardingService(BaseOnboardingService):
 
         self.onboarding_repository.update_message_sender(mall_id, message_sender, db)
 
+    @transactional
     def register_kakao_channel(
         self, mall_id: str, kakao_channel: KakaoChannelRequest, db: Session
     ):
@@ -60,6 +64,7 @@ class OnboardingService(BaseOnboardingService):
                 )
         self.onboarding_repository.save_kakao_channel(mall_id, kakao_channel, db)
 
+    @transactional
     def update_kakao_channel(
         self, mall_id: str, kakao_channel: KakaoChannelRequest, db: Session
     ):
@@ -72,6 +77,7 @@ class OnboardingService(BaseOnboardingService):
                 )
         self.onboarding_repository.update_kakao_channel(mall_id, kakao_channel, db)
 
+    @transactional
     def get_kakao_channel(
         self, mall_id: str, db: Session
     ) -> KakaoChannelResponse | None:
@@ -92,6 +98,7 @@ class OnboardingService(BaseOnboardingService):
 
         return OnboardingResponse(onboarding_status=onboarding.onboarding_status)
 
+    @transactional
     def update_onboarding_status(
         self, mall_id: str, status: OnboardingStatus, db: Session
     ) -> OnboardingResponse:
