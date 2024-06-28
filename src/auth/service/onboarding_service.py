@@ -1,6 +1,4 @@
-from core.exceptions.exceptions import ValidationException
 from sqlalchemy.orm import Session
-from users.domain.user import User
 
 from src.auth.enums.onboarding_status import OnboardingStatus
 from src.auth.routes.dto.request.kakao_channel_request import KakaoChannelRequest
@@ -10,7 +8,9 @@ from src.auth.routes.dto.response.message_sender_response import MessageSenderRe
 from src.auth.routes.dto.response.onboarding_response import OnboardingResponse
 from src.auth.routes.port.base_onboarding_service import BaseOnboardingService
 from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
+from src.core.exceptions.exceptions import ValidationException
 from src.core.transactional import transactional
+from src.users.domain.user import User
 
 
 class OnboardingService(BaseOnboardingService):

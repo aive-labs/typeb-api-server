@@ -1,6 +1,5 @@
 import logging
 
-from core.database import get_db_session
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
@@ -14,6 +13,7 @@ from src.auth.service.auth_service import AuthService
 from src.auth.service.token_service import TokenService
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
+from src.core.database import get_db_session
 from src.users.domain.gnb_permission import GNBPermissions
 from src.users.domain.resource_permission import ResourcePermission
 from src.users.domain.user_role import UserPermissions

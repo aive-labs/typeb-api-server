@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
-from users.domain.user import User
 
 from src.auth.enums.onboarding_status import OnboardingStatus
 from src.auth.routes.dto.request.kakao_channel_request import KakaoChannelRequest
@@ -10,6 +9,7 @@ from src.auth.routes.dto.response.kakao_channel_response import KakaoChannelResp
 from src.auth.routes.dto.response.message_sender_response import MessageSenderResponse
 from src.auth.routes.dto.response.onboarding_response import OnboardingResponse
 from src.core.transactional import transactional
+from src.users.domain.user import User
 
 
 class BaseOnboardingService(ABC):

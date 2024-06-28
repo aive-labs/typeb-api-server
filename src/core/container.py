@@ -1,4 +1,3 @@
-from core.database import Database, get_db_url
 from dependency_injector import containers, providers
 
 from src.admin.infra.admin_repository import AdminRepository
@@ -44,6 +43,7 @@ from src.contents.service.get_creative_recommendations_for_content import (
 from src.contents.service.get_creatives_service import GetCreativesService
 from src.contents.service.update_contents_service import UpdateContentsService
 from src.contents.service.update_creatives_service import UpdateCreativesService
+from src.core.database import Database, get_db_url
 from src.message_template.infra.message_template_repository import (
     MessageTemplateRepository,
 )

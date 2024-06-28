@@ -1,4 +1,3 @@
-from core.database import get_db_session
 from dependency_injector.wiring import Provide, inject
 from fastapi import Depends
 from jose import JWTError, jwt
@@ -7,6 +6,7 @@ from sqlalchemy.orm import Session
 from src.auth.infra.cafe24_repository import Cafe24Repository
 from src.auth.service.auth_service import ALGORITHM, SECRET_KEY, reuseable_oauth
 from src.core.container import Container
+from src.core.database import get_db_session
 from src.core.exceptions.exceptions import AuthException, CredentialException
 from src.core.schema import schema_context
 from src.users.infra.user_repository import UserRepository

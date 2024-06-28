@@ -2,11 +2,12 @@ import os
 from collections.abc import Callable
 from contextlib import AbstractContextManager, contextmanager
 
-from core.schema import schema_context
 from pydantic_settings import BaseSettings
 from sqlalchemy import MetaData, create_engine, orm, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
+
+from src.core.schema import schema_context
 
 
 class DBSettings(BaseSettings):

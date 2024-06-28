@@ -1,4 +1,3 @@
-from core.database import get_db_session
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
@@ -9,6 +8,7 @@ from src.auth.routes.port.base_oauth_service import BaseOauthService
 from src.auth.service.auth_service import AuthService
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
+from src.core.database import get_db_session
 
 auth_router = APIRouter(
     tags=["Auth"],

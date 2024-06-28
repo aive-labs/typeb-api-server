@@ -1,4 +1,3 @@
-from core.schema import schema_context
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -10,6 +9,7 @@ from src.contents.routes.contents_router import contents_router
 from src.contents.routes.creatives_router import creatives_router
 from src.core.container import Container
 from src.core.exceptions.register_exception_handler import register_exception_handlers
+from src.core.schema import schema_context
 from src.message_template.routes.message_template_router import message_template_router
 from src.messages.routes.message_router import message_router
 from src.offers.routes.offer_router import offer_router

@@ -1,5 +1,3 @@
-from auth.routes.dto.response.kakao_channel_response import KakaoChannelResponse
-from core.database import get_db_session
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
@@ -7,11 +5,13 @@ from sqlalchemy.orm import Session
 from src.auth.routes.dto.request.kakao_channel_request import KakaoChannelRequest
 from src.auth.routes.dto.request.message_sender_request import MessageSenderRequest
 from src.auth.routes.dto.request.onboarding_request import OnboardingRequest
+from src.auth.routes.dto.response.kakao_channel_response import KakaoChannelResponse
 from src.auth.routes.dto.response.message_sender_response import MessageSenderResponse
 from src.auth.routes.dto.response.onboarding_response import OnboardingResponse
 from src.auth.routes.port.base_onboarding_service import BaseOnboardingService
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
+from src.core.database import get_db_session
 
 onboarding_router = APIRouter(
     tags=["Onboarding"],
