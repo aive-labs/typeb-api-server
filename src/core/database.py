@@ -35,7 +35,8 @@ def get_db_url():
     return db_settings.database_url
 
 
-meta_obj = MetaData()
+# meta_obj = MetaData()
+meta_obj = MetaData(schema="aivelabs_sv")
 Base = declarative_base(metadata=meta_obj)
 
 
