@@ -5,6 +5,7 @@ import requests
 from dotenv import load_dotenv
 from fastapi import HTTPException
 from requests.auth import HTTPBasicAuth
+from sqlalchemy.orm import Session
 
 from src.auth.enums.onboarding_status import OnboardingStatus
 from src.auth.infra.dto.cafe24_token import Cafe24TokenData
@@ -57,7 +58,7 @@ class Cafe24Service(BaseOauthService):
             raise ValueError(f"{var_name} cannot be None")
         return value
 
-    def get_oauth_authentication_url(self, mall_id, user):
+    def get_oauth_authentication_url(self, mall_id, user, db: Session):
         # 만들고 나서 DB에 저장해야함
         hashed_state = generate_hash(self.state + mall_id)
 
@@ -65,13 +66,15 @@ class Cafe24Service(BaseOauthService):
             str(user.user_id), mall_id, hashed_state
         )
 
-        self.onboarding_repository.insert_first_onboarding(mall_id)
+        self.onboarding_repository.insert_first_onboarding(mall_id, db)
 
         return self._generate_authentication_url(
             mall_id, self.client_id, hashed_state, self.redirect_uri, self.scope
         )
 
-    def get_connected_info_by_user(self, user_id: str) -> ExternalIntegration | None:
+    def get_connected_info_by_user(
+        self, user_id: str, db: Session
+    ) -> ExternalIntegration | None:
         cafe24_mall_info = self.cafe24_repository.get_cafe24_info_by_user_id(user_id)
 
         if cafe24_mall_info is None:
@@ -82,7 +85,9 @@ class Cafe24Service(BaseOauthService):
             mall_id=cafe24_mall_info.mall_id,
         )
 
-    def get_oauth_access_token(self, oauth_request: OauthAuthenticationRequest):
+    def get_oauth_access_token(
+        self, oauth_request: OauthAuthenticationRequest, db: Session
+    ):
         cafe24_state_token = self.cafe24_repository.get_state_token(oauth_request.state)
         mall_id = cafe24_state_token.mall_id
 
@@ -92,7 +97,7 @@ class Cafe24Service(BaseOauthService):
         self.cafe24_repository.save_tokens(cafe24_tokens)
 
         self.onboarding_repository.update_onboarding_status(
-            mall_id, OnboardingStatus.MIGRATION_IN_PROGRESS
+            mall_id, OnboardingStatus.MIGRATION_IN_PROGRESS, db
         )
 
         # airflow request
@@ -109,6 +114,7 @@ class Cafe24Service(BaseOauthService):
         username = get_env_variable("airflow_username")
         password = get_env_variable("airflow_password")
 
+        # TODO 비동기 변경
         result = requests.post(
             url=f"{airflow_api}/dags/{cafe24_dag_id}/dagRuns",
             json={
@@ -146,6 +152,7 @@ class Cafe24Service(BaseOauthService):
             "Content-Type": "application/x-www-form-urlencoded",
         }
 
+        # TODO 비동기 변경
         # Send the POST request
         response = requests.post(
             f"https://{mall_id}.cafe24api.com/api/v2/oauth/token",

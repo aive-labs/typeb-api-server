@@ -1,9 +1,11 @@
 import logging
 
+from core.database import get_db_session
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session
 
 from src.auth.enums.onboarding_status import OnboardingStatus
 from src.auth.routes.port.base_oauth_service import BaseOauthService
@@ -34,9 +36,10 @@ user_router = APIRouter(
 def sign_up(
     user_create: UserCreate,
     user_service: BaseUserService = Depends(dependency=Provide[Container.user_service]),
+    db: Session = Depends(get_db_session),
 ) -> UserResponse:
     logger.debug(f"user_service: {user_service}")
-    saved_user = user_service.register_user(user_create)
+    saved_user = user_service.register_user(user_create, db=db)
     return saved_user
 
 
@@ -44,6 +47,7 @@ def sign_up(
 @inject
 def get_me(
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
     onboarding_service: BaseOnboardingService = Depends(
         Provide[Container.onboarding_service]
@@ -57,13 +61,13 @@ def get_me(
         user_role=get_user_role_from_mapping(user.role_id),
     )
 
-    cafe24_integration = cafe24_service.get_connected_info_by_user(user.user_id)
+    cafe24_integration = cafe24_service.get_connected_info_by_user(user.user_id, db=db)
 
     if cafe24_integration is None:
         onboarding_status = OnboardingStatus.CAFE24_INTEGRATION_REQUIRED.value
     else:
         onboarding = onboarding_service.get_onboarding_status(
-            cafe24_integration.mall_id
+            cafe24_integration.mall_id, user, db=db
         )
         if not onboarding:
             onboarding_status = OnboardingStatus.CAFE24_INTEGRATION_REQUIRED.value
@@ -80,11 +84,12 @@ def get_me(
 def sign_in(
     form_data: OAuth2PasswordRequestForm = Depends(),
     auth_service: AuthService = Depends(dependency=Provide[Container.auth_service]),
+    db: Session = Depends(get_db_session),
 ):
     login_id = form_data.username
     password = form_data.password
 
-    token_response = auth_service.login(login_id, password)
+    token_response = auth_service.login(login_id, password, db=db)
 
     response = JSONResponse(content=token_response.model_dump())
     response.set_cookie(
@@ -102,9 +107,10 @@ def sign_in(
 def update_user_profile(
     user_modify: UserModify,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     user_service: BaseUserService = Depends(dependency=Provide[Container.user_service]),
 ):
-    user_service.update_user(user_modify)
+    user_service.update_user(user_modify, db=db)
 
 
 @user_router.post("/refresh")

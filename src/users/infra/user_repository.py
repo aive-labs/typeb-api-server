@@ -1,3 +1,5 @@
+from sqlalchemy.orm import Session
+
 from src.core.exceptions.exceptions import NotFoundException
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
@@ -11,29 +13,29 @@ class UserRepository(BaseUserRepository):
     def __init__(self, user_sqlalchemy: UserSqlAlchemy):
         self.user_sqlalchemy = user_sqlalchemy
 
-    def register_user(self, user_create: UserCreate) -> User:
+    def register_user(self, user_create: UserCreate, db: Session) -> User:
         user: User = user_create.to_user()
 
         return self.user_sqlalchemy.register_user(
-            user.to_entity(), user.to_password_entity()
+            user.to_entity(), user.to_password_entity(), db
         )
 
-    def update_user(self, user_modify: UserModify):
-        self.user_sqlalchemy.update_user(user_modify)
+    def update_user(self, user_modify: UserModify, db: Session):
+        self.user_sqlalchemy.update_user(user_modify, db)
 
-    def delete_user(self, user_id: int):
+    def delete_user(self, user_id: int, db: Session):
         pass
 
-    def get_user_by_id(self, user_id: int) -> User | None:
-        user_entity: UserEntity = self.user_sqlalchemy.get_user_by_id(user_id)
+    def get_user_by_id(self, user_id: int, db: Session) -> User | None:
+        user_entity: UserEntity = self.user_sqlalchemy.get_user_by_id(user_id, db)
         return User.from_entity(user_entity=user_entity)
 
-    def get_all_users(self) -> list[User]:
-        user_entities = self.user_sqlalchemy.get_all_users()
+    def get_all_users(self, db: Session) -> list[User]:
+        user_entities = self.user_sqlalchemy.get_all_users(db)
         return [User.from_entity(user_entity) for user_entity in user_entities]
 
-    def get_user_by_email(self, email: str) -> User | None:
-        user_info = self.user_sqlalchemy.find_user_by_email(email)
+    def get_user_by_email(self, email: str, db: Session) -> User | None:
+        user_info = self.user_sqlalchemy.find_user_by_email(email, db)
 
         if user_info is None:
             raise NotFoundException("해당하는 사용자를 찾지 못하였습니다.")
@@ -43,8 +45,8 @@ class UserRepository(BaseUserRepository):
 
         return user
 
-    def is_existing_user(self, email: str) -> bool:
-        user_info = self.user_sqlalchemy.find_user_by_email(email)
+    def is_existing_user(self, email: str, db: Session) -> bool:
+        user_info = self.user_sqlalchemy.find_user_by_email(email, db)
         if user_info:
             return True
 

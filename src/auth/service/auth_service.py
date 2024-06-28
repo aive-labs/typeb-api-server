@@ -2,6 +2,7 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+from sqlalchemy.orm import Session
 
 from src.auth.routes.dto.response.token_response import TokenResponse
 from src.auth.service.token_service import TokenService
@@ -27,9 +28,9 @@ class AuthService:
         self.token_service = token_service
         self.user_repository = user_repository
 
-    def login(self, login_id: str, password: str) -> TokenResponse:
+    def login(self, login_id: str, password: str, db: Session) -> TokenResponse:
         # 사용자 존재 유무 확인
-        user = self.user_repository.get_user_by_email(login_id)
+        user = self.user_repository.get_user_by_email(login_id, db)
         if user is None:
             raise NotFoundException("가입되지 않은 사용자 입니다.")
 
@@ -49,12 +50,11 @@ class AuthService:
 
     def verify_password(self, plain_password, hashed_password) -> bool:
         result = pwd_context.verify(plain_password, hashed_password)
-        print(plain_password)
-        print(hashed_password)
-        print(result)
         return result
 
-    def get_current_user(self, token: str = Depends(reuseable_oauth)):
+    def get_current_user(
+        self, refresh_token: str, db: Session, token: str = Depends(reuseable_oauth)
+    ):
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             email = payload.get("email")
@@ -63,14 +63,14 @@ class AuthService:
         except JWTError as e:
             raise CredentialException("유효하지 않은 토큰입니다.") from e
 
-        user = self.user_repository.get_user_by_email(email)
+        user = self.user_repository.get_user_by_email(email, db)
         if user is None:
             raise NotFoundException("해당하는 이메일을 찾지 못하였습니다.")
 
         return user
 
-    def get_new_token(self, refresh_token: str) -> TokenResponse:
-        user = self.get_current_user(refresh_token)
+    def get_new_token(self, refresh_token: str, db: Session) -> TokenResponse:
+        user = self.get_current_user(refresh_token, db)
         token_response = self.token_service.create_token(user)
         # TODO: refresh_token save
 
