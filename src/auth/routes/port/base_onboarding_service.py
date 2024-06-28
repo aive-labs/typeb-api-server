@@ -40,7 +40,19 @@ class BaseOnboardingService(ABC):
         pass
 
     @abstractmethod
+    def update_message_sender(
+        self, mall_id: str, message_sender: MessageSenderRequest, db: Session
+    ):
+        pass
+
+    @abstractmethod
     def register_kakao_channel(
+        self, mall_id: str, kakao_channel: KakaoChannelRequest, db: Session
+    ):
+        pass
+
+    @abstractmethod
+    def update_kakao_channel(
         self, mall_id: str, kakao_channel: KakaoChannelRequest, db: Session
     ):
         pass

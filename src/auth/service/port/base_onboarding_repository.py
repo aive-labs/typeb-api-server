@@ -26,11 +26,19 @@ class BaseOnboardingRepository(ABC):
         pass
 
     @abstractmethod
+    def update_message_sender(self, mall_id, message_sender, db):
+        pass
+
+    @abstractmethod
     def get_message_sender(self, mall_id, db: Session) -> MessageSenderResponse | None:
         pass
 
     @abstractmethod
     def save_kakao_channel(self, mall_id, kakao_channel, db: Session):
+        pass
+
+    @abstractmethod
+    def update_kakao_channel(self, mall_id, kakao_channel, db: Session):
         pass
 
     @abstractmethod

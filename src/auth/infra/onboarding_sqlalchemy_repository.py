@@ -2,7 +2,6 @@ import datetime
 from contextlib import AbstractContextManager
 from typing import Callable
 
-from sqlalchemy import text
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
@@ -33,17 +32,12 @@ class OnboardingSqlAlchemyRepository:
         self.db = db
 
     def get_onboarding_status(self, mall_id: str, db: Session) -> Onboarding | None:
-        print(f"sqlalchemy_db_session: {db}")
-        result = db.execute(text("SHOW search_path")).fetchone()
-        print(f"Current search_path: {result}")
 
         entity = (
             db.query(OnboardingEntity)
             .filter(OnboardingEntity.mall_id == mall_id)
             .first()
         )
-
-        print(entity)
 
         if not entity:
             return None
@@ -87,7 +81,6 @@ class OnboardingSqlAlchemyRepository:
         )
 
         db.execute(upsert_statement)
-        db.commit()
 
     def save_message_sender(
         self, mall_id, message_sender: MessageSenderRequest, db: Session
@@ -102,7 +95,16 @@ class OnboardingSqlAlchemyRepository:
             )
         )
 
-        db.commit()
+    def update_message_sender(self, mall_id, message_sender, db):
+
+        db.merge(
+            MessageIntegrationEntity(
+                mall_id=mall_id,
+                sender_name=message_sender.sender_name,
+                sender_phone_number=message_sender.sender_phone_number,
+                opt_out_phone_number=message_sender.opt_out_phone_number,
+            )
+        )
 
     def get_message_sender(self, mall_id, db: Session) -> MessageSenderResponse | None:
 
@@ -126,6 +128,19 @@ class OnboardingSqlAlchemyRepository:
     ):
 
         db.add(
+            KakaoIntegrationEntity(
+                mall_id=mall_id,
+                channel_id=kakao_channel.channel_id,
+                search_id=kakao_channel.search_id,
+                sender_phone_number=kakao_channel.sender_phone_number,
+            )
+        )
+
+    def update_kakao_channel(
+        self, mall_id, kakao_channel: KakaoChannelRequest, db: Session
+    ):
+
+        db.merge(
             KakaoIntegrationEntity(
                 mall_id=mall_id,
                 channel_id=kakao_channel.channel_id,
