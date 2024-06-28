@@ -3,7 +3,7 @@ from collections.abc import Callable
 from contextlib import AbstractContextManager, contextmanager
 
 from pydantic_settings import BaseSettings
-from sqlalchemy import MetaData, create_engine, orm, text
+from sqlalchemy import MetaData, create_engine, orm
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
 
@@ -78,8 +78,8 @@ def get_db_session():
     with db.session() as session:
         schema_name = schema_context.get()
         print(f"[get_db_session] {schema_name}")
-        print(f"[get_db_session] SET search_path TO {schema_name}")
-        session.execute(text(f"SET search_path TO {schema_name}"))
+        # print(f"[get_db_session] SET search_path TO {schema_name}")
+        # session.execute(text(f"SET search_path TO {schema_name}"))
         print("--------")
 
         yield session
