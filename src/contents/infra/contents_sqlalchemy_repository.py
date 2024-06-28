@@ -26,190 +26,183 @@ class ContentsSqlAlchemy:
         """
         self.db = db
 
-    def add_contents(self, contents: ContentsEntity) -> ContentsResponse:
-        with self.db() as db:
-            db.add(contents)
-            db.commit()
+    def add_contents(self, contents: ContentsEntity, db: Session) -> ContentsResponse:
 
-            return ModelConverter.entity_to_model(contents, ContentsResponse)
+        db.add(contents)
 
-    def get_subject(self, style_yn) -> list[ContentsMenu]:
+        return ModelConverter.entity_to_model(contents, ContentsResponse)
+
+    def get_subject(self, style_yn, db: Session) -> list[ContentsMenu]:
         style_yn = "y" if style_yn else "n"
-        with self.db() as db:
-            entities = (
-                db.query(ContentsMenuEntity)
-                .filter(
-                    ContentsMenuEntity.menu_type == "subject",
-                    ContentsMenuEntity.style_yn == style_yn,
-                )
-                .order_by(ContentsMenuEntity.code)
-                .all()
+        entities = (
+            db.query(ContentsMenuEntity)
+            .filter(
+                ContentsMenuEntity.menu_type == "subject",
+                ContentsMenuEntity.style_yn == style_yn,
             )
+            .order_by(ContentsMenuEntity.code)
+            .all()
+        )
 
-            return [
-                ModelConverter.entity_to_model(entity, ContentsMenu)
-                for entity in entities
-            ]
+        return [
+            ModelConverter.entity_to_model(entity, ContentsMenu) for entity in entities
+        ]
 
-    def get_menu_map(self, code) -> list[ContentsMenu]:
-        with self.db() as db:
-            entity = (
-                db.query(ContentsMenuEntity)
-                .filter(ContentsMenuEntity.code == code)
-                .first()
-            )
-            if not entity:
-                raise NotFoundException("해당 메뉴를 찾지 못했습니다.")
+    def get_menu_map(self, code, db: Session) -> list[ContentsMenu]:
 
-            subject_style_yn = entity.style_yn
+        entity = (
+            db.query(ContentsMenuEntity).filter(ContentsMenuEntity.code == code).first()
+        )
+        if not entity:
+            raise NotFoundException("해당 메뉴를 찾지 못했습니다.")
 
-            subject = f"%{code}%"
+        subject_style_yn = entity.style_yn
 
-            entities = (
-                db.query(ContentsMenuEntity)
-                .filter(ContentsMenuEntity.subject_with.ilike(subject))
-                .filter(ContentsMenuEntity.style_yn == subject_style_yn)
-                .order_by(ContentsMenuEntity.code)
-                .all()
-            )
+        subject = f"%{code}%"
 
-            return [
-                ModelConverter.entity_to_model(entity, ContentsMenu)
-                for entity in entities
-            ]
+        entities = (
+            db.query(ContentsMenuEntity)
+            .filter(ContentsMenuEntity.subject_with.ilike(subject))
+            .filter(ContentsMenuEntity.style_yn == subject_style_yn)
+            .order_by(ContentsMenuEntity.code)
+            .all()
+        )
 
-    def get_contents_url_list(self) -> list[str]:
-        with self.db() as db:
-            entities = db.query(ContentsEntity).all()
-            contents_urls: list[str] = [str(entity.contents_url) for entity in entities]
-            return contents_urls
+        return [
+            ModelConverter.entity_to_model(entity, ContentsMenu) for entity in entities
+        ]
+
+    def get_contents_url_list(self, db: Session) -> list[str]:
+
+        entities = db.query(ContentsEntity).all()
+        contents_urls: list[str] = [str(entity.contents_url) for entity in entities]
+        return contents_urls
 
     def get_contents_list(
-        self, based_on, sort_by, contents_status=None, query=None
+        self, db: Session, based_on, sort_by, contents_status=None, query=None
     ) -> list[ContentsResponse]:
-        with self.db() as db:
-            sort_col = getattr(ContentsEntity, based_on)
-            # get all contents_data
-            base_query = (
-                db.query(
-                    ContentsEntity.contents_id,
-                    ContentsEntity.contents_name,
-                    ContentsEntity.contents_status,
-                    ContentsEntity.contents_body,
-                    ContentsEntity.plain_text,
-                    ContentsEntity.sty_cd,
-                    ContentsEntity.subject,
-                    ContentsMenuEntity.name.label("subject_name"),
-                    ContentsEntity.material1,
-                    ContentsEntity.material2,
-                    ContentsEntity.template,
-                    ContentsEntity.thumbnail_uri,
-                    ContentsEntity.contents_url,
-                    ContentsEntity.publication_start,
-                    ContentsEntity.publication_end,
-                    ContentsEntity.additional_prompt,
-                    ContentsEntity.contents_tags,
-                    ContentsEntity.created_by,
-                    ContentsEntity.created_at,
-                    ContentsEntity.updated_by,
-                    ContentsEntity.updated_at,
-                )
-                .join(ContentsEntity, ContentsMenuEntity.code == ContentsEntity.subject)
-                .filter(~ContentsEntity.is_deleted)
+
+        sort_col = getattr(ContentsEntity, based_on)
+        # get all contents_data
+        base_query = (
+            db.query(
+                ContentsEntity.contents_id,
+                ContentsEntity.contents_name,
+                ContentsEntity.contents_status,
+                ContentsEntity.contents_body,
+                ContentsEntity.plain_text,
+                ContentsEntity.sty_cd,
+                ContentsEntity.subject,
+                ContentsMenuEntity.name.label("subject_name"),
+                ContentsEntity.material1,
+                ContentsEntity.material2,
+                ContentsEntity.template,
+                ContentsEntity.thumbnail_uri,
+                ContentsEntity.contents_url,
+                ContentsEntity.publication_start,
+                ContentsEntity.publication_end,
+                ContentsEntity.additional_prompt,
+                ContentsEntity.contents_tags,
+                ContentsEntity.created_by,
+                ContentsEntity.created_at,
+                ContentsEntity.updated_by,
+                ContentsEntity.updated_at,
             )
+            .join(ContentsEntity, ContentsMenuEntity.code == ContentsEntity.subject)
+            .filter(~ContentsEntity.is_deleted)
+        )
 
-            if sort_by == "desc":
-                sort_col = sort_col.desc()
-            else:
-                sort_col = sort_col.asc()
-            base_query = base_query.order_by(sort_col)
+        if sort_by == "desc":
+            sort_col = sort_col.desc()
+        else:
+            sort_col = sort_col.asc()
+        base_query = base_query.order_by(sort_col)
 
-            if contents_status:
-                base_query = base_query.filter(
-                    ContentsEntity.contents_status == contents_status
-                )
-            if query:
-                query = f"%{query}%"
-                # check query in sty_nm, tags, image_name
-                base_query = base_query.filter(
-                    or_(
-                        ContentsEntity.contents_name.ilike(query),
-                        ContentsEntity.contents_tags.ilike(query),
-                    )
-                )
-            entities = base_query.all()
-
-            return [
-                ContentsResponse(
-                    contents_id=entity.contents_id,
-                    contents_name=entity.contents_name,
-                    contents_status=entity.contents_status,
-                    contents_body=entity.contents_body,
-                    plain_text=entity.plain_text,
-                    sty_cd=entity.sty_cd,
-                    subject=entity.subject,
-                    subject_name=entity.subject_name,
-                    material1=entity.material1,
-                    material2=entity.material2,
-                    template=entity.template,
-                    additional_prompt=entity.additional_prompt,
-                    thumbnail_uri=entity.thumbnail_uri,
-                    contents_url=entity.contents_url,
-                    publication_start=entity.publication_start,
-                    publication_end=entity.publication_end,
-                    contents_tags=entity.contents_tags,
-                    created_by=entity.created_by,
-                    created_at=entity.created_at,
-                    updated_by=entity.updated_by,
-                    updated_at=entity.updated_at,
-                )
-                for entity in entities
-            ]
-
-    def get_subject_by_code(self, subject) -> ContentsMenu:
-        with self.db() as db:
-            entity = (
-                db.query(ContentsMenuEntity)
-                .filter(ContentsMenuEntity.code == subject)
-                .first()
+        if contents_status:
+            base_query = base_query.filter(
+                ContentsEntity.contents_status == contents_status
             )
-
-            if not entity:
-                raise NotFoundException("해당하는 menu가 존재하지 않습니다.")
-
-            return ModelConverter.entity_to_model(entity, ContentsMenu)
-
-    def get_contents_detail(self, contents_id) -> ContentsResponse:
-        with self.db() as db:
-            entity = (
-                db.query(ContentsEntity)
-                .filter(
-                    ContentsEntity.contents_id == contents_id,
-                    ~ContentsEntity.is_deleted,
+        if query:
+            query = f"%{query}%"
+            # check query in sty_nm, tags, image_name
+            base_query = base_query.filter(
+                or_(
+                    ContentsEntity.contents_name.ilike(query),
+                    ContentsEntity.contents_tags.ilike(query),
                 )
-                .first()
             )
+        entities = base_query.all()
 
-            if not entity:
-                raise NotFoundException("해당하는 콘텐츠가 존재하지 않습니다.")
-
-            return ModelConverter.entity_to_model(entity, ContentsResponse)
-
-    def delete_contents(self, contents_id):
-        with self.db() as db:
-            update_statement = (
-                update(ContentsEntity)
-                .where(ContentsEntity.contents_id == contents_id)
-                .values(is_deleted=True)
+        return [
+            ContentsResponse(
+                contents_id=entity.contents_id,
+                contents_name=entity.contents_name,
+                contents_status=entity.contents_status,
+                contents_body=entity.contents_body,
+                plain_text=entity.plain_text,
+                sty_cd=entity.sty_cd,
+                subject=entity.subject,
+                subject_name=entity.subject_name,
+                material1=entity.material1,
+                material2=entity.material2,
+                template=entity.template,
+                additional_prompt=entity.additional_prompt,
+                thumbnail_uri=entity.thumbnail_uri,
+                contents_url=entity.contents_url,
+                publication_start=entity.publication_start,
+                publication_end=entity.publication_end,
+                contents_tags=entity.contents_tags,
+                created_by=entity.created_by,
+                created_at=entity.created_at,
+                updated_by=entity.updated_by,
+                updated_at=entity.updated_at,
             )
+            for entity in entities
+        ]
 
-            db.execute(update_statement)
-            db.commit()
+    def get_subject_by_code(self, subject, db: Session) -> ContentsMenu:
 
-    def update_contents(self, contents_id: int, contents: Contents) -> ContentsResponse:
-        with self.db() as db:
-            # merge는 같은 기본 키를 가진 엔티티가 이미 존재하면 업데이트하고, 존재하지 않으면 새로 추가
-            updated_entity = db.merge(contents.to_entity())
-            db.commit()
-            db.refresh(updated_entity)
-            return ModelConverter.entity_to_model(updated_entity, ContentsResponse)
+        entity = (
+            db.query(ContentsMenuEntity)
+            .filter(ContentsMenuEntity.code == subject)
+            .first()
+        )
+
+        if not entity:
+            raise NotFoundException("해당하는 menu가 존재하지 않습니다.")
+
+        return ModelConverter.entity_to_model(entity, ContentsMenu)
+
+    def get_contents_detail(self, contents_id, db: Session) -> ContentsResponse:
+
+        entity = (
+            db.query(ContentsEntity)
+            .filter(
+                ContentsEntity.contents_id == contents_id,
+                ~ContentsEntity.is_deleted,
+            )
+            .first()
+        )
+
+        if not entity:
+            raise NotFoundException("해당하는 콘텐츠가 존재하지 않습니다.")
+
+        return ModelConverter.entity_to_model(entity, ContentsResponse)
+
+    def delete_contents(self, contents_id, db: Session):
+        update_statement = (
+            update(ContentsEntity)
+            .where(ContentsEntity.contents_id == contents_id)
+            .values(is_deleted=True)
+        )
+
+        db.execute(update_statement)
+
+    def update_contents(
+        self, contents_id: int, contents: Contents, db: Session
+    ) -> ContentsResponse:
+        # merge는 같은 기본 키를 가진 엔티티가 이미 존재하면 업데이트하고, 존재하지 않으면 새로 추가
+        updated_entity = db.merge(contents.to_entity())
+        db.commit()
+        db.refresh(updated_entity)
+        return ModelConverter.entity_to_model(updated_entity, ContentsResponse)

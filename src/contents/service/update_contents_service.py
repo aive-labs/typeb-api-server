@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from sqlalchemy.orm import Session
 
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.common.utils.date_utils import get_localtime, localtime_from_str
@@ -15,6 +16,7 @@ from src.contents.routes.port.usecase.update_contents_usecase import (
 )
 from src.contents.utils.create_html import create_contents_html
 from src.core.exceptions.exceptions import NotFoundException
+from src.core.transactional import transactional
 from src.users.domain.user import User
 from src.users.infra.user_repository import UserRepository
 
@@ -34,14 +36,15 @@ class UpdateContentsService(UpdateContentsUseCase):
         self.s3_service = s3_service
         self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
+    @transactional
     def exec(
-        self, contents_id: int, contents_create: ContentsCreate, user: User
+        self, contents_id: int, contents_create: ContentsCreate, user: User, db: Session
     ) -> ContentsResponse:
 
-        if not self.contents_repository.get_contents_detail(contents_id):
+        if not self.contents_repository.get_contents_detail(contents_id, db):
             raise NotFoundException("해당하는 콘텐츠가 존재하지 않습니다.")
 
-        contents_urls = self.contents_repository.get_contents_url_list()
+        contents_urls = self.contents_repository.get_contents_url_list(db)
         contents_uuids = [url.split("/")[-1] for url in contents_urls]
 
         new_uuid = str(generate_random_string(5))
@@ -59,7 +62,7 @@ class UpdateContentsService(UpdateContentsUseCase):
         external_html_body = contents_create.contents_body
 
         cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(
-            str(user.user_id)
+            str(user.user_id), db=db
         )
         if cafe24_info is None:
             raise NotFoundException("연동된 cafe24 계정이 없습니다.")
@@ -128,7 +131,7 @@ class UpdateContentsService(UpdateContentsUseCase):
             updated_at=get_localtime(),
         )
 
-        updated_contents = self.contents_repository.update(contents_id, contents)
+        updated_contents = self.contents_repository.update(contents_id, contents, db)
         updated_contents.set_thumbnail_url(
             f"{self.cloud_front_url}/{updated_contents.thumbnail_uri}"
         )

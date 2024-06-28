@@ -1,3 +1,5 @@
+from sqlalchemy.orm import Session
+
 from src.common.pagination.pagination_base import PaginationBase
 from src.common.pagination.pagination_response import PaginationResponse
 from src.common.utils.get_env_variable import get_env_variable
@@ -13,8 +15,8 @@ class GetContentsService(GetContentsUseCase):
         self.contents_repository = contents_repository
         self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
-    def get_contents(self, contents_id) -> ContentsResponse:
-        contents = self.contents_repository.get_contents_detail(contents_id)
+    def get_contents(self, contents_id, db: Session) -> ContentsResponse:
+        contents = self.contents_repository.get_contents_detail(contents_id, db)
 
         contents_dict = contents.model_dump()
         contents_response = ContentsResponse(**contents_dict)
@@ -27,15 +29,15 @@ class GetContentsService(GetContentsUseCase):
         )
         return contents_response
 
-    def get_subjects(self, style_yn: bool) -> list[ContentsMenuResponse]:
-        contents_menu_list = self.contents_repository.get_subject(style_yn)
+    def get_subjects(self, style_yn: bool, db: Session) -> list[ContentsMenuResponse]:
+        contents_menu_list = self.contents_repository.get_subject(style_yn, db)
         return [
             ContentsMenuResponse(code=menu.code, name=menu.name)
             for menu in contents_menu_list
         ]
 
-    def get_with_subject(self, code: str):
-        menu_map = self.contents_repository.get_menu_map(code)
+    def get_with_subject(self, code: str, db: Session):
+        menu_map = self.contents_repository.get_menu_map(code, db)
         menu_response = {
             "message_template": [
                 ContentsMenuResponse(code=item.code, name=item.name)
@@ -58,9 +60,11 @@ class GetContentsService(GetContentsUseCase):
         return menu_response
 
     def get_contents_list(
-        self, based_on, sort_by, current_page, per_page, query=None
+        self, db: Session, based_on, sort_by, current_page, per_page, query=None
     ) -> PaginationResponse[ContentsResponse]:
-        responses = self.contents_repository.get_contents_list(based_on, sort_by, query)
+        responses = self.contents_repository.get_contents_list(
+            db, based_on, sort_by, query
+        )
 
         for response in responses:
             response.set_thumbnail_url(

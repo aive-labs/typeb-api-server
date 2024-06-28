@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from sqlalchemy.orm import Session
 
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.common.utils.date_utils import get_localtime, localtime_from_str
@@ -13,6 +14,7 @@ from src.contents.routes.dto.request.contents_create import ContentsCreate
 from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUseCase
 from src.contents.utils.create_html import create_contents_html
 from src.core.exceptions.exceptions import NotFoundException
+from src.core.transactional import transactional
 from src.users.domain.user import User
 from src.users.infra.user_repository import UserRepository
 
@@ -31,11 +33,12 @@ class AddContentsService(AddContentsUseCase):
         self.s3_service = s3_service
         self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
+    @transactional
     def create_contents(
-        self, contents_create: ContentsCreate, user: User
+        self, contents_create: ContentsCreate, user: User, db: Session
     ) -> ContentsResponse:
 
-        contents_urls = self.contents_repository.get_contents_url_list()
+        contents_urls = self.contents_repository.get_contents_url_list(db)
         contents_uuids = [url.split("/")[-1] for url in contents_urls]
 
         new_uuid = str(generate_random_string(5))
@@ -53,7 +56,7 @@ class AddContentsService(AddContentsUseCase):
         external_html_body = contents_create.contents_body
 
         cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(
-            str(user.user_id)
+            str(user.user_id), db
         )
         if cafe24_info is None:
             raise NotFoundException("연동된 cafe24 계정이 없습니다.")
@@ -119,7 +122,7 @@ class AddContentsService(AddContentsUseCase):
             updated_at=get_localtime(),
         )
 
-        new_contents = self.contents_repository.add_contents(contents=contents)
+        new_contents = self.contents_repository.add_contents(contents=contents, db=db)
         new_contents.set_thumbnail_url(
             f"{self.cloud_front_url}/{new_contents.thumbnail_uri}"
         )
