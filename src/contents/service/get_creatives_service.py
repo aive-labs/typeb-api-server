@@ -1,3 +1,5 @@
+from sqlalchemy.orm import Session
+
 from src.common.pagination.pagination_base import PaginationBase
 from src.common.pagination.pagination_response import PaginationResponse
 from src.common.utils.file.s3_service import S3Service
@@ -16,17 +18,24 @@ class GetCreativesService(GetCreativesUseCase):
         self.s3_service = S3Service("aice-asset-dev")
         self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
-    def get_creatives_detail(self, creative_id: int) -> Creatives:
-        creative = self.creatives_repository.find_by_id(creative_id)
+    def get_creatives_detail(self, creative_id: int, db: Session) -> Creatives:
+        creative = self.creatives_repository.find_by_id(creative_id, db)
 
         creative.set_image_url(f"{self.cloud_front_url}/{creative.image_path}")
         return creative
 
     def get_creatives(
-        self, based_on, sort_by, current_page, per_page, asset_type=None, query=None
+        self,
+        db: Session,
+        based_on,
+        sort_by,
+        current_page,
+        per_page,
+        asset_type=None,
+        query=None,
     ) -> PaginationResponse[CreativeBase]:
         creative_list = self.creatives_repository.find_all(
-            based_on, sort_by, asset_type, query
+            based_on, sort_by, db, asset_type, query
         )
 
         items = creative_list[(current_page - 1) * per_page : current_page * per_page]
@@ -43,5 +52,5 @@ class GetCreativesService(GetCreativesUseCase):
 
         return PaginationResponse[CreativeBase](items=items, pagination=pagination)
 
-    def get_style_list(self) -> list[StyleObject]:
-        return self.creatives_repository.get_simple_style_list()
+    def get_style_list(self, db: Session) -> list[StyleObject]:
+        return self.creatives_repository.get_simple_style_list(db)

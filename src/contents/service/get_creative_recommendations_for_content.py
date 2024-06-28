@@ -1,5 +1,7 @@
 from typing import Union
 
+from sqlalchemy.orm import Session
+
 from src.common.utils.file.s3_service import S3Service
 from src.common.utils.get_env_variable import get_env_variable
 from src.contents.infra.creatives_repository import CreativesRepository
@@ -7,6 +9,7 @@ from src.contents.infra.dto.response.creative_recommend import CreativeRecommend
 from src.contents.routes.port.usecase.get_creative_recommendations_for_content_usecase import (
     GetCreativeRecommendationsForContentUseCase,
 )
+from src.core.transactional import transactional
 
 
 class GetCreativeRecommendationsForContent(GetCreativeRecommendationsForContentUseCase):
@@ -17,8 +20,10 @@ class GetCreativeRecommendationsForContent(GetCreativeRecommendationsForContentU
         self.creatives_repository = creatives_repository
         self.s3_service = s3_service
 
+    @transactional
     def execute(
         self,
+        db: Session,
         style_codes: Union[str, None] = None,
         subject: Union[str, None] = "",
         material1: Union[str, None] = "",
@@ -31,7 +36,7 @@ class GetCreativeRecommendationsForContent(GetCreativeRecommendationsForContentU
         given_tag = ",".join(tag_list)
 
         creatives_recommend_list = self.creatives_repository.get_creatives_for_contents(
-            style_cd_list, given_tag, img_tag_nm, limit
+            style_cd_list, given_tag, img_tag_nm, limit, db
         )
 
         cloud_front_url = get_env_variable("cloud_front_asset_url")

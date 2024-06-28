@@ -1,3 +1,5 @@
+from sqlalchemy.orm import Session
+
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.common.utils.date_utils import get_unix_timestamp
 from src.common.utils.file.s3_service import S3Service
@@ -10,6 +12,7 @@ from src.contents.routes.dto.request.s3_presigned_url_request import (
 from src.contents.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase
 from src.contents.service.port.base_creatives_repository import BaseCreativesRepository
 from src.core.exceptions.exceptions import NotFoundException
+from src.core.transactional import transactional
 
 
 class AddCreativesService(AddCreativesUseCase):
@@ -24,11 +27,12 @@ class AddCreativesService(AddCreativesUseCase):
         # todo dot env service
         self.s3_service = S3Service("aice-asset-dev")
 
+    @transactional
     def generate_s3_url(
-        self, s3_presigned_url_request: S3PresignedUrlRequest, user
+        self, s3_presigned_url_request: S3PresignedUrlRequest, user, db: Session
     ) -> list[S3PresignedResponse]:
         cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(
-            str(user.user_id)
+            str(user.user_id), db
         )
 
         if cafe24_info is None:
@@ -52,7 +56,10 @@ class AddCreativesService(AddCreativesUseCase):
 
         return s3_presigned_url_list
 
-    def create_creatives(self, asset_data: CreativeCreate, user) -> list[Creatives]:
+    @transactional
+    def create_creatives(
+        self, asset_data: CreativeCreate, user, db: Session
+    ) -> list[Creatives]:
         files = asset_data.files
 
         new_creatives_list = [
@@ -69,7 +76,7 @@ class AddCreativesService(AddCreativesUseCase):
             for file_name in files
         ]
 
-        self.creatives_repository.create_creatives(new_creatives_list)
+        self.creatives_repository.create_creatives(new_creatives_list, db)
 
         return new_creatives_list
 

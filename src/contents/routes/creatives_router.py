@@ -1,5 +1,6 @@
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.common.pagination.pagination_response import PaginationResponse
@@ -21,6 +22,7 @@ from src.contents.routes.port.usecase.update_creatives_usecase import (
     UpdateCreativesUseCase,
 )
 from src.core.container import Container
+from src.core.database import get_db_session
 
 creatives_router = APIRouter(
     tags=["Creatives"],
@@ -40,11 +42,14 @@ def get_img_creatives_list(
     query: str | None = None,
     current_page: int = 1,
     per_page: int = 10,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     get_creatives_service: GetCreativesUseCase = Depends(
         Provide[Container.get_creatives_service]
     ),
 ) -> PaginationResponse[CreativeBase]:
     pagination_result = get_creatives_service.get_creatives(
+        db=db,
         based_on=based_on,
         sort_by=sort_by,
         asset_type=asset_type,
@@ -60,11 +65,12 @@ def get_img_creatives_list(
 def generate_s3_presigned_url(
     asset_data: S3PresignedUrlRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     add_creatives_service: AddCreativesUseCase = Depends(
         dependency=Provide[Container.add_creatives_service]
     ),
 ) -> list[S3PresignedResponse]:
-    return add_creatives_service.generate_s3_url(asset_data, user)
+    return add_creatives_service.generate_s3_url(asset_data, user, db=db)
 
 
 @creatives_router.post("", status_code=status.HTTP_201_CREATED)
@@ -72,11 +78,14 @@ def generate_s3_presigned_url(
 def create_img_creatives(
     asset_data: CreativeCreate,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     add_creatives_service: AddCreativesUseCase = Depends(
         dependency=Provide[Container.add_creatives_service]
     ),
 ) -> list[Creatives]:
-    return add_creatives_service.create_creatives(asset_data=asset_data, user=user)
+    return add_creatives_service.create_creatives(
+        asset_data=asset_data, user=user, db=db
+    )
 
 
 @creatives_router.delete("/{creative_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -84,11 +93,12 @@ def create_img_creatives(
 def delete_img_creatives(
     creative_id: int,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     delete_creatives_service: DeleteCreativesUseCase = Depends(
         Provide[Container.delete_creatives_service]
     ),
 ):
-    delete_creatives_service.exec(creative_id)
+    delete_creatives_service.exec(creative_id, db=db)
 
 
 @creatives_router.put("/{creative_id}", status_code=status.HTTP_200_OK)
@@ -97,6 +107,7 @@ def update_img_creatives(
     creative_id: int,
     creative_update: CreativeCreate,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     update_creatives_service: UpdateCreativesUseCase = Depends(
         dependency=Provide[Container.update_creatives_service]
     ),
@@ -110,7 +121,9 @@ def update_img_creatives(
             },
         )
 
-    return update_creatives_service.update_creative(creative_id, creative_update, user)
+    return update_creatives_service.update_creative(
+        creative_id, creative_update, user, db=db
+    )
 
 
 @creatives_router.get("/{creative_id}")
@@ -118,20 +131,22 @@ def update_img_creatives(
 def get_img_creatives(
     creative_id: int,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     get_creatives_service: GetCreativesUseCase = Depends(
         Provide[Container.get_creatives_service]
     ),
 ):
     """이미지 에셋을 조회하는 API"""
-    return get_creatives_service.get_creatives_detail(creative_id)
+    return get_creatives_service.get_creatives_detail(creative_id, db=db)
 
 
 @creatives_router.get("/style/list")
 @inject
 def get_style_list(
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     get_creatives_service: GetCreativesUseCase = Depends(
         Provide[Container.get_creatives_service]
     ),
 ) -> list[StyleObject]:
-    return get_creatives_service.get_style_list()
+    return get_creatives_service.get_style_list(db=db)
