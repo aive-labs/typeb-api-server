@@ -1,4 +1,4 @@
-from sqlalchemy import text
+from core.exceptions.exceptions import ValidationException
 from sqlalchemy.orm import Session
 from users.domain.user import User
 
@@ -26,8 +26,10 @@ class OnboardingService(BaseOnboardingService):
         kakao_channel = self.onboarding_repository.get_kakao_channel(mall_id, db)
         if kakao_channel:
             if kakao_channel.sender_phone_number != message_sender.sender_phone_number:
-                raise Exception(
-                    "카카오 채널에 등록된 발신 번호와 등록하려는 발신 번호는 동일해야 합니다."
+                raise ValidationException(
+                    detail={
+                        "message": "카카오 채널에 등록된 발신 번호와 등록하려는 발신 번호는 동일해야 합니다."
+                    }
                 )
 
         self.onboarding_repository.save_message_sender(mall_id, message_sender, db)
@@ -45,8 +47,10 @@ class OnboardingService(BaseOnboardingService):
         kakao_channel = self.onboarding_repository.get_kakao_channel(mall_id, db)
         if kakao_channel:
             if kakao_channel.sender_phone_number != message_sender.sender_phone_number:
-                raise Exception(
-                    "카카오 채널에 등록된 발신 번호와 등록하려는 발신 번호는 동일해야 합니다."
+                raise ValidationException(
+                    detail={
+                        "message": "카카오 채널에 등록된 발신 번호와 등록하려는 발신 번호는 동일해야 합니다."
+                    }
                 )
 
         self.onboarding_repository.update_message_sender(mall_id, message_sender, db)
@@ -59,8 +63,10 @@ class OnboardingService(BaseOnboardingService):
         message_sender = self.onboarding_repository.get_message_sender(mall_id, db)
         if message_sender:
             if message_sender.sender_phone_number != kakao_channel.sender_phone_number:
-                raise Exception(
-                    "등록된 문자 발신번호와 카카오 채널 발신 번호는 동일해야 합니다."
+                raise ValidationException(
+                    detail={
+                        "message": "등록된 문자 발신번호와 카카오 채널 발신 번호는 동일해야 합니다."
+                    }
                 )
         self.onboarding_repository.save_kakao_channel(mall_id, kakao_channel, db)
 
@@ -72,8 +78,10 @@ class OnboardingService(BaseOnboardingService):
         message_sender = self.onboarding_repository.get_message_sender(mall_id, db)
         if message_sender:
             if message_sender.sender_phone_number != kakao_channel.sender_phone_number:
-                raise Exception(
-                    "등록된 문자 발신번호와 카카오 채널 발신 번호는 동일해야 합니다."
+                raise ValidationException(
+                    detail={
+                        "message": "등록된 문자 발신번호와 카카오 채널 발신 번호는 동일해야 합니다."
+                    }
                 )
         self.onboarding_repository.update_kakao_channel(mall_id, kakao_channel, db)
 
@@ -87,10 +95,6 @@ class OnboardingService(BaseOnboardingService):
     def get_onboarding_status(
         self, mall_id: str, user: User, db: Session
     ) -> OnboardingResponse | None:
-        print(f"service_db_session: {db}")
-        result = db.execute(text("SHOW search_path")).fetchone()
-        print(f"Current search_path: {result}")
-
         onboarding = self.onboarding_repository.get_onboarding_status(mall_id, db)
 
         if not onboarding:
