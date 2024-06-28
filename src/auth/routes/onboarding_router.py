@@ -89,6 +89,7 @@ def get_message_sender(
 
 
 @onboarding_router.post("/{mall_id}/kakao", status_code=status.HTTP_201_CREATED)
+@inject
 def register_kakao_channel(
     mall_id: str,
     kakao_channel_request: KakaoChannelRequest,
@@ -102,6 +103,7 @@ def register_kakao_channel(
 
 
 @onboarding_router.put("/{mall_id}/kakao", status_code=status.HTTP_201_CREATED)
+@inject
 def update_kakao_channel(
     mall_id: str,
     kakao_channel_request: KakaoChannelRequest,
