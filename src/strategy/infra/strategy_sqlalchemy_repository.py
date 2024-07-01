@@ -51,6 +51,7 @@ class StrategySqlAlchemy:
                         func.date(StrategyEntity.updated_at) >= start_date,
                         func.date(StrategyEntity.updated_at) <= end_date,
                     ),
+                    ~StrategyEntity.is_deleted,
                     StrategyEntity.strategy_status_code
                     != StrategyStatus.notdisplay.value,
                     *conditions
@@ -63,7 +64,10 @@ class StrategySqlAlchemy:
         with self.db() as db:
             entity: StrategyEntity = (
                 db.query(StrategyEntity)
-                .filter(StrategyEntity.strategy_id == strategy_id)
+                .filter(
+                    ~StrategyEntity.is_deleted,
+                    StrategyEntity.strategy_id == strategy_id,
+                )
                 .first()
             )
 
@@ -81,10 +85,7 @@ class StrategySqlAlchemy:
                 strategy_tags=strategy.strategy_tags,
                 strategy_status_code=strategy.strategy_status_code,
                 strategy_status_name=strategy.strategy_status_name,
-                audience_type_code=strategy.audience_type_code,
-                audience_type_name=strategy.audience_type_name,
-                target_strategy_code=strategy.target_strategy_code,
-                target_strategy_name=strategy.target_strategy_name,
+                target_strategy=strategy.target_strategy,
                 created_by=user.username,
                 created_at=localtime_converter(),
                 updated_by=user.username,
@@ -191,7 +192,9 @@ class StrategySqlAlchemy:
         with self.db() as db:
             return (
                 db.query(StrategyEntity)
-                .filter(StrategyEntity.strategy_name == name)
+                .filter(
+                    ~StrategyEntity.is_deleted, StrategyEntity.strategy_name == name
+                )
                 .count()
             )
 
@@ -199,7 +202,10 @@ class StrategySqlAlchemy:
         with self.db() as db:
             entity = (
                 db.query(StrategyEntity)
-                .filter(StrategyEntity.strategy_id == strategy_id)
+                .filter(
+                    ~StrategyEntity.is_deleted,
+                    StrategyEntity.strategy_id == strategy_id,
+                )
                 .first()
             )
 

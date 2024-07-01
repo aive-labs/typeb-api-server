@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import ARRAY, Column, DateTime, String, text
+from sqlalchemy import ARRAY, Boolean, Column, DateTime, String, text
 from sqlalchemy.orm import relationship
 
 from src.core.database import Base
@@ -27,6 +27,7 @@ class StrategyEntity(Base):
         DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now()
     )
     updated_by = Column(String, nullable=False, default=text("(user)"))
+    is_deleted = Column(Boolean, nullable=False, default=False)
 
     # 1:1 relationship
     camp_mapping = relationship("CampaignEntity", backref="strategies")
