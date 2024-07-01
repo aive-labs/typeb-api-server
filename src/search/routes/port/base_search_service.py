@@ -15,7 +15,7 @@ class BaseSearchService(ABC):
 
     @abstractmethod
     def search_audience_without_strategy_id(
-        self, audience_type_code: str, search_keyword, is_exclude=False
+        self, search_keyword, is_exclude=False, target_strategy: str | None = None
     ) -> list[IdWithLabel]:
         pass
 

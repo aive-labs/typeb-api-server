@@ -143,6 +143,6 @@ class BaseAudienceRepository(ABC):
 
     @abstractmethod
     def get_audiences_by_condition_without_strategy_id(
-        self, audience_type_code, search_keyword, is_exclude
+        self, search_keyword, is_exclude, target_strategy: str | None = None
     ) -> list[IdWithLabel]:
         pass

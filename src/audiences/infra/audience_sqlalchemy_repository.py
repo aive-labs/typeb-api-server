@@ -925,7 +925,7 @@ class AudienceSqlAlchemy:
             ]
 
     def get_audiences_by_condition_without_strategy_id(
-        self, audience_type_code, search_keyword, is_exclude
+        self, search_keyword, is_exclude, target_strategy: str | None = None
     ) -> list[IdWithLabel]:
 
         with self.db() as db:
@@ -944,16 +944,23 @@ class AudienceSqlAlchemy:
                         AudienceEntity.audience_name.ilike(keyword)
                     )  # audience_name
 
+            strategy_conditions = [
+                AudienceEntity.audience_status_code != AudienceStatus.notdisplay.value
+            ]
+
+            if target_strategy:
+                strategy_conditions.append(
+                    AudienceEntity.target_strategy == target_strategy
+                )
+
             result = (
                 db.query(
                     AudienceEntity.audience_id.label("id"),
                     AudienceEntity.audience_name.label("name"),
                 )
                 .filter(
-                    AudienceEntity.audience_type_code == audience_type_code,
-                    AudienceEntity.audience_status_code
-                    != AudienceStatus.notdisplay.value,  # 캠페인 연결된 적 있는 삭제 오브젝트 제외
                     *conditions,
+                    *strategy_conditions,
                 )
                 .all()
             )

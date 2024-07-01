@@ -25,6 +25,7 @@ class TargetStrategyFilterWrapping(BaseModel):
 
 
 class TargetStrategyCombination(BaseModel):
+    event_and_remind: TargetStrategyFilterWrapping | None = None
     new_customer_guide: TargetStrategyFilterWrapping | None = None
     engagement_customer: TargetStrategyFilterWrapping | None = None
     loyal_customer_management: TargetStrategyFilterWrapping | None = None

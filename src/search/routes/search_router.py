@@ -8,6 +8,7 @@ from src.core.container import Container
 from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.search.routes.dto.id_with_label_response import IdWithLabel
 from src.search.routes.port.base_search_service import BaseSearchService
+from src.strategy.enums.target_strategy import TargetStrategy
 
 search_router = APIRouter(tags=["Search"])
 
@@ -15,7 +16,7 @@ search_router = APIRouter(tags=["Search"])
 @search_router.get("/audience")
 @inject
 def get_strategies(
-    audience_type_code: str,
+    target_strategy: Optional[TargetStrategy] = None,
     strategy_id: Optional[str] = None,
     keyword: Optional[str] = None,
     is_exclude: Optional[bool] = False,
@@ -33,7 +34,7 @@ def get_strategies(
         )
     else:
         return search_service.search_audience_without_strategy_id(
-            audience_type_code, keyword, is_exclude
+            keyword, is_exclude, target_strategy.value if target_strategy else None
         )
 
 
