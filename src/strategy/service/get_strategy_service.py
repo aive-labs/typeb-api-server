@@ -2,7 +2,7 @@ from src.core.exceptions.exceptions import ConvertValueExeption
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.routes.dto.response.strategy_response import StrategyResponse
 from src.strategy.routes.dto.response.strategy_with_campaign_theme_response import (
-    StrategyWithCampaignThemeResponse,
+    StrategyWithStrategyThemeResponse,
 )
 from src.strategy.routes.port.get_strategy_usecase import GetStrategyUseCase
 from src.users.domain.user import User
@@ -25,7 +25,7 @@ class GetStrategyService(GetStrategyUseCase):
 
     def get_strategy_detail(
         self, strategy_id: str
-    ) -> StrategyWithCampaignThemeResponse:
+    ) -> StrategyWithStrategyThemeResponse:
         strategy, strategy_themes = self.strategy_repository.get_strategy_detail(
             strategy_id
         )
@@ -35,7 +35,7 @@ class GetStrategyService(GetStrategyUseCase):
                 detail={"message": "created_at and updated_at cannot be None"}
             )
 
-        response = StrategyWithCampaignThemeResponse(
+        response = StrategyWithStrategyThemeResponse(
             strategy_name=strategy.strategy_name,
             strategy_tags=strategy.strategy_tags,
             strategy_status_code=strategy.strategy_status_code,

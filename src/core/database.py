@@ -5,8 +5,9 @@ from contextlib import AbstractContextManager, contextmanager
 from pydantic_settings import BaseSettings
 from sqlalchemy import MetaData, create_engine, orm
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, scoped_session, sessionmaker
 
+from src.common.utils.get_env_variable import get_env_variable
 from src.core.schema import schema_context
 
 
@@ -84,3 +85,28 @@ def get_db_session():
         print("--------")
 
         yield session
+
+
+def get_engine(db_url: str):
+    return create_engine(db_url)
+
+
+def get_session(engine):
+    return scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
+
+
+def prefix_db_url(db_name: str):
+    db_url = get_env_variable("prefix_db_url")
+    return f"{db_url}/{db_name}"
+
+
+def get_db():
+    db_name = "aivelabsdb"
+    engine = get_engine(prefix_db_url(db_name))
+    session_local = get_session(engine)
+    Base.metadata.create_all(bind=engine)
+    db = session_local()
+    try:
+        yield db
+    finally:
+        db.close()

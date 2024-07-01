@@ -106,6 +106,7 @@ class CreateAudienceService(CreateAudienceUseCase):
                 "audience_type_code": AudienceType.custom.value,
                 "audience_type_name": AudienceType.custom.description,
                 "create_type_code": create_type_code,
+                "target_strategy": audience_create.target_strategy.value,
                 "audience_status_code": AudienceStatus.inactive.value,
                 "audience_status_name": AudienceStatus.inactive.description,
                 "description": None,

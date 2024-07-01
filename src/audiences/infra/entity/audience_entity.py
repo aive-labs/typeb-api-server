@@ -23,6 +23,7 @@ class AudienceEntity(Base):
     audience_status_name = Column(String, nullable=False)
     description = Column(String, nullable=True)
     create_type_code = Column(String, nullable=True)
+    target_strategy = Column(String, nullable=True)
     owned_by_dept = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), default=datetime.now())
     created_by = Column(String, nullable=False, default=text("(user)"))

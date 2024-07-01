@@ -12,7 +12,7 @@ class StrategyThemeSelectV2(BaseModel):
     theme_audience_set: ThemeDetail | None = None
 
 
-class StrategyWithCampaignThemeResponse(BaseModel):
+class StrategyWithStrategyThemeResponse(BaseModel):
     strategy_name: str
     strategy_tags: list[str] | None = None
     strategy_status_code: str
