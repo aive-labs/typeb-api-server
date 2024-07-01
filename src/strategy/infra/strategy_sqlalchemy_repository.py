@@ -2,7 +2,7 @@ from collections.abc import Callable
 from contextlib import AbstractContextManager
 from typing import Type
 
-from sqlalchemy import func, or_
+from sqlalchemy import func, or_, update
 from sqlalchemy.orm import Session
 
 from src.audiences.infra.entity.strategy_theme_audience_entity import (
@@ -168,7 +168,7 @@ class StrategySqlAlchemy:
 
                 # 해당 본사 팀이 관리하는 매장 리소스
                 shops_query = (
-                    db.query(User.department_id)
+                    db.query(UserEntity.department_id)
                     .filter(
                         UserEntity.branch_manager.in_(erp_ids),
                         UserEntity.branch_manager.isnot(None),
@@ -210,3 +210,26 @@ class StrategySqlAlchemy:
             )
 
             return Strategy.from_entity(entity)
+
+    def delete(self, strategy_id):
+        with self.db() as db:
+            update_statement = (
+                update(StrategyEntity)
+                .where(StrategyEntity.strategy_id == strategy_id)
+                .values(is_deleted=True)
+            )
+
+            db.execute(update_statement)
+
+    def update_expired_strategy(self, strategy_id):
+        with self.db() as db:
+            update_statement = (
+                update(StrategyEntity)
+                .where(StrategyEntity.strategy_id == strategy_id)
+                .values(
+                    strategy_status_code=StrategyStatus.notdisplay.value,
+                    strategy_status_name=StrategyStatus.notdisplay.description,
+                )
+            )
+
+            db.execute(update_statement)

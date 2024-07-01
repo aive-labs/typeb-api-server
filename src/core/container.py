@@ -68,7 +68,9 @@ from src.search.service.search_service import SearchService
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.infra.strategy_sqlalchemy_repository import StrategySqlAlchemy
 from src.strategy.service.create_strategy_service import CreateStrategyService
+from src.strategy.service.delete_strategy_service import DeleteStrategyService
 from src.strategy.service.get_strategy_service import GetStrategyService
+from src.strategy.service.update_strategy_service import UpdateStrategyService
 from src.users.infra.user_repository import UserRepository
 from src.users.infra.user_sqlalchemy import UserSqlAlchemy
 from src.users.service.user_service import UserService
@@ -314,6 +316,14 @@ class Container(containers.DeclarativeContainer):
 
     create_strategy_service = providers.Singleton(
         provides=CreateStrategyService, strategy_repository=strategy_repository
+    )
+
+    delete_strategy_service = providers.Singleton(
+        provides=DeleteStrategyService, strategy_repository=strategy_repository
+    )
+
+    update_strategy_service = providers.Singleton(
+        provides=UpdateStrategyService, strategy_repository=strategy_repository
     )
 
     """

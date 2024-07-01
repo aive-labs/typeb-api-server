@@ -1,11 +1,12 @@
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
 from src.strategy.routes.dto.request.strategy_create import StrategyCreate
 from src.strategy.routes.dto.response.strategy_response import StrategyResponse
 from src.strategy.routes.port.create_strategy_usecase import CreateStrategyUseCase
+from src.strategy.routes.port.delete_strategy_usecase import DeleteStrategyUseCase
 from src.strategy.routes.port.get_strategy_usecase import GetStrategyUseCase
 
 strategy_router = APIRouter(tags=["Strategy-management"])
@@ -51,3 +52,16 @@ def create_strategies(
 ):
     result = create_strategy_service.create_strategy_object(strategy_create, user)
     return result
+
+
+@strategy_router.delete(
+    "/strategies/{strategy_id}", status_code=status.HTTP_204_NO_CONTENT
+)
+@inject
+def delete_strategy(
+    strategy_id: str,
+    delete_strategy_service: DeleteStrategyUseCase = Depends(
+        Provide[Container.delete_strategy_service]
+    ),
+):
+    delete_strategy_service.exec(strategy_id)

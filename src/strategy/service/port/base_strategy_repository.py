@@ -35,3 +35,7 @@ class BaseStrategyRepository(ABC):
     @abstractmethod
     def find_by_strategy_id(self, strategy_id: str) -> Strategy:
         pass
+
+    @abstractmethod
+    def delete(self, strategy_id: str):
+        pass

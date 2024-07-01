@@ -108,3 +108,14 @@ class CampaignSqlAlchemy:
                 return False
 
             return True
+
+    def get_campaign_by_strategy_id(self, strategy_id: str) -> list[Campaign]:
+        with self.db() as db:
+            entities = (
+                db.query(CampaignEntity)
+                .filter(CampaignEntity.strategy_id == strategy_id)
+                .distinct()
+                .all()
+            )
+
+            return [Campaign.model_validate(entity) for entity in entities]

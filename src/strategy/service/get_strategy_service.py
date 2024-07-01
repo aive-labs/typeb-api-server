@@ -1,4 +1,4 @@
-from src.core.exceptions.exceptions import ConvertValueExeption
+from src.core.exceptions.exceptions import ConvertValueException
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.routes.dto.response.strategy_response import StrategyResponse
 from src.strategy.routes.dto.response.strategy_with_campaign_theme_response import (
@@ -31,7 +31,7 @@ class GetStrategyService(GetStrategyUseCase):
         )
 
         if strategy.created_at is None or strategy.updated_at is None:
-            raise ConvertValueExeption(
+            raise ConvertValueException(
                 detail={"message": "created_at and updated_at cannot be None"}
             )
 

@@ -58,3 +58,9 @@ class StrategyRepository(BaseStrategyRepository):
 
     def find_by_strategy_id(self, strategy_id: str) -> Strategy:
         return self.strategy_sqlalchemy_repository.find_by_strategy_id(strategy_id)
+
+    def delete(self, strategy_id: str):
+        return self.strategy_sqlalchemy_repository.delete(strategy_id)
+
+    def update_expired_strategy_status(self, strategy_id):
+        return self.strategy_sqlalchemy_repository.update_expired_strategy(strategy_id)
