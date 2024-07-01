@@ -8,6 +8,7 @@ from src.strategy.routes.dto.response.strategy_response import StrategyResponse
 from src.strategy.routes.port.create_strategy_usecase import CreateStrategyUseCase
 from src.strategy.routes.port.delete_strategy_usecase import DeleteStrategyUseCase
 from src.strategy.routes.port.get_strategy_usecase import GetStrategyUseCase
+from src.strategy.routes.port.update_strategy_usecase import UpdateStrategyUseCase
 
 strategy_router = APIRouter(tags=["Strategy-management"])
 
@@ -65,3 +66,15 @@ def delete_strategy(
     ),
 ):
     delete_strategy_service.exec(strategy_id)
+
+
+@strategy_router.put("/strategies/{strategy_id}")
+@inject
+def update_strategy(
+    strategy_id: str,
+    strategy_update: StrategyCreate,
+    update_strategy_service: UpdateStrategyUseCase = Depends(
+        Provide[Container.update_strategy_service]
+    ),
+):
+    update_strategy_service.exec(strategy_id, strategy_update)

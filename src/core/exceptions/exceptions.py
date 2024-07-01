@@ -54,7 +54,7 @@ class ConvertValueException(HTTPException):
         super().__init__(status.HTTP_500_INTERNAL_SERVER_ERROR, detail, headers)
 
 
-class DeleteConditionException(HTTPException):
+class LinkedCampaignException(HTTPException):
     def __init__(
         self, detail: Any = None, headers: dict[str, Any] | None = None
     ) -> None:

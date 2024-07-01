@@ -26,6 +26,8 @@ from src.auth.service.auth_service import AuthService
 from src.auth.service.cafe24_service import Cafe24Service
 from src.auth.service.onboarding_service import OnboardingService
 from src.auth.service.token_service import TokenService
+from src.campaign.infra.campaign_repository import CampaignRepository
+from src.campaign.infra.campaign_sqlalchemy_repository import CampaignSqlAlchemy
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
 from src.common.utils.file.s3_service import S3Service
 from src.contents.infra.contents_repository import ContentsRepository
@@ -299,6 +301,26 @@ class Container(containers.DeclarativeContainer):
     )
 
     """
+    캠페인 의존성 주입
+    """
+
+    campaign_sqlalchemy = providers.Singleton(
+        provides=CampaignSqlAlchemy, db=db.provided.session
+    )
+
+    campaign_repository = providers.Singleton(
+        provides=CampaignRepository, campaign_sqlalchemy=campaign_sqlalchemy
+    )
+
+    # get_campaign_service = providers.Singleton(
+    #     provides=GetCampaignUsecase, campaign_repository=campaign_repository
+    # )
+    #
+    # create_campaign_service = providers.Singleton(
+    #     provides=CreateCampaignUsecase, campaign_repository=campaign_repository
+    # )
+
+    """
     전략 의존성 주입
     """
     strategy_sqlalchemy = providers.Singleton(
@@ -319,11 +341,15 @@ class Container(containers.DeclarativeContainer):
     )
 
     delete_strategy_service = providers.Singleton(
-        provides=DeleteStrategyService, strategy_repository=strategy_repository
+        provides=DeleteStrategyService,
+        strategy_repository=strategy_repository,
+        campaign_repository=campaign_repository,
     )
 
     update_strategy_service = providers.Singleton(
-        provides=UpdateStrategyService, strategy_repository=strategy_repository
+        provides=UpdateStrategyService,
+        strategy_repository=strategy_repository,
+        campaign_repository=campaign_repository,
     )
 
     """
@@ -389,23 +415,3 @@ class Container(containers.DeclarativeContainer):
         recommend_products_repository=recommend_products_repository,
         offer_repository=offer_repository,
     )
-
-    """
-    캠페인 의존성 주입
-    """
-
-    # campaign_sqlalchemy = providers.Singleton(
-    #     provides=CampaignSqlAlchemy, db=db.provided.session
-    # )
-    #
-    # campaign_repository = providers.Singleton(
-    #     provides=BaseCampaignRepository, campaign_sqlalchemy=campaign_sqlalchemy
-    # )
-    #
-    # get_campaign_service = providers.Singleton(
-    #     provides=GetCampaignUsecase, campaign_repository=campaign_repository
-    # )
-    #
-    # create_campaign_service = providers.Singleton(
-    #     provides=CreateCampaignUsecase, campaign_repository=campaign_repository
-    # )

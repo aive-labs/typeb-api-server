@@ -1,6 +1,8 @@
 from src.campaign.enums.campagin_status import CampaignStatus
 from src.campaign.infra.campaign_repository import CampaignRepository
-from src.core.exceptions.exceptions import DeleteConditionException
+from src.core.exceptions.exceptions import (
+    LinkedCampaignException,
+)
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.routes.port.delete_strategy_usecase import DeleteStrategyUseCase
 
@@ -34,7 +36,7 @@ class DeleteStrategyService(DeleteStrategyUseCase):
                     strategy_id
                 )
 
-            raise DeleteConditionException(
+            raise LinkedCampaignException(
                 detail={
                     "code": "delete/01",
                     "message": "삭제 불가 - 연결된 캠페인이 존재합니다.",
