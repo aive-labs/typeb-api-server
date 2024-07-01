@@ -11,7 +11,7 @@ class StrategyCreate(BaseModel):
     strategy_name: str
     strategy_tags: list | None = None
     audience_type_code: str
-    target_strategy_code: TargetStrategy
+    target_strategy: TargetStrategy
     strategy_themes: list[StrategyThemeModel]
     created_at: datetime = Field(default_factory=localtime_converter)
     updated_at: datetime = Field(default_factory=localtime_converter)

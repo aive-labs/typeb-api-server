@@ -11,10 +11,7 @@ class StrategyResponse(BaseModel):
     strategy_tags: list | None = None
     strategy_status_code: str
     strategy_status_name: str
-    audience_type_code: str
-    audience_type_name: str
-    target_strategy_code: str
-    target_strategy_name: str
+    target_strategy: str
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
 
@@ -26,10 +23,7 @@ class StrategyResponse(BaseModel):
             strategy_tags=model.strategy_tags,
             strategy_status_code=model.strategy_status_code,
             strategy_status_name=model.strategy_status_name,
-            audience_type_code=model.audience_type_code,
-            audience_type_name=model.audience_type_name,
-            target_strategy_code=model.target_strategy_code,
-            target_strategy_name=model.target_strategy_name,
+            target_strategy=model.target_strategy,
             created_at=model.created_at,
             updated_at=model.updated_at,
         )

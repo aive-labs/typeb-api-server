@@ -17,10 +17,7 @@ class StrategyWithStrategyThemeResponse(BaseModel):
     strategy_tags: list[str] | None = None
     strategy_status_code: str
     strategy_status_name: str
-    audience_type_code: str
-    audience_type_name: str
-    target_strategy_code: str
-    target_strategy_name: str
+    target_strategy: str
     strategy_themes: list[StrategyThemeSelectV2]
     created_at: datetime
     updated_at: datetime

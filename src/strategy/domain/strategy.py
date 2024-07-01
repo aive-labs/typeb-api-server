@@ -2,14 +2,12 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from src.audiences.enums.audience_type import AudienceType
 from src.strategy.domain.strategy_theme import (
     StrategyTheme,
     StrategyThemeAudienceMapping,
     StrategyThemeOfferMapping,
 )
 from src.strategy.enums.strategy_status import StrategyStatus
-from src.strategy.enums.target_strategy import TargetStrategy
 from src.strategy.infra.entity.strategy_entity import StrategyEntity
 from src.strategy.routes.dto.request.strategy_create import StrategyCreate
 
@@ -20,14 +18,11 @@ class Strategy(BaseModel):
     strategy_tags: list | None = None
     strategy_status_code: str
     strategy_status_name: str
-    audience_type_code: str
-    audience_type_name: str
-    target_strategy_code: str
-    target_strategy_name: str
+    target_strategy: str
     owned_by_dept: str | None = None
-    created_at: datetime | None = None
+    created_at: datetime
     created_by: str | None = None
-    updated_at: datetime | None = None
+    updated_at: datetime
     updated_by: str | None = None
     strategy_themes: list[StrategyTheme] = []
 
@@ -63,10 +58,7 @@ class Strategy(BaseModel):
             strategy_tags=entity.strategy_tags,
             strategy_status_code=entity.strategy_status_code,
             strategy_status_name=entity.strategy_status_name,
-            audience_type_code=entity.audience_type_code,
-            audience_type_name=entity.audience_type_name,
-            target_strategy_code=entity.target_strategy_code,
-            target_strategy_name=entity.target_strategy_name,
+            target_strategy=entity.target_strategy,
             owned_by_dept=entity.owned_by_dept,
             created_at=entity.created_at,
             created_by=entity.created_by,
@@ -84,12 +76,7 @@ class Strategy(BaseModel):
             strategy_tags=strategy_create.strategy_tags,
             strategy_status_code=StrategyStatus.inactive.value,
             strategy_status_name=StrategyStatus.inactive.description,
-            audience_type_code=strategy_create.audience_type_code,
-            audience_type_name=AudienceType(
-                strategy_create.audience_type_code
-            ).description,
-            target_strategy_code=strategy_create.target_strategy_code.value,
-            target_strategy_name=TargetStrategy(
-                strategy_create.target_strategy_code
-            ).description,
+            target_strategy=strategy_create.target_strategy.value,
+            created_at=strategy_create.created_at,
+            updated_at=strategy_create.updated_at,
         )
