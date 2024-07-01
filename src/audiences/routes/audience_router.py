@@ -23,6 +23,9 @@ from src.audiences.routes.dto.response.audience_variable_combinations import (
     AudienceVariableCombinations,
 )
 from src.audiences.routes.dto.response.audiences import AudienceResponse
+from src.audiences.routes.dto.response.target_strategy_combination import (
+    TargetStrategyCombination,
+)
 from src.audiences.routes.dto.response.upload_condition_response import (
     AudienceCreationOptionsResponse,
 )
@@ -94,6 +97,18 @@ def create_audience(
     )
 
     background_task.add_task(execute_target_audience_summary, audience_id)
+
+
+@audience_router.get("/target-strategy-combinations")
+@inject
+def get_audience_target_strategy_combinations(
+    user=Depends(get_permission_checker([])),
+    create_audience_service: CreateAudienceUseCase = Depends(
+        Provide[Container.create_audience_service]
+    ),
+) -> TargetStrategyCombination:
+    """타겟 전략에 대한 필터 조건을 조회하는 API"""
+    return create_audience_service.get_audience_target_strategy_combinations()
 
 
 @audience_router.get(

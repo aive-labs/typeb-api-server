@@ -17,6 +17,13 @@ from src.audiences.routes.dto.response.audience_variable_combinations import (
     Option,
     PredefinedVariable,
 )
+from src.audiences.routes.dto.response.target_strategy_combination import (
+    TargetStrategyAndCondition,
+    TargetStrategyCombination,
+    TargetStrategyCondition,
+    TargetStrategyFilter,
+    TargetStrategyFilterWrapping,
+)
 from src.audiences.routes.port.usecase.create_audience_usecase import (
     CreateAudienceUseCase,
 )
@@ -176,6 +183,96 @@ class CreateAudienceService(CreateAudienceUseCase):
         ]
 
         return insert_to_audiences, insert_to_filter_conditions
+
+    def get_audience_target_strategy_combinations(self) -> TargetStrategyCombination:
+
+        new_customer_guide = TargetStrategyAndCondition(
+            no=0,
+            conditions=[
+                TargetStrategyCondition(
+                    value="new_customer,Inactive_new_m1,Inactive_new_m3,Inactive_new_m6,Inactive_new_m9",
+                    cell_type="multi_select",
+                    data_type="d_cv",
+                )
+            ],
+            variable_id="cv_model",
+            additional_filters=None,
+        )
+        new_customer_guide = TargetStrategyFilterWrapping(
+            filter=TargetStrategyFilter(and_conditions=[new_customer_guide])
+        )
+
+        engagement_customer = TargetStrategyAndCondition(
+            no=0,
+            conditions=[
+                TargetStrategyCondition(
+                    value="Active_Customer1,Active_Customer2,Active_Customer3,Active_Customer4,Inactive_act1_m3,Inactive_act1_m6,Inactive_act1_m9,Inactive_act2_m6,Inactive_act2_m9,Inactive_act3_m6,Inactive_act3_m9CHL",
+                    cell_type="multi_select",
+                    data_type="d_cv",
+                )
+            ],
+            variable_id="cv_model",
+            additional_filters=None,
+        )
+        engagement_customer = TargetStrategyFilterWrapping(
+            filter=TargetStrategyFilter(and_conditions=[engagement_customer])
+        )
+
+        loyal_customer_management = TargetStrategyAndCondition(
+            no=0,
+            conditions=[
+                TargetStrategyCondition(
+                    value="Inactive_act4_m3,Inactive_act4_m6,Inactive_act4_m9",
+                    cell_type="multi_select",
+                    data_type="d_cv",
+                )
+            ],
+            variable_id="cv_model",
+            additional_filters=None,
+        )
+        loyal_customer_management = TargetStrategyFilterWrapping(
+            filter=TargetStrategyFilter(and_conditions=[loyal_customer_management])
+        )
+
+        preventing_customer_churn = TargetStrategyAndCondition(
+            no=0,
+            conditions=[
+                TargetStrategyCondition(
+                    value="Inactive_act1_m9,Inactive_act2_m9,Inactive_act3_m9,Inactive_act4_m9",
+                    cell_type="multi_select",
+                    data_type="d_cv",
+                )
+            ],
+            variable_id="cv_model",
+            additional_filters=None,
+        )
+        preventing_customer_churn = TargetStrategyFilterWrapping(
+            filter=TargetStrategyFilter(and_conditions=[preventing_customer_churn])
+        )
+
+        reactivate_customer = TargetStrategyAndCondition(
+            no=0,
+            conditions=[
+                TargetStrategyCondition(
+                    value="Churn_m12,Churn_m18,Churn_m24,Churn_m30",
+                    cell_type="multi_select",
+                    data_type="d_cv",
+                )
+            ],
+            variable_id="cv_model",
+            additional_filters=None,
+        )
+        reactivate_customer = TargetStrategyFilterWrapping(
+            filter=TargetStrategyFilter(and_conditions=[reactivate_customer])
+        )
+
+        return TargetStrategyCombination(
+            new_customer_guide=new_customer_guide,
+            engagement_customer=engagement_customer,
+            loyal_customer_management=loyal_customer_management,
+            preventing_customer_churn=preventing_customer_churn,
+            reactivate_customer=reactivate_customer,
+        )
 
     def get_audience_variable_combinations(
         self, user: User

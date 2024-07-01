@@ -5,6 +5,9 @@ from src.audiences.routes.dto.response.audience_variable_combinations import (
     DataType,
     PredefinedVariable,
 )
+from src.audiences.routes.dto.response.target_strategy_combination import (
+    TargetStrategyCombination,
+)
 from src.users.domain.user import User
 
 
@@ -25,4 +28,8 @@ class CreateAudienceUseCase(ABC):
 
     @abstractmethod
     def get_option_items(self) -> list[DataType]:
+        pass
+
+    @abstractmethod
+    def get_audience_target_strategy_combinations(self) -> TargetStrategyCombination:
         pass
