@@ -3,6 +3,7 @@ from src.campaign.infra.campaign_repository import CampaignRepository
 from src.core.exceptions.exceptions import (
     LinkedCampaignException,
 )
+from src.core.transactional import transactional
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.routes.port.delete_strategy_usecase import DeleteStrategyUseCase
 
@@ -17,6 +18,7 @@ class DeleteStrategyService(DeleteStrategyUseCase):
         self.strategy_repository = strategy_repository
         self.campaign_repository = campaign_repository
 
+    @transactional
     def exec(self, strategy_id: str):
 
         linked_campaigns = self.campaign_repository.get_campaign_by_strategy_id(
