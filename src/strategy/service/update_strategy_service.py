@@ -46,7 +46,7 @@ class UpdateStrategyService(UpdateStrategyUseCase):
         strategy, _ = self.strategy_repository.get_strategy_detail(strategy_id, db)
 
         self._check_linked_campaign(strategy)
-        self._check_duplicate_name(db, strategy_update)
+        self._check_duplicate_name(strategy_id, strategy_update, db)
 
         audience_ids = []
         for theme in strategy_update.strategy_themes:
@@ -111,9 +111,9 @@ class UpdateStrategyService(UpdateStrategyUseCase):
                 },
             )
 
-    def _check_duplicate_name(self, db, strategy_update):
-        if self.strategy_repository.is_strategy_name_exists(
-            strategy_update.strategy_name, db
+    def _check_duplicate_name(self, strategy_id, strategy_update, db):
+        if self.strategy_repository.is_strategy_name_exists_for_update(
+            strategy_id, strategy_update.strategy_name, db
         ):
             raise DuplicatedException(
                 detail={
@@ -155,15 +155,6 @@ class UpdateStrategyService(UpdateStrategyUseCase):
                 },
             )
 
-    def _check_single_offer_per_custom_theme(self, audience_type_code, offer_id_list):
-        if audience_type_code == "c" and len(offer_id_list) > 1:
-            raise ValidationException(
-                detail={
-                    "code": "strategy/create",
-                    "message": "커스텀 전략의 테마 별 오퍼는 1개까지 사용가능합니다.",
-                },
-            )
-
     def _check_strategy_theme_validation(
         self, recommend_model_ids, strategy_create, theme
     ):
@@ -176,9 +167,4 @@ class UpdateStrategyService(UpdateStrategyUseCase):
         # 2. 세그먼트 캠페인 - 신상품 추천 모델 단독 사용 점검
         self._check_exclusive_new_collection_model(
             recommend_model_list=recommend_model_ids
-        )
-        # 3. 커스텀 캠페인 - 오퍼 1개 제한
-        self._check_single_offer_per_custom_theme(
-            audience_type_code=strategy_create.audience_type_code,
-            offer_id_list=theme.theme_audience_set.offer_ids,
         )

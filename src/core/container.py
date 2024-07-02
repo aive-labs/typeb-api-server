@@ -349,7 +349,6 @@ class Container(containers.DeclarativeContainer):
     update_strategy_service = providers.Singleton(
         provides=UpdateStrategyService,
         strategy_repository=strategy_repository,
-        campaign_repository=campaign_repository,
     )
 
     """

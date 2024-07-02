@@ -295,3 +295,14 @@ class StrategySqlAlchemy:
             strategy_entity.strategy_themes.append(strategy_theme_entity)
 
         db.merge(strategy_entity)
+
+    def is_strategy_name_exists_for_update(self, strategy_id, name, db):
+        return (
+            db.query(StrategyEntity)
+            .filter(
+                ~StrategyEntity.is_deleted,
+                StrategyEntity.strategy_name == name,
+                StrategyEntity.strategy_id != strategy_id,
+            )
+            .count()
+        )
