@@ -416,4 +416,5 @@ class Container(containers.DeclarativeContainer):
         audience_repository=audience_repository,
         recommend_products_repository=recommend_products_repository,
         offer_repository=offer_repository,
+        contents_repository=contents_repository,
     )

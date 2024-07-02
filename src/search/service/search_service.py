@@ -1,5 +1,8 @@
+from sqlalchemy.orm import Session
+
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
+from src.contents.infra.contents_repository import ContentsRepository
 from src.offers.infra.offer_repository import OfferRepository
 from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.search.routes.dto.id_with_label_response import IdWithLabel
@@ -14,10 +17,12 @@ class SearchService(BaseSearchService):
         audience_repository: BaseAudienceRepository,
         recommend_products_repository: RecommendProductsRepository,
         offer_repository: OfferRepository,
+        contents_repository: ContentsRepository,
     ):
         self.audience_repository = audience_repository
         self.recommend_products_repository = recommend_products_repository
         self.offer_repository = offer_repository
+        self.contents_repository = contents_repository
 
     def search_audience_with_strategy_id(
         self, strategy_id: str, search_keyword: str, user: User, is_exclude=False
@@ -48,3 +53,10 @@ class SearchService(BaseSearchService):
 
     def search_recommend_products(self, keyword) -> list[IdWithItem]:
         return self.recommend_products_repository.search_recommend_products(keyword)
+
+    def search_contents_tag(
+        self, keyword, recsys_model_id, db: Session
+    ) -> list[IdWithItem]:
+        return self.contents_repository.search_contents_tag(
+            keyword, recsys_model_id, db
+        )

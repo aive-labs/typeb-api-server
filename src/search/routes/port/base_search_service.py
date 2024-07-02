@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from sqlalchemy.orm import Session
+
 from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.search.routes.dto.id_with_label_response import IdWithLabel
 from src.users.domain.user import User
@@ -31,4 +33,10 @@ class BaseSearchService(ABC):
 
     @abstractmethod
     def search_recommend_products(self, keyword) -> list[IdWithItem]:
+        pass
+
+    @abstractmethod
+    def search_contents_tag(
+        self, keyword, recsys_model_id, db: Session
+    ) -> list[IdWithItem]:
         pass

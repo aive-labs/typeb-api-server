@@ -5,6 +5,7 @@ from src.contents.domain.contents_menu import ContentsMenu
 from src.contents.infra.contents_sqlalchemy_repository import ContentsSqlAlchemy
 from src.contents.infra.dto.response.contents_response import ContentsResponse
 from src.contents.service.port.base_contents_repository import BaseContentsRepository
+from src.search.routes.dto.id_with_item_response import IdWithItem
 
 
 class ContentsRepository(BaseContentsRepository):
@@ -44,3 +45,10 @@ class ContentsRepository(BaseContentsRepository):
         self, contents_id: int, contents: Contents, db: Session
     ) -> ContentsResponse:
         return self.contents_sqlalchemy.update_contents(contents_id, contents, db)
+
+    def search_contents_tag(
+        self, keyword, recsys_model_id, db: Session
+    ) -> list[IdWithItem]:
+        return self.contents_sqlalchemy.search_contents_tag(
+            keyword, recsys_model_id, db
+        )

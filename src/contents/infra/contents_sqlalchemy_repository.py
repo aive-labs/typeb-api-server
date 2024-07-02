@@ -11,6 +11,8 @@ from src.contents.infra.dto.response.contents_response import ContentsResponse
 from src.contents.infra.entity.contents_entity import ContentsEntity
 from src.contents.infra.entity.contents_menu_entity import ContentsMenuEntity
 from src.core.exceptions.exceptions import NotFoundException
+from src.search.routes.dto.id_with_item_response import IdWithItem
+from src.strategy.enums.recommend_model import RecommendModels
 
 
 class ContentsSqlAlchemy:
@@ -206,3 +208,29 @@ class ContentsSqlAlchemy:
         db.commit()
         db.refresh(updated_entity)
         return ModelConverter.entity_to_model(updated_entity, ContentsResponse)
+
+    def search_contents_tag(
+        self, search_keyword, recsys_model_id, db
+    ) -> list[IdWithItem]:
+
+        filter_conditions = [ContentsEntity.contents_status == "published"]
+
+        if recsys_model_id == str(RecommendModels.contents_only_personalized.value):
+            filter_conditions.append(ContentsEntity.contents_type == "contents_only")
+
+        if search_keyword:
+            keyword = f"%{search_keyword}%"
+            filter_conditions.append(ContentsEntity.contents_tags.ilike(keyword))
+
+        results = (
+            db.query(
+                ContentsEntity.contents_id,
+                ContentsEntity.contents_name,
+            )
+            .filter(*filter_conditions)
+            .all()
+        )
+
+        return [
+            IdWithItem(id=item.contents_id, name=item.contents_name) for item in results
+        ]

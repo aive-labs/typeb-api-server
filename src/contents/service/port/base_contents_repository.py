@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from src.contents.domain.contents import Contents
 from src.contents.domain.contents_menu import ContentsMenu
 from src.contents.infra.dto.response.contents_response import ContentsResponse
+from src.search.routes.dto.id_with_item_response import IdWithItem
 
 
 class BaseContentsRepository(ABC):
@@ -47,4 +48,10 @@ class BaseContentsRepository(ABC):
     def update(
         self, contents_id: int, contents: Contents, db: Session
     ) -> ContentsResponse:
+        pass
+
+    @abstractmethod
+    def search_contents_tag(
+        self, keyword, recsys_model_id, db: Session
+    ) -> list[IdWithItem]:
         pass

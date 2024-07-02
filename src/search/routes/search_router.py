@@ -2,9 +2,11 @@ from typing import Optional
 
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
+from src.core.database import get_db_session
 from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.search.routes.dto.id_with_label_response import IdWithLabel
 from src.search.routes.port.base_search_service import BaseSearchService
@@ -67,3 +69,17 @@ async def get_search_products(
 ) -> list[IdWithItem]:
     """드롭다운 추천모델 목록을 조회하는 API"""
     return search_service.search_recommend_products(keyword)
+
+
+@search_router.get("/contents_tag")
+@inject
+async def get_contents_tag(
+    keyword: Optional[str] = None,
+    recsys_model_id: Optional[str] = None,
+    db: Session = Depends(get_db_session),
+    user=Depends(get_permission_checker(required_permissions=[])),
+    search_service: BaseSearchService = Depends(
+        dependency=Provide[Container.search_service]
+    ),
+) -> list[IdWithItem]:
+    return search_service.search_contents_tag(keyword, recsys_model_id, db)
