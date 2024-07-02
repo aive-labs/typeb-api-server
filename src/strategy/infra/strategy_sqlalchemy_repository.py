@@ -230,3 +230,67 @@ class StrategySqlAlchemy:
         )
 
         db.execute(update_statement)
+
+    def update(
+        self,
+        strategy: Strategy,
+        strategy_themes: list[StrategyTheme],
+        user: User,
+        db: Session,
+    ):
+        strategy_entity = StrategyEntity(
+            strategy_id=strategy.strategy_id,
+            strategy_name=strategy.strategy_name,
+            strategy_tags=strategy.strategy_tags,
+            strategy_status_code=strategy.strategy_status_code,
+            strategy_status_name=strategy.strategy_status_name,
+            target_strategy=strategy.target_strategy,
+            updated_by=user.username,
+            updated_at=localtime_converter(),
+            owned_by_dept=user.department_id,
+        )
+
+        for theme in strategy_themes:
+            strategy_theme_entity = StrategyThemesEntity(
+                strategy_theme_id=theme.strategy_theme_id,
+                strategy_theme_name=theme.strategy_theme_name,
+                strategy_id=strategy.strategy_id,
+                recsys_model_id=theme.recsys_model_id,
+                contents_tags=theme.contents_tags,
+                updated_by=theme.updated_by,
+                updated_at=theme.updated_at,
+            )
+
+            theme_audience_entities = [
+                StrategyThemeAudienceMappingEntity(
+                    audience_id=audience.audience_id,
+                    strategy_theme_id=theme.strategy_theme_id,
+                    updated_by=theme.updated_by,
+                    updated_at=theme.updated_at,
+                )
+                for audience in theme.strategy_theme_audience_mapping
+            ]
+
+            for theme_audience_entity in theme_audience_entities:
+                strategy_theme_entity.strategy_theme_audience_mapping.append(
+                    theme_audience_entity
+                )
+
+            theme_offer_entities = [
+                StrategyThemeOfferMappingEntity(
+                    offer_id=offer.offer_id,
+                    strategy_theme_id=theme.strategy_theme_id,
+                    updated_by=theme.updated_by,
+                    updated_at=theme.updated_at,
+                )
+                for offer in theme.strategy_theme_offer_mapping
+            ]
+
+            for theme_offer_entity in theme_offer_entities:
+                strategy_theme_entity.strategy_theme_offer_mapping.append(
+                    theme_offer_entity
+                )
+
+            strategy_entity.strategy_themes.append(strategy_theme_entity)
+
+        db.merge(strategy_entity)

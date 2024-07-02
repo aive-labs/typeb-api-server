@@ -68,3 +68,14 @@ class StrategyRepository(BaseStrategyRepository):
         return self.strategy_sqlalchemy_repository.update_expired_strategy(
             strategy_id, db
         )
+
+    def update(
+        self,
+        strategy: Strategy,
+        campaign_themes: list[StrategyTheme],
+        user: User,
+        db: Session,
+    ):
+        return self.strategy_sqlalchemy_repository.update(
+            strategy, campaign_themes, user, db
+        )

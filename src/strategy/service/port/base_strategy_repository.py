@@ -41,3 +41,13 @@ class BaseStrategyRepository(ABC):
     @abstractmethod
     def delete(self, strategy_id: str, db: Session):
         pass
+
+    @abstractmethod
+    def update(
+        self,
+        strategy: Strategy,
+        campaign_themes: list[StrategyTheme],
+        user: User,
+        db: Session,
+    ):
+        pass
