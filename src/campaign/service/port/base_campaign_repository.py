@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
+from src.campaign.domain.campaign_timeline import CampaignTimeline
 from src.users.domain.user import User
 
 
@@ -29,4 +30,8 @@ class BaseCampaignRepository(ABC):
     def get_campaign_by_strategy_id(
         self, strategy_id: str, db: Session
     ) -> list[Campaign]:
+        pass
+
+    @abstractmethod
+    def get_timeline(self, campaign_id: str, db: Session) -> list[CampaignTimeline]:
         pass

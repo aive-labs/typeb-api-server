@@ -1,16 +1,19 @@
 from collections.abc import Callable
 from contextlib import AbstractContextManager
 
-from sqlalchemy import and_, func, not_, or_
+from sqlalchemy import Integer, and_, desc, func, not_, or_
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
+from src.campaign.domain.campaign_timeline import CampaignTimeline
 from src.campaign.enums.campagin_status import CampaignStatus
 from src.campaign.enums.send_type import SendType
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
+from src.campaign.infra.entity.campaign_timeline_entity import CampaignTimelineEntity
 from src.common.sqlalchemy.object_access_condition import object_access_condition
 from src.users.domain.user import User
+from src.users.infra.entity.user_entity import UserEntity
 
 
 class CampaignSqlAlchemy:
@@ -120,3 +123,33 @@ class CampaignSqlAlchemy:
         )
 
         return [Campaign.model_validate(entity) for entity in entities]
+
+    def get_timeline(self, campaign_id, db) -> list[CampaignTimeline]:
+        timelines = (
+            db.query(
+                CampaignTimelineEntity.timeline_no,
+                CampaignTimelineEntity.timeline_type,
+                CampaignTimelineEntity.description,
+                CampaignTimelineEntity.status_no,
+                CampaignTimelineEntity.created_at,
+                CampaignTimelineEntity.created_by,
+                CampaignTimelineEntity.created_by_name,
+                UserEntity.email,
+                UserEntity.photo_uri,
+                UserEntity.department_id,
+                UserEntity.department_name,
+                UserEntity.test_callback_number,
+            )
+            .outerjoin(
+                UserEntity,
+                func.cast(CampaignTimelineEntity.created_by, Integer)
+                == UserEntity.user_id,
+            )
+            .filter(
+                CampaignTimelineEntity.campaign_id == campaign_id,
+            )
+            .order_by(desc(CampaignTimelineEntity.timeline_no))
+            .all()
+        )
+
+        return [CampaignTimeline.model_validate(timeline) for timeline in timelines]
