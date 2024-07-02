@@ -1,9 +1,12 @@
+from sqlalchemy.orm import Session
+
 from src.campaign.infra.campaign_repository import CampaignRepository
 from src.core.exceptions.exceptions import LinkedCampaignException
 from src.core.transactional import transactional
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.routes.dto.request.strategy_create import StrategyCreate
 from src.strategy.routes.port.update_strategy_usecase import UpdateStrategyUseCase
+from src.users.domain.user import User
 
 
 class UpdateStrategyService(UpdateStrategyUseCase):
@@ -17,7 +20,9 @@ class UpdateStrategyService(UpdateStrategyUseCase):
         self.campaign_repository = campaign_repository
 
     @transactional
-    def exec(self, strategy_id: str, strategy_update: StrategyCreate):
+    def exec(
+        self, strategy_id: str, strategy_update: StrategyCreate, user: User, db: Session
+    ):
         """전략 수정: 전략 오브젝트를 수정하는 API
 
         -삭제 가능 상태:
@@ -31,7 +36,9 @@ class UpdateStrategyService(UpdateStrategyUseCase):
 
         """
 
-        campaigns = self.campaign_repository.get_campaign_by_strategy_id(strategy_id)
+        campaigns = self.campaign_repository.get_campaign_by_strategy_id(
+            strategy_id, db
+        )
 
         if campaigns:
             raise LinkedCampaignException(

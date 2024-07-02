@@ -1,3 +1,5 @@
+from sqlalchemy.orm import Session
+
 from src.campaign.domain.campaign import Campaign
 from src.campaign.infra.campaign_sqlalchemy_repository import CampaignSqlAlchemy
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
@@ -23,8 +25,12 @@ class CampaignRepository(BaseCampaignRepository):
 
         return False
 
-    def get_campaign_by_strategy_id(self, strategy_id: str) -> list[Campaign]:
-        campaigns = self.campaign_sqlalchemy.get_campaign_by_strategy_id(strategy_id)
+    def get_campaign_by_strategy_id(
+        self, strategy_id: str, db: Session
+    ) -> list[Campaign]:
+        campaigns = self.campaign_sqlalchemy.get_campaign_by_strategy_id(
+            strategy_id, db
+        )
         return campaigns
 
     def is_existing_campaign_by_offer_event_no(self, offer_event_no: str) -> bool:

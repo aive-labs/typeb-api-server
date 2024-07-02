@@ -1,8 +1,10 @@
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
+from sqlalchemy.orm import Session
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
+from src.core.database import get_db_session
 from src.strategy.routes.dto.request.strategy_create import StrategyCreate
 from src.strategy.routes.dto.response.strategy_response import StrategyResponse
 from src.strategy.routes.port.create_strategy_usecase import CreateStrategyUseCase
@@ -61,11 +63,12 @@ def create_strategies(
 @inject
 def delete_strategy(
     strategy_id: str,
+    db: Session = Depends(get_db_session),
     delete_strategy_service: DeleteStrategyUseCase = Depends(
         Provide[Container.delete_strategy_service]
     ),
 ):
-    delete_strategy_service.exec(strategy_id)
+    delete_strategy_service.exec(strategy_id, db=db)
 
 
 @strategy_router.put("/strategies/{strategy_id}")
@@ -73,8 +76,9 @@ def delete_strategy(
 def update_strategy(
     strategy_id: str,
     strategy_update: StrategyCreate,
+    db: Session = Depends(get_db_session),
     update_strategy_service: UpdateStrategyUseCase = Depends(
         Provide[Container.update_strategy_service]
     ),
 ):
-    update_strategy_service.exec(strategy_id, strategy_update)
+    update_strategy_service.exec(strategy_id, strategy_update, db=db)

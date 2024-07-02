@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from sqlalchemy.orm import Session
+
 from src.campaign.domain.campaign import Campaign
 
 
@@ -18,4 +20,10 @@ class BaseCampaignRepository(ABC):
 
     @abstractmethod
     def is_existing_campaign_by_offer_event_no(self, offer_event_no: str) -> bool:
+        pass
+
+    @abstractmethod
+    def get_campaign_by_strategy_id(
+        self, strategy_id: str, db: Session
+    ) -> list[Campaign]:
         pass

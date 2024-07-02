@@ -1,3 +1,5 @@
+from sqlalchemy.orm import Session
+
 from src.campaign.enums.campagin_status import CampaignStatus
 from src.campaign.infra.campaign_repository import CampaignRepository
 from src.core.exceptions.exceptions import (
@@ -19,10 +21,10 @@ class DeleteStrategyService(DeleteStrategyUseCase):
         self.campaign_repository = campaign_repository
 
     @transactional
-    def exec(self, strategy_id: str):
+    def exec(self, strategy_id: str, db: Session):
 
         linked_campaigns = self.campaign_repository.get_campaign_by_strategy_id(
-            strategy_id
+            strategy_id, db
         )
 
         if linked_campaigns:
@@ -35,7 +37,7 @@ class DeleteStrategyService(DeleteStrategyUseCase):
                 and linked_campaign_status_code == CampaignStatus.expired.value
             ):
                 return self.strategy_repository.update_expired_strategy_status(
-                    strategy_id
+                    strategy_id, db
                 )
 
             raise LinkedCampaignException(

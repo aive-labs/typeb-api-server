@@ -211,25 +211,25 @@ class StrategySqlAlchemy:
 
             return Strategy.from_entity(entity)
 
-    def delete(self, strategy_id):
-        with self.db() as db:
-            update_statement = (
-                update(StrategyEntity)
-                .where(StrategyEntity.strategy_id == strategy_id)
-                .values(is_deleted=True)
+    def delete(self, strategy_id, db: Session):
+
+        update_statement = (
+            update(StrategyEntity)
+            .where(StrategyEntity.strategy_id == strategy_id)
+            .values(is_deleted=True)
+        )
+
+        db.execute(update_statement)
+
+    def update_expired_strategy(self, strategy_id, db: Session):
+
+        update_statement = (
+            update(StrategyEntity)
+            .where(StrategyEntity.strategy_id == strategy_id)
+            .values(
+                strategy_status_code=StrategyStatus.notdisplay.value,
+                strategy_status_name=StrategyStatus.notdisplay.description,
             )
+        )
 
-            db.execute(update_statement)
-
-    def update_expired_strategy(self, strategy_id):
-        with self.db() as db:
-            update_statement = (
-                update(StrategyEntity)
-                .where(StrategyEntity.strategy_id == strategy_id)
-                .values(
-                    strategy_status_code=StrategyStatus.notdisplay.value,
-                    strategy_status_name=StrategyStatus.notdisplay.description,
-                )
-            )
-
-            db.execute(update_statement)
+        db.execute(update_statement)
