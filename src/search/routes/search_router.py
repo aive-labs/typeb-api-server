@@ -13,7 +13,7 @@ from src.strategy.enums.target_strategy import TargetStrategy
 search_router = APIRouter(tags=["Search"])
 
 
-@search_router.get("/audience")
+@search_router.get("/audiences")
 @inject
 def get_strategies(
     target_strategy: Optional[TargetStrategy] = None,
