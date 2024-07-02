@@ -1,4 +1,3 @@
-from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from src.auth.domain.onboarding import Onboarding
@@ -17,9 +16,9 @@ class OnboardingRepository(BaseOnboardingRepository):
         self.onboarding_sqlalchemy = onboarding_sqlalchemy
 
     def get_onboarding_status(self, mall_id, db: Session) -> Onboarding | None:
-        print(f"repository_db_session: {db}")
-        result = db.execute(text("SHOW search_path")).fetchone()
-        print(f"Current search_path: {result}")
+        # print(f"repository_db_session: {db}")
+        # result = db.execute(text("SHOW search_path")).fetchone()
+        # print(f"Current search_path: {result}")
 
         return self.onboarding_sqlalchemy.get_onboarding_status(mall_id, db)
 

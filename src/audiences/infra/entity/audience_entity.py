@@ -16,8 +16,6 @@ class AudienceEntity(Base):
         server_default=text("'aud-' || LPAD(nextval('audience_seq')::TEXT, 6, '0')"),
     )
     audience_name = Column(String, nullable=False)
-    audience_type_code = Column(String, nullable=False)
-    audience_type_name = Column(String, nullable=False)
     main_mix_lv1 = Column(String)
     audience_status_code = Column(String, nullable=False)
     audience_status_name = Column(String, nullable=False)
