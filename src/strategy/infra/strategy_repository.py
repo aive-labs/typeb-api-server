@@ -15,9 +15,11 @@ class StrategyRepository(BaseStrategyRepository):
     def __init__(self, strategy_sqlalchemy: StrategySqlAlchemy):
         self.strategy_sqlalchemy_repository = strategy_sqlalchemy
 
-    def get_all_strategies(self, start_date, end_date, user: User) -> list[Strategy]:
+    def get_all_strategies(
+        self, start_date, end_date, user: User, db: Session
+    ) -> list[Strategy]:
         return self.strategy_sqlalchemy_repository.get_all_strategies(
-            start_date, end_date, user
+            start_date, end_date, user, db=db
         )
 
     def get_strategy_detail(

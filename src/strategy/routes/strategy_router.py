@@ -20,24 +20,26 @@ strategy_router = APIRouter(tags=["Strategy-management"])
 def get_strategies(
     start_date: str,
     end_date: str,
+    db: Session = Depends(get_db_session),
     get_strategy_service: GetStrategyUseCase = Depends(
         dependency=Provide[Container.get_strategy_service]
     ),
     user=Depends(get_permission_checker(required_permissions=[])),
 ) -> list[StrategyResponse]:
-    return get_strategy_service.get_strategies(start_date, end_date, user)
+    return get_strategy_service.get_strategies(start_date, end_date, user, db=db)
 
 
 @strategy_router.get("/strategies/{strategy_id}")
 @inject
 def read_strategy_object(
     strategy_id: str,
+    db: Session = Depends(get_db_session),
     get_strategy_service: GetStrategyUseCase = Depends(
         dependency=Provide[Container.get_strategy_service]
     ),
     user=Depends(get_permission_checker(required_permissions=[])),
 ):
-    return get_strategy_service.get_strategy_detail(strategy_id)
+    return get_strategy_service.get_strategy_detail(strategy_id, db=db)
 
 
 @strategy_router.post("/strategies")
@@ -48,13 +50,11 @@ def create_strategies(
         dependency=Provide[Container.create_strategy_service]
     ),
     db: Session = Depends(get_db_session),
-    user=Depends(
-        get_permission_checker(
-            required_permissions=["gnb_permissions:strategy_manager:create"]
-        )
-    ),
+    user=Depends(get_permission_checker(required_permissions=[])),
 ):
-    result = create_strategy_service.create_strategy_object(strategy_create, user, db)
+    result = create_strategy_service.create_strategy_object(
+        strategy_create, user, db=db
+    )
     return result
 
 

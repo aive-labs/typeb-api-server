@@ -36,29 +36,30 @@ class StrategySqlAlchemy:
         """
         self.db = db
 
-    def get_all_strategies(self, start_date, end_date, user: User) -> list[Strategy]:
-        with self.db() as db:
-            user_entity = (
-                db.query(UserEntity).filter(UserEntity.user_id == user.user_id).first()
-            )
+    def get_all_strategies(
+        self, start_date, end_date, user: User, db: Session
+    ) -> list[Strategy]:
 
-            conditions = self._object_access_condition(db, user_entity, StrategyEntity)
+        user_entity = (
+            db.query(UserEntity).filter(UserEntity.user_id == user.user_id).first()
+        )
 
-            entities = (
-                db.query(StrategyEntity)
-                .filter(
-                    or_(
-                        func.date(StrategyEntity.updated_at) >= start_date,
-                        func.date(StrategyEntity.updated_at) <= end_date,
-                    ),
-                    ~StrategyEntity.is_deleted,
-                    StrategyEntity.strategy_status_code
-                    != StrategyStatus.notdisplay.value,
-                    *conditions
-                )
-                .all()
+        conditions = self._object_access_condition(db, user_entity, StrategyEntity)
+
+        entities = (
+            db.query(StrategyEntity)
+            .filter(
+                or_(
+                    func.date(StrategyEntity.updated_at) >= start_date,
+                    func.date(StrategyEntity.updated_at) <= end_date,
+                ),
+                ~StrategyEntity.is_deleted,
+                StrategyEntity.strategy_status_code != StrategyStatus.notdisplay.value,
+                *conditions
             )
-            return [Strategy.from_entity(entity) for entity in entities]
+            .all()
+        )
+        return [Strategy.from_entity(entity) for entity in entities]
 
     def get_strategy_detail(self, strategy_id: str, db: Session) -> Strategy:
 

@@ -1,3 +1,5 @@
+from sqlalchemy.orm import Session
+
 from src.core.exceptions.exceptions import ConvertValueException
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.routes.dto.response.strategy_response import StrategyResponse
@@ -13,21 +15,21 @@ class GetStrategyService(GetStrategyUseCase):
         self.strategy_repository = strategy_repository
 
     def get_strategies(
-        self, start_date: str, end_date: str, user: User
+        self, start_date: str, end_date: str, user: User, db: Session
     ) -> list[StrategyResponse]:
         # TODO: 생성 부서 오브젝트 필터링 추가 작업 필요
 
         strategies = self.strategy_repository.get_all_strategies(
-            start_date, end_date, user
+            start_date, end_date, user, db
         )
 
         return [StrategyResponse.from_model(model) for model in strategies]
 
     def get_strategy_detail(
-        self, strategy_id: str
+        self, strategy_id: str, db: Session
     ) -> StrategyWithStrategyThemeResponse:
         strategy, strategy_themes = self.strategy_repository.get_strategy_detail(
-            strategy_id
+            strategy_id, db
         )
 
         if strategy.created_at is None or strategy.updated_at is None:
