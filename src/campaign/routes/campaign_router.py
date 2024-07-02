@@ -28,7 +28,7 @@ def get_campaigns(
     return get_campaign_service.get_campaigns(start_date, end_date, user)
 
 
-@campaign_router.get("/timeline/{campaign_id]")
+@campaign_router.get("/timeline/{campaign_id}")
 @inject
 def get_campaign_timeline(
     campaign_id: str,
