@@ -47,13 +47,14 @@ def create_strategies(
     create_strategy_service: CreateStrategyUseCase = Depends(
         dependency=Provide[Container.create_strategy_service]
     ),
+    db: Session = Depends(get_db_session),
     user=Depends(
         get_permission_checker(
             required_permissions=["gnb_permissions:strategy_manager:create"]
         )
     ),
 ):
-    result = create_strategy_service.create_strategy_object(strategy_create, user)
+    result = create_strategy_service.create_strategy_object(strategy_create, user, db)
     return result
 
 
@@ -67,6 +68,7 @@ def delete_strategy(
     delete_strategy_service: DeleteStrategyUseCase = Depends(
         Provide[Container.delete_strategy_service]
     ),
+    user=Depends(get_permission_checker(required_permissions=[])),
 ):
     delete_strategy_service.exec(strategy_id, db=db)
 
@@ -80,5 +82,6 @@ def update_strategy(
     update_strategy_service: UpdateStrategyUseCase = Depends(
         Provide[Container.update_strategy_service]
     ),
+    user=Depends(get_permission_checker(required_permissions=[])),
 ):
-    update_strategy_service.exec(strategy_id, strategy_update, db=db)
+    update_strategy_service.exec(strategy_id, strategy_update, user, db=db)

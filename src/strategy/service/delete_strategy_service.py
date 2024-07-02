@@ -47,4 +47,4 @@ class DeleteStrategyService(DeleteStrategyUseCase):
                 }
             )
 
-        return self.strategy_repository.delete(strategy_id)
+        return self.strategy_repository.delete(strategy_id, db)

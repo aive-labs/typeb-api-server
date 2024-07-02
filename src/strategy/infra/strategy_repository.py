@@ -21,10 +21,10 @@ class StrategyRepository(BaseStrategyRepository):
         )
 
     def get_strategy_detail(
-        self, strategy_id: str
+        self, strategy_id: str, db: Session
     ) -> tuple[Strategy, list[StrategyThemeSelectV2]]:
         strategy = self.strategy_sqlalchemy_repository.get_strategy_detail(
-            strategy_id=strategy_id
+            strategy_id=strategy_id, db=db
         )
 
         strategy_themes = [
@@ -55,8 +55,8 @@ class StrategyRepository(BaseStrategyRepository):
             strategy, campaign_themes, user
         )
 
-    def is_strategy_name_exists(self, name: str) -> int:
-        return self.strategy_sqlalchemy_repository.is_strategy_name_exists(name)
+    def is_strategy_name_exists(self, name: str, db: Session) -> int:
+        return self.strategy_sqlalchemy_repository.is_strategy_name_exists(name, db)
 
     def find_by_strategy_id(self, strategy_id: str) -> Strategy:
         return self.strategy_sqlalchemy_repository.find_by_strategy_id(strategy_id)

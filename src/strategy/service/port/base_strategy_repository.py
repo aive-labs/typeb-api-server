@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from sqlalchemy.orm import Session
+
 from src.strategy.domain.strategy import Strategy
 from src.strategy.domain.strategy_theme import StrategyTheme
 from src.strategy.routes.dto.response.strategy_with_campaign_theme_response import (
@@ -15,7 +17,7 @@ class BaseStrategyRepository(ABC):
 
     @abstractmethod
     def get_strategy_detail(
-        self, strategy_id: str
+        self, strategy_id: str, db: Session
     ) -> tuple[Strategy, list[StrategyThemeSelectV2]]:
         pass
 
@@ -29,7 +31,7 @@ class BaseStrategyRepository(ABC):
         pass
 
     @abstractmethod
-    def is_strategy_name_exists(self, name: str) -> int:
+    def is_strategy_name_exists(self, name: str, db: Session) -> int:
         pass
 
     @abstractmethod
@@ -37,5 +39,5 @@ class BaseStrategyRepository(ABC):
         pass
 
     @abstractmethod
-    def delete(self, strategy_id: str):
+    def delete(self, strategy_id: str, db: Session):
         pass

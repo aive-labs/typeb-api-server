@@ -60,21 +60,21 @@ class StrategySqlAlchemy:
             )
             return [Strategy.from_entity(entity) for entity in entities]
 
-    def get_strategy_detail(self, strategy_id: str) -> Strategy:
-        with self.db() as db:
-            entity: StrategyEntity = (
-                db.query(StrategyEntity)
-                .filter(
-                    ~StrategyEntity.is_deleted,
-                    StrategyEntity.strategy_id == strategy_id,
-                )
-                .first()
+    def get_strategy_detail(self, strategy_id: str, db: Session) -> Strategy:
+
+        entity: StrategyEntity = (
+            db.query(StrategyEntity)
+            .filter(
+                ~StrategyEntity.is_deleted,
+                StrategyEntity.strategy_id == strategy_id,
             )
+            .first()
+        )
 
-            if entity is None:
-                raise NotFoundException("전략을 찾지 못했습니다.")
+        if entity is None:
+            raise NotFoundException("전략을 찾지 못했습니다.")
 
-            return Strategy.from_entity(entity)
+        return Strategy.from_entity(entity)
 
     def create_strategy(
         self, strategy: Strategy, strategy_themes: list[StrategyTheme], user: User
@@ -188,15 +188,12 @@ class StrategySqlAlchemy:
 
         return res_cond
 
-    def is_strategy_name_exists(self, name: str) -> int:
-        with self.db() as db:
-            return (
-                db.query(StrategyEntity)
-                .filter(
-                    ~StrategyEntity.is_deleted, StrategyEntity.strategy_name == name
-                )
-                .count()
-            )
+    def is_strategy_name_exists(self, name: str, db: Session) -> int:
+        return (
+            db.query(StrategyEntity)
+            .filter(~StrategyEntity.is_deleted, StrategyEntity.strategy_name == name)
+            .count()
+        )
 
     def find_by_strategy_id(self, strategy_id: str) -> Strategy:
         with self.db() as db:

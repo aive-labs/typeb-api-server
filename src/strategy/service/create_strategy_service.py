@@ -1,3 +1,5 @@
+from sqlalchemy.orm import Session
+
 from src.core.exceptions.exceptions import DuplicatedException, ValidationException
 from src.strategy.domain.strategy import Strategy
 from src.strategy.domain.strategy_theme import (
@@ -16,10 +18,12 @@ class CreateStrategyService(CreateStrategyUseCase):
     def __init__(self, strategy_repository: StrategyRepository):
         self.strategy_repository = strategy_repository
 
-    def create_strategy_object(self, strategy_create: StrategyCreate, user: User):
+    def create_strategy_object(
+        self, strategy_create: StrategyCreate, user: User, db: Session
+    ):
         # 1. 전략명 중복 확인
         strategy_name = strategy_create.strategy_name
-        if self.strategy_repository.is_strategy_name_exists(strategy_name):
+        if self.strategy_repository.is_strategy_name_exists(strategy_name, db):
             raise DuplicatedException(
                 detail={
                     "code": "strategy/create",
@@ -32,10 +36,8 @@ class CreateStrategyService(CreateStrategyUseCase):
         for theme in strategy_create.strategy_themes:
             audience_ids.extend(theme.theme_audience_set.audience_ids)
 
-        # 3. 요청 타입이 c 이고 어떤 경우에 어쩌고 저쩌고를 함
-        if (self.is_audience_type_code_custom(strategy_create)) and (
-            self.is_duplicate_audience_selected(audience_ids)
-        ):
+        # 3. 어떤 경우에 어쩌고 저쩌고를 함
+        if self.is_duplicate_audience_selected(audience_ids):
             raise DuplicatedException(
                 detail={
                     "code": "strategy/create",
@@ -83,9 +85,6 @@ class CreateStrategyService(CreateStrategyUseCase):
 
     def is_duplicate_audience_selected(self, audience_ids):
         return len(audience_ids) != len(set(audience_ids))
-
-    def is_audience_type_code_custom(self, strategy_create):
-        return strategy_create.audience_type_code == "c"
 
     def _check_strategy_theme_validation(
         self, recommend_model_ids, strategy_create, theme

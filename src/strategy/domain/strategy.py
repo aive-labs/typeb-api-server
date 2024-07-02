@@ -80,3 +80,16 @@ class Strategy(BaseModel):
             created_at=strategy_create.created_at,
             updated_at=strategy_create.updated_at,
         )
+
+    @staticmethod
+    def from_update(strategy_id: str, strategy_update: StrategyCreate) -> "Strategy":
+        return Strategy(
+            strategy_id=strategy_id,
+            strategy_name=strategy_update.strategy_name,
+            strategy_tags=strategy_update.strategy_tags,
+            strategy_status_code=StrategyStatus.inactive.value,
+            strategy_status_name=StrategyStatus.inactive.description,
+            target_strategy=strategy_update.target_strategy.value,
+            created_at=strategy_update.created_at,
+            updated_at=strategy_update.updated_at,
+        )
