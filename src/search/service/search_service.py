@@ -37,22 +37,14 @@ class SearchService(BaseSearchService):
         )
 
     def search_offers_search_of_sets(
-        self, audience_type_code, strategy_id, keyword, user: User
+        self, strategy_id, keyword, user: User
     ) -> list[IdWithLabel]:
         return self.offer_repository.get_search_offers_of_sets(
-            audience_type_code, strategy_id, keyword, user
+            strategy_id, keyword, user
         )
 
-    def search_offers(
-        self, audience_type_code, keyword, user: User
-    ) -> list[IdWithLabel]:
-        return self.offer_repository.get_search_offers(
-            audience_type_code, keyword, user
-        )
+    def search_offers(self, keyword, user: User) -> list[IdWithLabel]:
+        return self.offer_repository.get_search_offers(keyword, user)
 
-    def search_recommend_products(
-        self, audience_type_code, keyword
-    ) -> list[IdWithItem]:
-        return self.recommend_products_repository.search_recommend_products(
-            audience_type_code, keyword
-        )
+    def search_recommend_products(self, keyword) -> list[IdWithItem]:
+        return self.recommend_products_repository.search_recommend_products(keyword)

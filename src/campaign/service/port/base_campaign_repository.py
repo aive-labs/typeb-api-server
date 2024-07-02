@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
+from src.users.domain.user import User
 
 
 class BaseCampaignRepository(ABC):
@@ -11,7 +12,9 @@ class BaseCampaignRepository(ABC):
         pass
 
     @abstractmethod
-    def get_campaigns(self, start_date: str, end_date: str) -> list[Campaign]:
+    def get_campaigns(
+        self, start_date: str, end_date: str, user: User
+    ) -> list[Campaign]:
         pass
 
     @abstractmethod

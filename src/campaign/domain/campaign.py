@@ -37,7 +37,7 @@ class Campaign(BaseModel):
     progress: str
     msg_delivery_vendor: str
     shop_send_yn: str
-    retention_day: str | None = None
+    retention_day: int | None = None
     owned_by_dept: str
     owned_by_dept_name: str
     owned_by_dept_abb_name: str

@@ -13,9 +13,10 @@ class CampaignRepository(BaseCampaignRepository):
     def create_campaign():
         raise NotImplementedError
 
-    def get_campaigns(self, start_date: str, end_date: str, user: User):
-        self.campaign_sqlalchemy.get_all_campaigns(start_date, end_date, user)
-        raise NotImplementedError
+    def get_campaigns(
+        self, start_date: str, end_date: str, user: User
+    ) -> list[Campaign]:
+        return self.campaign_sqlalchemy.get_all_campaigns(start_date, end_date, user)
 
     def is_existing_campaign_by_name(self, name: str) -> bool:
         campaign_entity = self.campaign_sqlalchemy.get_campaign_by_name(name)

@@ -28,6 +28,8 @@ from src.auth.service.onboarding_service import OnboardingService
 from src.auth.service.token_service import TokenService
 from src.campaign.infra.campaign_repository import CampaignRepository
 from src.campaign.infra.campaign_sqlalchemy_repository import CampaignSqlAlchemy
+from src.campaign.service.create_campaign_service import CreateCampaignService
+from src.campaign.service.get_campaign_service import GetCampaignService
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
 from src.common.utils.file.s3_service import S3Service
 from src.contents.infra.contents_repository import ContentsRepository
@@ -96,13 +98,14 @@ class Container(containers.DeclarativeContainer):
             "src.auth.utils.get_current_user",
             "src.users.routes.user_router",
             "src.auth.routes.auth_router",
-            "src.auth.routes.onboarding_router",
-            "src.contents.routes.contents_router",
-            "src.contents.routes.creatives_router",
             "src.audiences.routes.audience_router",
             "src.audiences.service.background.execute_target_audience_summary",
-            "src.strategy.routes.strategy_router",
+            "src.auth.routes.onboarding_router",
+            "src.campaign.routes.campaign_router",
+            "src.contents.routes.contents_router",
+            "src.contents.routes.creatives_router",
             "src.search.routes.search_router",
+            "src.strategy.routes.strategy_router",
             "src.offers.routes.offer_router",
             "src.message_template.routes.message_template_router",
             "src.admin.routes.admin_router",
@@ -312,13 +315,13 @@ class Container(containers.DeclarativeContainer):
         provides=CampaignRepository, campaign_sqlalchemy=campaign_sqlalchemy
     )
 
-    # get_campaign_service = providers.Singleton(
-    #     provides=GetCampaignUsecase, campaign_repository=campaign_repository
-    # )
-    #
-    # create_campaign_service = providers.Singleton(
-    #     provides=CreateCampaignUsecase, campaign_repository=campaign_repository
-    # )
+    get_campaign_service = providers.Singleton(
+        provides=GetCampaignService, campaign_repository=campaign_repository
+    )
+
+    create_campaign_service = providers.Singleton(
+        provides=CreateCampaignService, campaign_repository=campaign_repository
+    )
 
     """
     전략 의존성 주입

@@ -20,9 +20,7 @@ class RecommendProductsRepository:
         """
         self.db = db
 
-    def search_recommend_products(
-        self, audience_type_code: str, keyword: str
-    ) -> list[IdWithItem]:
+    def search_recommend_products(self, keyword: str) -> list[IdWithItem]:
         with self.db() as db:
             if keyword:
                 keyword = f"%{keyword}%"
@@ -33,21 +31,14 @@ class RecommendProductsRepository:
                     )
                     .filter(
                         RecommendProductsModel.recsys_model_name.ilike(keyword),
-                        RecommendProductsModel.audience_type_code == audience_type_code,
                     )
                     .all()
                 )
             else:
-                result = (
-                    db.query(
-                        RecommendProductsModel.recsys_model_id.label("id"),
-                        RecommendProductsModel.recsys_model_name.label("name"),
-                    )
-                    .filter(
-                        RecommendProductsModel.audience_type_code == audience_type_code
-                    )
-                    .all()
-                )
+                result = db.query(
+                    RecommendProductsModel.recsys_model_id.label("id"),
+                    RecommendProductsModel.recsys_model_name.label("name"),
+                ).all()
 
             return [
                 IdWithItem(

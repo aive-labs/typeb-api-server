@@ -41,7 +41,6 @@ def get_strategies(
 @search_router.get("/offers")
 @inject
 def get_search_offers(
-    audience_type_code: str,
     strategy_id: Optional[str] = None,
     keyword: Optional[str] = None,
     user=Depends(get_permission_checker(required_permissions=[])),
@@ -52,17 +51,14 @@ def get_search_offers(
     """드롭다운 오퍼 목록을 조회하는 API"""
 
     if strategy_id:
-        return search_service.search_offers_search_of_sets(
-            audience_type_code, strategy_id, keyword, user
-        )
+        return search_service.search_offers_search_of_sets(strategy_id, keyword, user)
     else:
-        return search_service.search_offers(audience_type_code, keyword, user)
+        return search_service.search_offers(keyword, user)
 
 
 @search_router.get("/recommend-products-models")
 @inject
 async def get_search_products(
-    audience_type_code: str,
     keyword: Optional[str] = None,
     user=Depends(get_permission_checker(required_permissions=[])),
     search_service: BaseSearchService = Depends(
@@ -70,4 +66,4 @@ async def get_search_products(
     ),
 ) -> list[IdWithItem]:
     """드롭다운 추천모델 목록을 조회하는 API"""
-    return search_service.search_recommend_products(audience_type_code, keyword)
+    return search_service.search_recommend_products(keyword)

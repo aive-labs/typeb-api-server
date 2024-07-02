@@ -5,7 +5,6 @@ from typing import Callable
 from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 
-from src.audiences.enums.audience_type import AudienceType
 from src.common.infra.entity.channel_master_entity import ChannelMasterEntity
 from src.common.timezone_setting import selected_timezone
 from src.common.utils.string_utils import is_convertible_to_int
@@ -88,13 +87,11 @@ class OfferRepository:
         return f"({data.id}) {data.name}"
 
     def get_search_offers_of_sets(
-        self, audience_type_code: str, strategy_id: str, keyword: str, user: User
+        self, strategy_id: str, keyword: str, user: User
     ) -> list[IdWithLabel]:
         with self.db() as db:
 
-            condition = self._add_search_offer_condition_by_user(
-                audience_type_code, user
-            )
+            condition = self._add_search_offer_condition_by_user(user)
 
             offer_ids = (
                 db.query(StrategyThemeOfferMappingEntity.offer_id)
@@ -139,15 +136,9 @@ class OfferRepository:
                 for data in result
             ]
 
-    def _add_search_offer_condition_by_user(self, audience_type_code, user):
+    def _add_search_offer_condition_by_user(self, user):
         if user.role_id in ("admin", "operator"):
-            if audience_type_code == AudienceType.segment.value:
-                condition = [
-                    OffersEntity.offer_source == "AICRM",
-                    OffersEntity.campaign_id.is_(None),
-                ]
-            else:
-                condition = [OffersEntity.campaign_id.is_(None)]
+            condition = [OffersEntity.campaign_id.is_(None)]
         else:
             condition = [
                 OffersEntity.offer_source != "AICRM",
@@ -155,13 +146,9 @@ class OfferRepository:
             ]
         return condition
 
-    def get_search_offers(
-        self, audience_type_code: str, keyword: str, user: User
-    ) -> list[IdWithLabel]:
+    def get_search_offers(self, keyword: str, user: User) -> list[IdWithLabel]:
         with self.db() as db:
-            condition = self._add_search_offer_condition_by_user(
-                audience_type_code, user
-            )
+            condition = self._add_search_offer_condition_by_user(user)
 
             today = datetime.now(selected_timezone).strftime("%Y%m%d")
             if keyword:

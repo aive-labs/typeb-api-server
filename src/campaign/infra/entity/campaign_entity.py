@@ -62,7 +62,7 @@ class CampaignEntity(Base):
     progress = Column(String, nullable=False)
     msg_delivery_vendor = Column(String, nullable=False)
     shop_send_yn = Column(String, nullable=False)
-    retention_day = Column(String, nullable=True)
+    retention_day = Column(Integer, nullable=True)
     owned_by_dept = Column(String, nullable=False)
     owned_by_dept_name = Column(String, nullable=False)  # 생성 부서명
     owned_by_dept_abb_name = Column(String, nullable=False)  # 생성 부서명2
