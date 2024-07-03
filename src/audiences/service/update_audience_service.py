@@ -38,18 +38,18 @@ class UpdateAudienceService(UpdateAudienceUseCase):
         # audiences 수정
         create_type_code = audience_update.create_type_code
         if create_type_code == AudienceCreateType.Filter.value:
-            self.update_audience_by_filter(
+            update_audience_id = self.update_audience_by_filter(
                 create_type_code, audience_id, audience_update, user
             )
             self.save_audience_customer_list(audience_id, user)
         elif create_type_code == AudienceCreateType.Upload.value:
-            self.update_audience_by_upload(
+            update_audience_id = self.update_audience_by_upload(
                 create_type_code, audience_id, audience_update, user
             )
         else:
             raise ValueError("허용되지 않은 생성 타입 코드 입니다.")
 
-        # background_task.add_task(execute_target_audience_summary, db, res)
+        return update_audience_id
 
     def save_audience_customer_list(self, audience_id: str, user: User):
         creation_options = self.audience_repository.get_db_filter_conditions(
@@ -166,6 +166,7 @@ class UpdateAudienceService(UpdateAudienceUseCase):
         insert_to_audiences = {
             "audience_name": audience_update.audience_name,
             "create_type_code": create_type_code,
+            "target_strategy": audience_update.target_strategy,
             "updated_by": str(user.user_id),
             "updated_at": audience_update.updated_at,
         }

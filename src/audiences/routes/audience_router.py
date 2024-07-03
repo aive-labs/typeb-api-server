@@ -12,6 +12,7 @@ from fastapi import (
     status,
 )
 from fastapi.responses import FileResponse, StreamingResponse
+from sqlalchemy.orm import Session
 
 from src.audiences.enums.audience_create_type import AudienceCreateType
 from src.audiences.enums.csv_template import CsvTemplates
@@ -46,6 +47,9 @@ from src.audiences.routes.port.usecase.get_audience_creation_options_usecase imp
     GetAudienceCreationOptionsUseCase,
 )
 from src.audiences.routes.port.usecase.get_audience_usecase import GetAudienceUseCase
+from src.audiences.routes.port.usecase.update_audience_usecase import (
+    UpdateAudienceUseCase,
+)
 from src.audiences.routes.port.usecase.update_cycle_usecase import (
     AudienceUpdateCycleUseCase,
 )
@@ -54,6 +58,7 @@ from src.audiences.service.background.execute_target_audience_summary import (
 )
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
+from src.core.database import get_db_session
 
 audience_router = APIRouter(tags=["Audience-management"])
 
@@ -160,13 +165,17 @@ def get_audience_creation_options(
         return get_audience_creation_option.get_csv_uploaded_data(audience_id)
 
 
-@audience_router.put("/audiences/{audience_id}/creation-options")
+@audience_router.put("/audiences/{audience_id}", status_code=status.HTTP_204_NO_CONTENT)
 @inject
 def update_audience_creation_options(
     audience_id: str,
     audience_update: AudienceUpdate,
+    background_task: BackgroundTasks,
     user=Depends(get_permission_checker([])),
-    # background_task: BackgroundTasks,
+    db: Session = Depends(get_db_session),
+    update_audience_service: UpdateAudienceUseCase = Depends(
+        Provide[Container.update_audience_service]
+    ),
 ):
     """타겟 오디언스 생성조건 수정:  타겟 오디언스 생성 조건을 조회하는 API
 
@@ -192,7 +201,10 @@ def update_audience_creation_options(
     1. cust_campaign_objects
     """
 
-    return {"result": True}
+    update_audience_id = update_audience_service.exec(
+        audience_id, audience_update, user
+    )
+    background_task.add_task(execute_target_audience_summary, db, update_audience_id)
 
 
 @audience_router.delete(
