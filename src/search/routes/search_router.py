@@ -76,7 +76,7 @@ async def get_search_products(
 
 @search_router.get("/contents_tag")
 @inject
-async def get_contents_tag(
+def get_contents_tag(
     keyword: Optional[str] = None,
     recsys_model_id: Optional[str] = None,
     db: Session = Depends(get_db_session),
@@ -86,3 +86,22 @@ async def get_contents_tag(
     ),
 ) -> list[IdWithItem]:
     return search_service.search_contents_tag(keyword, recsys_model_id, db)
+
+
+@search_router.get("/campaigns")
+@inject
+def search_campaign(
+    keyword: Optional[str] = None,
+    db: Session = Depends(get_db_session),
+    user=Depends(get_permission_checker(required_permissions=[])),
+    search_service: BaseSearchService = Depends(
+        dependency=Provide[Container.search_service]
+    ),
+) -> list[IdWithItem]:
+    """
+    드롭다운 캠페인 목록을 조회하는 API
+
+    당일 기준 직전 2주내 시작 또는 종료된 캠페인 &
+    운영중 또는 종료, 기간만료된 캠페인
+    """
+    return search_service.search_campaign(keyword, db=db)

@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
 from src.campaign.domain.campaign_timeline import CampaignTimeline
+from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.users.domain.user import User
 
 
@@ -34,4 +35,10 @@ class BaseCampaignRepository(ABC):
 
     @abstractmethod
     def get_timeline(self, campaign_id: str, db: Session) -> list[CampaignTimeline]:
+        pass
+
+    @abstractmethod
+    def search_campaign(
+        self, keyword, current_date, two_weeks_ago, db
+    ) -> list[IdWithItem]:
         pass

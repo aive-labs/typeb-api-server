@@ -1,7 +1,11 @@
+from datetime import datetime, timedelta
+
 from sqlalchemy.orm import Session
 
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
+from src.campaign.infra.campaign_repository import CampaignRepository
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
+from src.common.timezone_setting import selected_timezone
 from src.contents.infra.contents_repository import ContentsRepository
 from src.offers.infra.offer_repository import OfferRepository
 from src.search.routes.dto.id_with_item_response import (
@@ -21,11 +25,13 @@ class SearchService(BaseSearchService):
         recommend_products_repository: RecommendProductsRepository,
         offer_repository: OfferRepository,
         contents_repository: ContentsRepository,
+        campaign_repository: CampaignRepository,
     ):
         self.audience_repository = audience_repository
         self.recommend_products_repository = recommend_products_repository
         self.offer_repository = offer_repository
         self.contents_repository = contents_repository
+        self.campaign_repository = campaign_repository
 
     def search_audience_with_strategy_id(
         self, strategy_id: str, search_keyword: str, user: User, is_exclude=False
@@ -62,4 +68,14 @@ class SearchService(BaseSearchService):
     ) -> list[IdWithItem]:
         return self.contents_repository.search_contents_tag(
             keyword, recsys_model_id, db
+        )
+
+    def search_campaign(self, keyword, db) -> list[IdWithItem]:
+        current_timestamp = datetime.now(selected_timezone)
+        current_date = current_timestamp.strftime("%Y%m%d")
+        two_weeks_ago = current_timestamp - timedelta(days=14)
+        two_weeks_ago = two_weeks_ago.strftime("%Y%m%d")
+
+        return self.campaign_repository.search_campaign(
+            keyword, current_date, two_weeks_ago, db
         )

@@ -58,16 +58,12 @@ class CreateStrategyService(CreateStrategyUseCase):
             )
 
             theme_audience = [
-                StrategyThemeAudienceMapping(
-                    audience_id=audience_id,
-                )
+                StrategyThemeAudienceMapping(audience_id=audience_id)
                 for audience_id in theme.theme_audience_set.audience_ids
             ]
 
             theme_offer = [
-                StrategyThemeOfferMapping(
-                    offer_id=offer_id,
-                )
+                StrategyThemeOfferMapping(offer_id=offer_id)
                 for offer_id in theme.theme_audience_set.offer_ids
             ]
 

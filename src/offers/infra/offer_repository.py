@@ -160,14 +160,18 @@ class OfferRepository:
                         OffersEntity.offer_name.ilike(keyword)
                     )  # offer_name
 
-            result = db.query(
-                OffersEntity.offer_id.label("id"),
-                OffersEntity.offer_name.label("name"),
-                OffersEntity.event_no.label("code"),
-            ).filter(
-                OffersEntity.offer_type_code.isnot(None),
-                OffersEntity.event_end_dt >= today,  # 이벤트 기간 필터
-                *condition,
+            result = (
+                db.query(
+                    OffersEntity.offer_id.label("id"),
+                    OffersEntity.offer_name.label("name"),
+                    OffersEntity.event_no.label("code"),
+                )
+                .filter(
+                    OffersEntity.offer_type_code.isnot(None),
+                    OffersEntity.event_end_dt >= today,  # 이벤트 기간 필터
+                    *condition,
+                )
+                .all()
             )
 
             return [

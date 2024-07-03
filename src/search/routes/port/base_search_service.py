@@ -43,3 +43,7 @@ class BaseSearchService(ABC):
         self, keyword, recsys_model_id, db: Session
     ) -> list[IdWithItem]:
         pass
+
+    @abstractmethod
+    def search_campaign(self, keyword, db) -> list[IdWithItem]:
+        pass

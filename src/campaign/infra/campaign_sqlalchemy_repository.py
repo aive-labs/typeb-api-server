@@ -12,6 +12,8 @@ from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
 from src.campaign.infra.entity.campaign_timeline_entity import CampaignTimelineEntity
 from src.common.sqlalchemy.object_access_condition import object_access_condition
+from src.common.utils.string_utils import is_convertible_to_int
+from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
 
@@ -81,7 +83,7 @@ class CampaignSqlAlchemy:
                             func.date(CampaignEntity.created_at) >= start_date,
                         ),
                     ),
-                    *conditions
+                    *conditions,
                 )
                 .all()
             )
@@ -153,3 +155,37 @@ class CampaignSqlAlchemy:
         )
 
         return [CampaignTimeline.model_validate(timeline) for timeline in timelines]
+
+    def search_campaign(
+        self, keyword, current_date, two_weeks_ago, db
+    ) -> list[IdWithItem]:
+        conditions = []
+
+        if keyword:
+            modified_string = keyword.replace("cam-", "")
+            keyword = f"%{keyword}%"
+
+            if is_convertible_to_int(modified_string):
+                conditions.append(
+                    CampaignEntity.campaign_id.ilike(keyword)
+                )  # audience_id
+            else:
+                conditions.append(
+                    CampaignEntity.campaign_name.ilike(keyword)
+                )  # audience_name
+
+        entities = (
+            db.query(
+                CampaignEntity.campaign_id.label("id"),
+                CampaignEntity.campaign_name.label("name"),
+            )
+            .filter(
+                CampaignEntity.start_date <= current_date,
+                CampaignEntity.end_date >= two_weeks_ago,
+                CampaignEntity.campaign_status_code.notin_(["r1"]),
+                *conditions,
+            )
+            .all()
+        )
+
+        return [IdWithItem(id=entity.id, name=entity.name) for entity in entities]
