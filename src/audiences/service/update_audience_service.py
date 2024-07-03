@@ -4,7 +4,6 @@ from sqlalchemy.sql.expression import Alias
 
 from src.audiences.enums.audience_create_type import AudienceCreateType
 from src.audiences.enums.audience_status import AudienceStatus
-from src.audiences.enums.audience_type import AudienceType
 from src.audiences.enums.csv_template import CsvTemplates
 from src.audiences.infra.entity import variable_table_list
 from src.audiences.infra.entity.variable_table_list import CustomerInfoStatusEntity
@@ -76,15 +75,16 @@ class UpdateAudienceService(UpdateAudienceUseCase):
                 )
 
     def check_if_audience_type_segment(self, audience, user):
-        if audience.audience_type_code == AudienceType.segment.value:
-            if not user.is_admin():
-                raise HTTPException(
-                    status_code=500,
-                    detail={
-                        "code": "modify/02",
-                        "message": "수정 불가 - 세그먼트 타겟입니다.",
-                    },
-                )
+        pass
+        # if audience.audience_type_code == AudienceType.segment.value:
+        #     if not user.is_admin():
+        #         raise HTTPException(
+        #             status_code=500,
+        #             detail={
+        #                 "code": "modify/02",
+        #                 "message": "수정 불가 - 세그먼트 타겟입니다.",
+        #             },
+        #         )
 
     def update_audience_by_upload(
         self, create_type_code, audience_id, audience_update, user
@@ -121,8 +121,6 @@ class UpdateAudienceService(UpdateAudienceUseCase):
         # Audience 데이터 저장
         insert_to_audiences = {
             "audience_name": audience_update.audience_name,
-            "audience_type_code": AudienceType.custom.value,
-            "audience_type_name": AudienceType.custom.description,
             "create_type_code": create_type_code,
             "audience_status_code": AudienceStatus.inactive.value,
             "audience_status_name": AudienceStatus.inactive.description,

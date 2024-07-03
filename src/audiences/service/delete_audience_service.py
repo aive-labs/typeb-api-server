@@ -1,6 +1,5 @@
 from fastapi import HTTPException
 
-from src.audiences.enums.audience_type import AudienceType
 from src.audiences.routes.port.usecase.delete_audience_usecase import (
     DeleteAudienceUseCase,
 )
@@ -20,16 +19,16 @@ class DeleteAudienceService(DeleteAudienceUseCase):
             - 그 외의 경우 -> 삭제 불가. error raise
         """
 
-        audience = self.audience_repository.get_audience(audience_id)
+        # audience = self.audience_repository.get_audience(audience_id)
 
-        if audience.audience_type_code == AudienceType.segment.value:
-            raise HTTPException(
-                status_code=500,
-                detail={
-                    "code": "delete/02",
-                    "message": "삭제 불가 - 세그먼트 타겟입니다.",
-                },
-            )
+        # if audience.audience_type_code == AudienceType.segment.value:
+        #     raise HTTPException(
+        #         status_code=500,
+        #         detail={
+        #             "code": "delete/02",
+        #             "message": "삭제 불가 - 세그먼트 타겟입니다.",
+        #         },
+        #     )
 
         linked_campaigns = self.audience_repository.get_linked_campaigns(audience_id)
         if len(linked_campaigns) >= 1:

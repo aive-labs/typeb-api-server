@@ -100,8 +100,6 @@ class GetAudienceService(GetAudienceUseCase):
         keys_to_get = [
             "audience_id",
             "audience_name",
-            "audience_type_code",
-            "audience_type_name",
             "description",
         ]
         audience_base_dict = DataConverter.get_values_from_dict(
@@ -188,8 +186,6 @@ class GetAudienceService(GetAudienceUseCase):
         return AudienceStatsInfo(
             audience_id=res["audience_id"],
             audience_name=res["audience_name"],
-            audience_type_code=res["audience_type_code"],
-            audience_type_name=res["audience_type_name"],
             description=res["description"],
             audience_stat=AudienceStats(**res["audience_stat"]),
             audience_summary=AudienceSummary(**res["audience_summary"]),

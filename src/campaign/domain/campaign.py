@@ -10,7 +10,6 @@ class Campaign(BaseModel):
     budget: int | None
     campaign_type_code: str
     campaign_type_name: str
-    audience_type_code: str | None
     medias: str
     campaign_status_group_code: str
     campaign_status_group_name: str

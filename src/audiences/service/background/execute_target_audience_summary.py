@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 
 from dependency_injector.wiring import Provide, inject
 
-from src.audiences.enums.audience_type import AudienceType
 from src.common.utils.data_converter import DataConverter
 from src.core.container import Container
 
@@ -74,7 +73,6 @@ def execute_target_audience_summary(
     insert_to_count_by_month_list = []
     insert_to_count_by_month = {}
     insert_to_count_by_month["stnd_month"] = today_month_str
-    insert_to_count_by_month["audience_type_code"] = AudienceType.custom.value
     insert_to_count_by_month["audience_count"] = audience_cnt
     insert_to_count_by_month["audience_count_gap"] = 0
     insert_to_count_by_month["net_audience_count"] = 0
@@ -86,7 +84,6 @@ def execute_target_audience_summary(
     insert_to_audience_stats["audience_count"] = audience_cnt
     insert_to_audience_stats["audience_count_gap"] = 0.0
     insert_to_audience_stats["net_audience_count"] = 0
-    insert_to_audience_stats["audience_type_code"] = AudienceType.custom.value
     insert_to_audience_stats["agg_period_start"] = three_months_ago_str
     insert_to_audience_stats["agg_period_end"] = yesterday_str
     insert_to_audience_stats["excluded_customer_count"] = 0

@@ -6,10 +6,9 @@ from pydantic import BaseModel
 class AudienceInfo(BaseModel):
     audience_id: str
     audience_name: str
-    audience_type_code: str
-    audience_type_name: str
     audience_status_code: str
     audience_status_name: str
+    target_strategy: str
     is_exclude: bool
     user_exc_deletable: bool | None
     update_cycle: str | None
@@ -30,10 +29,9 @@ class AudienceInfo(BaseModel):
             AudienceInfo(
                 audience_id=row.audience_id,
                 audience_name=row.audience_name,
-                audience_type_code=row.audience_type_code,
-                audience_type_name=row.audience_type_name,
                 audience_status_code=row.audience_status_code,
                 audience_status_name=row.audience_status_name,
+                target_strategy=row.target_strategy,
                 is_exclude=row.is_exclude,
                 user_exc_deletable=row.user_exc_deletable,
                 update_cycle=row.update_cycle,

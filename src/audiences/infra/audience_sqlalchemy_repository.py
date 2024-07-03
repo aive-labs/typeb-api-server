@@ -127,10 +127,9 @@ class AudienceSqlAlchemy:
                 db.query(
                     AudienceEntity.audience_id,
                     audience_name_column,
-                    AudienceEntity.audience_type_code,
-                    AudienceEntity.audience_type_name,
                     AudienceEntity.audience_status_code,
                     AudienceEntity.audience_status_name,
+                    AudienceEntity.target_strategy,
                     AudienceEntity.is_exclude,
                     AudienceEntity.user_exc_deletable,
                     AudienceEntity.update_cycle,
@@ -561,8 +560,6 @@ class AudienceSqlAlchemy:
                 db.query(
                     AudienceEntity.audience_id,
                     AudienceEntity.audience_name,
-                    AudienceEntity.audience_type_code,
-                    AudienceEntity.audience_type_name,
                     AudienceEntity.audience_status_code,
                     AudienceEntity.audience_status_name,
                     AudienceEntity.create_type_code,

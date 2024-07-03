@@ -15,7 +15,6 @@ class CampaignCreate(BaseModel):
     campaign_name: str
     budget: int | None = None
     campaign_type_code: CampaignTypeEnum
-    audience_type_code: str | None = None
     medias: str
     send_type_code: SendtypeEnum
     repeat_type: RepeatType | None = None

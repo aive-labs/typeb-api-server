@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 
 from fastapi import HTTPException
 
-from src.audiences.enums.audience_type import AudienceType
 from src.campaign.domain.campaign import Campaign
 from src.campaign.enums.campagin_status import CampaignStatus
 from src.campaign.enums.campaign_progress import CampaignProgress
@@ -15,7 +14,7 @@ from src.campaign.service.port.base_campaign_repository import BaseCampaignRepos
 from src.common.timezone_setting import selected_timezone
 from src.common.utils.date_utils import calculate_remind_date, localtime_converter
 from src.common.utils.repeat_date import calculate_dates
-from src.core.exceptions.exceptions import DuplicatedException
+from src.core.exceptions.exceptions import DuplicatedException, NotFoundException
 from src.strategy.service.port.base_strategy_repository import BaseStrategyRepository
 from src.users.domain.user import User
 
@@ -55,17 +54,17 @@ class CreateCampaignService(CreateCampaignUsecase):
             strategy_id = campaign_create.strategy_id
 
             if strategy_id is None:
-                raise HTTPException(detail="전략 id가 존재하지 않습니다.")
+                raise NotFoundException(
+                    detail={"message": "전략 id가 존재하지 않습니다."}
+                )
 
-            strategy = self.strategy_repository.find_by_strategy_id(strategy_id)
-            audience_type_code = strategy.audience_type_code
+            # strategy = self.strategy_repository.find_by_strategy_id(strategy_id)
 
-            if audience_type_code == AudienceType.custom.value:
-                is_msg_creation_recurred = True
-            else:
-                is_msg_creation_recurred = False
+            # if audience_type_code == AudienceType.custom.value:
+            #     is_msg_creation_recurred = True
+            # else:
+            is_msg_creation_recurred = False
         else:
-            audience_type_code = AudienceType.custom.value
             is_msg_creation_recurred = True
 
         if campaign_create.repeat_type is None:
@@ -133,7 +132,6 @@ class CreateCampaignService(CreateCampaignUsecase):
             shop_send_yn=shop_send_yn,
             # from logic
             strategy_id=campaign_create.strategy_id,
-            audience_type_code=audience_type_code,
             is_msg_creation_recurred=is_msg_creation_recurred,
             start_date=start_date,
             end_date=end_date,

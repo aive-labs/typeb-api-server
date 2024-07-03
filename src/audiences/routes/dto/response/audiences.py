@@ -17,8 +17,6 @@ class AudienceFilter(BaseModel):
 class AudienceRes(BaseModel):
     audience_id: str
     audience_name: str
-    audience_type_code: str
-    audience_type_name: str
     audience_status_code: str
     audience_status_name: str
     is_exclude: bool

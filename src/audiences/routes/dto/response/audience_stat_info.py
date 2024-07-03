@@ -47,8 +47,6 @@ class AudienceSummary(BaseModel):
 class AudienceStatsInfo(BaseModel):
     audience_id: str
     audience_name: str
-    audience_type_code: str
-    audience_type_name: str
     description: list | None = None
     audience_stat: AudienceStats
     audience_summary: AudienceSummary

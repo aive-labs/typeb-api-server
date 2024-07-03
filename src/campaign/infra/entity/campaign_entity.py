@@ -35,7 +35,6 @@ class CampaignEntity(Base):
     budget = Column(Integer, nullable=True)
     campaign_type_code = Column(String, nullable=False)
     campaign_type_name = Column(String, nullable=False)
-    audience_type_code = Column(String, nullable=True)
     medias = Column(String, nullable=False)
     campaign_status_group_code = Column(String, nullable=False)
     campaign_status_group_name = Column(String, nullable=False)

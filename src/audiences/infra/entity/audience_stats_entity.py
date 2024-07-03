@@ -7,7 +7,6 @@ class AudienceStatsEntity(Base):
     __tablename__ = "audience_stats"
 
     audience_id = Column(String, primary_key=True, index=True)
-    audience_type_code = Column(String, nullable=False)
     audience_count = Column(Integer, nullable=False)
     audience_count_gap = Column(Integer, nullable=True)
     net_audience_count = Column(Integer)

@@ -9,8 +9,6 @@ from src.audiences.routes.dto.response.code_items import RepresentativeItems
 class Audience(BaseModel):
     audience_id: str
     audience_name: str
-    audience_type_code: str
-    audience_type_name: str
     audience_status_code: str
     audience_status_name: str
     is_exclude: bool
@@ -29,8 +27,6 @@ class Audience(BaseModel):
         return Audience(
             audience_id=entity.audience_id,
             audience_name=entity.audience_name,
-            audience_type_code=entity.audience_type_code,
-            audience_type_name=entity.audience_type_name,
             audience_status_code=entity.audience_status_code,
             audience_status_name=entity.audience_status_name,
             is_exclude=entity.is_exclude,

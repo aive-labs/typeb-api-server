@@ -100,10 +100,10 @@ class CreateStrategyService(CreateStrategyUseCase):
             recommend_model_list=recommend_model_ids
         )
         # 3. 커스텀 캠페인 - 오퍼 1개 제한
-        self._check_single_offer_per_custom_theme(
-            audience_type_code=strategy_create.audience_type_code,
-            offer_id_list=theme.theme_audience_set.offer_ids,
-        )
+        # self._check_single_offer_per_custom_theme(
+        #     audience_type_code=strategy_create.audience_type_code,
+        #     offer_id_list=theme.theme_audience_set.offer_ids,
+        # )
 
     def _check_duplicate_recommend_model(
         self, recommend_model_id: int, recommend_model_list
@@ -130,10 +130,11 @@ class CreateStrategyService(CreateStrategyUseCase):
             )
 
     def _check_single_offer_per_custom_theme(self, audience_type_code, offer_id_list):
-        if audience_type_code == "c" and len(offer_id_list) > 1:
-            raise ValidationException(
-                detail={
-                    "code": "strategy/create",
-                    "message": "커스텀 전략의 테마 별 오퍼는 1개까지 사용가능합니다.",
-                },
-            )
+        pass
+        # if audience_type_code == "c" and len(offer_id_list) > 1:
+        #     raise ValidationException(
+        #         detail={
+        #             "code": "strategy/create",
+        #             "message": "커스텀 전략의 테마 별 오퍼는 1개까지 사용가능합니다.",
+        #         },
+        #     )

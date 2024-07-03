@@ -5,7 +5,6 @@ from sqlalchemy.sql.expression import Alias
 
 from src.audiences.enums.audience_create_type import AudienceCreateType
 from src.audiences.enums.audience_status import AudienceStatus
-from src.audiences.enums.audience_type import AudienceType
 from src.audiences.enums.csv_template import CsvTemplates
 from src.audiences.enums.predefined_variable_access import PredefinedVariableAccess
 from src.audiences.infra.audience_repository import AudienceRepository
@@ -110,8 +109,6 @@ class CreateAudienceService(CreateAudienceUseCase):
             # audiences 저장 데이터 준비
             insert_to_audiences = {
                 "audience_name": audience_create.audience_name,
-                "audience_type_code": AudienceType.custom.value,
-                "audience_type_name": AudienceType.custom.description,
                 "create_type_code": create_type_code,
                 "target_strategy": audience_create.target_strategy.value,
                 "audience_status_code": AudienceStatus.inactive.value,
@@ -144,8 +141,6 @@ class CreateAudienceService(CreateAudienceUseCase):
     ):
         insert_to_audiences = {}
         insert_to_audiences["audience_name"] = audience_create.audience_name
-        insert_to_audiences["audience_type_code"] = AudienceType.custom.value
-        insert_to_audiences["audience_type_name"] = AudienceType.custom.description
         insert_to_audiences["create_type_code"] = ctype
         insert_to_audiences["audience_status_code"] = AudienceStatus.inactive.value
         insert_to_audiences["audience_status_name"] = (
