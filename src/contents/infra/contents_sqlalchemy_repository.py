@@ -227,7 +227,7 @@ class ContentsSqlAlchemy:
                 ContentsEntity.contents_id,
                 ContentsEntity.contents_name,
             )
-            .filter(*filter_conditions)
+            .filter(~ContentsEntity.is_deleted, *filter_conditions)
             .all()
         )
 
