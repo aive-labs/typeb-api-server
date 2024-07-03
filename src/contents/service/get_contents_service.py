@@ -39,7 +39,7 @@ class GetContentsService(GetContentsUseCase):
     def get_with_subject(self, code: str, db: Session):
         menu_map = self.contents_repository.get_menu_map(code, db)
         menu_response = {
-            "message_template": [
+            "template": [
                 ContentsMenuResponse(code=item.code, name=item.name)
                 for item in menu_map
                 if item.menu_type == "message_template"
