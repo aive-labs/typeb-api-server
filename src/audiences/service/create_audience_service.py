@@ -280,6 +280,9 @@ class CreateAudienceService(CreateAudienceUseCase):
 
         variables_combi_df = self.audience_repository.get_variable_options(access_lv)
 
+        print("variable_combi_df")
+        print(variables_combi_df)
+
         variables_combi_df["additional_variable"] = variables_combi_df[
             "additional_variable"
         ].apply(tuple)

@@ -647,6 +647,9 @@ class AudienceSqlAlchemy:
                 .filter(AudiencePredefVariableEntity.access_level >= access_lv)
             )
 
+            print("data")
+            print(data)
+
             return DataConverter.convert_query_to_df(data)
 
     def get_options(self):

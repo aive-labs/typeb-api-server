@@ -8,7 +8,7 @@ class CustomerInfoStatusEntity(Base):
 
     cus_info_id = Column(Integer, primary_key=True)
     shop_no = Column(BigInteger, nullable=False)
-    member_id = Column(String, nullable=True)
+    cus_cd = Column(String, nullable=True)
     gender = Column(String, nullable=True)
     this_year_birth_day = Column(String, nullable=True)
     this_year_wedding_anniversary = Column(String, nullable=True)
