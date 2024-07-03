@@ -29,16 +29,8 @@ class GetAudienceCreationOptions(GetAudienceCreationOptionsUseCase):
             audience_name=filter_condition.audience_name,
             create_type_code=AudienceCreateType.Filter.value,
             create_type_name=AudienceCreateType.Filter.description,
-            filters=(
-                filter_condition.conditions["filters"][0]
-                if filter_condition.conditions["filters"]
-                else None
-            ),
-            exclusions=(
-                filter_condition.conditions["exclusions"][0]
-                if filter_condition.conditions["exclusions"]
-                else None
-            ),
+            filters=filter_condition.conditions["filters"],
+            exclusions=filter_condition.conditions["exclusions"],
             created_at=filter_condition.created_at,
             updated_at=filter_condition.updated_at,
         )
