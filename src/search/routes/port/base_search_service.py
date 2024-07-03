@@ -2,7 +2,10 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.search.routes.dto.id_with_item_response import IdWithItem
+from src.search.routes.dto.id_with_item_response import (
+    IdWithItem,
+    IdWithItemDescription,
+)
 from src.search.routes.dto.id_with_label_response import IdWithLabel
 from src.users.domain.user import User
 
@@ -32,7 +35,7 @@ class BaseSearchService(ABC):
         pass
 
     @abstractmethod
-    def search_recommend_products(self, keyword) -> list[IdWithItem]:
+    def search_recommend_products(self, keyword) -> list[IdWithItemDescription]:
         pass
 
     @abstractmethod

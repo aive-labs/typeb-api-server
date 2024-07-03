@@ -3,8 +3,8 @@ from typing import Callable
 
 from sqlalchemy.orm import Session
 
-from src.common.infra.entity.recommend_products import RecommendProductsModel
-from src.search.routes.dto.id_with_item_response import IdWithItem
+from src.common.infra.entity.recommend_products import RecommendProductsModelEntity
+from src.search.routes.dto.id_with_item_response import IdWithItemDescription
 
 
 class RecommendProductsRepository:
@@ -20,30 +20,31 @@ class RecommendProductsRepository:
         """
         self.db = db
 
-    def search_recommend_products(self, keyword: str) -> list[IdWithItem]:
+    def search_recommend_products(self, keyword: str) -> list[IdWithItemDescription]:
         with self.db() as db:
             if keyword:
                 keyword = f"%{keyword}%"
                 result = (
                     db.query(
-                        RecommendProductsModel.recsys_model_id.label("id"),
-                        RecommendProductsModel.recsys_model_name.label("name"),
+                        RecommendProductsModelEntity.recsys_model_id.label("id"),
+                        RecommendProductsModelEntity.recsys_model_name.label("name"),
+                        RecommendProductsModelEntity.description.label("description"),
                     )
                     .filter(
-                        RecommendProductsModel.recsys_model_name.ilike(keyword),
+                        RecommendProductsModelEntity.recsys_model_name.ilike(keyword),
                     )
                     .all()
                 )
             else:
                 result = db.query(
-                    RecommendProductsModel.recsys_model_id.label("id"),
-                    RecommendProductsModel.recsys_model_name.label("name"),
+                    RecommendProductsModelEntity.recsys_model_id.label("id"),
+                    RecommendProductsModelEntity.recsys_model_name.label("name"),
+                    RecommendProductsModelEntity.description.label("description"),
                 ).all()
 
             return [
-                IdWithItem(
-                    id=data.id,
-                    name=data.name,
+                IdWithItemDescription(
+                    id=data.id, name=data.name, description=data.description
                 )
                 for data in result
             ]

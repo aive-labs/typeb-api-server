@@ -4,7 +4,10 @@ from src.audiences.service.port.base_audience_repository import BaseAudienceRepo
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
 from src.contents.infra.contents_repository import ContentsRepository
 from src.offers.infra.offer_repository import OfferRepository
-from src.search.routes.dto.id_with_item_response import IdWithItem
+from src.search.routes.dto.id_with_item_response import (
+    IdWithItem,
+    IdWithItemDescription,
+)
 from src.search.routes.dto.id_with_label_response import IdWithLabel
 from src.search.routes.port.base_search_service import BaseSearchService
 from src.users.domain.user import User
@@ -51,7 +54,7 @@ class SearchService(BaseSearchService):
     def search_offers(self, keyword, user: User) -> list[IdWithLabel]:
         return self.offer_repository.get_search_offers(keyword, user)
 
-    def search_recommend_products(self, keyword) -> list[IdWithItem]:
+    def search_recommend_products(self, keyword) -> list[IdWithItemDescription]:
         return self.recommend_products_repository.search_recommend_products(keyword)
 
     def search_contents_tag(

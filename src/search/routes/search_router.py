@@ -7,7 +7,10 @@ from sqlalchemy.orm import Session
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
 from src.core.database import get_db_session
-from src.search.routes.dto.id_with_item_response import IdWithItem
+from src.search.routes.dto.id_with_item_response import (
+    IdWithItem,
+    IdWithItemDescription,
+)
 from src.search.routes.dto.id_with_label_response import IdWithLabel
 from src.search.routes.port.base_search_service import BaseSearchService
 from src.strategy.enums.target_strategy import TargetStrategy
@@ -66,7 +69,7 @@ async def get_search_products(
     search_service: BaseSearchService = Depends(
         dependency=Provide[Container.search_service]
     ),
-) -> list[IdWithItem]:
+) -> list[IdWithItemDescription]:
     """드롭다운 추천모델 목록을 조회하는 API"""
     return search_service.search_recommend_products(keyword)
 
