@@ -315,6 +315,7 @@ def audience_update_cycles(
 
 
 @audience_router.get("/default-exclude")
+@inject
 def get_audience_default_exclude(
     user=Depends(get_permission_checker(required_permissions=[])),
     get_audience_service: GetAudienceUseCase = Depends(
