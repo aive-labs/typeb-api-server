@@ -143,6 +143,7 @@ class CreateAudienceService(CreateAudienceUseCase):
         insert_to_audiences["audience_name"] = audience_create.audience_name
         insert_to_audiences["create_type_code"] = ctype
         insert_to_audiences["audience_status_code"] = AudienceStatus.inactive.value
+        insert_to_audiences["target_strategy"] = audience_create.target_strategy.value
         insert_to_audiences["audience_status_name"] = (
             AudienceStatus.inactive.description
         )
