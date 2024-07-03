@@ -151,7 +151,11 @@ def get_audience_creation_options(
     audience = get_audience_service.get_audience_details(audience_id)
 
     if audience.create_type_code == AudienceCreateType.Filter.value:
-        return get_audience_creation_option.get_filter_conditions(audience_id)
+        audience_creation_option = get_audience_creation_option.get_filter_conditions(
+            audience_id
+        )
+        audience_creation_option.target_strategy = audience.target_strategy
+        return audience_creation_option
     else:
         return get_audience_creation_option.get_csv_uploaded_data(audience_id)
 

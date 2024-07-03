@@ -11,6 +11,7 @@ class Audience(BaseModel):
     audience_name: str
     audience_status_code: str
     audience_status_name: str
+    target_strategy: str
     is_exclude: bool
     create_type_code: str | None = None
     user_exc_deletable: bool | None = None
@@ -29,6 +30,7 @@ class Audience(BaseModel):
             audience_name=entity.audience_name,
             audience_status_code=entity.audience_status_code,
             audience_status_name=entity.audience_status_name,
+            target_strategy=entity.target_strategy,
             is_exclude=entity.is_exclude,
             create_type_code=entity.create_type_code,
             user_exc_deletable=entity.user_exc_deletable,
