@@ -255,6 +255,8 @@ class AudienceSqlAlchemy:
                 .all()
             )
 
+            print(data)
+
             return [
                 FilterCondition(
                     audience_id=row.audience_id,
