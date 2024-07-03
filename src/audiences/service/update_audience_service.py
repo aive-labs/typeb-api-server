@@ -166,7 +166,7 @@ class UpdateAudienceService(UpdateAudienceUseCase):
         insert_to_audiences = {
             "audience_name": audience_update.audience_name,
             "create_type_code": create_type_code,
-            "target_strategy": audience_update.target_strategy,
+            "target_strategy": audience_update.target_strategy.value,
             "updated_by": str(user.user_id),
             "updated_at": audience_update.updated_at,
         }
