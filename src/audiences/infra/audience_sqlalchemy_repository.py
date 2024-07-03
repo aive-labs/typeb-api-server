@@ -55,6 +55,9 @@ from src.audiences.infra.entity.variable_table_list import (
 from src.audiences.infra.entity.variable_table_mapping_entity import (
     VariableTableMappingEntity,
 )
+from src.audiences.routes.dto.response.default_exclude_audience import (
+    DefaultExcludeAudience,
+)
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.common.enums.role import RoleEnum
 from src.common.utils.data_converter import DataConverter
@@ -973,3 +976,38 @@ class AudienceSqlAlchemy:
 
     def _create_label(self, data):
         return f"({data.id}) {data.name}"
+
+    def get_default_exclude(self, user) -> list[DefaultExcludeAudience]:
+        with self.db() as db:
+            base_query = db.query(
+                AudienceEntity.audience_id,
+                AudienceEntity.audience_name,
+                AudienceEntity.user_exc_deletable,
+            )
+            if user.role_id == "branch_user":
+                entities = base_query.filter(
+                    or_(
+                        and_(
+                            AudienceEntity.is_exclude.is_(True),
+                            AudienceEntity.default_excl_on_camp.is_(True),
+                            AudienceEntity.audience_id
+                            != "aud-000459",  ## branch_user를 위한 예외로직
+                        ),
+                        AudienceEntity.audience_id
+                        == "aud-000461",  ## branch_user를 위한 예외로직
+                    ),
+                ).all()
+            else:
+                entities = base_query.filter(
+                    AudienceEntity.is_exclude.is_(True),
+                    AudienceEntity.default_excl_on_camp.is_(True),
+                ).all()
+
+            return [
+                DefaultExcludeAudience(
+                    id=entity.audience_id,
+                    name=entity.audience_name,
+                    user_exc_deletable=entity.user_exc_deletable,
+                )
+                for entity in entities
+            ]

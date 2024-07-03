@@ -9,6 +9,9 @@ from src.audiences.infra.audience_sqlalchemy_repository import AudienceSqlAlchem
 from src.audiences.infra.dto.filter_condition import FilterCondition
 from src.audiences.infra.dto.linked_campaign import LinkedCampaign
 from src.audiences.infra.dto.upload_conditon import UploadCondition
+from src.audiences.routes.dto.response.default_exclude_audience import (
+    DefaultExcludeAudience,
+)
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
 from src.common.utils.data_converter import DataConverter
 from src.search.routes.dto.id_with_label_response import IdWithLabel
@@ -198,3 +201,6 @@ class AudienceRepository(BaseAudienceRepository):
         return self.audience_sqlalchemy.get_audiences_by_condition_without_strategy_id(
             search_keyword, is_exclude, target_strategy
         )
+
+    def get_default_exclude(self, user: User) -> list[DefaultExcludeAudience]:
+        return self.audience_sqlalchemy.get_default_exclude(user)

@@ -23,6 +23,9 @@ from src.audiences.routes.dto.response.audience_variable_combinations import (
     AudienceVariableCombinations,
 )
 from src.audiences.routes.dto.response.audiences import AudienceResponse
+from src.audiences.routes.dto.response.default_exclude_audience import (
+    DefaultExcludeAudience,
+)
 from src.audiences.routes.dto.response.target_strategy_combination import (
     TargetStrategyCombination,
 )
@@ -309,3 +312,13 @@ def audience_update_cycles(
         )
 
     audience_update_cycle_service.exec(audience_id, cycle.value)
+
+
+@audience_router.get("/default-exclude")
+def get_audience_default_exclude(
+    user=Depends(get_permission_checker(required_permissions=[])),
+    get_audience_service: GetAudienceUseCase = Depends(
+        Provide[Container.get_audience_service]
+    ),
+) -> list[DefaultExcludeAudience]:
+    return get_audience_service.get_default_exclude(user)

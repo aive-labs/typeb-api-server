@@ -10,6 +10,9 @@ from src.audiences.routes.dto.response.audiences import (
     AudienceResponse,
     FilterItem,
 )
+from src.audiences.routes.dto.response.default_exclude_audience import (
+    DefaultExcludeAudience,
+)
 from src.audiences.routes.port.usecase.get_audience_usecase import GetAudienceUseCase
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
 from src.common.utils.data_converter import DataConverter
@@ -190,3 +193,6 @@ class GetAudienceService(GetAudienceUseCase):
             audience_stat=AudienceStats(**res["audience_stat"]),
             audience_summary=AudienceSummary(**res["audience_summary"]),
         )
+
+    def get_default_exclude(self, user: User) -> list[DefaultExcludeAudience]:
+        return self.audience_repository.get_default_exclude(user)

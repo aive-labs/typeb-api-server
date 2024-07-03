@@ -9,6 +9,9 @@ from src.audiences.domain.variable_table_mapping import VariableTableMapping
 from src.audiences.infra.dto.filter_condition import FilterCondition
 from src.audiences.infra.dto.linked_campaign import LinkedCampaign
 from src.audiences.infra.dto.upload_conditon import UploadCondition
+from src.audiences.routes.dto.response.default_exclude_audience import (
+    DefaultExcludeAudience,
+)
 from src.search.routes.dto.id_with_label_response import IdWithLabel
 from src.users.domain.user import User
 
@@ -145,4 +148,8 @@ class BaseAudienceRepository(ABC):
     def get_audiences_by_condition_without_strategy_id(
         self, search_keyword, is_exclude, target_strategy: str | None = None
     ) -> list[IdWithLabel]:
+        pass
+
+    @abstractmethod
+    def get_default_exclude(self, user: User) -> list[DefaultExcludeAudience]:
         pass
