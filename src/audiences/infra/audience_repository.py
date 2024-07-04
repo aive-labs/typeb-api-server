@@ -204,3 +204,6 @@ class AudienceRepository(BaseAudienceRepository):
 
     def get_default_exclude(self, user: User) -> list[DefaultExcludeAudience]:
         return self.audience_sqlalchemy.get_default_exclude(user)
+
+    def update_exclude_status(self, audience_id: str, is_exclude: bool):
+        self.audience_sqlalchemy.update_exclude_status(audience_id, is_exclude)

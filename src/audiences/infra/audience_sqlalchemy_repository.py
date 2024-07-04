@@ -165,6 +165,9 @@ class AudienceSqlAlchemy:
             )
 
             result = audience_filtered.all()
+            print("result")
+            print(len(result))
+            print(result)
 
             # 결과를 Pydantic 모델로 변환
             audiences = AudienceInfo.from_query(result)
@@ -1024,3 +1027,17 @@ class AudienceSqlAlchemy:
                 )
                 for entity in entities
             ]
+
+    def update_exclude_status(self, audience_id, is_exclude):
+        with self.db() as db:
+            update_statement = (
+                update(AudienceEntity)
+                .where(AudienceEntity.audience_id == audience_id)
+                .values(user_exc_deletable=is_exclude)
+            )
+            result = db.execute(update_statement)
+
+            db.commit()
+
+            if result.rowcount == 0:
+                raise ValueError("해당하는 타겟 오디언스가 존재하지 않습니다.")

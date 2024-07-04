@@ -47,6 +47,9 @@ from src.audiences.routes.port.usecase.get_audience_creation_options_usecase imp
     GetAudienceCreationOptionsUseCase,
 )
 from src.audiences.routes.port.usecase.get_audience_usecase import GetAudienceUseCase
+from src.audiences.routes.port.usecase.update_audience_exclude_status import (
+    UpdateAudienceExcludeStatusUseCase,
+)
 from src.audiences.routes.port.usecase.update_audience_usecase import (
     UpdateAudienceUseCase,
 )
@@ -339,3 +342,19 @@ def get_audience_default_exclude(
     ),
 ) -> list[DefaultExcludeAudience]:
     return get_audience_service.get_default_exclude(user)
+
+
+@audience_router.put(
+    "/audiences/{audience_id}/is-exclude", status_code=status.HTTP_204_NO_CONTENT
+)
+@inject
+def update_audience_exclude_status(
+    audience_id: str,
+    is_exclude: bool = False,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    update_audience_exclude_service: UpdateAudienceExcludeStatusUseCase = Depends(
+        Provide[Container.update_audience_exclude_service]
+    ),
+    db: Session = Depends(get_db_session),
+):
+    update_audience_exclude_service.exec(audience_id, is_exclude, user)

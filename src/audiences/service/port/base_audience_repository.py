@@ -153,3 +153,7 @@ class BaseAudienceRepository(ABC):
     @abstractmethod
     def get_default_exclude(self, user: User) -> list[DefaultExcludeAudience]:
         pass
+
+    @abstractmethod
+    def update_exclude_status(self, audience_id: str, is_exclude: bool):
+        pass
