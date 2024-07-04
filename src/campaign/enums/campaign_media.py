@@ -4,4 +4,13 @@ from enum import Enum
 class CampaignMediaEnum(Enum):
     KAKAO_ALIM_TALK = "kat"
     KAKAO_FRIEND_TALK = "kft"
-    TEXT_MESSAGE = "tms"
+    TEXT_MESSAGE = "tms"    
+
+class MessageTypeEnum(Enum):
+    SMS = "sms"
+    LMS= "lms"
+    MMS = "mms"
+    KAKAO_ALIM_TEXT = "kakao_alim_text" #알림톡 기본형
+    KAKAO_TEXT = "kakao_text" #친구톡 이미지형에 이미지가 없는경우
+    KAKAO_IMAGE_GENERAL = "kakao_image_general" #친구톡 이미지형
+    KAKAO_IMAGE_WIDE = "kakao_image_wide" #친구톡 와이드 이미지형

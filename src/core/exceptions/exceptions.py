@@ -59,3 +59,10 @@ class LinkedCampaignException(HTTPException):
         self, detail: Any = None, headers: dict[str, Any] | None = None
     ) -> None:
         super().__init__(status.HTTP_500_INTERNAL_SERVER_ERROR, detail, headers)
+
+
+class PolicyException(HTTPException):
+    def __init__(
+        self, detail: Any = None, headers: dict[str, Any] | None = None
+    ) -> None:
+        super().__init__(status.HTTP_400_BAD_REQUEST, detail, headers)

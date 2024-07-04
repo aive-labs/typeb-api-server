@@ -273,6 +273,21 @@ class OfferRepository:
 
             return Offer.from_entity(entity)
 
+    def get_offer_by_id(self, offer_id) -> Offer:
+        with self.db() as db:
+            entity = (
+                db.query(OffersEntity)
+                .filter(OffersEntity.offer_id == offer_id)
+                .first()
+            )
+
+            if entity is None:
+                raise NotFoundException(
+                    detail={"message": "오퍼 정보를 찾지 못했습니다."}
+                )
+
+            return Offer.from_entity(entity)
+        
     def save_duplicate_offer(
         self, offer_id, event_no, offer_update, now_kst_datetime, user
     ):

@@ -5,7 +5,7 @@ from typing import Literal
 import pytz
 from dateutil.relativedelta import relativedelta
 
-from src.campaign.enums.repeat_type import RepeatType
+from src.campaign.enums.repeat_type import RepeatTypeEnum
 
 
 def get_last_day_of_month(date: datetime) -> int:
@@ -43,12 +43,12 @@ def calculate_dates(
     if datetosend is None:
         datetosend = 1
 
-    if period == RepeatType.DAILY.value:
+    if period == RepeatTypeEnum.DAILY.value:
         start = start_date + timedelta(days=1)
         end = start
         next_start = start + timedelta(days=1)
 
-    elif period == RepeatType.WEEKLY.value:
+    elif period == RepeatTypeEnum.WEEKLY.value:
         if sum([int(day) for day in week_days]) == 0:
             raise ValueError("At least one day should be selected for weekly repeat")
         days_to_add = [int(day) for day in week_days]
@@ -66,7 +66,7 @@ def calculate_dates(
                 next_start = next_day
                 break
 
-    elif period == RepeatType.MONTHLY.value:
+    elif period == RepeatTypeEnum.MONTHLY.value:
         # start_date -> now
 
         if start_date.day < datetosend:
@@ -78,7 +78,7 @@ def calculate_dates(
         end = start
         next_start = start + relativedelta(months=1)
 
-    elif period == RepeatType.QUARTER.value:
+    elif period == RepeatTypeEnum.QUARTER.value:
         if start_date.month in [1, 4, 7, 10] and start_date.day < datetosend:
             start = start_date.replace(day=datetosend)
         else:
@@ -89,7 +89,7 @@ def calculate_dates(
         end = start
         next_start = start + relativedelta(months=3)
 
-    elif period == RepeatType.HALFYEAR.value:
+    elif period == RepeatTypeEnum.HALFYEAR.value:
         if start_date.month < 7 or (
             start_date.month == 7 and start_date.day < datetosend
         ):

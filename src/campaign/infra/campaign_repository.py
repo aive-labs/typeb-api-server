@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
 from src.campaign.domain.campaign_timeline import CampaignTimeline
+from src.campaign.domain.send_reservation import SendReservation
 from src.campaign.infra.campaign_sqlalchemy_repository import CampaignSqlAlchemy
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
 from src.search.routes.dto.id_with_item_response import IdWithItem
@@ -50,4 +51,11 @@ class CampaignRepository(BaseCampaignRepository):
     ) -> list[IdWithItem]:
         return self.campaign_sqlalchemy.search_campaign(
             keyword, current_date, two_weeks_ago, db
+        )
+
+    def get_send_complete_campaign(
+        self, campaign_id: str, req_set_group_seqs: list, db: Session
+    ) -> SendReservation:
+        return self.campaign_sqlalchemy.get_send_complete_campaign(
+            campaign_id, req_set_group_seqs, db
         )

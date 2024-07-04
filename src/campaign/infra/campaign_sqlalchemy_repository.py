@@ -5,10 +5,12 @@ from sqlalchemy import Integer, and_, desc, func, not_, or_
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
+from src.campaign.domain.send_reservation import SendReservation
 from src.campaign.domain.campaign_timeline import CampaignTimeline
 from src.campaign.enums.campagin_status import CampaignStatus
 from src.campaign.enums.send_type import SendType
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
+from src.campaign.infra.entity.send_reservation_entity import SendReservationEntity
 from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
 from src.campaign.infra.entity.campaign_timeline_entity import CampaignTimelineEntity
 from src.common.sqlalchemy.object_access_condition import object_access_condition
@@ -189,3 +191,14 @@ class CampaignSqlAlchemy:
         )
 
         return [IdWithItem(id=entity.id, name=entity.name) for entity in entities]
+
+
+    def get_send_complete_campaign(
+        self, campaign_id, req_set_group_seqs, db
+    ) -> SendReservation:
+        return  db.query(SendReservationEntity).filter(
+                        SendReservationEntity.campaign_id == campaign_id, 
+                        SendReservationEntity.test_send_yn == 'n',
+                        SendReservationEntity.set_group_msg_seq.in_(req_set_group_seqs),
+                        SendReservationEntity.send_resv_state.not_in(['21', '01', '00']), # 발송한 메세지 필터
+                    ).first()
