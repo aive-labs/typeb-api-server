@@ -34,6 +34,10 @@ def execute_target_audience_summary(
         three_months_ago_str, yesterday_str, cust_ids
     )
     purchase_records_df = DataConverter.convert_query_to_df(purchase_records_query)
+    print("-------------------")
+    print("purchase_records_df")
+    print(purchase_records_df)
+    print("-------------------")
 
     response_data_query = target_audience_summary_sqlalchemy.get_response_data_3m(
         audience_id, three_months_ago_str, yesterday_str
@@ -46,7 +50,11 @@ def execute_target_audience_summary(
     all_cus_cnt = target_audience_summary_sqlalchemy.get_all_customer_count()
     audience_cnt = len(cust_ids)
     sale_audience_cnt = purchase_records_df["cus_cd"].unique().shape[0]
+    print(sale_audience_cnt)
+    print(type(sale_audience_cnt))
     audience_sale_amt = purchase_records_df["sale_amt"].sum()
+    print(audience_sale_amt)
+    print(type(audience_sale_amt))
     audience_freq = (
         purchase_records_df[["cus_cd", "sale_dt"]].drop_duplicates().shape[0]
     )

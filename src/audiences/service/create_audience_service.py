@@ -188,7 +188,7 @@ class CreateAudienceService(CreateAudienceUseCase):
             no=0,
             conditions=[
                 TargetStrategyCondition(
-                    value="new_customer,Inactive_new_m1,Inactive_new_m3,Inactive_new_m6,Inactive_new_m9",
+                    value="New_customer,Inactive_new_m1,Inactive_new_m3,Inactive_new_m6,Inactive_new_m9",
                     cell_type="multi_select",
                     data_type="d_cv",
                 )
@@ -204,7 +204,7 @@ class CreateAudienceService(CreateAudienceUseCase):
             no=0,
             conditions=[
                 TargetStrategyCondition(
-                    value="Active_Customer1,Active_Customer2,Active_Customer3,Active_Customer4,Inactive_act1_m3,Inactive_act1_m6,Inactive_act1_m9,Inactive_act2_m6,Inactive_act2_m9,Inactive_act3_m6,Inactive_act3_m9CHL",
+                    value="Active_Customer1,Active_Customer2,Active_Customer3,Active_Customer4,Inactive_act1_m3,Inactive_act1_m6,Inactive_act1_m9,Inactive_act2_m6,Inactive_act2_m9,Inactive_act3_m6,Inactive_act3_m9",
                     cell_type="multi_select",
                     data_type="d_cv",
                 )
@@ -402,9 +402,6 @@ class CreateAudienceService(CreateAudienceUseCase):
                 all_customer = self.audience_repository.get_all_customer_by_audience(
                     user=user
                 )
-                print("all customer")
-                print(all_customer)
-                print(type(all_customer))
 
                 # 조건 넘버링 n1
                 for n1, and_conditions in enumerate(and_conditions_list, 1):

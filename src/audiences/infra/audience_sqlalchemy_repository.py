@@ -272,7 +272,10 @@ class AudienceSqlAlchemy:
     def save_audience_list(self, audience_id, query):
         # res List[tuple[str,]]
         with self.db() as db:
+            print("--- save_audience_query")
+            print(query)
             result = db.execute(query).fetchall()
+            print(result)
 
             obj = [
                 AudienceCustomerMappingEntity(cus_cd=item[0], audience_id=audience_id)

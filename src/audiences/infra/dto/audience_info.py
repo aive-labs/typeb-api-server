@@ -18,7 +18,7 @@ class AudienceInfo(BaseModel):
     owned_by_dept: str | None
     audience_count: int
     audience_unit_price: float
-    main_product_id: int | None
+    main_product_id: str | None
     main_product_name: str | None
 
     @staticmethod
