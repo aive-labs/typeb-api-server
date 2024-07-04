@@ -2,6 +2,7 @@ from contextlib import AbstractContextManager
 from typing import Callable
 
 from sqlalchemy import and_, func, literal
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
 from src.audiences.infra.entity.audience_count_by_month_entity import (
@@ -159,13 +160,38 @@ class TargetAudienceSummarySqlAlchemy:
             db.add(audience_stats_req)
             # primary_rep_product -bulk
             if main_rep_nm_list:
+                # insert_to_rep_product_list_add = [
+                #     {**data_dict, "audience_id": audience_id}
+                #     for data_dict in insert_to_rep_product_list
+                # ]
+                # insert_query = PrimaryRepProductEntity.__table__.insert().values(
+                #     insert_to_rep_product_list_add
+                # )
+                # db.execute(insert_query)
+                # 기존 데이터에 audience_id 추가
+
                 insert_to_rep_product_list_add = [
                     {**data_dict, "audience_id": audience_id}
                     for data_dict in insert_to_rep_product_list
                 ]
-                insert_query = PrimaryRepProductEntity.__table__.insert().values(
+
+                # insert 구문 생성
+                insert_stmt = insert(PrimaryRepProductEntity).values(
                     insert_to_rep_product_list_add
                 )
-                db.execute(insert_query)
 
+                # 업데이트할 컬럼 설정 (여기서는 모든 컬럼을 업데이트)
+                update_dict = {
+                    col.name: col
+                    for col in insert_stmt.excluded
+                    if col.name not in ("audience_id", "main_product_id")
+                }
+
+                # on_conflict_do_update 설정
+                on_conflict_stmt = insert_stmt.on_conflict_do_update(
+                    index_elements=["audience_id", "main_product_id"], set_=update_dict
+                )
+
+                # upsert 쿼리 실행
+                db.execute(on_conflict_stmt)
             db.commit()
