@@ -5,12 +5,12 @@ from typing_extensions import Self
 
 from src.common.enums.campaign_media import CampaignMedia
 from src.core.exceptions.exceptions import ValidationException
-from src.message_template.enums.kakao_button_type import KakaoButtonTypeEnum
+from src.message_template.enums.kakao_button_type import KakaoButtonType
 
 
 class KakaoTemplateButtonObject(BaseModel):
     button_name: str
-    button_type: KakaoButtonTypeEnum = KakaoButtonTypeEnum.WEB_LINK_BUTTON
+    button_type: KakaoButtonType = KakaoButtonType.WEB_LINK_BUTTON
     web_link: Optional[str]
     app_link: Optional[str]
 
