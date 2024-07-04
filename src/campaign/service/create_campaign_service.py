@@ -34,7 +34,9 @@ class CreateCampaignService(CreateCampaignUsecase):
             campaign_create.campaign_name
         )
         if is_existing_campaign:
-            raise DuplicatedException("동일한 캠페인 명이 존재합니다.")
+            raise DuplicatedException(
+                detail={"message": "동일한 캠페인 명이 존재합니다."}
+            )
 
         if user.user_id is None:
             raise Exception("user_id는 none일 수 없습니다.")

@@ -55,7 +55,9 @@ class OnboardingSqlAlchemyRepository:
         )
 
         if not entity:
-            raise NotFoundException("온보딩 관련 데이터가 존재하지 않습니다.")
+            raise NotFoundException(
+                detail={"message": "온보딩 관련 데이터가 존재하지 않습니다."}
+            )
 
         entity.onboarding_status = (  # pyright: ignore [reportAttributeAccessIssue]
             status.value

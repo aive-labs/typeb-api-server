@@ -56,7 +56,7 @@ class ContentsSqlAlchemy:
             db.query(ContentsMenuEntity).filter(ContentsMenuEntity.code == code).first()
         )
         if not entity:
-            raise NotFoundException("해당 메뉴를 찾지 못했습니다.")
+            raise NotFoundException(detail={"message": "해당 메뉴를 찾지 못했습니다."})
 
         subject_style_yn = entity.style_yn
 
@@ -171,7 +171,9 @@ class ContentsSqlAlchemy:
         )
 
         if not entity:
-            raise NotFoundException("해당하는 menu가 존재하지 않습니다.")
+            raise NotFoundException(
+                detail={"message": "해당하는 menu가 존재하지 않습니다."}
+            )
 
         return ModelConverter.entity_to_model(entity, ContentsMenu)
 
@@ -187,7 +189,9 @@ class ContentsSqlAlchemy:
         )
 
         if not entity:
-            raise NotFoundException("해당하는 콘텐츠가 존재하지 않습니다.")
+            raise NotFoundException(
+                detail={"message": "해당하는 콘텐츠가 존재하지 않습니다."}
+            )
 
         return ModelConverter.entity_to_model(entity, ContentsResponse)
 

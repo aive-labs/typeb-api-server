@@ -73,7 +73,7 @@ class StrategySqlAlchemy:
         )
 
         if entity is None:
-            raise NotFoundException("전략을 찾지 못했습니다.")
+            raise NotFoundException(detail={"message": "전략을 찾지 못했습니다."})
 
         return Strategy.from_entity(entity)
 

@@ -53,7 +53,9 @@ class CreateAudienceService(CreateAudienceUseCase):
 
         # 오디언스명 중복 체크
         if audience:
-            raise DuplicatedException("동일한 오디언스명이 존재합니다.")
+            raise DuplicatedException(
+                detail={"message": "동일한 오디언스명이 존재합니다."}
+            )
 
         if audience_create.create_type_code == AudienceCreateType.Filter.value:
             ctype = AudienceCreateType.Filter.value

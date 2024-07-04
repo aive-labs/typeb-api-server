@@ -36,7 +36,9 @@ class AddCreativesService(AddCreativesUseCase):
         )
 
         if cafe24_info is None:
-            raise NotFoundException("연동된 cafe24 계정이 없습니다.")
+            raise NotFoundException(
+                detail={"message": "연동된 cafe24 계정이 없습니다."}
+            )
 
         files = s3_presigned_url_request.files
         image_use_type = s3_presigned_url_request.use_type.value

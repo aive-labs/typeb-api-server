@@ -91,7 +91,7 @@ class AudienceSqlAlchemy:
                 db.query(UserEntity).filter(UserEntity.user_id == user.user_id).first()
             )
             if user_entity is None:
-                raise NotFoundException("사용자를 찾지 못했습니다.")
+                raise NotFoundException(detail={"message": "사용자를 찾지 못했습니다."})
 
             if is_exclude:
                 conditions = [AudienceEntity.is_exclude == is_exclude]
@@ -303,7 +303,9 @@ class AudienceSqlAlchemy:
             )
 
             if not entity:
-                raise NotFoundException("변수-테이블 매핑 정보를 찾지 못했습니다.")
+                raise NotFoundException(
+                    detail={"message": "변수-테이블 매핑 정보를 찾지 못했습니다."}
+                )
 
             return ModelConverter.entity_to_model(entity, VariableTableMapping)
 
@@ -686,7 +688,9 @@ class AudienceSqlAlchemy:
             )
 
             if not entity:
-                raise NotFoundException("타겟 오디언스를 찾지 못했습니다.")
+                raise NotFoundException(
+                    detail={"message": "타겟 오디언스를 찾지 못했습니다."}
+                )
 
             return ModelConverter.entity_to_model(entity, Audience)
 
@@ -762,7 +766,9 @@ class AudienceSqlAlchemy:
             db.commit()
 
             if result.rowcount == 0:
-                raise NotFoundException("타겟 오디언스를 찾지 못했습니다.")
+                raise NotFoundException(
+                    detail={"message": "타겟 오디언스를 찾지 못했습니다."}
+                )
 
     def delete_audience_info_for_update(self, audience_id):
         """

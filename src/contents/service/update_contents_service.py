@@ -42,7 +42,9 @@ class UpdateContentsService(UpdateContentsUseCase):
     ) -> ContentsResponse:
 
         if not self.contents_repository.get_contents_detail(contents_id, db):
-            raise NotFoundException("해당하는 콘텐츠가 존재하지 않습니다.")
+            raise NotFoundException(
+                detail={"message": "해당하는 콘텐츠가 존재하지 않습니다."}
+            )
 
         contents_urls = self.contents_repository.get_contents_url_list(db)
         contents_uuids = [url.split("/")[-1] for url in contents_urls]
@@ -65,7 +67,9 @@ class UpdateContentsService(UpdateContentsUseCase):
             str(user.user_id), db=db
         )
         if cafe24_info is None:
-            raise NotFoundException("연동된 cafe24 계정이 없습니다.")
+            raise NotFoundException(
+                detail={"message": "연동된 cafe24 계정이 없습니다."}
+            )
 
         mall_id = cafe24_info.mall_id
 

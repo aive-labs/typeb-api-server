@@ -59,7 +59,9 @@ class AddContentsService(AddContentsUseCase):
             str(user.user_id), db
         )
         if cafe24_info is None:
-            raise NotFoundException("연동된 cafe24 계정이 없습니다.")
+            raise NotFoundException(
+                detail={"message": "연동된 cafe24 계정이 없습니다."}
+            )
 
         mall_id = cafe24_info.mall_id
 

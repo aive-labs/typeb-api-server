@@ -36,7 +36,7 @@ class CreativesSqlAlchemy:
         )
 
         if entity is None:
-            raise NotFoundException("Not found CreativesEntity")
+            raise NotFoundException(detail={"message": "소재를 찾지 못했습니다."})
 
         return ModelConverter.entity_to_model(entity, Creatives)
 
@@ -138,7 +138,7 @@ class CreativesSqlAlchemy:
         )
 
         if creative_data is None:
-            raise NotFoundException("Creative가 존재하지 않습니다")
+            raise NotFoundException(detail={"message": "Creative가 존재하지 않습니다"})
 
         update_statement = (
             update(CreativesEntity)

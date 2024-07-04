@@ -267,7 +267,9 @@ class OfferRepository:
             )
 
             if entity is None:
-                raise NotFoundException("오퍼 정보를 찾지 못했습니다.")
+                raise NotFoundException(
+                    detail={"message": "오퍼 정보를 찾지 못했습니다."}
+                )
 
             return Offer.from_entity(entity)
 

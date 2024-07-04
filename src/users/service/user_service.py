@@ -18,7 +18,7 @@ class UserService(BaseUserService):
         existing_user = self.user_repository.is_existing_user(user_create.email, db)
 
         if existing_user:
-            raise DuplicatedException("동일한 이메일이 존재합니다.")
+            raise DuplicatedException(detail={"message": "동일한 이메일이 존재합니다."})
 
         # 2. 회원 가입 진행
         saved_user: User = self.user_repository.register_user(user_create, db)
@@ -35,7 +35,7 @@ class UserService(BaseUserService):
         user: User | None = self.user_repository.get_user_by_id(user_id, db)
 
         if user is None:
-            raise NotFoundException("사용자를 찾지 못했습니다.")
+            raise NotFoundException(detail={"message": "사용자를 찾지 못했습니다."})
 
         return UserResponse(**user.model_dump())
 

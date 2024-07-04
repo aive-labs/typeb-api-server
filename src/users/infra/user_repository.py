@@ -38,7 +38,9 @@ class UserRepository(BaseUserRepository):
         user_info = self.user_sqlalchemy.find_user_by_email(email, db)
 
         if user_info is None:
-            raise NotFoundException("해당하는 사용자를 찾지 못하였습니다.")
+            raise NotFoundException(
+                detail={"message": "해당하는 사용자를 찾지 못하였습니다."}
+            )
 
         user = User.from_entity(user_info[0])
         user.password = user_info[1]
