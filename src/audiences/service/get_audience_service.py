@@ -47,6 +47,7 @@ class GetAudienceService(GetAudienceUseCase):
         if not audiences:
             return AudienceResponse(audiences=[], filters=None)
 
+        print(len(audiences))
         audience_response = [
             convert_to_audience_res(audience) for audience in audiences
         ]

@@ -9,25 +9,31 @@ class CustomerInfoStatusEntity(Base):
     cus_info_id = Column(Integer, primary_key=True)
     shop_no = Column(BigInteger, nullable=False)
     cus_cd = Column(String, nullable=True)
-    gender = Column(String, nullable=True)
-    this_year_birth_day = Column(String, nullable=True)
+    sex = Column(String, nullable=True)
+    sex_nm = Column(String, nullable=True)
+    this_year_birthday = Column(String, nullable=True)
     this_year_wedding_anniversary = Column(String, nullable=True)
     age = Column(String, nullable=True)
-    age_group = Column(String, nullable=True)
+    age_group_10 = Column(String, nullable=True)
+    age_group_5 = Column(String, nullable=True)
     created_date = Column(Date, nullable=True)
+
     group_no = Column(BigInteger, nullable=True)
     group_name = Column(String, nullable=True)
     last_login_date = Column(Date, nullable=True)
     last_purchase_date = Column(String, nullable=True)
     last_purchase_months_ago = Column(String, nullable=True)
     first_purchase_date = Column(String, nullable=True)
+
     sms = Column(String, nullable=True)
     news_mail = Column(String, nullable=True)
     member_authentification = Column(String, nullable=True)
-    available_points = Column(String, nullable=True)
-    used_points = Column(String, nullable=True)
-    total_points = Column(String, nullable=True)
+
+    available_points = Column(Float, nullable=True)
+    used_points = Column(Float, nullable=True)
+    total_points = Column(Float, nullable=True)
     sale_amt_year = Column(String, nullable=True)
+
     cv_model = Column(String, nullable=True)
     r_score_3m = Column(Float, nullable=True)
     f_score_3m = Column(Float, nullable=True)
@@ -45,11 +51,21 @@ class CustomerInfoStatusEntity(Base):
     f_score_1y = Column(Float, nullable=True)
     m_score_1y = Column(Float, nullable=True)
     rfm_score_1y = Column(String, nullable=True)
+
+    coupon_expired = Column(String, nullable=True)
+    is_cart = Column(String, nullable=True)
+    cart_product_no = Column(String, nullable=True)
+    is_wishlist = Column(String, nullable=True)
+    wishlist_product_no = Column(String, nullable=True)
+    near_promotion_amount = Column(String, nullable=True)
+    near_promotion_cnt = Column(String, nullable=True)
+    promoted_customer = Column(String, nullable=True)
+
     etltime = Column(Date, nullable=True)
 
 
 # class CustomerInfoStatusEntity(Base):
-#     __tablename__ = "cus_info_status"
+#     __tablename__ = "temp_cus_info_status"
 #
 #     cus_info_status_seq = Column(Integer, primary_key=True)
 #     cus_cd = Column(String, primary_key=True)

@@ -15,6 +15,9 @@ from src.audiences.service.get_audience_creation_options import (
     GetAudienceCreationOptions,
 )
 from src.audiences.service.get_audience_service import GetAudienceService
+from src.audiences.service.update_audience_exclude_status_service import (
+    UpdateAudienceExcludeStatusService,
+)
 from src.audiences.service.update_audience_service import UpdateAudienceService
 from src.audiences.service.update_cycle_service import AudienceUpdateCycleService
 from src.auth.infra.cafe24_repository import Cafe24Repository
@@ -288,6 +291,11 @@ class Container(containers.DeclarativeContainer):
 
     update_audience_service = providers.Singleton(
         provides=UpdateAudienceService, audience_repository=audience_repository
+    )
+
+    update_audience_exclude_service = providers.Singleton(
+        provides=UpdateAudienceExcludeStatusService,
+        audience_repository=audience_repository,
     )
 
     download_audience_service = providers.Singleton(
