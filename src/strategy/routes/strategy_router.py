@@ -96,7 +96,7 @@ def update_strategy(
     update_strategy_service.exec(strategy_id, strategy_update, user, db=db)
 
 
-@strategy_router.post("/strategies/themes/preview")
+@strategy_router.post("/themes/preview")
 @inject
 def get_preview(
     preview_message_create: PreviewMessageCreate,
