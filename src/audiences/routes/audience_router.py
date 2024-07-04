@@ -204,7 +204,7 @@ def update_audience_creation_options(
     update_audience_id = update_audience_service.exec(
         audience_id, audience_update, user
     )
-    background_task.add_task(execute_target_audience_summary, db, update_audience_id)
+    background_task.add_task(execute_target_audience_summary, update_audience_id)
 
 
 @audience_router.delete(

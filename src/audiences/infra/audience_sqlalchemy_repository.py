@@ -272,6 +272,8 @@ class AudienceSqlAlchemy:
     def save_audience_list(self, audience_id, query):
         # res List[tuple[str,]]
         with self.db() as db:
+            print("query")
+            print(query)
             result = db.execute(query).fetchall()
 
             obj = [

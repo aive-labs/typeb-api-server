@@ -29,6 +29,8 @@ def execute_target_audience_summary(
         )
     )
     cust_ids = DataConverter.convert_query_to_df(cust_ids_query)["cus_cd"].tolist()
+    print("cust_ids")
+    print(cust_ids)
 
     purchase_records_query = target_audience_summary_sqlalchemy.get_purchase_records_3m(
         three_months_ago_str, yesterday_str, cust_ids
