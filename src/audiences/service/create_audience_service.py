@@ -204,7 +204,7 @@ class CreateAudienceService(CreateAudienceUseCase):
             no=0,
             conditions=[
                 TargetStrategyCondition(
-                    value="Active_Customer1,Active_Customer2,Active_Customer3,Active_Customer4,Inactive_act1_m3,Inactive_act1_m6,Inactive_act1_m9,Inactive_act2_m6,Inactive_act2_m9,Inactive_act3_m6,Inactive_act3_m9",
+                    value="Active_customer1,Active_customer2,Active_customer3,Active_customer4,Inactive_act1_m3,Inactive_act1_m6,Inactive_act1_m9,Inactive_act2_m6,Inactive_act2_m9,Inactive_act3_m6,Inactive_act3_m9",
                     cell_type="multi_select",
                     data_type="d_cv",
                 )

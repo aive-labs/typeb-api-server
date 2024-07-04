@@ -17,4 +17,5 @@ class DownloadAudienceService(DownloadAudienceUseCase):
             audience_id
         )
         audience_df = DataConverter.convert_query_to_df(audience_data)
+        audience_df.columns = ["member_id"]
         return audience_df
