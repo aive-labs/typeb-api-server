@@ -1033,7 +1033,7 @@ class AudienceSqlAlchemy:
             update_statement = (
                 update(AudienceEntity)
                 .where(AudienceEntity.audience_id == audience_id)
-                .values(user_exc_deletable=is_exclude)
+                .values(is_exclude=is_exclude, user_exc_deletable=True)
             )
             result = db.execute(update_statement)
 
