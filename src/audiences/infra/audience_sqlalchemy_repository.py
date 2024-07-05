@@ -202,6 +202,8 @@ class AudienceSqlAlchemy:
         audience_queries_req = AudienceQueriesEntity(**conditions)
         db.add(audience_queries_req)
 
+        db.flush()
+
         return audience_id
 
     def create_audience_by_upload(
@@ -235,13 +237,16 @@ class AudienceSqlAlchemy:
 
         db.bulk_save_objects(obj)
 
-        db.commit()
+        db.flush()
 
         return audience_id
 
     def get_db_filter_conditions(
         self, audience_id: str, db: Session
     ) -> list[FilterCondition]:
+
+        print("audience_id")
+        print(audience_id)
 
         data = (
             db.query(
@@ -499,6 +504,8 @@ class AudienceSqlAlchemy:
         db.query(AudienceCustomerMappingEntity).filter(
             AudienceCustomerMappingEntity.audience_id == audience_id
         ).delete()
+
+        db.flush()
 
     def _object_access_condition(
         self, db: Session, user: UserEntity, model: AudienceEntity
@@ -770,6 +777,8 @@ class AudienceSqlAlchemy:
                 detail={"message": "타겟 오디언스를 찾지 못했습니다."}
             )
 
+        db.flush()
+
     def delete_audience_info_for_update(self, audience_id, db: Session):
         """
         타겟오디언스 생성 조건 수정 후 기존 데이터 삭제 함수
@@ -805,6 +814,8 @@ class AudienceSqlAlchemy:
             AudienceQueriesEntity.audience_id == audience_id
         ).delete()
 
+        db.flush()
+
     def update_by_upload(
         self,
         filter_audience,
@@ -839,6 +850,8 @@ class AudienceSqlAlchemy:
 
         db.bulk_save_objects(obj)
 
+        db.flush()
+
     def update_by_filter(
         self, audience_id, insert_to_filter_conditions, insert_to_audiences, db: Session
     ):
@@ -848,6 +861,8 @@ class AudienceSqlAlchemy:
             .values(insert_to_audiences)
         )
         update_result = db.execute(update_statement)
+        print("audience_update_entity")
+        print(update_result)
 
         if update_result.rowcount == 0:
             raise ValueError("해당 타겟 오디언스를 찾지 못했습니다.")
@@ -871,6 +886,8 @@ class AudienceSqlAlchemy:
         else:
             insert_to_filter_conditions["audience_id"] = audience_id
             db.add(AudienceQueriesEntity(**insert_to_filter_conditions))
+
+        db.flush()
 
     def get_audiences_ids_by_strategy_id(
         self, strategy_id: str, db: Session

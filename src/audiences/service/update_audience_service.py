@@ -60,8 +60,10 @@ class UpdateAudienceService(UpdateAudienceUseCase):
         creation_options = self.audience_repository.get_db_filter_conditions(
             audience_id, db
         )
+        print("creation_options")
+        print(creation_options)
         options = creation_options[0].conditions
-        query = self.get_final_query(user, options)
+        query = self.get_final_query(user, options, db)
 
         self.audience_repository.save_audience_list(audience_id, query, db)
 
@@ -186,7 +188,7 @@ class UpdateAudienceService(UpdateAudienceUseCase):
 
         return audience_id
 
-    def get_final_query(self, user, filter_condition):
+    def get_final_query(self, user, filter_condition, db: Session):
         # **variable_type 반환(target / event) : 추가 필요
         # 인덱스 기준 넘버링된 조건 입력되는 딕셔너리(condition_1_1, condition_1_2, condition_2_1 ...)
         condition_dict = {}
@@ -200,7 +202,7 @@ class UpdateAudienceService(UpdateAudienceUseCase):
                 where_condition_dict = {}
                 # 전체 고객 모수 조회
                 all_customer = self.audience_repository.get_all_customer_by_audience(
-                    user=user
+                    user=user, db=db
                 )
 
                 # 조건 넘버링 n1
@@ -218,7 +220,7 @@ class UpdateAudienceService(UpdateAudienceUseCase):
                         # variable_type 고정 : target
                         variable_table = (
                             self.audience_repository.get_tablename_by_variable_id(
-                                query_type_dict["field"]
+                                query_type_dict["field"], db
                             )
                         )
                         table_name = variable_table.target_table
@@ -260,14 +262,14 @@ class UpdateAudienceService(UpdateAudienceUseCase):
                             if temp_idx == 0:
                                 sub_alias: Alias = (
                                     self.audience_repository.get_subquery_with_select_query_list(
-                                        variable_table, select_query_list, idx
+                                        variable_table, select_query_list, idx, db
                                     )
                                 )
                             else:
                                 # temp_idx == 1
                                 sub_alias: Alias = (
                                     self.audience_repository.get_subquery_with_array_select_query_list(
-                                        variable_table, array_select_query_list, idx
+                                        variable_table, array_select_query_list, idx, db
                                     )
                                 )
 
