@@ -35,7 +35,7 @@ class UpdateAudienceService(UpdateAudienceUseCase):
 
         audience = self.audience_repository.get_audience_detail(audience_id, db)
         self.check_if_audience_type_segment(audience, user)
-        self.check_duplicated_name(audience_id, audience_update)
+        self.check_duplicated_name(audience_id, audience_update, db)
 
         # 관련 데이터 삭제
         self.audience_repository.delete_audience_info_for_update(audience_id, db)
@@ -65,9 +65,9 @@ class UpdateAudienceService(UpdateAudienceUseCase):
 
         self.audience_repository.save_audience_list(audience_id, query, db)
 
-    def check_duplicated_name(self, audience_id, audience_update):
+    def check_duplicated_name(self, audience_id, audience_update, db: Session):
         duplicated_name_audience = self.audience_repository.get_audience_by_name(
-            audience_update.audience_name
+            audience_update.audience_name, db
         )
         if duplicated_name_audience:
             if duplicated_name_audience.audience_id != audience_id:
