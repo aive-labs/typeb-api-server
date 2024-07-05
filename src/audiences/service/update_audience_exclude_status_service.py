@@ -1,3 +1,5 @@
+from sqlalchemy.orm import Session
+
 from src.audiences.routes.port.usecase.update_audience_exclude_status import (
     UpdateAudienceExcludeStatusUseCase,
 )
@@ -9,5 +11,5 @@ class UpdateAudienceExcludeStatusService(UpdateAudienceExcludeStatusUseCase):
     def __init__(self, audience_repository: BaseAudienceRepository):
         self.audience_repository = audience_repository
 
-    def exec(self, audience_id, is_exclude, user):
-        self.audience_repository.update_exclude_status(audience_id, is_exclude)
+    def exec(self, audience_id, is_exclude, user, db: Session):
+        self.audience_repository.update_exclude_status(audience_id, is_exclude, db)

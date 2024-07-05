@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 from sqlalchemy import and_, except_, or_
+from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import Alias
 
 from src.audiences.enums.audience_create_type import AudienceCreateType
@@ -18,6 +19,7 @@ from src.audiences.utils.query_builder import (
     get_query_type_with_additional_filters,
     group_where_conditions,
 )
+from src.core.transactional import transactional
 from src.users.domain.user import User
 
 
@@ -26,39 +28,42 @@ class UpdateAudienceService(UpdateAudienceUseCase):
     def __init__(self, audience_repository: BaseAudienceRepository):
         self.audience_repository = audience_repository
 
-    def exec(self, audience_id: str, audience_update: AudienceUpdate, user: User):
+    @transactional
+    def exec(
+        self, audience_id: str, audience_update: AudienceUpdate, user: User, db: Session
+    ):
 
-        audience = self.audience_repository.get_audience_detail(audience_id)
+        audience = self.audience_repository.get_audience_detail(audience_id, db)
         self.check_if_audience_type_segment(audience, user)
         self.check_duplicated_name(audience_id, audience_update)
 
         # 관련 데이터 삭제
-        self.audience_repository.delete_audience_info_for_update(audience_id)
+        self.audience_repository.delete_audience_info_for_update(audience_id, db)
 
         # audiences 수정
         create_type_code = audience_update.create_type_code
         if create_type_code == AudienceCreateType.Filter.value:
             update_audience_id = self.update_audience_by_filter(
-                create_type_code, audience_id, audience_update, user
+                create_type_code, audience_id, audience_update, user, db
             )
-            self.save_audience_customer_list(audience_id, user)
+            self.save_audience_customer_list(audience_id, user, db)
         elif create_type_code == AudienceCreateType.Upload.value:
             update_audience_id = self.update_audience_by_upload(
-                create_type_code, audience_id, audience_update, user
+                create_type_code, audience_id, audience_update, user, db
             )
         else:
             raise ValueError("허용되지 않은 생성 타입 코드 입니다.")
 
         return update_audience_id
 
-    def save_audience_customer_list(self, audience_id: str, user: User):
+    def save_audience_customer_list(self, audience_id: str, user: User, db: Session):
         creation_options = self.audience_repository.get_db_filter_conditions(
-            audience_id
+            audience_id, db
         )
         options = creation_options[0].conditions
         query = self.get_final_query(user, options)
 
-        self.audience_repository.save_audience_list(audience_id, query)
+        self.audience_repository.save_audience_list(audience_id, query, db)
 
     def check_duplicated_name(self, audience_id, audience_update):
         duplicated_name_audience = self.audience_repository.get_audience_by_name(
@@ -76,18 +81,9 @@ class UpdateAudienceService(UpdateAudienceUseCase):
 
     def check_if_audience_type_segment(self, audience, user):
         pass
-        # if audience.audience_type_code == AudienceType.segment.value:
-        #     if not user.is_admin():
-        #         raise HTTPException(
-        #             status_code=500,
-        #             detail={
-        #                 "code": "modify/02",
-        #                 "message": "수정 불가 - 세그먼트 타겟입니다.",
-        #             },
-        #         )
 
     def update_audience_by_upload(
-        self, create_type_code, audience_id, audience_update, user
+        self, create_type_code, audience_id, audience_update, user, db: Session
     ):
 
         template_name = audience_update.upload["type"]
@@ -147,12 +143,13 @@ class UpdateAudienceService(UpdateAudienceUseCase):
             insert_to_uploaded_audiences,
             insert_to_audiences,
             checked_list,
+            db,
         )
 
         return audience_id
 
     def update_audience_by_filter(
-        self, create_type_code, audience_id, audience_update, user
+        self, create_type_code, audience_id, audience_update, user, db: Session
     ):
 
         # 생성
@@ -184,7 +181,7 @@ class UpdateAudienceService(UpdateAudienceUseCase):
         }
 
         self.audience_repository.update_by_filter(
-            audience_id, insert_to_filter_conditions, insert_to_audiences
+            audience_id, insert_to_filter_conditions, insert_to_audiences, db
         )
 
         return audience_id

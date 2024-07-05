@@ -1,3 +1,5 @@
+from sqlalchemy.orm import Session
+
 from src.audiences.domain.audience import Audience
 from src.audiences.routes.dto.response.audience_stat_info import (
     AudienceStats,
@@ -34,14 +36,14 @@ class GetAudienceService(GetAudienceUseCase):
     def __init__(self, audience_repository: BaseAudienceRepository):
         self.audience_repository = audience_repository
 
-    def get_audience_details(self, audience_id: str) -> Audience:
-        return self.audience_repository.get_audience_detail(audience_id)
+    def get_audience_details(self, audience_id: str, db: Session) -> Audience:
+        return self.audience_repository.get_audience_detail(audience_id, db)
 
     def get_all_audiences(
-        self, user: User, is_exclude: bool | None = None
+        self, user: User, db: Session, is_exclude: bool | None = None
     ) -> AudienceResponse:
         audiences, audience_df = self.audience_repository.get_audiences(
-            user, is_exclude
+            user, db, is_exclude
         )
 
         if not audiences:
@@ -79,14 +81,18 @@ class GetAudienceService(GetAudienceUseCase):
 
         return response
 
-    def get_audience_stat_details(self, audience_id: str) -> AudienceStatsInfo:
+    def get_audience_stat_details(
+        self, audience_id: str, db: Session
+    ) -> AudienceStatsInfo:
 
         res = {}
 
-        audience_filtered = self.audience_repository.get_audience_stats(audience_id)
-        audience_rep_list = self.audience_repository.get_audience_products(audience_id)
+        audience_filtered = self.audience_repository.get_audience_stats(audience_id, db)
+        audience_rep_list = self.audience_repository.get_audience_products(
+            audience_id, db
+        )
         audience_count_list = self.audience_repository.get_audience_count(
-            audience_id=audience_id
+            audience_id, db
         )
         audience_df = DataConverter.convert_query_to_df(audience_filtered)
         audience_df["description"] = audience_df["description"].fillna("")
@@ -195,5 +201,7 @@ class GetAudienceService(GetAudienceUseCase):
             audience_summary=AudienceSummary(**res["audience_summary"]),
         )
 
-    def get_default_exclude(self, user: User) -> list[DefaultExcludeAudience]:
-        return self.audience_repository.get_default_exclude(user)
+    def get_default_exclude(
+        self, user: User, db: Session
+    ) -> list[DefaultExcludeAudience]:
+        return self.audience_repository.get_default_exclude(user, db)

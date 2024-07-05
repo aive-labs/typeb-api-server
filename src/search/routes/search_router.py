@@ -26,6 +26,7 @@ def get_strategies(
     keyword: Optional[str] = None,
     is_exclude: Optional[bool] = False,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     search_service: BaseSearchService = Depends(
         dependency=Provide[Container.search_service]
     ),
@@ -35,11 +36,11 @@ def get_strategies(
 
     if strategy_id:
         return search_service.search_audience_with_strategy_id(
-            strategy_id, keyword, user, is_exclude
+            strategy_id, keyword, user, db, is_exclude
         )
     else:
         return search_service.search_audience_without_strategy_id(
-            keyword, is_exclude, target_strategy.value if target_strategy else None
+            keyword, db, is_exclude, target_strategy.value if target_strategy else None
         )
 
 

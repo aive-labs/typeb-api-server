@@ -2,6 +2,7 @@ import math
 from datetime import datetime, timedelta
 
 from dependency_injector.wiring import Provide, inject
+from sqlalchemy.orm import Session
 
 from src.common.utils.data_converter import DataConverter
 from src.core.container import Container
@@ -10,6 +11,7 @@ from src.core.container import Container
 @inject
 def execute_target_audience_summary(
     audience_id,
+    db: Session,
     target_audience_summary_sqlalchemy=Provide[
         Container.target_audience_summary_sqlalchemy
     ],

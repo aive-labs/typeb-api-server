@@ -73,10 +73,13 @@ def get_audiences(
     get_audience_service: GetAudienceUseCase = Depends(
         Provide[Container.get_audience_service]
     ),
+    db: Session = Depends(get_db_session),
     user=Depends(get_permission_checker(required_permissions=[])),
 ):
     # get_all_audience에서 리턴 타입이 dictionary 형태임
-    return get_audience_service.get_all_audiences(user, is_exclude)
+    return get_audience_service.get_all_audiences(
+        user=user, db=db, is_exclude=is_exclude
+    )
 
 
 @audience_router.get(
@@ -86,11 +89,12 @@ def get_audiences(
 def get_audience_detail(
     audience_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     get_audience_service: GetAudienceUseCase = Depends(
         Provide[Container.get_audience_service]
     ),
 ):
-    return get_audience_service.get_audience_stat_details(audience_id)
+    return get_audience_service.get_audience_stat_details(audience_id, db=db)
 
 
 @audience_router.post("/audiences", status_code=status.HTTP_201_CREATED)
@@ -101,25 +105,29 @@ def create_audience(
     create_audience_service: CreateAudienceUseCase = Depends(
         Provide[Container.create_audience_service]
     ),
+    db: Session = Depends(get_db_session),
     user=Depends(get_permission_checker([])),
 ):
     audience_id = create_audience_service.create_audience(
-        audience_create=audience_create, user=user
+        audience_create=audience_create, user=user, db=db
     )
 
-    background_task.add_task(execute_target_audience_summary, audience_id)
+    background_task.add_task(
+        execute_target_audience_summary, audience_id=audience_id, db=db
+    )
 
 
 @audience_router.get("/target-strategy-combinations")
 @inject
 def get_audience_target_strategy_combinations(
     user=Depends(get_permission_checker([])),
+    db: Session = Depends(get_db_session),
     create_audience_service: CreateAudienceUseCase = Depends(
         Provide[Container.create_audience_service]
     ),
 ) -> TargetStrategyCombination:
     """타겟 전략에 대한 필터 조건을 조회하는 API"""
-    return create_audience_service.get_audience_target_strategy_combinations()
+    return create_audience_service.get_audience_target_strategy_combinations(db=db)
 
 
 @audience_router.get(
@@ -128,15 +136,16 @@ def get_audience_target_strategy_combinations(
 @inject
 def get_audience_variable_combinations(
     user=Depends(get_permission_checker([])),
+    db: Session = Depends(get_db_session),
     create_audience_service: CreateAudienceUseCase = Depends(
         Provide[Container.create_audience_service]
     ),
 ):
     """생성 변수 조합 정보 조회:  타겟 오디언스가 어떤 생성 조건으로 만들어졌는지에 대한 옵션 정보를 내려주는 API"""
     predefined_variables = create_audience_service.get_audience_variable_combinations(
-        user
+        user, db=db
     )
-    options_by_cell = create_audience_service.get_option_items()
+    options_by_cell = create_audience_service.get_option_items(db=db)
 
     return AudienceVariableCombinations(
         predefined_variables=predefined_variables, options_by_data_type=options_by_cell
@@ -148,6 +157,7 @@ def get_audience_variable_combinations(
 def get_audience_creation_options(
     audience_id: str,
     user=Depends(get_permission_checker([])),
+    db: Session = Depends(get_db_session),
     get_audience_service: GetAudienceUseCase = Depends(
         Provide[Container.get_audience_service]
     ),
@@ -156,16 +166,16 @@ def get_audience_creation_options(
     ),
 ) -> AudienceCreationOptionsResponse:
     """타겟 오디언스 생성조건 조회:  타겟 오디언스 생성 조건을 조회하는 API"""
-    audience = get_audience_service.get_audience_details(audience_id)
+    audience = get_audience_service.get_audience_details(audience_id, db=db)
 
     if audience.create_type_code == AudienceCreateType.Filter.value:
         audience_creation_option = get_audience_creation_option.get_filter_conditions(
-            audience_id
+            audience_id, db=db
         )
         audience_creation_option.target_strategy = audience.target_strategy
         return audience_creation_option
     else:
-        return get_audience_creation_option.get_csv_uploaded_data(audience_id)
+        return get_audience_creation_option.get_csv_uploaded_data(audience_id, db=db)
 
 
 @audience_router.put("/audiences/{audience_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -205,9 +215,11 @@ def update_audience_creation_options(
     """
 
     update_audience_id = update_audience_service.exec(
-        audience_id, audience_update, user
+        audience_id, audience_update, user, db=db
     )
-    background_task.add_task(execute_target_audience_summary, update_audience_id)
+    background_task.add_task(
+        execute_target_audience_summary, audience_id=update_audience_id, db=db
+    )
 
 
 @audience_router.delete(
@@ -217,6 +229,7 @@ def update_audience_creation_options(
 def delete_audience(
     audience_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     delete_audience_service: DeleteAudienceUseCase = Depends(
         Provide[Container.delete_audience_service]
     ),
@@ -240,7 +253,7 @@ def delete_audience(
     -exclude objectid from cus_cd
     1. cust_campaign_objects
     """
-    delete_audience_service.exec(audience_id=audience_id)
+    delete_audience_service.exec(audience_id=audience_id, db=db)
 
 
 @audience_router.get("/audiences/{audience_id}/download")
@@ -248,13 +261,14 @@ def delete_audience(
 def download_audience(
     audience_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     download_audience_service: DownloadAudienceUseCase = Depends(
         Provide[Container.download_audience_service]
     ),
 ):
     """타겟 오디언스 다운로드: 타겟 오디언스 다운로드 API"""
 
-    data = download_audience_service.exec(audience_id)
+    data = download_audience_service.exec(audience_id, db=db)
 
     return StreamingResponse(
         iter([data.to_csv(index=False)]),
@@ -308,7 +322,9 @@ async def check_csv_template(
                 "checked_list": checked_list,
             }
 
-    raise Exception("파일이 템플릿과 일치하지 않습니다.")
+    raise HTTPException(
+        status_code=400, detail={"message": "파일이 템플릿과 일치하지 않습니다."}
+    )
 
 
 @audience_router.patch(
@@ -319,6 +335,7 @@ def audience_update_cycles(
     audience_id: str,
     cycle: TargetAudienceUpdateCycle,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     audience_update_cycle_service: AudienceUpdateCycleUseCase = Depends(
         Provide[Container.audience_update_cycle_service]
     ),
@@ -330,18 +347,19 @@ def audience_update_cycles(
             detail={"code": "modify/03", "message": "수정 권한이 없는 사용자입니다."},
         )
 
-    audience_update_cycle_service.exec(audience_id, cycle.value)
+    audience_update_cycle_service.exec(audience_id, cycle.value, db=db)
 
 
 @audience_router.get("/default-exclude")
 @inject
 def get_audience_default_exclude(
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     get_audience_service: GetAudienceUseCase = Depends(
         Provide[Container.get_audience_service]
     ),
 ) -> list[DefaultExcludeAudience]:
-    return get_audience_service.get_default_exclude(user)
+    return get_audience_service.get_default_exclude(user, db=db)
 
 
 @audience_router.put(
@@ -352,9 +370,9 @@ def update_audience_exclude_status(
     audience_id: str,
     is_exclude: bool = False,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     update_audience_exclude_service: UpdateAudienceExcludeStatusUseCase = Depends(
         Provide[Container.update_audience_exclude_service]
     ),
-    db: Session = Depends(get_db_session),
 ):
-    update_audience_exclude_service.exec(audience_id, is_exclude, user)
+    update_audience_exclude_service.exec(audience_id, is_exclude, user, db)
