@@ -34,20 +34,29 @@ class SearchService(BaseSearchService):
         self.campaign_repository = campaign_repository
 
     def search_audience_with_strategy_id(
-        self, strategy_id: str, search_keyword: str, user: User, is_exclude=False
+        self,
+        strategy_id: str,
+        search_keyword: str,
+        user: User,
+        db: Session,
+        is_exclude=False,
     ) -> list[IdWithLabel]:
         audience_ids = self.audience_repository.get_audiences_ids_by_strategy_id(
-            strategy_id
+            strategy_id, db
         )
         return self.audience_repository.get_audiences_by_condition(
-            audience_ids, search_keyword, is_exclude
+            audience_ids, search_keyword, is_exclude, db
         )
 
     def search_audience_without_strategy_id(
-        self, search_keyword, is_exclude=False, target_strategy: str | None = None
+        self,
+        search_keyword,
+        db: Session,
+        is_exclude=False,
+        target_strategy: str | None = None,
     ) -> list[IdWithLabel]:
         return self.audience_repository.get_audiences_by_condition_without_strategy_id(
-            search_keyword, is_exclude, target_strategy
+            search_keyword, is_exclude, db, target_strategy
         )
 
     def search_offers_search_of_sets(

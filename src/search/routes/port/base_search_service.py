@@ -14,13 +14,22 @@ class BaseSearchService(ABC):
 
     @abstractmethod
     def search_audience_with_strategy_id(
-        self, strategy_id: str, search_keyword, user: User, is_exclude=False
+        self,
+        strategy_id: str,
+        search_keyword,
+        user: User,
+        db: Session,
+        is_exclude=False,
     ) -> list[IdWithLabel]:
         pass
 
     @abstractmethod
     def search_audience_without_strategy_id(
-        self, search_keyword, is_exclude=False, target_strategy: str | None = None
+        self,
+        search_keyword,
+        db: Session,
+        is_exclude=False,
+        target_strategy: str | None = None,
     ) -> list[IdWithLabel]:
         pass
 

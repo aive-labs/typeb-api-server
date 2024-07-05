@@ -37,95 +37,87 @@ class TargetAudienceSummarySqlAlchemy:
         """
         self.db = db
 
-    def get_audience_cust_with_audience_id(self, audience_id):
-        with self.db() as db:
-            return db.query(AudienceCustomerMappingEntity.cus_cd).filter(
-                AudienceCustomerMappingEntity.audience_id == audience_id
-            )
+    def get_audience_cust_with_audience_id(self, audience_id, db: Session):
+        return db.query(AudienceCustomerMappingEntity.cus_cd).filter(
+            AudienceCustomerMappingEntity.audience_id == audience_id
+        )
 
-    def get_all_customer_count(self):
-        with self.db() as db:
-            return db.query(
-                func.distinct(CustomerInfoStatusEntity.cus_cd).label("cus_cd")
-            ).count()
+    def get_all_customer_count(self, db: Session):
+        return db.query(
+            func.distinct(CustomerInfoStatusEntity.cus_cd).label("cus_cd")
+        ).count()
 
-    def get_purchase_records_3m(self, three_months_ago, today, cust_list):
-        with self.db() as db:
-            return db.query(
-                PurchaseAnalyticsMasterStyle.cus_cd,
-                PurchaseAnalyticsMasterStyle.recp_no,
-                PurchaseAnalyticsMasterStyle.sale_dt,
-                PurchaseAnalyticsMasterStyle.sty_cd,
-                PurchaseAnalyticsMasterStyle.sty_nm,
-                PurchaseAnalyticsMasterStyle.rep_nm,
-                PurchaseAnalyticsMasterStyle.sale_qty,
-                PurchaseAnalyticsMasterStyle.sale_amt,
-            ).filter(
-                PurchaseAnalyticsMasterStyle.sale_dt.between(three_months_ago, today),
-                PurchaseAnalyticsMasterStyle.cus_cd.in_(cust_list),
-            )
+    def get_purchase_records_3m(self, three_months_ago, today, cust_list, db: Session):
+        return db.query(
+            PurchaseAnalyticsMasterStyle.cus_cd,
+            PurchaseAnalyticsMasterStyle.recp_no,
+            PurchaseAnalyticsMasterStyle.sale_dt,
+            PurchaseAnalyticsMasterStyle.sty_cd,
+            PurchaseAnalyticsMasterStyle.sty_nm,
+            PurchaseAnalyticsMasterStyle.rep_nm,
+            PurchaseAnalyticsMasterStyle.sale_qty,
+            PurchaseAnalyticsMasterStyle.sale_amt,
+        ).filter(
+            PurchaseAnalyticsMasterStyle.sale_dt.between(three_months_ago, today),
+            PurchaseAnalyticsMasterStyle.cus_cd.in_(cust_list),
+        )
 
-    def get_response_data_3m(self, audience_id: str, three_months_ago, yst_date):
-        with self.db() as db:
-            campaigns_subquery = (
-                db.query(CampaignEntity.campaign_id)
-                .filter(CampaignEntity.send_date.between(three_months_ago, yst_date))
-                .subquery()
-            )
+    def get_response_data_3m(
+        self, audience_id: str, three_months_ago, yst_date, db: Session
+    ):
+        campaigns_subquery = (
+            db.query(CampaignEntity.campaign_id)
+            .filter(CampaignEntity.send_date.between(three_months_ago, yst_date))
+            .subquery()
+        )
 
-            send_count_subquery = (
-                db.query(
-                    SendReservationEntity.campaign_id,
-                    SendReservationEntity.cus_cd,
-                    literal(1).label("send_count"),
-                )
-                .join(
-                    campaigns_subquery,
-                    SendReservationEntity.campaign_id
-                    == campaigns_subquery.c.campaign_id,
-                )
-                .filter(
-                    SendReservationEntity.test_send_yn == "n",
-                    SendReservationEntity.audience_id == audience_id,
-                )
-                .group_by(
-                    SendReservationEntity.campaign_id, SendReservationEntity.cus_cd
-                )
-                .subquery()
+        send_count_subquery = (
+            db.query(
+                SendReservationEntity.campaign_id,
+                SendReservationEntity.cus_cd,
+                literal(1).label("send_count"),
             )
+            .join(
+                campaigns_subquery,
+                SendReservationEntity.campaign_id == campaigns_subquery.c.campaign_id,
+            )
+            .filter(
+                SendReservationEntity.test_send_yn == "n",
+                SendReservationEntity.audience_id == audience_id,
+            )
+            .group_by(SendReservationEntity.campaign_id, SendReservationEntity.cus_cd)
+            .subquery()
+        )
 
-            response_count_subquery = (
-                db.query(
-                    DashEndTable.cus_cd,
-                    DashEndTable.campaign_id,
-                    literal(1).label("response_count"),
-                )
-                .group_by(DashEndTable.cus_cd, DashEndTable.campaign_id)
-                .having(func.sum(DashEndTable.sale_amt) > 0)
-                .subquery()
+        response_count_subquery = (
+            db.query(
+                DashEndTable.cus_cd,
+                DashEndTable.campaign_id,
+                literal(1).label("response_count"),
             )
+            .group_by(DashEndTable.cus_cd, DashEndTable.campaign_id)
+            .having(func.sum(DashEndTable.sale_amt) > 0)
+            .subquery()
+        )
 
-            return (
-                db.query(
-                    send_count_subquery.c.campaign_id,
-                    send_count_subquery.c.cus_cd,
-                    func.count(response_count_subquery.c.response_count).label(
-                        "response_count"
-                    ),
-                )
-                .outerjoin(
-                    response_count_subquery,
-                    and_(
-                        send_count_subquery.c.campaign_id
-                        == response_count_subquery.c.campaign_id,
-                        send_count_subquery.c.cus_cd
-                        == response_count_subquery.c.cus_cd,
-                    ),
-                )
-                .group_by(
-                    send_count_subquery.c.campaign_id, send_count_subquery.c.cus_cd
-                )
+        return (
+            db.query(
+                send_count_subquery.c.campaign_id,
+                send_count_subquery.c.cus_cd,
+                func.count(response_count_subquery.c.response_count).label(
+                    "response_count"
+                ),
             )
+            .outerjoin(
+                response_count_subquery,
+                and_(
+                    send_count_subquery.c.campaign_id
+                    == response_count_subquery.c.campaign_id,
+                    send_count_subquery.c.cus_cd == response_count_subquery.c.cus_cd,
+                ),
+            )
+            .group_by(send_count_subquery.c.campaign_id, send_count_subquery.c.cus_cd)
+        )
 
     def insert_audience_stats(
         self,
@@ -134,64 +126,54 @@ class TargetAudienceSummarySqlAlchemy:
         insert_to_count_by_month_list,
         insert_to_rep_product_list,
         main_rep_nm_list,
+        db: Session,
     ):
-        with self.db() as db:
-            # #audience_count_by_month -bulk
-            insert_to_count_by_month_list_add = [
+        # #audience_count_by_month -bulk
+        insert_to_count_by_month_list_add = [
+            {**data_dict, "audience_id": audience_id}
+            for data_dict in insert_to_count_by_month_list
+        ]
+
+        print("insert_to_count_by_month_list_add")
+        print(insert_to_count_by_month_list_add)
+
+        insert_query = AudienceCountByMonthEntity.__table__.insert().values(
+            insert_to_count_by_month_list_add
+        )
+        print(insert_query)
+
+        db.execute(insert_query)
+        # #audience_stats
+        insert_to_audience_stats["audience_id"] = audience_id
+
+        print("insert_to_audience_stats")
+        print(insert_to_audience_stats)
+        audience_stats_req = AudienceStatsEntity(**insert_to_audience_stats)
+        db.add(audience_stats_req)
+        # primary_rep_product -bulk
+        if main_rep_nm_list:
+            insert_to_rep_product_list_add = [
                 {**data_dict, "audience_id": audience_id}
-                for data_dict in insert_to_count_by_month_list
+                for data_dict in insert_to_rep_product_list
             ]
 
-            print("insert_to_count_by_month_list_add")
-            print(insert_to_count_by_month_list_add)
-
-            insert_query = AudienceCountByMonthEntity.__table__.insert().values(
-                insert_to_count_by_month_list_add
+            # insert 구문 생성
+            insert_stmt = insert(PrimaryRepProductEntity).values(
+                insert_to_rep_product_list_add
             )
-            print(insert_query)
 
-            db.execute(insert_query)
-            # #audience_stats
-            insert_to_audience_stats["audience_id"] = audience_id
+            # 업데이트할 컬럼 설정 (여기서는 모든 컬럼을 업데이트)
+            update_dict = {
+                col.name: col
+                for col in insert_stmt.excluded
+                if col.name not in ("audience_id", "main_product_id")
+            }
 
-            print("insert_to_audience_stats")
-            print(insert_to_audience_stats)
-            audience_stats_req = AudienceStatsEntity(**insert_to_audience_stats)
-            db.add(audience_stats_req)
-            # primary_rep_product -bulk
-            if main_rep_nm_list:
-                # insert_to_rep_product_list_add = [
-                #     {**data_dict, "audience_id": audience_id}
-                #     for data_dict in insert_to_rep_product_list
-                # ]
-                # insert_query = PrimaryRepProductEntity.__table__.insert().values(
-                #     insert_to_rep_product_list_add
-                # )
-                # db.execute(insert_query)
-                # 기존 데이터에 audience_id 추가
+            # on_conflict_do_update 설정
+            on_conflict_stmt = insert_stmt.on_conflict_do_update(
+                index_elements=["audience_id", "main_product_id"], set_=update_dict
+            )
 
-                insert_to_rep_product_list_add = [
-                    {**data_dict, "audience_id": audience_id}
-                    for data_dict in insert_to_rep_product_list
-                ]
-
-                # insert 구문 생성
-                insert_stmt = insert(PrimaryRepProductEntity).values(
-                    insert_to_rep_product_list_add
-                )
-
-                # 업데이트할 컬럼 설정 (여기서는 모든 컬럼을 업데이트)
-                update_dict = {
-                    col.name: col
-                    for col in insert_stmt.excluded
-                    if col.name not in ("audience_id", "main_product_id")
-                }
-
-                # on_conflict_do_update 설정
-                on_conflict_stmt = insert_stmt.on_conflict_do_update(
-                    index_elements=["audience_id", "main_product_id"], set_=update_dict
-                )
-
-                # upsert 쿼리 실행
-                db.execute(on_conflict_stmt)
-            db.commit()
+            # upsert 쿼리 실행
+            db.execute(on_conflict_stmt)
+        db.commit()

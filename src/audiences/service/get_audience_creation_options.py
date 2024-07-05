@@ -1,3 +1,5 @@
+from sqlalchemy.orm import Session
+
 from src.audiences.enums.audience_create_type import AudienceCreateType
 from src.audiences.routes.dto.response.upload_condition_response import (
     AudienceCreationOptionsResponse,
@@ -16,12 +18,12 @@ class GetAudienceCreationOptions(GetAudienceCreationOptionsUseCase):
         self.audience_repository = audience_repository
 
     def get_filter_conditions(
-        self, audience_id: str
+        self, audience_id: str, db: Session
     ) -> AudienceCreationOptionsResponse:
         """타겟 오디언스 생성 정보를 내려주는 함수"""
 
         filter_condition = self.audience_repository.get_db_filter_conditions(
-            audience_id
+            audience_id, db
         )
         filter_condition = filter_condition[0]
 
@@ -36,12 +38,12 @@ class GetAudienceCreationOptions(GetAudienceCreationOptionsUseCase):
         )
 
     def get_csv_uploaded_data(
-        self, audience_id: str
+        self, audience_id: str, db: Session
     ) -> AudienceCreationOptionsResponse:
         """타겟 오디언스 csv 업로드 정보를 내려주는 함수"""
 
         upload_conditions = self.audience_repository.get_audience_upload_info(
-            audience_id
+            audience_id, db
         )
         upload_conditions = upload_conditions[0]
 

@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 from sqlalchemy import and_, except_, or_
+from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import Alias
 
 from src.audiences.enums.audience_create_type import AudienceCreateType
@@ -34,6 +35,7 @@ from src.audiences.utils.query_builder import (
     group_where_conditions,
 )
 from src.core.exceptions.exceptions import DuplicatedException
+from src.core.transactional import transactional
 from src.users.domain.user import User
 
 
@@ -42,13 +44,10 @@ class CreateAudienceService(CreateAudienceUseCase):
     def __init__(self, audience_repository: AudienceRepository):
         self.audience_repository = audience_repository
 
-    def create_audience(
-        self,
-        audience_create: AudienceCreate,
-        user: User,
-    ):
+    @transactional
+    def create_audience(self, audience_create: AudienceCreate, user: User, db: Session):
         audience = self.audience_repository.get_audience_by_name(
-            audience_create.audience_name
+            audience_create.audience_name, db
         )
 
         # 오디언스명 중복 체크
@@ -61,22 +60,22 @@ class CreateAudienceService(CreateAudienceUseCase):
             ctype = AudienceCreateType.Filter.value
 
             to_audiences, filter_conditions = self._create_audience_by_filter(
-                ctype, audience_create, user
+                ctype, audience_create, user, db
             )
 
             new_audience_id = self.audience_repository.create_audience(
-                to_audiences, filter_conditions
+                to_audiences, filter_conditions, db
             )
 
             # 타겟 오디언스 고객 리스트 저장
             audience_filter_condition = (
-                self.audience_repository.get_db_filter_conditions(new_audience_id)
+                self.audience_repository.get_db_filter_conditions(new_audience_id, db)
             )
             conditions = audience_filter_condition[0].conditions
-            query = self.get_final_query(user, conditions)
+            query = self.get_final_query(user, conditions, db)
             execute_query_compiler(query)
 
-            self.audience_repository.save_audience_list(new_audience_id, query)
+            self.audience_repository.save_audience_list(new_audience_id, query, db)
 
         elif audience_create.create_type_code == AudienceCreateType.Upload.value:
             create_type_code = AudienceCreateType.Upload.value
@@ -131,7 +130,7 @@ class CreateAudienceService(CreateAudienceUseCase):
 
             upload_check_list = audience_create.upload["check_list"]  # type: ignore
             new_audience_id = self.audience_repository.create_audience_by_upload(
-                insert_to_audiences, insert_to_uploaded_audiences, upload_check_list
+                insert_to_audiences, insert_to_uploaded_audiences, upload_check_list, db
             )
         else:
             raise ValueError("타겟 오디언스 생성 미지원 타입입니다.")
@@ -139,7 +138,7 @@ class CreateAudienceService(CreateAudienceUseCase):
         return new_audience_id
 
     def _create_audience_by_filter(
-        self, ctype: str, audience_create: AudienceCreate, user: User
+        self, ctype: str, audience_create: AudienceCreate, user: User, db: Session
     ):
         insert_to_audiences = {}
         insert_to_audiences["audience_name"] = audience_create.audience_name
@@ -182,7 +181,9 @@ class CreateAudienceService(CreateAudienceUseCase):
 
         return insert_to_audiences, insert_to_filter_conditions
 
-    def get_audience_target_strategy_combinations(self) -> TargetStrategyCombination:
+    def get_audience_target_strategy_combinations(
+        self, db: Session
+    ) -> TargetStrategyCombination:
 
         new_customer_guide = TargetStrategyAndCondition(
             no=0,
@@ -204,7 +205,7 @@ class CreateAudienceService(CreateAudienceUseCase):
             no=0,
             conditions=[
                 TargetStrategyCondition(
-                    value="Active_customer1,Active_customer2,Active_customer3,Active_customer4,Inactive_act1_m3,Inactive_act1_m6,Inactive_act1_m9,Inactive_act2_m6,Inactive_act2_m9,Inactive_act3_m6,Inactive_act3_m9",
+                    value="Active_customer1,Active_customer2,Active_customer3,Active_customer4,Inactive_act1_m3,Inactive_act1_m6,Inactive_act1_m9,Inactive_act2_m3,Inactive_act2_m6,Inactive_act2_m9,Inactive_act3_m3,Inactive_act3_m6,Inactive_act3_m9",
                     cell_type="multi_select",
                     data_type="d_cv",
                 )
@@ -273,7 +274,7 @@ class CreateAudienceService(CreateAudienceUseCase):
         )
 
     def get_audience_variable_combinations(
-        self, user: User
+        self, user: User, db: Session
     ) -> list[PredefinedVariable]:
         access_lv = [
             level.value
@@ -281,10 +282,9 @@ class CreateAudienceService(CreateAudienceUseCase):
             if level.name == user.role_id
         ][0]
 
-        variables_combi_df = self.audience_repository.get_variable_options(access_lv)
-
-        print("variable_combi_df")
-        print(variables_combi_df)
+        variables_combi_df = self.audience_repository.get_variable_options(
+            access_lv, db
+        )
 
         variables_combi_df["additional_variable"] = variables_combi_df[
             "additional_variable"
@@ -359,10 +359,10 @@ class CreateAudienceService(CreateAudienceUseCase):
             combinations.append(input_cell_type)
         return combinations
 
-    def get_option_items(self) -> list[DataType]:
+    def get_option_items(self, db: Session) -> list[DataType]:
         """data_type별로 옵션 name과 input_type을 내려주는 함수"""
 
-        options = self.audience_repository.get_options()
+        options = self.audience_repository.get_options(db)
 
         options_dict = [row._asdict() for row in options]
 
@@ -386,7 +386,7 @@ class CreateAudienceService(CreateAudienceUseCase):
         ]
         return data_type_list
 
-    def get_final_query(self, user, filter_condition):
+    def get_final_query(self, user, filter_condition, db: Session):
         # **variable_type 반환(target / event) : 추가 필요
         # 인덱스 기준 넘버링된 조건 입력되는 딕셔너리(condition_1_1, condition_1_2, condition_2_1 ...)
         condition_dict = {}
@@ -400,7 +400,7 @@ class CreateAudienceService(CreateAudienceUseCase):
                 where_condition_dict = {}
                 # 전체 고객 모수 조회
                 all_customer = self.audience_repository.get_all_customer_by_audience(
-                    user=user
+                    user=user, db=db
                 )
 
                 # 조건 넘버링 n1
@@ -418,7 +418,7 @@ class CreateAudienceService(CreateAudienceUseCase):
                         # variable_type 고정 : target
                         variable_table = (
                             self.audience_repository.get_tablename_by_variable_id(
-                                query_type_dict["field"]
+                                query_type_dict["field"], db
                             )
                         )
                         table_name = variable_table.target_table
@@ -460,14 +460,14 @@ class CreateAudienceService(CreateAudienceUseCase):
                             if temp_idx == 0:
                                 sub_alias: Alias = (
                                     self.audience_repository.get_subquery_with_select_query_list(
-                                        variable_table, select_query_list, idx
+                                        variable_table, select_query_list, idx, db
                                     )
                                 )
                             else:
                                 # temp_idx == 1
                                 sub_alias: Alias = (
                                     self.audience_repository.get_subquery_with_array_select_query_list(
-                                        variable_table, array_select_query_list, idx
+                                        variable_table, array_select_query_list, idx, db
                                     )
                                 )
 

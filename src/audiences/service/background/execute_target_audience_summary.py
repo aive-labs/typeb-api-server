@@ -2,6 +2,7 @@ import math
 from datetime import datetime, timedelta
 
 from dependency_injector.wiring import Provide, inject
+from sqlalchemy.orm import Session
 
 from src.common.utils.data_converter import DataConverter
 from src.core.container import Container
@@ -10,6 +11,7 @@ from src.core.container import Container
 @inject
 def execute_target_audience_summary(
     audience_id,
+    db: Session,
     target_audience_summary_sqlalchemy=Provide[
         Container.target_audience_summary_sqlalchemy
     ],
@@ -25,7 +27,7 @@ def execute_target_audience_summary(
 
     cust_ids_query = (
         target_audience_summary_sqlalchemy.get_audience_cust_with_audience_id(
-            audience_id
+            audience_id, db
         )
     )
     cust_ids = DataConverter.convert_query_to_df(cust_ids_query)["cus_cd"].tolist()
@@ -33,7 +35,7 @@ def execute_target_audience_summary(
     print(cust_ids)
 
     purchase_records_query = target_audience_summary_sqlalchemy.get_purchase_records_3m(
-        three_months_ago_str, yesterday_str, cust_ids
+        three_months_ago_str, yesterday_str, cust_ids, db
     )
     purchase_records_df = DataConverter.convert_query_to_df(purchase_records_query)
     print("-------------------")
@@ -42,14 +44,14 @@ def execute_target_audience_summary(
     print("-------------------")
 
     response_data_query = target_audience_summary_sqlalchemy.get_response_data_3m(
-        audience_id, three_months_ago_str, yesterday_str
+        audience_id, three_months_ago_str, yesterday_str, db
     )
     response_data_df = DataConverter.convert_query_to_df(response_data_query)
     response_data_df = (
         response_data_df.groupby(["cus_cd"])["response_count"].max().reset_index()
     )
 
-    all_cus_cnt = target_audience_summary_sqlalchemy.get_all_customer_count()
+    all_cus_cnt = target_audience_summary_sqlalchemy.get_all_customer_count(db)
     audience_cnt = len(cust_ids)
     sale_audience_cnt = purchase_records_df["cus_cd"].unique().shape[0]
     print(sale_audience_cnt)
@@ -143,4 +145,5 @@ def execute_target_audience_summary(
         insert_to_count_by_month_list,
         insert_to_rep_product_list,
         main_rep_nm_list,
+        db,
     )
