@@ -11,12 +11,15 @@ from src.common.utils.string_utils import is_convertible_to_int
 from src.contents.infra.entity.style_master_entity import StyleMasterEntity
 from src.core.exceptions.exceptions import NotFoundException
 from src.offers.domain.offer import Offer
+from src.offers.domain.offer_details import OfferDetails
 from src.offers.domain.offer_condition_variable import OfferConditionVar
 from src.offers.domain.offer_option import OfferOption
 from src.offers.enums.offer_type import OfferType
 from src.offers.enums.offer_use_type import OfferUseType
 from src.offers.infra.entity.offer_duplicate_entity import OfferDuplicateEntity
 from src.offers.infra.entity.offers_entity import OffersEntity
+from src.offers.infra.entity.offer_details_entity import OfferDetailsEntity
+
 from src.offers.routes.dto.response.offer_detail_response import OfferDetailResponse
 from src.search.routes.dto.id_with_label_response import IdWithLabel
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
@@ -183,6 +186,20 @@ class OfferRepository:
                 for data in result
             ]
 
+    def get_offer_detail_for_msggen(self, offer_key: str) -> bool:
+        with self.db() as db:
+            entity = (
+                db.query(
+                    OfferDetailsEntity.offer_key,
+                    OfferDetailsEntity.apply_offer_amount,
+                    OfferDetailsEntity.apply_offer_rate
+                    )
+                .filter(OfferDetailsEntity.offer_key == offer_key)
+                .first()
+            )
+            # return OfferDetails.from_entity(entity)
+            return entity
+
     def get_offer_detail(self, offer_key) -> OfferDetailResponse:
         with self.db() as db:
             offer_data = (
@@ -273,6 +290,21 @@ class OfferRepository:
 
             return Offer.from_entity(entity)
 
+    def get_offer_by_id(self, offer_id) -> Offer:
+        with self.db() as db:
+            entity = (
+                db.query(OffersEntity)
+                .filter(OffersEntity.offer_id == offer_id)
+                .first()
+            )
+
+            if entity is None:
+                raise NotFoundException(
+                    detail={"message": "오퍼 정보를 찾지 못했습니다."}
+                )
+
+            return Offer.from_entity(entity)
+        
     def save_duplicate_offer(
         self, offer_id, event_no, offer_update, now_kst_datetime, user
     ):

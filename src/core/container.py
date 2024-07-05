@@ -30,9 +30,12 @@ from src.auth.service.auth_service import AuthService
 from src.auth.service.cafe24_service import Cafe24Service
 from src.auth.service.onboarding_service import OnboardingService
 from src.auth.service.token_service import TokenService
+from src.common.infra.common_repository import CommonRepository
+
 from src.campaign.infra.campaign_repository import CampaignRepository
 from src.campaign.infra.campaign_sqlalchemy_repository import CampaignSqlAlchemy
 from src.campaign.service.create_campaign_service import CreateCampaignService
+from src.campaign.service.generate_message_service import GenerateMessageService
 from src.campaign.service.get_campaign_service import GetCampaignService
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
 from src.common.utils.file.s3_service import S3Service
@@ -323,9 +326,25 @@ class Container(containers.DeclarativeContainer):
     campaign_sqlalchemy = providers.Singleton(
         provides=CampaignSqlAlchemy, db=db.provided.session
     )
+    
+    offer_repository = providers.Singleton(
+        provides=OfferRepository, db=db.provided.session
+    )
 
     campaign_repository = providers.Singleton(
         provides=CampaignRepository, campaign_sqlalchemy=campaign_sqlalchemy
+    )
+
+    common_repository = providers.Singleton(
+        provides=CommonRepository, db=db.provided.session
+    )
+
+    contents_sqlalchemy = providers.Singleton(
+        provides=ContentsSqlAlchemy, db=db.provided.session
+    )
+
+    contents_repository = providers.Singleton(
+        ContentsRepository, contents_sqlalchemy=contents_sqlalchemy
     )
 
     get_campaign_service = providers.Singleton(
@@ -334,6 +353,10 @@ class Container(containers.DeclarativeContainer):
 
     create_campaign_service = providers.Singleton(
         provides=CreateCampaignService, campaign_repository=campaign_repository
+    )
+
+    generate_message_service = providers.Singleton(
+        provides=GenerateMessageService, campaign_repository=campaign_repository, offer_repository=offer_repository, common_repository=common_repository, contents_repository=contents_repository
     )
 
     """

@@ -1,0 +1,61 @@
+location,gen_key,index,detail,text,rep_nm,rec_exp
+main,main-whi01,whi,공통,휘슬링 소재로 최상의 쿠셔닝을 구현한 휘슬라이저,WHISTLIZER SHOES,
+main,main-whi02,whi,공통,"ALL-WAYS 하이킹화, 휘슬라이저",WHISTLIZER SHOES,
+main,main-whi03,whi,공통,신었다 벗었다 너무 편한 네파 휘슬라이저,WHISTLIZER SHOES,
+main,main-whi04,whi,공통,"가볍고 쿠션감이 좋은 하이킹화, 휘슬라이저",WHISTLIZER SHOES,
+main,main-whi05,whi,공통,"사계절용 하이킹화의 선두주자, 휘슬라이저",WHISTLIZER SHOES,
+main,main-whi06,whi,공통,새로나온 휘슬라이저를 만나보세요!,WHISTLIZER SHOES,
+main,main-whi07,whi,공통,당신의 발을 위한 혁신! 휘슬라이저,WHISTLIZER SHOES,
+main,main-whi08,whi,공통,모든 길이 편안해진다! NEPA 휘슬라이저,WHISTLIZER SHOES,
+main,main-whi09,whi,공통,"매일이 편안한 하이킹화, 휘슬라이저",WHISTLIZER SHOES,
+main,main-whi10,whi,공통,"일상과 아웃도어의 완벽한 동반자, 휘슬라이저 출시",WHISTLIZER SHOES,
+main,main-whc01,whc,lifestyle_casual,일상에도 잘 어울리는 네파 휘슬라이저 고어텍스,WHISTLIZER SHOES,lifestyle_casual
+main,main-whc02,whc,lifestyle_casual,"일상 생활에서도 많이 신게 되는 트레킹화, 휘슬라이저",WHISTLIZER SHOES,lifestyle_casual
+main,main-whc03,whc,lifestyle_casual,스타일과 편안함을 모두 잡은 휘슬라이저,WHISTLIZER SHOES,lifestyle_casual
+main,main-whc04,whc,lifestyle_casual,"코디해서 신기 좋은 트레킹화, 휘슬라이저",WHISTLIZER SHOES,lifestyle_casual
+main,main-whc05,whc,lifestyle_casual,"트레킹화의 캐주얼화, 네파 휘슬라이저",WHISTLIZER SHOES,lifestyle_casual
+main,main-whc06,whc,lifestyle_casual,"하루 종일 편안한 휘슬라이저, 지금 만나보세요!",WHISTLIZER SHOES,lifestyle_casual
+main,main-whc07,whc,lifestyle_casual,"휘슬라이저, 일상의 변화를 경험해보세요!",WHISTLIZER SHOES,lifestyle_casual
+main,main-whc08,whc,lifestyle_casual,"일상 속 경량화 체험, 휘슬라이저로 시작하세요!",WHISTLIZER SHOES,lifestyle_casual
+main,main-whc09,whc,lifestyle_casual,"휘슬라이저 신고, 가벼운 하루를 만들어보세요!",WHISTLIZER SHOES,lifestyle_casual
+main,main-whc10,whc,lifestyle_casual,"사계절 내내 함께하는 신발, 휘슬라이저를 만나보세요!",WHISTLIZER SHOES,lifestyle_casual
+main,main-whe01,whe,easy_trekking&athleisure,"운동화보다 더 예쁜 트레킹화, 휘슬라이저",WHISTLIZER SHOES,easy_trekking&athleisure
+main,main-whe02,whe,easy_trekking&athleisure,가벼운 운동에도 딱인 네파 휘슬라이저,WHISTLIZER SHOES,easy_trekking&athleisure
+main,main-whe03,whe,easy_trekking&athleisure,액티브한 레저 활동도 휘슬라이저와 함께!,WHISTLIZER SHOES,easy_trekking&athleisure
+main,main-whe04,whe,easy_trekking&athleisure,네파 휘슬라이저와 함께라면 트레킹 정복 완료!,WHISTLIZER SHOES,easy_trekking&athleisure
+main,main-whe05,whe,easy_trekking&athleisure,"경량 고어텍스 하이킹화의 끝판왕, 네파 휘슬라이저",WHISTLIZER SHOES,easy_trekking&athleisure
+main,main-whe06,whe,easy_trekking&athleisure,"하이킹, 이제 경량으로! 휘슬라이저와 함께",WHISTLIZER SHOES,easy_trekking&athleisure
+main,main-whe07,whe,easy_trekking&athleisure,"고어텍스 하이킹화의 혁신, 휘슬라이저 출시!",WHISTLIZER SHOES,easy_trekking&athleisure
+main,main-whe08,whe,easy_trekking&athleisure,"하이킹 패션의 끝, 휘슬라이저로 완성",WHISTLIZER SHOES,easy_trekking&athleisure
+main,main-whe09,whe,easy_trekking&athleisure,"사계절 언제든 경량 하이킹화, 휘슬라이저! 지금 신어보세요!",WHISTLIZER SHOES,easy_trekking&athleisure
+main,main-whe10,whe,easy_trekking&athleisure,"새로운 경량 하이킹화, 지금 만나보세요!",WHISTLIZER SHOES,easy_trekking&athleisure
+main,main-whl01,whl,lifestyle_casual&easy_trekking,나들이나 여행때도 신기 좋은 네파 휘슬라이저,WHISTLIZER SHOES,lifestyle_casual&easy_trekking
+main,main-whl02,whl,lifestyle_casual&easy_trekking,일반 러닝화와 같은 착화감의 네파 휘슬라이저,WHISTLIZER SHOES,lifestyle_casual&easy_trekking
+main,main-whl03,whl,lifestyle_casual&easy_trekking,"휘슬라이저 신고, 더 넓은 세상을 탐험해보세요!",WHISTLIZER SHOES,lifestyle_casual&easy_trekking
+main,main-whl04,whl,lifestyle_casual&easy_trekking,우수한 통기성으로 장시간 착화에도 시원한 휘슬라이저,WHISTLIZER SHOES,lifestyle_casual&easy_trekking
+main,main-whl05,whl,lifestyle_casual&easy_trekking,일상에서도 트레킹에서도 빛이 나는 휘슬라이저,WHISTLIZER SHOES,lifestyle_casual&easy_trekking
+main,main-whl06,whl,lifestyle_casual&easy_trekking,"트레킹도, 일상도 휘슬라이저로!",WHISTLIZER SHOES,lifestyle_casual&easy_trekking
+main,main-whl07,whl,lifestyle_casual&easy_trekking,"휘슬라이저, 하이킹과 일상의 조화",WHISTLIZER SHOES,lifestyle_casual&easy_trekking
+main,main-whl08,whl,lifestyle_casual&easy_trekking,"일상과 트레킹, 휘슬라이저로 일타이피!",WHISTLIZER SHOES,lifestyle_casual&easy_trekking
+main,main-whl09,whl,lifestyle_casual&easy_trekking,"일상도 트레킹도, 휘슬라이저와 함께하세요!",WHISTLIZER SHOES,lifestyle_casual&easy_trekking
+main,main-whl10,whl,lifestyle_casual&easy_trekking,"경량, 방수, 스타일, 모두 한번에! 휘슬라이저",WHISTLIZER SHOES,lifestyle_casual&easy_trekking
+main,main-whm01,whm,mountaineering,최상의 접지력으로 험한 지형에도 걱정없는 휘슬라이저!,WHISTLIZER SHOES,mountaineering
+main,main-whm02,whm,mountaineering,"험한 지형도 걱정없는 고어텍스 하이킹화, 네파 휘슬라이저",WHISTLIZER SHOES,mountaineering
+main,main-whm03,whm,mountaineering,휘슬라이저와 함께 다양한 등산 코스를 정복하세요!,WHISTLIZER SHOES,mountaineering
+main,main-whm04,whm,mountaineering,어떤 환경도 두렵지 않은 휘슬라이저,WHISTLIZER SHOES,mountaineering
+main,main-whm05,whm,mountaineering,등산 매니아 필수템! 네파 휘슬라이저 고어텍스!,WHISTLIZER SHOES,mountaineering
+main,main-whm06,whm,mountaineering,"산을 부르는 신발, 휘슬라이저!",WHISTLIZER SHOES,mountaineering
+main,main-whm07,whm,mountaineering,"산행 필수템, 휘슬라이저 출시!",WHISTLIZER SHOES,mountaineering
+main,main-whm08,whm,mountaineering,"산악인의 새 선택! 경량 하이킹화, 휘슬라이저",WHISTLIZER SHOES,mountaineering
+main,main-whm09,whm,mountaineering,"최상의 접지력, 안전한 발걸음. 휘슬라이저",WHISTLIZER SHOES,mountaineering
+main,main-whm10,whm,mountaineering,"휘슬라이저, 산의 자유를 누려보세요!",WHISTLIZER SHOES,mountaineering
+main,main-whs01,whs,nepa_starter,"경량 트레킹화의 새로운 정의, 네파 휘슬라이저!",WHISTLIZER SHOES,nepa_starter
+main,main-whs02,whs,nepa_starter,"안유진이 선택한 고어텍스 트레킹화, 네파 휘슬라이저!",WHISTLIZER SHOES,nepa_starter
+main,main-whs03,whs,nepa_starter,"준호도 반한 경량 트레킹화, 네파 휘슬라이저!",WHISTLIZER SHOES,nepa_starter
+main,main-whs04,whs,nepa_starter,"파워풀하게 튕겨주는 쿠셔닝, 네파 휘슬라이저",WHISTLIZER SHOES,nepa_starter
+main,main-whs05,whs,nepa_starter,"주중엔 일상화로 주말엔 트레킹화로, 네파 휘슬라이저",WHISTLIZER SHOES,nepa_starter
+main,main-whs06,whs,nepa_starter,"최상의 쿠셔닝, 휘슬라이저로 경험해보세요!",WHISTLIZER SHOES,nepa_starter
+main,main-whs07,whs,nepa_starter,"휘슬라이저로 더 가볍게, 더 멀리 나아가세요!",WHISTLIZER SHOES,nepa_starter
+main,main-whs08,whs,nepa_starter,"일상과 등산, 휘슬라이저 하나로!",WHISTLIZER SHOES,nepa_starter
+main,main-whs09,whs,nepa_starter,"경쾌하게 튕겨주는 쿠셔닝, 네파 휘슬라이저",WHISTLIZER SHOES,nepa_starter
+main,main-whs10,whs,nepa_starter,휘슬라이저로 본인만의 리듬을 타보세요.,WHISTLIZER SHOES,nepa_starter

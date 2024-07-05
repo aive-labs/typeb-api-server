@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Literal
+from typing import Literal, List
 
 from pydantic import BaseModel, Field
 
@@ -7,6 +7,7 @@ from src.campaign.enums.campaign_type import CampaignTypeEnum
 from src.campaign.enums.repeat_type import RepeatTypeEnum
 from src.campaign.enums.send_type import SendtypeEnum
 from src.campaign.routes.dto.request.campaign_remind import CampaignRemind
+from src.campaign.routes.dto.response.campaign_response import CampaignReadBase, CampaignSet, CampaignSetGroup
 from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
 from src.common.utils.date_utils import localtime_converter
 
@@ -38,3 +39,10 @@ class CampaignCreate(BaseModel):
     audiences_exc: list[str] | None = None
     created_at: datetime = Field(default_factory=localtime_converter)
     updated_at: datetime = Field(default_factory=localtime_converter)
+
+
+class MsgGenerationReq(BaseModel):
+	campaign_base: CampaignReadBase
+	set_object: CampaignSet
+	set_group_list: List[CampaignSetGroup]
+	req_generate_msg_seq: List[int]

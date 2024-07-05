@@ -4,7 +4,7 @@ from sqlalchemy import ARRAY, JSON, Column, DateTime, Integer, String
 from sqlalchemy.orm import relationship
 
 from src.core.database import Base
-from src.offers.infra.entity.offer_details import OfferDetailsEntity
+from src.offers.infra.entity.offer_details_entity import OfferDetailsEntity
 
 
 class OffersEntity(Base):

@@ -4,10 +4,12 @@ from sqlalchemy.orm import Session
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.campaign.routes.dto.request.campaign_create import CampaignCreate
+from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
 from src.campaign.routes.dto.response.campaign_timeline_response import (
     CampaignTimelineResponse,
 )
 from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUsecase
+from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase ##
 from src.campaign.routes.port.get_campaign_usecase import GetCampaignUseCase
 from src.core.container import Container
 from src.core.database import get_db_session
@@ -51,3 +53,16 @@ def create_campaign(
     ),
 ):
     return create_campaign_service.create_campaign(campaign_create, user)
+
+
+@campaign_router.post("/campaigns/generate-message")
+@inject
+def generate_message(
+    message_generate: MsgGenerationReq,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    generate_message_service: GenerateMessageUsecase = Depends(
+        dependency=Provide[Container.generate_message_service]
+    ),
+):
+    return generate_message_service.generate_message(message_generate, user)
+

@@ -1,6 +1,7 @@
 from typing import Optional
 
 from pydantic import BaseModel
+from src.offers.infra.entity.offer_details_entity import OfferDetailsEntity
 
 
 class OfferDetails(BaseModel):
@@ -14,3 +15,17 @@ class OfferDetails(BaseModel):
 
     class Config:
         from_attributes = True
+
+    @staticmethod
+    def from_entity(entity: OfferDetailsEntity) -> "OfferDetails":
+        offer_details = [
+            OfferDetailsEntity.model_validate(detail)
+            for detail in entity.offer_detail_options
+        ]
+
+        offer_data = {
+            **{col.name: getattr(entity, col.name) for col in entity.__table__.columns},
+            "offer_detail_options": offer_details,
+        }
+
+        return OfferDetails.model_validate(offer_data)
