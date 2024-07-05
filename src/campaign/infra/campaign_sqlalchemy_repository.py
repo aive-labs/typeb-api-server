@@ -1,18 +1,25 @@
 from collections.abc import Callable
 from contextlib import AbstractContextManager
 
-from sqlalchemy import Integer, and_, desc, func, not_, or_
-from sqlalchemy.orm import Session
+from sqlalchemy import Integer, and_, desc, func, not_, or_, distinct
+from sqlalchemy.orm import Session, joinedload
 
 from src.campaign.domain.campaign import Campaign
 from src.campaign.domain.send_reservation import SendReservation
 from src.campaign.domain.campaign_timeline import CampaignTimeline
+from src.campaign.domain.campaign_messages import CampaignMessages, SetGroupMessages
 from src.campaign.enums.campagin_status import CampaignStatus
 from src.campaign.enums.send_type import SendType
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
+from src.campaign.infra.entity.campaign_set_recipients_entity import CampaignSetRecipientsEntity
 from src.campaign.infra.entity.send_reservation_entity import SendReservationEntity
 from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
 from src.campaign.infra.entity.campaign_timeline_entity import CampaignTimelineEntity
+from src.campaign.infra.entity.campaign_remind_entity import CampaignRemindEntity
+from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
+from src.contents.infra.entity.style_master_entity import StyleMasterEntity
+from src.audiences.infra.entity.variable_table_list import CustomerInfoStatusEntity
+
 from src.common.sqlalchemy.object_access_condition import object_access_condition
 from src.common.utils.string_utils import is_convertible_to_int
 from src.search.routes.dto.id_with_item_response import IdWithItem
@@ -202,3 +209,103 @@ class CampaignSqlAlchemy:
                         SendReservationEntity.set_group_msg_seq.in_(req_set_group_seqs),
                         SendReservationEntity.send_resv_state.not_in(['21', '01', '00']), # 발송한 메세지 필터
                     ).first()
+
+
+    def get_group_item_nm_stats(
+        self, campaign_id, set_sort_num
+    ):
+        with self.db() as db:
+            subquery = db.query(distinct(StyleMasterEntity.rep_nm).label('rep_nm'), StyleMasterEntity.item_nm).subquery()
+
+            return db.query(
+                CampaignSetRecipientsEntity.group_sort_num, 
+                subquery.c.item_nm, 
+                func.count(CampaignSetRecipientsEntity.cus_cd).label('cus_count')
+            ).join(
+                subquery, 
+                CampaignSetRecipientsEntity.rep_nm==subquery.c.rep_nm
+            ).filter(
+                CampaignSetRecipientsEntity.campaign_id==campaign_id,
+                CampaignSetRecipientsEntity.set_sort_num==set_sort_num
+            ).group_by(
+                CampaignSetRecipientsEntity.group_sort_num,
+                subquery.c.item_nm
+            ).all()
+
+
+    def get_it_gb_nm_stats(self, campaign_id, set_sort_num):
+        """메시지 생성시, 그룹 내 아이템 구분(복종)별 고객수 통계 조회를 위한 쿼리
+        """
+        with self.db() as db:
+            subquery = db.query(distinct(StyleMasterEntity.rep_nm).label('rep_nm'), StyleMasterEntity.it_gb_nm).subquery()
+
+            return db.query(
+                CampaignSetRecipientsEntity.group_sort_num, 
+                subquery.c.it_gb_nm, 
+                func.count(CampaignSetRecipientsEntity.cus_cd).label('cus_count')
+            ).join(
+                subquery, 
+                CampaignSetRecipientsEntity.rep_nm==subquery.c.rep_nm
+            ).filter(
+                CampaignSetRecipientsEntity.campaign_id==campaign_id,
+                CampaignSetRecipientsEntity.set_sort_num==set_sort_num
+            ).group_by(
+                CampaignSetRecipientsEntity.group_sort_num,
+                subquery.c.it_gb_nm
+            ).all()
+
+
+    def get_age_stats(self, campaign_id, set_sort_num):
+        """메시지 생성시, 그룹 내 연령별 고객수 통계 조회를 위한 쿼리
+        """
+        with self.db() as db:
+            subquery = db.query(distinct(CustomerInfoStatusEntity.age).label('age_seg'), CustomerInfoStatusEntity.cus_cd).subquery()
+
+            return db.query(
+                CampaignSetRecipientsEntity.group_sort_num, 
+                subquery.c.age_seg, 
+                func.count(CampaignSetRecipientsEntity.cus_cd).label('cus_count')
+            ).join(
+                subquery, 
+                CampaignSetRecipientsEntity.cus_cd==subquery.c.cus_cd
+            ).filter(
+                CampaignSetRecipientsEntity.campaign_id==campaign_id,
+                CampaignSetRecipientsEntity.set_sort_num==set_sort_num
+            ).group_by(
+                CampaignSetRecipientsEntity.group_sort_num,
+                subquery.c.age_seg
+            ).all()
+
+    def get_campaign_messages(self, campaign_id, req_set_group_seqs)-> list[CampaignMessages]:
+        """캠페인의 메세지를 모두 조회하는 쿼리
+        """
+        with self.db() as db:
+            message_data =  db.query(
+                    SetGroupMessagesEntity,
+                    CampaignRemindEntity.remind_date,
+                    CampaignRemindEntity.remind_duration,
+                ).options(
+                    joinedload(SetGroupMessagesEntity.kakao_button_links),
+                    joinedload(SetGroupMessagesEntity.msg_resources),
+                        ).outerjoin(
+                            CampaignRemindEntity,
+                            and_(
+                                SetGroupMessagesEntity.campaign_id == CampaignRemindEntity.campaign_id,
+                                SetGroupMessagesEntity.remind_step == CampaignRemindEntity.remind_step
+                            ),
+                        ).filter(
+                            SetGroupMessagesEntity.campaign_id == campaign_id, 
+                            SetGroupMessagesEntity.set_group_msg_seq.in_(req_set_group_seqs)
+                        ).all()
+
+        result = []
+        for set_group_message, remind_date, remind_duration in message_data:
+            set_group_message_model = SetGroupMessages.from_orm(set_group_message)
+            message_md = CampaignMessages(
+                set_group_message=set_group_message_model,
+                remind_date=remind_date,
+                remind_duration=remind_duration,
+            )
+            result.append(message_md)
+
+        return result

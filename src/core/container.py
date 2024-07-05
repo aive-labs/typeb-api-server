@@ -30,6 +30,8 @@ from src.auth.service.auth_service import AuthService
 from src.auth.service.cafe24_service import Cafe24Service
 from src.auth.service.onboarding_service import OnboardingService
 from src.auth.service.token_service import TokenService
+from src.common.infra.common_repository import CommonRepository
+
 from src.campaign.infra.campaign_repository import CampaignRepository
 from src.campaign.infra.campaign_sqlalchemy_repository import CampaignSqlAlchemy
 from src.campaign.service.create_campaign_service import CreateCampaignService
@@ -333,6 +335,18 @@ class Container(containers.DeclarativeContainer):
         provides=CampaignRepository, campaign_sqlalchemy=campaign_sqlalchemy
     )
 
+    common_repository = providers.Singleton(
+        provides=CommonRepository, db=db.provided.session
+    )
+
+    contents_sqlalchemy = providers.Singleton(
+        provides=ContentsSqlAlchemy, db=db.provided.session
+    )
+
+    contents_repository = providers.Singleton(
+        ContentsRepository, contents_sqlalchemy=contents_sqlalchemy
+    )
+
     get_campaign_service = providers.Singleton(
         provides=GetCampaignService, campaign_repository=campaign_repository
     )
@@ -342,7 +356,7 @@ class Container(containers.DeclarativeContainer):
     )
 
     generate_message_service = providers.Singleton(
-        provides=GenerateMessageService, campaign_repository=campaign_repository, offer_repository=offer_repository
+        provides=GenerateMessageService, campaign_repository=campaign_repository, offer_repository=offer_repository, common_repository=common_repository, contents_repository=contents_repository
     )
 
     """

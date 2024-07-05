@@ -84,7 +84,7 @@ class CampaignSetGroup(BaseModel):
 class CampaignSet(BaseModel):
     set_seq: int | None = None
     set_sort_num: int | None = None
-    # is_group_added: bool | None = None
+    is_group_added: bool | None = None
     campaign_theme_id: int | None = None
     campaign_theme_name : str | None = None
     recsys_model_id : int | None = None

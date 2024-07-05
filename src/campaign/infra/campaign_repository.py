@@ -59,3 +59,31 @@ class CampaignRepository(BaseCampaignRepository):
         return self.campaign_sqlalchemy.get_send_complete_campaign(
             campaign_id, req_set_group_seqs, db
         )
+
+    def get_group_item_nm_stats(
+        self, campaign_id: str, set_sort_num: int
+    ): ###
+        return self.campaign_sqlalchemy.get_group_item_nm_stats(
+            campaign_id, set_sort_num
+        )
+
+    def get_it_gb_nm_stats(
+        self, campaign_id: str, set_sort_num: int
+    ): ###
+        return self.campaign_sqlalchemy.get_it_gb_nm_stats(
+            campaign_id, set_sort_num
+        )
+    
+    def get_age_stats(
+        self, campaign_id: str, set_sort_num: int
+    ): ###
+        return self.campaign_sqlalchemy.get_age_stats(
+            campaign_id, set_sort_num
+        )
+
+    def get_campaign_messages(
+        self, campaign_id: str, req_set_group_seqs: list
+    ): ###
+        return self.campaign_sqlalchemy.get_campaign_messages(
+            campaign_id, req_set_group_seqs
+        )
