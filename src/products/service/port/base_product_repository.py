@@ -17,7 +17,9 @@ class BaseProductRepository(ABC):
         pass
 
     @abstractmethod
-    def get_all_products(self, db: Session):
+    def get_all_products(
+        self, based_on: str, sort_by: str, current_page: int, per_page: int, db: Session
+    ) -> list[Product]:
         pass
 
     @abstractmethod
@@ -32,4 +34,8 @@ class BaseProductRepository(ABC):
 
     @abstractmethod
     def update(self, product_id, product_update, db):
+        pass
+
+    @abstractmethod
+    def get_all_products_count(self, db) -> int:
         pass

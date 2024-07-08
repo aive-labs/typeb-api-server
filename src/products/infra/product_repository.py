@@ -1,4 +1,4 @@
-from sqlalchemy import update
+from sqlalchemy import func, update
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
@@ -34,8 +34,27 @@ class ProductRepository(BaseProductRepository):
         )
         return Product.model_validate(entity)
 
-    def get_all_products(self, db: Session):
-        pass
+    def get_all_products(
+        self, based_on: str, sort_by: str, current_page: int, per_page: int, db: Session
+    ) -> list[Product]:
+        sort_col = getattr(ProductMasterEntity, based_on)
+        if sort_by == "desc":
+            sort_col = sort_col.desc()
+        else:
+            sort_col = sort_col.asc()
+
+        entities = (
+            db.query(ProductMasterEntity)
+            .order_by(sort_col)
+            .offset((current_page - 1) * per_page)
+            .limit(per_page)
+            .all()
+        )
+
+        return [Product.model_validate(entity) for entity in entities]
+
+    def get_all_products_count(self, db) -> int:
+        return db.query(func.count(ProductMasterEntity.product_code)).scalar()
 
     def get_links_by_product_code(
         self, product_id: str, link_type: str, db: Session

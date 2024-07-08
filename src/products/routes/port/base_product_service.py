@@ -15,7 +15,9 @@ class BaseProductService(ABC):
         pass
 
     @abstractmethod
-    def get_all_products(self, db: Session):
+    def get_all_products(
+        self, based_on: str, sort_by: str, current_page: int, per_page: int, db: Session
+    ) -> list[ProductResponse]:
         pass
 
     @transactional
@@ -28,4 +30,8 @@ class BaseProductService(ABC):
     @transactional
     @abstractmethod
     def update(self, product_id: str, product_update: ProductUpdate, db: Session):
+        pass
+
+    @abstractmethod
+    def get_all_products_count(self, db) -> int:
         pass
