@@ -41,3 +41,9 @@ class BaseCreativesRepository(ABC):
         self, style_cd_list, given_tag, tag_nm, limit, db: Session
     ) -> list[CreativeRecommend]:
         pass
+
+    @abstractmethod
+    def get_creatives_by_style_cd(
+        self, style_cd: str, db: Session
+    ) -> list[CreativeBase]:
+        pass

@@ -75,6 +75,7 @@ from src.offers.infra.offer_repository import OfferRepository
 from src.offers.service.get_offer_service import GetOfferService
 from src.offers.service.update_offer_service import UpdateOfferService
 from src.products.infra.product_repository import ProductRepository
+from src.products.service.product_service import ProductService
 from src.search.service.search_service import SearchService
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.infra.strategy_sqlalchemy_repository import StrategySqlAlchemy
@@ -116,6 +117,7 @@ class Container(containers.DeclarativeContainer):
             "src.offers.routes.offer_router",
             "src.message_template.routes.message_template_router",
             "src.admin.routes.admin_router",
+            "src.products.routes.product_router",
         ]
     )
 
@@ -448,6 +450,12 @@ class Container(containers.DeclarativeContainer):
     product 의존성
     """
     product_repository = providers.Singleton(provides=ProductRepository)
+
+    product_service = providers.Singleton(
+        provides=ProductService,
+        product_repository=product_repository,
+        creatives_repository=creatives_repository,
+    )
 
     """
     search 의존성
