@@ -56,3 +56,7 @@ class BaseSearchService(ABC):
     @abstractmethod
     def search_campaign(self, keyword, db) -> list[IdWithItem]:
         pass
+
+    @abstractmethod
+    def search_rep_nms(self, product_id, db) -> list[str]:
+        pass

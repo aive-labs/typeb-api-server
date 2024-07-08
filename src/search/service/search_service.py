@@ -8,6 +8,7 @@ from src.common.infra.recommend_products_repository import RecommendProductsRepo
 from src.common.timezone_setting import selected_timezone
 from src.contents.infra.contents_repository import ContentsRepository
 from src.offers.infra.offer_repository import OfferRepository
+from src.products.infra.product_repository import ProductRepository
 from src.search.routes.dto.id_with_item_response import (
     IdWithItem,
     IdWithItemDescription,
@@ -26,12 +27,14 @@ class SearchService(BaseSearchService):
         offer_repository: OfferRepository,
         contents_repository: ContentsRepository,
         campaign_repository: CampaignRepository,
+        product_repository: ProductRepository,
     ):
         self.audience_repository = audience_repository
         self.recommend_products_repository = recommend_products_repository
         self.offer_repository = offer_repository
         self.contents_repository = contents_repository
         self.campaign_repository = campaign_repository
+        self.product_repository = product_repository
 
     def search_audience_with_strategy_id(
         self,
@@ -88,3 +91,6 @@ class SearchService(BaseSearchService):
         return self.campaign_repository.search_campaign(
             keyword, current_date, two_weeks_ago, db
         )
+
+    def search_rep_nms(self, product_id, db) -> list[str]:
+        return self.product_repository.get_rep_nms(product_id, db)
