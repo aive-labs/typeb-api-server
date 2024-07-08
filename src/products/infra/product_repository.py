@@ -1,3 +1,4 @@
+from sqlalchemy import update
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
@@ -9,6 +10,7 @@ from src.products.enums.product_link_type import ProductLinkType
 from src.products.infra.entity.product_link_entity import ProductLinkEntity
 from src.products.infra.entity.product_master_entity import ProductMasterEntity
 from src.products.routes.dto.request.product_link_update import ProductLinkUpdate
+from src.products.routes.dto.request.product_update import ProductUpdate
 from src.products.routes.dto.response.title_with_link import TitleWithLink
 from src.products.service.port.base_product_repository import BaseProductRepository
 
@@ -93,3 +95,18 @@ class ProductRepository(BaseProductRepository):
                         link=link.link,
                     )
                 )
+
+    def update(self, product_id, product_update: ProductUpdate, db):
+        update_statement = (
+            update(ProductMasterEntity)
+            .where(ProductMasterEntity.product_code == product_id)
+            .values(
+                {
+                    "rep_nm": product_update.rep_nm,
+                    "comment": product_update.comment,
+                    "recommend_yn": product_update.recommend_yn.value,
+                }
+            )
+        )
+
+        db.execute(update_statement)

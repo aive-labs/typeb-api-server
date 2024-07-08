@@ -6,6 +6,7 @@ from src.core.transactional import transactional
 from src.products.domain.product import Product
 from src.products.enums.product_link_type import ProductLinkType
 from src.products.routes.dto.request.product_link_update import ProductLinkUpdate
+from src.products.routes.dto.request.product_update import ProductUpdate
 from src.products.routes.dto.response.product_response import ProductResponse
 from src.products.routes.port.base_product_service import BaseProductService
 from src.products.service.port.base_product_repository import BaseProductRepository
@@ -70,3 +71,7 @@ class ProductService(BaseProductService):
         self, product_id: str, product_link_update: ProductLinkUpdate, db: Session
     ):
         self.product_repository.update_product_link(product_id, product_link_update, db)
+
+    @transactional
+    def update(self, product_id: str, product_update: ProductUpdate, db: Session):
+        self.product_repository.update(product_id, product_update, db)

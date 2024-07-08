@@ -29,3 +29,7 @@ class BaseProductRepository(ABC):
     @abstractmethod
     def update_product_link(self, product_id, product_link_update, db):
         pass
+
+    @abstractmethod
+    def update(self, product_id, product_update, db):
+        pass

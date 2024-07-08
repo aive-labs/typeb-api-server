@@ -75,6 +75,7 @@ class ProductMasterEntity(Base):
     relational_product = Column(String)
     comment = Column(String)
     recommend_yn = Column(String)
+    rep_nm = Column(String)
     created_at = Column(DateTime(timezone=True), default=datetime.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
     updated_at = Column(DateTime(timezone=True), default=datetime.now())

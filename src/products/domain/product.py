@@ -72,6 +72,7 @@ class Product(BaseModel):
     relational_product: Optional[str]
     comment: Optional[str]
     recommend_yn: Optional[str]
+    rep_nm: Optional[str]
     created_at: Optional[str]
     updated_at: Optional[str]
     etltime: Optional[datetime]
