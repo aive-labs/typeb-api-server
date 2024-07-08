@@ -1,5 +1,7 @@
-from src.common.enums.str_enum import StrEnum
 from enum import Enum
+
+from src.common.enums.str_enum import StrEnum
+
 
 class CampaignStatus(StrEnum):
     tempsave = ("r1", "임시저장", "r", "준비단계")
@@ -24,11 +26,13 @@ class CampaignStatus(StrEnum):
         obj.group_description = group_description
         return obj
 
+
 class CampaignStatusGroupEnum(Enum):
     READY = "r"
     WAIT = "w"
     OPERATE = "o"
     STOP = "s"
+
 
 class CampaignStatusEnum(Enum):
     TEMPSAVE = "r1"

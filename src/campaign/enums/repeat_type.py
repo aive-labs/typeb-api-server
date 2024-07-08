@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class RepeatTypeEnum(Enum):
     DAILY = "daily"
     WEEKLY = "weekly"

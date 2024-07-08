@@ -28,7 +28,7 @@ class ContentsRepository(BaseContentsRepository):
         return self.contents_sqlalchemy.get_contents_list(
             db, based_on, sort_by, query=query
         )
-    
+
     def get_contents_id_url_dict(self) -> dict:
         return self.contents_sqlalchemy.get_contents_id_url_dict()
 

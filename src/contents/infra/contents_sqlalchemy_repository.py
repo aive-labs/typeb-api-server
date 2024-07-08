@@ -84,12 +84,13 @@ class ContentsSqlAlchemy:
 
         with self.db() as db:
             entities = db.query(
-                ContentsEntity.contents_id,
-                ContentsEntity.contents_url
+                ContentsEntity.contents_id, ContentsEntity.contents_url
             ).all()
-            contents_id_urls: dict = {entity.contents_id: entity.contents_url for entity in entities}
+            contents_id_urls: dict = {
+                entity.contents_id: entity.contents_url for entity in entities
+            }
             return contents_id_urls
-    
+
     def get_contents_list(
         self, db: Session, based_on, sort_by, contents_status=None, query=None
     ) -> list[ContentsResponse]:

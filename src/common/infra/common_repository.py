@@ -3,9 +3,8 @@ from typing import Callable
 
 from sqlalchemy.orm import Session
 
-from src.common.infra.entity.recsys_models_entity import RecsysModelsEntity
-from src.search.routes.dto.id_with_item_response import IdWithItemDescription
 from src.common.domain.recsys_models import RecsysModels
+from src.common.infra.entity.recsys_models_entity import RecsysModelsEntity
 
 
 class CommonRepository:
@@ -21,14 +20,13 @@ class CommonRepository:
         """
         self.db = db
 
-
-    def get_recsys_model(self, recsys_model_id: int) -> RecsysModels: 
+    def get_recsys_model(self, recsys_model_id: int) -> RecsysModels:
         with self.db() as db:
 
-            result = db.query(
-                RecsysModelsEntity
-            ).filter(
-                RecsysModelsEntity.recsys_model_id == recsys_model_id
-                ).first()
-            
+            result = (
+                db.query(RecsysModelsEntity)
+                .filter(RecsysModelsEntity.recsys_model_id == recsys_model_id)
+                .first()
+            )
+
             return result

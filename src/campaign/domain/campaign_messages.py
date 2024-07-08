@@ -1,7 +1,10 @@
 from datetime import datetime
-from pydantic import BaseModel
 from typing import List
-from src.campaign.enums.campaign_media import MessageTypeEnum, CampaignMediaEnum
+
+from pydantic import BaseModel
+
+from src.campaign.enums.campaign_media import CampaignMediaEnum, MessageTypeEnum
+
 
 class KakaoLinkButtons(BaseModel):
     kakao_link_buttons_seq: int | None
@@ -18,6 +21,7 @@ class KakaoLinkButtons(BaseModel):
     class Config:
         orm_mode = True
         from_attributes = True
+
 
 class MessageResource(BaseModel):
     resource_id: int | None

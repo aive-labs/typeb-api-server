@@ -1,6 +1,7 @@
 from typing import Optional
 
 from pydantic import BaseModel
+
 from src.offers.infra.entity.offer_details_entity import OfferDetailsEntity
 
 
