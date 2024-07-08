@@ -2,8 +2,10 @@ from sqlalchemy.orm import Session
 
 from src.common.utils.get_env_variable import get_env_variable
 from src.contents.service.port.base_creatives_repository import BaseCreativesRepository
+from src.core.transactional import transactional
 from src.products.domain.product import Product
 from src.products.enums.product_link_type import ProductLinkType
+from src.products.routes.dto.request.product_link_update import ProductLinkUpdate
 from src.products.routes.dto.response.product_response import ProductResponse
 from src.products.routes.port.base_product_service import BaseProductService
 from src.products.service.port.base_product_repository import BaseProductRepository
@@ -62,3 +64,9 @@ class ProductService(BaseProductService):
 
     def get_all_products(self, db: Session):
         pass
+
+    @transactional
+    def update_product_link(
+        self, product_id: str, product_link_update: ProductLinkUpdate, db: Session
+    ):
+        self.product_repository.update_product_link(product_id, product_link_update, db)

@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
+from src.core.transactional import transactional
+from src.products.routes.dto.request.product_link_update import ProductLinkUpdate
 from src.products.routes.dto.response.product_response import ProductResponse
 
 
@@ -13,4 +15,11 @@ class BaseProductService(ABC):
 
     @abstractmethod
     def get_all_products(self, db: Session):
+        pass
+
+    @transactional
+    @abstractmethod
+    def update_product_link(
+        self, product_id: str, product_link_update: ProductLinkUpdate, db: Session
+    ):
         pass

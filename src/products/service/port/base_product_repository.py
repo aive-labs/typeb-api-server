@@ -25,3 +25,7 @@ class BaseProductRepository(ABC):
         self, product_id: str, link_type: str, db: Session
     ) -> list[TitleWithLink]:
         pass
+
+    @abstractmethod
+    def update_product_link(self, product_id, product_link_update, db):
+        pass
