@@ -20,7 +20,7 @@ class ProductRepository(BaseProductRepository):
     def get_rep_nms(self, product_id: str, db: Session):
         entities = (
             db.query(PurchaseAnalyticsMasterStyle)
-            .filter(PurchaseAnalyticsMasterStyle.sty_cd == product_id)
+            .filter(PurchaseAnalyticsMasterStyle.product_code == product_id)
             .all()
         )
         rep_nm_list = list({entity.rep_nm for entity in entities})

@@ -51,14 +51,3 @@ def get_offer_detail(
 ) -> OfferDetailResponse:
     """오퍼 세부 내용을 조회하는 API"""
     return get_offer_service.get_offer_detail(offer_key)
-
-
-# @offer_router.put("/{offer_key", status_code=status.HTTP_204_NO_CONTENT)
-# @inject
-# def update_offer_detail(
-#     offer_key: int,
-#     offer_update: OfferUpdate,
-#     user=Depends(get_permission_checker(required_permissions=[])),
-#     update_offer_service: UpdateOfferUseCase = Depends(Provide[Container.update_offer_service])
-# ):
-#     update_offer_service.update_offer(offer_update)

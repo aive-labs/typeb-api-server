@@ -404,7 +404,9 @@ class Container(containers.DeclarativeContainer):
     )
 
     get_offer_service = providers.Singleton(
-        provides=GetOfferService, offer_repository=offer_repository
+        provides=GetOfferService,
+        offer_repository=offer_repository,
+        cafe24_repository=cafe24_repository,
     )
 
     update_offer_service = providers.Singleton(
