@@ -16,7 +16,6 @@ from src.offers.domain.offer_option import OfferOption
 from src.offers.enums.offer_type import OfferType
 from src.offers.enums.offer_use_type import OfferUseType
 from src.offers.infra.entity.offer_details_entity import OfferDetailsEntity
-from src.offers.infra.entity.offer_duplicate_entity import OfferDuplicateEntity
 from src.offers.infra.entity.offers_entity import OffersEntity
 from src.offers.routes.dto.response.offer_detail_response import OfferDetailResponse
 from src.search.routes.dto.id_with_label_response import IdWithLabel

@@ -6,6 +6,7 @@ from sqlalchemy import func, update
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
+from src.auth.domain.cafe24_token import Cafe24Token
 from src.auth.enums.cafe24_data_migration_status import CAFE24DataMigrationStatus
 from src.auth.infra.dto.cafe24_mall_info import Cafe24MallInfo
 from src.auth.infra.dto.cafe24_state_token import Cafe24StateToken
@@ -130,3 +131,22 @@ class Cafe24SqlAlchemyRepository:
 
         db.execute(statement)
         db.commit()
+
+    def get_token(self, mall_id: str, db: Session) -> Cafe24Token:
+        entity: Cafe24IntegrationEntity = (
+            db.query(Cafe24IntegrationEntity)
+            .filter(Cafe24IntegrationEntity.mall_id == mall_id)
+            .first()
+        )
+
+        if entity is None:
+            raise NotFoundException(
+                detail={"message": "카페 24 정보를 찾을 수 없습니다."}
+            )
+
+        return Cafe24Token(
+            access_token=entity.access_token,
+            expires_at=entity.access_token_expired_at,
+            refresh_token=entity.refresh_token,
+            refresh_token_expires_at=entity.refresh_token_expired_at,
+        )

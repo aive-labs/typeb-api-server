@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
+from src.auth.domain.cafe24_token import Cafe24Token
 from src.auth.infra.dto.cafe24_mall_info import Cafe24MallInfo
 from src.auth.infra.dto.cafe24_state_token import Cafe24StateToken
 from src.auth.infra.dto.cafe24_token import Cafe24TokenData
@@ -32,4 +33,8 @@ class BaseOauthRepository(ABC):
     def get_cafe24_info_by_user_id(
         self, user_id: str, db: Session
     ) -> Cafe24MallInfo | None:
+        pass
+
+    @abstractmethod
+    def get_token(self, mall_id: str, db: Session) -> Cafe24Token:
         pass
