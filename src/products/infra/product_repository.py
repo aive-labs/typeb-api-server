@@ -92,42 +92,18 @@ class ProductRepository(BaseProductRepository):
         db.query(ProductLinkEntity).filter(
             ProductLinkEntity.product_code == product_id
         ).delete()
+        db.flush()
 
         for link in links:
-            # if link.id:
             db.merge(
                 ProductLinkEntity(
-                    product_link_id=link.id,
+                    product_link_id=int(link.id),
                     product_code=product_id,
                     link_type=link_type.value,
                     title=link.title,
                     link=link.link,
                 )
             )
-
-            # insert_statement = insert(ProductLinkEntity).values(
-            #     product_link_id=link.id,
-            #     product_code=product_id,
-            #     link_type=link_type.value,
-            #     title=link.title,
-            #     link=link.link,
-            # )
-            #
-            # upsert_statement = insert_statement.on_conflict_do_update(
-            #     index_elements=["product_link_id"],  # conflict 대상 열
-            #     set_={"title": link.title, "link": link.link},  # 업데이트할 열
-            # )
-            #
-            # db.execute(upsert_statement)
-            # else:
-            #     db.add(
-            #         ProductLinkEntity(
-            #             product_code=product_id,
-            #             link_type=link_type.value,
-            #             title=link.title,
-            #             link=link.link,
-            #         )
-            #     )
 
     def update(self, product_id, product_update: ProductUpdate, db):
         update_statement = (
