@@ -108,7 +108,6 @@ class ProductRepository(BaseProductRepository):
             else:
                 db.add(
                     ProductLinkEntity(
-                        product_link_id=int(link.id),
                         product_code=product_id,
                         link_type=link_type.value,
                         title=link.title,
