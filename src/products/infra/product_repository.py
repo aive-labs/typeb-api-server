@@ -1,5 +1,4 @@
 from sqlalchemy import func, update
-from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
 from src.audiences.infra.entity.purchase_analytics_master_style_entity import (
@@ -89,31 +88,46 @@ class ProductRepository(BaseProductRepository):
             )
 
     def upsert_product_link(self, db, product_id, links, link_type):
+
+        db.query(ProductLinkEntity).filter(
+            ProductLinkEntity.product_code == product_id
+        ).delete()
+
         for link in links:
-            if link.id:
-                insert_statement = insert(ProductLinkEntity).values(
+            # if link.id:
+            db.merge(
+                ProductLinkEntity(
                     product_link_id=link.id,
                     product_code=product_id,
                     link_type=link_type.value,
                     title=link.title,
                     link=link.link,
                 )
+            )
 
-                upsert_statement = insert_statement.on_conflict_do_update(
-                    index_elements=["product_link_id"],  # conflict 대상 열
-                    set_={"title": link.title, "link": link.link},  # 업데이트할 열
-                )
-
-                db.execute(upsert_statement)
-            else:
-                db.add(
-                    ProductLinkEntity(
-                        product_code=product_id,
-                        link_type=link_type.value,
-                        title=link.title,
-                        link=link.link,
-                    )
-                )
+            # insert_statement = insert(ProductLinkEntity).values(
+            #     product_link_id=link.id,
+            #     product_code=product_id,
+            #     link_type=link_type.value,
+            #     title=link.title,
+            #     link=link.link,
+            # )
+            #
+            # upsert_statement = insert_statement.on_conflict_do_update(
+            #     index_elements=["product_link_id"],  # conflict 대상 열
+            #     set_={"title": link.title, "link": link.link},  # 업데이트할 열
+            # )
+            #
+            # db.execute(upsert_statement)
+            # else:
+            #     db.add(
+            #         ProductLinkEntity(
+            #             product_code=product_id,
+            #             link_type=link_type.value,
+            #             title=link.title,
+            #             link=link.link,
+            #         )
+            #     )
 
     def update(self, product_id, product_update: ProductUpdate, db):
         update_statement = (
