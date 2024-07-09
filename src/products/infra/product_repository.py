@@ -90,7 +90,8 @@ class ProductRepository(BaseProductRepository):
     def upsert_product_link(self, db, product_id, links, link_type):
 
         db.query(ProductLinkEntity).filter(
-            ProductLinkEntity.product_code == product_id
+            ProductLinkEntity.product_code == product_id,
+            ProductLinkEntity.link_type == link_type,
         ).delete()
         db.flush()
 
