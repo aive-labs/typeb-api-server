@@ -77,12 +77,13 @@ class ProductRepository(BaseProductRepository):
     def update_product_link(
         self, product_id, product_link_update: ProductLinkUpdate, db
     ):
-        if product_link_update.youtube:
+
+        if product_link_update.youtube is not None:
             self.upsert_product_link(
                 db, product_id, product_link_update.youtube, ProductLinkType.YOUTUBE
             )
 
-        if product_link_update.instagram:
+        if product_link_update.instagram is not None:
             self.upsert_product_link(
                 db, product_id, product_link_update.instagram, ProductLinkType.INSTAGRAM
             )
