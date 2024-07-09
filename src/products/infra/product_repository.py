@@ -95,15 +95,26 @@ class ProductRepository(BaseProductRepository):
         db.flush()
 
         for link in links:
-            db.merge(
-                ProductLinkEntity(
-                    product_link_id=int(link.id),
-                    product_code=product_id,
-                    link_type=link_type.value,
-                    title=link.title,
-                    link=link.link,
+            if link.id:
+                db.merge(
+                    ProductLinkEntity(
+                        product_link_id=int(link.id),
+                        product_code=product_id,
+                        link_type=link_type.value,
+                        title=link.title,
+                        link=link.link,
+                    )
                 )
-            )
+            else:
+                db.add(
+                    ProductLinkEntity(
+                        product_link_id=int(link.id),
+                        product_code=product_id,
+                        link_type=link_type.value,
+                        title=link.title,
+                        link=link.link,
+                    )
+                )
 
     def update(self, product_id, product_update: ProductUpdate, db):
         update_statement = (
