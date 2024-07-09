@@ -8,6 +8,8 @@ from src.auth.infra.dto.cafe24_token import Cafe24TokenData
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.common.utils.get_env_variable import get_env_variable
 from src.core.exceptions.exceptions import Cafe24Exception, NotFoundException
+from src.core.transactional import transactional
+from src.offers.domain.cafe24_coupon import Cafe24CouponResponse
 from src.offers.infra.offer_repository import OfferRepository
 from src.offers.routes.dto.response.offer_response import OfferResponse
 from src.offers.routes.port.get_offer_usecase import GetOfferUseCase
@@ -24,19 +26,17 @@ class GetOfferService(GetOfferUseCase):
         self.client_id: str = get_env_variable("client_id")
         self.client_secret: str = get_env_variable("client_secret")
 
+    @transactional
     async def get_offers(
         self, based_on, sort_by, start_date, end_date, query, user: User, db: Session
     ) -> list[OfferResponse]:
 
-        print("111111111")
         if user.mall_id is None:
             raise NotFoundException(
                 detail={"message": "mall 정보가 존재하지 않습니다."}
             )
 
         token = self.cafe24_repository.get_token(user.mall_id, db)
-        print(f"token: {token}")
-
         access_token = token.access_token
         if self.is_access_token_expired(token):
             # todo 재발급 api
@@ -66,6 +66,7 @@ class GetOfferService(GetOfferUseCase):
 
             # 날짜를 문자열로 포맷팅 (YYYY-MM-DD 형식)
             start_date = today.strftime("%Y-%m-%d")
+            start_date = "2024-05-01"
             end_date = tomorrow.strftime("%Y-%m-%d")
 
             url = f"https://{user.mall_id}.cafe24api.com/api/v2/admin/coupons?created_start_date={start_date}&created_end_date={end_date}"
@@ -82,7 +83,17 @@ class GetOfferService(GetOfferUseCase):
                     )
                 response = await response.json()
                 print("coupon")
-                print(response)
+                cafe24_coupon_response = Cafe24CouponResponse(**response)
+                print(cafe24_coupon_response)
+
+                self.offer_repository.save_new_coupon(cafe24_coupon_response, db)
+
+        print(start_date, end_date)
+        offers = self.offer_repository.get_all_offers(
+            based_on, sort_by, start_date, end_date, query, db
+        )
+        print("db offers")
+        print(offers)
 
         return None
 

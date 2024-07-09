@@ -10,6 +10,7 @@ from src.common.timezone_setting import selected_timezone
 from src.common.utils.string_utils import is_convertible_to_int
 from src.contents.infra.entity.style_master_entity import StyleMasterEntity
 from src.core.exceptions.exceptions import NotFoundException
+from src.offers.domain.cafe24_coupon import Cafe24CouponResponse
 from src.offers.domain.offer import Offer
 from src.offers.domain.offer_condition_variable import OfferConditionVar
 from src.offers.domain.offer_option import OfferOption
@@ -40,48 +41,50 @@ class OfferRepository:
         self.db = db
 
     def get_all_offers(
-        self, based_on, sort_by, start_date, end_date, keyword
+        self, based_on, sort_by, start_date, end_date, keyword, db: Session
     ) -> list[Offer]:
-        with self.db() as db:
-            base_query = (
-                db.query(OffersEntity)
-                .filter(
-                    and_(
-                        OffersEntity.event_end_dt >= start_date,
-                        OffersEntity.event_str_dt <= end_date,
-                    )
+        base_query = (
+            db.query(OffersEntity)
+            # .filter(
+            #     and_(
+            #         OffersEntity.available_end_datetime >= start_date,
+            #         OffersEntity.available_begin_datetime <= end_date,
+            #     )
+            # )
+            .order_by(
+                OffersEntity.offer_source, OffersEntity.available_begin_datetime.desc()
+            )
+        )
+
+        if keyword:
+            print("keyword?")
+            base_query = base_query.filter(
+                or_(
+                    OffersEntity.coupon_name.ilike(f"%{keyword}%"),
+                    OffersEntity.coupon_no.ilike(f"%{keyword}%"),
+                    OffersEntity.offer_source.ilike(f"%{keyword}%"),
+                    OffersEntity.benefit_type_name.ilike(f"%{keyword}%"),
                 )
-                .order_by(OffersEntity.offer_source, OffersEntity.event_str_dt.desc())
             )
 
-            if keyword:
-                base_query = base_query.filter(
-                    or_(
-                        OffersEntity.offer_name.ilike(f"%{keyword}%"),
-                        OffersEntity.event_no.ilike(f"%{keyword}%"),
-                        OffersEntity.offer_source.ilike(f"%{keyword}%"),
-                        OffersEntity.offer_type_name.ilike(f"%{keyword}%"),
-                    )
-                )
+        offer_entities = base_query.all()
+        use_type_dict = {
+            v.value: v.description for _, v in OfferUseType.__members__.items()
+        }
 
-            offer_entities = base_query.all()
-            use_type_dict = {
-                v.value: v.description for _, v in OfferUseType.__members__.items()
-            }
+        offers = []
+        for offer in offer_entities:
+            temp_offer = Offer.model_validate(offer)
+            temp_offer.available_scope = use_type_dict.get(
+                temp_offer.available_scope, ""
+            )
+            temp_offer.offer_source = (
+                temp_offer.offer_source if temp_offer.offer_source else ""
+            )
 
-            offers = []
-            for offer in offer_entities:
-                temp_offer = Offer.from_entity(offer)
-                temp_offer.offer_use_type = use_type_dict.get(
-                    temp_offer.offer_use_type, ""
-                )
-                temp_offer.offer_source = (
-                    temp_offer.offer_source if temp_offer.offer_source else ""
-                )
+            offers.append(temp_offer)
 
-                offers.append(temp_offer)
-
-            return offers
+        return offers
 
     def _create_label(self, data):
         return f"({data.id}) {data.name}"
@@ -323,3 +326,60 @@ class OfferRepository:
             db.bulk_save_objects(dupl_apply_obj)
 
             db.commit()
+
+    def save_new_coupon(
+        self, cafe24_coupon_response: Cafe24CouponResponse, db: Session
+    ):
+        for coupon in cafe24_coupon_response.coupons:
+            offer_entity = OffersEntity(
+                coupon_no=coupon.coupon_no,
+                coupon_name=coupon.coupon_name,
+                coupon_type=coupon.coupon_type,
+                coupon_description=coupon.coupon_description,
+                benefit_type=coupon.benefit_type,
+                benefit_type_name=coupon.benefit_type,
+                shop_no=str(coupon.shop_no),
+                comp_cd=str(coupon.shop_no),
+                br_div="",
+                is_available=True,
+                available_scope=coupon.available_scope,
+                available_product_list=coupon.available_product_list,
+                available_category_list=coupon.available_category_list,
+                issue_max_count_by_user=(
+                    int(coupon.issue_max_count_by_user)
+                    if coupon.issue_max_count_by_user
+                    else 0
+                ),
+                available_begin_datetime=coupon.available_begin_datetime,
+                available_end_datetime=coupon.available_end_datetime,
+                issue_type=coupon.issue_type,
+                issue_sub_type=coupon.issue_sub_type,
+                issue_order_path=coupon.issue_order_path,
+                issue_order_type=coupon.issue_order_type,
+                issue_reserved=coupon.issue_reserved,
+                available_period_type=coupon.available_period_type,
+                available_site=coupon.available_site,
+                available_price_type=coupon.available_price_type,
+                is_stopped_issued_coupon=coupon.is_stopped_issued_coupon,
+                benefit_text=coupon.benefit_text,
+                benefit_price=coupon.benefit_price,
+                benefit_percentage=coupon.benefit_percentage,
+                benefit_percentage_round_unit=coupon.benefit_percentage_round_unit,
+                benefit_percentage_max_price=coupon.benefit_percentage_max_price,
+                coupon_direct_url=coupon.coupon_direct_url,
+                available_date=coupon.available_date,
+                available_order_price_type=coupon.available_order_price_type,
+                available_min_price=coupon.available_min_price,
+                available_amount_type=coupon.available_amount_type,
+                send_sms_for_issue=coupon.send_sms_for_issue,
+                issue_order_start_date=coupon.issue_order_start_date,
+                issue_order_end_date=coupon.issue_order_end_date,
+                deleted=coupon.deleted,
+                offer_source="cafe24",
+                cus_data_batch_yn="N",
+                created_by="aivelabs",
+                updated_by="aivelabs",
+            )
+
+            db.merge(offer_entity)
+        db.commit()
