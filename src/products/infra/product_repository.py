@@ -91,7 +91,7 @@ class ProductRepository(BaseProductRepository):
 
         db.query(ProductLinkEntity).filter(
             ProductLinkEntity.product_code == product_id,
-            ProductLinkEntity.link_type == link_type,
+            ProductLinkEntity.link_type == link_type.value,
         ).delete()
         db.flush()
 
