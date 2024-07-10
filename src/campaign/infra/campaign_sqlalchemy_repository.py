@@ -1,9 +1,10 @@
 from collections.abc import Callable
 from contextlib import AbstractContextManager
 
-from sqlalchemy import Integer, and_, desc, distinct, func, not_, or_
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import Integer, and_, desc, distinct, func, inspect, not_, or_
+from sqlalchemy.orm import Session, joinedload, subqueryload
 
+from src.audiences.infra.entity.audience_stats_entity import AudienceStatsEntity
 from src.audiences.infra.entity.variable_table_list import CustomerInfoStatusEntity
 from src.campaign.domain.campaign import Campaign
 from src.campaign.domain.campaign_messages import CampaignMessages, SetGroupMessages
@@ -13,6 +14,7 @@ from src.campaign.enums.campagin_status import CampaignStatus
 from src.campaign.enums.send_type import SendType
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.campaign.infra.entity.campaign_remind_entity import CampaignRemindEntity
+from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
 from src.campaign.infra.entity.campaign_set_recipients_entity import (
     CampaignSetRecipientsEntity,
 )
@@ -20,6 +22,7 @@ from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
 from src.campaign.infra.entity.campaign_timeline_entity import CampaignTimelineEntity
 from src.campaign.infra.entity.send_reservation_entity import SendReservationEntity
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
+from src.common.infra.entity.customer_master_entity import CustomerMasterEntity
 from src.common.sqlalchemy.object_access_condition import object_access_condition
 from src.common.utils.string_utils import is_convertible_to_int
 from src.contents.infra.entity.style_master_entity import StyleMasterEntity
@@ -404,3 +407,101 @@ class CampaignSqlAlchemy:
         )
         db.add(entity)
         db.flush()
+
+    def get_campaign_sets(self, campaign_id: str, db: Session):
+        entities = (
+            db.query(
+                CampaignSetsEntity.set_seq,
+                CampaignSetsEntity.set_sort_num,
+                CampaignSetsEntity.is_group_added,
+                CampaignSetsEntity.campaign_theme_id,
+                CampaignSetsEntity.campaign_theme_name,
+                CampaignSetsEntity.recsys_model_id,
+                CampaignSetsEntity.audience_id,
+                CampaignSetsEntity.audience_name,
+                AudienceStatsEntity.audience_count,
+                AudienceStatsEntity.audience_portion,
+                AudienceStatsEntity.audience_unit_price,
+                AudienceStatsEntity.response_rate,
+                CampaignSetsEntity.offer_id,
+                CampaignSetsEntity.offer_name,
+                CampaignSetsEntity.recipient_count,
+                CampaignSetsEntity.medias,
+                CampaignSetsEntity.media_cost,
+                CampaignSetsEntity.is_confirmed,
+                CampaignSetsEntity.is_message_confirmed,
+            )
+            .outerjoin(
+                AudienceStatsEntity,
+                CampaignSetsEntity.audience_id == AudienceStatsEntity.audience_id,
+            )
+            .filter(CampaignSetsEntity.campaign_id == campaign_id)
+        )
+
+    def get_campaign_set_groups(self, campaign_id: str, db: Session):
+
+        entities = (
+            db.query(CampaignSetGroupsEntity)
+            .filter(CampaignSetGroupsEntity.campaign_id == campaign_id)
+            .all()
+        )
+
+    def get_set_portion(self, campaign_id: str, db: Session):
+
+        total_cus = (
+            db.query(func.count(CustomerMasterEntity.cus_cd))
+            .filter(
+                CustomerMasterEntity.br_div == "NPC",
+                CustomerMasterEntity.cust_status == "1",
+                CustomerMasterEntity.cust_grade1 != "R",
+                CustomerMasterEntity.cust_name.notin_(["휴면", "탈퇴"]),
+            )
+            .scalar()
+        )
+
+        set_cus_count = (
+            db.query(func.count(CampaignSetRecipientsEntity.cus_cd))
+            .filter(CampaignSetRecipientsEntity.campaign_id == campaign_id)
+            .scalar()
+        )
+
+        recipient_portion = round(set_cus_count / total_cus, 3)
+
+        return recipient_portion, total_cus, set_cus_count
+
+    def get_campaign_set_group_messages(self, campaign_id: str, db: Session):
+        query_result = (
+            db.query(
+                SetGroupMessages,
+                CampaignSetGroupsEntity.set_seq,
+                CampaignSetGroupsEntity.group_sort_num,
+            )
+            .outerjoin(CampaignSetGroupsEntity)
+            .filter(CampaignSetGroupsEntity.campaign_id == campaign_id)
+            .options(subqueryload(SetGroupMessagesEntity.kakao_button_links))
+            .all()
+        )
+
+        result_list = []
+        for item in query_result:
+            set_group_message, set_seq, group_sort_num = item
+
+            # SetGroupMessages 객체를 딕셔너리로 변환
+            set_group_message_dict = {
+                c.key: getattr(set_group_message, c.key)
+                for c in inspect(set_group_message).mapper.column_attrs
+            }
+
+            # 관련된 kakao_button_links를 딕셔너리 리스트로 변환
+            set_group_message_dict["kakao_button_links"] = [
+                {c.key: getattr(link, c.key) for c in inspect(link).mapper.column_attrs}
+                for link in set_group_message.kakao_button_links
+            ]
+
+            # CampaignSetGroups의 컬럼을 딕셔너리에 추가
+            set_group_message_dict["set_seq"] = set_seq
+            set_group_message_dict["group_sort_num"] = group_sort_num
+
+            result_list.append(set_group_message_dict)
+
+        return result_list

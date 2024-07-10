@@ -12,6 +12,10 @@ from src.campaign.enums.send_type import SendType, SendTypeEnum
 from src.campaign.routes.dto.request.campaign_create import CampaignCreate
 from src.campaign.routes.dto.request.campaign_remind import CampaignRemind
 from src.campaign.routes.dto.request.campaign_remind_create import CampaignRemindCreate
+from src.campaign.routes.dto.response.campaign_basic_response import (
+    CampaignBasicResponse,
+    RecipientSummary,
+)
 from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUseCase
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
 from src.common.timezone_setting import selected_timezone
@@ -183,7 +187,25 @@ class CreateCampaignService(CreateCampaignUseCase):
         )
         self.campaign_repository.save_timeline(timeline, db)
 
-        # TODO: 캠페인 오브젝트 리턴
+        if campaign_create.campaign_type_code == CampaignType.expert.value:
+            pass
+        else:
+            recipient_portion = 0
+            recipient_descriptions = None
+            sets = None
+            set_groups = None
+            set_group_message_list = None
+
+        return CampaignBasicResponse(
+            progress=saved_campaign.progress,
+            base=saved_campaign,
+            set_summary=RecipientSummary(
+                recipient_portion="a", recipient_descriptions="b"
+            ),
+            set_list=[],
+            set_group_list=[],
+            set_group_message_list=[],
+        )
 
     def _convert_to_campaign_remind(
         self,
