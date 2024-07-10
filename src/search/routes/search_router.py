@@ -123,6 +123,7 @@ def search_rep_nms(
 
 
 @search_router.get("/strategies")
+@inject
 def search_strategies(
     campaign_type_code: str,
     keyword: Optional[str] = None,

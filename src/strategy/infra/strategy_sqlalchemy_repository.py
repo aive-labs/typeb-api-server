@@ -335,7 +335,7 @@ class StrategySqlAlchemy:
 
         return [
             StrategySearchResponse(
-                strategy_id=entity.id,
+                strategy_id=entity.strategy_id,
                 strategy_name=entity.strategy_name,
                 strategy_tags=entity.strategy_tags,
                 target_strategy=entity.target_strategy,
