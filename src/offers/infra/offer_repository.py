@@ -308,7 +308,7 @@ class OfferRepository:
                 issue_max_count_by_user=(
                     int(coupon.issue_max_count_by_user)
                     if coupon.issue_max_count_by_user
-                    else 0
+                    else None
                 ),
                 available_begin_datetime=coupon.available_begin_datetime,
                 available_end_datetime=coupon.available_end_datetime,

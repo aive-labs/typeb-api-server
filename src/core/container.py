@@ -474,4 +474,5 @@ class Container(containers.DeclarativeContainer):
         contents_repository=contents_repository,
         campaign_repository=campaign_repository,
         product_repository=product_repository,
+        strategy_repository=strategy_repository,
     )

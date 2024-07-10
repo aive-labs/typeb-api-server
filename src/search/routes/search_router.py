@@ -12,6 +12,7 @@ from src.search.routes.dto.id_with_item_response import (
     IdWithItemDescription,
 )
 from src.search.routes.dto.id_with_label_response import IdWithLabel
+from src.search.routes.dto.strategy_search_response import StrategySearchResponse
 from src.search.routes.port.base_search_service import BaseSearchService
 from src.strategy.enums.target_strategy import TargetStrategy
 
@@ -119,3 +120,16 @@ def search_rep_nms(
     ),
 ) -> list[str]:
     return search_service.search_rep_nms(product_id, db=db)
+
+
+@search_router.get("/strategies")
+def search_strategies(
+    campaign_type_code: str,
+    keyword: Optional[str] = None,
+    db: Session = Depends(get_db_session),
+    user=Depends(get_permission_checker(required_permissions=[])),
+    search_service: BaseSearchService = Depends(
+        dependency=Provide[Container.search_service]
+    ),
+) -> list[StrategySearchResponse]:
+    return search_service.search_strategies(campaign_type_code, keyword, db=db)

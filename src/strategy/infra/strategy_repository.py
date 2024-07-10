@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 
+from src.search.routes.dto.strategy_search_response import StrategySearchResponse
 from src.strategy.domain.strategy import Strategy
 from src.strategy.domain.strategy_theme import StrategyTheme
 from src.strategy.infra.strategy_sqlalchemy_repository import StrategySqlAlchemy
@@ -87,4 +88,11 @@ class StrategyRepository(BaseStrategyRepository):
     ):
         return self.strategy_sqlalchemy_repository.update(
             strategy, campaign_themes, user, db
+        )
+
+    def search_keyword(
+        self, campaign_type_code, search_keyword, db: Session
+    ) -> list[StrategySearchResponse]:
+        return self.strategy_sqlalchemy_repository.search_keyword(
+            campaign_type_code, search_keyword, db
         )

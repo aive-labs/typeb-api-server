@@ -14,7 +14,9 @@ from src.search.routes.dto.id_with_item_response import (
     IdWithItemDescription,
 )
 from src.search.routes.dto.id_with_label_response import IdWithLabel
+from src.search.routes.dto.strategy_search_response import StrategySearchResponse
 from src.search.routes.port.base_search_service import BaseSearchService
+from src.strategy.infra.strategy_repository import StrategyRepository
 from src.users.domain.user import User
 
 
@@ -28,6 +30,7 @@ class SearchService(BaseSearchService):
         contents_repository: ContentsRepository,
         campaign_repository: CampaignRepository,
         product_repository: ProductRepository,
+        strategy_repository: StrategyRepository,
     ):
         self.audience_repository = audience_repository
         self.recommend_products_repository = recommend_products_repository
@@ -35,6 +38,7 @@ class SearchService(BaseSearchService):
         self.contents_repository = contents_repository
         self.campaign_repository = campaign_repository
         self.product_repository = product_repository
+        self.strategy_repository = strategy_repository
 
     def search_audience_with_strategy_id(
         self,
@@ -94,3 +98,10 @@ class SearchService(BaseSearchService):
 
     def search_rep_nms(self, product_id, db) -> list[str]:
         return self.product_repository.get_rep_nms(product_id, db)
+
+    def search_strategies(
+        self, campaign_type_code, search_keyword, db: Session
+    ) -> list[StrategySearchResponse]:
+        return self.strategy_repository.search_keyword(
+            campaign_type_code, search_keyword, db
+        )

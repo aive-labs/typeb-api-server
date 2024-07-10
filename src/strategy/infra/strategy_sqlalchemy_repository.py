@@ -11,6 +11,7 @@ from src.audiences.infra.entity.strategy_theme_audience_entity import (
 from src.common.enums.role import RoleEnum
 from src.common.utils.date_utils import localtime_converter
 from src.core.exceptions.exceptions import NotFoundException
+from src.search.routes.dto.strategy_search_response import StrategySearchResponse
 from src.strategy.domain.strategy import Strategy
 from src.strategy.domain.strategy_theme import StrategyTheme
 from src.strategy.enums.strategy_status import StrategyStatus
@@ -55,7 +56,7 @@ class StrategySqlAlchemy:
                 ),
                 ~StrategyEntity.is_deleted,
                 StrategyEntity.strategy_status_code != StrategyStatus.notdisplay.value,
-                *conditions
+                *conditions,
             )
             .all()
         )
@@ -306,3 +307,38 @@ class StrategySqlAlchemy:
             )
             .count()
         )
+
+    def search_keyword(
+        self, campaign_type_code, search_keyword, db
+    ) -> list[StrategySearchResponse]:
+
+        if search_keyword:
+            keyword = f"%{search_keyword}%"
+
+            entities = (
+                db.query(
+                    StrategyEntity.strategy_id,
+                    StrategyEntity.strategy_name,
+                    StrategyEntity.strategy_tags,
+                    StrategyEntity.target_strategy,
+                )
+                .filter(StrategyEntity.strategy_name.ilike(keyword))
+                .all()
+            )
+        else:
+            entities = db.query(
+                StrategyEntity.strategy_id,
+                StrategyEntity.strategy_name,
+                StrategyEntity.strategy_tags,
+                StrategyEntity.target_strategy,
+            ).all()
+
+        return [
+            StrategySearchResponse(
+                strategy_id=entity.id,
+                strategy_name=entity.strategy_name,
+                strategy_tags=entity.strategy_tags,
+                target_strategy=entity.target_strategy,
+            )
+            for entity in entities
+        ]
