@@ -14,8 +14,8 @@ class CampaignRepository(BaseCampaignRepository):
     def __init__(self, campaign_sqlalchemy: CampaignSqlAlchemy):
         self.campaign_sqlalchemy = campaign_sqlalchemy
 
-    def create_campaign():
-        raise NotImplementedError
+    def create_campaign(self, new_campaign: Campaign, db: Session) -> Campaign:
+        return self.campaign_sqlalchemy.register_campaign(new_campaign, db)
 
     def get_campaigns(
         self, start_date: str, end_date: str, user: User
@@ -75,3 +75,6 @@ class CampaignRepository(BaseCampaignRepository):
         return self.campaign_sqlalchemy.get_campaign_messages(
             campaign_id, req_set_group_seqs
         )
+
+    def save_timeline(self, timeline: CampaignTimeline, db: Session):
+        return self.campaign_sqlalchemy.save_timeline(timeline, db)

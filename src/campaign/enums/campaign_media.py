@@ -1,12 +1,6 @@
 from enum import Enum
 
 
-class CampaignMediaEnum(Enum):
-    KAKAO_ALIM_TALK = "kat"
-    KAKAO_FRIEND_TALK = "kft"
-    TEXT_MESSAGE = "tms"
-
-
 class MessageTypeEnum(Enum):
     SMS = "sms"
     LMS = "lms"

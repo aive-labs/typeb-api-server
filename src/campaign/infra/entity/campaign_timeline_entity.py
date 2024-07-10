@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy import Column, DateTime, Integer, String, func
 
 from src.core.database import Base
 
@@ -11,6 +11,6 @@ class CampaignTimelineEntity(Base):
     campaign_id = Column(String, nullable=False)
     description = Column(String, nullable=False)
     status_no = Column(String, nullable=True)
-    created_at = Column(DateTime(timezone=True))
+    created_at = Column(DateTime, default=func.now())
     created_by = Column(String, nullable=False)
     created_by_name = Column(String, nullable=False)

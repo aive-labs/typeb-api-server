@@ -11,7 +11,7 @@ from src.campaign.enums.campaign_media import CampaignMediaEnum, MessageTypeEnum
 from src.campaign.enums.campaign_progress import CampaignProgressEnum
 from src.campaign.enums.campaign_type import CampaignTypeEnum
 from src.campaign.enums.repeat_type import RepeatTypeEnum
-from src.campaign.enums.send_type import SendtypeEnum
+from src.campaign.enums.send_type import SendTypeEnum
 from src.campaign.enums.set_group_category import SetGroupCategoryEnum
 from src.campaign.routes.dto.request.campaign_remind import CampaignRemind
 from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
@@ -29,7 +29,7 @@ class CampaignBase(BaseModel):
     campaign_status_group_name: str
     campaign_status_code: CampaignStatusEnum
     campaign_status_name: str
-    send_type_code: SendtypeEnum
+    send_type_code: SendTypeEnum
     send_type_name: str
     repeat_type: RepeatTypeEnum | None = None
     week_days: str | None = None

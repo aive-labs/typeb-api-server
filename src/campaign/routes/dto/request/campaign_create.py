@@ -5,8 +5,8 @@ from pydantic import BaseModel, Field
 
 from src.campaign.enums.campaign_type import CampaignTypeEnum
 from src.campaign.enums.repeat_type import RepeatTypeEnum
-from src.campaign.enums.send_type import SendtypeEnum
-from src.campaign.routes.dto.request.campaign_remind import CampaignRemind
+from src.campaign.enums.send_type import SendTypeEnum
+from src.campaign.routes.dto.request.campaign_remind_create import CampaignRemindCreate
 from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
 from src.common.utils.date_utils import localtime_converter
 
@@ -16,7 +16,7 @@ class CampaignCreate(BaseModel):
     budget: int | None = None
     campaign_type_code: CampaignTypeEnum
     medias: str
-    send_type_code: SendtypeEnum
+    send_type_code: SendTypeEnum
     repeat_type: RepeatTypeEnum | None = None
     week_days: str | None = None
     send_date: str | None = None
@@ -28,9 +28,9 @@ class CampaignCreate(BaseModel):
     end_date: str | None = None
     group_end_date: str | None = None
     has_remind: bool
-    remind_list: list[CampaignRemind] | None = None
+    remind_list: list[CampaignRemindCreate] | None = None
     strategy_id: str | None = None
-    campaign_theme_ids: list[int] | None = None
+    strategy_theme_ids: list[int] | None = None
     is_personalized: bool
     msg_delivery_vendor: MsgDeliveryVendorEnum
     retention_day: int | None = None  # 유지기간

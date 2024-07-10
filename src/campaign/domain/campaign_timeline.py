@@ -8,6 +8,7 @@ class CampaignTimeline(BaseModel):
     timeline_no: Optional[int] = None
     timeline_type: Optional[str] = None
     description: Optional[str] = None
+    campaign_id: Optional[str] = None
     status_no: Optional[str] = None
     created_at: Optional[datetime] = None
     created_by: Optional[str] = None

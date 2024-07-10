@@ -10,7 +10,7 @@ from src.users.domain.user import User
 
 class BaseCampaignRepository(ABC):
     @abstractmethod
-    def create_campaign():
+    def create_campaign(self, new_campaign: Campaign, db: Session) -> Campaign:
         pass
 
     @abstractmethod
@@ -41,4 +41,8 @@ class BaseCampaignRepository(ABC):
     def search_campaign(
         self, keyword, current_date, two_weeks_ago, db
     ) -> list[IdWithItem]:
+        pass
+
+    @abstractmethod
+    def save_timeline(self, timeline: CampaignTimeline, db: Session):
         pass

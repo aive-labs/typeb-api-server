@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 from src.campaign.enums.campaign_type import CampaignTypeEnum
 from src.campaign.enums.repeat_type import RepeatTypeEnum
-from src.campaign.enums.send_type import SendtypeEnum
+from src.campaign.enums.send_type import SendTypeEnum
 from src.campaign.routes.dto.request.campaign_remind import CampaignRemind
 from src.campaign.routes.dto.response.campaign_response import (
     CampaignReadBase,
@@ -21,7 +21,7 @@ class CampaignCreate(BaseModel):
     budget: int | None = None
     campaign_type_code: CampaignTypeEnum
     medias: str
-    send_type_code: SendtypeEnum
+    send_type_code: SendTypeEnum
     repeat_type: RepeatTypeEnum | None = None
     week_days: str | None = None
     send_date: str | None = None

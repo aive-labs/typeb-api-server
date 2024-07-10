@@ -332,3 +332,75 @@ class CampaignSqlAlchemy:
             result.append(message_md)
 
         return result
+
+    def register_campaign(self, model: Campaign, db) -> Campaign:
+
+        remind_entities = [
+            CampaignRemindEntity(
+                send_type_code=remind.send_type_code,
+                remind_media=remind.remind_media,
+                remind_step=remind.remind_step,
+                remind_date=remind.remind_date,
+                remind_duration=remind.remind_duration,
+                created_by=model.created_by_name,
+                updated_by=model.updated_by,
+            )
+            for remind in model.remind_list
+        ]
+
+        entity = CampaignEntity(
+            campaign_name=model.campaign_name,
+            budget=model.budget,
+            campaign_type_code=model.campaign_type_code,
+            campaign_type_name=model.campaign_type_name,
+            medias=model.medias,
+            campaign_status_group_code=model.campaign_status_group_code,
+            campaign_status_group_name=model.campaign_status_group_name,
+            campaign_status_code=model.campaign_status_code,
+            campaign_status_name=model.campaign_status_name,
+            send_type_code=model.send_type_code,
+            send_type_name=model.send_type_name,
+            repeat_type=model.repeat_type,
+            week_days=model.week_days,
+            send_date=model.send_date,
+            is_msg_creation_recurred=model.is_msg_creation_recurred,
+            is_approval_recurred=model.is_approval_recurred,
+            datetosend=str(model.datetosend),
+            timetosend=model.timetosend,
+            start_date=model.start_date,
+            end_date=model.end_date,
+            group_end_date=model.group_end_date,
+            has_remind=model.has_remind,
+            campaigns_exc=model.campaigns_exc,
+            audiences_exc=model.audiences_exc,
+            strategy_id=model.strategy_id,
+            campaign_theme_ids=model.campaign_theme_ids,
+            is_personalized=model.is_personalized,
+            progress=model.progress,
+            msg_delivery_vendor=model.msg_delivery_vendor,
+            shop_send_yn=model.shop_send_yn,
+            retention_day=model.retention_day,
+            owned_by_dept=model.owned_by_dept,
+            owned_by_dept_name=model.owned_by_dept_name,
+            owned_by_dept_abb_name=model.owned_by_dept_abb_name,
+            created_by_name=model.created_by_name,
+            updated_by=model.created_by_name,
+            remind_list=remind_entities,
+        )
+
+        db.add(entity)
+        db.flush()
+
+        return Campaign.model_validate(entity)
+
+    def save_timeline(self, timeline: CampaignTimeline, db: Session):
+        entity = CampaignTimelineEntity(
+            timeline_type=timeline.timeline_type,
+            campaign_id=timeline.campaign_id,
+            description=timeline.description,
+            status_no=timeline.status_no,
+            created_by=timeline.created_by,
+            created_by_name=timeline.created_by_name,
+        )
+        db.add(entity)
+        db.flush()
