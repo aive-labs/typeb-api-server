@@ -102,6 +102,45 @@ def get_preview(
     preview_message_create: PreviewMessageCreate,
     user=Depends(get_permission_checker(required_permissions=[])),
 ) -> PreviewMessageResponse:
+
+    # recsys_model_id = preview_message_create.recsys_model_id  # recsys_model_id
+    # audience_id = preview_message_create.theme_audience_set.audience_ids[
+    #     0
+    # ]  # audience_id
+    # offer_ids_input = preview_message_create.theme_audience_set.offer_ids  # offer_id
+    # if offer_ids_input is None:
+    #     offer_id = []
+    # elif len(offer_ids_input) == 0:
+    #     offer_id = []
+    # else:
+    #     offer_id = offer_ids_input[0]
+
+    # contents_tag = preview_message_create.theme_audience_set.contents_tags
+    # if contents_tag is None:
+    #     contents_id = []
+    #     contents_name = []
+    # elif len(contents_tag) == 0:
+    #     contents_id = []
+    #     contents_name = []
+    # else:
+    #     contents_id = contents_tag[0]
+    #     contents_name = ""
+
+    # contents_name
+    # group_stats - item_ratio
+    # group_stats - it_gb_ratio
+
+    ##rep_nm
+    ##set_group_category
+    ##media
+    ##msg_type
+
+    ##input_data
+
+    ## data_dict
+
+    ##
+
     lms = PreviewMessage(
         msg_title="Sample Title",
         msg_body="This is a sample message body.",
