@@ -1,6 +1,7 @@
 import base64
 import os
 
+import aiohttp
 import requests
 from dotenv import load_dotenv
 from fastapi import HTTPException
@@ -87,7 +88,7 @@ class Cafe24Service(BaseOauthService):
             mall_id=cafe24_mall_info.mall_id,
         )
 
-    def get_oauth_access_token(
+    async def get_oauth_access_token(
         self, oauth_request: OauthAuthenticationRequest, db: Session
     ):
         cafe24_state_token = self.cafe24_repository.get_state_token(
@@ -95,7 +96,7 @@ class Cafe24Service(BaseOauthService):
         )
         mall_id = cafe24_state_token.mall_id
 
-        token_data = self._request_token_to_cafe24(oauth_request.code, mall_id)
+        token_data = await self._request_token_to_cafe24(oauth_request.code, mall_id)
         cafe24_tokens = Cafe24TokenData(**token_data)
 
         self.cafe24_repository.save_tokens(cafe24_tokens, db)
@@ -138,7 +139,7 @@ class Cafe24Service(BaseOauthService):
             f"redirect_uri={redirect_uri}&scope={scope}"
         )
 
-    def _request_token_to_cafe24(self, code, mall_id):
+    async def _request_token_to_cafe24(self, code, mall_id):
         # basic authentication 생성
         credentials = f"{self.client_id}:{self.client_secret}".encode()
         encoded_credentials = base64.b64encode(credentials).decode("utf-8")
@@ -156,18 +157,20 @@ class Cafe24Service(BaseOauthService):
             "Content-Type": "application/x-www-form-urlencoded",
         }
 
-        # TODO 비동기 변경
         # Send the POST request
-        response = requests.post(
-            f"https://{mall_id}.cafe24api.com/api/v2/oauth/token",
-            headers=headers,
-            data=data,
-        )
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                url=f"https://{mall_id}.cafe24api.com/api/v2/oauth/token",
+                data=data,
+                headers=headers,
+                ssl=False,
+            ) as response:
+                response = await response.json()
 
-        if response.status_code != 200:
-            raise HTTPException(
-                status_code=response.status_code,
-                detail={"code": "cafe24 auth error", "message": response.text},
-            )
+                if response.status_code != 200:
+                    raise HTTPException(
+                        status_code=response.status_code,
+                        detail={"code": "cafe24 auth error", "message": response.text},
+                    )
 
-        return response.json()
+                return response
