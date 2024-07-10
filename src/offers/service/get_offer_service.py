@@ -11,6 +11,7 @@ from src.core.exceptions.exceptions import Cafe24Exception, NotFoundException
 from src.core.transactional import transactional
 from src.offers.domain.cafe24_coupon import Cafe24CouponResponse
 from src.offers.infra.offer_repository import OfferRepository
+from src.offers.routes.dto.response.offer_detail_response import OfferDetailResponse
 from src.offers.routes.dto.response.offer_response import OfferResponse
 from src.offers.routes.port.get_offer_usecase import GetOfferUseCase
 from src.users.domain.user import User
@@ -39,7 +40,6 @@ class GetOfferService(GetOfferUseCase):
         token = self.cafe24_repository.get_token(user.mall_id, db)
         access_token = token.access_token
         if self.is_access_token_expired(token):
-            # todo 재발급 api
             url = f"https://{user.mall_id}.cafe24api.com/api/v2/oauth/token"
             payload = (
                 f"""grant_type=refresh_token&refresh_token={token.refresh_token}"""
@@ -54,7 +54,6 @@ class GetOfferService(GetOfferUseCase):
 
             async with aiohttp.ClientSession() as session:
                 response = await self.renew_token(url, payload, headers, session)
-                print(f"response: {response}")
                 cafe24_token_data = Cafe24TokenData(**response)
                 self.cafe24_repository.save_tokens(cafe24_token_data, db)
                 access_token = cafe24_token_data.access_token
@@ -77,25 +76,24 @@ class GetOfferService(GetOfferUseCase):
             }
             async with session.get(url=url, headers=headers, ssl=False) as response:
                 if response.status != 200:
-                    print(response.text)
                     raise Cafe24Exception(
-                        detail={"message": "쿠폰 정보를 불러오는데 실패했습니다."}
+                        detail={
+                            "message": "쿠폰 정보를 불러오는데 실패했습니다. 잠시 후에 다시 시도해주세요."
+                        }
                     )
                 response = await response.json()
-                print("coupon")
+                print("cafe24 coupon")
                 cafe24_coupon_response = Cafe24CouponResponse(**response)
                 print(cafe24_coupon_response)
 
                 self.offer_repository.save_new_coupon(cafe24_coupon_response, db)
 
-        print(start_date, end_date)
         offers = self.offer_repository.get_all_offers(
             based_on, sort_by, start_date, end_date, query, db
         )
-        print("db offers")
-        print(offers)
 
-        return None
+        offer_responses = [OfferResponse.from_model(offer) for offer in offers]
+        return offer_responses
 
     def is_access_token_expired(self, token):
         return datetime.now() > token.expires_at
@@ -106,3 +104,7 @@ class GetOfferService(GetOfferUseCase):
         ) as response:
             response = await response.json()
             return response
+
+    def get_offer_detail(self, coupon_no: str, db: Session) -> OfferDetailResponse:
+        offer = self.offer_repository.get_offer_detail(coupon_no, db)
+        return OfferDetailResponse.from_model(offer)

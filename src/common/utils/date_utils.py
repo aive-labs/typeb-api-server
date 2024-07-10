@@ -36,3 +36,9 @@ def get_unix_timestamp() -> int:
     # datetime 객체를 Unix 시간 (마이크로초 단위)로 변환
     now = datetime.now()
     return int(now.timestamp() * 1_000_000)
+
+
+def convert_str_iso_8601_to_datetime(date_str: str):
+    # 주어진 날짜 문자열 포맷 "2017-12-19T14:39:22+09:00"
+
+    return datetime.fromisoformat(date_str)

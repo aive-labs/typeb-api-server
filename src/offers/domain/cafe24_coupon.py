@@ -9,7 +9,7 @@ class Cafe24Coupon(BaseModel):
     coupon_type: str | None = None
     coupon_name: str | None = None
     coupon_description: str | None = None
-    created_date: str | None = None
+    created_date: str
     deleted: str | None = None
     is_stopped_issued_coupon: str | None = None
     pause_begin_datetime: str | None = None
@@ -60,7 +60,7 @@ class Cafe24Coupon(BaseModel):
     available_end_datetime: str | None = None
     available_site: str | None = None
     available_scope: str | None = None
-    available_day_from_issued: str | None = None
+    available_day_from_issued: int | None = None
     available_price_type: str | None = None
     available_order_price_type: str | None = None
     available_min_price: str | None = None

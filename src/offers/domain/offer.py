@@ -9,6 +9,7 @@ class Offer(BaseModel):
     coupon_name: str
     coupon_type: Optional[str] = None
     coupon_description: Optional[str] = None
+    coupon_created_at: datetime
     benefit_type: Optional[str] = None
     benefit_type_name: Optional[str] = None
     comp_cd: Optional[str] = None
@@ -27,7 +28,9 @@ class Offer(BaseModel):
     issue_order_path: Optional[str] = None
     issue_order_type: Optional[str] = None
     issue_reserved: Optional[str] = None
+    issue_reserved_date: Optional[str] = None
     available_period_type: Optional[str] = None
+    available_day_from_issued: Optional[int] = None
     available_site: Optional[str] = None
     available_price_type: Optional[str] = None
     is_stopped_issued_coupon: Optional[str] = None
@@ -36,6 +39,8 @@ class Offer(BaseModel):
     benefit_percentage: Optional[str] = None
     benefit_percentage_round_unit: Optional[str] = None
     benefit_percentage_max_price: Optional[str] = None
+    include_regional_shipping_rate: Optional[str] = None
+    include_foreign_delivery: Optional[str] = None
     coupon_direct_url: Optional[str] = None
     available_date: Optional[str] = None
     available_order_price_type: Optional[str] = None

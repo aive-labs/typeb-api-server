@@ -58,7 +58,7 @@ class GenerateMessageService(GenerateMessageUsecase):
         if offer_data:
             offer_info_dict = {
                 "offer_id": offer_data.offer_id,
-                "offer_name": offer_data.offer_name,
+                "offer_name": offer_data.coupon_name,
                 "event_remark": offer_data.event_remark,
                 "offer_type_code": offer_data.offer_type_code,
                 "offer_type_name": offer_data.offer_type_name,

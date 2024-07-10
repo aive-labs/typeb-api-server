@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.core.transactional import transactional
+from src.offers.routes.dto.response.offer_detail_response import OfferDetailResponse
 from src.offers.routes.dto.response.offer_response import OfferResponse
 from src.users.domain.user import User
 
@@ -16,6 +17,6 @@ class GetOfferUseCase(ABC):
     ) -> list[OfferResponse]:
         pass
 
-    # @abstractmethod
-    # def get_offer_detail(self, offer_id) -> OfferDetailResponse:
-    #     pass
+    @abstractmethod
+    def get_offer_detail(self, coupon_no, db: Session) -> OfferDetailResponse:
+        pass
