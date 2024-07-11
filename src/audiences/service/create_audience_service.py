@@ -46,15 +46,11 @@ class CreateAudienceService(CreateAudienceUseCase):
 
     @transactional
     def create_audience(self, audience_create: AudienceCreate, user: User, db: Session):
-        audience = self.audience_repository.get_audience_by_name(
-            audience_create.audience_name, db
-        )
+        audience = self.audience_repository.get_audience_by_name(audience_create.audience_name, db)
 
         # 오디언스명 중복 체크
         if audience:
-            raise DuplicatedException(
-                detail={"message": "동일한 오디언스명이 존재합니다."}
-            )
+            raise DuplicatedException(detail={"message": "동일한 오디언스명이 존재합니다."})
 
         if audience_create.create_type_code == AudienceCreateType.Filter.value:
             ctype = AudienceCreateType.Filter.value
@@ -68,8 +64,8 @@ class CreateAudienceService(CreateAudienceUseCase):
             )
 
             # 타겟 오디언스 고객 리스트 저장
-            audience_filter_condition = (
-                self.audience_repository.get_db_filter_conditions(new_audience_id, db)
+            audience_filter_condition = self.audience_repository.get_db_filter_conditions(
+                new_audience_id, db
             )
             conditions = audience_filter_condition[0].conditions
             query = self.get_final_query(user, conditions, db)
@@ -84,11 +80,7 @@ class CreateAudienceService(CreateAudienceUseCase):
             # 업로드 템플릿 식별 후 schema와 field 변수 할당
             templates_members = CsvTemplates.get_eums()
             template = next(
-                (
-                    template
-                    for template in templates_members
-                    if template["_name_"] == template_name
-                ),
+                (template for template in templates_members if template["_name_"] == template_name),
                 None,
             )
 
@@ -145,12 +137,8 @@ class CreateAudienceService(CreateAudienceUseCase):
         insert_to_audiences["create_type_code"] = ctype
         insert_to_audiences["audience_status_code"] = AudienceStatus.inactive.value
         insert_to_audiences["target_strategy"] = audience_create.target_strategy.value
-        insert_to_audiences["audience_status_name"] = (
-            AudienceStatus.inactive.description
-        )
-        insert_to_audiences["user_exc_deletable"] = (
-            True  # 제외오디언스 파란색 표시 -True
-        )
+        insert_to_audiences["audience_status_name"] = AudienceStatus.inactive.description
+        insert_to_audiences["user_exc_deletable"] = True  # 제외오디언스 파란색 표시 -True
         insert_to_audiences["description"] = None
         insert_to_audiences["owned_by_dept"] = user.department_id
         insert_to_audiences["created_by"] = str(user.user_id)
@@ -171,9 +159,7 @@ class CreateAudienceService(CreateAudienceUseCase):
             "filters": filters,
             "exclusions": exclusions,
         }
-        insert_to_filter_conditions["exclusion_condition"] = {
-            "exclusion_condition": exclusions
-        }
+        insert_to_filter_conditions["exclusion_condition"] = {"exclusion_condition": exclusions}
         insert_to_filter_conditions["exclusion_description"] = [
             "1샘플문장입니다.",
             "2샘플문장입니다.",
@@ -181,9 +167,7 @@ class CreateAudienceService(CreateAudienceUseCase):
 
         return insert_to_audiences, insert_to_filter_conditions
 
-    def get_audience_target_strategy_combinations(
-        self, db: Session
-    ) -> TargetStrategyCombination:
+    def get_audience_target_strategy_combinations(self, db: Session) -> TargetStrategyCombination:
 
         new_customer_guide = TargetStrategyAndCondition(
             no=0,
@@ -277,18 +261,14 @@ class CreateAudienceService(CreateAudienceUseCase):
         self, user: User, db: Session
     ) -> list[PredefinedVariable]:
         access_lv = [
-            level.value
-            for level in PredefinedVariableAccess
-            if level.name == user.role_id
+            level.value for level in PredefinedVariableAccess if level.name == user.role_id
         ][0]
 
-        variables_combi_df = self.audience_repository.get_variable_options(
-            access_lv, db
-        )
+        variables_combi_df = self.audience_repository.get_variable_options(access_lv, db)
 
-        variables_combi_df["additional_variable"] = variables_combi_df[
-            "additional_variable"
-        ].apply(tuple)
+        variables_combi_df["additional_variable"] = variables_combi_df["additional_variable"].apply(
+            tuple
+        )
 
         group_bys = [
             "variable_id",
@@ -407,28 +387,22 @@ class CreateAudienceService(CreateAudienceUseCase):
                 for n1, and_conditions in enumerate(and_conditions_list, 1):
                     n2 = 0
                     for and_condition in and_conditions["and_conditions"]:
-                        query_type_dict = get_query_type_with_additional_filters(
-                            and_condition
-                        )
+                        query_type_dict = get_query_type_with_additional_filters(and_condition)
                         n2 += 1
 
                         if query_type_dict is None:
                             raise Exception()
 
                         # variable_type 고정 : target
-                        variable_table = (
-                            self.audience_repository.get_tablename_by_variable_id(
-                                query_type_dict["field"], db
-                            )
+                        variable_table = self.audience_repository.get_tablename_by_variable_id(
+                            query_type_dict["field"], db
                         )
                         table_name = variable_table.target_table
 
                         query_type_dict["table_name"] = table_name
                         condition_dict[f"condition_{n1}_{n2}"] = query_type_dict
 
-                table_condition_dict = classify_conditions_based_on_tablename(
-                    condition_dict
-                )
+                table_condition_dict = classify_conditions_based_on_tablename(condition_dict)
 
                 idx = 0
                 for table_name, condition_list in table_condition_dict.items():
@@ -486,10 +460,8 @@ class CreateAudienceService(CreateAudienceUseCase):
                 total_where_condition = or_(
                     *[and_(*same_n1) for same_n1 in where_condition_dict.values()]
                 )
-                all_customer = (
-                    all_customer.filter(  # pyright: ignore [reportAttributeAccessIssue]
-                        total_where_condition
-                    )
+                all_customer = all_customer.filter(  # pyright: ignore [reportAttributeAccessIssue]
+                    total_where_condition
                 )
                 filter_or_exclutions_query_list.append(all_customer)
         result = except_(*filter_or_exclutions_query_list)

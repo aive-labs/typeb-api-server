@@ -49,9 +49,7 @@ def get_me(
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
     cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
-    onboarding_service: BaseOnboardingService = Depends(
-        Provide[Container.onboarding_service]
-    ),
+    onboarding_service: BaseOnboardingService = Depends(Provide[Container.onboarding_service]),
 ):
     permissions = UserPermissions(
         gnb_permissions=GNBPermissions.with_admin(),
@@ -74,9 +72,7 @@ def get_me(
         else:
             onboarding_status = onboarding.onboarding_status.value
 
-    return UserProfileResponse.from_user(
-        user, permissions, cafe24_integration, onboarding_status
-    )
+    return UserProfileResponse.from_user(user, permissions, cafe24_integration, onboarding_status)
 
 
 @user_router.post("/signin")
@@ -131,8 +127,6 @@ def refresh_access_token(
             "access_token_expires_in": access_token_expires,
         }
     )
-    response.set_cookie(
-        key="access_token", value=access_token, httponly=True, secure=True
-    )
+    response.set_cookie(key="access_token", value=access_token, httponly=True, secure=True)
 
     return response

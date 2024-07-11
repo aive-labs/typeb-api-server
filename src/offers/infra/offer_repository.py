@@ -47,9 +47,7 @@ class OfferRepository:
             #         OffersEntity.available_begin_datetime <= end_date,
             #     )
             # )
-            .order_by(
-                OffersEntity.offer_source, OffersEntity.available_begin_datetime.desc()
-            )
+            .order_by(OffersEntity.offer_source, OffersEntity.available_begin_datetime.desc())
         )
 
         if keyword:
@@ -64,19 +62,13 @@ class OfferRepository:
             )
 
         offer_entities = base_query.all()
-        use_type_dict = {
-            v.value: v.description for _, v in OfferUseType.__members__.items()
-        }
+        use_type_dict = {v.value: v.description for _, v in OfferUseType.__members__.items()}
 
         offers = []
         for offer in offer_entities:
             temp_offer = Offer.model_validate(offer)
-            temp_offer.available_scope = use_type_dict.get(
-                temp_offer.available_scope, ""
-            )
-            temp_offer.offer_source = (
-                temp_offer.offer_source if temp_offer.offer_source else ""
-            )
+            temp_offer.available_scope = use_type_dict.get(temp_offer.available_scope, "")
+            temp_offer.offer_source = temp_offer.offer_source if temp_offer.offer_source else ""
 
             offers.append(temp_offer)
 
@@ -111,9 +103,7 @@ class OfferRepository:
                 if is_convertible_to_int(keyword):
                     condition.append(OffersEntity.event_no.ilike(keyword))  # event_no
                 else:
-                    condition.append(
-                        OffersEntity.offer_name.ilike(keyword)
-                    )  # offer_name
+                    condition.append(OffersEntity.offer_name.ilike(keyword))  # offer_name
 
             result = db.query(
                 OffersEntity.offer_id.label("id"),
@@ -155,9 +145,7 @@ class OfferRepository:
                 if is_convertible_to_int(keyword):
                     condition.append(OffersEntity.event_no.ilike(keyword))  # event_no
                 else:
-                    condition.append(
-                        OffersEntity.offer_name.ilike(keyword)
-                    )  # offer_name
+                    condition.append(OffersEntity.offer_name.ilike(keyword))  # offer_name
 
             result = (
                 db.query(
@@ -197,14 +185,10 @@ class OfferRepository:
             return entity
 
     def get_offer_detail(self, coupon_no, db: Session) -> Offer:
-        entity = (
-            db.query(OffersEntity).filter(OffersEntity.coupon_no == coupon_no).first()
-        )
+        entity = db.query(OffersEntity).filter(OffersEntity.coupon_no == coupon_no).first()
 
         if entity is None:
-            raise NotFoundException(
-                detail={"message": "해당 오퍼 정보를 찾지 못했습니다."}
-            )
+            raise NotFoundException(detail={"message": "해당 오퍼 정보를 찾지 못했습니다."})
 
         offer = Offer.model_validate(entity)
 
@@ -232,35 +216,23 @@ class OfferRepository:
 
     def get_offer(self, offer_key) -> Offer:
         with self.db() as db:
-            entity = (
-                db.query(OffersEntity)
-                .filter(OffersEntity.offer_key == offer_key)
-                .first()
-            )
+            entity = db.query(OffersEntity).filter(OffersEntity.offer_key == offer_key).first()
 
             if entity is None:
-                raise NotFoundException(
-                    detail={"message": "오퍼 정보를 찾지 못했습니다."}
-                )
+                raise NotFoundException(detail={"message": "오퍼 정보를 찾지 못했습니다."})
 
             return Offer.model_validate(entity)
 
     def get_offer_by_id(self, offer_id) -> Offer:
         with self.db() as db:
-            entity = (
-                db.query(OffersEntity).filter(OffersEntity.offer_id == offer_id).first()
-            )
+            entity = db.query(OffersEntity).filter(OffersEntity.offer_id == offer_id).first()
 
             if entity is None:
-                raise NotFoundException(
-                    detail={"message": "오퍼 정보를 찾지 못했습니다."}
-                )
+                raise NotFoundException(detail={"message": "오퍼 정보를 찾지 못했습니다."})
 
             return Offer.from_entity(entity)
 
-    def save_duplicate_offer(
-        self, offer_id, event_no, offer_update, now_kst_datetime, user
-    ):
+    def save_duplicate_offer(self, offer_id, event_no, offer_update, now_kst_datetime, user):
         with self.db() as db:
             db.query(OfferDuplicateEntity).filter(
                 (OfferDuplicateEntity.event_no == event_no)
@@ -282,9 +254,7 @@ class OfferRepository:
 
             db.commit()
 
-    def save_new_coupon(
-        self, cafe24_coupon_response: Cafe24CouponResponse, db: Session
-    ):
+    def save_new_coupon(self, cafe24_coupon_response: Cafe24CouponResponse, db: Session):
         for coupon in cafe24_coupon_response.coupons:
             offer_entity = OffersEntity(
                 coupon_no=coupon.coupon_no,
@@ -306,9 +276,7 @@ class OfferRepository:
                 available_product_list=coupon.available_product_list,
                 available_category_list=coupon.available_category_list,
                 issue_max_count_by_user=(
-                    int(coupon.issue_max_count_by_user)
-                    if coupon.issue_max_count_by_user
-                    else None
+                    int(coupon.issue_max_count_by_user) if coupon.issue_max_count_by_user else None
                 ),
                 available_begin_datetime=coupon.available_begin_datetime,
                 available_end_datetime=coupon.available_end_datetime,

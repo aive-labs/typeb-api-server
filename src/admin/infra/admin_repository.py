@@ -28,9 +28,7 @@ class AdminRepository(BaseAdminRepository):
 
     def get_personal_variables(self, user: User) -> list[PersonalVariableResponse]:
         with self.db() as db:
-            access_level = [
-                level.value for level in AccessLevel if level.name == user.role_id
-            ][0]
+            access_level = [level.value for level in AccessLevel if level.name == user.role_id][0]
 
             entities = (
                 db.query(PersonalVariablesEntity)

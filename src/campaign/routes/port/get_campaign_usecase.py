@@ -11,13 +11,9 @@ from src.users.domain.user import User
 
 class GetCampaignUseCase(ABC):
     @abstractmethod
-    def get_campaigns(
-        self, start_date: str, end_date: str, user: User
-    ) -> list[Campaign]:
+    def get_campaigns(self, start_date: str, end_date: str, user: User) -> list[Campaign]:
         pass
 
     @abstractmethod
-    def get_timeline(
-        self, campaign_id: str, db: Session
-    ) -> list[CampaignTimelineResponse]:
+    def get_timeline(self, campaign_id: str, db: Session) -> list[CampaignTimelineResponse]:
         pass

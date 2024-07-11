@@ -17,12 +17,8 @@ from src.core.database import Base as Base
 class SetGroupMessagesEntity(Base):
     __tablename__ = "set_group_messages"
 
-    set_group_msg_seq = Column(
-        Integer, primary_key=True, index=True, autoincrement=True
-    )
-    set_group_seq = Column(
-        Integer, ForeignKey("campaign_set_groups.set_group_seq"), index=True
-    )
+    set_group_msg_seq = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    set_group_seq = Column(Integer, ForeignKey("campaign_set_groups.set_group_seq"), index=True)
     msg_send_type = Column(String, nullable=False)
     remind_step = Column(Integer, nullable=True)
     remind_seq = Column(Integer, nullable=True)

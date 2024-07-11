@@ -34,9 +34,7 @@ class ProductService(BaseProductService):
             product_id, ProductLinkType.INSTAGRAM.value, db
         )
 
-        creatives = self.creatives_repository.get_creatives_by_style_cd(
-            style_cd=product_id, db=db
-        )
+        creatives = self.creatives_repository.get_creatives_by_style_cd(style_cd=product_id, db=db)
 
         for creative in creatives:
             creative.set_image_url(f"{self.cloud_front_url}/{creative.image_path}")
@@ -76,9 +74,7 @@ class ProductService(BaseProductService):
             product_id = product.product_code
 
             if product_id is None:
-                raise ValidationException(
-                    "프로덕트 코드가 존재하지 않는 상품이 있습니다."
-                )
+                raise ValidationException("프로덕트 코드가 존재하지 않는 상품이 있습니다.")
 
             rep_nm = self.product_repository.get_rep_nms(product_id, db)
             youtube_links = self.product_repository.get_links_by_product_code(

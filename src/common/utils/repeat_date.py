@@ -82,17 +82,15 @@ def calculate_dates(
         if start_date.month in [1, 4, 7, 10] and start_date.day < datetosend:
             start = start_date.replace(day=datetosend)
         else:
-            start = (
-                start_date + relativedelta(months=3 - ((start_date.month - 1) % 3))
-            ).replace(day=datetosend)
+            start = (start_date + relativedelta(months=3 - ((start_date.month - 1) % 3))).replace(
+                day=datetosend
+            )
 
         end = start
         next_start = start + relativedelta(months=3)
 
     elif period == RepeatTypeEnum.HALFYEAR.value:
-        if start_date.month < 7 or (
-            start_date.month == 7 and start_date.day < datetosend
-        ):
+        if start_date.month < 7 or (start_date.month == 7 and start_date.day < datetosend):
             start = (
                 datetime(start_date.year, 1, datetosend, tzinfo=tz)
                 if start_date.month >= 7

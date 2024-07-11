@@ -23,7 +23,5 @@ class StrategyThemeAudienceMappingEntity(Base):
     audience_id = Column(String, ForeignKey("audiences.audience_id"), primary_key=True)
     created_at = Column(DateTime(timezone=True), default=datetime.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
-    updated_at = Column(
-        DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now()
-    )
+    updated_at = Column(DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now())
     updated_by = Column(String, nullable=False, default=text("(user)"))

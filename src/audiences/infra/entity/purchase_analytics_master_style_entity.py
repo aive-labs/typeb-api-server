@@ -34,9 +34,7 @@ class PurchaseAnalyticsMasterStyle(Base):
     additional_discount_price = Column(Integer)
     coupon_discount_price = Column(Integer)
     app_item_discount_amount = Column(Integer)
-    actual_order_amount_payment_amount = Column(
-        "actual_order_amount.payment_amount", Integer
-    )
+    actual_order_amount_payment_amount = Column("actual_order_amount.payment_amount", Integer)
     actual_refund_amount = Column(Integer)
     paid = Column(String)
     canceled = Column(String)

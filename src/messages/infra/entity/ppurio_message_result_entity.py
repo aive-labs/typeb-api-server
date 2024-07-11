@@ -38,9 +38,7 @@ class PpurioMessageResultEntity(Base):
     RCSRES = Column("rcsres", String, nullable=True, comment="RCS 대체 발송 결과")
     RCSTIME = Column("rcstime", String, nullable=True, comment="RCS 대체 발송 시간")
     RETRY_FLAG = Column("retry_flag", String, nullable=True, comment="대체 발송 정보")
-    RESEND_FLAG = Column(
-        "resend_flag", String, nullable=True, comment="대체 발송 메시지 유형"
-    )
+    RESEND_FLAG = Column("resend_flag", String, nullable=True, comment="대체 발송 메시지 유형")
     REFKEY = Column("refkey", String, nullable=True, comment="고객사에서 부여한 키")
     created_at = Column("created_at", DateTime(timezone=True), default=datetime.now)
     updated_at = Column(

@@ -23,9 +23,7 @@ class BaseCreativesRepository(ABC):
         pass
 
     @abstractmethod
-    def update_creatives(
-        self, creative_id, creative_update_dict: dict, db: Session
-    ) -> Creatives:
+    def update_creatives(self, creative_id, creative_update_dict: dict, db: Session) -> Creatives:
         pass
 
     @abstractmethod
@@ -43,7 +41,5 @@ class BaseCreativesRepository(ABC):
         pass
 
     @abstractmethod
-    def get_creatives_by_style_cd(
-        self, style_cd: str, db: Session
-    ) -> list[CreativeBase]:
+    def get_creatives_by_style_cd(self, style_cd: str, db: Session) -> list[CreativeBase]:
         pass

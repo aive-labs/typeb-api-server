@@ -48,9 +48,7 @@ class SearchService(BaseSearchService):
         db: Session,
         is_exclude=False,
     ) -> list[IdWithLabel]:
-        audience_ids = self.audience_repository.get_audiences_ids_by_strategy_id(
-            strategy_id, db
-        )
+        audience_ids = self.audience_repository.get_audiences_ids_by_strategy_id(strategy_id, db)
         return self.audience_repository.get_audiences_by_condition(
             audience_ids, search_keyword, is_exclude, db
         )
@@ -66,12 +64,8 @@ class SearchService(BaseSearchService):
             search_keyword, is_exclude, db, target_strategy
         )
 
-    def search_offers_search_of_sets(
-        self, strategy_id, keyword, user: User
-    ) -> list[IdWithLabel]:
-        return self.offer_repository.get_search_offers_of_sets(
-            strategy_id, keyword, user
-        )
+    def search_offers_search_of_sets(self, strategy_id, keyword, user: User) -> list[IdWithLabel]:
+        return self.offer_repository.get_search_offers_of_sets(strategy_id, keyword, user)
 
     def search_offers(self, keyword, user: User) -> list[IdWithLabel]:
         return self.offer_repository.get_search_offers(keyword, user)
@@ -79,12 +73,8 @@ class SearchService(BaseSearchService):
     def search_recommend_products(self, keyword) -> list[IdWithItemDescription]:
         return self.recommend_products_repository.search_recommend_products(keyword)
 
-    def search_contents_tag(
-        self, keyword, recsys_model_id, db: Session
-    ) -> list[IdWithItem]:
-        return self.contents_repository.search_contents_tag(
-            keyword, recsys_model_id, db
-        )
+    def search_contents_tag(self, keyword, recsys_model_id, db: Session) -> list[IdWithItem]:
+        return self.contents_repository.search_contents_tag(keyword, recsys_model_id, db)
 
     def search_campaign(self, keyword, db) -> list[IdWithItem]:
         current_timestamp = datetime.now(selected_timezone)
@@ -92,9 +82,7 @@ class SearchService(BaseSearchService):
         two_weeks_ago = current_timestamp - timedelta(days=14)
         two_weeks_ago = two_weeks_ago.strftime("%Y%m%d")
 
-        return self.campaign_repository.search_campaign(
-            keyword, current_date, two_weeks_ago, db
-        )
+        return self.campaign_repository.search_campaign(keyword, current_date, two_weeks_ago, db)
 
     def search_rep_nms(self, product_id, db) -> list[str]:
         return self.product_repository.get_rep_nms(product_id, db)
@@ -102,6 +90,4 @@ class SearchService(BaseSearchService):
     def search_strategies(
         self, campaign_type_code, search_keyword, db: Session
     ) -> list[StrategySearchResponse]:
-        return self.strategy_repository.search_keyword(
-            campaign_type_code, search_keyword, db
-        )
+        return self.strategy_repository.search_keyword(campaign_type_code, search_keyword, db)

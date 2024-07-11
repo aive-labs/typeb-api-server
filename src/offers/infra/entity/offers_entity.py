@@ -59,9 +59,7 @@ class OffersEntity(Base):
     offer_source = Column(String(10))
     created_at = Column(DateTime(timezone=True), default=datetime.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
-    updated_at = Column(
-        DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now()
-    )
+    updated_at = Column(DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now())
     updated_by = Column(String, nullable=False, default=text("(user)"))
 
     offer_detail_options = relationship(

@@ -19,18 +19,14 @@ class GetStrategyService(GetStrategyUseCase):
     ) -> list[StrategyResponse]:
         # TODO: 생성 부서 오브젝트 필터링 추가 작업 필요
 
-        strategies = self.strategy_repository.get_all_strategies(
-            start_date, end_date, user, db
-        )
+        strategies = self.strategy_repository.get_all_strategies(start_date, end_date, user, db)
 
         return [StrategyResponse.from_model(model) for model in strategies]
 
     def get_strategy_detail(
         self, strategy_id: str, db: Session
     ) -> StrategyWithStrategyThemeResponse:
-        strategy, strategy_themes = self.strategy_repository.get_strategy_detail(
-            strategy_id, db
-        )
+        strategy, strategy_themes = self.strategy_repository.get_strategy_detail(strategy_id, db)
 
         if strategy.created_at is None or strategy.updated_at is None:
             raise ConvertValueException(

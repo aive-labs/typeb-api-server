@@ -33,11 +33,7 @@ class OnboardingSqlAlchemyRepository:
 
     def get_onboarding_status(self, mall_id: str, db: Session) -> Onboarding | None:
 
-        entity = (
-            db.query(OnboardingEntity)
-            .filter(OnboardingEntity.mall_id == mall_id)
-            .first()
-        )
+        entity = db.query(OnboardingEntity).filter(OnboardingEntity.mall_id == mall_id).first()
 
         if not entity:
             return None
@@ -48,20 +44,12 @@ class OnboardingSqlAlchemyRepository:
         self, mall_id: str, status: OnboardingStatus, db: Session
     ) -> Onboarding:
 
-        entity = (
-            db.query(OnboardingEntity)
-            .filter(OnboardingEntity.mall_id == mall_id)
-            .first()
-        )
+        entity = db.query(OnboardingEntity).filter(OnboardingEntity.mall_id == mall_id).first()
 
         if not entity:
-            raise NotFoundException(
-                detail={"message": "온보딩 관련 데이터가 존재하지 않습니다."}
-            )
+            raise NotFoundException(detail={"message": "온보딩 관련 데이터가 존재하지 않습니다."})
 
-        entity.onboarding_status = (  # pyright: ignore [reportAttributeAccessIssue]
-            status.value
-        )
+        entity.onboarding_status = status.value  # pyright: ignore [reportAttributeAccessIssue]
         db.commit()
         db.refresh(entity)
 
@@ -84,9 +72,7 @@ class OnboardingSqlAlchemyRepository:
 
         db.execute(upsert_statement)
 
-    def save_message_sender(
-        self, mall_id, message_sender: MessageSenderRequest, db: Session
-    ):
+    def save_message_sender(self, mall_id, message_sender: MessageSenderRequest, db: Session):
 
         db.add(
             MessageIntegrationEntity(
@@ -125,9 +111,7 @@ class OnboardingSqlAlchemyRepository:
             opt_out_phone_number=entity.opt_out_phone_number,
         )
 
-    def save_kakao_channel(
-        self, mall_id, kakao_channel: KakaoChannelRequest, db: Session
-    ):
+    def save_kakao_channel(self, mall_id, kakao_channel: KakaoChannelRequest, db: Session):
 
         db.add(
             KakaoIntegrationEntity(
@@ -138,9 +122,7 @@ class OnboardingSqlAlchemyRepository:
             )
         )
 
-    def update_kakao_channel(
-        self, mall_id, kakao_channel: KakaoChannelRequest, db: Session
-    ):
+    def update_kakao_channel(self, mall_id, kakao_channel: KakaoChannelRequest, db: Session):
 
         db.merge(
             KakaoIntegrationEntity(

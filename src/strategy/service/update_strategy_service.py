@@ -28,9 +28,7 @@ class UpdateStrategyService(UpdateStrategyUseCase):
         self.strategy_repository = strategy_repository
 
     @transactional
-    def exec(
-        self, strategy_id: str, strategy_update: StrategyCreate, user: User, db: Session
-    ):
+    def exec(self, strategy_id: str, strategy_update: StrategyCreate, user: User, db: Session):
         """전략 수정 함수
 
         -연결된 캠페인이 존재하는 경우
@@ -60,9 +58,7 @@ class UpdateStrategyService(UpdateStrategyUseCase):
 
         for _, theme in enumerate(strategy_update.strategy_themes):
             # 입력값 및 비즈니스 로직에 대한 예외 검증
-            self._check_strategy_theme_validation(
-                recommend_model_ids, strategy_update, theme
-            )
+            self._check_strategy_theme_validation(recommend_model_ids, strategy_update, theme)
 
             theme_audience = [
                 StrategyThemeAudienceMapping(
@@ -98,9 +94,7 @@ class UpdateStrategyService(UpdateStrategyUseCase):
                 )
             )
 
-        self.strategy_repository.update(
-            update_strategy, update_strategy_themes, user, db
-        )
+        self.strategy_repository.update(update_strategy, update_strategy_themes, user, db)
 
     def _is_duplicate_audience_selected(self, audience_ids):
         if len(audience_ids) != len(set(audience_ids)):
@@ -131,9 +125,7 @@ class UpdateStrategyService(UpdateStrategyUseCase):
                 }
             )
 
-    def _check_duplicate_recommend_model(
-        self, recommend_model_id: int, recommend_model_list
-    ):
+    def _check_duplicate_recommend_model(self, recommend_model_id: int, recommend_model_list):
         """Checks for duplicate recommender system model IDs and raises an exception if found."""
         if recommend_model_id != 0 and (recommend_model_id in recommend_model_list):
             raise DuplicatedException(
@@ -155,9 +147,7 @@ class UpdateStrategyService(UpdateStrategyUseCase):
                 },
             )
 
-    def _check_strategy_theme_validation(
-        self, recommend_model_ids, strategy_create, theme
-    ):
+    def _check_strategy_theme_validation(self, recommend_model_ids, strategy_create, theme):
         # 1. 테마모델 중복 점검
         self._check_duplicate_recommend_model(
             recommend_model_id=theme.recsys_model_id,
@@ -165,6 +155,4 @@ class UpdateStrategyService(UpdateStrategyUseCase):
         )
         recommend_model_ids.append(theme.recsys_model_id)
         # 2. 세그먼트 캠페인 - 신상품 추천 모델 단독 사용 점검
-        self._check_exclusive_new_collection_model(
-            recommend_model_list=recommend_model_ids
-        )
+        self._check_exclusive_new_collection_model(recommend_model_list=recommend_model_ids)

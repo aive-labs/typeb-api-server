@@ -36,7 +36,5 @@ class CreateAudienceUseCase(ABC):
         pass
 
     @abstractmethod
-    def get_audience_target_strategy_combinations(
-        self, db: Session
-    ) -> TargetStrategyCombination:
+    def get_audience_target_strategy_combinations(self, db: Session) -> TargetStrategyCombination:
         pass

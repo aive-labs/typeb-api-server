@@ -14,9 +14,7 @@ from src.core.transactional import transactional
 
 class GetCreativeRecommendationsForContent(GetCreativeRecommendationsForContentUseCase):
 
-    def __init__(
-        self, creatives_repository: CreativesRepository, s3_service: S3Service
-    ):
+    def __init__(self, creatives_repository: CreativesRepository, s3_service: S3Service):
         self.creatives_repository = creatives_repository
         self.s3_service = s3_service
 
@@ -41,8 +39,6 @@ class GetCreativeRecommendationsForContent(GetCreativeRecommendationsForContentU
 
         cloud_front_url = get_env_variable("cloud_front_asset_url")
         for creatives_recommend in creatives_recommend_list:
-            creatives_recommend.set_image_url(
-                f"{cloud_front_url}/{creatives_recommend.image_uri}"
-            )
+            creatives_recommend.set_image_url(f"{cloud_front_url}/{creatives_recommend.image_uri}")
 
         return creatives_recommend_list

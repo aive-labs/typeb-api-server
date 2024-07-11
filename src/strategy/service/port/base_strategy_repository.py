@@ -13,9 +13,7 @@ from src.users.domain.user import User
 
 class BaseStrategyRepository(ABC):
     @abstractmethod
-    def get_all_strategies(
-        self, start_date, end_date, user: User, db: Session
-    ) -> list[Strategy]:
+    def get_all_strategies(self, start_date, end_date, user: User, db: Session) -> list[Strategy]:
         pass
 
     @abstractmethod
@@ -38,9 +36,7 @@ class BaseStrategyRepository(ABC):
         pass
 
     @abstractmethod
-    def is_strategy_name_exists_for_update(
-        self, strategy_id: str, name: str, db: Session
-    ) -> int:
+    def is_strategy_name_exists_for_update(self, strategy_id: str, name: str, db: Session) -> int:
         pass
 
     @abstractmethod

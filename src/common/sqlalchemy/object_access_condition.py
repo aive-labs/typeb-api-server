@@ -13,9 +13,7 @@ def object_access_condition(db, user, model):
         model: Object Model
     """
     admin_access = (
-        True
-        if user.role_id in [RoleEnum.ADMIN.value, RoleEnum.OPERATOR.value]
-        else False
+        True if user.role_id in [RoleEnum.ADMIN.value, RoleEnum.OPERATOR.value] else False
     )
 
     if admin_access:

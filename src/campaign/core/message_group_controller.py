@@ -88,12 +88,8 @@ class MessageGroupController:
             ],  # 매장 번호 또는 대표번호
             msg_announcement="",
             template_id=None,
-            msg_gen_key=(
-                msg_data.msg_gen_key if msg_data.msg_gen_key is not None else None
-            ),
-            msg_photo_uri=(
-                msg_data.msg_photo_uri if msg_data.msg_photo_uri is not None else None
-            ),
+            msg_gen_key=(msg_data.msg_gen_key if msg_data.msg_gen_key is not None else None),
+            msg_photo_uri=(msg_data.msg_photo_uri if msg_data.msg_photo_uri is not None else None),
             msg_send_type=msg_data.msg_send_type,
             media=media,
             msg_type=msg_type,
@@ -247,9 +243,7 @@ def message_validator(msg_delivery_vendor: str, msg_obj: Message):
 
     # 메시지 타입별 validation checker
     if msg_obj.media.value == "tms":
-        if (msg_obj.msg_type == MessageType.MMS.value) & (
-            msg_obj.msg_photo_uri is None
-        ):
+        if (msg_obj.msg_type == MessageType.MMS.value) & (msg_obj.msg_photo_uri is None):
             raise HTTPException(
                 status_code=400,
                 detail={

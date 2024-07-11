@@ -24,9 +24,7 @@ def get_all_products(
     per_page: int = 10,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    product_service: BaseProductService = Depends(
-        dependency=Provide[Container.product_service]
-    ),
+    product_service: BaseProductService = Depends(dependency=Provide[Container.product_service]),
 ):
     product_response = product_service.get_all_products(
         based_on, sort_by, current_page, per_page, db=db
@@ -49,9 +47,7 @@ def get_product_detail(
     product_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    product_service: BaseProductService = Depends(
-        dependency=Provide[Container.product_service]
-    ),
+    product_service: BaseProductService = Depends(dependency=Provide[Container.product_service]),
 ) -> ProductResponse:
     return product_service.get_product_detail(product_id, db=db)
 
@@ -63,9 +59,7 @@ def update_product_link(
     product_link_update: ProductLinkUpdate,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    product_service: BaseProductService = Depends(
-        dependency=Provide[Container.product_service]
-    ),
+    product_service: BaseProductService = Depends(dependency=Provide[Container.product_service]),
 ):
     product_service.update_product_link(product_id, product_link_update, db=db)
 
@@ -77,8 +71,6 @@ def update_product(
     product_update: ProductUpdate,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    product_service: BaseProductService = Depends(
-        dependency=Provide[Container.product_service]
-    ),
+    product_service: BaseProductService = Depends(dependency=Provide[Container.product_service]),
 ):
     product_service.update(product_id, product_update, db=db)

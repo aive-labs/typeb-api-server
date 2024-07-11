@@ -19,9 +19,7 @@ class GetAudienceUseCase(ABC):
         pass
 
     @abstractmethod
-    def get_audience_stat_details(
-        self, audience_id: str, db: Session
-    ) -> AudienceStatsInfo:
+    def get_audience_stat_details(self, audience_id: str, db: Session) -> AudienceStatsInfo:
         pass
 
     @abstractmethod
@@ -29,7 +27,5 @@ class GetAudienceUseCase(ABC):
         pass
 
     @abstractmethod
-    def get_default_exclude(
-        self, user: User, db: Session
-    ) -> list[DefaultExcludeAudience]:
+    def get_default_exclude(self, user: User, db: Session) -> list[DefaultExcludeAudience]:
         pass

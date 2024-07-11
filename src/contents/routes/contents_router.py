@@ -73,9 +73,7 @@ def get_contents_subject_list(
     style_yn: bool = True,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    get_contents_service: GetContentsUseCase = Depends(
-        Provide[Container.get_contents_service]
-    ),
+    get_contents_service: GetContentsUseCase = Depends(Provide[Container.get_contents_service]),
 ) -> list[ContentsMenuResponse]:
     return get_contents_service.get_subjects(style_yn, db=db)
 
@@ -86,9 +84,7 @@ def get_contents_menu_list(
     code: str,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    get_contents_service: GetContentsUseCase = Depends(
-        Provide[Container.get_contents_service]
-    ),
+    get_contents_service: GetContentsUseCase = Depends(Provide[Container.get_contents_service]),
 ) -> dict:
     return get_contents_service.get_with_subject(code, db=db)
 
@@ -103,9 +99,7 @@ def get_contents_list(
     per_page: int = 10,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    get_contents_service: GetContentsUseCase = Depends(
-        Provide[Container.get_contents_service]
-    ),
+    get_contents_service: GetContentsUseCase = Depends(Provide[Container.get_contents_service]),
 ):
     pagination_result = get_contents_service.get_contents_list(
         db=db,
@@ -125,9 +119,7 @@ def get_contents(
     contents_id: int,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    get_contents_service: GetContentsUseCase = Depends(
-        Provide[Container.get_contents_service]
-    ),
+    get_contents_service: GetContentsUseCase = Depends(Provide[Container.get_contents_service]),
 ) -> ContentsResponse:
     return get_contents_service.get_contents(contents_id, db=db)
 

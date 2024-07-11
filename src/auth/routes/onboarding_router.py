@@ -24,9 +24,7 @@ def get_onboarding_status(
     mall_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db),
-    onboarding_service: BaseOnboardingService = Depends(
-        Provide[Container.onboarding_service]
-    ),
+    onboarding_service: BaseOnboardingService = Depends(Provide[Container.onboarding_service]),
 ) -> OnboardingResponse | None:
     return onboarding_service.get_onboarding_status(mall_id=mall_id, user=user, db=db)
 
@@ -38,9 +36,7 @@ def update_onboarding_status(
     onboarding_request: OnboardingRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    onboarding_service: BaseOnboardingService = Depends(
-        Provide[Container.onboarding_service]
-    ),
+    onboarding_service: BaseOnboardingService = Depends(Provide[Container.onboarding_service]),
 ) -> OnboardingResponse:
     return onboarding_service.update_onboarding_status(
         mall_id=mall_id, status=onboarding_request.onboarding_status, db=db
@@ -54,9 +50,7 @@ def register_message_sender(
     message_sender_request: MessageSenderRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    onboarding_service: BaseOnboardingService = Depends(
-        Provide[Container.onboarding_service]
-    ),
+    onboarding_service: BaseOnboardingService = Depends(Provide[Container.onboarding_service]),
 ):
     onboarding_service.register_message_sender(mall_id, message_sender_request, db=db)
 
@@ -68,9 +62,7 @@ def updates_message_sender(
     message_sender_request: MessageSenderRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    onboarding_service: BaseOnboardingService = Depends(
-        Provide[Container.onboarding_service]
-    ),
+    onboarding_service: BaseOnboardingService = Depends(Provide[Container.onboarding_service]),
 ):
     onboarding_service.update_message_sender(mall_id, message_sender_request, db=db)
 
@@ -81,9 +73,7 @@ def get_message_sender(
     mall_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    onboarding_service: BaseOnboardingService = Depends(
-        Provide[Container.onboarding_service]
-    ),
+    onboarding_service: BaseOnboardingService = Depends(Provide[Container.onboarding_service]),
 ) -> MessageSenderResponse | None:
     return onboarding_service.get_message_sender(mall_id, db=db)
 
@@ -95,9 +85,7 @@ def register_kakao_channel(
     kakao_channel_request: KakaoChannelRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    onboarding_service: BaseOnboardingService = Depends(
-        Provide[Container.onboarding_service]
-    ),
+    onboarding_service: BaseOnboardingService = Depends(Provide[Container.onboarding_service]),
 ):
     onboarding_service.register_kakao_channel(mall_id, kakao_channel_request, db=db)
 
@@ -109,9 +97,7 @@ def update_kakao_channel(
     kakao_channel_request: KakaoChannelRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    onboarding_service: BaseOnboardingService = Depends(
-        Provide[Container.onboarding_service]
-    ),
+    onboarding_service: BaseOnboardingService = Depends(Provide[Container.onboarding_service]),
 ):
     onboarding_service.update_kakao_channel(mall_id, kakao_channel_request, db=db)
 
@@ -122,8 +108,6 @@ def get_kakao_channel(
     mall_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    onboarding_service: BaseOnboardingService = Depends(
-        Provide[Container.onboarding_service]
-    ),
+    onboarding_service: BaseOnboardingService = Depends(Provide[Container.onboarding_service]),
 ) -> KakaoChannelResponse | None:
     return onboarding_service.get_kakao_channel(mall_id=mall_id, db=db)

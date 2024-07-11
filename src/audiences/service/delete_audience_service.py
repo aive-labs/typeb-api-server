@@ -21,9 +21,7 @@ class DeleteAudienceService(DeleteAudienceUseCase):
             - 연결 캠페인이 모두 기간만료 상태인 경우 -> 미표시 상태 update
             - 그 외의 경우 -> 삭제 불가. error raise
         """
-        linked_campaigns = self.audience_repository.get_linked_campaigns(
-            audience_id, db
-        )
+        linked_campaigns = self.audience_repository.get_linked_campaigns(audience_id, db)
         if len(linked_campaigns) >= 1:
             linked_camp_list = [row.campaign_status_code for row in linked_campaigns]
 
@@ -45,6 +43,4 @@ class DeleteAudienceService(DeleteAudienceUseCase):
         """
         캠페인 리스트에 단 하나의 캠페인이 있고, 그 상태가 'expired'인지 확인합니다.
         """
-        return (
-            len(campaign_list) == 1 and campaign_list[0] == CampaignStatus.expired.value
-        )
+        return len(campaign_list) == 1 and campaign_list[0] == CampaignStatus.expired.value

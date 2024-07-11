@@ -22,9 +22,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 class AuthService:
-    def __init__(
-        self, token_service: TokenService, user_repository: BaseUserRepository
-    ):
+    def __init__(self, token_service: TokenService, user_repository: BaseUserRepository):
         self.token_service = token_service
         self.user_repository = user_repository
 
@@ -61,15 +59,11 @@ class AuthService:
             if email is None:
                 raise AuthException("해당하는 이메일을 찾지 못하였습니다.")
         except JWTError as e:
-            raise CredentialException(
-                detail={"message": "유효하지 않은 토큰입니다."}
-            ) from e
+            raise CredentialException(detail={"message": "유효하지 않은 토큰입니다."}) from e
 
         user = self.user_repository.get_user_by_email(email, db)
         if user is None:
-            raise NotFoundException(
-                detail={"message": "해당하는 이메일을 찾지 못하였습니다."}
-            )
+            raise NotFoundException(detail={"message": "해당하는 이메일을 찾지 못하였습니다."})
 
         return user
 

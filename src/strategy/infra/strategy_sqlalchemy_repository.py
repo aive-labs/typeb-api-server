@@ -37,13 +37,9 @@ class StrategySqlAlchemy:
         """
         self.db = db
 
-    def get_all_strategies(
-        self, start_date, end_date, user: User, db: Session
-    ) -> list[Strategy]:
+    def get_all_strategies(self, start_date, end_date, user: User, db: Session) -> list[Strategy]:
 
-        user_entity = (
-            db.query(UserEntity).filter(UserEntity.user_id == user.user_id).first()
-        )
+        user_entity = db.query(UserEntity).filter(UserEntity.user_id == user.user_id).first()
 
         conditions = self._object_access_condition(db, user_entity, StrategyEntity)
 
@@ -118,9 +114,7 @@ class StrategySqlAlchemy:
                 ]
 
                 for theme_offer_entity in theme_offer_entities:
-                    strategy_theme_entity.strategy_theme_offer_mapping.append(
-                        theme_offer_entity
-                    )
+                    strategy_theme_entity.strategy_theme_offer_mapping.append(theme_offer_entity)
 
                 strategy_entity.strategy_themes.append(strategy_theme_entity)
 
@@ -129,9 +123,7 @@ class StrategySqlAlchemy:
 
             return strategy_entity
 
-    def _object_access_condition(
-        self, db: Session, user: UserEntity, model: Type[StrategyEntity]
-    ):
+    def _object_access_condition(self, db: Session, user: UserEntity, model: Type[StrategyEntity]):
         """Checks if the user has the required permissions for Object access.
         Return conditions based on object access permissions
 
@@ -140,9 +132,7 @@ class StrategySqlAlchemy:
             model: Object Model
         """
         admin_access = (
-            True
-            if user.role_id in [RoleEnum.ADMIN.value, RoleEnum.OPERATOR.value]
-            else False
+            True if user.role_id in [RoleEnum.ADMIN.value, RoleEnum.OPERATOR.value] else False
         )
 
         if admin_access:
@@ -274,9 +264,7 @@ class StrategySqlAlchemy:
             ]
 
             for theme_audience_entity in theme_audience_entities:
-                strategy_theme_entity.strategy_theme_audience_mapping.append(
-                    theme_audience_entity
-                )
+                strategy_theme_entity.strategy_theme_audience_mapping.append(theme_audience_entity)
 
             theme_offer_entities = [
                 StrategyThemeOfferMappingEntity(
@@ -289,9 +277,7 @@ class StrategySqlAlchemy:
             ]
 
             for theme_offer_entity in theme_offer_entities:
-                strategy_theme_entity.strategy_theme_offer_mapping.append(
-                    theme_offer_entity
-                )
+                strategy_theme_entity.strategy_theme_offer_mapping.append(theme_offer_entity)
 
             strategy_entity.strategy_themes.append(strategy_theme_entity)
 

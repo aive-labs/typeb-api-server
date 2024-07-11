@@ -72,23 +72,17 @@ class GenerateMessageService(GenerateMessageUsecase):
                 "event_end_dt": offer_data.event_end_dt,
             }
 
-            offer_amount = self.offer_repository.get_offer_detail_for_msggen(
-                offer_data.offer_key
-            )
+            offer_amount = self.offer_repository.get_offer_detail_for_msggen(offer_data.offer_key)
             offer_info_dict["offer_amount"] = (
                 offer_amount.apply_offer_amount if offer_amount else None
             )
-            offer_info_dict["offer_rate"] = (
-                offer_amount.apply_offer_rate if offer_amount else None
-            )
+            offer_info_dict["offer_rate"] = offer_amount.apply_offer_rate if offer_amount else None
 
         else:
             offer_info_dict = {}
 
         if set_data_obj.recsys_model_id:
-            recsys_model_obj = self.common_repository.get_recsys_model(
-                set_data_obj.recsys_model_id
-            )
+            recsys_model_obj = self.common_repository.get_recsys_model(set_data_obj.recsys_model_id)
             recsys_model_name = recsys_model_obj.recsys_model_name
         else:
             recsys_model_name = None
@@ -113,9 +107,7 @@ class GenerateMessageService(GenerateMessageUsecase):
             "recipient_count": set_data_obj.recipient_count,
             "is_confirmed": set_data_obj.is_confirmed,
             "is_message_confirmed": set_data_obj.is_message_confirmed,
-            "media_cost": (
-                25 if set_data_obj.media_cost is None else set_data_obj.media_cost
-            ),
+            "media_cost": (25 if set_data_obj.media_cost is None else set_data_obj.media_cost),
             "offer_info": offer_info_dict,
         }
 
@@ -163,9 +155,7 @@ class GenerateMessageService(GenerateMessageUsecase):
         )
 
         phone_callback = "02-0000-0000"  # 매장 번호 또는 대표번호
-        msg_controller = MessageGroupController(
-            phone_callback, campaign_base_obj, message_data
-        )
+        msg_controller = MessageGroupController(phone_callback, campaign_base_obj, message_data)
 
         ## message send type campaing / remind
         ## handle generate data
@@ -174,9 +164,7 @@ class GenerateMessageService(GenerateMessageUsecase):
         message_data_dict = defaultdict(list)
         for message in message_data:
             set_group_msg = message.set_group_message
-            remind_step = (
-                str(set_group_msg.remind_step) if set_group_msg.remind_step else ""
-            )
+            remind_step = str(set_group_msg.remind_step) if set_group_msg.remind_step else ""
             send_type = (
                 "_".join([set_group_msg.msg_send_type, remind_step])
                 if set_group_msg.remind_step
@@ -232,9 +220,7 @@ class GenerateMessageService(GenerateMessageUsecase):
             else:
                 set_group_seq = msg_controller.get_set_group_seq(values[0])
 
-                pre_def_gen_keys = msg_controller.pre_define_remind_msg_seq(
-                    key.split("_")[1]
-                )
+                pre_def_gen_keys = msg_controller.pre_define_remind_msg_seq(key.split("_")[1])
                 while len(generate_keys) <= 0:  # 리마인드는 1개만 생성
                     generation_msg = generate_dm.generate_dm(
                         set_group_seq,

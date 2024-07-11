@@ -40,9 +40,7 @@ class CreativesSqlAlchemy:
 
         return ModelConverter.entity_to_model(entity, Creatives)
 
-    def get_all_creatives(
-        self, based_on, sort_by, db: Session, asset_type=None, query=None
-    ):
+    def get_all_creatives(self, based_on, sort_by, db: Session, asset_type=None, query=None):
         """소재 목록을 조회하는 함수, style_master와 left 조인하여 데이터 조회
         # add based_on, sort_by options
         """
@@ -92,9 +90,7 @@ class CreativesSqlAlchemy:
         base_query = base_query.order_by(sort_col)
 
         if asset_type:
-            base_query = base_query.filter(
-                CreativesEntity.image_asset_type == asset_type.value
-            )
+            base_query = base_query.filter(CreativesEntity.image_asset_type == asset_type.value)
 
         if query:
             query = f"%{query}%"
@@ -114,15 +110,13 @@ class CreativesSqlAlchemy:
 
         style_masters = db.query(
             StyleMasterEntity.sty_cd.label("style_cd"),
-            func.concat(
-                "(", StyleMasterEntity.sty_cd, ")", " ", StyleMasterEntity.sty_nm
-            ).label("style_object_name"),
+            func.concat("(", StyleMasterEntity.sty_cd, ")", " ", StyleMasterEntity.sty_nm).label(
+                "style_object_name"
+            ),
         ).all()
 
         return [
-            StyleObject(
-                style_cd=item.style_cd, style_object_name=item.style_object_name
-            )
+            StyleObject(style_cd=item.style_cd, style_object_name=item.style_object_name)
             for item in style_masters
         ]
 
@@ -152,9 +146,7 @@ class CreativesSqlAlchemy:
 
     def save_creatives(self, creatives_list, db: Session):
 
-        entities = [
-            CreativesEntity.from_model(creatives) for creatives in creatives_list
-        ]
+        entities = [CreativesEntity.from_model(creatives) for creatives in creatives_list]
         db.add_all(entities)
 
     def delete(self, creative_id, db: Session):
@@ -175,13 +167,9 @@ class CreativesSqlAlchemy:
 
         if tag_nm != "":
             filter_conditions.append(CreativesEntity.creative_tags.ilike(f"%{tag_nm}%"))
-            filter_conditions.append(
-                CreativesEntity.style_object_name.ilike(f"%{tag_nm}%")
-            )
+            filter_conditions.append(CreativesEntity.style_object_name.ilike(f"%{tag_nm}%"))
         elif len(style_cd_list) > 0:
-            filter_conditions.append(
-                func.lower(CreativesEntity.style_cd).in_(style_cd_list)
-            )
+            filter_conditions.append(func.lower(CreativesEntity.style_cd).in_(style_cd_list))
 
         filter_conditions.append(~CreativesEntity.is_deleted)
 
@@ -197,10 +185,7 @@ class CreativesSqlAlchemy:
 
         result = query.limit(limit).all()
 
-        return [
-            ModelConverter.entity_to_model(entity, CreativeRecommend)
-            for entity in result
-        ]
+        return [ModelConverter.entity_to_model(entity, CreativeRecommend) for entity in result]
 
     # def _add_file_order(self, query):
     #
@@ -217,9 +202,7 @@ class CreativesSqlAlchemy:
 
     def _add_tag_order(self, given_tag, query):
         tag_order = (
-            func.array_position(
-                func.string_to_array(CreativesEntity.creative_tags, ","), given_tag
-            )
+            func.array_position(func.string_to_array(CreativesEntity.creative_tags, ","), given_tag)
             .desc()
             .nullslast()
         )

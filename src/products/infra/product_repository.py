@@ -68,15 +68,11 @@ class ProductRepository(BaseProductRepository):
         )
 
         return [
-            TitleWithLink(
-                id=str(entity.product_link_id), title=entity.title, link=entity.link
-            )
+            TitleWithLink(id=str(entity.product_link_id), title=entity.title, link=entity.link)
             for entity in entities
         ]
 
-    def update_product_link(
-        self, product_id, product_link_update: ProductLinkUpdate, db
-    ):
+    def update_product_link(self, product_id, product_link_update: ProductLinkUpdate, db):
 
         if product_link_update.youtube is not None:
             self.upsert_product_link(

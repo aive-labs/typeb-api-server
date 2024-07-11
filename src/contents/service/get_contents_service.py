@@ -31,10 +31,7 @@ class GetContentsService(GetContentsUseCase):
 
     def get_subjects(self, style_yn: bool, db: Session) -> list[ContentsMenuResponse]:
         contents_menu_list = self.contents_repository.get_subject(style_yn, db)
-        return [
-            ContentsMenuResponse(code=menu.code, name=menu.name)
-            for menu in contents_menu_list
-        ]
+        return [ContentsMenuResponse(code=menu.code, name=menu.name) for menu in contents_menu_list]
 
     def get_with_subject(self, code: str, db: Session):
         menu_map = self.contents_repository.get_menu_map(code, db)
@@ -62,14 +59,10 @@ class GetContentsService(GetContentsUseCase):
     def get_contents_list(
         self, db: Session, based_on, sort_by, current_page, per_page, query=None
     ) -> PaginationResponse[ContentsResponse]:
-        responses = self.contents_repository.get_contents_list(
-            db, based_on, sort_by, query
-        )
+        responses = self.contents_repository.get_contents_list(db, based_on, sort_by, query)
 
         for response in responses:
-            response.set_thumbnail_url(
-                f"{self.cloud_front_url}/{response.thumbnail_uri}"
-            )
+            response.set_thumbnail_url(f"{self.cloud_front_url}/{response.thumbnail_uri}")
             response.set_contents_url(f"{self.cloud_front_url}/{response.contents_url}")
 
         items = responses[(current_page - 1) * per_page : current_page * per_page]

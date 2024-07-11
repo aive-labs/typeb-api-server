@@ -15,7 +15,4 @@ class MessageService:
             # DB 성공 상태 업데이트
 
     def is_lms_success(self, ppurio_message_result):
-        return (
-            ppurio_message_result.MEDIA == "LMS"
-            and ppurio_message_result.RESULT == "6600"
-        )
+        return ppurio_message_result.MEDIA == "LMS" and ppurio_message_result.RESULT == "6600"

@@ -116,8 +116,7 @@ class OfferConditionVar:
             code = "code" if v.get("code") else "name"
             if v.get("select_type") == "multi_select":
                 elem = {
-                    (getattr(data, v.get(code)), getattr(data, v.get("name")))
-                    for data in tbl_data
+                    (getattr(data, v.get(code)), getattr(data, v.get("name"))) for data in tbl_data
                 }
                 options = [
                     option_model.model_validate(

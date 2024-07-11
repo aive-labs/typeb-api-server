@@ -16,9 +16,7 @@ class UserRepository(BaseUserRepository):
     def register_user(self, user_create: UserCreate, db: Session) -> User:
         user: User = user_create.to_user()
 
-        return self.user_sqlalchemy.register_user(
-            user.to_entity(), user.to_password_entity(), db
-        )
+        return self.user_sqlalchemy.register_user(user.to_entity(), user.to_password_entity(), db)
 
     def update_user(self, user_modify: UserModify, db: Session):
         self.user_sqlalchemy.update_user(user_modify, db)
@@ -38,9 +36,7 @@ class UserRepository(BaseUserRepository):
         user_info = self.user_sqlalchemy.find_user_by_email(email, db)
 
         if user_info is None:
-            raise NotFoundException(
-                detail={"message": "해당하는 사용자를 찾지 못하였습니다."}
-            )
+            raise NotFoundException(detail={"message": "해당하는 사용자를 찾지 못하였습니다."})
 
         user = User.from_entity(user_info[0])
         user.password = user_info[1]

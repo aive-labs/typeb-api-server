@@ -30,10 +30,7 @@ class DataConverter:
         2개 이상의 query object를 dataframe으로 변환. 중복 허용 union
         """
         return pd.concat(
-            [
-                pd.read_sql(orm_stt.statement, orm_stt.session.bind)
-                for orm_stt in queries
-            ]
+            [pd.read_sql(orm_stt.statement, orm_stt.session.bind) for orm_stt in queries]
         )
 
     @staticmethod
@@ -79,9 +76,7 @@ class DataConverter:
     @staticmethod
     def convert_model_to_dict(model):
         """SQLAlchemy model을 dict로 변환하는 함수"""
-        return {
-            c.key: getattr(model, c.key) for c in inspect(model).mapper.column_attrs
-        }
+        return {c.key: getattr(model, c.key) for c in inspect(model).mapper.column_attrs}
 
     @staticmethod
     def iditems_group_conv_by_key(
@@ -100,9 +95,7 @@ class DataConverter:
         for item in listofdict:
             key_field_val = item[key_field]
             if item.get(code_field) is not None:
-                added_dict[key_field_val].append(
-                    {"id": item[code_field], "name": item[name_field]}
-                )
+                added_dict[key_field_val].append({"id": item[code_field], "name": item[name_field]})
             else:
                 added_dict[key_field_val].append(None)
 

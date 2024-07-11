@@ -43,9 +43,7 @@ class TargetAudienceSummarySqlAlchemy:
         )
 
     def get_all_customer_count(self, db: Session):
-        return db.query(
-            func.distinct(CustomerInfoStatusEntity.cus_cd).label("cus_cd")
-        ).count()
+        return db.query(func.distinct(CustomerInfoStatusEntity.cus_cd).label("cus_cd")).count()
 
     def get_purchase_records_3m(self, three_months_ago, today, cust_list, db: Session):
         return db.query(
@@ -62,9 +60,7 @@ class TargetAudienceSummarySqlAlchemy:
             PurchaseAnalyticsMasterStyle.cus_cd.in_(cust_list),
         )
 
-    def get_response_data_3m(
-        self, audience_id: str, three_months_ago, yst_date, db: Session
-    ):
+    def get_response_data_3m(self, audience_id: str, three_months_ago, yst_date, db: Session):
         campaigns_subquery = (
             db.query(CampaignEntity.campaign_id)
             .filter(CampaignEntity.send_date.between(three_months_ago, yst_date))
@@ -104,15 +100,12 @@ class TargetAudienceSummarySqlAlchemy:
             db.query(
                 send_count_subquery.c.campaign_id,
                 send_count_subquery.c.cus_cd,
-                func.count(response_count_subquery.c.response_count).label(
-                    "response_count"
-                ),
+                func.count(response_count_subquery.c.response_count).label("response_count"),
             )
             .outerjoin(
                 response_count_subquery,
                 and_(
-                    send_count_subquery.c.campaign_id
-                    == response_count_subquery.c.campaign_id,
+                    send_count_subquery.c.campaign_id == response_count_subquery.c.campaign_id,
                     send_count_subquery.c.cus_cd == response_count_subquery.c.cus_cd,
                 ),
             )
@@ -130,8 +123,7 @@ class TargetAudienceSummarySqlAlchemy:
     ):
         # #audience_count_by_month -bulk
         insert_to_count_by_month_list_add = [
-            {**data_dict, "audience_id": audience_id}
-            for data_dict in insert_to_count_by_month_list
+            {**data_dict, "audience_id": audience_id} for data_dict in insert_to_count_by_month_list
         ]
 
         print("insert_to_count_by_month_list_add")
@@ -158,9 +150,7 @@ class TargetAudienceSummarySqlAlchemy:
             ]
 
             # insert 구문 생성
-            insert_stmt = insert(PrimaryRepProductEntity).values(
-                insert_to_rep_product_list_add
-            )
+            insert_stmt = insert(PrimaryRepProductEntity).values(insert_to_rep_product_list_add)
 
             # 업데이트할 컬럼 설정 (여기서는 모든 컬럼을 업데이트)
             update_dict = {

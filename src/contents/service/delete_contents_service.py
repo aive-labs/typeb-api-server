@@ -10,9 +10,7 @@ from src.core.transactional import transactional
 
 class DeleteContentsService(DeleteContentsUseCase):
 
-    def __init__(
-        self, contents_repository: BaseContentsRepository, s3_service: S3Service
-    ):
+    def __init__(self, contents_repository: BaseContentsRepository, s3_service: S3Service):
         self.contents_repository = contents_repository
         self.s3_service = s3_service
 

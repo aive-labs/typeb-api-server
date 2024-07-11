@@ -46,15 +46,11 @@ class ContentsSqlAlchemy:
             .all()
         )
 
-        return [
-            ModelConverter.entity_to_model(entity, ContentsMenu) for entity in entities
-        ]
+        return [ModelConverter.entity_to_model(entity, ContentsMenu) for entity in entities]
 
     def get_menu_map(self, code, db: Session) -> list[ContentsMenu]:
 
-        entity = (
-            db.query(ContentsMenuEntity).filter(ContentsMenuEntity.code == code).first()
-        )
+        entity = db.query(ContentsMenuEntity).filter(ContentsMenuEntity.code == code).first()
         if not entity:
             raise NotFoundException(detail={"message": "해당 메뉴를 찾지 못했습니다."})
 
@@ -70,9 +66,7 @@ class ContentsSqlAlchemy:
             .all()
         )
 
-        return [
-            ModelConverter.entity_to_model(entity, ContentsMenu) for entity in entities
-        ]
+        return [ModelConverter.entity_to_model(entity, ContentsMenu) for entity in entities]
 
     def get_contents_url_list(self, db: Session) -> list[str]:
 
@@ -83,9 +77,7 @@ class ContentsSqlAlchemy:
     def get_contents_id_url_dict(self) -> dict:
 
         with self.db() as db:
-            entities = db.query(
-                ContentsEntity.contents_id, ContentsEntity.contents_url
-            ).all()
+            entities = db.query(ContentsEntity.contents_id, ContentsEntity.contents_url).all()
             contents_id_urls: dict = {
                 entity.contents_id: entity.contents_url for entity in entities
             }
@@ -132,9 +124,7 @@ class ContentsSqlAlchemy:
         base_query = base_query.order_by(sort_col)
 
         if contents_status:
-            base_query = base_query.filter(
-                ContentsEntity.contents_status == contents_status
-            )
+            base_query = base_query.filter(ContentsEntity.contents_status == contents_status)
         if query:
             query = f"%{query}%"
             # check query in sty_nm, tags, image_name
@@ -175,16 +165,10 @@ class ContentsSqlAlchemy:
 
     def get_subject_by_code(self, subject, db: Session) -> ContentsMenu:
 
-        entity = (
-            db.query(ContentsMenuEntity)
-            .filter(ContentsMenuEntity.code == subject)
-            .first()
-        )
+        entity = db.query(ContentsMenuEntity).filter(ContentsMenuEntity.code == subject).first()
 
         if not entity:
-            raise NotFoundException(
-                detail={"message": "해당하는 menu가 존재하지 않습니다."}
-            )
+            raise NotFoundException(detail={"message": "해당하는 menu가 존재하지 않습니다."})
 
         return ModelConverter.entity_to_model(entity, ContentsMenu)
 
@@ -200,9 +184,7 @@ class ContentsSqlAlchemy:
         )
 
         if not entity:
-            raise NotFoundException(
-                detail={"message": "해당하는 콘텐츠가 존재하지 않습니다."}
-            )
+            raise NotFoundException(detail={"message": "해당하는 콘텐츠가 존재하지 않습니다."})
 
         return ModelConverter.entity_to_model(entity, ContentsResponse)
 
@@ -224,9 +206,7 @@ class ContentsSqlAlchemy:
         db.refresh(updated_entity)
         return ModelConverter.entity_to_model(updated_entity, ContentsResponse)
 
-    def search_contents_tag(
-        self, search_keyword, recsys_model_id, db
-    ) -> list[IdWithItem]:
+    def search_contents_tag(self, search_keyword, recsys_model_id, db) -> list[IdWithItem]:
 
         filter_conditions = [ContentsEntity.contents_status == "published"]
 
@@ -246,6 +226,4 @@ class ContentsSqlAlchemy:
             .all()
         )
 
-        return [
-            IdWithItem(id=item.contents_id, name=item.contents_name) for item in results
-        ]
+        return [IdWithItem(id=item.contents_id, name=item.contents_name) for item in results]

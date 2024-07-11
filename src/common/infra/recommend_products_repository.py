@@ -43,8 +43,6 @@ class RecommendProductsRepository:
                 ).all()
 
             return [
-                IdWithItemDescription(
-                    id=data.id, name=data.name, description=data.description
-                )
+                IdWithItemDescription(id=data.id, name=data.name, description=data.description)
                 for data in result
             ]

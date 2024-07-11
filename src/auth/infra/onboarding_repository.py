@@ -37,9 +37,7 @@ class OnboardingRepository(BaseOnboardingRepository):
         return self.onboarding_sqlalchemy.get_message_sender(mall_id, db)
 
     def update_message_sender(self, mall_id, message_sender, db):
-        return self.onboarding_sqlalchemy.update_message_sender(
-            mall_id, message_sender, db
-        )
+        return self.onboarding_sqlalchemy.update_message_sender(mall_id, message_sender, db)
 
     def save_kakao_channel(self, mall_id, kakao_channel, db: Session):
         self.onboarding_sqlalchemy.save_kakao_channel(mall_id, kakao_channel, db)

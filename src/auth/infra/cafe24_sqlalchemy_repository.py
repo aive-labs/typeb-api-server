@@ -28,9 +28,7 @@ class Cafe24SqlAlchemyRepository:
         """
         self.db = db
 
-    def insert_basic_info(
-        self, user_id: str, mall_id: str, state_token: str, db: Session
-    ):
+    def insert_basic_info(self, user_id: str, mall_id: str, state_token: str, db: Session):
 
         insert_statement = insert(Cafe24IntegrationEntity).values(
             user_id=user_id,
@@ -47,9 +45,7 @@ class Cafe24SqlAlchemyRepository:
         db.execute(upsert_statement)
         db.commit()
 
-    def is_existing_state_token(
-        self, state_token: str, db: Session
-    ) -> Cafe24StateToken:
+    def is_existing_state_token(self, state_token: str, db: Session) -> Cafe24StateToken:
 
         token = (
             db.query(Cafe24IntegrationEntity)
@@ -58,9 +54,7 @@ class Cafe24SqlAlchemyRepository:
         )
 
         if not token:
-            raise NotFoundException(
-                detail={"message": "해당 state은 유효하지 않습니다."}
-            )
+            raise NotFoundException(detail={"message": "해당 state은 유효하지 않습니다."})
 
         return Cafe24StateToken(mall_id=token.mall_id, state_token=token.state_token)
 
@@ -102,16 +96,10 @@ class Cafe24SqlAlchemyRepository:
 
     def save_tokens(self, cafe24_tokens: Cafe24TokenData, db: Session):
 
-        entity = (
-            db.query(Cafe24IntegrationEntity)
-            .filter_by(mall_id=cafe24_tokens.mall_id)
-            .first()
-        )
+        entity = db.query(Cafe24IntegrationEntity).filter_by(mall_id=cafe24_tokens.mall_id).first()
 
         if not entity:
-            raise NotFoundException(
-                detail={"message": "해당 state 토큰을 찾을 수 없습니다."}
-            )
+            raise NotFoundException(detail={"message": "해당 state 토큰을 찾을 수 없습니다."})
 
         statement = (
             update(Cafe24IntegrationEntity)
@@ -140,9 +128,7 @@ class Cafe24SqlAlchemyRepository:
         )
 
         if entity is None:
-            raise NotFoundException(
-                detail={"message": "카페 24 정보를 찾을 수 없습니다."}
-            )
+            raise NotFoundException(detail={"message": "카페 24 정보를 찾을 수 없습니다."})
 
         return Cafe24Token(
             access_token=entity.access_token,

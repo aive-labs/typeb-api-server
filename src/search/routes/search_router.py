@@ -28,9 +28,7 @@ def get_strategies(
     is_exclude: Optional[bool] = False,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    search_service: BaseSearchService = Depends(
-        dependency=Provide[Container.search_service]
-    ),
+    search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[IdWithLabel]:
     if is_exclude is None:
         is_exclude = False
@@ -51,9 +49,7 @@ def get_search_offers(
     strategy_id: Optional[str] = None,
     keyword: Optional[str] = None,
     user=Depends(get_permission_checker(required_permissions=[])),
-    search_service: BaseSearchService = Depends(
-        dependency=Provide[Container.search_service]
-    ),
+    search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[IdWithLabel]:
     """드롭다운 오퍼 목록을 조회하는 API"""
 
@@ -68,9 +64,7 @@ def get_search_offers(
 async def get_search_products(
     keyword: Optional[str] = None,
     user=Depends(get_permission_checker(required_permissions=[])),
-    search_service: BaseSearchService = Depends(
-        dependency=Provide[Container.search_service]
-    ),
+    search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[IdWithItemDescription]:
     """드롭다운 추천모델 목록을 조회하는 API"""
     return search_service.search_recommend_products(keyword)
@@ -83,9 +77,7 @@ def get_contents_tag(
     recsys_model_id: Optional[str] = None,
     db: Session = Depends(get_db_session),
     user=Depends(get_permission_checker(required_permissions=[])),
-    search_service: BaseSearchService = Depends(
-        dependency=Provide[Container.search_service]
-    ),
+    search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[IdWithItem]:
     return search_service.search_contents_tag(keyword, recsys_model_id, db)
 
@@ -96,9 +88,7 @@ def search_campaign(
     keyword: Optional[str] = None,
     db: Session = Depends(get_db_session),
     user=Depends(get_permission_checker(required_permissions=[])),
-    search_service: BaseSearchService = Depends(
-        dependency=Provide[Container.search_service]
-    ),
+    search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[IdWithItem]:
     """
     드롭다운 캠페인 목록을 조회하는 API
@@ -115,9 +105,7 @@ def search_rep_nms(
     product_id: Optional[str] = None,
     db: Session = Depends(get_db_session),
     user=Depends(get_permission_checker(required_permissions=[])),
-    search_service: BaseSearchService = Depends(
-        dependency=Provide[Container.search_service]
-    ),
+    search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[str]:
     return search_service.search_rep_nms(product_id, db=db)
 
@@ -129,8 +117,6 @@ def search_strategies(
     keyword: Optional[str] = None,
     db: Session = Depends(get_db_session),
     user=Depends(get_permission_checker(required_permissions=[])),
-    search_service: BaseSearchService = Depends(
-        dependency=Provide[Container.search_service]
-    ),
+    search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[StrategySearchResponse]:
     return search_service.search_strategies(campaign_type_code, keyword, db=db)

@@ -14,9 +14,7 @@ class BaseCampaignRepository(ABC):
         pass
 
     @abstractmethod
-    def get_campaigns(
-        self, start_date: str, end_date: str, user: User
-    ) -> list[Campaign]:
+    def get_campaigns(self, start_date: str, end_date: str, user: User) -> list[Campaign]:
         pass
 
     @abstractmethod
@@ -28,9 +26,7 @@ class BaseCampaignRepository(ABC):
         pass
 
     @abstractmethod
-    def get_campaign_by_strategy_id(
-        self, strategy_id: str, db: Session
-    ) -> list[Campaign]:
+    def get_campaign_by_strategy_id(self, strategy_id: str, db: Session) -> list[Campaign]:
         pass
 
     @abstractmethod
@@ -38,9 +34,7 @@ class BaseCampaignRepository(ABC):
         pass
 
     @abstractmethod
-    def search_campaign(
-        self, keyword, current_date, two_weeks_ago, db
-    ) -> list[IdWithItem]:
+    def search_campaign(self, keyword, current_date, two_weeks_ago, db) -> list[IdWithItem]:
         pass
 
     @abstractmethod

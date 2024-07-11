@@ -7,9 +7,7 @@ from src.users.domain.user import User
 
 class UpdateOfferService(UpdateOfferUseCase):
 
-    def __init__(
-        self, offer_repository: OfferRepository, campaign_repository: CampaignRepository
-    ):
+    def __init__(self, offer_repository: OfferRepository, campaign_repository: CampaignRepository):
         self.offer_repository = offer_repository
         self.campaign_repository = campaign_repository
 

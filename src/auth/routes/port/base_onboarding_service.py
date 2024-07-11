@@ -37,9 +37,7 @@ class BaseOnboardingService(ABC):
 
     @transactional
     @abstractmethod
-    def get_message_sender(
-        self, mall_id: str, db: Session
-    ) -> MessageSenderResponse | None:
+    def get_message_sender(self, mall_id: str, db: Session) -> MessageSenderResponse | None:
         pass
 
     @transactional
@@ -51,21 +49,15 @@ class BaseOnboardingService(ABC):
 
     @transactional
     @abstractmethod
-    def register_kakao_channel(
-        self, mall_id: str, kakao_channel: KakaoChannelRequest, db: Session
-    ):
+    def register_kakao_channel(self, mall_id: str, kakao_channel: KakaoChannelRequest, db: Session):
         pass
 
     @transactional
     @abstractmethod
-    def update_kakao_channel(
-        self, mall_id: str, kakao_channel: KakaoChannelRequest, db: Session
-    ):
+    def update_kakao_channel(self, mall_id: str, kakao_channel: KakaoChannelRequest, db: Session):
         pass
 
     @transactional
     @abstractmethod
-    def get_kakao_channel(
-        self, mall_id: str, db: Session
-    ) -> KakaoChannelResponse | None:
+    def get_kakao_channel(self, mall_id: str, db: Session) -> KakaoChannelResponse | None:
         pass

@@ -86,9 +86,7 @@ class AudienceSqlAlchemy:
     def get_audiences(
         self, user: User, db: Session, is_exclude: bool | None = None
     ) -> list[AudienceInfo]:
-        user_entity = (
-            db.query(UserEntity).filter(UserEntity.user_id == user.user_id).first()
-        )
+        user_entity = db.query(UserEntity).filter(UserEntity.user_id == user.user_id).first()
         if user_entity is None:
             raise NotFoundException(detail={"message": "사용자를 찾지 못했습니다."})
 
@@ -172,20 +170,12 @@ class AudienceSqlAlchemy:
         return audiences
 
     def get_audience(self, audience_id: str, db: Session) -> AudienceEntity | None:
-        return (
-            db.query(AudienceEntity)
-            .filter(AudienceEntity.audience_id == audience_id)
-            .first()
-        )
+        return db.query(AudienceEntity).filter(AudienceEntity.audience_id == audience_id).first()
 
-    def get_audience_by_name(
-        self, audience_name: str, db: Session
-    ) -> AudienceEntity | None:
+    def get_audience_by_name(self, audience_name: str, db: Session) -> AudienceEntity | None:
 
         return (
-            db.query(AudienceEntity)
-            .filter(AudienceEntity.audience_name == audience_name)
-            .first()
+            db.query(AudienceEntity).filter(AudienceEntity.audience_name == audience_name).first()
         )
 
     def create_audience(self, audience_dict, conditions, db: Session):
@@ -221,9 +211,7 @@ class AudienceSqlAlchemy:
         audience_id = audiences_req.audience_id
 
         insert_to_uploaded_audiences["audience_id"] = audience_id
-        audience_upload_condition = AudienceUploadConditionsEntity(
-            **insert_to_uploaded_audiences
-        )
+        audience_upload_condition = AudienceUploadConditionsEntity(**insert_to_uploaded_audiences)
         db.add(audience_upload_condition)
 
         # audience_cust_mapping
@@ -241,9 +229,7 @@ class AudienceSqlAlchemy:
 
         return audience_id
 
-    def get_db_filter_conditions(
-        self, audience_id: str, db: Session
-    ) -> list[FilterCondition]:
+    def get_db_filter_conditions(self, audience_id: str, db: Session) -> list[FilterCondition]:
 
         print("audience_id")
         print(audience_id)
@@ -290,15 +276,11 @@ class AudienceSqlAlchemy:
 
     def get_all_customer(self, erp_id: str, sys_id: str, db: Session):
 
-        return db.query(
-            func.distinct(CustomerInfoStatusEntity.cus_cd).label("cus_cd")
-        ).filter(
+        return db.query(func.distinct(CustomerInfoStatusEntity.cus_cd).label("cus_cd")).filter(
             *([CustomerInfoStatusEntity.main_shop == erp_id] if sys_id == "WP" else [])
         )
 
-    def get_tablename_by_variable_id(
-        self, variable_id: str, db: Session
-    ) -> VariableTableMapping:
+    def get_tablename_by_variable_id(self, variable_id: str, db: Session) -> VariableTableMapping:
 
         entity = (
             db.query(VariableTableMappingEntity)
@@ -307,15 +289,11 @@ class AudienceSqlAlchemy:
         )
 
         if not entity:
-            raise NotFoundException(
-                detail={"message": "변수-테이블 매핑 정보를 찾지 못했습니다."}
-            )
+            raise NotFoundException(detail={"message": "변수-테이블 매핑 정보를 찾지 못했습니다."})
 
         return ModelConverter.entity_to_model(entity, VariableTableMapping)
 
-    def get_linked_campaign(
-        self, audience_id: str, db: Session
-    ) -> list[LinkedCampaign]:
+    def get_linked_campaign(self, audience_id: str, db: Session) -> list[LinkedCampaign]:
 
         results = (
             db.query(
@@ -336,8 +314,7 @@ class AudienceSqlAlchemy:
         )
 
         linked_campaigns = [
-            LinkedCampaign(audience_id=row[0], campaign_status_code=row[1])
-            for row in results
+            LinkedCampaign(audience_id=row[0], campaign_status_code=row[1]) for row in results
         ]
         return linked_campaigns
 
@@ -355,9 +332,7 @@ class AudienceSqlAlchemy:
         """
         label = label.replace("_recency", "")
         today = datetime.now().date()
-        recency = (func.date(today) - func.to_date(func.max(column), "YYYYMMDD")).label(
-            label
-        )
+        recency = (func.date(today) - func.to_date(func.max(column), "YYYYMMDD")).label(label)
         return recency
 
     def calculate_pur_cycle(self, column, label):
@@ -393,14 +368,11 @@ class AudienceSqlAlchemy:
         get_calculate_method_by_label_name 함수를 모든 서브쿼리 컬럼에 대해 적용
         """
         agg_select_query_list = [
-            self.get_calculate_method_by_label_name(column, column.key)
-            for column in subquery.c
+            self.get_calculate_method_by_label_name(column, column.key) for column in subquery.c
         ]
         return agg_select_query_list
 
-    def get_subquery_without_groupby(
-        self, select_query_list, variabletable, db: Session
-    ):
+    def get_subquery_without_groupby(self, select_query_list, variabletable, db: Session):
 
         return db.query(
             func.distinct(variabletable.cus_cd).label("cus_cd"), *select_query_list
@@ -445,14 +417,10 @@ class AudienceSqlAlchemy:
         """
         서브쿼리가 필요한 변수에 대한 집계쿼리 반환
         """
-        subquery = self.get_subquery_without_groupby(
-            array_select_query_list, table_obj, db
-        )
+        subquery = self.get_subquery_without_groupby(array_select_query_list, table_obj, db)
         # agg_subquery = get_agg_value_with_subquery(db, subquery)
         agg_select_query_list = self.get_agg_value_with_subquery(subquery)
-        agg_subquery = self.get_subquery_with_groupby(
-            agg_select_query_list, subquery.c, db
-        )
+        agg_subquery = self.get_subquery_with_groupby(agg_select_query_list, subquery.c, db)
         sub_alias = agg_subquery.alias(f"t{idx}")
         return sub_alias
 
@@ -471,9 +439,7 @@ class AudienceSqlAlchemy:
     def delete_audience(self, audience_id: str, db: Session):
 
         # 타겟 오디언스
-        db.query(AudienceEntity).filter(
-            AudienceEntity.audience_id == audience_id
-        ).delete()
+        db.query(AudienceEntity).filter(AudienceEntity.audience_id == audience_id).delete()
 
         # 상세정보
         db.query(AudienceStatsEntity).filter(
@@ -507,9 +473,7 @@ class AudienceSqlAlchemy:
 
         db.flush()
 
-    def _object_access_condition(
-        self, db: Session, user: UserEntity, model: AudienceEntity
-    ):
+    def _object_access_condition(self, db: Session, user: UserEntity, model: AudienceEntity):
         """Checks if the user has the required permissions for Object access.
         Return conditions based on object access permissions
 
@@ -518,9 +482,7 @@ class AudienceSqlAlchemy:
             model: Object Model
         """
         admin_access = (
-            True
-            if user.role_id in [RoleEnum.ADMIN.value, RoleEnum.OPERATOR.value]
-            else False
+            True if user.role_id in [RoleEnum.ADMIN.value, RoleEnum.OPERATOR.value] else False
         )
 
         if admin_access:
@@ -581,12 +543,8 @@ class AudienceSqlAlchemy:
                 AudienceEntity.created_at,
                 AudienceEntity.created_by,  # 생성 유저
                 UserEntity.username.label("created_by_name"),  # 생성 부서
-                UserEntity.department_name.label(
-                    "owned_by_dept_name"
-                ),  # 생성 부서 abb명
-                UserEntity.department_abb_name.label(
-                    "owned_by_dept_abb_name"
-                ),  # 생성 부서 abb명
+                UserEntity.department_name.label("owned_by_dept_name"),  # 생성 부서 abb명
+                UserEntity.department_abb_name.label("owned_by_dept_abb_name"),  # 생성 부서 abb명
                 AudienceStatsEntity.audience_count,
                 AudienceStatsEntity.audience_count_gap,
                 AudienceStatsEntity.net_audience_count,
@@ -685,22 +643,14 @@ class AudienceSqlAlchemy:
 
     def get_audience_detail(self, audience_id, db: Session) -> Audience:
 
-        entity = (
-            db.query(AudienceEntity)
-            .filter(AudienceEntity.audience_id == audience_id)
-            .first()
-        )
+        entity = db.query(AudienceEntity).filter(AudienceEntity.audience_id == audience_id).first()
 
         if not entity:
-            raise NotFoundException(
-                detail={"message": "타겟 오디언스를 찾지 못했습니다."}
-            )
+            raise NotFoundException(detail={"message": "타겟 오디언스를 찾지 못했습니다."})
 
         return ModelConverter.entity_to_model(entity, Audience)
 
-    def get_audience_upload_info(
-        self, audience_id, db: Session
-    ) -> list[UploadCondition]:
+    def get_audience_upload_info(self, audience_id, db: Session) -> list[UploadCondition]:
 
         data = (
             db.query(
@@ -715,8 +665,7 @@ class AudienceSqlAlchemy:
             )
             .join(
                 AudienceEntity,
-                AudienceUploadConditionsEntity.audience_id
-                == AudienceEntity.audience_id,
+                AudienceUploadConditionsEntity.audience_id == AudienceEntity.audience_id,
             )
             .filter(AudienceUploadConditionsEntity.audience_id == audience_id)
             .all()
@@ -740,19 +689,11 @@ class AudienceSqlAlchemy:
 
         return upload_conditions
 
-    def get_actual_list_from_csv(
-        self, uploaded_rows, target_column, entity, db: Session
-    ) -> list:
+    def get_actual_list_from_csv(self, uploaded_rows, target_column, entity, db: Session) -> list:
 
         selected_column = getattr(entity, target_column)
 
-        res = [
-            db.query(
-                func.distinct(selected_column).filter(
-                    selected_column.in_(uploaded_rows)
-                )
-            )
-        ]
+        res = [db.query(func.distinct(selected_column).filter(selected_column.in_(uploaded_rows)))]
 
         if entity == CsvTemplates.shop_cd.source:
             res.append(
@@ -773,9 +714,7 @@ class AudienceSqlAlchemy:
         result = db.execute(update_statement)
 
         if result.rowcount == 0:
-            raise NotFoundException(
-                detail={"message": "타겟 오디언스를 찾지 못했습니다."}
-            )
+            raise NotFoundException(detail={"message": "타겟 오디언스를 찾지 못했습니다."})
 
         db.flush()
 
@@ -794,8 +733,7 @@ class AudienceSqlAlchemy:
 
         # 타겟 오디언스 수
         db.query(AudienceCountByMonthEntity).filter(
-            AudienceCountByMonthEntity.stnd_month
-            == func.to_char(func.current_date(), "YYYYMM"),
+            AudienceCountByMonthEntity.stnd_month == func.to_char(func.current_date(), "YYYYMM"),
             AudienceCountByMonthEntity.audience_id == audience_id,
         ).delete()
 
@@ -889,9 +827,7 @@ class AudienceSqlAlchemy:
 
         db.flush()
 
-    def get_audiences_ids_by_strategy_id(
-        self, strategy_id: str, db: Session
-    ) -> list[str]:
+    def get_audiences_ids_by_strategy_id(self, strategy_id: str, db: Session) -> list[str]:
 
         audience_ids = (
             db.query(StrategyThemeAudienceMappingEntity.audience_id)
@@ -918,13 +854,9 @@ class AudienceSqlAlchemy:
             keyword = f"%{search_keyword}%"
 
             if is_convertible_to_int(modified_string):
-                conditions.append(
-                    AudienceEntity.audience_id.ilike(keyword)
-                )  # audience_id
+                conditions.append(AudienceEntity.audience_id.ilike(keyword))  # audience_id
             else:
-                conditions.append(
-                    AudienceEntity.audience_name.ilike(keyword)
-                )  # audience_name
+                conditions.append(AudienceEntity.audience_name.ilike(keyword))  # audience_name
 
         result = (
             db.query(
@@ -965,22 +897,16 @@ class AudienceSqlAlchemy:
             keyword = f"%{search_keyword}%"
 
             if is_convertible_to_int(modified_string):
-                conditions.append(
-                    AudienceEntity.audience_id.ilike(keyword)
-                )  # audience_id
+                conditions.append(AudienceEntity.audience_id.ilike(keyword))  # audience_id
             else:
-                conditions.append(
-                    AudienceEntity.audience_name.ilike(keyword)
-                )  # audience_name
+                conditions.append(AudienceEntity.audience_name.ilike(keyword))  # audience_name
 
         strategy_conditions = [
             AudienceEntity.audience_status_code != AudienceStatus.notdisplay.value
         ]
 
         if target_strategy:
-            strategy_conditions.append(
-                AudienceEntity.target_strategy == target_strategy
-            )
+            strategy_conditions.append(AudienceEntity.target_strategy == target_strategy)
 
         result = (
             db.query(
@@ -1019,11 +945,9 @@ class AudienceSqlAlchemy:
                     and_(
                         AudienceEntity.is_exclude.is_(True),
                         AudienceEntity.default_excl_on_camp.is_(True),
-                        AudienceEntity.audience_id
-                        != "aud-000459",  ## branch_user를 위한 예외로직
+                        AudienceEntity.audience_id != "aud-000459",  ## branch_user를 위한 예외로직
                     ),
-                    AudienceEntity.audience_id
-                    == "aud-000461",  ## branch_user를 위한 예외로직
+                    AudienceEntity.audience_id == "aud-000461",  ## branch_user를 위한 예외로직
                 ),
             ).all()
         else:

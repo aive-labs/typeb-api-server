@@ -17,9 +17,7 @@ class CampaignRepository(BaseCampaignRepository):
     def create_campaign(self, new_campaign: Campaign, db: Session) -> Campaign:
         return self.campaign_sqlalchemy.register_campaign(new_campaign, db)
 
-    def get_campaigns(
-        self, start_date: str, end_date: str, user: User
-    ) -> list[Campaign]:
+    def get_campaigns(self, start_date: str, end_date: str, user: User) -> list[Campaign]:
         return self.campaign_sqlalchemy.get_all_campaigns(start_date, end_date, user)
 
     def is_existing_campaign_by_name(self, name: str) -> bool:
@@ -30,28 +28,18 @@ class CampaignRepository(BaseCampaignRepository):
 
         return False
 
-    def get_campaign_by_strategy_id(
-        self, strategy_id: str, db: Session
-    ) -> list[Campaign]:
-        campaigns = self.campaign_sqlalchemy.get_campaign_by_strategy_id(
-            strategy_id, db
-        )
+    def get_campaign_by_strategy_id(self, strategy_id: str, db: Session) -> list[Campaign]:
+        campaigns = self.campaign_sqlalchemy.get_campaign_by_strategy_id(strategy_id, db)
         return campaigns
 
     def is_existing_campaign_by_offer_event_no(self, offer_event_no: str) -> bool:
-        return self.campaign_sqlalchemy.is_existing_campaign_by_offer_event_no(
-            offer_event_no
-        )
+        return self.campaign_sqlalchemy.is_existing_campaign_by_offer_event_no(offer_event_no)
 
     def get_timeline(self, campaign_id: str, db: Session) -> list[CampaignTimeline]:
         return self.campaign_sqlalchemy.get_timeline(campaign_id, db)
 
-    def search_campaign(
-        self, keyword, current_date, two_weeks_ago, db
-    ) -> list[IdWithItem]:
-        return self.campaign_sqlalchemy.search_campaign(
-            keyword, current_date, two_weeks_ago, db
-        )
+    def search_campaign(self, keyword, current_date, two_weeks_ago, db) -> list[IdWithItem]:
+        return self.campaign_sqlalchemy.search_campaign(keyword, current_date, two_weeks_ago, db)
 
     def get_send_complete_campaign(
         self, campaign_id: str, req_set_group_seqs: list, db: Session
@@ -61,9 +49,7 @@ class CampaignRepository(BaseCampaignRepository):
         )
 
     def get_group_item_nm_stats(self, campaign_id: str, set_sort_num: int):  ###
-        return self.campaign_sqlalchemy.get_group_item_nm_stats(
-            campaign_id, set_sort_num
-        )
+        return self.campaign_sqlalchemy.get_group_item_nm_stats(campaign_id, set_sort_num)
 
     def get_it_gb_nm_stats(self, campaign_id: str, set_sort_num: int):  ###
         return self.campaign_sqlalchemy.get_it_gb_nm_stats(campaign_id, set_sort_num)
@@ -72,9 +58,7 @@ class CampaignRepository(BaseCampaignRepository):
         return self.campaign_sqlalchemy.get_age_stats(campaign_id, set_sort_num)
 
     def get_campaign_messages(self, campaign_id: str, req_set_group_seqs: list):  ###
-        return self.campaign_sqlalchemy.get_campaign_messages(
-            campaign_id, req_set_group_seqs
-        )
+        return self.campaign_sqlalchemy.get_campaign_messages(campaign_id, req_set_group_seqs)
 
     def save_timeline(self, timeline: CampaignTimeline, db: Session):
         return self.campaign_sqlalchemy.save_timeline(timeline, db)

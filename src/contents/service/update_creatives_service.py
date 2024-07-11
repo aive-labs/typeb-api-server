@@ -38,6 +38,4 @@ class UpdateCreativesService(UpdateCreativesUseCase):
             s3_service = S3Service("aice-asset-dev")
             s3_service.delete_object(creatives.image_path)
 
-        return self.creatives_repository.update_creatives(
-            creative_id, creatives_update_dict, db
-        )
+        return self.creatives_repository.update_creatives(creative_id, creatives_update_dict, db)

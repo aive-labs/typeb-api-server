@@ -53,9 +53,7 @@ class UserSqlAlchemy:
     def get_user_signin(self, login_id: str, db: Session):
 
         return (
-            db.query(
-                UserEntity.user_id, UserEntity.login_id, UserPasswordEntity.login_pw
-            )
+            db.query(UserEntity.user_id, UserEntity.login_id, UserPasswordEntity.login_pw)
             .join(
                 UserPasswordEntity,
                 UserEntity.login_id == UserPasswordEntity.login_id,
@@ -107,9 +105,7 @@ class UserSqlAlchemy:
         try:
             selected_col = getattr(UserWhitelist, whitelist_field)
         except AttributeError:
-            return {
-                "error": f"'{whitelist_field}' is not a valid field in UserWhitelist table"
-            }
+            return {"error": f"'{whitelist_field}' is not a valid field in UserWhitelist table"}
 
         return db.query(selected_col).filter(UserWhitelist.user_id == user_id).first()
 

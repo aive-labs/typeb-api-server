@@ -94,16 +94,14 @@ def classify_conditions_based_on_tablename(condition_dict):
 
     for key, value in condition_dict.items():
         temp_table_name = value["table_name"]
-        table_condition_dict[temp_table_name] = table_condition_dict.get(
-            temp_table_name, []
-        ) + [key]
+        table_condition_dict[temp_table_name] = table_condition_dict.get(temp_table_name, []) + [
+            key
+        ]
 
     return table_condition_dict
 
 
-def apply_caculate_method(
-    table_obj, query_list, field_list, condition_name, agg_variable_name
-):
+def apply_caculate_method(table_obj, query_list, field_list, condition_name, agg_variable_name):
     """
     변수(field)에 따라 집계 방법을 적용하는 함수
     """
@@ -118,9 +116,7 @@ def apply_caculate_method(
         elif field_list[0].startswith("sale_dt"):
             return (
                 False,
-                func.unnest(query_list[0]).label(
-                    condition_name + f"_{agg_variable_name}"
-                ),
+                func.unnest(query_list[0]).label(condition_name + f"_{agg_variable_name}"),
             )
     elif table_obj in (
         CustomerPromotionReactSummaryEntity,
@@ -131,9 +127,7 @@ def apply_caculate_method(
         else:
             return (
                 True,
-                (func.sum(query_list[0]) / func.sum(query_list[1])).label(
-                    condition_name
-                ),
+                (func.sum(query_list[0]) / func.sum(query_list[1])).label(condition_name),
             )
     else:
         return (True, query_list[0].label(condition_name))
@@ -168,11 +162,7 @@ def build_select_query(table_obj, condition, condition_name):
     for field in field_list:
         if period := condition.get("period"):
             if is_event_variable:
-                dt_column = (
-                    "sale_dt"
-                    if table_obj == PurchaseAnalyticsMasterStyle
-                    else "send_dt"
-                )
+                dt_column = "sale_dt" if table_obj == PurchaseAnalyticsMasterStyle else "send_dt"
                 and_conditions_in_case.append(
                     and_(getattr(table_obj, dt_column).between(period[0], period[1]))
                 )
@@ -222,9 +212,7 @@ def get_comparison_operator(fliter_column, condition, value):
         return [not_(fliter_column.in_(value.split(",")))]
 
 
-def group_where_conditions(
-    sub_alias, condition_dict, condition_list, where_condition_dict
-):
+def group_where_conditions(sub_alias, condition_dict, condition_list, where_condition_dict):
     """
     where 조건 생성 함수
     동일한 n1을 갖는 where조건을 하나의 리스트로 관리
@@ -236,9 +224,9 @@ def group_where_conditions(
         fliter_column = getattr(sub_alias.c, condition_name)
         condition = temp_condition.get("condition", None)
         value = temp_condition["data"]
-        where_condition_dict[n1] = where_condition_dict.get(
-            n1, []
-        ) + get_comparison_operator(fliter_column, condition, value)
+        where_condition_dict[n1] = where_condition_dict.get(n1, []) + get_comparison_operator(
+            fliter_column, condition, value
+        )
 
     return where_condition_dict
 
