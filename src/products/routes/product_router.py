@@ -22,14 +22,15 @@ def get_all_products(
     sort_by: str = "desc",  # Enum으로 변경
     current_page: int = 1,
     per_page: int = 10,
+    keyword: str | None = None,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
     product_service: BaseProductService = Depends(dependency=Provide[Container.product_service]),
 ):
     product_response = product_service.get_all_products(
-        based_on, sort_by, current_page, per_page, db=db
+        based_on, sort_by, current_page, per_page, db=db, keyword=keyword
     )
-    all_count = product_service.get_all_products_count(db)
+    all_count = len(product_response)
 
     pagination = PaginationBase(
         total=all_count,

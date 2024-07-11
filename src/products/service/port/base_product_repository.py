@@ -18,7 +18,13 @@ class BaseProductRepository(ABC):
 
     @abstractmethod
     def get_all_products(
-        self, based_on: str, sort_by: str, current_page: int, per_page: int, db: Session
+        self,
+        based_on: str,
+        sort_by: str,
+        current_page: int,
+        per_page: int,
+        db: Session,
+        keyword: str | None = None,
     ) -> list[Product]:
         pass
 

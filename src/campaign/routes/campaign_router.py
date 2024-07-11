@@ -56,6 +56,19 @@ def create_campaign(
     return create_campaign_service.create_campaign(campaign_create, user, db=db)
 
 
+@campaign_router.get("/campaigns/{campaign_id}")
+@inject
+def get_campaign_detail(
+    campaign_id: str,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    get_campaign_service: GetCampaignUseCase = Depends(
+        dependency=Provide[Container.get_campaign_service]
+    ),
+):
+    return get_campaign_service.get_campaign_detail(campaign_id, user, db=db)
+
+
 @campaign_router.post("/campaigns/generate-message")
 @inject
 def generate_message(

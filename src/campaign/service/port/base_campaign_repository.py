@@ -3,7 +3,9 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
+from src.campaign.domain.campaign_remind import CampaignRemind
 from src.campaign.domain.campaign_timeline import CampaignTimeline
+from src.campaign.infra.dto.campaign_reviewer_info import CampaignReviewerInfo
 from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.users.domain.user import User
 
@@ -39,4 +41,16 @@ class BaseCampaignRepository(ABC):
 
     @abstractmethod
     def save_timeline(self, timeline: CampaignTimeline, db: Session):
+        pass
+
+    @abstractmethod
+    def get_campaign_detail(self, campaign_id, user, db: Session) -> Campaign:
+        pass
+
+    @abstractmethod
+    def get_campaign_remind(self, campaign_id: str, db: Session) -> list[CampaignRemind]:
+        pass
+
+    @abstractmethod
+    def get_campaign_reviewers(self, campaign_id: str, db: Session) -> list[CampaignReviewerInfo]:
         pass

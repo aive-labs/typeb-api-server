@@ -1,9 +1,6 @@
-from sqlalchemy import func, update
+from sqlalchemy import func, or_, update
 from sqlalchemy.orm import Session
 
-from src.audiences.infra.entity.purchase_analytics_master_style_entity import (
-    PurchaseAnalyticsMasterStyle,
-)
 from src.products.domain.product import Product
 from src.products.enums.product_link_type import ProductLinkType
 from src.products.infra.entity.product_link_entity import ProductLinkEntity
@@ -18,8 +15,8 @@ class ProductRepository(BaseProductRepository):
 
     def get_rep_nms(self, product_id: str, db: Session):
         entities = (
-            db.query(PurchaseAnalyticsMasterStyle)
-            .filter(PurchaseAnalyticsMasterStyle.product_code == product_id)
+            db.query(ProductMasterEntity)
+            .filter(ProductMasterEntity.product_code == product_id)
             .all()
         )
         rep_nm_list = list({entity.rep_nm for entity in entities})
@@ -34,7 +31,13 @@ class ProductRepository(BaseProductRepository):
         return Product.model_validate(entity)
 
     def get_all_products(
-        self, based_on: str, sort_by: str, current_page: int, per_page: int, db: Session
+        self,
+        based_on: str,
+        sort_by: str,
+        current_page: int,
+        per_page: int,
+        db: Session,
+        keyword: str | None = None,
     ) -> list[Product]:
         sort_col = getattr(ProductMasterEntity, based_on)
         if sort_by == "desc":
@@ -42,12 +45,18 @@ class ProductRepository(BaseProductRepository):
         else:
             sort_col = sort_col.asc()
 
+        query = db.query(ProductMasterEntity)
+
+        if keyword:
+            query = query.filter(
+                or_(
+                    ProductMasterEntity.product_code.ilike(f"%{keyword}%"),
+                    ProductMasterEntity.product_name.ilike(f"%{keyword}%"),
+                )
+            )
+
         entities = (
-            db.query(ProductMasterEntity)
-            .order_by(sort_col)
-            .offset((current_page - 1) * per_page)
-            .limit(per_page)
-            .all()
+            query.order_by(sort_col).offset((current_page - 1) * per_page).limit(per_page).all()
         )
 
         return [Product.model_validate(entity) for entity in entities]

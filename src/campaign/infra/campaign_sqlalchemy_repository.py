@@ -8,10 +8,17 @@ from src.audiences.infra.entity.audience_stats_entity import AudienceStatsEntity
 from src.audiences.infra.entity.variable_table_list import CustomerInfoStatusEntity
 from src.campaign.domain.campaign import Campaign
 from src.campaign.domain.campaign_messages import CampaignMessages, SetGroupMessages
+from src.campaign.domain.campaign_remind import CampaignRemind
 from src.campaign.domain.campaign_timeline import CampaignTimeline
 from src.campaign.domain.send_reservation import SendReservation
 from src.campaign.enums.campagin_status import CampaignStatus
+from src.campaign.enums.campaign_approval_status import CampaignApprovalStatus
 from src.campaign.enums.send_type import SendType
+from src.campaign.infra.dto.campaign_reviewer_info import CampaignReviewerInfo
+from src.campaign.infra.entity.approver_entity import ApproverEntity
+from src.campaign.infra.entity.campaign_approval_entity import (
+    CampaignApprovalEntity,
+)
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.campaign.infra.entity.campaign_remind_entity import CampaignRemindEntity
 from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
@@ -192,7 +199,7 @@ class CampaignSqlAlchemy:
                 SendReservationEntity.campaign_id == campaign_id,
                 SendReservationEntity.test_send_yn == "n",
                 SendReservationEntity.set_group_msg_seq.in_(req_set_group_seqs),
-                SendReservationEntity.send_resv_state.not_in(
+                SendReservationEntity.send_resv_state.not_in(  # pyright: ignore [reportAttributeAccessIssue]
                     ["21", "01", "00"]
                 ),  # 발송한 메세지 필터
             )
@@ -418,3 +425,47 @@ class CampaignSqlAlchemy:
             .all()
         )
         return entities
+
+    def get_campaign_detail(self, campaign_id, user, db: Session) -> Campaign:
+        entity = db.query(CampaignEntity).filter(CampaignEntity.campaign_id == campaign_id).first()
+        return Campaign.model_validate(entity)
+
+    def get_campaign_remind(self, campaign_id: str, db: Session) -> list[CampaignRemind]:
+        entities = (
+            db.query(CampaignRemindEntity)
+            .filter(CampaignRemindEntity.campaign_id == campaign_id)
+            .order_by(CampaignRemindEntity.remind_step)
+            .all()
+        )
+
+        return [CampaignRemind.model_validate(entity) for entity in entities]
+
+    def get_campaign_reviewers(self, campaign_id: str, db: Session) -> list[CampaignReviewerInfo]:
+
+        entities = (
+            db.query(
+                CampaignApprovalEntity.approval_no,
+                ApproverEntity.user_id,
+                ApproverEntity.user_name,
+                ApproverEntity.is_approved,
+                ApproverEntity.department_abb_name,
+                UserEntity.test_callback_number,
+                ApproverEntity.is_approved,
+            )
+            .join(ApproverEntity, CampaignApprovalEntity.approval_no == ApproverEntity.approval_no)
+            .outerjoin(UserEntity, ApproverEntity.user_id == UserEntity.user_id)
+            .filter(
+                and_(
+                    CampaignApprovalEntity.campaign_id == campaign_id,
+                    or_(
+                        CampaignApprovalEntity.approval_status
+                        == CampaignApprovalStatus.REVIEW.value,  # 수정요청 받은 결재의 승인자
+                        CampaignApprovalEntity.approval_status
+                        == CampaignApprovalStatus.APPROVED.value,  # 승인된 결재의 승인자
+                    ),
+                )
+            )
+            .all()
+        )
+
+        return [CampaignReviewerInfo.model_validate(entity) for entity in entities]

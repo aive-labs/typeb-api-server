@@ -63,10 +63,16 @@ class ProductService(BaseProductService):
         return product_response
 
     def get_all_products(
-        self, based_on: str, sort_by: str, current_page: int, per_page: int, db: Session
+        self,
+        based_on: str,
+        sort_by: str,
+        current_page: int,
+        per_page: int,
+        db: Session,
+        keyword: str | None = None,
     ) -> list[ProductResponse]:
         products = self.product_repository.get_all_products(
-            based_on, sort_by, current_page, per_page, db=db
+            based_on, sort_by, current_page, per_page, db=db, keyword=keyword
         )
 
         product_responses = []

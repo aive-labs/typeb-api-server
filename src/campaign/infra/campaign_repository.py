@@ -1,9 +1,11 @@
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
+from src.campaign.domain.campaign_remind import CampaignRemind
 from src.campaign.domain.campaign_timeline import CampaignTimeline
 from src.campaign.domain.send_reservation import SendReservation
 from src.campaign.infra.campaign_sqlalchemy_repository import CampaignSqlAlchemy
+from src.campaign.infra.dto.campaign_reviewer_info import CampaignReviewerInfo
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
 from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.users.domain.user import User
@@ -62,3 +64,12 @@ class CampaignRepository(BaseCampaignRepository):
 
     def save_timeline(self, timeline: CampaignTimeline, db: Session):
         return self.campaign_sqlalchemy.save_timeline(timeline, db)
+
+    def get_campaign_detail(self, campaign_id, user, db: Session) -> Campaign:
+        return self.campaign_sqlalchemy.get_campaign_detail(campaign_id, user, db)
+
+    def get_campaign_remind(self, campaign_id: str, db: Session) -> list[CampaignRemind]:
+        return self.campaign_sqlalchemy.get_campaign_remind(campaign_id, db)
+
+    def get_campaign_reviewers(self, campaign_id: str, db: Session) -> list[CampaignReviewerInfo]:
+        return self.campaign_sqlalchemy.get_campaign_reviewers(campaign_id, db)
