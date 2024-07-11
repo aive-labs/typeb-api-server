@@ -4,6 +4,7 @@ from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.common.utils.date_utils import get_unix_timestamp
 from src.common.utils.file.s3_service import S3Service
 from src.contents.domain.creatives import Creatives
+from src.contents.enums.image_source import ImageSource
 from src.contents.infra.dto.response.s3_presigned_response import S3PresignedResponse
 from src.contents.routes.dto.request.creatives_create import CreativeCreate
 from src.contents.routes.dto.request.s3_presigned_url_request import (
@@ -62,6 +63,7 @@ class AddCreativesService(AddCreativesUseCase):
             Creatives(
                 image_uri=file_name,
                 image_path=file_name,
+                image_source=ImageSource.UPLOAD.value,
                 image_asset_type=asset_data.image_asset_type.value,
                 style_cd=asset_data.style_cd,
                 style_object_name=asset_data.style_object_name,

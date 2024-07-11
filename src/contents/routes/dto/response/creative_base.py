@@ -3,6 +3,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field
 
 from src.common.utils.date_utils import localtime_converter
+from src.contents.enums.image_source import ImageSource
 
 
 class CreativeBase(BaseModel):
@@ -14,6 +15,7 @@ class CreativeBase(BaseModel):
     image_asset_type: str
     image_uri: str
     image_path: str
+    image_source: str
     sty_nm: str | None = None
     sty_cd: str | None = None
     rep_nm: str | None = None
@@ -29,5 +31,6 @@ class CreativeBase(BaseModel):
     related_img_uri: list[str] | None = []  # 그때그때 계산하는게 좋을듯?
 
     def set_image_url(self, s3_url):
-        self.image_uri = s3_url
-        self.image_path = s3_url
+        if self.image_source == ImageSource.UPLOAD.value:
+            self.image_uri = s3_url
+            self.image_path = s3_url

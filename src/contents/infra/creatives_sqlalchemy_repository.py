@@ -52,6 +52,7 @@ class CreativesSqlAlchemy:
                 CreativesEntity.image_asset_type,
                 CreativesEntity.image_uri,
                 CreativesEntity.image_path,
+                CreativesEntity.image_source,
                 StyleMasterEntity.sty_nm,
                 StyleMasterEntity.sty_cd,
                 StyleMasterEntity.rep_nm,
