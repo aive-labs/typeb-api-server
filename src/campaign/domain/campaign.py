@@ -34,7 +34,7 @@ class Campaign(BaseModel):
     campaigns_exc: list[str] | None
     audiences_exc: list[str] | None
     strategy_id: str | None
-    campaign_theme_ids: list[int] | None
+    strategy_theme_ids: list[int] | None
     is_personalized: bool
     progress: str
     msg_delivery_vendor: str

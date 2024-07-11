@@ -1,8 +1,8 @@
 from collections.abc import Callable
 from contextlib import AbstractContextManager
 
-from sqlalchemy import Integer, and_, desc, distinct, func, inspect, not_, or_
-from sqlalchemy.orm import Session, joinedload, subqueryload
+from sqlalchemy import Integer, and_, desc, distinct, func, not_, or_
+from sqlalchemy.orm import Session, joinedload
 
 from src.audiences.infra.entity.audience_stats_entity import AudienceStatsEntity
 from src.audiences.infra.entity.variable_table_list import CustomerInfoStatusEntity
@@ -22,7 +22,6 @@ from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
 from src.campaign.infra.entity.campaign_timeline_entity import CampaignTimelineEntity
 from src.campaign.infra.entity.send_reservation_entity import SendReservationEntity
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
-from src.common.infra.entity.customer_master_entity import CustomerMasterEntity
 from src.common.sqlalchemy.object_access_condition import object_access_condition
 from src.common.utils.string_utils import is_convertible_to_int
 from src.contents.infra.entity.style_master_entity import StyleMasterEntity
@@ -45,15 +44,9 @@ class CampaignSqlAlchemy:
 
     def get_campaign_by_name(self, name: str):
         with self.db() as db:
-            return (
-                db.query(CampaignEntity)
-                .filter(CampaignEntity.campaign_name == name)
-                .first()
-            )
+            return db.query(CampaignEntity).filter(CampaignEntity.campaign_name == name).first()
 
-    def get_all_campaigns(
-        self, start_date: str, end_date: str, user: User
-    ) -> list[Campaign]:
+    def get_all_campaigns(self, start_date: str, end_date: str, user: User) -> list[Campaign]:
         with self.db() as db:
             conditions = object_access_condition(db=db, user=user, model=CampaignEntity)
 
@@ -101,9 +94,7 @@ class CampaignSqlAlchemy:
                 .all()
             )
 
-            campaigns = [
-                Campaign.model_validate(entity) for entity in campaign_entities
-            ]
+            campaigns = [Campaign.model_validate(entity) for entity in campaign_entities]
 
             return campaigns
 
@@ -127,9 +118,7 @@ class CampaignSqlAlchemy:
 
             return True
 
-    def get_campaign_by_strategy_id(
-        self, strategy_id: str, db: Session
-    ) -> list[Campaign]:
+    def get_campaign_by_strategy_id(self, strategy_id: str, db: Session) -> list[Campaign]:
         entities = (
             db.query(CampaignEntity)
             .filter(CampaignEntity.strategy_id == strategy_id)
@@ -157,8 +146,7 @@ class CampaignSqlAlchemy:
             )
             .outerjoin(
                 UserEntity,
-                func.cast(CampaignTimelineEntity.created_by, Integer)
-                == UserEntity.user_id,
+                func.cast(CampaignTimelineEntity.created_by, Integer) == UserEntity.user_id,
             )
             .filter(
                 CampaignTimelineEntity.campaign_id == campaign_id,
@@ -169,9 +157,7 @@ class CampaignSqlAlchemy:
 
         return [CampaignTimeline.model_validate(timeline) for timeline in timelines]
 
-    def search_campaign(
-        self, keyword, current_date, two_weeks_ago, db
-    ) -> list[IdWithItem]:
+    def search_campaign(self, keyword, current_date, two_weeks_ago, db) -> list[IdWithItem]:
         conditions = []
 
         if keyword:
@@ -179,13 +165,9 @@ class CampaignSqlAlchemy:
             keyword = f"%{keyword}%"
 
             if is_convertible_to_int(modified_string):
-                conditions.append(
-                    CampaignEntity.campaign_id.ilike(keyword)
-                )  # audience_id
+                conditions.append(CampaignEntity.campaign_id.ilike(keyword))  # audience_id
             else:
-                conditions.append(
-                    CampaignEntity.campaign_name.ilike(keyword)
-                )  # audience_name
+                conditions.append(CampaignEntity.campaign_name.ilike(keyword))  # audience_name
 
         entities = (
             db.query(
@@ -203,9 +185,7 @@ class CampaignSqlAlchemy:
 
         return [IdWithItem(id=entity.id, name=entity.name) for entity in entities]
 
-    def get_send_complete_campaign(
-        self, campaign_id, req_set_group_seqs, db
-    ) -> SendReservation:
+    def get_send_complete_campaign(self, campaign_id, req_set_group_seqs, db) -> SendReservation:
         return (
             db.query(SendReservationEntity)
             .filter(
@@ -237,9 +217,7 @@ class CampaignSqlAlchemy:
                     CampaignSetRecipientsEntity.campaign_id == campaign_id,
                     CampaignSetRecipientsEntity.set_sort_num == set_sort_num,
                 )
-                .group_by(
-                    CampaignSetRecipientsEntity.group_sort_num, subquery.c.item_nm
-                )
+                .group_by(CampaignSetRecipientsEntity.group_sort_num, subquery.c.item_nm)
                 .all()
             )
 
@@ -262,9 +240,7 @@ class CampaignSqlAlchemy:
                     CampaignSetRecipientsEntity.campaign_id == campaign_id,
                     CampaignSetRecipientsEntity.set_sort_num == set_sort_num,
                 )
-                .group_by(
-                    CampaignSetRecipientsEntity.group_sort_num, subquery.c.it_gb_nm
-                )
+                .group_by(CampaignSetRecipientsEntity.group_sort_num, subquery.c.it_gb_nm)
                 .all()
             )
 
@@ -287,15 +263,11 @@ class CampaignSqlAlchemy:
                     CampaignSetRecipientsEntity.campaign_id == campaign_id,
                     CampaignSetRecipientsEntity.set_sort_num == set_sort_num,
                 )
-                .group_by(
-                    CampaignSetRecipientsEntity.group_sort_num, subquery.c.age_seg
-                )
+                .group_by(CampaignSetRecipientsEntity.group_sort_num, subquery.c.age_seg)
                 .all()
             )
 
-    def get_campaign_messages(
-        self, campaign_id, req_set_group_seqs
-    ) -> list[CampaignMessages]:
+    def get_campaign_messages(self, campaign_id, req_set_group_seqs) -> list[CampaignMessages]:
         """캠페인의 메세지를 모두 조회하는 쿼리"""
         with self.db() as db:
             message_data = (
@@ -311,10 +283,8 @@ class CampaignSqlAlchemy:
                 .outerjoin(
                     CampaignRemindEntity,
                     and_(
-                        SetGroupMessagesEntity.campaign_id
-                        == CampaignRemindEntity.campaign_id,
-                        SetGroupMessagesEntity.remind_step
-                        == CampaignRemindEntity.remind_step,
+                        SetGroupMessagesEntity.campaign_id == CampaignRemindEntity.campaign_id,
+                        SetGroupMessagesEntity.remind_step == CampaignRemindEntity.remind_step,
                     ),
                 )
                 .filter(
@@ -337,7 +307,6 @@ class CampaignSqlAlchemy:
         return result
 
     def register_campaign(self, model: Campaign, db) -> Campaign:
-
         remind_entities = [
             CampaignRemindEntity(
                 send_type_code=remind.send_type_code,
@@ -368,7 +337,7 @@ class CampaignSqlAlchemy:
             send_date=model.send_date,
             is_msg_creation_recurred=model.is_msg_creation_recurred,
             is_approval_recurred=model.is_approval_recurred,
-            datetosend=str(model.datetosend),
+            datetosend=str(model.datetosend) if model.datetosend else None,
             timetosend=model.timetosend,
             start_date=model.start_date,
             end_date=model.end_date,
@@ -377,7 +346,7 @@ class CampaignSqlAlchemy:
             campaigns_exc=model.campaigns_exc,
             audiences_exc=model.audiences_exc,
             strategy_id=model.strategy_id,
-            campaign_theme_ids=model.campaign_theme_ids,
+            strategy_theme_ids=model.strategy_theme_ids,
             is_personalized=model.is_personalized,
             progress=model.progress,
             msg_delivery_vendor=model.msg_delivery_vendor,
@@ -387,12 +356,16 @@ class CampaignSqlAlchemy:
             owned_by_dept_name=model.owned_by_dept_name,
             owned_by_dept_abb_name=model.owned_by_dept_abb_name,
             created_by_name=model.created_by_name,
+            created_by=model.created_by,
             updated_by=model.created_by_name,
             remind_list=remind_entities,
         )
 
         db.add(entity)
         db.flush()
+
+        print("entity")
+        print(entity.datetosend)
 
         return Campaign.model_validate(entity)
 
@@ -439,69 +412,9 @@ class CampaignSqlAlchemy:
         )
 
     def get_campaign_set_groups(self, campaign_id: str, db: Session):
-
         entities = (
             db.query(CampaignSetGroupsEntity)
             .filter(CampaignSetGroupsEntity.campaign_id == campaign_id)
             .all()
         )
-
-    def get_set_portion(self, campaign_id: str, db: Session):
-
-        total_cus = (
-            db.query(func.count(CustomerMasterEntity.cus_cd))
-            .filter(
-                CustomerMasterEntity.br_div == "NPC",
-                CustomerMasterEntity.cust_status == "1",
-                CustomerMasterEntity.cust_grade1 != "R",
-                CustomerMasterEntity.cust_name.notin_(["휴면", "탈퇴"]),
-            )
-            .scalar()
-        )
-
-        set_cus_count = (
-            db.query(func.count(CampaignSetRecipientsEntity.cus_cd))
-            .filter(CampaignSetRecipientsEntity.campaign_id == campaign_id)
-            .scalar()
-        )
-
-        recipient_portion = round(set_cus_count / total_cus, 3)
-
-        return recipient_portion, total_cus, set_cus_count
-
-    def get_campaign_set_group_messages(self, campaign_id: str, db: Session):
-        query_result = (
-            db.query(
-                SetGroupMessages,
-                CampaignSetGroupsEntity.set_seq,
-                CampaignSetGroupsEntity.group_sort_num,
-            )
-            .outerjoin(CampaignSetGroupsEntity)
-            .filter(CampaignSetGroupsEntity.campaign_id == campaign_id)
-            .options(subqueryload(SetGroupMessagesEntity.kakao_button_links))
-            .all()
-        )
-
-        result_list = []
-        for item in query_result:
-            set_group_message, set_seq, group_sort_num = item
-
-            # SetGroupMessages 객체를 딕셔너리로 변환
-            set_group_message_dict = {
-                c.key: getattr(set_group_message, c.key)
-                for c in inspect(set_group_message).mapper.column_attrs
-            }
-
-            # 관련된 kakao_button_links를 딕셔너리 리스트로 변환
-            set_group_message_dict["kakao_button_links"] = [
-                {c.key: getattr(link, c.key) for c in inspect(link).mapper.column_attrs}
-                for link in set_group_message.kakao_button_links
-            ]
-
-            # CampaignSetGroups의 컬럼을 딕셔너리에 추가
-            set_group_message_dict["set_seq"] = set_seq
-            set_group_message_dict["group_sort_num"] = group_sort_num
-
-            result_list.append(set_group_message_dict)
-
-        return result_list
+        return entities
