@@ -3,8 +3,8 @@ from random import choice
 from fastapi import HTTPException
 
 from src.campaign.domain.campaign_messages import Message, MessageGenerate
-from src.campaign.enums.campaign_media import MessageTypeEnum
 from src.campaign.enums.msg_delivery_vendor import MsgDeliveryVendorEnum
+from src.message_template.enums.message_type import MessageType
 
 
 class MessageGroupController:
@@ -68,7 +68,6 @@ class MessageGroupController:
             msg_type = choice(msg_type_dict[media])
 
         if msg_data.msg_photo_uri is not None:
-
             msg_type_photo = {
                 "kakao_image_general": "kakao_image_general",
                 "kakao_image_wide": "kakao_image_wide",
@@ -106,7 +105,6 @@ class MessageGroupController:
 
 
 def message_image_validator(msg_obj: Message):
-
     msg_type_dict = {
         "mms": "MMS",
         "kakao_image_general": "카카오 이미지 일반형",
@@ -128,7 +126,6 @@ def message_image_validator(msg_obj: Message):
 
 
 def message_modify_validator(msg_delivery_vendor: str, msg_obj: Message):
-
     msg_obj.msg_title = "" if msg_obj.msg_title is None else msg_obj.msg_title
 
     if msg_delivery_vendor == MsgDeliveryVendorEnum.DAU.value:
@@ -171,11 +168,11 @@ def message_modify_validator(msg_delivery_vendor: str, msg_obj: Message):
     # 메시지 타입별 validation checker
     if msg_obj.media.value == "tms":
         if msg_obj.msg_photo_uri is not None:
-            msg_obj.msg_type = MessageTypeEnum.MMS
+            msg_obj.msg_type = MessageType.MMS
         elif len(msg_obj.msg_body + msg_obj.bottom_text) < 45:
-            msg_obj.msg_type = MessageTypeEnum.SMS
+            msg_obj.msg_type = MessageType.SMS
         else:
-            msg_obj.msg_type = MessageTypeEnum.LMS
+            msg_obj.msg_type = MessageType.LMS
     elif msg_obj.media.value == "kft":
         if msg_obj.msg_type.value == "kakao_image_general":
             if len(msg_obj.msg_body) > 400:
@@ -209,7 +206,6 @@ def message_modify_validator(msg_delivery_vendor: str, msg_obj: Message):
 
 
 def message_validator(msg_delivery_vendor: str, msg_obj: Message):
-
     msg_obj.msg_title = "" if msg_obj.msg_title is None else msg_obj.msg_title
 
     if msg_delivery_vendor == MsgDeliveryVendorEnum.DAU.value:
@@ -251,7 +247,7 @@ def message_validator(msg_delivery_vendor: str, msg_obj: Message):
 
     # 메시지 타입별 validation checker
     if msg_obj.media.value == "tms":
-        if (msg_obj.msg_type == MessageTypeEnum.MMS.value) & (
+        if (msg_obj.msg_type == MessageType.MMS.value) & (
             msg_obj.msg_photo_uri is None
         ):
             raise HTTPException(
@@ -262,7 +258,7 @@ def message_validator(msg_delivery_vendor: str, msg_obj: Message):
                 },
             )
 
-        if (msg_obj.msg_type == MessageTypeEnum.SMS.value) & (
+        if (msg_obj.msg_type == MessageType.SMS.value) & (
             len(msg_obj.msg_body + msg_obj.bottom_text) > 45
         ):
             raise HTTPException(

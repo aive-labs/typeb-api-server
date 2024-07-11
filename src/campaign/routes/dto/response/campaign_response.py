@@ -7,15 +7,16 @@ from src.campaign.enums.campagin_status import (
     CampaignStatusEnum,
     CampaignStatusGroupEnum,
 )
-from src.campaign.enums.campaign_media import CampaignMediaEnum, MessageTypeEnum
 from src.campaign.enums.campaign_progress import CampaignProgressEnum
 from src.campaign.enums.campaign_type import CampaignTypeEnum
 from src.campaign.enums.repeat_type import RepeatTypeEnum
 from src.campaign.enums.send_type import SendTypeEnum
 from src.campaign.enums.set_group_category import SetGroupCategoryEnum
 from src.campaign.routes.dto.request.campaign_remind import CampaignRemind
+from src.common.enums.campaign_media import CampaignMedia
 from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
 from src.common.utils.date_utils import localtime_converter
+from src.message_template.enums.message_type import MessageType
 
 
 class CampaignBase(BaseModel):
@@ -72,8 +73,8 @@ class CampaignSetGroup(BaseModel):
     set_seq: int | None = None
     set_sort_num: int | None = None
     group_sort_num: int | None = None
-    media: CampaignMediaEnum | None = None
-    msg_type: MessageTypeEnum | None = None
+    media: CampaignMedia | None = None
+    msg_type: MessageType | None = None
     recipient_group_rate: float | None = None
     recipient_group_count: int | None = None
     set_group_category: SetGroupCategoryEnum | None = None
