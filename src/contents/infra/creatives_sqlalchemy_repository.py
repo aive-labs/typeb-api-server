@@ -227,6 +227,7 @@ class CreativesSqlAlchemy:
             CreativeBase(
                 creative_id=entity.creative_id,
                 image_asset_type=entity.image_asset_type,
+                image_source=entity.image_source,
                 image_uri=entity.image_uri,
                 image_path=entity.image_path,
                 creative_tags=entity.creative_tags,
