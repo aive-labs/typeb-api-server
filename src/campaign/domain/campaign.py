@@ -25,7 +25,7 @@ class Campaign(BaseModel):
     send_date: str | None
     is_msg_creation_recurred: bool
     is_approval_recurred: bool
-    datetosend: Literal["end_of_month"] | int | None = None
+    datetosend: Literal["end_of_month"] | int | str | None = None
     timetosend: str
     start_date: str | None
     end_date: str | None
