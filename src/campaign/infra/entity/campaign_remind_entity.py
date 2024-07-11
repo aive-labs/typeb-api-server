@@ -25,7 +25,7 @@ class CampaignRemindEntity(Base):
     remind_duration = Column(Integer, nullable=False)
     created_at = Column(DateTime(timezone=True), default=datetime.now())
     created_by = Column(String, nullable=False)
-    updated_dt = Column(DateTime, default=func.now(), onupdate=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
     updated_by = Column(String, nullable=False)
 
     campaigns = relationship("CampaignEntity", back_populates="remind_list")

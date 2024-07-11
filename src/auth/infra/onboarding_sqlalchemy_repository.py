@@ -66,7 +66,7 @@ class OnboardingSqlAlchemyRepository:
             index_elements=["mall_id"],  # conflict 대상 열
             set_={
                 "onboarding_status": OnboardingStatus.CAFE24_INTEGRATION_REQUIRED.value,
-                "updated_dt": datetime.datetime.now(),
+                "updated_at": datetime.datetime.now(),
             },  # 업데이트할 열
         )
 

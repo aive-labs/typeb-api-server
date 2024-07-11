@@ -113,7 +113,7 @@ class Cafe24SqlAlchemyRepository:
                 shop_no=cafe24_tokens.shop_no,
                 cafe24_user_id=cafe24_tokens.user_id,
                 data_migration_status=CAFE24DataMigrationStatus.PENDING.value,
-                updated_dt=func.now(),
+                updated_at=func.now(),
             )
         )
 
