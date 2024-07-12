@@ -40,6 +40,7 @@ class ProductService(BaseProductService):
             creative.set_image_url(f"{self.cloud_front_url}/{creative.image_path}")
 
         product_response = ProductResponse(
+            id=product.product_code,
             name=product.product_name,
             rep_nm=rep_nm[0] if rep_nm else None,
             category_1=product.full_category_name_1,
@@ -98,6 +99,7 @@ class ProductService(BaseProductService):
                 creative.set_image_url(f"{self.cloud_front_url}/{creative.image_path}")
 
             product_response = ProductResponse(
+                id=product.product_code,
                 name=product.product_name,
                 rep_nm=rep_nm[0] if rep_nm else None,
                 category_1=product.full_category_name_1,

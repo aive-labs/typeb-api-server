@@ -225,6 +225,8 @@ class CreativesSqlAlchemy:
         )
         creative_base_list = [
             CreativeBase(
+                sty_nm=entity.style_object_name,
+                sty_cd=entity.style_cd,
                 creative_id=entity.creative_id,
                 image_asset_type=entity.image_asset_type,
                 image_source=entity.image_source,

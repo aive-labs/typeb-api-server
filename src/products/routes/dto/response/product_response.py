@@ -5,6 +5,7 @@ from src.products.routes.dto.response.title_with_link import TitleWithLink
 
 
 class ProductResponse(BaseModel):
+    id: str | None = None
     name: str | None = None
     rep_nm: str | None = None
     category_1: str | None = None
