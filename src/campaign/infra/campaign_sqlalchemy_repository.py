@@ -31,7 +31,7 @@ from src.campaign.infra.entity.send_reservation_entity import SendReservationEnt
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.common.sqlalchemy.object_access_condition import object_access_condition
 from src.common.utils.string_utils import is_convertible_to_int
-from src.contents.infra.entity.style_master_entity import StyleMasterEntity
+from src.products.infra.entity.product_master_entity import ProductMasterEntity
 from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
@@ -209,14 +209,14 @@ class CampaignSqlAlchemy:
     def get_group_item_nm_stats(self, campaign_id, set_sort_num):
         with self.db() as db:
             subquery = db.query(
-                distinct(StyleMasterEntity.rep_nm).label("rep_nm"),
-                StyleMasterEntity.item_nm,
+                distinct(ProductMasterEntity.rep_nm).label("rep_nm"),
+                ProductMasterEntity.product_name,
             ).subquery()
 
             return (
                 db.query(
                     CampaignSetRecipientsEntity.group_sort_num,
-                    subquery.c.item_nm,
+                    subquery.c.product_name,
                     func.count(CampaignSetRecipientsEntity.cus_cd).label("cus_count"),
                 )
                 .join(subquery, CampaignSetRecipientsEntity.rep_nm == subquery.c.rep_nm)
@@ -224,7 +224,7 @@ class CampaignSqlAlchemy:
                     CampaignSetRecipientsEntity.campaign_id == campaign_id,
                     CampaignSetRecipientsEntity.set_sort_num == set_sort_num,
                 )
-                .group_by(CampaignSetRecipientsEntity.group_sort_num, subquery.c.item_nm)
+                .group_by(CampaignSetRecipientsEntity.group_sort_num, subquery.c.product_name)
                 .all()
             )
 
@@ -232,8 +232,8 @@ class CampaignSqlAlchemy:
         """메시지 생성시, 그룹 내 아이템 구분(복종)별 고객수 통계 조회를 위한 쿼리"""
         with self.db() as db:
             subquery = db.query(
-                distinct(StyleMasterEntity.rep_nm).label("rep_nm"),
-                StyleMasterEntity.it_gb_nm,
+                distinct(ProductMasterEntity.rep_nm).label("rep_nm"),
+                ProductMasterEntity.product_name,
             ).subquery()
 
             return (
@@ -247,7 +247,7 @@ class CampaignSqlAlchemy:
                     CampaignSetRecipientsEntity.campaign_id == campaign_id,
                     CampaignSetRecipientsEntity.set_sort_num == set_sort_num,
                 )
-                .group_by(CampaignSetRecipientsEntity.group_sort_num, subquery.c.it_gb_nm)
+                .group_by(CampaignSetRecipientsEntity.group_sort_num, subquery.c.product_name)
                 .all()
             )
 
