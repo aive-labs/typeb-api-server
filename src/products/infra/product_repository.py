@@ -14,11 +14,12 @@ from src.products.service.port.base_product_repository import BaseProductReposit
 class ProductRepository(BaseProductRepository):
 
     def get_rep_nms(self, product_id: str, db: Session):
-        entities = (
-            db.query(ProductMasterEntity)
-            .filter(ProductMasterEntity.product_code == product_id)
-            .all()
-        )
+        query = db.query(ProductMasterEntity)
+
+        if product_id:
+            query = query.filter(ProductMasterEntity.product_code == product_id)
+        entities = query.all()
+
         rep_nm_list = list({entity.rep_nm for entity in entities if entity.rep_nm is not None})
         return rep_nm_list
 
