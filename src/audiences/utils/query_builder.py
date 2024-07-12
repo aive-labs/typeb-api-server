@@ -13,6 +13,7 @@ from src.audiences.infra.entity.variable_table_list import (
     CustomerInfoStatusEntity,
     CustomerProductPurchaseSummaryEntity,
 )
+from src.core.exceptions.exceptions import ValidationException
 
 
 def set_query_type_lv2(and_condition):
@@ -62,6 +63,8 @@ def delete_event_field_check(field):
 
 
 def get_query_type(and_condition):
+    print("and_condition")
+    print(and_condition)
     comb_lv = len(and_condition["conditions"]) + 1
     if comb_lv == 2:
         return set_query_type_lv2(and_condition)
@@ -70,7 +73,7 @@ def get_query_type(and_condition):
     elif comb_lv == 4:
         return set_query_type_lv4(and_condition)
     else:
-        raise Exception()
+        raise ValidationException(detail={"message": "필터는 최소 1개 이상 선택해야합니다."})
 
 
 def get_query_type_with_additional_filters(and_condition):
