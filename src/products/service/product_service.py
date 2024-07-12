@@ -6,6 +6,7 @@ from src.core.exceptions.exceptions import ValidationException
 from src.core.transactional import transactional
 from src.products.domain.product import Product
 from src.products.enums.product_link_type import ProductLinkType
+from src.products.infra.dto.product_search_condition import ProductSearchCondition
 from src.products.routes.dto.request.product_link_update import ProductLinkUpdate
 from src.products.routes.dto.request.product_update import ProductUpdate
 from src.products.routes.dto.response.product_response import ProductResponse
@@ -39,26 +40,9 @@ class ProductService(BaseProductService):
         for creative in creatives:
             creative.set_image_url(f"{self.cloud_front_url}/{creative.image_path}")
 
-        product_response = ProductResponse(
-            id=product.product_code,
-            name=product.product_name,
-            rep_nm=rep_nm[0] if rep_nm else None,
-            category_1=product.full_category_name_1,
-            category_2=product.full_category_name_2,
-            category_3=product.full_category_name_3,
-            category_4=product.full_category_name_4,
-            comment=product.comment,
-            recommend_yn=product.recommend_yn,
-            price=product.price,
-            discount_price=product.discountprice,
-            sale_status=product.product_condition,
-            sale_yn=product.display,
-            youtube=youtube_links,
-            instagram=instagram_links,
-            created_at=product.created_at,
-            updated_at=product.updated_at,
+        product_response = ProductResponse.from_model(
+            product, rep_nm, youtube_links, instagram_links
         )
-
         product_response = product_response.set_creatives(creatives)
 
         return product_response
@@ -70,10 +54,10 @@ class ProductService(BaseProductService):
         current_page: int,
         per_page: int,
         db: Session,
-        keyword: str | None = None,
+        search_condition: ProductSearchCondition | None = None,
     ) -> list[ProductResponse]:
         products = self.product_repository.get_all_products(
-            based_on, sort_by, current_page, per_page, db=db, keyword=keyword
+            based_on, sort_by, current_page, per_page, db=db, search_condition=search_condition
         )
 
         product_responses = []
@@ -98,32 +82,19 @@ class ProductService(BaseProductService):
             for creative in creatives:
                 creative.set_image_url(f"{self.cloud_front_url}/{creative.image_path}")
 
-            product_response = ProductResponse(
-                id=product.product_code,
-                name=product.product_name,
-                rep_nm=rep_nm[0] if rep_nm else None,
-                category_1=product.full_category_name_1,
-                category_2=product.full_category_name_2,
-                category_3=product.full_category_name_3,
-                category_4=product.full_category_name_4,
-                comment=product.comment,
-                recommend_yn=product.recommend_yn,
-                price=product.price,
-                discount_price=product.discountprice,
-                sale_status=product.product_condition,
-                sale_yn=product.display,
-                youtube=youtube_links,
-                instagram=instagram_links,
-                created_at=product.created_at,
-                updated_at=product.updated_at,
+            product_response = ProductResponse.from_model(
+                product, rep_nm, youtube_links, instagram_links
             )
-
             product_responses.append(product_response.set_creatives(creatives))
 
         return product_responses
 
-    def get_all_products_count(self, db, keyword: str | None = None) -> int:
-        return self.product_repository.get_all_products_count(db=db, keyword=keyword)
+    def get_all_products_count(
+        self, db, search_condition: ProductSearchCondition | None = None
+    ) -> int:
+        return self.product_repository.get_all_products_count(
+            db=db, search_condition=search_condition
+        )
 
     @transactional
     def update_product_link(

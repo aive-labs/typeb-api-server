@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.core.transactional import transactional
+from src.products.infra.dto.product_search_condition import ProductSearchCondition
 from src.products.routes.dto.request.product_link_update import ProductLinkUpdate
 from src.products.routes.dto.request.product_update import ProductUpdate
 from src.products.routes.dto.response.product_response import ProductResponse
@@ -22,7 +23,7 @@ class BaseProductService(ABC):
         current_page: int,
         per_page: int,
         db: Session,
-        keyword: str | None = None,
+        search_condition: ProductSearchCondition | None = None,
     ) -> list[ProductResponse]:
         pass
 
@@ -39,5 +40,7 @@ class BaseProductService(ABC):
         pass
 
     @abstractmethod
-    def get_all_products_count(self, db, keyword: str | None = None) -> int:
+    def get_all_products_count(
+        self, db, search_condition: ProductSearchCondition | None = None
+    ) -> int:
         pass

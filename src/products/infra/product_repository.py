@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from src.products.domain.product import Product
 from src.products.enums.product_link_type import ProductLinkType
+from src.products.infra.dto.product_search_condition import ProductSearchCondition
 from src.products.infra.entity.product_link_entity import ProductLinkEntity
 from src.products.infra.entity.product_master_entity import ProductMasterEntity
 from src.products.routes.dto.request.product_link_update import ProductLinkUpdate
@@ -38,7 +39,7 @@ class ProductRepository(BaseProductRepository):
         current_page: int,
         per_page: int,
         db: Session,
-        keyword: str | None = None,
+        search_condition: ProductSearchCondition | None = None,
     ) -> list[Product]:
         sort_col = getattr(ProductMasterEntity, based_on)
         if sort_by == "desc":
@@ -47,14 +48,8 @@ class ProductRepository(BaseProductRepository):
             sort_col = sort_col.asc()
 
         query = db.query(ProductMasterEntity)
-
-        if keyword:
-            query = query.filter(
-                or_(
-                    ProductMasterEntity.product_code.ilike(f"%{keyword}%"),
-                    ProductMasterEntity.product_name.ilike(f"%{keyword}%"),
-                )
-            )
+        if search_condition:
+            query = self.add_product_search_condition(query, search_condition)
 
         entities = (
             query.order_by(sort_col).offset((current_page - 1) * per_page).limit(per_page).all()
@@ -62,17 +57,42 @@ class ProductRepository(BaseProductRepository):
 
         return [Product.model_validate(entity) for entity in entities]
 
-    def get_all_products_count(self, db, keyword: str | None = None) -> int:
-
-        query = db.query(func.count(ProductMasterEntity.product_code))
-
-        if keyword:
+    def add_product_search_condition(self, query, search_condition: ProductSearchCondition):
+        if search_condition.keyword:
             query = query.filter(
                 or_(
-                    ProductMasterEntity.product_code.ilike(f"%{keyword}%"),
-                    ProductMasterEntity.product_name.ilike(f"%{keyword}%"),
+                    ProductMasterEntity.product_code.ilike(f"%{search_condition.keyword}%"),
+                    ProductMasterEntity.product_name.ilike(f"%{search_condition.keyword}%"),
                 )
             )
+        if search_condition.rep_nm:
+            query = query.filter(
+                or_(
+                    ProductMasterEntity.rep_nm == search_condition.rep_nm,
+                )
+            )
+        if search_condition.recommend_yn:
+            query = query.filter(
+                or_(
+                    ProductMasterEntity.recommend_yn == search_condition.recommend_yn,
+                )
+            )
+        if search_condition.sale_yn:
+            sale_yn_mapping = "T" if search_condition.sale_yn == "Y" else "F"
+            query = query.filter(
+                or_(
+                    ProductMasterEntity.display == sale_yn_mapping,
+                )
+            )
+        return query
+
+    def get_all_products_count(
+        self, db, search_condition: ProductSearchCondition | None = None
+    ) -> int:
+
+        query = db.query(func.count(ProductMasterEntity.product_code))
+        if search_condition:
+            query = self.add_product_search_condition(query, search_condition)
 
         return query.scalar()
 

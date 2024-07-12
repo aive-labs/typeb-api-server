@@ -9,6 +9,7 @@ from src.common.pagination.pagination_base import PaginationBase
 from src.common.pagination.pagination_response import PaginationResponse
 from src.core.container import Container
 from src.core.database import get_db_session
+from src.products.infra.dto.product_search_condition import ProductSearchCondition
 from src.products.routes.dto.request.product_link_update import ProductLinkUpdate
 from src.products.routes.dto.request.product_update import ProductUpdate
 from src.products.routes.dto.response.product_response import ProductResponse
@@ -25,14 +26,23 @@ def get_all_products(
     current_page: int = 1,
     per_page: int = 20,
     keyword: str | None = None,
+    rep_nm: str | None = None,
+    recommend_yn: str | None = None,
+    sale_yn: str | None = None,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
     product_service: BaseProductService = Depends(dependency=Provide[Container.product_service]),
 ):
-    product_response = product_service.get_all_products(
-        based_on, sort_by, current_page, per_page, db=db, keyword=keyword
+    product_search_condition = ProductSearchCondition(
+        keyword=keyword, rep_nm=rep_nm, recommend_yn=recommend_yn, sale_yn=sale_yn
     )
-    all_count = product_service.get_all_products_count(db=db, keyword=keyword)
+
+    product_response = product_service.get_all_products(
+        based_on, sort_by, current_page, per_page, db=db, search_condition=product_search_condition
+    )
+    all_count = product_service.get_all_products_count(
+        db=db, search_condition=product_search_condition
+    )
 
     pagination = PaginationBase(
         total=all_count,
