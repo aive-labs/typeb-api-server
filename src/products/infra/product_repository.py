@@ -66,24 +66,15 @@ class ProductRepository(BaseProductRepository):
                 )
             )
         if search_condition.rep_nm:
-            query = query.filter(
-                or_(
-                    ProductMasterEntity.rep_nm == search_condition.rep_nm,
-                )
-            )
+            rep_nm_list = search_condition.rep_nm.split(",")
+            query = query.filter(ProductMasterEntity.rep_nm.in_(rep_nm_list))
+
         if search_condition.recommend_yn:
-            query = query.filter(
-                or_(
-                    ProductMasterEntity.recommend_yn == search_condition.recommend_yn,
-                )
-            )
+            query = query.filter(ProductMasterEntity.recommend_yn == search_condition.recommend_yn)
         if search_condition.sale_yn:
             sale_yn_mapping = "T" if search_condition.sale_yn == "Y" else "F"
-            query = query.filter(
-                or_(
-                    ProductMasterEntity.display == sale_yn_mapping,
-                )
-            )
+            query = query.filter(ProductMasterEntity.display == sale_yn_mapping)
+
         return query
 
     def get_all_products_count(
