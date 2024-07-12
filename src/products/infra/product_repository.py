@@ -19,7 +19,7 @@ class ProductRepository(BaseProductRepository):
             .filter(ProductMasterEntity.product_code == product_id)
             .all()
         )
-        rep_nm_list = list({entity.rep_nm for entity in entities})
+        rep_nm_list = list({entity.rep_nm for entity in entities if entity.rep_nm is not None})
         return rep_nm_list
 
     def get_product_detail(self, product_id: str, db: Session) -> Product:
