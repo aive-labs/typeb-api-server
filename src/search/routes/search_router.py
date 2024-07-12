@@ -108,8 +108,7 @@ def search_rep_nms(
     search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[str]:
     rep_nm_list = search_service.search_rep_nms(product_id, db=db)
-
-    return ["rep_nm1", "rep_nm2", "rep_nm3"]
+    return rep_nm_list
 
 
 @search_router.get("/strategies")

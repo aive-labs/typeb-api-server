@@ -63,7 +63,6 @@ def get_product_detail(
     product_service: BaseProductService = Depends(dependency=Provide[Container.product_service]),
 ) -> ProductResponse:
     product_response = product_service.get_product_detail(product_id, db=db)
-    product_response.rep_nm = "rep_nm1"
     return product_response
 
 
