@@ -59,8 +59,8 @@ class CreateStrategyService(CreateStrategyUseCase):
             ]
 
             theme_offer = [
-                StrategyThemeOfferMapping(offer_id=offer_id)
-                for offer_id in theme.theme_audience_set.offer_ids
+                StrategyThemeOfferMapping(coupon_no=coupon_no)
+                for coupon_no in theme.theme_audience_set.coupon_no_list
             ]
 
             strategy_themes.append(
@@ -87,11 +87,6 @@ class CreateStrategyService(CreateStrategyUseCase):
         recommend_model_ids.append(theme.recsys_model_id)
         # 2. 세그먼트 캠페인 - 신상품 추천 모델 단독 사용 점검
         self._check_exclusive_new_collection_model(recommend_model_list=recommend_model_ids)
-        # 3. 커스텀 캠페인 - 오퍼 1개 제한
-        # self._check_single_offer_per_custom_theme(
-        #     audience_type_code=strategy_create.audience_type_code,
-        #     offer_id_list=theme.theme_audience_set.offer_ids,
-        # )
 
     def _check_duplicate_recommend_model(self, recommend_model_id: int, recommend_model_list):
         """Checks for duplicate recommender system model IDs and raises an exception if found."""
@@ -114,13 +109,3 @@ class CreateStrategyService(CreateStrategyUseCase):
                     "message": "신상품 추천 모델은 전략 내 단독으로만 사용 가능합니다. (다른 추천 모델 사용 불가)",
                 },
             )
-
-    def _check_single_offer_per_custom_theme(self, audience_type_code, offer_id_list):
-        pass
-        # if audience_type_code == "c" and len(offer_id_list) > 1:
-        #     raise ValidationException(
-        #         detail={
-        #             "code": "strategy/create",
-        #             "message": "커스텀 전략의 테마 별 오퍼는 1개까지 사용가능합니다.",
-        #         },
-        #     )

@@ -37,7 +37,9 @@ class StrategyRepository(BaseStrategyRepository):
                     audience_ids=[
                         audience.audience_id for audience in theme.strategy_theme_audience_mapping
                     ],
-                    offer_ids=[offer.offer_id for offer in theme.strategy_theme_offer_mapping],
+                    coupon_no_list=[
+                        offer.coupon_no for offer in theme.strategy_theme_offer_mapping
+                    ],
                     contents_tags=theme.contents_tags,
                 ),
             )

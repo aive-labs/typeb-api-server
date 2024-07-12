@@ -98,8 +98,8 @@ class CampaignSet(BaseModel):
     audience_unit_price: float | None = None
     response_rate: float | None = None
     rep_nm_list: List[str | None] | None = None
-    offer_id: str | None = None
-    offer_name: str | None = None
+    coupon_no: str | None = None
+    coupon_name: str | None = None
     recipient_count: int | None = None
     medias: str | None = None
     contents_names: List[str | None] | None = None

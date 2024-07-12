@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 class ThemeDetail(BaseModel):
     audience_ids: list[str]
-    offer_ids: list[str]
+    coupon_no_list: list[str]
     contents_tags: list[str] | None = None
 
 

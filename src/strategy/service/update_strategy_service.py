@@ -72,12 +72,12 @@ class UpdateStrategyService(UpdateStrategyUseCase):
 
             theme_offer = [
                 StrategyThemeOfferMapping(
-                    offer_id=offer_id,
+                    coupon_no=coupon_no,
                     strategy_theme_id=theme.strategy_theme_id,
                     updated_at=datetime.now(),
                     updated_by=user.username,
                 )
-                for offer_id in theme.theme_audience_set.offer_ids
+                for coupon_no in theme.theme_audience_set.coupon_no_list
             ]
 
             update_strategy_themes.append(

@@ -32,7 +32,7 @@ def get_first_offer_by_strategy_theme(strategy_theme_ids: list, db: Session):
         .join(
             subquery,
             (StrategyThemeOfferMappingEntity.strategy_theme_id == subquery.c.campaign_theme_id)
-            & (StrategyThemeOfferMappingEntity.coupon_no == subquery.c.offer_id),
+            & (StrategyThemeOfferMappingEntity.coupon_no == subquery.c.coupon_no),
         )
         .join(
             OffersEntity,

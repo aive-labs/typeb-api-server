@@ -109,8 +109,8 @@ class StrategySqlAlchemy:
                     )
 
                 theme_offer_entities = [
-                    StrategyThemeOfferMappingEntity(offer_id=offer.offer_id)
-                    for offer in theme.strategy_theme_offer_mapping
+                    StrategyThemeOfferMappingEntity(coupon_no=coupon.coupon_no)
+                    for coupon in theme.strategy_theme_offer_mapping
                 ]
 
                 for theme_offer_entity in theme_offer_entities:
@@ -268,12 +268,12 @@ class StrategySqlAlchemy:
 
             theme_offer_entities = [
                 StrategyThemeOfferMappingEntity(
-                    offer_id=offer.offer_id,
+                    coupon_no=coupon.coupon_no,
                     strategy_theme_id=theme.strategy_theme_id,
                     updated_by=theme.updated_by,
                     updated_at=theme.updated_at,
                 )
-                for offer in theme.strategy_theme_offer_mapping
+                for coupon in theme.strategy_theme_offer_mapping
             ]
 
             for theme_offer_entity in theme_offer_entities:
