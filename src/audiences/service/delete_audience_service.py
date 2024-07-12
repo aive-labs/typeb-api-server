@@ -1,4 +1,3 @@
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from src.audiences.routes.port.usecase.delete_audience_usecase import (
@@ -6,6 +5,7 @@ from src.audiences.routes.port.usecase.delete_audience_usecase import (
 )
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
 from src.campaign.enums.campagin_status import CampaignStatus
+from src.core.exceptions.exceptions import LinkedCampaignException, PolicyException
 from src.core.transactional import transactional
 
 
@@ -29,11 +29,19 @@ class DeleteAudienceService(DeleteAudienceUseCase):
             if self._is_single_expired_campaign(linked_camp_list):
                 self.audience_repository.update_expired_audience_status(audience_id, db)
 
-            raise HTTPException(
-                status_code=500,
+            raise LinkedCampaignException(
                 detail={
                     "code": "delete/01",
                     "message": "삭제 불가 - 연결된 캠페인이 존재합니다.",
+                },
+            )
+
+        linked_strategy_ids = self.audience_repository.get_linked_strategy(audience_id, db)
+        print(linked_strategy_ids)
+        if len(linked_strategy_ids) >= 1:
+            raise PolicyException(
+                detail={
+                    "message": "삭제 불가 - 연결된 전략이 존재합니다.",
                 },
             )
 

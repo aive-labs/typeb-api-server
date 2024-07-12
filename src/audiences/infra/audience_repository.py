@@ -218,3 +218,6 @@ class AudienceRepository(BaseAudienceRepository):
 
     def update_exclude_status(self, audience_id: str, is_exclude: bool, db: Session):
         self.audience_sqlalchemy.update_exclude_status(audience_id, is_exclude, db)
+
+    def get_linked_strategy(self, audience_id: str, db: Session) -> list:
+        return self.audience_sqlalchemy.get_linked_strategy(audience_id, db)

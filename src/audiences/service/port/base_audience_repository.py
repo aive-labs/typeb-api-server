@@ -54,6 +54,10 @@ class BaseAudienceRepository(ABC):
         pass
 
     @abstractmethod
+    def get_linked_strategy(self, audience_id: str, db: Session) -> list:
+        pass
+
+    @abstractmethod
     def update_expired_audience_status(self, audience_id: str, db: Session):
         pass
 

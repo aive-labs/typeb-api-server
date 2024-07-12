@@ -65,6 +65,7 @@ from src.common.utils.model_converter import ModelConverter
 from src.common.utils.string_utils import is_convertible_to_int
 from src.core.exceptions.exceptions import NotFoundException
 from src.search.routes.dto.id_with_label_response import IdWithLabel
+from src.strategy.infra.entity.strategy_entity import StrategyEntity
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
@@ -977,3 +978,27 @@ class AudienceSqlAlchemy:
 
         if result.rowcount == 0:
             raise ValueError("해당하는 타겟 오디언스가 존재하지 않습니다.")
+
+    def get_linked_strategy(self, audience_id, db: Session) -> list:
+
+        strategy_theme_audience = (
+            db.query(StrategyThemeAudienceMappingEntity)
+            .filter(StrategyThemeAudienceMappingEntity.audience_id == audience_id)
+            .first()
+        )
+
+        if not strategy_theme_audience:
+            return []
+
+        strategy_id_entities = (
+            db.query(StrategyEntity.strategy_id)
+            .join(
+                StrategyThemesEntity, StrategyThemesEntity.strategy_id == StrategyEntity.strategy_id
+            )
+            .filter(
+                StrategyThemesEntity.strategy_theme_id == strategy_theme_audience.strategy_theme_id,
+                ~StrategyEntity.is_deleted,
+            )
+        )
+
+        return [strategy.strategy_id for strategy in strategy_id_entities]
