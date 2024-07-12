@@ -55,7 +55,7 @@ def execute_target_audience_summary(
     print(type(audience_sale_amt))
     audience_freq = purchase_records_df[["cus_cd", "sale_dt"]].drop_duplicates().shape[0]
     avg_pur_item_count = (
-        purchase_records_df[["cus_cd", "sale_dt", "sty_cd"]]
+        purchase_records_df[["cus_cd", "sale_dt", "product_code"]]
         .drop_duplicates()
         .groupby(by=["cus_cd", "sale_dt"])
         .count()
