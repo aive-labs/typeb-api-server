@@ -18,7 +18,7 @@ class StrategyThemeAudienceMapping(BaseModel):
 
 class StrategyThemeOfferMapping(BaseModel):
     strategy_theme_id: int | None = None
-    offer_id: str
+    coupon_no: str
     created_at: datetime | None = None
     created_by: str | None = None
     updated_at: datetime | None = None
