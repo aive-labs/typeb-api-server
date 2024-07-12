@@ -62,8 +62,19 @@ class ProductRepository(BaseProductRepository):
 
         return [Product.model_validate(entity) for entity in entities]
 
-    def get_all_products_count(self, db) -> int:
-        return db.query(func.count(ProductMasterEntity.product_code)).scalar()
+    def get_all_products_count(self, db, keyword: str | None = None) -> int:
+
+        query = db.query(func.count(ProductMasterEntity.product_code))
+
+        if keyword:
+            query = query.filter(
+                or_(
+                    ProductMasterEntity.product_code.ilike(f"%{keyword}%"),
+                    ProductMasterEntity.product_name.ilike(f"%{keyword}%"),
+                )
+            )
+
+        return query.scalar()
 
     def get_links_by_product_code(
         self, product_id: str, link_type: str, db: Session

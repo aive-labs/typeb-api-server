@@ -43,5 +43,5 @@ class BaseProductRepository(ABC):
         pass
 
     @abstractmethod
-    def get_all_products_count(self, db) -> int:
+    def get_all_products_count(self, db, keyword: str | None = None) -> int:
         pass

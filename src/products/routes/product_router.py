@@ -1,3 +1,5 @@
+import math
+
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
@@ -21,7 +23,7 @@ def get_all_products(
     based_on: str = "product_no",  # Enum으로 변경
     sort_by: str = "desc",  # Enum으로 변경
     current_page: int = 1,
-    per_page: int = 10,
+    per_page: int = 20,
     keyword: str | None = None,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
@@ -30,13 +32,13 @@ def get_all_products(
     product_response = product_service.get_all_products(
         based_on, sort_by, current_page, per_page, db=db, keyword=keyword
     )
-    all_count = len(product_response)
+    all_count = product_service.get_all_products_count(db=db, keyword=keyword)
 
     pagination = PaginationBase(
         total=all_count,
         per_page=per_page,
         current_page=current_page,
-        total_page=(all_count // per_page) + 1,
+        total_page=math.ceil(all_count / per_page),
     )
 
     return PaginationResponse(items=product_response, pagination=pagination)

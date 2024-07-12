@@ -122,8 +122,8 @@ class ProductService(BaseProductService):
 
         return product_responses
 
-    def get_all_products_count(self, db) -> int:
-        return self.product_repository.get_all_products_count(db)
+    def get_all_products_count(self, db, keyword: str | None = None) -> int:
+        return self.product_repository.get_all_products_count(db=db, keyword=keyword)
 
     @transactional
     def update_product_link(
