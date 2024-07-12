@@ -221,7 +221,9 @@ class CreativesSqlAlchemy:
 
     def get_creatives_by_style_cd(self, style_cd, db) -> list[CreativeBase]:
         entities: list[CreativesEntity] = (
-            db.query(CreativesEntity).filter(CreativesEntity.style_cd == style_cd).all()
+            db.query(CreativesEntity)
+            .filter(~CreativesEntity.is_deleted, CreativesEntity.style_cd == style_cd)
+            .all()
         )
         creative_base_list = [
             CreativeBase(
