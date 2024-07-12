@@ -50,7 +50,9 @@ def get_product_detail(
     db: Session = Depends(get_db_session),
     product_service: BaseProductService = Depends(dependency=Provide[Container.product_service]),
 ) -> ProductResponse:
-    return product_service.get_product_detail(product_id, db=db)
+    product_response = product_service.get_product_detail(product_id, db=db)
+    product_response.rep_nm = "rep_nm1"
+    return product_response
 
 
 @product_router.patch("/{product_id}/links", status_code=status.HTTP_204_NO_CONTENT)

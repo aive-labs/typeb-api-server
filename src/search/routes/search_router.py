@@ -107,7 +107,10 @@ def search_rep_nms(
     user=Depends(get_permission_checker(required_permissions=[])),
     search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[str]:
-    return search_service.search_rep_nms(product_id, db=db)
+    rep_nm_list = search_service.search_rep_nms(product_id, db=db)
+    if not rep_nm_list:
+        return ["rep_nm1", "rep_nm2", "rep_nm3"]
+    return rep_nm_list
 
 
 @search_router.get("/strategies")
