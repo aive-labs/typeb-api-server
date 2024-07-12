@@ -50,3 +50,6 @@ class CreativesRepository(BaseCreativesRepository):
 
     def get_creatives_by_style_cd(self, style_cd: str, db: Session) -> list[CreativeBase]:
         return self.creative_sqlalchemy.get_creatives_by_style_cd(style_cd, db)
+
+    def get_creatives_by_id(self, creative_id, db) -> Creatives:
+        return self.creative_sqlalchemy.get_creative_by_id(creative_id, db)

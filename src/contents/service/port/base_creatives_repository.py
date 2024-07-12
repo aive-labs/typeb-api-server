@@ -43,3 +43,7 @@ class BaseCreativesRepository(ABC):
     @abstractmethod
     def get_creatives_by_style_cd(self, style_cd: str, db: Session) -> list[CreativeBase]:
         pass
+
+    @abstractmethod
+    def get_creatives_by_id(self, creative_id, db: Session) -> Creatives:
+        pass

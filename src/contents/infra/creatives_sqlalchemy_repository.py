@@ -240,3 +240,18 @@ class CreativesSqlAlchemy:
         ]
 
         return creative_base_list
+
+    def get_creative_by_id(self, creative_id, db) -> Creatives:
+        creative_data = (
+            db.query(CreativesEntity)
+            .filter(
+                CreativesEntity.creative_id == creative_id,
+                ~CreativesEntity.is_deleted,
+            )
+            .first()
+        )
+
+        if creative_data is None:
+            raise NotFoundException(detail={"message": "Creative가 존재하지 않습니다"})
+
+        return ModelConverter.entity_to_model(creative_data, Creatives)
