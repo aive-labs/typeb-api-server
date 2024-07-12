@@ -54,7 +54,7 @@ class SendReservationEntity(Base):
     shop_send_yn = Column(String, nullable=False)  # shop_send_yn
     test_send_yn = Column(String(5))
     audience_id = Column(String)
-    event_no = Column(String)
+    coupon_no = Column(String)
     create_resv_date = Column(DateTime(timezone=True), nullable=False, default=datetime.now())
     create_resv_user = Column(String(20), nullable=False, default=text("(user)"))
     update_resv_date = Column(

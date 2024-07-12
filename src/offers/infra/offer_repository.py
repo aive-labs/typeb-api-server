@@ -142,7 +142,7 @@ class OfferRepository:
             if keyword:
                 keyword = f"%{keyword}%"
                 if is_convertible_to_int(keyword):
-                    condition.append(OffersEntity.coupon_no.ilike(keyword))  # event_no
+                    condition.append(OffersEntity.coupon_no.ilike(keyword))  # coupon_no
                 else:
                     condition.append(OffersEntity.coupon_name.ilike(keyword))  # offer_name
 

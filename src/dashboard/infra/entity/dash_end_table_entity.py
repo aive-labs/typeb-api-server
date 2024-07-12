@@ -34,7 +34,7 @@ class DashEndTable(Base):
     cus_seg = Column(String)
     prd_seg = Column(String)
     promo_seg = Column(String)
-    event_no = Column(String)
+    coupon_no = Column(String)
     add_sale_event_no = Column(String)
     offer_usage = Column(Integer)
     milege_usage = Column(Integer)

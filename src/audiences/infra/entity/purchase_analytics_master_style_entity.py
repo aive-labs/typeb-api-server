@@ -21,7 +21,7 @@ class PurchaseAnalyticsMasterStyle(Base):
     cons_amt = Column(BigInteger)
     dc_rate = Column(String)
     milege_usage = Column(BigInteger)
-    event_no = Column(String)
+    coupon_no = Column(String)
     rep_nm = Column(String)
     order_item_code = Column(String)
     market_id = Column(String)

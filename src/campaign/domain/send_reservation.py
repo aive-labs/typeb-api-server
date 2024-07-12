@@ -43,7 +43,7 @@ class SendReservation(BaseModel):
     shop_send_yn: str
     test_send_yn: str | None = None
     audience_id: str | None = None
-    event_no: str | None = None
+    coupon_no: str | None = None
     create_resv_date: datetime | None
     create_resv_user: str
     update_resv_date: datetime | None

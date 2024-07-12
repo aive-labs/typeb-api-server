@@ -115,7 +115,7 @@ class CampaignSqlAlchemy:
                 )
                 .filter(
                     CampaignEntity.campaign_status_code.notin_(["o2", "s3"]),
-                    CampaignSetsEntity.event_no == offer_event_no,
+                    CampaignSetsEntity.coupon_no == offer_event_no,
                 )
                 .first()
             )
