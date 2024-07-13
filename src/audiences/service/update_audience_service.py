@@ -29,9 +29,7 @@ class UpdateAudienceService(UpdateAudienceUseCase):
         self.audience_repository = audience_repository
 
     @transactional
-    def exec(
-        self, audience_id: str, audience_update: AudienceUpdate, user: User, db: Session
-    ):
+    def exec(self, audience_id: str, audience_update: AudienceUpdate, user: User, db: Session):
 
         audience = self.audience_repository.get_audience_detail(audience_id, db)
         self.check_if_audience_type_segment(audience, user)
@@ -57,9 +55,7 @@ class UpdateAudienceService(UpdateAudienceUseCase):
         return update_audience_id
 
     def save_audience_customer_list(self, audience_id: str, user: User, db: Session):
-        creation_options = self.audience_repository.get_db_filter_conditions(
-            audience_id, db
-        )
+        creation_options = self.audience_repository.get_db_filter_conditions(audience_id, db)
         print("creation_options")
         print(creation_options)
         options = creation_options[0].conditions
@@ -93,11 +89,7 @@ class UpdateAudienceService(UpdateAudienceUseCase):
         # 업로드 템플릿 식별 후 schema와 field 변수 할당
         templates_members = CsvTemplates.get_eums()
         template = next(
-            (
-                template
-                for template in templates_members
-                if template["_name_"] == template_name
-            ),
+            (template for template in templates_members if template["_name_"] == template_name),
             None,
         )
 
@@ -209,28 +201,22 @@ class UpdateAudienceService(UpdateAudienceUseCase):
                 for n1, and_conditions in enumerate(and_conditions_list, 1):
                     n2 = 0
                     for and_condition in and_conditions["and_conditions"]:
-                        query_type_dict = get_query_type_with_additional_filters(
-                            and_condition
-                        )
+                        query_type_dict = get_query_type_with_additional_filters(and_condition)
                         n2 += 1
 
                         if query_type_dict is None:
                             raise Exception()
 
                         # variable_type 고정 : target
-                        variable_table = (
-                            self.audience_repository.get_tablename_by_variable_id(
-                                query_type_dict["field"], db
-                            )
+                        variable_table = self.audience_repository.get_tablename_by_variable_id(
+                            query_type_dict["field"], db
                         )
                         table_name = variable_table.target_table
 
                         query_type_dict["table_name"] = table_name
                         condition_dict[f"condition_{n1}_{n2}"] = query_type_dict
 
-                table_condition_dict = classify_conditions_based_on_tablename(
-                    condition_dict
-                )
+                table_condition_dict = classify_conditions_based_on_tablename(condition_dict)
 
                 idx = 0
                 for table_name, condition_list in table_condition_dict.items():
@@ -288,10 +274,8 @@ class UpdateAudienceService(UpdateAudienceUseCase):
                 total_where_condition = or_(
                     *[and_(*same_n1) for same_n1 in where_condition_dict.values()]
                 )
-                all_customer = (
-                    all_customer.filter(  # pyright: ignore [reportAttributeAccessIssue]
-                        total_where_condition
-                    )
+                all_customer = all_customer.filter(  # pyright: ignore [reportAttributeAccessIssue]
+                    total_where_condition
                 )
                 filter_or_exclutions_query_list.append(all_customer)
         result = except_(*filter_or_exclutions_query_list)

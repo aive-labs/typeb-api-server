@@ -14,9 +14,7 @@ class BaseOauthRepository(ABC):
         pass
 
     @abstractmethod
-    def insert_basic_info(
-        self, user_id: str, mall_id: str, state_token: str, db: Session
-    ):
+    def insert_basic_info(self, user_id: str, mall_id: str, state_token: str, db: Session):
         pass
 
     @abstractmethod
@@ -24,15 +22,11 @@ class BaseOauthRepository(ABC):
         pass
 
     @abstractmethod
-    def is_existing_state_token(
-        self, state_token: str, db: Session
-    ) -> Cafe24StateToken:
+    def is_existing_state_token(self, state_token: str, db: Session) -> Cafe24StateToken:
         pass
 
     @abstractmethod
-    def get_cafe24_info_by_user_id(
-        self, user_id: str, db: Session
-    ) -> Cafe24MallInfo | None:
+    def get_cafe24_info_by_user_id(self, user_id: str, db: Session) -> Cafe24MallInfo | None:
         pass
 
     @abstractmethod

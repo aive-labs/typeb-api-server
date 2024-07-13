@@ -12,13 +12,9 @@ class BaseOauthService(ABC):
         pass
 
     @abstractmethod
-    async def get_oauth_access_token(
-        self, oauth_request: OauthAuthenticationRequest, db: Session
-    ):
+    async def get_oauth_access_token(self, oauth_request: OauthAuthenticationRequest, db: Session):
         pass
 
     @abstractmethod
-    def get_connected_info_by_user(
-        self, user_id: str, db: Session
-    ) -> ExternalIntegration | None:
+    def get_connected_info_by_user(self, user_id: str, db: Session) -> ExternalIntegration | None:
         pass

@@ -10,5 +10,5 @@ class KakaoIntegrationEntity(Base):
     channel_id = Column(String, nullable=False)
     search_id = Column(String, nullable=False)
     sender_phone_number = Column(String, nullable=False)
-    created_dt = Column(DateTime, default=func.now())
-    updated_dt = Column(DateTime, default=func.now(), onupdate=func.now())
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())

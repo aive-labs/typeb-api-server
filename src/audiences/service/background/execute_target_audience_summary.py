@@ -12,9 +12,7 @@ from src.core.container import Container
 def execute_target_audience_summary(
     audience_id,
     db: Session,
-    target_audience_summary_sqlalchemy=Provide[
-        Container.target_audience_summary_sqlalchemy
-    ],
+    target_audience_summary_sqlalchemy=Provide[Container.target_audience_summary_sqlalchemy],
 ):
     today = datetime.now()
     yesterday = today - timedelta(days=1)
@@ -25,10 +23,8 @@ def execute_target_audience_summary(
     today_month_str = today.strftime("%Y%m")
     three_months_ago_str = three_months_ago.strftime("%Y%m%d")
 
-    cust_ids_query = (
-        target_audience_summary_sqlalchemy.get_audience_cust_with_audience_id(
-            audience_id, db
-        )
+    cust_ids_query = target_audience_summary_sqlalchemy.get_audience_cust_with_audience_id(
+        audience_id, db
     )
     cust_ids = DataConverter.convert_query_to_df(cust_ids_query)["cus_cd"].tolist()
     print("cust_ids")
@@ -47,9 +43,7 @@ def execute_target_audience_summary(
         audience_id, three_months_ago_str, yesterday_str, db
     )
     response_data_df = DataConverter.convert_query_to_df(response_data_query)
-    response_data_df = (
-        response_data_df.groupby(["cus_cd"])["response_count"].max().reset_index()
-    )
+    response_data_df = response_data_df.groupby(["cus_cd"])["response_count"].max().reset_index()
 
     all_cus_cnt = target_audience_summary_sqlalchemy.get_all_customer_count(db)
     audience_cnt = len(cust_ids)
@@ -59,11 +53,9 @@ def execute_target_audience_summary(
     audience_sale_amt = purchase_records_df["sale_amt"].sum()
     print(audience_sale_amt)
     print(type(audience_sale_amt))
-    audience_freq = (
-        purchase_records_df[["cus_cd", "sale_dt"]].drop_duplicates().shape[0]
-    )
+    audience_freq = purchase_records_df[["cus_cd", "sale_dt"]].drop_duplicates().shape[0]
     avg_pur_item_count = (
-        purchase_records_df[["cus_cd", "sale_dt", "sty_cd"]]
+        purchase_records_df[["cus_cd", "sale_dt", "product_code"]]
         .drop_duplicates()
         .groupby(by=["cus_cd", "sale_dt"])
         .count()
@@ -71,9 +63,7 @@ def execute_target_audience_summary(
         .values[0]  # pyright: ignore [reportAttributeAccessIssue]
     )
     main_rep_nm_list = (
-        purchase_records_df[
-            ["rep_nm", "sale_qty", "sale_amt"]
-        ]  # pyright: ignore [reportCallIssue]
+        purchase_records_df[["rep_nm", "sale_qty", "sale_amt"]]  # pyright: ignore [reportCallIssue]
         .groupby(by=["rep_nm"])
         .sum()
         .sort_values(by=["sale_qty", "sale_amt"], ascending=False)
@@ -104,9 +94,7 @@ def execute_target_audience_summary(
     )
     insert_to_audience_stats["audience_portion_gap"] = 0.0
     insert_to_audience_stats["audience_unit_price"] = (
-        int(round(audience_sale_amt / sale_audience_cnt, -3))
-        if sale_audience_cnt > 0
-        else 0
+        int(round(audience_sale_amt / sale_audience_cnt, -3)) if sale_audience_cnt > 0 else 0
     )
     insert_to_audience_stats["audience_unit_price_gap"] = 0.0
     insert_to_audience_stats["revenue_per_audience"] = int(round(audience_sale_amt, -3))

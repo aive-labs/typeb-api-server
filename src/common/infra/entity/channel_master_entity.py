@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import Column, DateTime, String
 
-from src.core.database import Base as Base
+from src.core.database import Base
 
 
 class ChannelMasterEntity(Base):

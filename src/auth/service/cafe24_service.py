@@ -63,9 +63,7 @@ class Cafe24Service(BaseOauthService):
         # 만들고 나서 DB에 저장해야함
         hashed_state = generate_hash(self.state + mall_id)
 
-        self.cafe24_repository.insert_basic_info(
-            str(user.user_id), mall_id, hashed_state, db
-        )
+        self.cafe24_repository.insert_basic_info(str(user.user_id), mall_id, hashed_state, db)
 
         self.onboarding_repository.insert_first_onboarding(mall_id, db)
 
@@ -73,12 +71,8 @@ class Cafe24Service(BaseOauthService):
             mall_id, self.client_id, hashed_state, self.redirect_uri, self.scope
         )
 
-    def get_connected_info_by_user(
-        self, user_id: str, db: Session
-    ) -> ExternalIntegration | None:
-        cafe24_mall_info = self.cafe24_repository.get_cafe24_info_by_user_id(
-            user_id, db=db
-        )
+    def get_connected_info_by_user(self, user_id: str, db: Session) -> ExternalIntegration | None:
+        cafe24_mall_info = self.cafe24_repository.get_cafe24_info_by_user_id(user_id, db=db)
 
         if cafe24_mall_info is None:
             return None
@@ -88,12 +82,8 @@ class Cafe24Service(BaseOauthService):
             mall_id=cafe24_mall_info.mall_id,
         )
 
-    async def get_oauth_access_token(
-        self, oauth_request: OauthAuthenticationRequest, db: Session
-    ):
-        cafe24_state_token = self.cafe24_repository.get_state_token(
-            oauth_request.state, db=db
-        )
+    async def get_oauth_access_token(self, oauth_request: OauthAuthenticationRequest, db: Session):
+        cafe24_state_token = self.cafe24_repository.get_state_token(oauth_request.state, db=db)
         mall_id = cafe24_state_token.mall_id
 
         token_data = await self._request_token_to_cafe24(oauth_request.code, mall_id)

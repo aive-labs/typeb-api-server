@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
+from src.search.routes.dto.strategy_search_response import StrategySearchResponse
 from src.strategy.domain.strategy import Strategy
 from src.strategy.domain.strategy_theme import StrategyTheme
 from src.strategy.routes.dto.response.strategy_with_campaign_theme_response import (
@@ -12,9 +13,7 @@ from src.users.domain.user import User
 
 class BaseStrategyRepository(ABC):
     @abstractmethod
-    def get_all_strategies(
-        self, start_date, end_date, user: User, db: Session
-    ) -> list[Strategy]:
+    def get_all_strategies(self, start_date, end_date, user: User, db: Session) -> list[Strategy]:
         pass
 
     @abstractmethod
@@ -37,9 +36,7 @@ class BaseStrategyRepository(ABC):
         pass
 
     @abstractmethod
-    def is_strategy_name_exists_for_update(
-        self, strategy_id: str, name: str, db: Session
-    ) -> int:
+    def is_strategy_name_exists_for_update(self, strategy_id: str, name: str, db: Session) -> int:
         pass
 
     @abstractmethod
@@ -58,4 +55,10 @@ class BaseStrategyRepository(ABC):
         user: User,
         db: Session,
     ):
+        pass
+
+    @abstractmethod
+    def search_keyword(
+        self, campaign_type_code, search_keyword, db: Session
+    ) -> list[StrategySearchResponse]:
         pass

@@ -1,6 +1,9 @@
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
+
+from src.campaign.routes.dto.request.campaign_remind import CampaignRemind
 
 
 class Campaign(BaseModel):
@@ -22,7 +25,7 @@ class Campaign(BaseModel):
     send_date: str | None
     is_msg_creation_recurred: bool
     is_approval_recurred: bool
-    datetosend: str | None
+    datetosend: Literal["end_of_month"] | int | str | None = None
     timetosend: str
     start_date: str | None
     end_date: str | None
@@ -31,12 +34,13 @@ class Campaign(BaseModel):
     campaigns_exc: list[str] | None
     audiences_exc: list[str] | None
     strategy_id: str | None
-    campaign_theme_ids: list[int] | None
+    strategy_theme_ids: list[int] | None
     is_personalized: bool
     progress: str
     msg_delivery_vendor: str
     shop_send_yn: str
     retention_day: int | None = None
+    remind_list: list[CampaignRemind] = []
     owned_by_dept: str
     owned_by_dept_name: str
     owned_by_dept_abb_name: str

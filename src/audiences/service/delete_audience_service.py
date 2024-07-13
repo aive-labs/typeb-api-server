@@ -1,4 +1,3 @@
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from src.audiences.routes.port.usecase.delete_audience_usecase import (
@@ -6,6 +5,7 @@ from src.audiences.routes.port.usecase.delete_audience_usecase import (
 )
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
 from src.campaign.enums.campagin_status import CampaignStatus
+from src.core.exceptions.exceptions import LinkedCampaignException, PolicyException
 from src.core.transactional import transactional
 
 
@@ -21,9 +21,7 @@ class DeleteAudienceService(DeleteAudienceUseCase):
             - 연결 캠페인이 모두 기간만료 상태인 경우 -> 미표시 상태 update
             - 그 외의 경우 -> 삭제 불가. error raise
         """
-        linked_campaigns = self.audience_repository.get_linked_campaigns(
-            audience_id, db
-        )
+        linked_campaigns = self.audience_repository.get_linked_campaigns(audience_id, db)
         if len(linked_campaigns) >= 1:
             linked_camp_list = [row.campaign_status_code for row in linked_campaigns]
 
@@ -31,11 +29,19 @@ class DeleteAudienceService(DeleteAudienceUseCase):
             if self._is_single_expired_campaign(linked_camp_list):
                 self.audience_repository.update_expired_audience_status(audience_id, db)
 
-            raise HTTPException(
-                status_code=500,
+            raise LinkedCampaignException(
                 detail={
                     "code": "delete/01",
                     "message": "삭제 불가 - 연결된 캠페인이 존재합니다.",
+                },
+            )
+
+        linked_strategy_ids = self.audience_repository.get_linked_strategy(audience_id, db)
+        print(linked_strategy_ids)
+        if len(linked_strategy_ids) >= 1:
+            raise PolicyException(
+                detail={
+                    "message": "삭제 불가 - 연결된 전략이 존재합니다.",
                 },
             )
 
@@ -45,6 +51,4 @@ class DeleteAudienceService(DeleteAudienceUseCase):
         """
         캠페인 리스트에 단 하나의 캠페인이 있고, 그 상태가 'expired'인지 확인합니다.
         """
-        return (
-            len(campaign_list) == 1 and campaign_list[0] == CampaignStatus.expired.value
-        )
+        return len(campaign_list) == 1 and campaign_list[0] == CampaignStatus.expired.value

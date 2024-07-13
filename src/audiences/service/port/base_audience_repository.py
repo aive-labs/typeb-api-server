@@ -50,9 +50,11 @@ class BaseAudienceRepository(ABC):
         pass
 
     @abstractmethod
-    def get_linked_campaigns(
-        self, audience_id: str, db: Session
-    ) -> list[LinkedCampaign]:
+    def get_linked_campaigns(self, audience_id: str, db: Session) -> list[LinkedCampaign]:
+        pass
+
+    @abstractmethod
+    def get_linked_strategy(self, audience_id: str, db: Session) -> list:
         pass
 
     @abstractmethod
@@ -78,9 +80,7 @@ class BaseAudienceRepository(ABC):
         pass
 
     @abstractmethod
-    def get_db_filter_conditions(
-        self, audience_id: str, db: Session
-    ) -> list[FilterCondition]:
+    def get_db_filter_conditions(self, audience_id: str, db: Session) -> list[FilterCondition]:
         pass
 
     @abstractmethod
@@ -92,9 +92,7 @@ class BaseAudienceRepository(ABC):
         pass
 
     @abstractmethod
-    def get_tablename_by_variable_id(
-        self, variable_id: str, db: Session
-    ) -> VariableTableMapping:
+    def get_tablename_by_variable_id(self, variable_id: str, db: Session) -> VariableTableMapping:
         pass
 
     @abstractmethod
@@ -110,21 +108,15 @@ class BaseAudienceRepository(ABC):
         pass
 
     @abstractmethod
-    def get_audience_cust_with_audience_id(
-        self, audience_id: str, db: Session
-    ) -> object:
+    def get_audience_cust_with_audience_id(self, audience_id: str, db: Session) -> object:
         pass
 
     @abstractmethod
-    def get_audience_upload_info(
-        self, audience_id: str, db: Session
-    ) -> list[UploadCondition]:
+    def get_audience_upload_info(self, audience_id: str, db: Session) -> list[UploadCondition]:
         pass
 
     @abstractmethod
-    def get_actual_list_from_csv(
-        self, uploaded_rows, target_column, entity, db: Session
-    ) -> list:
+    def get_actual_list_from_csv(self, uploaded_rows, target_column, entity, db: Session) -> list:
         pass
 
     @abstractmethod
@@ -153,9 +145,7 @@ class BaseAudienceRepository(ABC):
         pass
 
     @abstractmethod
-    def get_audiences_ids_by_strategy_id(
-        self, strategy_id: str, db: Session
-    ) -> list[str]:
+    def get_audiences_ids_by_strategy_id(self, strategy_id: str, db: Session) -> list[str]:
         pass
 
     @abstractmethod
@@ -179,9 +169,7 @@ class BaseAudienceRepository(ABC):
         pass
 
     @abstractmethod
-    def get_default_exclude(
-        self, user: User, db: Session
-    ) -> list[DefaultExcludeAudience]:
+    def get_default_exclude(self, user: User, db: Session) -> list[DefaultExcludeAudience]:
         pass
 
     @abstractmethod

@@ -11,6 +11,7 @@ from src.audiences.infra.entity.strategy_theme_audience_entity import (
 from src.common.enums.role import RoleEnum
 from src.common.utils.date_utils import localtime_converter
 from src.core.exceptions.exceptions import NotFoundException
+from src.search.routes.dto.strategy_search_response import StrategySearchResponse
 from src.strategy.domain.strategy import Strategy
 from src.strategy.domain.strategy_theme import StrategyTheme
 from src.strategy.enums.strategy_status import StrategyStatus
@@ -36,13 +37,9 @@ class StrategySqlAlchemy:
         """
         self.db = db
 
-    def get_all_strategies(
-        self, start_date, end_date, user: User, db: Session
-    ) -> list[Strategy]:
+    def get_all_strategies(self, start_date, end_date, user: User, db: Session) -> list[Strategy]:
 
-        user_entity = (
-            db.query(UserEntity).filter(UserEntity.user_id == user.user_id).first()
-        )
+        user_entity = db.query(UserEntity).filter(UserEntity.user_id == user.user_id).first()
 
         conditions = self._object_access_condition(db, user_entity, StrategyEntity)
 
@@ -55,7 +52,7 @@ class StrategySqlAlchemy:
                 ),
                 ~StrategyEntity.is_deleted,
                 StrategyEntity.strategy_status_code != StrategyStatus.notdisplay.value,
-                *conditions
+                *conditions,
             )
             .all()
         )
@@ -112,14 +109,12 @@ class StrategySqlAlchemy:
                     )
 
                 theme_offer_entities = [
-                    StrategyThemeOfferMappingEntity(offer_id=offer.offer_id)
-                    for offer in theme.strategy_theme_offer_mapping
+                    StrategyThemeOfferMappingEntity(coupon_no=coupon.coupon_no)
+                    for coupon in theme.strategy_theme_offer_mapping
                 ]
 
                 for theme_offer_entity in theme_offer_entities:
-                    strategy_theme_entity.strategy_theme_offer_mapping.append(
-                        theme_offer_entity
-                    )
+                    strategy_theme_entity.strategy_theme_offer_mapping.append(theme_offer_entity)
 
                 strategy_entity.strategy_themes.append(strategy_theme_entity)
 
@@ -128,9 +123,7 @@ class StrategySqlAlchemy:
 
             return strategy_entity
 
-    def _object_access_condition(
-        self, db: Session, user: UserEntity, model: Type[StrategyEntity]
-    ):
+    def _object_access_condition(self, db: Session, user: UserEntity, model: Type[StrategyEntity]):
         """Checks if the user has the required permissions for Object access.
         Return conditions based on object access permissions
 
@@ -139,9 +132,7 @@ class StrategySqlAlchemy:
             model: Object Model
         """
         admin_access = (
-            True
-            if user.role_id in [RoleEnum.ADMIN.value, RoleEnum.OPERATOR.value]
-            else False
+            True if user.role_id in [RoleEnum.ADMIN.value, RoleEnum.OPERATOR.value] else False
         )
 
         if admin_access:
@@ -273,24 +264,20 @@ class StrategySqlAlchemy:
             ]
 
             for theme_audience_entity in theme_audience_entities:
-                strategy_theme_entity.strategy_theme_audience_mapping.append(
-                    theme_audience_entity
-                )
+                strategy_theme_entity.strategy_theme_audience_mapping.append(theme_audience_entity)
 
             theme_offer_entities = [
                 StrategyThemeOfferMappingEntity(
-                    offer_id=offer.offer_id,
+                    coupon_no=coupon.coupon_no,
                     strategy_theme_id=theme.strategy_theme_id,
                     updated_by=theme.updated_by,
                     updated_at=theme.updated_at,
                 )
-                for offer in theme.strategy_theme_offer_mapping
+                for coupon in theme.strategy_theme_offer_mapping
             ]
 
             for theme_offer_entity in theme_offer_entities:
-                strategy_theme_entity.strategy_theme_offer_mapping.append(
-                    theme_offer_entity
-                )
+                strategy_theme_entity.strategy_theme_offer_mapping.append(theme_offer_entity)
 
             strategy_entity.strategy_themes.append(strategy_theme_entity)
 
@@ -306,3 +293,38 @@ class StrategySqlAlchemy:
             )
             .count()
         )
+
+    def search_keyword(
+        self, campaign_type_code, search_keyword, db
+    ) -> list[StrategySearchResponse]:
+
+        if search_keyword:
+            keyword = f"%{search_keyword}%"
+
+            entities = (
+                db.query(
+                    StrategyEntity.strategy_id,
+                    StrategyEntity.strategy_name,
+                    StrategyEntity.strategy_tags,
+                    StrategyEntity.target_strategy,
+                )
+                .filter(StrategyEntity.strategy_name.ilike(keyword))
+                .all()
+            )
+        else:
+            entities = db.query(
+                StrategyEntity.strategy_id,
+                StrategyEntity.strategy_name,
+                StrategyEntity.strategy_tags,
+                StrategyEntity.target_strategy,
+            ).all()
+
+        return [
+            StrategySearchResponse(
+                strategy_id=entity.strategy_id,
+                strategy_name=entity.strategy_name,
+                strategy_tags=entity.strategy_tags,
+                target_strategy=entity.target_strategy,
+            )
+            for entity in entities
+        ]

@@ -22,12 +22,8 @@ class ContentsRepository(BaseContentsRepository):
     def get_menu_map(self, code, db: Session) -> list[ContentsMenu]:
         return self.contents_sqlalchemy.get_menu_map(code, db)
 
-    def get_contents_list(
-        self, db: Session, based_on, sort_by, query
-    ) -> list[ContentsResponse]:
-        return self.contents_sqlalchemy.get_contents_list(
-            db, based_on, sort_by, query=query
-        )
+    def get_contents_list(self, db: Session, based_on, sort_by, query) -> list[ContentsResponse]:
+        return self.contents_sqlalchemy.get_contents_list(db, based_on, sort_by, query=query)
 
     def get_contents_id_url_dict(self) -> dict:
         return self.contents_sqlalchemy.get_contents_id_url_dict()
@@ -44,14 +40,8 @@ class ContentsRepository(BaseContentsRepository):
     def delete(self, contents_id: int, db: Session):
         self.contents_sqlalchemy.delete_contents(contents_id, db)
 
-    def update(
-        self, contents_id: int, contents: Contents, db: Session
-    ) -> ContentsResponse:
+    def update(self, contents_id: int, contents: Contents, db: Session) -> ContentsResponse:
         return self.contents_sqlalchemy.update_contents(contents_id, contents, db)
 
-    def search_contents_tag(
-        self, keyword, recsys_model_id, db: Session
-    ) -> list[IdWithItem]:
-        return self.contents_sqlalchemy.search_contents_tag(
-            keyword, recsys_model_id, db
-        )
+    def search_contents_tag(self, keyword, recsys_model_id, db: Session) -> list[IdWithItem]:
+        return self.contents_sqlalchemy.search_contents_tag(keyword, recsys_model_id, db)

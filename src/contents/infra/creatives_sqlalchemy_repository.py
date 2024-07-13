@@ -8,10 +8,10 @@ from src.common.utils.model_converter import ModelConverter
 from src.contents.domain.creatives import Creatives
 from src.contents.infra.dto.response.creative_recommend import CreativeRecommend
 from src.contents.infra.entity.creatives_entity import CreativesEntity
-from src.contents.infra.entity.style_master_entity import StyleMasterEntity
 from src.contents.routes.dto.request.contents_create import StyleObject
 from src.contents.routes.dto.response.creative_base import CreativeBase
 from src.core.exceptions.exceptions import NotFoundException
+from src.products.infra.entity.product_master_entity import ProductMasterEntity
 
 
 class CreativesSqlAlchemy:
@@ -40,9 +40,7 @@ class CreativesSqlAlchemy:
 
         return ModelConverter.entity_to_model(entity, Creatives)
 
-    def get_all_creatives(
-        self, based_on, sort_by, db: Session, asset_type=None, query=None
-    ):
+    def get_all_creatives(self, based_on, sort_by, db: Session, asset_type=None, query=None):
         """소재 목록을 조회하는 함수, style_master와 left 조인하여 데이터 조회
         # add based_on, sort_by options
         """
@@ -54,33 +52,18 @@ class CreativesSqlAlchemy:
                 CreativesEntity.image_asset_type,
                 CreativesEntity.image_uri,
                 CreativesEntity.image_path,
-                StyleMasterEntity.sty_nm,
-                StyleMasterEntity.sty_cd,
-                StyleMasterEntity.rep_nm,
-                case(
-                    (
-                        StyleMasterEntity.year2.isnot(None),
-                        func.concat(
-                            StyleMasterEntity.year2,
-                            "(",
-                            StyleMasterEntity.sty_season_nm,
-                            ")",
-                        ),
-                    ),
-                    else_=None,
-                ).label("year_season"),
-                StyleMasterEntity.it_gb_nm,
-                StyleMasterEntity.item_nm,
-                StyleMasterEntity.item_sb_nm,
-                StyleMasterEntity.purpose1.label("purpose"),
-                StyleMasterEntity.cons_pri.label("price"),
+                CreativesEntity.image_source,
+                ProductMasterEntity.product_name.label("sty_nm"),
+                ProductMasterEntity.product_code.label("sty_cd"),
+                ProductMasterEntity.rep_nm,
+                ProductMasterEntity.price.label("price"),
                 CreativesEntity.creative_tags.label("creative_tags"),
                 CreativesEntity.updated_by.label("updated_by"),
                 CreativesEntity.updated_at.label("updated_at"),
             )
             .outerjoin(
-                StyleMasterEntity,
-                StyleMasterEntity.sty_cd == CreativesEntity.style_cd,
+                ProductMasterEntity,
+                ProductMasterEntity.product_code == CreativesEntity.style_cd,
             )
             .filter(~CreativesEntity.is_deleted)
         )
@@ -92,17 +75,15 @@ class CreativesSqlAlchemy:
         base_query = base_query.order_by(sort_col)
 
         if asset_type:
-            base_query = base_query.filter(
-                CreativesEntity.image_asset_type == asset_type.value
-            )
+            base_query = base_query.filter(CreativesEntity.image_asset_type == asset_type.value)
 
         if query:
             query = f"%{query}%"
             # check query in sty_nm, tags, image_name
             base_query = base_query.filter(
                 or_(
-                    StyleMasterEntity.sty_nm.ilike(query),
-                    StyleMasterEntity.sty_cd.ilike(query),
+                    ProductMasterEntity.product_name.ilike(query),
+                    ProductMasterEntity.product_code.ilike(query),
                     CreativesEntity.creative_tags.ilike(query),
                     CreativesEntity.image_uri.ilike(query),
                 )
@@ -113,16 +94,14 @@ class CreativesSqlAlchemy:
     def get_simple_style_list(self, db: Session) -> list[StyleObject]:
 
         style_masters = db.query(
-            StyleMasterEntity.sty_cd.label("style_cd"),
+            ProductMasterEntity.product_code.label("style_cd"),
             func.concat(
-                "(", StyleMasterEntity.sty_cd, ")", " ", StyleMasterEntity.sty_nm
+                "(", ProductMasterEntity.product_code, ")", " ", ProductMasterEntity.product_name
             ).label("style_object_name"),
         ).all()
 
         return [
-            StyleObject(
-                style_cd=item.style_cd, style_object_name=item.style_object_name
-            )
+            StyleObject(style_cd=item.style_cd, style_object_name=item.style_object_name)
             for item in style_masters
         ]
 
@@ -152,9 +131,7 @@ class CreativesSqlAlchemy:
 
     def save_creatives(self, creatives_list, db: Session):
 
-        entities = [
-            CreativesEntity.from_model(creatives) for creatives in creatives_list
-        ]
+        entities = [CreativesEntity.from_model(creatives) for creatives in creatives_list]
         db.add_all(entities)
 
     def delete(self, creative_id, db: Session):
@@ -175,13 +152,9 @@ class CreativesSqlAlchemy:
 
         if tag_nm != "":
             filter_conditions.append(CreativesEntity.creative_tags.ilike(f"%{tag_nm}%"))
-            filter_conditions.append(
-                CreativesEntity.style_object_name.ilike(f"%{tag_nm}%")
-            )
+            filter_conditions.append(CreativesEntity.style_object_name.ilike(f"%{tag_nm}%"))
         elif len(style_cd_list) > 0:
-            filter_conditions.append(
-                func.lower(CreativesEntity.style_cd).in_(style_cd_list)
-            )
+            filter_conditions.append(func.lower(CreativesEntity.style_cd).in_(style_cd_list))
 
         filter_conditions.append(~CreativesEntity.is_deleted)
 
@@ -197,10 +170,7 @@ class CreativesSqlAlchemy:
 
         result = query.limit(limit).all()
 
-        return [
-            ModelConverter.entity_to_model(entity, CreativeRecommend)
-            for entity in result
-        ]
+        return [ModelConverter.entity_to_model(entity, CreativeRecommend) for entity in result]
 
     # def _add_file_order(self, query):
     #
@@ -217,9 +187,7 @@ class CreativesSqlAlchemy:
 
     def _add_tag_order(self, given_tag, query):
         tag_order = (
-            func.array_position(
-                func.string_to_array(CreativesEntity.creative_tags, ","), given_tag
-            )
+            func.array_position(func.string_to_array(CreativesEntity.creative_tags, ","), given_tag)
             .desc()
             .nullslast()
         )
@@ -237,12 +205,17 @@ class CreativesSqlAlchemy:
 
     def get_creatives_by_style_cd(self, style_cd, db) -> list[CreativeBase]:
         entities: list[CreativesEntity] = (
-            db.query(CreativesEntity).filter(CreativesEntity.style_cd == style_cd).all()
+            db.query(CreativesEntity)
+            .filter(~CreativesEntity.is_deleted, CreativesEntity.style_cd == style_cd)
+            .all()
         )
         creative_base_list = [
             CreativeBase(
+                sty_nm=entity.style_object_name,
+                sty_cd=entity.style_cd,
                 creative_id=entity.creative_id,
                 image_asset_type=entity.image_asset_type,
+                image_source=entity.image_source,
                 image_uri=entity.image_uri,
                 image_path=entity.image_path,
                 creative_tags=entity.creative_tags,
@@ -251,3 +224,18 @@ class CreativesSqlAlchemy:
         ]
 
         return creative_base_list
+
+    def get_creative_by_id(self, creative_id, db) -> Creatives:
+        creative_data = (
+            db.query(CreativesEntity)
+            .filter(
+                CreativesEntity.creative_id == creative_id,
+                ~CreativesEntity.is_deleted,
+            )
+            .first()
+        )
+
+        if creative_data is None:
+            raise NotFoundException(detail={"message": "Creative가 존재하지 않습니다"})
+
+        return ModelConverter.entity_to_model(creative_data, Creatives)

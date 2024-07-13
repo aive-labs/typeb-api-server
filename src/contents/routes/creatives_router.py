@@ -44,9 +44,7 @@ def get_img_creatives_list(
     per_page: int = 10,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    get_creatives_service: GetCreativesUseCase = Depends(
-        Provide[Container.get_creatives_service]
-    ),
+    get_creatives_service: GetCreativesUseCase = Depends(Provide[Container.get_creatives_service]),
 ) -> PaginationResponse[CreativeBase]:
     pagination_result = get_creatives_service.get_creatives(
         db=db,
@@ -83,9 +81,7 @@ def create_img_creatives(
         dependency=Provide[Container.add_creatives_service]
     ),
 ) -> list[Creatives]:
-    return add_creatives_service.create_creatives(
-        asset_data=asset_data, user=user, db=db
-    )
+    return add_creatives_service.create_creatives(asset_data=asset_data, user=user, db=db)
 
 
 @creatives_router.delete("/{creative_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -121,9 +117,7 @@ def update_img_creatives(
             },
         )
 
-    return update_creatives_service.update_creative(
-        creative_id, creative_update, user, db=db
-    )
+    return update_creatives_service.update_creative(creative_id, creative_update, user, db=db)
 
 
 @creatives_router.get("/{creative_id}")
@@ -132,9 +126,7 @@ def get_img_creatives(
     creative_id: int,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    get_creatives_service: GetCreativesUseCase = Depends(
-        Provide[Container.get_creatives_service]
-    ),
+    get_creatives_service: GetCreativesUseCase = Depends(Provide[Container.get_creatives_service]),
 ):
     """이미지 에셋을 조회하는 API"""
     return get_creatives_service.get_creatives_detail(creative_id, db=db)
@@ -145,8 +137,6 @@ def get_img_creatives(
 def get_style_list(
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
-    get_creatives_service: GetCreativesUseCase = Depends(
-        Provide[Container.get_creatives_service]
-    ),
+    get_creatives_service: GetCreativesUseCase = Depends(Provide[Container.get_creatives_service]),
 ) -> list[StyleObject]:
     return get_creatives_service.get_style_list(db=db)

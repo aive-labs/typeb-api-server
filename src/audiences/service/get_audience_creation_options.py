@@ -22,9 +22,7 @@ class GetAudienceCreationOptions(GetAudienceCreationOptionsUseCase):
     ) -> AudienceCreationOptionsResponse:
         """타겟 오디언스 생성 정보를 내려주는 함수"""
 
-        filter_condition = self.audience_repository.get_db_filter_conditions(
-            audience_id, db
-        )
+        filter_condition = self.audience_repository.get_db_filter_conditions(audience_id, db)
         filter_condition = filter_condition[0]
 
         return AudienceCreationOptionsResponse(
@@ -42,18 +40,14 @@ class GetAudienceCreationOptions(GetAudienceCreationOptionsUseCase):
     ) -> AudienceCreationOptionsResponse:
         """타겟 오디언스 csv 업로드 정보를 내려주는 함수"""
 
-        upload_conditions = self.audience_repository.get_audience_upload_info(
-            audience_id, db
-        )
+        upload_conditions = self.audience_repository.get_audience_upload_info(audience_id, db)
         upload_conditions = upload_conditions[0]
 
         upload_count = upload_conditions.upload_count
         actual_count = upload_conditions.checked_count
         template_type = upload_conditions.template_type
 
-        result_sentence = csv_check_sentence_converter(
-            actual_count, template_type, upload_count
-        )
+        result_sentence = csv_check_sentence_converter(actual_count, template_type, upload_count)
 
         return AudienceCreationOptionsResponse(
             audience_name=upload_conditions.audience_name,

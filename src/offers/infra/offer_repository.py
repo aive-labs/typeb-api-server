@@ -2,7 +2,7 @@ from contextlib import AbstractContextManager
 from datetime import datetime
 from typing import Callable
 
-from sqlalchemy import and_, or_
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from src.common.timezone_setting import selected_timezone
@@ -47,13 +47,10 @@ class OfferRepository:
             #         OffersEntity.available_begin_datetime <= end_date,
             #     )
             # )
-            .order_by(
-                OffersEntity.offer_source, OffersEntity.available_begin_datetime.desc()
-            )
+            .order_by(OffersEntity.offer_source, OffersEntity.available_begin_datetime.desc())
         )
 
         if keyword:
-            print("keyword?")
             base_query = base_query.filter(
                 or_(
                     OffersEntity.coupon_name.ilike(f"%{keyword}%"),
@@ -64,19 +61,13 @@ class OfferRepository:
             )
 
         offer_entities = base_query.all()
-        use_type_dict = {
-            v.value: v.description for _, v in OfferUseType.__members__.items()
-        }
+        use_type_dict = {v.value: v.description for _, v in OfferUseType.__members__.items()}
 
         offers = []
         for offer in offer_entities:
             temp_offer = Offer.model_validate(offer)
-            temp_offer.available_scope = use_type_dict.get(
-                temp_offer.available_scope, ""
-            )
-            temp_offer.offer_source = (
-                temp_offer.offer_source if temp_offer.offer_source else ""
-            )
+            temp_offer.available_scope = use_type_dict.get(temp_offer.available_scope, "")
+            temp_offer.offer_source = temp_offer.offer_source if temp_offer.offer_source else ""
 
             offers.append(temp_offer)
 
@@ -92,8 +83,8 @@ class OfferRepository:
 
             condition = self._add_search_offer_condition_by_user(user)
 
-            coupon_nos = (
-                db.query(StrategyThemeOfferMappingEntity.coupon_no)
+            offer_ids = (
+                db.query(StrategyThemeOfferMappingEntity.offer_id)
                 .join(
                     StrategyThemesEntity,
                     StrategyThemeOfferMappingEntity.strategy_theme_id
@@ -103,24 +94,22 @@ class OfferRepository:
                 .all()
             )
 
-            coupon_nos = [offef[0] for offef in coupon_nos]
+            offer_ids = [offef[0] for offef in offer_ids]
 
             today = datetime.now(selected_timezone).strftime("%Y%m%d")
             if keyword:
                 keyword = f"%{keyword}%"
                 if is_convertible_to_int(keyword):
-                    condition.append(OffersEntity.event_no.ilike(keyword))  # event_no
+                    condition.append(OffersEntity.coupon_no.ilike(keyword))
                 else:
-                    condition.append(
-                        OffersEntity.coupon_name.ilike(keyword)
-                    )  # coupon_name
+                    condition.append(OffersEntity.offer_name.ilike(keyword))  # offer_name
 
             result = db.query(
-                OffersEntity.coupon_no.label("id"),
-                OffersEntity.coupon_name.label("name"),
+                OffersEntity.offer_id.label("id"),
+                OffersEntity.offer_name.label("name"),
                 OffersEntity.event_no.label("code"),
             ).filter(
-                OffersEntity.coupon_no.in_(coupon_nos),
+                OffersEntity.offer_id.in_(offer_ids),
                 OffersEntity.offer_type_code.isnot(None),
                 OffersEntity.event_end_dt >= today,  # 이벤트 기간 필터
                 *condition,
@@ -153,21 +142,19 @@ class OfferRepository:
             if keyword:
                 keyword = f"%{keyword}%"
                 if is_convertible_to_int(keyword):
-                    condition.append(OffersEntity.event_no.ilike(keyword))  # event_no
+                    condition.append(OffersEntity.coupon_no.ilike(keyword))  # coupon_no
                 else:
-                    condition.append(
-                        OffersEntity.coupon_name.ilike(keyword)
-                    )  # coupon_name
+                    condition.append(OffersEntity.offer_name.ilike(keyword))  # offer_name
 
             result = (
                 db.query(
-                    OffersEntity.coupon_no.label("id"),
-                    OffersEntity.coupon_name.label("name"),
+                    OffersEntity.offer_id.label("id"),
+                    OffersEntity.offer_name.label("name"),
                     OffersEntity.event_no.label("code"),
                 )
                 .filter(
-                    OffersEntity.offer_type_code.isnot(None),
-                    OffersEntity.event_end_dt >= today,  # 이벤트 기간 필터
+                    OffersEntity.available_scope.isnot(None),
+                    OffersEntity.available_end_datetime >= today,  # 이벤트 기간 필터
                     *condition,
                 )
                 .all()
@@ -197,97 +184,73 @@ class OfferRepository:
             return entity
 
     def get_offer_detail(self, coupon_no, db: Session) -> Offer:
-        entity = (
-            db.query(OffersEntity).filter(OffersEntity.coupon_no == coupon_no).first()
-        )
+        entity = db.query(OffersEntity).filter(OffersEntity.coupon_no == coupon_no).first()
 
         if entity is None:
-            raise NotFoundException(
-                detail={"message": "해당 오퍼 정보를 찾지 못했습니다."}
-            )
+            raise NotFoundException(detail={"message": "해당 오퍼 정보를 찾지 못했습니다."})
 
         offer = Offer.model_validate(entity)
 
         return offer
 
-    def is_existing_duplicated_date_event(self, offer_update):
-        with self.db() as db:
-            duplicated_date_event = (
-                db.query(OffersEntity)
-                .filter(
-                    and_(
-                        OffersEntity.coupon_no != offer_update.coupon_no,
-                        OffersEntity.event_no == offer_update.event_no,
-                        OffersEntity.event_str_dt <= offer_update.event_end_dt,
-                        OffersEntity.event_end_dt >= offer_update.event_str_dt,
-                    )
-                )
-                .first()
-            )
+    # def get_offer(self, coupon_no) -> Offer:
+    #     with self.db() as db:
+    #         duplicated_date_event = (
+    #             db.query(OffersEntity)
+    #             .filter(
+    #                 and_(
+    #                     OffersEntity.coupon_no != coupon_no,
+    #                 )
+    #             )
+    #             .first()
+    #         )
 
-            if duplicated_date_event is None:
-                return False
+    #         if duplicated_date_event is None:
+    #             return False
 
-            return True
+    #         return True
 
     def get_offer(self, offer_key) -> Offer:
         with self.db() as db:
-            entity = (
-                db.query(OffersEntity)
-                .filter(OffersEntity.offer_key == offer_key)
-                .first()
-            )
+            entity = db.query(OffersEntity).filter(OffersEntity.offer_key == offer_key).first()
 
             if entity is None:
-                raise NotFoundException(
-                    detail={"message": "오퍼 정보를 찾지 못했습니다."}
-                )
+                raise NotFoundException(detail={"message": "오퍼 정보를 찾지 못했습니다."})
 
             return Offer.model_validate(entity)
 
-    def get_offer_by_id(self, coupon_no) -> Offer:
-
+    def get_offer_by_id(self, offer_id) -> Offer:
         with self.db() as db:
-            entity = (
-                db.query(OffersEntity)
-                .filter(OffersEntity.coupon_no == coupon_no)
-                .first()
-            )
+            entity = db.query(OffersEntity).filter(OffersEntity.offer_id == offer_id).first()
 
             if entity is None:
-                raise NotFoundException(
-                    detail={"message": "오퍼 정보를 찾지 못했습니다."}
-                )
+                raise NotFoundException(detail={"message": "오퍼 정보를 찾지 못했습니다."})
 
             return Offer.from_entity(entity)
 
-    # def save_duplicate_offer(
-    #     self, coupon_no, event_no, offer_update, now_kst_datetime, user
-    # ):
-    #     with self.db() as db:
-    #         db.query(OfferDuplicateEntity).filter(
-    #             (OfferDuplicateEntity.event_no == event_no)
-    #             & (OfferDuplicateEntity.coupon_no == coupon_no)
-    #         ).delete()
+    def save_duplicate_offer(self, offer_id, event_no, offer_update, now_kst_datetime, user):
+        with self.db() as db:
+            db.query(OfferDuplicateEntity).filter(
+                (OfferDuplicateEntity.event_no == event_no)
+                & (OfferDuplicateEntity.offer_id == offer_id)
+            ).delete()
 
-    #         dupl_apply_obj = [
-    #             OfferDuplicateEntity(
-    #                 coupon_no=coupon_no,
-    #                 event_no=event_no,
-    #                 incs_event_no=dupl_apply_event_no,
-    #                 created_by=user.username,
-    #                 updated_by=user.username,
-    #                 updated_at=now_kst_datetime,
-    #             )
-    #             for dupl_apply_event_no in offer_update.dupl_apply_event
-    #         ]
-    #         db.bulk_save_objects(dupl_apply_obj)
+            dupl_apply_obj = [
+                OfferDuplicateEntity(
+                    offer_id=offer_id,
+                    event_no=event_no,
+                    incs_event_no=dupl_apply_event_no,
+                    created_by=user.username,
+                    updated_by=user.username,
+                    updated_at=now_kst_datetime,
+                )
+                for dupl_apply_event_no in offer_update.dupl_apply_event
+            ]
+            db.bulk_save_objects(dupl_apply_obj)
 
-    #         db.commit()
+            db.commit()
 
-    def save_new_coupon(
-        self, cafe24_coupon_response: Cafe24CouponResponse, db: Session
-    ):
+    def save_new_coupon(self, cafe24_coupon_response: Cafe24CouponResponse, db: Session):
         for coupon in cafe24_coupon_response.coupons:
             offer_entity = OffersEntity(
                 coupon_no=coupon.coupon_no,
@@ -309,9 +272,7 @@ class OfferRepository:
                 available_product_list=coupon.available_product_list,
                 available_category_list=coupon.available_category_list,
                 issue_max_count_by_user=(
-                    int(coupon.issue_max_count_by_user)
-                    if coupon.issue_max_count_by_user
-                    else 0
+                    int(coupon.issue_max_count_by_user) if coupon.issue_max_count_by_user else None
                 ),
                 available_begin_datetime=coupon.available_begin_datetime,
                 available_end_datetime=coupon.available_end_datetime,

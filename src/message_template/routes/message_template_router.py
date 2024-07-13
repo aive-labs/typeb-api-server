@@ -76,9 +76,7 @@ def update_template(
     update_template_service.exec(template_id, template_update, user)
 
 
-@message_template_router.delete(
-    "/{template_id}", status_code=status.HTTP_204_NO_CONTENT
-)
+@message_template_router.delete("/{template_id}", status_code=status.HTTP_204_NO_CONTENT)
 @inject
 def delete_template(
     template_id: str,

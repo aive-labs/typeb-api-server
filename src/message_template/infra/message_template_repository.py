@@ -68,9 +68,7 @@ class MessageTemplateRepository(BaseMessageTemplateRepository):
     def get_all_templates(self) -> list[MessageTemplate]:
         with self.db() as db:
             entities = (
-                db.query(MessageTemplateEntity)
-                .filter(~MessageTemplateEntity.is_deleted)
-                .all()
+                db.query(MessageTemplateEntity).filter(~MessageTemplateEntity.is_deleted).all()
             )
             return [MessageTemplate.model_validate(entity) for entity in entities]
 
@@ -84,9 +82,7 @@ class MessageTemplateRepository(BaseMessageTemplateRepository):
             )
 
             if entity is None:
-                raise NotFoundException(
-                    detail={"message": "존재하지 않는 템플릿입니다."}
-                )
+                raise NotFoundException(detail={"message": "존재하지 않는 템플릿입니다."})
 
             return MessageTemplate.model_validate(entity)
 
@@ -100,9 +96,7 @@ class MessageTemplateRepository(BaseMessageTemplateRepository):
             )
 
             if entity is None:
-                raise NotFoundException(
-                    detail={"message": "존재하지 않는 템플릿입니다."}
-                )
+                raise NotFoundException(detail={"message": "존재하지 않는 템플릿입니다."})
 
             button_entities = [
                 MessageTemplateButtonDetailEntity(
@@ -145,9 +139,7 @@ class MessageTemplateRepository(BaseMessageTemplateRepository):
             )
 
             if entity is None:
-                raise NotFoundException(
-                    detail={"message": "존재하지 않는 템플릿입니다."}
-                )
+                raise NotFoundException(detail={"message": "존재하지 않는 템플릿입니다."})
 
             update_statement = (
                 update(MessageTemplateEntity)

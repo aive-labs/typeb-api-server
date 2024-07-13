@@ -23,9 +23,7 @@ class BaseContentsRepository(ABC):
         pass
 
     @abstractmethod
-    def get_contents_list(
-        self, db: Session, based_on, sort_by, query
-    ) -> list[ContentsResponse]:
+    def get_contents_list(self, db: Session, based_on, sort_by, query) -> list[ContentsResponse]:
         pass
 
     @abstractmethod
@@ -45,13 +43,9 @@ class BaseContentsRepository(ABC):
         pass
 
     @abstractmethod
-    def update(
-        self, contents_id: int, contents: Contents, db: Session
-    ) -> ContentsResponse:
+    def update(self, contents_id: int, contents: Contents, db: Session) -> ContentsResponse:
         pass
 
     @abstractmethod
-    def search_contents_tag(
-        self, keyword, recsys_model_id, db: Session
-    ) -> list[IdWithItem]:
+    def search_contents_tag(self, keyword, recsys_model_id, db: Session) -> list[IdWithItem]:
         pass

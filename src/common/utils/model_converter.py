@@ -8,10 +8,7 @@ class ModelConverter:
     @staticmethod
     def convert_entity_to_dict(entity):
         """entity to dictionary"""
-        return {
-            column.name: getattr(entity, column.name)
-            for column in entity.__table__.columns
-        }
+        return {column.name: getattr(entity, column.name) for column in entity.__table__.columns}
 
     @staticmethod
     def entity_to_model(entity, pydantic_model):
@@ -26,9 +23,7 @@ class ModelConverter:
         return entity_class(**entity_dict)
 
     @staticmethod
-    def model_to_model(
-        from_model: BaseModel, to_model_class: Type[BaseModel]
-    ) -> BaseModel:
+    def model_to_model(from_model: BaseModel, to_model_class: Type[BaseModel]) -> BaseModel:
         fields = {
             k: (v, ...)
             for k, v in to_model_class.__annotations__.items()

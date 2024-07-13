@@ -74,9 +74,7 @@ class FakeCafe24Repository(BaseOauthRepository):
         )
 
     def insert_basic_info(self, user_id: str, mall_id: str, state_token: str):
-        self.cafe24_state_token.append(
-            Cafe24StateToken(mall_id=mall_id, state_token=state_token)
-        )
+        self.cafe24_state_token.append(Cafe24StateToken(mall_id=mall_id, state_token=state_token))
 
     def save_tokens(self, cafe24_tokens: Cafe24TokenData):
         save_token = None
@@ -85,9 +83,7 @@ class FakeCafe24Repository(BaseOauthRepository):
                 save_token = token
 
         if not save_token:
-            raise NotFoundException(
-                detail={"message": "해당 state 토큰을 찾을 수 없습니다."}
-            )
+            raise NotFoundException(detail={"message": "해당 state 토큰을 찾을 수 없습니다."})
 
         self.cafe24_token_data.append(cafe24_tokens)
 
@@ -107,9 +103,7 @@ class FakeCafe24Repository(BaseOauthRepository):
                 detail={"message": "user_id에 해당하는 mall을 찾지 못했습니다."}
             )
         elif len(filtered_tokens) > 1:
-            raise ValidationException(
-                detail={"message": "user_id는 1개만 가질 수 있습니다."}
-            )
+            raise ValidationException(detail={"message": "user_id는 1개만 가질 수 있습니다."})
         else:
             entity = filtered_tokens[0]
             return Cafe24MallInfo(
@@ -213,9 +207,7 @@ class FakeCreativesRepository(BaseCreativesRepository):
                 return creative
         raise NotFoundException(detail={"message": "Not found CreativesEntity"})
 
-    def find_all(
-        self, based_on, sort_by, asset_type=None, query=None
-    ) -> list[CreativeBase]:
+    def find_all(self, based_on, sort_by, asset_type=None, query=None) -> list[CreativeBase]:
         return self.creative_base
 
     def get_simple_style_list(self) -> list:
@@ -238,9 +230,7 @@ class FakeCreativesRepository(BaseCreativesRepository):
 
     def delete(self, creative_id):
         self.creatives = [
-            creative
-            for creative in self.creatives
-            if creative.creative_id != creative_id
+            creative for creative in self.creatives if creative.creative_id != creative_id
         ]
 
 

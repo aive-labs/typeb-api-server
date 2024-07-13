@@ -16,6 +16,4 @@ class UserPasswordEntity(Base):
     login_pw = Column(String, nullable=False)
     email = Column(String)
     created_at = Column(DateTime(timezone=True), default=datetime.now())
-    updated_at = Column(
-        DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now()
-    )
+    updated_at = Column(DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now())

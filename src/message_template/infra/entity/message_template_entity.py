@@ -30,9 +30,7 @@ class MessageTemplateEntity(Base):
     owned_by_dept_name = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), default=datetime.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
-    updated_at = Column(
-        DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now()
-    )
+    updated_at = Column(DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now())
     updated_by = Column(String, nullable=False, default=text("(user)"))
     is_deleted = Column(Boolean, nullable=False, default=False)
 

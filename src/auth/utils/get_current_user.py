@@ -23,13 +23,9 @@ def get_current_user(
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email = payload.get("email")
         if email is None:
-            raise AuthException(
-                detail={"message": "해당하는 이메일을 찾지 못하였습니다."}
-            )
+            raise AuthException(detail={"message": "해당하는 이메일을 찾지 못하였습니다."})
     except JWTError as e:
-        raise CredentialException(
-            detail={"message": "유효하지 않은 토큰입니다."}
-        ) from e
+        raise CredentialException(detail={"message": "유효하지 않은 토큰입니다."}) from e
 
     user = user_repository.get_user_by_email(email=email, db=db)
 

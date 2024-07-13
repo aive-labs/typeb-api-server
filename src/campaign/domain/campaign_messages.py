@@ -3,7 +3,8 @@ from typing import List
 
 from pydantic import BaseModel
 
-from src.campaign.enums.campaign_media import CampaignMediaEnum, MessageTypeEnum
+from src.common.enums.campaign_media import CampaignMedia
+from src.message_template.enums.message_type import MessageType
 
 
 class KakaoLinkButtons(BaseModel):
@@ -97,8 +98,8 @@ class Message(BaseModel):
     msg_gen_key: str | None = None
     msg_photo_uri: List[str] | None = None
     msg_send_type: str
-    media: CampaignMediaEnum
-    msg_type: MessageTypeEnum
+    media: CampaignMedia
+    msg_type: MessageType
     kakao_button_links: List[KakaoLinkButtons] | None = None
     phone_callback: str | None = ""
     is_used: bool

@@ -7,6 +7,7 @@ from src.search.routes.dto.id_with_item_response import (
     IdWithItemDescription,
 )
 from src.search.routes.dto.id_with_label_response import IdWithLabel
+from src.search.routes.dto.strategy_search_response import StrategySearchResponse
 from src.users.domain.user import User
 
 
@@ -34,9 +35,7 @@ class BaseSearchService(ABC):
         pass
 
     @abstractmethod
-    def search_offers_search_of_sets(
-        self, strategy_id, keyword, user
-    ) -> list[IdWithLabel]:
+    def search_offers_search_of_sets(self, strategy_id, keyword, user) -> list[IdWithLabel]:
         pass
 
     @abstractmethod
@@ -48,9 +47,7 @@ class BaseSearchService(ABC):
         pass
 
     @abstractmethod
-    def search_contents_tag(
-        self, keyword, recsys_model_id, db: Session
-    ) -> list[IdWithItem]:
+    def search_contents_tag(self, keyword, recsys_model_id, db: Session) -> list[IdWithItem]:
         pass
 
     @abstractmethod
@@ -59,4 +56,10 @@ class BaseSearchService(ABC):
 
     @abstractmethod
     def search_rep_nms(self, product_id, db) -> list[str]:
+        pass
+
+    @abstractmethod
+    def search_strategies(
+        self, campaign_type_code, search_keyword, db: Session
+    ) -> list[StrategySearchResponse]:
         pass

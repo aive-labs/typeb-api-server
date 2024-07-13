@@ -21,7 +21,7 @@ class PurchaseAnalyticsMasterStyle(Base):
     cons_amt = Column(BigInteger)
     dc_rate = Column(String)
     milege_usage = Column(BigInteger)
-    event_no = Column(String)
+    coupon_no = Column(String)
     rep_nm = Column(String)
     order_item_code = Column(String)
     market_id = Column(String)
@@ -34,9 +34,7 @@ class PurchaseAnalyticsMasterStyle(Base):
     additional_discount_price = Column(Integer)
     coupon_discount_price = Column(Integer)
     app_item_discount_amount = Column(Integer)
-    actual_order_amount_payment_amount = Column(
-        "actual_order_amount.payment_amount", Integer
-    )
+    actual_order_amount_payment_amount = Column("actual_order_amount.payment_amount", Integer)
     actual_refund_amount = Column(Integer)
     paid = Column(String)
     canceled = Column(String)

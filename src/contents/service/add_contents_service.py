@@ -50,18 +50,12 @@ class AddContentsService(AddContentsUseCase):
         text_list = [txt.text for txt in soup.find_all("p") if txt is not None]
         body_text = " ".join(text_list)
 
-        image_source = [
-            elem["src"] for elem in soup.find_all("img") if elem is not None
-        ]
+        image_source = [elem["src"] for elem in soup.find_all("img") if elem is not None]
         external_html_body = contents_create.contents_body
 
-        cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(
-            str(user.user_id), db
-        )
+        cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(str(user.user_id), db)
         if cafe24_info is None:
-            raise NotFoundException(
-                detail={"message": "연동된 cafe24 계정이 없습니다."}
-            )
+            raise NotFoundException(detail={"message": "연동된 cafe24 계정이 없습니다."})
 
         mall_id = cafe24_info.mall_id
 
@@ -86,9 +80,7 @@ class AddContentsService(AddContentsUseCase):
             contents_status = ContentsStatus.PUBLISHED.value
 
         new_style_code = (
-            [item.style_cd for item in contents_create.sty_cd]
-            if contents_create.sty_cd
-            else []
+            [item.style_cd for item in contents_create.sty_cd] if contents_create.sty_cd else []
         )
 
         contents = Contents(
@@ -125,11 +117,7 @@ class AddContentsService(AddContentsUseCase):
         )
 
         new_contents = self.contents_repository.add_contents(contents=contents, db=db)
-        new_contents.set_thumbnail_url(
-            f"{self.cloud_front_url}/{new_contents.thumbnail_uri}"
-        )
-        new_contents.set_contents_url(
-            f"{self.cloud_front_url}/{new_contents.contents_url}"
-        )
+        new_contents.set_thumbnail_url(f"{self.cloud_front_url}/{new_contents.thumbnail_uri}")
+        new_contents.set_contents_url(f"{self.cloud_front_url}/{new_contents.contents_url}")
 
         return new_contents

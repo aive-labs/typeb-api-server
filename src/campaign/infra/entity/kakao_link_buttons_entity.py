@@ -19,12 +19,8 @@ class KakaoLinkButtonsEntity(Base):
     kakao_web_link -> web_link
     kakao_app_link -> app_link
     """
-    kakao_link_buttons_seq = Column(
-        Integer, primary_key=True, index=True, autoincrement=True
-    )
-    set_group_msg_seq = Column(
-        Integer, ForeignKey("set_group_messages.set_group_msg_seq")
-    )
+    kakao_link_buttons_seq = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    set_group_msg_seq = Column(Integer, ForeignKey("set_group_messages.set_group_msg_seq"))
     button_name = Column(String, nullable=False)
     button_type = Column(String, nullable=False)
     web_link = Column(String, nullable=True)

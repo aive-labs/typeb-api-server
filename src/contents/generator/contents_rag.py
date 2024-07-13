@@ -116,9 +116,7 @@ class StreamingConversationChain:
         try:
             for chunk in chain.stream(message):
                 if self.generation_mode == "gpt":
-                    chunk = (
-                        chunk.content
-                    )  # pyright: ignore [reportAttributeAccessIssue]
+                    chunk = chunk.content  # pyright: ignore [reportAttributeAccessIssue]
                 buffer += chunk  # pyright: ignore [reportOperatorIssue]
 
                 if buffer.startswith("__text__") or buffer.startswith("__title__"):
@@ -128,13 +126,9 @@ class StreamingConversationChain:
                     start_idx = 0
                     yield "data: " + start_kwrd + "\n\n"
                 elif in_text_block:
-                    if (
-                        start_idx == 0
-                    ):  # pyright: ignore [reportPossiblyUnboundVariable]
+                    if start_idx == 0:  # pyright: ignore [reportPossiblyUnboundVariable]
                         yield "data: [SOS]" + chunk + "\n\n"  # pyright: ignore [reportOperatorIssue]
-                        start_idx += (
-                            1  # pyright: ignore [reportPossiblyUnboundVariable]
-                        )
+                        start_idx += 1  # pyright: ignore [reportPossiblyUnboundVariable]
                     elif "\n" in chunk:  # pyright: ignore [reportOperatorIssue]
                         in_text_block = False
                         buffer = ""

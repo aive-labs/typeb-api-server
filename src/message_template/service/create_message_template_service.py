@@ -30,17 +30,13 @@ class CreateMessageTemplateService(CreateMessageTemplateUseCase):
         message_title = template_create.message_title
         message_body = template_create.message_body
         message_announcement = (
-            template_create.message_announcement
-            if template_create.message_announcement
-            else ""
+            template_create.message_announcement if template_create.message_announcement else ""
         )
 
         if selected_media == CampaignMedia.KAKAO_ALIM_TALK:
             message_type = MessageType.KAKAO_ALIM_TEXT
             if len(message_title) > 31:
-                raise ValidationException(
-                    detail="템플릿키의 길이는 30자를 초과할 수 없습니다."
-                )
+                raise ValidationException(detail="템플릿키의 길이는 30자를 초과할 수 없습니다.")
             if len(message_body + message_announcement) > 1000:
                 raise ValidationException(
                     detail="메시지 본문과 안내문구의 총 길이는 1000자를 초과할 수 없습니다."
@@ -51,13 +47,9 @@ class CreateMessageTemplateService(CreateMessageTemplateUseCase):
             elif len(message_body) <= 1000:
                 message_type = MessageType.LMS
             else:
-                raise ValidationException(
-                    detail="메시지 본문은 1000자를 초과할 수 없습니다."
-                )
+                raise ValidationException(detail="메시지 본문은 1000자를 초과할 수 없습니다.")
         else:
-            raise ValidationException(
-                detail="템플릿은 카카오 알림톡과 LMS(SMS)만 가능합니다."
-            )
+            raise ValidationException(detail="템플릿은 카카오 알림톡과 LMS(SMS)만 가능합니다.")
 
         message_template = MessageTemplate(
             template_name=template_create.template_name,

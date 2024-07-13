@@ -14,7 +14,9 @@ from src.search.routes.dto.id_with_item_response import (
     IdWithItemDescription,
 )
 from src.search.routes.dto.id_with_label_response import IdWithLabel
+from src.search.routes.dto.strategy_search_response import StrategySearchResponse
 from src.search.routes.port.base_search_service import BaseSearchService
+from src.strategy.infra.strategy_repository import StrategyRepository
 from src.users.domain.user import User
 
 
@@ -28,6 +30,7 @@ class SearchService(BaseSearchService):
         contents_repository: ContentsRepository,
         campaign_repository: CampaignRepository,
         product_repository: ProductRepository,
+        strategy_repository: StrategyRepository,
     ):
         self.audience_repository = audience_repository
         self.recommend_products_repository = recommend_products_repository
@@ -35,6 +38,7 @@ class SearchService(BaseSearchService):
         self.contents_repository = contents_repository
         self.campaign_repository = campaign_repository
         self.product_repository = product_repository
+        self.strategy_repository = strategy_repository
 
     def search_audience_with_strategy_id(
         self,
@@ -44,9 +48,7 @@ class SearchService(BaseSearchService):
         db: Session,
         is_exclude=False,
     ) -> list[IdWithLabel]:
-        audience_ids = self.audience_repository.get_audiences_ids_by_strategy_id(
-            strategy_id, db
-        )
+        audience_ids = self.audience_repository.get_audiences_ids_by_strategy_id(strategy_id, db)
         return self.audience_repository.get_audiences_by_condition(
             audience_ids, search_keyword, is_exclude, db
         )
@@ -62,12 +64,8 @@ class SearchService(BaseSearchService):
             search_keyword, is_exclude, db, target_strategy
         )
 
-    def search_offers_search_of_sets(
-        self, strategy_id, keyword, user: User
-    ) -> list[IdWithLabel]:
-        return self.offer_repository.get_search_offers_of_sets(
-            strategy_id, keyword, user
-        )
+    def search_offers_search_of_sets(self, strategy_id, keyword, user: User) -> list[IdWithLabel]:
+        return self.offer_repository.get_search_offers_of_sets(strategy_id, keyword, user)
 
     def search_offers(self, keyword, user: User) -> list[IdWithLabel]:
         return self.offer_repository.get_search_offers(keyword, user)
@@ -75,12 +73,8 @@ class SearchService(BaseSearchService):
     def search_recommend_products(self, keyword) -> list[IdWithItemDescription]:
         return self.recommend_products_repository.search_recommend_products(keyword)
 
-    def search_contents_tag(
-        self, keyword, recsys_model_id, db: Session
-    ) -> list[IdWithItem]:
-        return self.contents_repository.search_contents_tag(
-            keyword, recsys_model_id, db
-        )
+    def search_contents_tag(self, keyword, recsys_model_id, db: Session) -> list[IdWithItem]:
+        return self.contents_repository.search_contents_tag(keyword, recsys_model_id, db)
 
     def search_campaign(self, keyword, db) -> list[IdWithItem]:
         current_timestamp = datetime.now(selected_timezone)
@@ -88,9 +82,12 @@ class SearchService(BaseSearchService):
         two_weeks_ago = current_timestamp - timedelta(days=14)
         two_weeks_ago = two_weeks_ago.strftime("%Y%m%d")
 
-        return self.campaign_repository.search_campaign(
-            keyword, current_date, two_weeks_ago, db
-        )
+        return self.campaign_repository.search_campaign(keyword, current_date, two_weeks_ago, db)
 
     def search_rep_nms(self, product_id, db) -> list[str]:
         return self.product_repository.get_rep_nms(product_id, db)
+
+    def search_strategies(
+        self, campaign_type_code, search_keyword, db: Session
+    ) -> list[StrategySearchResponse]:
+        return self.strategy_repository.search_keyword(campaign_type_code, search_keyword, db)

@@ -14,9 +14,7 @@ class DownloadAudienceService(DownloadAudienceUseCase):
         self.audience_repository = audience_repository
 
     def exec(self, audience_id: str, db: Session) -> DataFrame:
-        audience_data = self.audience_repository.get_audience_cust_with_audience_id(
-            audience_id, db
-        )
+        audience_data = self.audience_repository.get_audience_cust_with_audience_id(audience_id, db)
         audience_df = DataConverter.convert_query_to_df(audience_data)
         audience_df.columns = ["member_id"]
         return audience_df

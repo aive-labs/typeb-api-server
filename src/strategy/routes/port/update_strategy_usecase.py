@@ -11,7 +11,5 @@ class UpdateStrategyUseCase(ABC):
 
     @transactional
     @abstractmethod
-    def exec(
-        self, strategy_id: str, strategy_update: StrategyCreate, user: User, db: Session
-    ):
+    def exec(self, strategy_id: str, strategy_update: StrategyCreate, user: User, db: Session):
         pass

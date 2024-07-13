@@ -48,14 +48,10 @@ class Contents(BaseModel):
             thumbnail_uri=self.thumbnail_uri,
             contents_url=self.contents_url,
             publication_start=(
-                localtime_from_str(self.publication_start)
-                if self.publication_start
-                else None
+                localtime_from_str(self.publication_start) if self.publication_start else None
             ),
             publication_end=(
-                localtime_from_str(self.publication_end)
-                if self.publication_end
-                else None
+                localtime_from_str(self.publication_end) if self.publication_end else None
             ),
             contents_tags=self.contents_tags,
             coverage_score=self.coverage_score,

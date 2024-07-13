@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 
 import pytz
 
+from src.campaign.enums.message_send_type import MessageSendType
+
 
 def get_localtime():
     local_timezone = pytz.timezone("Asia/Seoul")
@@ -42,3 +44,16 @@ def convert_str_iso_8601_to_datetime(date_str: str):
     # 주어진 날짜 문자열 포맷 "2017-12-19T14:39:22+09:00"
 
     return datetime.fromisoformat(date_str)
+
+
+def get_reservation_date(msg_send_type, start_date, send_date, remind_date):
+    if msg_send_type == MessageSendType.CAMPAIGN.value:
+        if send_date:
+            resv_date = send_date
+        else:
+            resv_date = start_date
+
+    elif msg_send_type == MessageSendType.REMIND.value:
+        resv_date = remind_date
+
+    return resv_date

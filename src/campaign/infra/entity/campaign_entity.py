@@ -28,9 +28,7 @@ class CampaignEntity(Base):
     campaign_group_id = Column(
         String,
         nullable=False,
-        server_default=text(
-            "'grp-' || LPAD(nextval('campaign_grp_seq')::TEXT, 6, '0')"
-        ),
+        server_default=text("'grp-' || LPAD(nextval('campaign_grp_seq')::TEXT, 6, '0')"),
     )
     budget = Column(Integer, nullable=True)
     campaign_type_code = Column(String, nullable=False)
@@ -56,7 +54,7 @@ class CampaignEntity(Base):
     campaigns_exc = Column(ARRAY(String), nullable=True)
     audiences_exc = Column(ARRAY(String), nullable=True)
     strategy_id = Column(String, ForeignKey("strategies.strategy_id"))
-    campaign_theme_ids = Column(ARRAY(Integer), nullable=True)
+    strategy_theme_ids = Column(ARRAY(Integer), nullable=True)
     is_personalized = Column(Boolean, nullable=False)
     progress = Column(String, nullable=False)
     msg_delivery_vendor = Column(String, nullable=False)
@@ -90,6 +88,4 @@ class CampaignEntity(Base):
     )
 
     def as_dict(self):
-        return {
-            column.name: getattr(self, column.name) for column in self.__table__.columns
-        }
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}

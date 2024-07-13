@@ -34,9 +34,7 @@ class GetCreativesService(GetCreativesUseCase):
         asset_type=None,
         query=None,
     ) -> PaginationResponse[CreativeBase]:
-        creative_list = self.creatives_repository.find_all(
-            based_on, sort_by, db, asset_type, query
-        )
+        creative_list = self.creatives_repository.find_all(based_on, sort_by, db, asset_type, query)
 
         items = creative_list[(current_page - 1) * per_page : current_page * per_page]
 

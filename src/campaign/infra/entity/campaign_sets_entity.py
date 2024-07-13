@@ -25,8 +25,8 @@ class CampaignSetsEntity(Base):
     recsys_model_id = Column(Integer, nullable=True)
     audience_id = Column(String, nullable=False)
     audience_name = Column(String, nullable=False)
-    coupon_no = Column(String, nullable=True)
-    coupon_name = Column(String, nullable=True)
+    offer_id = Column(String, nullable=True)
+    offer_name = Column(String, nullable=True)
     event_no = Column(String, nullable=True)
     medias = Column(String, nullable=False)
     media_cost = Column(Integer, nullable=True)
@@ -48,6 +48,4 @@ class CampaignSetsEntity(Base):
     )
 
     def as_dict(self):
-        return {
-            column.name: getattr(self, column.name) for column in self.__table__.columns
-        }
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}

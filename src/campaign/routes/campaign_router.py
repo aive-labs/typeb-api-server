@@ -8,7 +8,7 @@ from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
 from src.campaign.routes.dto.response.campaign_timeline_response import (
     CampaignTimelineResponse,
 )
-from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUsecase
+from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUseCase
 from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase  ##
 from src.campaign.routes.port.get_campaign_usecase import GetCampaignUseCase
 from src.core.container import Container
@@ -48,11 +48,25 @@ def get_campaign_timeline(
 def create_campaign(
     campaign_create: CampaignCreate,
     user=Depends(get_permission_checker(required_permissions=[])),
-    create_campaign_service: CreateCampaignUsecase = Depends(
+    db=Depends(get_db_session),
+    create_campaign_service: CreateCampaignUseCase = Depends(
         dependency=Provide[Container.create_campaign_service]
     ),
 ):
-    return create_campaign_service.create_campaign(campaign_create, user)
+    return create_campaign_service.create_campaign(campaign_create, user, db=db)
+
+
+@campaign_router.get("/campaigns/{campaign_id}")
+@inject
+def get_campaign_detail(
+    campaign_id: str,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    get_campaign_service: GetCampaignUseCase = Depends(
+        dependency=Provide[Container.get_campaign_service]
+    ),
+):
+    return get_campaign_service.get_campaign_detail(campaign_id, user, db=db)
 
 
 @campaign_router.post("/campaigns/generate-message")

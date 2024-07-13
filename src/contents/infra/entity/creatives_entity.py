@@ -22,12 +22,11 @@ class CreativesEntity(Base):
     style_object_name = Column(String)
     image_uri = Column(String, nullable=False)
     image_path = Column(String, nullable=False)
+    image_source = Column(String, nullable=False, default="upload")
     creative_tags = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), default=datetime.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
-    updated_at = Column(
-        DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now()
-    )
+    updated_at = Column(DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now())
     updated_by = Column(String, nullable=False, default=text("(user)"))
     is_deleted = Column(Boolean, nullable=False, default=False)  # New field
 
@@ -38,6 +37,7 @@ class CreativesEntity(Base):
             style_cd=creatives.style_cd,
             style_object_name=creatives.style_object_name,
             image_uri=creatives.image_uri,
+            image_source=creatives.image_source,
             image_path=creatives.image_path,
             creative_tags=creatives.creative_tags,
             created_by=creatives.created_by,

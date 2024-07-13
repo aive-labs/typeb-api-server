@@ -26,8 +26,6 @@ class PpurioMessageRepository:
 
     def save_message_result(self, result: PpurioMessageResult):
         with self.db() as db:
-            new_entity = ModelConverter.model_to_entity(
-                result, PpurioMessageResultEntity
-            )
+            new_entity = ModelConverter.model_to_entity(result, PpurioMessageResultEntity)
             db.add(new_entity)
             db.commit()

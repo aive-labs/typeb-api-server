@@ -20,8 +20,7 @@ class OfferDetails(BaseModel):
     @staticmethod
     def from_entity(entity: OfferDetailsEntity) -> "OfferDetails":
         offer_details = [
-            OfferDetailsEntity.model_validate(detail)
-            for detail in entity.offer_detail_options
+            OfferDetailsEntity.model_validate(detail) for detail in entity.offer_detail_options
         ]
 
         offer_data = {

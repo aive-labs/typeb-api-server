@@ -42,17 +42,13 @@ class GetAudienceService(GetAudienceUseCase):
     def get_all_audiences(
         self, user: User, db: Session, is_exclude: bool | None = None
     ) -> AudienceResponse:
-        audiences, audience_df = self.audience_repository.get_audiences(
-            user, db, is_exclude
-        )
+        audiences, audience_df = self.audience_repository.get_audiences(user, db, is_exclude)
 
         if not audiences:
             return AudienceResponse(audiences=[], filters=None)
 
         print(len(audiences))
-        audience_response = [
-            convert_to_audience_res(audience) for audience in audiences
-        ]
+        audience_response = [convert_to_audience_res(audience) for audience in audiences]
 
         filter_obj = FilterProcessing("target_audience")
         filters = filter_obj.filter_converter(df=audience_df)
@@ -60,8 +56,7 @@ class GetAudienceService(GetAudienceUseCase):
         representative_items = []
         if "rep_list" in filters:
             representative_items = [
-                FilterItem(id=item["id"], name=item["name"])
-                for item in filters["rep_list"]
+                FilterItem(id=item["id"], name=item["name"]) for item in filters["rep_list"]
             ]
 
         item_owned_by = []
@@ -81,24 +76,16 @@ class GetAudienceService(GetAudienceUseCase):
 
         return response
 
-    def get_audience_stat_details(
-        self, audience_id: str, db: Session
-    ) -> AudienceStatsInfo:
+    def get_audience_stat_details(self, audience_id: str, db: Session) -> AudienceStatsInfo:
 
         res = {}
 
         audience_filtered = self.audience_repository.get_audience_stats(audience_id, db)
-        audience_rep_list = self.audience_repository.get_audience_products(
-            audience_id, db
-        )
-        audience_count_list = self.audience_repository.get_audience_count(
-            audience_id, db
-        )
+        audience_rep_list = self.audience_repository.get_audience_products(audience_id, db)
+        audience_count_list = self.audience_repository.get_audience_count(audience_id, db)
         audience_df = DataConverter.convert_query_to_df(audience_filtered)
         audience_df["description"] = audience_df["description"].fillna("")
-        audience_df["description"] = audience_df["description"].apply(
-            lambda x: x.split(",")
-        )
+        audience_df["description"] = audience_df["description"].apply(lambda x: x.split(","))
         audience_base = audience_df.to_dict("records")[0]
 
         audience_reps = DataConverter.convert_query_to_df(audience_rep_list)
@@ -112,9 +99,7 @@ class GetAudienceService(GetAudienceUseCase):
             "audience_name",
             "description",
         ]
-        audience_base_dict = DataConverter.get_values_from_dict(
-            audience_base, keys_to_get
-        )
+        audience_base_dict = DataConverter.get_values_from_dict(audience_base, keys_to_get)
 
         res.update(audience_base_dict)
 
@@ -129,9 +114,7 @@ class GetAudienceService(GetAudienceUseCase):
             "audience_unit_price",
             "audience_unit_price_gap",
         ]
-        audience_stat_dict = DataConverter.get_values_from_dict(
-            audience_base, keys_to_get
-        )
+        audience_stat_dict = DataConverter.get_values_from_dict(audience_base, keys_to_get)
 
         ## audience_trend
         audience_count_dict = DataConverter.extract_key_value_from_dict(
@@ -177,13 +160,9 @@ class GetAudienceService(GetAudienceUseCase):
             "owned_by_dept_abb_name",
             "create_type_code",
         ]
-        audience_summary_dict = DataConverter.get_values_from_dict(
-            audience_base, keys_to_get
-        )
+        audience_summary_dict = DataConverter.get_values_from_dict(audience_base, keys_to_get)
         keys_to_get = ["agg_period_start", "agg_period_end"]
-        audience_agg_peri_dict = DataConverter.get_values_from_dict(
-            audience_base, keys_to_get
-        )
+        audience_agg_peri_dict = DataConverter.get_values_from_dict(audience_base, keys_to_get)
 
         filter_col = ["main_product_id", "main_product_name"]
         audience_reps = audience_reps[filter_col]
@@ -201,7 +180,5 @@ class GetAudienceService(GetAudienceUseCase):
             audience_summary=AudienceSummary(**res["audience_summary"]),
         )
 
-    def get_default_exclude(
-        self, user: User, db: Session
-    ) -> list[DefaultExcludeAudience]:
+    def get_default_exclude(self, user: User, db: Session) -> list[DefaultExcludeAudience]:
         return self.audience_repository.get_default_exclude(user, db)

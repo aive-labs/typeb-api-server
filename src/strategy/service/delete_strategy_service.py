@@ -23,9 +23,7 @@ class DeleteStrategyService(DeleteStrategyUseCase):
     @transactional
     def exec(self, strategy_id: str, db: Session):
 
-        linked_campaigns = self.campaign_repository.get_campaign_by_strategy_id(
-            strategy_id, db
-        )
+        linked_campaigns = self.campaign_repository.get_campaign_by_strategy_id(strategy_id, db)
 
         if linked_campaigns:
             linked_campaign_status_code = list(
@@ -36,9 +34,7 @@ class DeleteStrategyService(DeleteStrategyUseCase):
                 len(linked_campaign_status_code) == 1
                 and linked_campaign_status_code == CampaignStatus.expired.value
             ):
-                return self.strategy_repository.update_expired_strategy_status(
-                    strategy_id, db
-                )
+                return self.strategy_repository.update_expired_strategy_status(strategy_id, db)
 
             raise LinkedCampaignException(
                 detail={

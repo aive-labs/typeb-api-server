@@ -17,5 +17,5 @@ class Cafe24IntegrationEntity(Base):
     shop_no = Column(String)
     cafe24_user_id = Column(String)
     data_migration_status = Column(String, nullable=False)
-    created_dt = Column(DateTime, default=func.now())
-    updated_dt = Column(DateTime, default=func.now(), onupdate=func.now())
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())

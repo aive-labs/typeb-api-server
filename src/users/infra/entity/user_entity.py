@@ -23,9 +23,7 @@ class UserEntity(Base):
     language = Column(String(10), unique=False, nullable=False)
     last_login = Column(DateTime)
     created_at = Column(DateTime(timezone=True), default=datetime.now())
-    updated_at = Column(
-        DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now()
-    )
+    updated_at = Column(DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now())
     login_id = Column(String(20), unique=True)
     erp_id = Column(String(20))
     sys_id = Column(String(2))

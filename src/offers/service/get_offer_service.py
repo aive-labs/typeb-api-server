@@ -19,9 +19,7 @@ from src.users.domain.user import User
 
 class GetOfferService(GetOfferUseCase):
 
-    def __init__(
-        self, offer_repository: OfferRepository, cafe24_repository: BaseOauthRepository
-    ):
+    def __init__(self, offer_repository: OfferRepository, cafe24_repository: BaseOauthRepository):
         self.offer_repository = offer_repository
         self.cafe24_repository = cafe24_repository
         self.client_id: str = get_env_variable("client_id")
@@ -33,17 +31,13 @@ class GetOfferService(GetOfferUseCase):
     ) -> list[OfferResponse]:
 
         if user.mall_id is None:
-            raise NotFoundException(
-                detail={"message": "mall 정보가 존재하지 않습니다."}
-            )
+            raise NotFoundException(detail={"message": "mall 정보가 존재하지 않습니다."})
 
         token = self.cafe24_repository.get_token(user.mall_id, db)
         access_token = token.access_token
         if self.is_access_token_expired(token):
             url = f"https://{user.mall_id}.cafe24api.com/api/v2/oauth/token"
-            payload = (
-                f"""grant_type=refresh_token&refresh_token={token.refresh_token}"""
-            )
+            payload = f"""grant_type=refresh_token&refresh_token={token.refresh_token}"""
             credentials = f"{self.client_id}:{self.client_secret}".encode()
             encoded_credentials = base64.b64encode(credentials).decode("utf-8")
             authorization_header = f"Basic {encoded_credentials}"
@@ -99,9 +93,7 @@ class GetOfferService(GetOfferUseCase):
         return datetime.now() > token.expires_at
 
     async def renew_token(self, url, payload, headers, session):
-        async with session.post(
-            url=url, data=payload, headers=headers, ssl=False
-        ) as response:
+        async with session.post(url=url, data=payload, headers=headers, ssl=False) as response:
             response = await response.json()
             return response
 

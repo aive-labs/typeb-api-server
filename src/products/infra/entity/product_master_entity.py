@@ -73,9 +73,12 @@ class ProductMasterEntity(Base):
     exchange_info = Column(String)
     additional_information = Column(String)
     relational_product = Column(String)
+
+    # 화면에서 수정 가능한 필드
     comment = Column(String)
-    recommend_yn = Column(String)
+    recommend_yn = Column(String, default="N")
     rep_nm = Column(String)
+
     created_at = Column(DateTime(timezone=True), default=datetime.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
     updated_at = Column(DateTime(timezone=True), default=datetime.now())

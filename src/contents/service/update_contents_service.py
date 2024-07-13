@@ -42,9 +42,7 @@ class UpdateContentsService(UpdateContentsUseCase):
     ) -> ContentsResponse:
 
         if not self.contents_repository.get_contents_detail(contents_id, db):
-            raise NotFoundException(
-                detail={"message": "해당하는 콘텐츠가 존재하지 않습니다."}
-            )
+            raise NotFoundException(detail={"message": "해당하는 콘텐츠가 존재하지 않습니다."})
 
         contents_urls = self.contents_repository.get_contents_url_list(db)
         contents_uuids = [url.split("/")[-1] for url in contents_urls]
@@ -58,18 +56,12 @@ class UpdateContentsService(UpdateContentsUseCase):
         text_list = [txt.text for txt in soup.find_all("p") if txt is not None]
         body_text = " ".join(text_list)
 
-        image_source = [
-            elem["src"] for elem in soup.find_all("img") if elem is not None
-        ]
+        image_source = [elem["src"] for elem in soup.find_all("img") if elem is not None]
         external_html_body = contents_create.contents_body
 
-        cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(
-            str(user.user_id), db=db
-        )
+        cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(str(user.user_id), db=db)
         if cafe24_info is None:
-            raise NotFoundException(
-                detail={"message": "연동된 cafe24 계정이 없습니다."}
-            )
+            raise NotFoundException(detail={"message": "연동된 cafe24 계정이 없습니다."})
 
         mall_id = cafe24_info.mall_id
 
@@ -96,9 +88,7 @@ class UpdateContentsService(UpdateContentsUseCase):
             contents_status = ContentsStatus.PUBLISHED.value
 
         new_style_code = (
-            [item.style_cd for item in contents_create.sty_cd]
-            if contents_create.sty_cd
-            else []
+            [item.style_cd for item in contents_create.sty_cd] if contents_create.sty_cd else []
         )
 
         contents = Contents(
@@ -139,8 +129,6 @@ class UpdateContentsService(UpdateContentsUseCase):
         updated_contents.set_thumbnail_url(
             f"{self.cloud_front_url}/{updated_contents.thumbnail_uri}"
         )
-        updated_contents.set_contents_url(
-            f"{self.cloud_front_url}/{updated_contents.contents_url}"
-        )
+        updated_contents.set_contents_url(f"{self.cloud_front_url}/{updated_contents.contents_url}")
 
         return updated_contents

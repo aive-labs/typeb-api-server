@@ -27,15 +27,11 @@ class TemplateCreate(BaseModel):
     message_announcement: Optional[str] = Field(
         "", max_length=80
     )  # 안내문구 #80자 이내 #안내문구+본문 = 1000자 이내
-    button: Optional[list[KakaoTemplateButtonObject]] = (
-        []
-    )  # 링크버튼 # 1~5개 # 현재는 1개만 사용
+    button: Optional[list[KakaoTemplateButtonObject]] = []  # 링크버튼 # 1~5개 # 현재는 1개만 사용
 
     @model_validator(mode="after")
     def check_announcement_and_body(self) -> Self:
-        message_announcement = (
-            self.message_announcement if self.message_announcement else ""
-        )
+        message_announcement = self.message_announcement if self.message_announcement else ""
         message_body = self.message_body
         if len(message_announcement) + len(message_body) > 1000:
             raise ValidationException(

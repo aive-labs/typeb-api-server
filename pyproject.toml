@@ -1,6 +1,6 @@
 [tool.black]
 # black이 형식화할 파일을 지정. 정규 표현식으로 .py와 .pyi 파일을 포함하도록 설정
-line-length = 88
+line-length = 100
 include = '\.pyi?$'
 exclude = '''
 /(

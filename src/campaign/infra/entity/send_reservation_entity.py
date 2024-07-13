@@ -16,9 +16,7 @@ class SendReservationEntity(Base):
     __tablename__ = "send_reservation"
 
     send_resv_seq = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    set_group_msg_seq = Column(
-        Integer, ForeignKey("set_group_messages.set_group_msg_seq")
-    )
+    set_group_msg_seq = Column(Integer, ForeignKey("set_group_messages.set_group_msg_seq"))
     campaign_id = Column(String(10), nullable=False)
     campaign_name = Column(String(100))
     send_resv_date = Column(DateTime(timezone=True), nullable=False)
@@ -56,10 +54,8 @@ class SendReservationEntity(Base):
     shop_send_yn = Column(String, nullable=False)  # shop_send_yn
     test_send_yn = Column(String(5))
     audience_id = Column(String)
-    event_no = Column(String)
-    create_resv_date = Column(
-        DateTime(timezone=True), nullable=False, default=datetime.now()
-    )
+    coupon_no = Column(String)
+    create_resv_date = Column(DateTime(timezone=True), nullable=False, default=datetime.now())
     create_resv_user = Column(String(20), nullable=False, default=text("(user)"))
     update_resv_date = Column(
         DateTime(timezone=True),

@@ -45,9 +45,7 @@ class AudienceRepository(BaseAudienceRepository):
             .to_dict("records")
         )
 
-        audience_reps = audience_df[
-            ["audience_id", "main_product_id", "main_product_name"]
-        ]
+        audience_reps = audience_df[["audience_id", "main_product_id", "main_product_name"]]
 
         audience_reps_dict = audience_reps.to_dict(
             "records"  # pyright: ignore [reportArgumentType]
@@ -81,9 +79,7 @@ class AudienceRepository(BaseAudienceRepository):
         audience = Audience.from_entity(audience_entity)
         return audience
 
-    def get_linked_campaigns(
-        self, audience_id: str, db: Session
-    ) -> list[LinkedCampaign]:
+    def get_linked_campaigns(self, audience_id: str, db: Session) -> list[LinkedCampaign]:
         return self.audience_sqlalchemy.get_linked_campaign(audience_id, db)
 
     def update_expired_audience_status(self, audience_id: str, db: Session) -> None:
@@ -93,9 +89,7 @@ class AudienceRepository(BaseAudienceRepository):
         return self.audience_sqlalchemy.delete_audience(audience_id, db)
 
     def get_audience_by_name(self, audience_name: str, db: Session) -> Audience | None:
-        audience_entity = self.audience_sqlalchemy.get_audience_by_name(
-            audience_name, db
-        )
+        audience_entity = self.audience_sqlalchemy.get_audience_by_name(audience_name, db)
 
         if audience_entity is not None:
             audience = Audience.from_entity(audience_entity)
@@ -104,9 +98,7 @@ class AudienceRepository(BaseAudienceRepository):
             return None
 
     def create_audience(self, audience_dict, conditions, db: Session) -> str:
-        audience_id = self.audience_sqlalchemy.create_audience(
-            audience_dict, conditions, db
-        )
+        audience_id = self.audience_sqlalchemy.create_audience(audience_dict, conditions, db)
         return audience_id
 
     def create_audience_by_upload(
@@ -121,9 +113,7 @@ class AudienceRepository(BaseAudienceRepository):
         )
         return audience_id
 
-    def get_db_filter_conditions(
-        self, audience_id: str, db: Session
-    ) -> list[FilterCondition]:
+    def get_db_filter_conditions(self, audience_id: str, db: Session) -> list[FilterCondition]:
         return self.audience_sqlalchemy.get_db_filter_conditions(audience_id, db)
 
     def save_audience_list(self, audience_id, query, db: Session):
@@ -131,15 +121,11 @@ class AudienceRepository(BaseAudienceRepository):
 
     def get_all_customer_by_audience(self, user: User, db: Session) -> object:
         if user.erp_id is not None and user.sys_id is not None:
-            return self.audience_sqlalchemy.get_all_customer(
-                user.erp_id, user.sys_id, db
-            )
+            return self.audience_sqlalchemy.get_all_customer(user.erp_id, user.sys_id, db)
 
         raise Exception("erp_id와 sys_id가 존재하지 않습니다.")
 
-    def get_tablename_by_variable_id(
-        self, variable_id: str, db: Session
-    ) -> VariableTableMapping:
+    def get_tablename_by_variable_id(self, variable_id: str, db: Session) -> VariableTableMapping:
         return self.audience_sqlalchemy.get_tablename_by_variable_id(variable_id, db)
 
     def get_subquery_with_select_query_list(
@@ -162,21 +148,13 @@ class AudienceRepository(BaseAudienceRepository):
     def get_options(self, db: Session):
         return self.audience_sqlalchemy.get_options(db)
 
-    def get_audience_cust_with_audience_id(
-        self, audience_id: str, db: Session
-    ) -> object:
-        return self.audience_sqlalchemy.get_audience_cust_with_audience_id(
-            audience_id, db
-        )
+    def get_audience_cust_with_audience_id(self, audience_id: str, db: Session) -> object:
+        return self.audience_sqlalchemy.get_audience_cust_with_audience_id(audience_id, db)
 
-    def get_audience_upload_info(
-        self, audience_id: str, db: Session
-    ) -> list[UploadCondition]:
+    def get_audience_upload_info(self, audience_id: str, db: Session) -> list[UploadCondition]:
         return self.audience_sqlalchemy.get_audience_upload_info(audience_id, db)
 
-    def get_actual_list_from_csv(
-        self, uploaded_rows, target_column, entity, db: Session
-    ) -> list:
+    def get_actual_list_from_csv(self, uploaded_rows, target_column, entity, db: Session) -> list:
         return self.audience_sqlalchemy.get_actual_list_from_csv(
             uploaded_rows, target_column, entity, db
         )
@@ -210,12 +188,8 @@ class AudienceRepository(BaseAudienceRepository):
             db,
         )
 
-    def get_audiences_ids_by_strategy_id(
-        self, strategy_id: str, db: Session
-    ) -> list[str]:
-        return self.audience_sqlalchemy.get_audiences_ids_by_strategy_id(
-            strategy_id, db
-        )
+    def get_audiences_ids_by_strategy_id(self, strategy_id: str, db: Session) -> list[str]:
+        return self.audience_sqlalchemy.get_audiences_ids_by_strategy_id(strategy_id, db)
 
     def get_audiences_by_condition(
         self,
@@ -239,10 +213,11 @@ class AudienceRepository(BaseAudienceRepository):
             search_keyword, is_exclude, db, target_strategy
         )
 
-    def get_default_exclude(
-        self, user: User, db: Session
-    ) -> list[DefaultExcludeAudience]:
+    def get_default_exclude(self, user: User, db: Session) -> list[DefaultExcludeAudience]:
         return self.audience_sqlalchemy.get_default_exclude(user, db)
 
     def update_exclude_status(self, audience_id: str, is_exclude: bool, db: Session):
         self.audience_sqlalchemy.update_exclude_status(audience_id, is_exclude, db)
+
+    def get_linked_strategy(self, audience_id: str, db: Session) -> list:
+        return self.audience_sqlalchemy.get_linked_strategy(audience_id, db)

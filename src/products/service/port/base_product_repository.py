@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.products.domain.product import Product
+from src.products.infra.dto.product_search_condition import ProductSearchCondition
 from src.products.routes.dto.response.title_with_link import TitleWithLink
 
 
@@ -18,7 +19,13 @@ class BaseProductRepository(ABC):
 
     @abstractmethod
     def get_all_products(
-        self, based_on: str, sort_by: str, current_page: int, per_page: int, db: Session
+        self,
+        based_on: str,
+        sort_by: str,
+        current_page: int,
+        per_page: int,
+        db: Session,
+        search_condition: ProductSearchCondition | None = None,
     ) -> list[Product]:
         pass
 
@@ -37,5 +44,7 @@ class BaseProductRepository(ABC):
         pass
 
     @abstractmethod
-    def get_all_products_count(self, db) -> int:
+    def get_all_products_count(
+        self, db, search_condition: ProductSearchCondition | None = None
+    ) -> int:
         pass

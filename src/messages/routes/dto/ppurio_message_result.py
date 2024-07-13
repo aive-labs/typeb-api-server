@@ -11,13 +11,9 @@ class PpurioMessageResult(BaseModel):
     MEDIA: str = Field(..., description="실제 발송된 메시지 상세 유형 * MEDIA 유형")
     TO_NAME: Optional[str] = Field(None, description="수신자 명")
     UNIXTIME: str = Field(..., description="발송 시간")
-    RESULT: str = Field(
-        ..., description="이통사/카카오/RCS 결과 코드 * 발송 결과 코드 참조"
-    )
+    RESULT: str = Field(..., description="이통사/카카오/RCS 결과 코드 * 발송 결과 코드 참조")
     USERDATA: Optional[str] = Field(None, description="정산용 부서 코드")
-    WAPINFO: Optional[str] = Field(
-        None, description="이통사/카카오 정보 * SKT/KTF/LGT/KAO"
-    )
+    WAPINFO: Optional[str] = Field(None, description="이통사/카카오 정보 * SKT/KTF/LGT/KAO")
     TELRES: Optional[str] = Field(None, description="이통사 대체 발송 결과")
     TELTIME: Optional[str] = Field(None, description="이통사 대체 발송 시간")
     KAORES: Optional[str] = Field(None, description="카카오 대체 발송 결과")

@@ -61,15 +61,11 @@ def create_strategies(
     db: Session = Depends(get_db_session),
     user=Depends(get_permission_checker(required_permissions=[])),
 ):
-    result = create_strategy_service.create_strategy_object(
-        strategy_create, user, db=db
-    )
+    result = create_strategy_service.create_strategy_object(strategy_create, user, db=db)
     return result
 
 
-@strategy_router.delete(
-    "/strategies/{strategy_id}", status_code=status.HTTP_204_NO_CONTENT
-)
+@strategy_router.delete("/strategies/{strategy_id}", status_code=status.HTTP_204_NO_CONTENT)
 @inject
 def delete_strategy(
     strategy_id: str,

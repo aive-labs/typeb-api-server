@@ -8,5 +8,5 @@ class OnboardingEntity(Base):
 
     mall_id = Column(String, primary_key=True, nullable=False)
     onboarding_status = Column(String, nullable=False)
-    created_dt = Column(DateTime, default=func.now())
-    updated_dt = Column(DateTime, default=func.now(), onupdate=func.now())
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())

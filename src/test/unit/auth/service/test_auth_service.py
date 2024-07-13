@@ -120,9 +120,7 @@ def describe_토큰_사용():
 
         return _create_token
 
-    def 토큰을_사용해서_현재_사용자_정보를_조회한다(
-        test_auth_jwt, test_auth_service: AuthService
-    ):
+    def 토큰을_사용해서_현재_사용자_정보를_조회한다(test_auth_jwt, test_auth_service: AuthService):
         user = User(
             user_id=0,
             username="테스트0",

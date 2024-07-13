@@ -49,9 +49,7 @@ class OfferDetailResponse(BaseModel):
             coupon_description=model.coupon_description,
             available_scope=model.available_scope,
             available_scope_name=(
-                AvailableScope[model.available_scope].value
-                if model.available_scope
-                else None
+                AvailableScope[model.available_scope].value if model.available_scope else None
             ),
             available_period_type=model.available_period_type,
             available_period_type_name=(
