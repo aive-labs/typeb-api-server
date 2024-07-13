@@ -1,11 +1,9 @@
 from sqlalchemy import (
     Column,
     DateTime,
-    ForeignKey,
     Integer,
     String,
 )
-from sqlalchemy.orm import relationship
 
 from src.core.database import Base
 
@@ -13,7 +11,9 @@ from src.core.database import Base
 class CampaignSetRecipientsEntity(Base):
     __tablename__ = "campaign_set_recipients"
 
-    set_recipient_seq = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    set_recipient_seq = Column(
+        Integer, primary_key=True, index=True, autoincrement=True
+    )
     campaign_id = Column(String, nullable=False)
     set_sort_num = Column(Integer, nullable=False)
     group_sort_num = Column(Integer, nullable=False)

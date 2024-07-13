@@ -63,8 +63,8 @@ class CreateStrategyService(CreateStrategyUseCase):
             ]
 
             theme_offer = [
-                StrategyThemeOfferMapping(offer_id=offer_id)
-                for offer_id in theme.theme_audience_set.offer_ids
+                StrategyThemeOfferMapping(coupon_no=coupon_no)
+                for coupon_no in theme.theme_audience_set.coupon_nos
             ]
 
             strategy_themes.append(
@@ -98,7 +98,7 @@ class CreateStrategyService(CreateStrategyUseCase):
         # 3. 커스텀 캠페인 - 오퍼 1개 제한
         # self._check_single_offer_per_custom_theme(
         #     audience_type_code=strategy_create.audience_type_code,
-        #     offer_id_list=theme.theme_audience_set.offer_ids,
+        #     coupon_no_list=theme.theme_audience_set.coupon_nos,
         # )
 
     def _check_duplicate_recommend_model(
@@ -125,9 +125,9 @@ class CreateStrategyService(CreateStrategyUseCase):
                 },
             )
 
-    def _check_single_offer_per_custom_theme(self, audience_type_code, offer_id_list):
+    def _check_single_offer_per_custom_theme(self, audience_type_code, coupon_no_list):
         pass
-        # if audience_type_code == "c" and len(offer_id_list) > 1:
+        # if audience_type_code == "c" and len(coupon_no_list) > 1:
         #     raise ValidationException(
         #         detail={
         #             "code": "strategy/create",

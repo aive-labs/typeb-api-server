@@ -47,10 +47,10 @@ def get_cafe24_authentication_url(
 
 @auth_router.post("/oauth/cafe24/token", status_code=status.HTTP_201_CREATED)
 @inject
-def get_cafe24_access_token(
+async def get_cafe24_access_token(
     cafe_authentication_request: OauthAuthenticationRequest,
     cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db_session),
 ) -> None:
-    cafe24_service.get_oauth_access_token(cafe_authentication_request, db=db)
+    await cafe24_service.get_oauth_access_token(cafe_authentication_request, db=db)

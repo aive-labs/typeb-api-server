@@ -106,3 +106,16 @@ def search_campaign(
     운영중 또는 종료, 기간만료된 캠페인
     """
     return search_service.search_campaign(keyword, db=db)
+
+
+@search_router.get("/rep-nms")
+@inject
+def search_rep_nms(
+    product_id: Optional[str] = None,
+    db: Session = Depends(get_db_session),
+    user=Depends(get_permission_checker(required_permissions=[])),
+    search_service: BaseSearchService = Depends(
+        dependency=Provide[Container.search_service]
+    ),
+) -> list[str]:
+    return search_service.search_rep_nms(product_id, db=db)

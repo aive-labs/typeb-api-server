@@ -47,3 +47,8 @@ class CreativesRepository(BaseCreativesRepository):
         return self.creative_sqlalchemy.get_creatives_for_contents(
             style_cd_list, given_tag, tag_nm, limit, db
         )
+
+    def get_creatives_by_style_cd(
+        self, style_cd: str, db: Session
+    ) -> list[CreativeBase]:
+        return self.creative_sqlalchemy.get_creatives_by_style_cd(style_cd, db)

@@ -3,60 +3,70 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from src.offers.domain.offer_details import OfferDetails
 from src.offers.infra.entity.offers_entity import OffersEntity
 
 
 class Offer(BaseModel):
-    offer_key: int
-    offer_id: str
-    event_no: str
-    comp_cd: str
-    br_div: str
-    offer_name: str
-    event_remark: Optional[str]
-    crm_event_remark: Optional[str]
-    sty_alert1: Optional[str]
-    offer_type_code: Optional[str]
-    offer_type_name: Optional[str]
-    offer_use_type: str
-    offer_style_conditions: Optional[dict]
-    offer_style_exclusion_conditions: Optional[dict]
-    offer_channel_conditions: Optional[dict]
-    offer_channel_exclusion_conditions: Optional[dict]
-    mileage_str_dt: Optional[str]
-    mileage_end_dt: Optional[str]
-    used_count: Optional[int]
-    apply_pcs: Optional[int]
-    use_yn: Optional[str]
-    crm_yn: Optional[str]
-    event_str_dt: str
-    event_end_dt: str
-    cus_data_batch_yn: Optional[str]
-    event_sort: Optional[int]
+    coupon_no: str
+    coupon_name: str
+    coupon_type: Optional[str] = None
+    coupon_description: Optional[str] = None
+    coupon_created_at: datetime
+    benefit_type: Optional[str] = None
+    benefit_type_name: Optional[str] = None
+    comp_cd: Optional[str] = None
+    br_div: Optional[str] = None
+    is_available: Optional[bool] = False
+    available_scope: Optional[str] = None
+    available_product_list: Optional[List] = []
+    available_category_list: Optional[List] = []
+    issue_max_count_by_user: Optional[int] = None
+    available_begin_datetime: Optional[str] = None
+    available_end_datetime: Optional[str] = None
+    campaign_id: Optional[str] = None
+    shop_no: Optional[str] = None
+    issue_type: Optional[str] = None
+    issue_sub_type: Optional[str] = None
+    issue_order_path: Optional[str] = None
+    issue_order_type: Optional[str] = None
+    issue_reserved: Optional[str] = None
+    issue_reserved_date: Optional[str] = None
+    available_period_type: Optional[str] = None
+    available_day_from_issued: Optional[int] = None
+    available_site: Optional[str] = None
+    available_price_type: Optional[str] = None
+    is_stopped_issued_coupon: Optional[str] = None
+    benefit_text: Optional[str] = None
+    benefit_price: Optional[str] = None
+    benefit_percentage: Optional[str] = None
+    benefit_percentage_round_unit: Optional[str] = None
+    benefit_percentage_max_price: Optional[str] = None
+    include_regional_shipping_rate: Optional[str] = None
+    include_foreign_delivery: Optional[str] = None
+    coupon_direct_url: Optional[str] = None
+    available_date: Optional[str] = None
+    available_order_price_type: Optional[str] = None
+    available_min_price: Optional[str] = None
+    available_amount_type: Optional[str] = None
+    send_sms_for_issue: Optional[str] = None
+    issue_order_start_date: Optional[str] = None
+    issue_order_end_date: Optional[str] = None
+    deleted: Optional[str] = None
+    cus_data_batch_yn: Optional[str] = None
+    offer_source: Optional[str] = None
     created_at: datetime
     created_by: str
     updated_at: datetime
     updated_by: str
-    dupl_apply_event: Optional[List[str]] = []
-    offer_source: str
-    campaign_id: Optional[str]
-    offer_sale_tp: Optional[List[str]] = []
-    offer_detail_options: List[OfferDetails] = []
 
     class Config:
         from_attributes = True
 
     @staticmethod
     def from_entity(entity: OffersEntity) -> "Offer":
-        offer_details = [
-            OfferDetails.model_validate(detail)
-            for detail in entity.offer_detail_options
-        ]
 
         offer_data = {
-            **{col.name: getattr(entity, col.name) for col in entity.__table__.columns},
-            "offer_detail_options": offer_details,
+            **{col.name: getattr(entity, col.name) for col in entity.__table__.columns}
         }
 
         return Offer.model_validate(offer_data)

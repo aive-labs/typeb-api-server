@@ -1,5 +1,7 @@
 from datetime import datetime
+
 from pydantic import BaseModel
+
 
 class CampaignSetRecipients(BaseModel):
     set_recipient_seq: int | None = None

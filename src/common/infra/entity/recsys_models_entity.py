@@ -1,12 +1,9 @@
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    DateTime
-)
-
 from datetime import datetime
+
+from sqlalchemy import Column, DateTime, Integer, String
+
 from src.core.database import Base as Base
+
 
 class RecsysModelsEntity(Base):
     __tablename__ = "recsys_models"

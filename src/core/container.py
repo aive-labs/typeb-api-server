@@ -30,13 +30,12 @@ from src.auth.service.auth_service import AuthService
 from src.auth.service.cafe24_service import Cafe24Service
 from src.auth.service.onboarding_service import OnboardingService
 from src.auth.service.token_service import TokenService
-from src.common.infra.common_repository import CommonRepository
-
 from src.campaign.infra.campaign_repository import CampaignRepository
 from src.campaign.infra.campaign_sqlalchemy_repository import CampaignSqlAlchemy
 from src.campaign.service.create_campaign_service import CreateCampaignService
 from src.campaign.service.generate_message_service import GenerateMessageService
 from src.campaign.service.get_campaign_service import GetCampaignService
+from src.common.infra.common_repository import CommonRepository
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
 from src.common.utils.file.s3_service import S3Service
 from src.contents.infra.contents_repository import ContentsRepository
@@ -75,6 +74,8 @@ from src.messages.service.message_service import MessageService
 from src.offers.infra.offer_repository import OfferRepository
 from src.offers.service.get_offer_service import GetOfferService
 from src.offers.service.update_offer_service import UpdateOfferService
+from src.products.infra.product_repository import ProductRepository
+from src.products.service.product_service import ProductService
 from src.search.service.search_service import SearchService
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.infra.strategy_sqlalchemy_repository import StrategySqlAlchemy
@@ -116,6 +117,7 @@ class Container(containers.DeclarativeContainer):
             "src.offers.routes.offer_router",
             "src.message_template.routes.message_template_router",
             "src.admin.routes.admin_router",
+            "src.products.routes.product_router",
         ]
     )
 
@@ -326,7 +328,7 @@ class Container(containers.DeclarativeContainer):
     campaign_sqlalchemy = providers.Singleton(
         provides=CampaignSqlAlchemy, db=db.provided.session
     )
-    
+
     offer_repository = providers.Singleton(
         provides=OfferRepository, db=db.provided.session
     )
@@ -356,7 +358,11 @@ class Container(containers.DeclarativeContainer):
     )
 
     generate_message_service = providers.Singleton(
-        provides=GenerateMessageService, campaign_repository=campaign_repository, offer_repository=offer_repository, common_repository=common_repository, contents_repository=contents_repository
+        provides=GenerateMessageService,
+        campaign_repository=campaign_repository,
+        offer_repository=offer_repository,
+        common_repository=common_repository,
+        contents_repository=contents_repository,
     )
 
     """
@@ -398,7 +404,9 @@ class Container(containers.DeclarativeContainer):
     )
 
     get_offer_service = providers.Singleton(
-        provides=GetOfferService, offer_repository=offer_repository
+        provides=GetOfferService,
+        offer_repository=offer_repository,
+        cafe24_repository=cafe24_repository,
     )
 
     update_offer_service = providers.Singleton(
@@ -441,6 +449,17 @@ class Container(containers.DeclarativeContainer):
     )
 
     """
+    product 의존성
+    """
+    product_repository = providers.Singleton(provides=ProductRepository)
+
+    product_service = providers.Singleton(
+        provides=ProductService,
+        product_repository=product_repository,
+        creatives_repository=creatives_repository,
+    )
+
+    """
     search 의존성
     """
     recommend_products_repository = providers.Singleton(
@@ -454,4 +473,5 @@ class Container(containers.DeclarativeContainer):
         offer_repository=offer_repository,
         contents_repository=contents_repository,
         campaign_repository=campaign_repository,
+        product_repository=product_repository,
     )

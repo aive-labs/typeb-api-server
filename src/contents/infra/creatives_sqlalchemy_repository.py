@@ -234,3 +234,20 @@ class CreativesSqlAlchemy:
         )
         query = query.order_by(code_order)
         return query
+
+    def get_creatives_by_style_cd(self, style_cd, db) -> list[CreativeBase]:
+        entities: list[CreativesEntity] = (
+            db.query(CreativesEntity).filter(CreativesEntity.style_cd == style_cd).all()
+        )
+        creative_base_list = [
+            CreativeBase(
+                creative_id=entity.creative_id,
+                image_asset_type=entity.image_asset_type,
+                image_uri=entity.image_uri,
+                image_path=entity.image_path,
+                creative_tags=entity.creative_tags,
+            )
+            for entity in entities
+        ]
+
+        return creative_base_list

@@ -24,8 +24,8 @@ class CreateDataDict:
     def generate_data_dict(self, request_generate_group_seq, input_data):
         # data_dict 초기값 설정
         data_dict = {
-            # "campaign_type": "custom",
-            # "audience_type": "custom",
+            "campaign_type": "custom",
+            "audience_type": "custom",
             "is_personalized": False,
             "product_yn": "n",
             "offer_yn": "n",
@@ -38,10 +38,24 @@ class CreateDataDict:
 
         data_dict["group_idx"] = request_generate_group_seq
 
-        # 캠페인 테마
-        data_dict["recsys_model_name"] = config["recsys_mode_name"][
-            input_data["set_data"].get("recsys_model_id")
-        ]
+        # 캠페인 테마 (세그먼트/커스텀)
+        if input_data["set_data"].get("recsys_model_id") is not None and input_data[
+            "set_data"
+        ].get("recsys_model_id") in [1, 2, 3, 4, 6, 8, 9, 10, 11, 12, 13]:
+            data_dict["campaign_type"] = "segment"
+            data_dict["recsys_model_name"] = config["recsys_mode_name"][
+                input_data["set_data"].get("recsys_model_id")
+            ]
+
+        # 타겟 오디언스 (세그먼트/커스텀)
+        if input_data["base_data"].get("audience_type_code") == "s":
+            data_dict["audience_type"] = "segment"
+            data_dict["audience_name"] = input_data["set_data"]["audience_name"]
+            data_dict["audience_purpose"] = config["cus_purpose"][
+                data_dict["audience_name"][1:2]
+            ]
+            data_dict["audience_purchase_level"] = data_dict["audience_name"][:1]
+            data_dict["audience_promotion_level"] = data_dict["audience_name"][2:]
 
         # 개인화 여부
         if input_data["base_data"].get("is_personalized") == True:
@@ -110,7 +124,13 @@ class CreateDataDict:
                     data_dict["set_group_val"] = input_data["group_info"][
                         group_num
                     ].get("set_group_val")
-
+                    if (
+                        input_data["group_info"][group_num].get("set_group_category")
+                        == "purpose"
+                    ):
+                        data_dict["audience_purpose"] = input_data["group_info"][
+                            group_num
+                        ].get("set_group_val")
                     if (
                         data_dict["set_group_category"] == "rep_nm"
                         and "rep_nm" not in data_dict.keys()
@@ -153,6 +173,17 @@ class CreateDataDict:
                                     data_dict["audience_purpose"] = config["style_seg"][
                                         k
                                     ]
+                    if (
+                        "rep_purpose_ratio"
+                        in input_data["group_info"][group_num]["group_stats"].keys()
+                    ):
+                        rep_purpose_ratio = input_data["group_info"][group_num][
+                            "group_stats"
+                        ].get("rep_purpose_ratio")
+                        if rep_purpose_ratio is not None:
+                            for k, v in rep_purpose_ratio.items():
+                                if v >= 0.8:
+                                    data_dict["rep_purpose"] = config["rep_purpose"][k]
                     if (
                         "age_ratio"
                         in input_data["group_info"][group_num]["group_stats"].keys()
@@ -252,7 +283,7 @@ class CreateDataDict:
         return data_dict
 
 
-class GenerateMessageDm:
+class generate_message:
     def __init__(self) -> None:
         self.file_path = "src/core/data/"
         self.msg_data = pd.read_csv(self.file_path + "msg_data.csv", encoding="euc-kr")
@@ -326,16 +357,16 @@ class GenerateMessageDm:
         msg_title_df = self.msg_data[self.msg_data["location"] == "title"]
 
         sample_df = pd.DataFrame()
-        # if "audience_purpose" in data_dict.keys():
-        #     sample_df = pd.concat(
-        #         [
-        #             sample_df,
-        #             msg_title_df[
-        #                 (msg_title_df["index"].str.startswith("cs"))
-        #                 & (msg_title_df["detail"] == data_dict["audience_purpose"])
-        #             ],
-        #         ]
-        #     )
+        if "audience_purpose" in data_dict.keys():
+            sample_df = pd.concat(
+                [
+                    sample_df,
+                    msg_title_df[
+                        (msg_title_df["index"].str.startswith("cs"))
+                        & (msg_title_df["detail"] == data_dict["audience_purpose"])
+                    ],
+                ]
+            )
         if "recsys_model_name" in data_dict.keys():
             sample_df = pd.concat(
                 [
@@ -415,11 +446,12 @@ class GenerateMessageDm:
         msg_main_df = self.msg_data[self.msg_data["location"] == "main"]
 
         sample_df = pd.DataFrame()
-        # 고객 호명 첫인사
+        # 첫인사
         if data_dict.get("msg_type") != "kakao_image_wide":
+            random_choice_p = random.choice(["T", "M", "B"])
             aud_prchs = msg_main_df[
                 (msg_main_df["index"].str.startswith("pa"))
-                # & (msg_main_df["detail"] == data_dict["audience_purchase_level"])
+                & (msg_main_df["detail"] == random_choice_p)
             ].sample(n=1)
             self.msg_gen_key.append(aud_prchs["gen_key"].values[0])
             self.msg_body = self.msg_body + aud_prchs["text"].values[0] + "\n"
@@ -562,40 +594,25 @@ class GenerateMessageDm:
                 basic = sample_df.sample(n=1)
                 while "offer_amount" in basic["text"].values[0]:
                     basic = sample_df.sample(n=1)
-            if (
-                "apply_pcs" not in data_dict["offer_info"].keys()
-                and "apply_pcs" in basic["text"].values[0]
-            ):
-                basic = sample_df.sample(n=1)
-                while "apply_pcs" in basic["text"].values[0]:
-                    basic = sample_df.sample(n=1)
 
         self.msg_gen_key.append(basic["gen_key"].values[0])
         self.msg_body = self.msg_body + basic["text"].values[0]
         if str(basic["rec_exp"].values[0]) != "nan":
             self.rec_explanation.append(basic["rec_exp"].values[0])
 
-        # if data_dict.get("msg_type") != "kakao_image_wide":
+        # if data_dict.get('msg_type')!='kakao_image_wide':
 
         #     # 대표상품명에 따라 해쉬태그 표출 (랜덤 3개)
         #     try:
-        #         if (
-        #             "rep_nm" in data_dict.keys()
-        #             and data_dict.get("msg_type") != "kakao_image_wide"
-        #         ):
-        #             if data_dict.get("rep_nm") in self.rep_tag["rep_nm"].values:
-        #                 rep_tags = (
-        #                     self.rep_tag[
-        #                         self.rep_tag["rep_nm"] == data_dict.get("rep_nm")
-        #                     ]["tag"].values[0]
-        #                 ).split(" ")
+        #         if 'rep_nm' in data_dict.keys() and data_dict.get('msg_type')!='kakao_image_wide':
+        #             if data_dict.get('rep_nm') in self.rep_tag['rep_nm'].values:
+        #                 rep_tags = (self.rep_tag[self.rep_tag['rep_nm']==data_dict.get('rep_nm')]['tag'].values[0]).split(' ')
         #                 if len(rep_tags) >= 3:
-        #                     rep_tags = " ".join(random.sample(rep_tags, 3))
+        #                     rep_tags = ' '.join(random.sample(rep_tags,3))
         #                 else:
-        #                     rep_tags = " ".join(rep_tags)
-        #                 self.msg_body = self.msg_body + "\n" + rep_tags
-        #     except:
-        #         pass
+        #                     rep_tags = ' '.join(rep_tags)
+        #                 self.msg_body = self.msg_body + '\n' + rep_tags
+        #     except: pass
 
     def product_template(self, data_dict):
         """
@@ -890,7 +907,7 @@ def generate_dm(grp_idx, input_data, send_date, msg_type, remind_duration):
     """
 
     if msg_type == "remind":
-        inst1 = CreateDataDict()
+        inst1 = create_data_dict()
         data_dict = inst1.create_data_dict(grp_idx, input_data)
         if data_dict.get("msg_type") not in [
             "lms",
@@ -906,7 +923,7 @@ def generate_dm(grp_idx, input_data, send_date, msg_type, remind_duration):
             output["rec_explanation"] = []
             output["kakao_button_link"] = {}
         else:
-            inst2 = GenerateMessageDm()
+            inst2 = generate_message()
             inst2.remind(data_dict)
 
             if data_dict["offer_yn"] == "y" and data_dict["msg_type"] in ("lms", "mms"):
@@ -938,12 +955,12 @@ def generate_dm(grp_idx, input_data, send_date, msg_type, remind_duration):
             output["kakao_button_link"] = {}
         else:
             if data_dict.get("recsys_model_name") == "contents_only":
-                inst2 = GenerateMessageDm()
+                inst2 = generate_message()
                 inst2.contents_only(data_dict)
                 inst2.contents_template(data_dict)
 
             else:
-                inst2 = GenerateMessageDm()
+                inst2 = generate_message()
                 inst2.generate_title(data_dict)
                 inst2.generate_body(data_dict)
 

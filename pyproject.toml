@@ -13,11 +13,25 @@ exclude = '''
   | buck-out
   | build
   | dist
+  | src/offers/enums/
 )/
 '''
 
 
 [tool.ruff]
+exclude = [
+    "src/offers/enums/*", # 카페24 enum 값으로 인해 E741 Ambiguous variable name 발생
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".tox",
+    ".venv",
+    "_build",
+    "buck-out",
+    "build",
+    "dist"
+]
+
 # ref: https://beta.ruff.rs/docs/rules/
 # 설명: ruff가 선택적으로 적용할 규칙들을 지정. 각 문자와 숫자는 특정 규칙을 의미
 # 기능:
@@ -40,7 +54,8 @@ lint.select = ["B", "C4", "E", "F", "N", "I", "W", "UP"]
 #  N801: 프로퍼티 값이 True인 경우
 #  E712: 프로퍼티 값이 True인 경우
 #  F821: 메세지 생성시 초기 딕셔너리가 없는 문제. 복잡한 로직으로 추후 개선 필요
-lint.ignore = ["F403", "F405", "E501", "E402", "B008", "N801", "E712", "F821"]
+lint.ignore = ["F403", "F405", "E501", "E402", "B008", "N801", "E722", "E712", "F821"]
+
 
 # ruff가 자동으로 고칠 수 있는 규칙 지정
 lint.fixable = ["A", "B", "C", "D", "E", "F", "I", "UP"]

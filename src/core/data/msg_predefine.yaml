@@ -91,3 +91,15 @@ button_msg:
     '지금 바로 읽기',
     '바로 확인하기'
   ]
+
+preview_msg_params:
+  campaign_keyword: []
+  age: []
+  season: []
+  msg_type: ['lms', 'kakao_image_general']
+  is_personalized: True
+  group_stats: {
+    'item_ratio': '',
+    'it_gb_ratio': '',
+    'age_ratio': '',
+  }

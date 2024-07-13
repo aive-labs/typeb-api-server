@@ -9,7 +9,7 @@ from src.campaign.routes.dto.response.campaign_timeline_response import (
     CampaignTimelineResponse,
 )
 from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUsecase
-from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase ##
+from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase  ##
 from src.campaign.routes.port.get_campaign_usecase import GetCampaignUseCase
 from src.core.container import Container
 from src.core.database import get_db_session
@@ -65,4 +65,3 @@ def generate_message(
     ),
 ):
     return generate_message_service.generate_message(message_generate, user)
-

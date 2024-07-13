@@ -12,7 +12,7 @@ class BaseOauthService(ABC):
         pass
 
     @abstractmethod
-    def get_oauth_access_token(
+    async def get_oauth_access_token(
         self, oauth_request: OauthAuthenticationRequest, db: Session
     ):
         pass
