@@ -10,7 +10,7 @@ class StrategyThemeOfferMappingEntity(Base):
 
     strategy_theme_id = Column(
         Integer,
-        ForeignKey("strategy_themes.strategy_theme_id"),
+        ForeignKey("strategy_themes.strategy_theme_id", ondelete="CASCADE"),
         primary_key=True,
     )
     coupon_no = Column(

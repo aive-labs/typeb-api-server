@@ -210,6 +210,14 @@ class StrategySqlAlchemy:
 
         db.execute(update_statement)
 
+        strategy_theme = (
+            db.query(StrategyThemesEntity)
+            .filter(StrategyThemesEntity.strategy_id == strategy_id)
+            .first()
+        )
+
+        db.delete(strategy_theme)
+
     def update_expired_strategy(self, strategy_id, db: Session):
 
         update_statement = (

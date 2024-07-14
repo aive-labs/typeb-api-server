@@ -37,7 +37,6 @@ class DeleteAudienceService(DeleteAudienceUseCase):
             )
 
         linked_strategy_ids = self.audience_repository.get_linked_strategy(audience_id, db)
-        print(linked_strategy_ids)
         if len(linked_strategy_ids) >= 1:
             raise PolicyException(
                 detail={

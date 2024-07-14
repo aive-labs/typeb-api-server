@@ -17,7 +17,7 @@ class StrategyThemeAudienceMappingEntity(Base):
 
     strategy_theme_id = Column(
         Integer,
-        ForeignKey("strategy_themes.strategy_theme_id"),
+        ForeignKey("strategy_themes.strategy_theme_id", ondelete="CASCADE"),
         primary_key=True,
     )
     audience_id = Column(String, ForeignKey("audiences.audience_id"), primary_key=True)
