@@ -320,12 +320,16 @@ class StrategySqlAlchemy:
                 .all()
             )
         else:
-            entities = db.query(
-                StrategyEntity.strategy_id,
-                StrategyEntity.strategy_name,
-                StrategyEntity.strategy_tags,
-                StrategyEntity.target_strategy,
-            ).all()
+            entities = (
+                db.query(
+                    StrategyEntity.strategy_id,
+                    StrategyEntity.strategy_name,
+                    StrategyEntity.strategy_tags,
+                    StrategyEntity.target_strategy,
+                )
+                .filter(~StrategyEntity.is_deleted)
+                .all()
+            )
 
         return [
             StrategySearchResponse(
