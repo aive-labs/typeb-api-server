@@ -56,7 +56,7 @@ class CreateDataDict:
             data_dict["audience_promotion_level"] = data_dict["audience_name"][2:]
 
         # 개인화 여부
-        if input_data["base_data"].get("is_personalized"):
+        if input_data["base_data"].get("is_personalized") == True:
             data_dict["is_personalized"] = input_data["base_data"]["is_personalized"]
 
         # 캠페인 기본 정보 (캠페인명, 시작일, 완료일)
@@ -111,6 +111,7 @@ class CreateDataDict:
                     "set_group_category" in input_data["group_info"][group_num].keys()
                     and input_data["group_info"][group_num].get("set_group_category") is not None
                 ):
+
                     data_dict["set_group_category"] = (
                         input_data["group_info"][group_num].get("set_group_category").value
                     )
@@ -258,7 +259,7 @@ class CreateDataDict:
         return data_dict
 
 
-class GenerateMessage:
+class generate_message:
     def __init__(self) -> None:
         self.file_path = "src/core/data/"
         self.msg_data = pd.read_csv(self.file_path + "msg_data.csv", encoding="euc-kr")
@@ -416,14 +417,12 @@ class GenerateMessage:
         msg_main_df = self.msg_data[self.msg_data["location"] == "main"]
 
         sample_df = pd.DataFrame()
-        # 구매력 (개인화 문장)
-        if (
-            "audience_purchase_level" in data_dict.keys()
-            and data_dict.get("msg_type") != "kakao_image_wide"
-        ):
+        # 첫인사
+        if data_dict.get("msg_type") != "kakao_image_wide":
+            random_choice_p = random.choice(["T", "M", "B"])
             aud_prchs = msg_main_df[
                 (msg_main_df["index"].str.startswith("pa"))
-                & (msg_main_df["detail"] == data_dict["audience_purchase_level"])
+                & (msg_main_df["detail"] == random_choice_p)
             ].sample(n=1)
             self.msg_gen_key.append(aud_prchs["gen_key"].values[0])
             self.msg_body = self.msg_body + aud_prchs["text"].values[0] + "\n"
@@ -563,13 +562,6 @@ class GenerateMessage:
                 basic = sample_df.sample(n=1)
                 while "offer_amount" in basic["text"].values[0]:
                     basic = sample_df.sample(n=1)
-            if (
-                "apply_pcs" not in data_dict["offer_info"].keys()
-                and "apply_pcs" in basic["text"].values[0]
-            ):
-                basic = sample_df.sample(n=1)
-                while "apply_pcs" in basic["text"].values[0]:
-                    basic = sample_df.sample(n=1)
 
         self.msg_gen_key.append(basic["gen_key"].values[0])
         self.msg_body = self.msg_body + basic["text"].values[0]
@@ -577,58 +569,18 @@ class GenerateMessage:
             self.rec_explanation.append(basic["rec_exp"].values[0])
 
         if data_dict.get("msg_type") != "kakao_image_wide":
-            # 대표상품 전용 추가 문구
-            if data_dict.get("rep_nm") == "WHISTLIZER SHOES":
-                if (
-                    "audience_purpose" in data_dict.keys()
-                    and data_dict.get("audience_purpose") is not None
-                ):
-                    extra_text = self.extra_df[
-                        (self.extra_df.rep_nm == data_dict.get("rep_nm"))
-                        & (self.extra_df.detail == data_dict.get("audience_purpose"))
+            try:
+                if data_dict.get("msg_type") != "kakao_image_wide":
+                    prd_prps = msg_main_df[
+                        (msg_main_df["index"].str.startswith("pp"))
+                        & (msg_main_df["detail"] == data_dict["rep_purpose"])
                     ].sample(n=1)
-                else:
-                    extra_text = self.extra_df[
-                        (self.extra_df.rep_nm == data_dict.get("rep_nm"))
-                        & (self.extra_df.detail == "공통")
-                    ].sample(n=1)
-                self.msg_gen_key.append(extra_text["gen_key"].values[0])
-                self.msg_body = self.msg_body + "\n" + extra_text["text"].values[0]
-                if str(extra_text["rec_exp"].values[0]) != "nan":
-                    self.rec_explanation.append(extra_text["rec_exp"].values[0])
-
-            else:
-                # 고객 SEG, 상품 PURPOSE (개인화 문장)
-                try:
-                    if (
-                        "audience_purpose" in data_dict.keys()
-                        and data_dict.get("msg_type") != "kakao_image_wide"
-                    ):
-                        aud_prps = msg_main_df[
-                            (msg_main_df["index"].str.startswith("cs"))
-                            & (msg_main_df["detail"] == data_dict["audience_purpose"])
-                        ].sample(n=1)
-                        self.msg_gen_key.append(aud_prps["gen_key"].values[0])
-                        self.msg_body = self.msg_body + "\n" + aud_prps["text"].values[0]
-                        if str(aud_prps["rec_exp"].values[0]) != "nan":
-                            self.rec_explanation.append(aud_prps["rec_exp"].values[0])
-                except:
-                    pass
-                try:
-                    if (
-                        "rep_purpose" in data_dict.keys()
-                        and data_dict.get("msg_type") != "kakao_image_wide"
-                    ):
-                        prd_prps = msg_main_df[
-                            (msg_main_df["index"].str.startswith("pp"))
-                            & (msg_main_df["detail"] == data_dict["rep_purpose"])
-                        ].sample(n=1)
-                        self.msg_gen_key.append(prd_prps["gen_key"].values[0])
-                        self.msg_body = self.msg_body + "\n" + prd_prps["text"].values[0]
-                        if str(prd_prps["rec_exp"].values[0]) != "nan":
-                            self.rec_explanation.append(prd_prps["rec_exp"].values[0])
-                except:
-                    pass
+                    self.msg_gen_key.append(prd_prps["gen_key"].values[0])
+                    self.msg_body = self.msg_body + "\n" + prd_prps["text"].values[0]
+                    if str(prd_prps["rec_exp"].values[0]) != "nan":
+                        self.rec_explanation.append(prd_prps["rec_exp"].values[0])
+            except:
+                pass
 
             # 대표상품명에 따라 해쉬태그 표출 (랜덤 3개)
             try:
@@ -904,6 +856,17 @@ def generate_dm(grp_idx, input_data, send_date, msg_type, remind_duration):
     send_date[str]
     msg_type[str] = 'remind' or 'campagin'
     remind_duration[int] #아직 미정
+
+
+    --TypeB 추천 모델 목록
+     * Best 상품 추천
+     * 성별 Best 상품 추천
+     * 연령대별
+     * 스테디셀러 상품 추천
+     * Next구매 확률 높은 상품 추천
+     * 신상품추천
+
+
     """
 
     if msg_type == "remind":
@@ -923,7 +886,7 @@ def generate_dm(grp_idx, input_data, send_date, msg_type, remind_duration):
             output["rec_explanation"] = []
             output["kakao_button_link"] = {}
         else:
-            inst2 = GenerateMessage()
+            inst2 = CreateDataDict()
             inst2.remind(data_dict)
 
             if data_dict["offer_yn"] == "y" and data_dict["msg_type"] in ("lms", "mms"):
@@ -955,12 +918,12 @@ def generate_dm(grp_idx, input_data, send_date, msg_type, remind_duration):
             output["kakao_button_link"] = {}
         else:
             if data_dict.get("recsys_model_name") == "contents_only":
-                inst2 = GenerateMessage()
+                inst2 = generate_message()
                 inst2.contents_only(data_dict)
                 inst2.contents_template(data_dict)
 
             else:
-                inst2 = GenerateMessage()
+                inst2 = generate_message()
                 inst2.generate_title(data_dict)
                 inst2.generate_body(data_dict)
 

@@ -207,6 +207,9 @@ class CampaignSqlAlchemy:
         )
 
     def get_group_item_nm_stats(self, campaign_id, set_sort_num):
+        """
+        item -> product_name
+        """
         with self.db() as db:
             subquery = db.query(
                 distinct(ProductMasterEntity.rep_nm).label("rep_nm"),
@@ -229,17 +232,23 @@ class CampaignSqlAlchemy:
             )
 
     def get_it_gb_nm_stats(self, campaign_id, set_sort_num):
-        """메시지 생성시, 그룹 내 아이템 구분(복종)별 고객수 통계 조회를 위한 쿼리"""
+        """메시지 생성시, 그룹 내 아이템 구분(복종)별 고객수 통계 조회를 위한 쿼리
+
+        it_gb -> brand_name
+        테스트 데이터 :
+        ALTOS  -> MOUNTAIN TEE(임시변경)
+        PURO -> MOUNTAIN PANTS(임시변경)
+        """
         with self.db() as db:
             subquery = db.query(
                 distinct(ProductMasterEntity.rep_nm).label("rep_nm"),
-                ProductMasterEntity.product_name,
+                ProductMasterEntity.category_name,
             ).subquery()
 
             return (
                 db.query(
                     CampaignSetRecipientsEntity.group_sort_num,
-                    subquery.c.it_gb_nm,
+                    subquery.c.category_name,
                     func.count(CampaignSetRecipientsEntity.cus_cd).label("cus_count"),
                 )
                 .join(subquery, CampaignSetRecipientsEntity.rep_nm == subquery.c.rep_nm)
@@ -247,7 +256,7 @@ class CampaignSqlAlchemy:
                     CampaignSetRecipientsEntity.campaign_id == campaign_id,
                     CampaignSetRecipientsEntity.set_sort_num == set_sort_num,
                 )
-                .group_by(CampaignSetRecipientsEntity.group_sort_num, subquery.c.product_name)
+                .group_by(CampaignSetRecipientsEntity.group_sort_num, subquery.c.category_name)
                 .all()
             )
 
@@ -255,14 +264,14 @@ class CampaignSqlAlchemy:
         """메시지 생성시, 그룹 내 연령별 고객수 통계 조회를 위한 쿼리"""
         with self.db() as db:
             subquery = db.query(
-                distinct(CustomerInfoStatusEntity.age).label("age_seg"),
+                distinct(CustomerInfoStatusEntity.age_group_10).label("age_group_10"),
                 CustomerInfoStatusEntity.cus_cd,
             ).subquery()
 
             return (
                 db.query(
                     CampaignSetRecipientsEntity.group_sort_num,
-                    subquery.c.age_seg,
+                    subquery.c.age_group_10,
                     func.count(CampaignSetRecipientsEntity.cus_cd).label("cus_count"),
                 )
                 .join(subquery, CampaignSetRecipientsEntity.cus_cd == subquery.c.cus_cd)
@@ -270,7 +279,7 @@ class CampaignSqlAlchemy:
                     CampaignSetRecipientsEntity.campaign_id == campaign_id,
                     CampaignSetRecipientsEntity.set_sort_num == set_sort_num,
                 )
-                .group_by(CampaignSetRecipientsEntity.group_sort_num, subquery.c.age_seg)
+                .group_by(CampaignSetRecipientsEntity.group_sort_num, subquery.c.age_group_10)
                 .all()
             )
 
@@ -417,6 +426,7 @@ class CampaignSqlAlchemy:
             )
             .filter(CampaignSetsEntity.campaign_id == campaign_id)
         )
+        return entities
 
     def get_campaign_set_groups(self, campaign_id: str, db: Session):
         entities = (

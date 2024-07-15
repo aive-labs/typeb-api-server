@@ -1,10 +1,8 @@
 from datetime import datetime
 
 from sqlalchemy import ARRAY, Boolean, Column, DateTime, Integer, String, text
-from sqlalchemy.orm import relationship
 
 from src.core.database import Base
-from src.offers.infra.entity.offer_details_entity import OfferDetailsEntity
 
 
 class OffersEntity(Base):
@@ -62,6 +60,6 @@ class OffersEntity(Base):
     updated_at = Column(DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now())
     updated_by = Column(String, nullable=False, default=text("(user)"))
 
-    offer_detail_options = relationship(
-        OfferDetailsEntity, backref="offers", lazy=True, cascade="all, delete-orphan"
-    )
+    # offer_detail_options = relationship(
+    #     OfferDetailsEntity, backref="offers", lazy=True, cascade="all, delete-orphan"
+    # )

@@ -58,11 +58,8 @@ item_nm:
   목크에리 : 티셔츠
   바지 : 바지
   저지반바지 : 바지
-  목크에리 : 티셔츠
   폴로에리 : 티셔츠
   저지바지 : 바지
-  반바지 : 바지
-  폴로에리 : 티셔츠
 
 rep_purpose:
   easy_trekking : easy_trekking
@@ -75,17 +72,16 @@ rep_purpose:
   travel : travel
 
 recsys_mode_name:
-  1 : 세그먼트 연관 추천
-  2 : 월별 번들 추천
-  3 : 1,2차 아이템 추천
-  4 : Purpose 추천
-  6 : contents_only
-  8 : 신상품 추천
-  9 : 연령대별 TOP상품 추천
-  10 : 세그먼트 연관 추천
-  11 : 월별 번들 추천
-  12 : 1,2차 아이템 추천
-  13 : Purpose 추천
+  0: 교차구매 상품 추천
+  2: 위시리스트 상품 추천
+  6: 장바구니 상품 추천
+  8: 신상품 추천
+  9: 연령대별 Best 상품 추천
+  10: 스테디셀러 상품 추천
+  11: 생일자 할인 쿠폰 제공
+  12: 성별 Best 상품 추천
+  13: 첫구매 Best 상품 추천
+
 
 button_msg:
   [
@@ -95,3 +91,15 @@ button_msg:
     '지금 바로 읽기',
     '바로 확인하기'
   ]
+
+preview_msg_params:
+  campaign_keyword: []
+  age: []
+  season: []
+  msg_type: ['lms', 'kakao_image_general']
+  is_personalized: True
+  group_stats: {
+    'item_ratio': '',
+    'it_gb_ratio': '',
+    'age_ratio': '',
+  }

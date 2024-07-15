@@ -1,0 +1,167 @@
+campaign_read:
+  campaign_id: "campaign-001"
+  campaign_group_id: "group-001"
+  campaign_name: "Summer Campaign"
+  budget: 50000
+  campaign_type_code: "expert"
+  campaign_type_name: "Expert 캠페인"
+  audience_type_code: "c"
+  medias: "tms,kft"
+  campaign_status_group_code: "r"
+  campaign_status_group_name: "준비단계"
+  campaign_status_code: "r1"
+  campaign_status_name: "준비단계"
+  send_type_code: "onetime"
+  send_type_name: "일회성"
+  repeat_type: null
+  week_days: null
+  send_date: "20240701"
+  is_msg_creation_recurred: false
+  is_approval_recurred: false
+  datetosend: null
+  timetosend: "14:00"
+  start_date: "20240701"
+  end_date: "20240731"
+  group_end_date: null
+  has_remind: false
+  remind_list: []
+  strategy_id: "strategy-001"
+  campaign_theme_ids: [] # 테마 아이디
+  is_personalized: true
+  msg_delivery_vendor: "ssg"
+  campaigns_exc: []
+  audiences_exc: []
+  shop_send_yn: "n"
+  retention_day: null
+  owned_by_dept: "admin"
+  owned_by_dept_name: "admin"
+  owned_by_dept_abb_name: "admin"
+  progress: "message_complete"
+  created_at: "2024-07-01T02:40:21Z"
+  created_by: "admin"
+  created_by_name: "admin"
+  updated_at: "2024-07-01T02:40:21Z"
+  updated_by: "admin"
+
+
+set_data:
+  set_seq: 1
+  set_sort_num: 1
+  is_group_added: null
+  campaign_theme_id: 123
+  campaign_theme_name: Summer Sale
+  # rec_sys_model_id: 456
+  audience_count: 1000
+  audience_id: 'aud-000001'
+  audience_name: Audience Group 1
+  audience_portion: 0.1
+  audience_unit_price: 0
+  response_rate: 0.05
+  rep_nm_list: []
+  coupon_no: null
+  coupon_name: null
+  recipient_count: 500
+  medias: 'lms,kft'
+  # contents_names: null
+  is_confirmed : true
+  is_message_confirmed: true
+  media_cost: 0
+
+
+group_info:
+  - set_group_seq: 1
+    set_seq: 1
+    set_sort_num: 1
+    group_sort_num: 1
+    media: tms
+    msg_type: lms
+    recipient_group_rate: 1.0
+    recipient_group_count: 7
+    set_group_category: purpose_lv2
+    set_group_val: 신발
+    rep_nm: null
+    contents_id: null
+    contents_name: 개인화
+    group_stats:
+      item_ratio:
+        ALTOS 알토스: 0.6
+        PURO ROUND TEE_U: 0.4
+      it_gb_ratio:
+        null: 1.0
+      age_ratio: null
+  - set_group_seq: 2
+    set_seq: 1
+    set_sort_num: 1
+    group_sort_num: 2
+    media: kft
+    msg_type: kakao_image_general
+    recipient_group_rate: 1.0
+    recipient_group_count: 7
+    set_group_category: purpose_lv2
+    set_group_val: 신발
+    rep_nm: null
+    contents_id: null
+    contents_name: 개인화
+    group_stats:
+      item_ratio:
+        ALTOS 알토스: 0.6
+        PURO ROUND TEE_U: 0.4
+      it_gb_ratio:
+        신발: 0.6
+        원피스: 0.4
+      age_ratio: null
+
+messages:
+  - set_group_msg_seq: 1
+    set_group_seq: 1
+    msg_send_type: "campaign"
+    remind_step: null
+    remind_seq: null
+    msg_resv_date: "20240701"
+    set_seq: 1
+    campaign_id: "cam-000001"
+    media: "tms"
+    msg_type: "lms"
+    msg_title: ""
+    msg_body: ""
+    msg_gen_key: ""
+    rec_explanation: []
+    bottom_text: "무료수신거부 080-801-7860"
+    msg_announcement: ""
+    template_id: null
+    msg_photo_uri: [""]
+    phone_callback: "1666-3096"
+    is_used: true
+    created_at: "2024-07-01T02:40:21Z"
+    created_by: "admin"
+    updated_at: "2024-07-01T02:40:21Z"
+    updated_by: "admin"
+    kakao_button_links: []
+    msg_resources: []
+
+  - set_group_msg_seq: 2
+    set_group_seq: 2
+    msg_send_type: "campaign"
+    remind_step: null
+    remind_seq: null
+    msg_resv_date: "20240701"
+    set_seq: 1
+    campaign_id: "cam-000001"
+    media: "kft"
+    msg_type: "kakao_image_general"
+    msg_title: ""
+    msg_body: ""
+    msg_gen_key: ""
+    rec_explanation: []
+    bottom_text: "무료수신거부 080-801-7860"
+    msg_announcement: ""
+    template_id: null
+    msg_photo_uri: [""]
+    phone_callback: "1666-3096"
+    is_used: true
+    created_at: "2024-07-01T02:40:21Z"
+    created_by: "admin"
+    updated_at: "2024-07-01T02:40:21Z"
+    updated_by: "admin"
+    kakao_button_links: []
+    msg_resources: []

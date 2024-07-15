@@ -3,6 +3,8 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
+from src.offers.infra.entity.offers_entity import OffersEntity
+
 
 class Offer(BaseModel):
     coupon_no: str
@@ -59,3 +61,8 @@ class Offer(BaseModel):
 
     class Config:
         from_attributes = True
+
+    @staticmethod
+    def from_entity(entity: OffersEntity) -> "Offer":
+        offer_data = {**{col.name: getattr(entity, col.name) for col in entity.__table__.columns}}
+        return Offer.model_validate(offer_data)

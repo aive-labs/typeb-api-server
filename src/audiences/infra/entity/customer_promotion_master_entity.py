@@ -18,7 +18,7 @@ class CustomerPromotionMasterEntity(Base):
     audience_id = Column(String, primary_key=True, nullable=False)
     audience_name = Column(String, nullable=True)
     coupon_no = Column(String, nullable=True)
-    coupon_ = Column(String, nullable=True)
+    coupon_name = Column(String, nullable=True)
     offer_type = Column(String, nullable=True)
     start_dt = Column(String, nullable=True)
     end_dt = Column(String, nullable=True)
