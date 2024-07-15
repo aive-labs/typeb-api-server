@@ -59,8 +59,8 @@ class CreateStrategyService(CreateStrategyUseCase):
             ]
 
             theme_offer = [
-                StrategyThemeOfferMapping(offer_id=offer_id)
-                for offer_id in theme.theme_audience_set.offer_ids
+                StrategyThemeOfferMapping(coupon_no=offer_id)
+                for offer_id in theme.theme_audience_set.coupon_no_list
             ]
 
             strategy_themes.append(
