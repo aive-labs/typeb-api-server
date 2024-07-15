@@ -121,3 +121,14 @@ def search_strategies(
     search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[StrategySearchResponse]:
     return search_service.search_strategies(campaign_type_code, keyword, db=db)
+
+
+@search_router.get("/themes")
+@inject
+def search_strategy_themes(
+    strategy_id: str,
+    db: Session = Depends(get_db_session),
+    user=Depends(get_permission_checker(required_permissions=[])),
+    search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
+) -> list[IdWithItem]:
+    return search_service.search_strategy_themes(strategy_id, db=db)

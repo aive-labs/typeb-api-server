@@ -91,3 +91,6 @@ class SearchService(BaseSearchService):
         self, campaign_type_code, search_keyword, db: Session
     ) -> list[StrategySearchResponse]:
         return self.strategy_repository.search_keyword(campaign_type_code, search_keyword, db)
+
+    def search_strategy_themes(self, strategy_id: str, db: Session) -> list[IdWithItem]:
+        return self.strategy_repository.search_strategy_themes_by_strategy_id(strategy_id, db)

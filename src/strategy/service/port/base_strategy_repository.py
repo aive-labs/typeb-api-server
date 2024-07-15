@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
+from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.search.routes.dto.strategy_search_response import StrategySearchResponse
 from src.strategy.domain.strategy import Strategy
 from src.strategy.domain.strategy_theme import StrategyTheme
@@ -61,4 +62,10 @@ class BaseStrategyRepository(ABC):
     def search_keyword(
         self, campaign_type_code, search_keyword, db: Session
     ) -> list[StrategySearchResponse]:
+        pass
+
+    @abstractmethod
+    def search_strategy_themes_by_strategy_id(
+        self, strategy_id: str, db: Session
+    ) -> list[IdWithItem]:
         pass

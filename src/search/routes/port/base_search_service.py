@@ -63,3 +63,7 @@ class BaseSearchService(ABC):
         self, campaign_type_code, search_keyword, db: Session
     ) -> list[StrategySearchResponse]:
         pass
+
+    @abstractmethod
+    def search_strategy_themes(self, strategy_id: str, db: Session) -> list[IdWithItem]:
+        pass
