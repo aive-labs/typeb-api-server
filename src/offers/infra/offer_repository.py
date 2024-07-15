@@ -219,36 +219,36 @@ class OfferRepository:
 
             return Offer.model_validate(entity)
 
-    def get_offer_by_id(self, offer_id) -> Offer:
+    def get_offer_by_id(self, coupon_no) -> Offer:
         with self.db() as db:
-            entity = db.query(OffersEntity).filter(OffersEntity.offer_id == offer_id).first()
+            entity = db.query(OffersEntity).filter(OffersEntity.coupon_no == coupon_no).first()
 
             if entity is None:
                 raise NotFoundException(detail={"message": "오퍼 정보를 찾지 못했습니다."})
 
             return Offer.from_entity(entity)
 
-    def save_duplicate_offer(self, offer_id, event_no, offer_update, now_kst_datetime, user):
-        with self.db() as db:
-            db.query(OfferDuplicateEntity).filter(
-                (OfferDuplicateEntity.event_no == event_no)
-                & (OfferDuplicateEntity.offer_id == offer_id)
-            ).delete()
+    # def save_duplicate_offer(self, offer_id, event_no, offer_update, now_kst_datetime, user):
+    #     with self.db() as db:
+    #         db.query(OfferDuplicateEntity).filter(
+    #             (OfferDuplicateEntity.event_no == event_no)
+    #             & (OfferDuplicateEntity.offer_id == offer_id)
+    #         ).delete()
 
-            dupl_apply_obj = [
-                OfferDuplicateEntity(
-                    offer_id=offer_id,
-                    event_no=event_no,
-                    incs_event_no=dupl_apply_event_no,
-                    created_by=user.username,
-                    updated_by=user.username,
-                    updated_at=now_kst_datetime,
-                )
-                for dupl_apply_event_no in offer_update.dupl_apply_event
-            ]
-            db.bulk_save_objects(dupl_apply_obj)
+    #         dupl_apply_obj = [
+    #             OfferDuplicateEntity(
+    #                 offer_id=offer_id,
+    #                 event_no=event_no,
+    #                 incs_event_no=dupl_apply_event_no,
+    #                 created_by=user.username,
+    #                 updated_by=user.username,
+    #                 updated_at=now_kst_datetime,
+    #             )
+    #             for dupl_apply_event_no in offer_update.dupl_apply_event
+    #         ]
+    #         db.bulk_save_objects(dupl_apply_obj)
 
-            db.commit()
+    #         db.commit()
 
     def save_new_coupon(self, cafe24_coupon_response: Cafe24CouponResponse, db: Session):
         for coupon in cafe24_coupon_response.coupons:

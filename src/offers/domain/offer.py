@@ -64,9 +64,5 @@ class Offer(BaseModel):
 
     @staticmethod
     def from_entity(entity: OffersEntity) -> "Offer":
-
-        offer_data = {
-            **{col.name: getattr(entity, col.name) for col in entity.__table__.columns}
-        }
-
+        offer_data = {**{col.name: getattr(entity, col.name) for col in entity.__table__.columns}}
         return Offer.model_validate(offer_data)

@@ -1,8 +1,17 @@
 from collections import defaultdict
+from datetime import datetime
+
+import yaml
 
 from src.campaign.core import generate_dm
 from src.campaign.core.message_group_controller import MessageGroupController
+from src.campaign.domain.campaign_messages import CampaignMessages, SetGroupMessages
 from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
+from src.campaign.routes.dto.response.campaign_response import (
+    CampaignReadBase,
+    CampaignSet,
+    CampaignSetGroup,
+)
 from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
 from src.common.service.port.base_common_repository import BaseCommonRepository
@@ -10,6 +19,7 @@ from src.common.utils.calculate_ratios import calculate_ratios
 from src.contents.service.port.base_contents_repository import BaseContentsRepository
 from src.core.exceptions.exceptions import PolicyException
 from src.offers.service.port.base_offer_repository import BaseOfferRepository
+from src.strategy.routes.dto.request.preview_message_create import PreviewMessageCreate
 from src.users.domain.user import User
 
 
@@ -26,125 +36,160 @@ class GenerateMessageService(GenerateMessageUsecase):
         self.common_repository = common_repository
         self.contents_repository = contents_repository
 
-    # def generate_preview_message(self, preview_message_create: PreviewMessageCreate, user: User):
+    def generate_preview_message(self, preview_message_create: PreviewMessageCreate, user: User):
 
-    #     recsys_model_id = preview_message_create.recsys_model_id  # recsys_model_id
-    #     audience_id = preview_message_create.theme_audience_set.audience_ids[
-    #         0
-    #     ]  # audience_id
-    #     coupon_nos_input = preview_message_create.theme_audience_set.coupon_nos  # coupon_no
-    #     if coupon_nos_input is None:
-    #         coupon_no = []
-    #     elif len(coupon_nos_input) == 0:
-    #         coupon_no = []
-    #     else:
-    #         coupon_no = coupon_nos_input[0]
+        with open("src/campaign/core/preview_data.yaml", encoding="utf-8") as file:
+            yaml_data = yaml.safe_load(file)
 
-    #     contents_tag = preview_message_create.theme_audience_set.contents_tags
-    #     if contents_tag is None:
-    #         contents_id = []
-    #         contents_name = []
-    #     elif len(contents_tag) == 0:
-    #         contents_id = []
-    #         contents_name = []
-    #     else:
-    #         contents_id = contents_tag[0]
-    #         contents_name = ""
+        campaign_base_obj = CampaignReadBase(**yaml_data["campaign_read"])
+        campaign_base_obj.campaign_name = "얼리버드 캠페인"
+        set_data = CampaignSet(**yaml_data["set_data"])
+        set_groups = [CampaignSetGroup(**info) for info in yaml_data["group_info"]]
 
-    #     contents_name
-    #     group_stats - item_ratio
-    #     group_stats - it_gb_ratio
+        group_info = [
+            item.dict()  # data변환 가정
+            for item in set_groups  ## CampaignSetGroup
+            if item.set_seq == set_data.set_seq
+        ]
 
-    #     # Define generation input
-    #     generation_input = {
-    #         "base_data": campaign_base_obj.dict(),
-    #         "set_data": set_data,
-    #         "group_info": group_info,
-    #     }
+        recsys_model_id = preview_message_create.recsys_model_id  # recsys_model_id
+        # audience_id = preview_message_create.theme_audience_set.audience_ids[0]  # audience_id
 
-    #     #rep_nm
-    #     #set_group_category
-    #     #media
-    #     #msg_type
-    #     # set_group_msg_seq로 obj 검색 간소화
-    #     msg_rtn = []
-    #     for key, values in message_data_dict.items():
+        # contents_tag = preview_message_create.theme_audience_set.contents_tags
+        # if not contents_tag:
+        #     contents_id = []
+        #     contents_name = []
+        # else:
+        #     contents_id = contents_tag[0]
+        #     contents_name = ""
 
-    #         generate_keys = set()
-    #         if key == "campaign":
-    #             pre_def_gen_keys = msg_controller.pre_define_campaign_msg_seq()
-    #             for _, val in enumerate(values):  # val is set_group_msg_seq
-    #                 msg_obj = msg_controller.get_msg_obj_from_seq(val)
-    #                 set_group_seq = msg_controller.get_set_group_seq(val)
-    #                 loop_count = 0
-    #                 while (loop_count == 0) or (generation_msg['msg_gen_key'] in pre_def_gen_keys) or (generation_msg['msg_gen_key'] in list(generate_keys)):
-    #                     generation_msg = generate_dm.generate_dm(set_group_seq, generation_input, send_date="0", msg_type="campaign", remind_duration="0")
-    #                     generate_keys.update(generation_msg['msg_gen_key'])
-    #                     if loop_count > 5:
-    #                         break
-    #                     loop_count += 1
-    #                 msg_obj.msg_gen_key = generation_msg["msg_gen_key"]
-    #                 msg_obj.msg_title = generation_msg["msg_title"]
-    #                 msg_obj.msg_body = (
-    #                     "(광고)[네파] " + generation_msg["msg_body"]
-    #                     if msg_obj.media.value == "tms"
-    #                     else generation_msg["msg_body"]
-    #                 )
-    #                 msg_obj.rec_explanation = generation_msg["rec_explanation"]
+        set_data.contents_names = "개인화"
 
-    #                 # 생성된 링크정보를 넣어준다.
-    #                 msg_obj.kakao_button_links = (
-    #                     generation_msg["kakao_button_link"]
-    #                     if len(generation_msg["kakao_button_link"]) > 0
-    #                     else None
-    #                 )
+        if recsys_model_id:
+            recsys_model_obj = self.common_repository.get_recsys_model(recsys_model_id)
+            recsys_model_name = recsys_model_obj.recsys_model_name
+        else:
+            recsys_model_name = None
 
-    #                 msg_rtn.append(msg_obj)
+        coupon_no_list_input = preview_message_create.theme_audience_set.coupon_no_list  # coupon_no
 
-    #         else:
-    #             set_group_seq = msg_controller.get_set_group_seq(values[0])
+        if not coupon_no_list_input:
+            coupon_no = None
+            offer_info_dict = {}
+        else:
+            coupon_no = coupon_no_list_input[0]
+            offer_data = self.offer_repository.get_offer_by_id(coupon_no)
+            offer_info_dict = {
+                "coupon_no": offer_data.coupon_no,
+                "coupon_name": offer_data.coupon_name,
+                "coupon_description": offer_data.coupon_description,
+                "benefit_type": offer_data.benefit_type,
+                "benefit_type_name": offer_data.benefit_type_name,
+            }
 
-    #             pre_def_gen_keys = msg_controller.pre_define_remind_msg_seq(
-    #                 key.split("_")[1]
-    #             )
-    #             while len(generate_keys) <= 0:  # 리마인드는 1개만 생성
-    #                 generation_msg = generate_dm.generate_dm(
-    #                     set_group_seq,
-    #                     generation_input,
-    #                     send_date="0",
-    #                     msg_type="remind",
-    #                     remind_duration="0",
-    #                 )
-    #                 # 이전에 생성한 메시지 키와 중복되지 않고, 새로 생성된 키에 없을때까지 메시지 생성
-    #                 if (generation_msg["msg_gen_key"] not in pre_def_gen_keys) and (
-    #                     generation_msg["msg_gen_key"] not in list(generate_keys)
-    #                 ):
-    #                     generate_keys.update(generation_msg["msg_gen_key"])
-    #             for _, val in enumerate(values):  # val is set_group_msg_seq
-    #                 msg_obj = msg_controller.get_msg_obj_from_seq(val)
-    #                 msg_obj.msg_gen_key = generation_msg["msg_gen_key"]
-    #                 msg_obj.msg_title = generation_msg["msg_title"]
-    #                 msg_obj.msg_body = (
-    #                     "(광고)[네파] " + generation_msg["msg_body"]
-    #                     if msg_obj.media.value == "tms"
-    #                     else generation_msg["msg_body"]
-    #                 )
-    #                 msg_obj.rec_explanation = (
-    #                     generation_msg["rec_explanation"]
-    #                     if len(generation_msg["rec_explanation"]) > 0
-    #                     else None
-    #                 )
+        set_data.rep_nm_list = ""
 
-    #                 # 생성된 링크정보를 넣어준다.
-    #                 msg_obj.kakao_button_links = (
-    #                     generation_msg["kakao_button_link"]
-    #                     if len(generation_msg["kakao_button_link"]) > 0
-    #                     else None
-    #                 )
+        set_data_dict = {
+            "set_seq": set_data.set_seq,
+            "set_sort_num": set_data.set_sort_num,
+            "is_group_added": set_data.is_group_added,
+            "campaign_theme_id": set_data.campaign_theme_id,
+            "campaign_theme_name": set_data.campaign_theme_name,
+            "recsys_model_id": set_data.recsys_model_id,
+            "recsys_model_name": recsys_model_name,
+            "audience_id": set_data.audience_id,
+            "audience_name": set_data.audience_name,
+            "audience_count": set_data.audience_count,
+            "audience_portion": set_data.audience_portion,
+            "response_rate": set_data.response_rate,
+            "rep_nm_list": set_data.rep_nm_list,
+            "recipient_count": set_data.recipient_count,
+            "is_confirmed": set_data.is_confirmed,
+            "is_message_confirmed": set_data.is_message_confirmed,
+            "media_cost": (25 if set_data.media_cost is None else set_data.media_cost),
+            "offer_info": offer_info_dict,
+        }
 
-    #                 msg_rtn.append(msg_obj)
+        # Define generation input
+        generation_input = {
+            "base_data": campaign_base_obj.dict(),
+            "set_data": set_data_dict,
+            "group_info": group_info,
+        }
 
-    #     return msg_rtn
+        # rep_nm
+        # set_group_category
+        # media
+        # msg_type
+        # set_group_msg_seq로 obj 검색 간소화
+
+        message_data = []
+        phone_callback = "02-0000-0000"  # 매장 번호 또는 대표번호
+        for msg in yaml_data["messages"]:
+            msg["created_at"] = datetime.fromisoformat(msg["created_at"])
+            msg["updated_at"] = datetime.fromisoformat(msg["updated_at"])
+            set_group_message = SetGroupMessages(**msg)
+            message_md = CampaignMessages(set_group_message=set_group_message)
+            message_data.append(message_md)
+
+        msg_controller = MessageGroupController(phone_callback, campaign_base_obj, message_data)
+
+        # defaultdict 생성
+        message_data_dict = defaultdict(list)
+        set_group_msg_seqs = [md.set_group_message.set_group_msg_seq for md in message_data]
+
+        for msg_seq in set_group_msg_seqs:
+            message_data_dict["campaign"].append(msg_seq)
+
+        msg_rtn = []
+        for key, values in message_data_dict.items():
+
+            generate_keys = set()
+            if key == "campaign":
+                pre_def_gen_keys = msg_controller.pre_define_campaign_msg_seq()
+                for _, val in enumerate(values):  # val is set_group_msg_seq
+                    msg_obj = msg_controller.get_msg_obj_from_seq(val)
+                    set_group_seq = msg_controller.get_set_group_seq(val)
+                    loop_count = 0
+                    while (
+                        (loop_count == 0)
+                        or (generation_msg["msg_gen_key"] in pre_def_gen_keys)
+                        or (generation_msg["msg_gen_key"] in list(generate_keys))
+                    ):
+                        generation_msg = generate_dm.generate_dm(
+                            set_group_seq,
+                            generation_input,
+                            send_date="0",
+                            msg_type="campaign",
+                            remind_duration="0",
+                        )
+                        generate_keys.update(generation_msg["msg_gen_key"])
+                        if loop_count > 5:
+                            break
+                        loop_count += 1
+                    msg_obj.msg_gen_key = generation_msg["msg_gen_key"]
+                    msg_obj.msg_title = generation_msg["msg_title"]
+                    msg_obj.msg_body = (
+                        "(광고)[네파] " + generation_msg["msg_body"]
+                        if msg_obj.media.value == "tms"
+                        else generation_msg["msg_body"]
+                    )
+                    msg_obj.rec_explanation = generation_msg["rec_explanation"]
+
+                    # 생성된 링크정보를 넣어준다.
+                    msg_obj.kakao_button_links = (
+                        generation_msg["kakao_button_link"]
+                        if len(generation_msg["kakao_button_link"]) > 0
+                        else None
+                    )
+
+                    msg_rtn.append(msg_obj)
+
+        res = {}
+        res["lms"] = msg_rtn[0]
+        res["kakao_image_general"] = msg_rtn[1]
+
+        return res
 
     def generate_message(self, message_generate: MsgGenerationReq, user: User):
         """메세지 생성"""
@@ -177,27 +222,12 @@ class GenerateMessageService(GenerateMessageUsecase):
 
         if offer_data:
             offer_info_dict = {
-                "offer_id": offer_data.offer_id,
-                "offer_name": offer_data.coupon_name,
-                "event_remark": offer_data.event_remark,
-                "offer_type_code": offer_data.offer_type_code,
-                "offer_type_name": offer_data.offer_type_name,
-                "offer_style_conditions": offer_data.offer_style_conditions,
-                "offer_style_exclusion_conditions": offer_data.offer_style_exclusion_conditions,
-                "offer_channel_conditions": offer_data.offer_channel_conditions,
-                "offer_channel_exclusion_conditions": offer_data.offer_channel_exclusion_conditions,
-                "used_count": offer_data.used_count,
-                "apply_pcs": offer_data.apply_pcs,
-                "event_str_dt": offer_data.event_str_dt,
-                "event_end_dt": offer_data.event_end_dt,
+                "coupon_no": offer_data.coupon_no,
+                "coupon_name": offer_data.coupon_name,
+                "coupon_description": offer_data.coupon_description,
+                "benefit_type": offer_data.benefit_type,
+                "benefit_type_name": offer_data.benefit_type_name,
             }
-
-            offer_amount = self.offer_repository.get_offer_detail_for_msggen(offer_data.offer_key)
-            offer_info_dict["offer_amount"] = (
-                offer_amount.apply_offer_amount if offer_amount else None
-            )
-            offer_info_dict["offer_rate"] = offer_amount.apply_offer_rate if offer_amount else None
-
         else:
             offer_info_dict = {}
 
@@ -288,6 +318,9 @@ class GenerateMessageService(GenerateMessageUsecase):
                 else set_group_msg.msg_send_type
             )
             message_data_dict[send_type].append(set_group_msg.set_group_msg_seq)
+
+        print(generation_input)
+        raise Exception("error")
 
         # set_group_msg_seq로 obj 검색 간소화
         msg_rtn = []
