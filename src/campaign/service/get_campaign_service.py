@@ -1,13 +1,6 @@
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
-from src.campaign.infra.sqlalchemy_query.get_campaign_set_groups import (
-    get_campaign_set_groups,
-)
-from src.campaign.infra.sqlalchemy_query.get_campaign_sets import get_campaign_sets
-from src.campaign.routes.dto.response.campaign_remind_response import (
-    CampaignRemindResponse,
-)
 from src.campaign.routes.dto.response.campaign_timeline_response import (
     CampaignTimelineResponse,
     StatusUserProfile,
@@ -50,22 +43,22 @@ class GetCampaignService(GetCampaignUseCase):
         ]
 
     def get_campaign_detail(self, campaign_id, user, db: Session):
-        campaign = self.campaign_repository.get_campaign_detail(campaign_id, user, db)
-        campaign_reminds = self.campaign_repository.get_campaign_remind(campaign_id, db)
+        # campaign = self.campaign_repository.get_campaign_detail(campaign_id, user, db)
+        # campaign_reminds = self.campaign_repository.get_campaign_remind(campaign_id, db)
 
-        remind_list = [
-            CampaignRemindResponse(
-                remind_step=remind.remind_step,
-                remind_media=remind.remind_media,
-                remind_duration=remind.remind_duration,
-            )
-            for remind in campaign_reminds
-        ]
+        # remind_list = [
+        #     CampaignRemindResponse(
+        #         remind_step=remind.remind_step,
+        #         remind_media=remind.remind_media,
+        #         remind_duration=remind.remind_duration,
+        #     )
+        #     for remind in campaign_reminds
+        # ]
 
-        sets = [row._asdict() for row in get_campaign_sets(campaign_id=campaign_id, db=db)]
-        set_groups = [
-            row._asdict() for row in get_campaign_set_groups(campaign_id=campaign_id, db=db)
-        ]
+        # sets = [row._asdict() for row in get_campaign_sets(campaign_id=campaign_id, db=db)]
+        # set_groups = [
+        #     row._asdict() for row in get_campaign_set_groups(campaign_id=campaign_id, db=db)
+        # ]
 
         # # rep_nm_list & contents_names
         # if campaign.campaign_type_code == CampaignType.expert.value:

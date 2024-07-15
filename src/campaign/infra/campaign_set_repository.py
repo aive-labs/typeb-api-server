@@ -63,7 +63,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             raise ValidationException(
                 detail={"message": "expert 캠페인에 선택된 전략테마가 존재하지 않습니다."}
             )
-        recommend_model_ids = self.get_recommend_models_by_strategy_id(selected_themes, db)
+        # recommend_model_ids = self.get_recommend_models_by_strategy_id(selected_themes, db)
 
         #### Expert 캠페인, 자동 분배
         campaign_set_merged, set_cus_items_df = self.create_campaign_set_with_expert(
@@ -147,7 +147,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         #         delivery_cost += get_delivery_cost(db, shop_send_yn, msg_delivery_vendor, media, msg_type)
         #     limit_count = math.floor(budget / delivery_cost)
         # else:
-        limit_count = None
+        # limit_count = None
 
         campaign_msg_type = initial_msg_type[media]
 
