@@ -114,13 +114,3 @@ class CreateStrategyService(CreateStrategyUseCase):
                     "message": "신상품 추천 모델은 전략 내 단독으로만 사용 가능합니다. (다른 추천 모델 사용 불가)",
                 },
             )
-
-    def _check_single_offer_per_custom_theme(self, audience_type_code, offer_id_list):
-        pass
-        # if audience_type_code == "c" and len(offer_id_list) > 1:
-        #     raise ValidationException(
-        #         detail={
-        #             "code": "strategy/create",
-        #             "message": "커스텀 전략의 테마 별 오퍼는 1개까지 사용가능합니다.",
-        #         },
-        #     )
