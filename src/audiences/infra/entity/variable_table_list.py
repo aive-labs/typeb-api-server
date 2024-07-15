@@ -61,7 +61,7 @@ class CustomerInfoStatusEntity(Base):
     near_promotion_cnt = Column(String, nullable=True)
     promoted_customer = Column(String, nullable=True)
 
-    purchase_cnt = Column(String, nullable=True)
+    purchase_cnt = Column(Integer, nullable=True)
     birthday_7_left = Column(String, nullable=True)
     first_purchase = Column(String, nullable=True)
 
