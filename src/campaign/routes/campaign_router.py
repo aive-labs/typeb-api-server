@@ -8,8 +8,11 @@ from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
 from src.campaign.routes.dto.response.campaign_timeline_response import (
     CampaignTimelineResponse,
 )
+from src.campaign.routes.dto.response.exclusion_customer_detail import (
+    ExcludeCustomerDetail,
+)
 from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUseCase
-from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase  ##
+from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase
 from src.campaign.routes.port.get_campaign_usecase import GetCampaignUseCase
 from src.core.container import Container
 from src.core.database import get_db_session
@@ -79,3 +82,16 @@ def generate_message(
     ),
 ):
     return generate_message_service.generate_message(message_generate, user)
+
+
+@campaign_router.get("/campaigns/excluded-custs/{campaign_id}")
+@inject
+def get_excluded_customer(
+    campaign_id: str,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    get_campaign_service: GetCampaignUseCase = Depends(
+        dependency=Provide[Container.get_campaign_service]
+    ),
+) -> ExcludeCustomerDetail:
+    return get_campaign_service.get_exclude_customer(campaign_id, user, db=db)

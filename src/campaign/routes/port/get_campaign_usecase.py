@@ -9,6 +9,9 @@ from src.campaign.routes.dto.response.campaign_basic_response import (
 from src.campaign.routes.dto.response.campaign_timeline_response import (
     CampaignTimelineResponse,
 )
+from src.campaign.routes.dto.response.exclusion_customer_detail import (
+    ExcludeCustomerDetail,
+)
 from src.users.domain.user import User
 
 
@@ -23,4 +26,8 @@ class GetCampaignUseCase(ABC):
 
     @abstractmethod
     def get_campaign_detail(self, campaign_id, user, db: Session) -> CampaignBasicResponse:
+        pass
+
+    @abstractmethod
+    def get_exclude_customer(self, campaign_id, user: User, db: Session) -> ExcludeCustomerDetail:
         pass

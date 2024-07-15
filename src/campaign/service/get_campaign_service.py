@@ -5,11 +5,26 @@ from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
 from src.campaign.enums.campaign_type import CampaignType
+from src.campaign.infra.sqlalchemy_query.get_audience_rank_between import (
+    get_audience_rank_between,
+)
 from src.campaign.infra.sqlalchemy_query.get_campaign_set_groups import (
     get_campaign_set_groups,
 )
 from src.campaign.infra.sqlalchemy_query.get_campaign_sets import get_campaign_sets
+from src.campaign.infra.sqlalchemy_query.get_customer_by_audience_id import (
+    get_customers_by_audience_id,
+)
+from src.campaign.infra.sqlalchemy_query.get_customer_by_excluded_audience_id import (
+    get_customer_by_excluded_audience_ids,
+)
+from src.campaign.infra.sqlalchemy_query.get_excluded_customer_list_for_calculation import (
+    get_excluded_customer_list_for_calculation,
+)
 from src.campaign.infra.sqlalchemy_query.get_set_rep_nm_list import get_set_rep_nm_list
+from src.campaign.infra.sqlalchemy_query.get_strategy_theme_audience_mapping import (
+    get_strategy_theme_audience_mapping_query,
+)
 from src.campaign.routes.dto.response.campaign_basic_response import (
     CampaignBasicResponse,
     RecipientSummary,
@@ -20,13 +35,21 @@ from src.campaign.routes.dto.response.campaign_timeline_response import (
     CampaignTimelineResponse,
     StatusUserProfile,
 )
+from src.campaign.routes.dto.response.exclusion_customer_detail import (
+    ExcludeCustomerDetail,
+    ExcludeCustomerDetailStats,
+)
 from src.campaign.routes.port.get_campaign_usecase import GetCampaignUseCase
+from src.campaign.service.campaign_manager import CampaignManager
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
 from src.campaign.service.port.base_campaign_set_repository import (
     BaseCampaignSetRepository,
 )
 from src.campaign.utils.utils import set_summary_sententce
+from src.common.enums.campaign_media import CampaignMedia
 from src.common.utils.data_converter import DataConverter
+from src.core.exceptions.exceptions import PolicyException
+from src.message_template.enums.message_type import MessageType
 from src.strategy.enums.recommend_model import RecommendModels
 from src.users.domain.user import User
 
@@ -334,3 +357,196 @@ class GetCampaignService(GetCampaignUseCase):
             result_dict[k] = total_list
 
         return result_dict
+
+    def get_exclude_customer(
+        self, campaign_id: str, user: User, db: Session
+    ) -> ExcludeCustomerDetail:
+        campaign = self.campaign_repository.get_campaign_detail(campaign_id, user, db)
+        shop_send_yn = campaign.shop_send_yn
+
+        campaign_manager = CampaignManager(db, shop_send_yn, user.user_id)
+
+        media = "tms" if "tms" in campaign.medias.split(",") else campaign.medias.split(",")[-1]
+
+        campaign_type_code = campaign.campaign_type_code
+        selected_themes = campaign.strategy_theme_ids
+        campaigns_exc = campaign.campaigns_exc
+        audiences_exc = campaign.audiences_exc
+
+        initial_msg_type = {
+            CampaignMedia.KAKAO_ALIM_TALK.value: MessageType.KAKAO_ALIM_TEXT.value,
+            CampaignMedia.KAKAO_FRIEND_TALK.value: MessageType.KAKAO_IMAGE_GENERAL.value,
+            CampaignMedia.TEXT_MESSAGE.value: MessageType.LMS.value,
+        }
+
+        budget_list = [(media, initial_msg_type[media])]
+        remind_data = self.campaign_repository.get_campaign_remind(campaign_id, db)
+        for remind in remind_data:
+            if remind.remind_media:
+                budget_list.append((remind.remind_media, initial_msg_type[remind.remind_media]))
+
+        limit_count = None
+
+        # 테마정보
+        if campaign_type_code == CampaignType.expert.value:
+            themes_query = get_strategy_theme_audience_mapping_query(selected_themes, db)
+            themes_df = DataConverter.convert_query_to_df(themes_query)
+        else:
+            campaign_manager._load_campaign_object(campaign.model_dump())
+            themes_df = campaign_manager.campaign_set_df
+
+        audience_ids = list(set(themes_df["audience_id"]))
+        sets_data = get_campaign_sets(campaign_id, db)
+        sets_df = DataConverter.convert_query_to_df(sets_data)
+
+        cust_audiences = get_customers_by_audience_id(audience_ids, db)
+        cust_audiences_df = DataConverter.convert_query_to_df(cust_audiences)
+        if campaign_type_code == CampaignType.expert.value:
+            audience_rank_between = get_audience_rank_between(audience_ids, db)
+            audience_rank_between_df = DataConverter.convert_query_to_df(audience_rank_between)
+            themes_df = pd.merge(themes_df, audience_rank_between_df, on="audience_id", how="inner")
+            themes_df = themes_df.loc[themes_df.groupby(["audience_id"])["rank"].idxmin()]
+            themes_df["set_sort_num"] = range(1, len(themes_df) + 1)
+
+        campaign_set_df_merged = cust_audiences_df.merge(themes_df, on="audience_id", how="inner")
+        campaign_set_df = campaign_set_df_merged.loc[
+            campaign_set_df_merged.groupby(["cus_cd"])["set_sort_num"].idxmin()
+        ]
+        campaign_set_df = pd.merge(
+            campaign_set_df,
+            sets_df[["audience_id"]].drop_duplicates(),
+            on=["audience_id"],
+            how="inner",
+        )
+        del campaign_set_df_merged
+
+        if len(campaign_set_df) == 0:
+            raise PolicyException(
+                detail={
+                    "code": "campaign/excluded-custs/get",
+                    "message": "적합한 고객이 존재하지 않습니다.",
+                },
+            )
+
+        # 대상 고객
+        org_campaign_set_df = campaign_set_df[["cus_cd"]].drop_duplicates()
+        tot_custs = len(org_campaign_set_df)
+        summary_df = pd.DataFrame()
+
+        # 제외 캠페인 고객 필터
+        if campaigns_exc:
+            exc_campaign_cust = get_excluded_customer_list_for_calculation(campaigns_exc, db)
+            exc_campaign_cust_df_raw = DataConverter.convert_query_to_df(exc_campaign_cust).rename(
+                columns={"exc_cus_cd": "cus_cd"}
+            )
+            exc_campaign_cust_df = pd.merge(
+                exc_campaign_cust_df_raw, org_campaign_set_df, on="cus_cd", how="inner"
+            )
+            exclusion_campaign_df = exc_campaign_cust_df.groupby(
+                ["campaign_id", "campaign_name"]
+            ).size()
+
+            # 제외 캠페인 전처리
+            camp_id_with_name = exc_campaign_cust_df_raw[
+                ["campaign_id", "campaign_name"]
+            ].drop_duplicates()
+            exclusion_campaign_df = (
+                exclusion_campaign_df.reindex(  # pyright: ignore [reportCallIssue]
+                    camp_id_with_name, fill_value=0
+                ).reset_index(name="count")
+            )
+            exclusion_campaign_df["div"] = "캠페인"
+            exclusion_campaign_df.columns = ["id", "name", "count", "div"]
+            exclusion_campaign_df = exclusion_campaign_df[["div", "id", "name", "count"]]
+            summary_df = pd.concat([summary_df, exclusion_campaign_df])
+
+            ## 중복 제거
+            exc_cus_df = exc_campaign_cust_df[["cus_cd"]].drop_duplicates()
+            campaign_set_df = pd.merge(
+                campaign_set_df, exc_cus_df, on="cus_cd", how="left", indicator=True
+            )
+            campaign_set_df = campaign_set_df[campaign_set_df["_merge"] == "left_only"].drop(
+                columns=["_merge"]
+            )
+        else:
+            exclusion_campaign_df = pd.DataFrame(
+                {"div": ["캠페인"], "id": [""], "name": [""], "count": [0]}
+            )
+
+        if audiences_exc:
+            exc_audience_cust = get_customer_by_excluded_audience_ids(audiences_exc, db)
+            exc_audience_cust_df_raw = DataConverter.convert_query_to_df(exc_audience_cust).rename(
+                columns={"exc_cus_cd": "cus_cd"}
+            )
+            exc_audience_cust_df = pd.merge(
+                exc_audience_cust_df_raw, org_campaign_set_df, on="cus_cd", how="inner"
+            )
+            exclusion_audience_df = exc_audience_cust_df.groupby(
+                ["audience_id", "audience_name"]
+            ).size()
+
+            # 제외 오디언스 전처리
+            aud_id_with_name = exc_audience_cust_df_raw[
+                ["audience_id", "audience_name"]
+            ].drop_duplicates()
+            exclusion_audience_df = (
+                exclusion_audience_df.reindex(  # pyright: ignore [reportCallIssue]
+                    aud_id_with_name, fill_value=0
+                ).reset_index(name="count")
+            )
+            exclusion_audience_df["div"] = "타겟 오디언스"
+            exclusion_audience_df.columns = ["id", "name", "count", "div"]
+            exclusion_audience_df = exclusion_audience_df[["div", "id", "name", "count"]]
+            summary_df = pd.concat([summary_df, exclusion_audience_df])
+
+            ## 중복 제거
+            exc_aud_df = exc_audience_cust_df[["cus_cd"]].drop_duplicates()
+            campaign_set_df = pd.merge(
+                campaign_set_df, exc_aud_df, on="cus_cd", how="left", indicator=True
+            )
+            campaign_set_df = campaign_set_df[campaign_set_df["_merge"] == "left_only"].drop(
+                columns=["_merge"]
+            )
+        else:
+            exclusion_audience_df = pd.DataFrame(
+                {"div": ["타겟 오디언스"], "id": [""], "name": [""], "count": [0]}
+            )
+
+        ## 예산 적용, 커스텀에서는 고객을 가져올때 ltv가 없으므로 포함
+        cust_after_exc_cnt = len(campaign_set_df)  # 기본 제외 후 고객수
+        if isinstance(limit_count, int):
+            budget_exc = cust_after_exc_cnt - limit_count if cust_after_exc_cnt > limit_count else 0
+            exclusion_budget_limit_df = pd.DataFrame(
+                {"div": ["예산 제한"], "id": [""], "name": [""], "count": [budget_exc]}
+            )
+            summary_df = pd.concat([summary_df, exclusion_budget_limit_df])
+            cust_after_exc_cnt = (
+                limit_count if cust_after_exc_cnt > limit_count else cust_after_exc_cnt
+            )
+
+        total_exc_cnt = tot_custs - cust_after_exc_cnt
+        total_exc_df = pd.DataFrame(
+            {
+                "div": ["제외 고객 합산(중복 제외)"],
+                "id": [""],
+                "name": [""],
+                "count": [total_exc_cnt],
+            }
+        )
+        summary_df = pd.concat([summary_df, total_exc_df]).reset_index(drop=True)
+        summary_dict = summary_df.to_dict("records")  # pyright: ignore [reportArgumentType]
+
+        message = f"전체 타겟고객(제외조건 미반영) {tot_custs:,}명 중, 제외조건 적용 후 {total_exc_cnt:,}명의 고객이 제외되었습니다. \n{tot_custs - total_exc_cnt:,}명의 고객이 캠페인 대상으로 선정되었습니다."
+
+        return ExcludeCustomerDetail(
+            excl_message=message,
+            excl_detail_stats=[
+                ExcludeCustomerDetailStats(
+                    div=summary["div"],
+                    id=summary["id"],
+                    name=summary["name"],
+                    count=summary["count"],
+                )
+                for summary in summary_dict
+            ],
+        )
