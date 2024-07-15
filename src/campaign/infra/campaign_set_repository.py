@@ -618,6 +618,9 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             .scalar()
         )
 
+        if total_cus == 0:
+            return (0, 0, 0)
+
         recipient_portion = round(set_cus_count / total_cus, 3)
 
         return recipient_portion, total_cus, set_cus_count

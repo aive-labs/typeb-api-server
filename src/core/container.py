@@ -361,11 +361,13 @@ class Container(containers.DeclarativeContainer):
         ContentsRepository, contents_sqlalchemy=contents_sqlalchemy
     )
 
-    get_campaign_service = providers.Singleton(
-        provides=GetCampaignService, campaign_repository=campaign_repository
-    )
-
     campaign_set_repository = providers.Singleton(provides=CampaignSetRepository)
+
+    get_campaign_service = providers.Singleton(
+        provides=GetCampaignService,
+        campaign_repository=campaign_repository,
+        campaign_set_repository=campaign_set_repository,
+    )
 
     create_campaign_service = providers.Singleton(
         provides=CreateCampaignService,

@@ -3,6 +3,9 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
+from src.campaign.routes.dto.response.campaign_basic_response import (
+    CampaignBasicResponse,
+)
 from src.campaign.routes.dto.response.campaign_timeline_response import (
     CampaignTimelineResponse,
 )
@@ -11,7 +14,7 @@ from src.users.domain.user import User
 
 class GetCampaignUseCase(ABC):
     @abstractmethod
-    def get_campaigns(self, start_dgate: str, end_date: str, user: User) -> list[Campaign]:
+    def get_campaigns(self, start_date: str, end_date: str, user: User) -> list[Campaign]:
         pass
 
     @abstractmethod
@@ -19,5 +22,5 @@ class GetCampaignUseCase(ABC):
         pass
 
     @abstractmethod
-    def get_campaign_detail(self, campaign_id, user, db: Session):
+    def get_campaign_detail(self, campaign_id, user, db: Session) -> CampaignBasicResponse:
         pass
