@@ -330,7 +330,7 @@ class CampaignSqlAlchemy:
                 remind_step=remind.remind_step,
                 remind_date=remind.remind_date,
                 remind_duration=remind.remind_duration,
-                created_by=model.created_by_name,
+                created_by=model.created_by,
                 updated_by=model.updated_by,
             )
             for remind in model.remind_list
@@ -373,7 +373,7 @@ class CampaignSqlAlchemy:
             owned_by_dept_abb_name=model.owned_by_dept_abb_name,
             created_by_name=model.created_by_name,
             created_by=model.created_by,
-            updated_by=model.created_by_name,
+            updated_by=model.updated_by,
             remind_list=remind_entities,
         )
 
@@ -382,6 +382,8 @@ class CampaignSqlAlchemy:
 
         print("entity")
         print(entity.datetosend)
+        print(entity.created_at)
+        print(entity.updated_at)
 
         return Campaign.model_validate(entity)
 

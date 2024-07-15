@@ -5,10 +5,10 @@ from pydantic import BaseModel
 
 
 class CampaignRemind(BaseModel):
-    remind_seq: Optional[int]
-    campaign_id: str
+    remind_seq: int | None = None
+    campaign_id: str | None = None
     send_type_code: str
-    remind_media: str
+    remind_media: str | None = None
     remind_step: int
     remind_date: str
     remind_duration: int

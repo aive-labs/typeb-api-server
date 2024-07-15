@@ -5,6 +5,7 @@ import pandas as pd
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
+from src.campaign.domain.campaign_remind import CampaignRemind
 from src.campaign.domain.campaign_timeline import CampaignTimeline
 from src.campaign.enums.campagin_status import CampaignStatus
 from src.campaign.enums.campaign_progress import CampaignProgress
@@ -17,7 +18,6 @@ from src.campaign.infra.sqlalchemy_query.get_campaign_set_groups import (
 from src.campaign.infra.sqlalchemy_query.get_campaign_sets import get_campaign_sets
 from src.campaign.infra.sqlalchemy_query.get_set_rep_nm_list import get_set_rep_nm_list
 from src.campaign.routes.dto.request.campaign_create import CampaignCreate
-from src.campaign.routes.dto.request.campaign_remind import CampaignRemind
 from src.campaign.routes.dto.request.campaign_remind_create import CampaignRemindCreate
 from src.campaign.routes.dto.response.campaign_basic_response import (
     CampaignBasicResponse,
@@ -295,7 +295,7 @@ class CreateCampaignService(CreateCampaignUseCase):
 
             campaign_remind_list.append(
                 CampaignRemind(
-                    send_type_code=send_type_code,
+                    send_type_code=send_type_code.value,
                     remind_step=remind_create.remind_step,
                     remind_duration=remind_create.remind_duration,
                     remind_media=(

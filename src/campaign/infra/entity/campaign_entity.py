@@ -6,6 +6,7 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     String,
+    func,
     text,
 )
 from sqlalchemy.orm import relationship
@@ -63,10 +64,10 @@ class CampaignEntity(Base):
     owned_by_dept = Column(String, nullable=False)
     owned_by_dept_name = Column(String, nullable=False)  # 생성 부서명
     owned_by_dept_abb_name = Column(String, nullable=False)  # 생성 부서명2
-    created_at = Column(DateTime(timezone=True))
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False)
     created_by_name = Column(String, nullable=False)  # 생성 유저명
-    updated_at = Column(DateTime(timezone=True))
+    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
     updated_by = Column(String, nullable=False)
 
     # 1:n relationship

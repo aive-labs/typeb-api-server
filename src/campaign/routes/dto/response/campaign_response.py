@@ -3,6 +3,7 @@ from typing import List, Literal
 
 from pydantic import BaseModel, Field
 
+from src.campaign.domain.campaign_remind import CampaignRemind
 from src.campaign.enums.campagin_status import (
     CampaignStatusEnum,
     CampaignStatusGroupEnum,
@@ -12,7 +13,6 @@ from src.campaign.enums.campaign_type import CampaignTypeEnum
 from src.campaign.enums.repeat_type import RepeatTypeEnum
 from src.campaign.enums.send_type import SendTypeEnum
 from src.campaign.enums.set_group_category import SetGroupCategoryEnum
-from src.campaign.routes.dto.request.campaign_remind import CampaignRemind
 from src.common.enums.campaign_media import CampaignMedia
 from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
 from src.common.utils.date_utils import localtime_converter
