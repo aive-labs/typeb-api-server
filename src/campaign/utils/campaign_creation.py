@@ -13,22 +13,18 @@ def add_group_type(set_df: pd.DataFrame):
     Case4) 커스텀 캠페인 (recsys_model_id not in above)
     """
     personalized_model_ids = [
-        item.value for item in RecommendModels if item.personalized and item.value not in [6, 9]
+        item.value for item in RecommendModels if item.personalized and item.value not in [15]
     ]
-    age_model_ids = [RecommendModels.age_top.value]
+    age_model_ids = [RecommendModels.BEST_BY_AGE.value]
     top_model_ids = [
-        item.value for item in RecommendModels if not item.personalized and item.value not in [6, 9]
+        item.value for item in RecommendModels if not item.personalized and item.value not in [15]
     ]
-    contents_model_ids = [RecommendModels.contents_only_personalized.value]
 
     cond = [
         set_df["recsys_model_id"].isin(personalized_model_ids),
         set_df["recsys_model_id"].isin(age_model_ids),
         set_df["recsys_model_id"].isin(top_model_ids),
-        set_df["recsys_model_id"].isin(contents_model_ids),
-        ~set_df["recsys_model_id"].isin(
-            personalized_model_ids + age_model_ids + top_model_ids + contents_model_ids
-        ),
+        ~set_df["recsys_model_id"].isin(personalized_model_ids + age_model_ids + top_model_ids),
     ]
 
     choice = [

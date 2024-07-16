@@ -137,7 +137,7 @@ class UpdateStrategyService(UpdateStrategyUseCase):
 
     def _check_exclusive_new_collection_model(self, recommend_model_list):
         """Checks if the new collection recommendation model is used exclusively and raises an exception if not."""
-        if (RecommendModels.new_collection_rec.value in recommend_model_list) and len(
+        if (RecommendModels.NEW_COLLECTION.value in recommend_model_list) and len(
             set(recommend_model_list)
         ) > 1:
             raise ValidationException(

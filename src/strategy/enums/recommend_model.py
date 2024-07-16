@@ -2,17 +2,15 @@ from src.common.enums.str_enum import StrEnum
 
 
 class RecommendModels(StrEnum):
-    segement_relation_top5 = (1, 1, "세그먼트 연관 추천", False)
-    monthly_bundle_top5 = (2, 2, "월별 번들 추천", False)
-    consecutive_items_top5 = (3, 3, "1,2차 아이템 추천", False)
-    purpose_top5 = (4, 4, "Purpose 추천", False)
-    new_collection_rec = (8, 8, "신상품 추천", True)
-    age_top = (9, 9, "연령대별 TOP 추천", True)
-    contents_only_personalized = (6, 6, "contents_only", True)
-    segement_relation_personalized = (10, 1, "세그먼트 연관 추천(콘텐츠개인화)", True)
-    monthly_bundle_personalized = (11, 2, "월별 번들 추천(콘텐츠개인화)", True)
-    consecutive_items_personalized = (12, 3, "1,2차 아이템 추천(콘텐츠개인화)", True)
-    purpose_personalized = (13, 4, "Purpose 추천(콘텐츠개인화)", True)
+    BIRTHDAY_DISCOUNT = (11, 11, "생일자 할인 쿠폰 제공", False)
+    BEST_BY_SEX = (12, 12, "성별 Best 상품 추천", False)
+    FIRST_PURCHASE_THANKS = (13, 13, "첫구매 Best 상품 추천", False)
+    STEADY_SELLER = (14, 14, "스테디셀러 상품 추천", False)
+    BEST_BY_AGE = (15, 15, "연령대별 Best 상품 추천", False)
+    NEW_COLLECTION = (16, 16, "신상품 추천", False)
+    CART_ITEMS = (17, 17, "장바구니 상품 추천", False)
+    WISHLIST_ITEMS = (18, 18, "위시리스트 상품 추천", False)
+    CROSS_PURCHASE = (19, 19, "교차구매 상품 추천", False)
 
     mstr_rec_id: int
     description: str

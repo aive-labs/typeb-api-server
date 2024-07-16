@@ -601,17 +601,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
 
     def get_set_portion(self, campaign_id: str, db: Session) -> tuple:
 
-        total_cus = (
-            db.query(func.count(CustomerMasterEntity.cus_cd))
-            .filter(
-                CustomerMasterEntity.br_div == "NPC",
-                CustomerMasterEntity.cust_status == "1",
-                CustomerMasterEntity.cust_grade1 != "R",
-                CustomerMasterEntity.cust_name.notin_(["휴면", "탈퇴"]),
-            )
-            .scalar()
-        )
-
+        total_cus = db.query(func.count(CustomerMasterEntity.cus_cd)).scalar()
         set_cus_count = (
             db.query(func.count(CampaignSetRecipientsEntity.cus_cd))
             .filter(CampaignSetRecipientsEntity.campaign_id == campaign_id)

@@ -191,7 +191,7 @@ class GetCampaignService(GetCampaignUseCase):
         personalized_recsys_model_id = [
             i["_value_"] for i in recsys_model_enum_dict if i["personalized"] is True
         ]
-        personalized_recsys_model_id.remove(RecommendModels.new_collection_rec.value)
+        personalized_recsys_model_id.remove(RecommendModels.NEW_COLLECTION.value)
         not_personalized_set = []
 
         for idx, row in enumerate(sets):
