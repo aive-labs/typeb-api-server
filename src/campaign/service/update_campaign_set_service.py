@@ -144,10 +144,6 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
             else:
                 item["update_status"] = "add"
 
-        if campaign_type_code != CampaignType.basic.value:
-            recsys_model_ids = get_recommend_model_ids_by_strategy_themes(selected_themes, db)
-            recsys_model_ids = [row.recsys_model_id for row in recsys_model_ids]
-
         if campaign_type_code == CampaignType.basic.value:
             #### 기본 캠페인, custom
             campaign_set_merged, set_cus_items_df = recreate_basic_campaign_set(
@@ -165,40 +161,44 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
                 audiences_exc,
                 campaign_set_updated,
             )
-        elif len(recsys_model_ids) == 1 and recsys_model_ids[0] == 8:
-            #### Expert 캠페인, Top5 추천 모델
-            campaign_set_merged, set_cus_items_df = recreate_new_collection_recommend_set(
-                db,
-                shop_send_yn,
-                user_id,
-                campaign_id,
-                campaign_group_id,
-                media,
-                msg_delivery_vendor,
-                is_personalized,
-                selected_themes,
-                budget,
-                campaigns_exc,
-                audiences_exc,
-                campaign_set_updated,
-            )
         else:
-            campaign_set_merged, set_cus_items_df = recreate_segment_campaign_set(
-                db,
-                shop_send_yn,
-                user_id,
-                campaign_id,
-                campaign_group_id,
-                media,
-                medias,
-                msg_delivery_vendor,
-                is_personalized,
-                selected_themes,
-                budget,
-                campaigns_exc,
-                audiences_exc,
-                campaign_set_updated,
-            )
+            recsys_model_ids = get_recommend_model_ids_by_strategy_themes(selected_themes, db)
+            recsys_model_ids = [row.recsys_model_id for row in recsys_model_ids]
+
+            if len(recsys_model_ids) == 1 and recsys_model_ids[0] == 8:
+                #### Expert 캠페인, Top5 추천 모델
+                campaign_set_merged, set_cus_items_df = recreate_new_collection_recommend_set(
+                    db,
+                    shop_send_yn,
+                    user_id,
+                    campaign_id,
+                    campaign_group_id,
+                    media,
+                    msg_delivery_vendor,
+                    is_personalized,
+                    selected_themes,
+                    budget,
+                    campaigns_exc,
+                    audiences_exc,
+                    campaign_set_updated,
+                )
+            else:
+                campaign_set_merged, set_cus_items_df = recreate_segment_campaign_set(
+                    db,
+                    shop_send_yn,
+                    user_id,
+                    campaign_id,
+                    campaign_group_id,
+                    media,
+                    medias,
+                    msg_delivery_vendor,
+                    is_personalized,
+                    selected_themes,
+                    budget,
+                    campaigns_exc,
+                    audiences_exc,
+                    campaign_set_updated,
+                )
 
             # 오퍼에 매핑되는 캠페인 id 업데이트
             coupon_no_list = list(campaign_set_merged["coupon_no"].unique())
@@ -242,10 +242,10 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
             )
 
         # 기본 캠페인은 테마가 없음
-        if campaign_type_code == enums.CampaignType.basic.value:
+        if campaign_type_code == CampaignType.basic.value:
             selected_themes = []
-            campaign_theme_ids = []
+            strategy_theme_ids = []
 
         db.commit()
 
-        return set(selected_themes), set(campaign_theme_ids)
+        return set(selected_themes), set(strategy_theme_ids)

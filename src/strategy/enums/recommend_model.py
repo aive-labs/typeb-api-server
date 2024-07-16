@@ -19,7 +19,7 @@ class RecommendModels(StrEnum):
     STEADY_SELLER_PRODUCT_RECOMMENDATION = (15, 15, "스테디셀러 상품 추천", False)
     MEMBERSHIP_UPGRADE_NOTICE = (16, 16, "회원등급 상승 임박 안내", False)
     MEMBERSHIP_UPGRADE_CONGRATULATION = (17, 17, "회원등급 상승 축하 메시지", False)
-    NEW_PRODUCT_RECOMMENDATION = (18, 18, "신상품 추천", False)
+    NEW_COLLECTION = (18, 18, "신상품 추천", False)
     MEMBERSHIP_BENEFITS_NOTICE = (19, 19, "회원 등급 혜택 안내", False)
     MAXIMUM_DISCOUNT_PRODUCT_RECOMMENDATION = (20, 20, "최대 할인 상품 추천", False)
     SECRET_COUPON_DISTRIBUTION = (21, 21, "시크릿 쿠폰 발송", False)
