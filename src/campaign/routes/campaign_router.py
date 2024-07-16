@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.campaign.routes.dto.request.campaign_create import CampaignCreate
+from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdate
 from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
 from src.campaign.routes.dto.response.campaign_timeline_response import (
     CampaignTimelineResponse,
@@ -14,6 +15,9 @@ from src.campaign.routes.dto.response.exclusion_customer_detail import (
 from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUseCase
 from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase
 from src.campaign.routes.port.get_campaign_usecase import GetCampaignUseCase
+from src.campaign.routes.port.update_campaign_set_usecase import (
+    UpdateCampaignSetUseCase,
+)
 from src.core.container import Container
 from src.core.database import get_db_session
 
@@ -95,3 +99,18 @@ def get_excluded_customer(
     ),
 ) -> ExcludeCustomerDetail:
     return get_campaign_service.get_exclude_customer(campaign_id, user, db=db)
+
+
+@campaign_router.put("/campaigns/{campaign_id}/set")
+def create_or_update_campaign_set(
+    campaign_id: str,
+    campaign_set_update: CampaignSetUpdate,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    update_campaign_set_service: UpdateCampaignSetUseCase = Depends(
+        dependency=Provide[Container.update_campaign_set_service]
+    ),
+):
+    return update_campaign_set_service.update_campaign_set(
+        campaign_id, campaign_set_update, user, db
+    )

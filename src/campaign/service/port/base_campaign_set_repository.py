@@ -17,3 +17,7 @@ class BaseCampaignSetRepository(ABC):
     @abstractmethod
     def get_set_portion(self, campaign_id: str, db: Session) -> tuple:
         pass
+
+    @abstractmethod
+    def get_audience_ids(self, campaign_id: str, db: Session) -> list[str]:
+        pass

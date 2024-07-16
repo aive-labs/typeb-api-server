@@ -87,7 +87,9 @@ class CampaignDependencyManager:
                     .filter(
                         CampaignSetsEntity.campaign_id != campaign_id,
                         CampaignSetsEntity.audience_id.in_(removed_ids),
-                        # CampaignSetsEntity.campaign_status_code.not_in(['o2', 's3'])  # 활성으로 사용되고 있는 오디언스
+                        CampaignEntity.campaign_status_code.not_in(
+                            ["o2", "s3"]
+                        ),  # 활성으로 사용되고 있는 오디언스
                     )
                     .all()
                 )
@@ -106,7 +108,7 @@ class CampaignDependencyManager:
                             "audience_status_name": AudienceStatus.inactive.description,
                         }
                     )
-                    db.commit()
+                    # db.commit()
         else:
             audience_ids = []
 
@@ -119,4 +121,4 @@ class CampaignDependencyManager:
                     "audience_status_name": AudienceStatus.active.description,
                 }
             )
-            db.commit()
+            # db.commit()

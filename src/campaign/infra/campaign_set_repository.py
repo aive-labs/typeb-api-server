@@ -614,3 +614,12 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         recipient_portion = round(set_cus_count / total_cus, 3)
 
         return recipient_portion, total_cus, set_cus_count
+
+    def get_audience_ids(self, campaign_id: str, db: Session) -> list[str]:
+        audience_ids = (
+            db.query(CampaignSetsEntity.audience_id)
+            .filter(CampaignSetsEntity.campaign_id == campaign_id)
+            .all()
+        )
+
+        return [audience_id[0] for audience_id in audience_ids]

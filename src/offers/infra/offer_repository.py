@@ -110,7 +110,7 @@ class OfferRepository:
                 OffersEntity.coupon_no.label("code"),
             ).filter(
                 OffersEntity.coupon_no.in_(offer_ids),
-                OffersEntity.available_scope.isnot(None),
+                OffersEntity.benefit_type.isnot(None),
                 OffersEntity.available_end_datetime >= today,  # 이벤트 기간 필터
                 *condition,
             )
@@ -153,7 +153,7 @@ class OfferRepository:
                     OffersEntity.coupon_no.label("code"),
                 )
                 .filter(
-                    OffersEntity.available_scope.isnot(None),
+                    OffersEntity.benefit_type.isnot(None),
                     OffersEntity.available_end_datetime >= today,  # 이벤트 기간 필터
                     *condition,
                 )

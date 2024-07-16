@@ -27,7 +27,8 @@ def get_first_offer_by_strategy_theme(strategy_theme_ids: list, db: Session):
         StrategyThemeOfferMappingEntity.strategy_theme_id,
         StrategyThemeOfferMappingEntity.coupon_no,
         OffersEntity.coupon_name,
-        OffersEntity.available_scope,
+        OffersEntity.benefit_type,
+        OffersEntity.benefit_type_name,
         func.min(coalesce(OffersEntity.benefit_price, OffersEntity.benefit_percentage))
         .join(
             subquery,

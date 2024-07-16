@@ -13,6 +13,7 @@ from src.campaign.infra.sqlalchemy_query.get_customer_by_audience_id import (
 from src.campaign.infra.sqlalchemy_query.get_exclude_customer_list import (
     get_excluded_customer_list,
 )
+from src.campaign.infra.sqlalchemy_query.get_ltv import get_ltv
 from src.campaign.utils.campaign_creation import add_group_type
 from src.common.enums.campaign_media import CampaignMedia
 from src.common.utils.data_converter import DataConverter
