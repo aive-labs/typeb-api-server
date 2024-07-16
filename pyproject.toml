@@ -86,3 +86,4 @@ extend-immutable-calls = [
 [tool.pyright]
 #reportInvalidConditionalOperand = false
 reportGeneralTypeIssues = false
+reportAttributeAccessIssue = false
