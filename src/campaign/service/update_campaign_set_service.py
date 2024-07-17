@@ -2,12 +2,20 @@ from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
 from src.campaign.enums.campaign_type import CampaignType
+from src.campaign.infra.sqlalchemy_query.create_set_group_messages import (
+    create_set_group_messages,
+)
+from src.campaign.infra.sqlalchemy_query.create_set_group_recipient import (
+    create_set_group_recipient,
+)
 from src.campaign.infra.sqlalchemy_query.get_recommend_model_ids_by_strategy_themes import (
     get_recommend_model_ids_by_strategy_themes,
 )
+from src.campaign.infra.sqlalchemy_query.get_set_group_seqs import get_set_group_seqs
 from src.campaign.infra.sqlalchemy_query.recreate_basic_campaign import (
     recreate_basic_campaign_set,
 )
+from src.campaign.infra.sqlalchemy_query.save_campaign_set import save_campaign_set
 from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdate
 from src.campaign.routes.port.update_campaign_set_usecase import (
     UpdateCampaignSetUseCase,
@@ -62,7 +70,6 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
         if is_updatable:
             # 기존 오디언스
             audience_ids = self.campaign_set_repository.get_audience_ids(campaign_id, db)
-
             selected_themes, campaign_theme_ids = self._update_campaign_set(
                 user.user_id, campaign, campaign_set_updated, db
             )
@@ -125,7 +132,7 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
         msg_delivery_vendor = campaign_obj["msg_delivery_vendor"]
         budget = campaign_obj["budget"]
         # strategy_id = campaign_obj["strategy_id"]
-        selected_themes = campaign_obj["campaign_theme_ids"]
+        selected_themes = campaign_obj["strategy_theme_ids"]
         media = campaign_obj["medias"].split(",")[0]  # 알림톡 있으면 알림톡, 없으면 문자
         medias = campaign_obj["medias"]
         # has_remind = campaign_obj["has_remind"]
@@ -165,7 +172,7 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
             recsys_model_ids = get_recommend_model_ids_by_strategy_themes(selected_themes, db)
             recsys_model_ids = [row.recsys_model_id for row in recsys_model_ids]
 
-            if len(recsys_model_ids) == 1 and recsys_model_ids[0] == 8:
+            if len(recsys_model_ids) == 1 and recsys_model_ids[0] == 18:
                 #### Expert 캠페인, Top5 추천 모델
                 campaign_set_merged, set_cus_items_df = recreate_new_collection_recommend_set(
                     db,

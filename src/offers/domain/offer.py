@@ -11,7 +11,7 @@ class Offer(BaseModel):
     coupon_name: str
     coupon_type: Optional[str] = None
     coupon_description: Optional[str] = None
-    coupon_created_at: datetime
+    coupon_created_at: str
     benefit_type: Optional[str] = None
     benefit_type_name: Optional[str] = None
     comp_cd: Optional[str] = None

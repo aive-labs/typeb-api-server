@@ -83,8 +83,10 @@ class CampaignSetRepository(BaseCampaignSetRepository):
 
         # 추천 캠페인 세트 저장
         self.save_campaign_set(campaign_set_merged, db)
+
         # 캠페인 세트 그룹 발송인 저장
         self.create_set_group_recipient(set_cus_items_df, db)
+
         # 캠페인 세트 그룹 메세지 더미 데이터 생성 & 저장
         set_group_seqs = [
             row._asdict() for row in self.get_set_group_seqs(campaign.campaign_id, db)
@@ -167,13 +169,18 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         strategy_themes_df = pd.merge(
             strategy_themes_df, audience_rank_between_df, on="audience_id", how="inner"
         )
+
+        # audience_id 별로 가장 낮은 index 값으로 추출
+        # audience_id의 유니크한 수만큼 데이터가 나옴
         themes_df = strategy_themes_df.loc[
+            # 각 audience_id 그룹에서 rank 열의 최소값을 가지는 행의 인덱스
             strategy_themes_df.groupby(["audience_id"])["rank"].idxmin()
         ]
         themes_df["set_sort_num"] = range(1, len(themes_df) + 1)
         campaign_set_df_merged = cust_audiences_df.merge(themes_df, on="audience_id", how="inner")
 
         ####방어로직###
+        # cus_cd가 가장 낮은 숫자의 set_sort_num에 속하게 하기 위해
         campaign_set_df = campaign_set_df_merged.loc[
             campaign_set_df_merged.groupby(["cus_cd"])["set_sort_num"].idxmin()
         ]
@@ -205,14 +212,6 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             campaign_set_df = campaign_set_df[campaign_set_df["_merge"] == "left_only"].drop(
                 columns=["_merge"]
             )
-
-        ## 예산 적용, 커스텀에서는 고객을 가져올때 ltv가 없으므로 포함
-        # if isinstance(limit_count, int):
-        #     ltv_score = DataConverter.convert_queries_to_df(get_ltv(db))
-        #     campaign_set_df = pd.merge(campaign_set_df, ltv_score, on='cus_cd', how='left')
-        #     campaign_set_df['ltv_frequency'] = campaign_set_df['ltv_frequency'].fillna(0)
-        #     campaign_set_df = campaign_set_df.sort_values(by='ltv_frequency', ascending=False)
-        #     campaign_set_df = campaign_set_df.head(limit_count)
 
         if len(campaign_set_df) == 0:
             raise ValidationException(
@@ -376,12 +375,12 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         theme_contents_df = DataConverter.convert_query_to_df(theme_contents)
         contents_info_df = DataConverter.convert_query_to_df(contents_info)
 
-        theme_contents_df["campaign_theme_id"] = theme_contents_df["campaign_theme_id"].astype(int)
+        theme_contents_df["strategy_theme_id"] = theme_contents_df["strategy_theme_id"].astype(int)
         theme_contents_df["contents_id"] = theme_contents_df["contents_id"].astype(str)
         contents_info_df["contents_id"] = contents_info_df["contents_id"].astype(str)
 
         set_cus_items_df = set_cus_items_df.merge(
-            theme_contents_df, on="campaign_theme_id", how="left"
+            theme_contents_df, on="strategy_theme_id", how="left"
         )
         set_cus_items_df = set_cus_items_df.merge(contents_info_df, on="contents_id", how="left")
 
@@ -393,6 +392,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         campaign_df: 캠페인 세트 데이터프레임
         """
 
+        # insert할 컬럼 정의
         campaign_set_columns = [column.name for column in CampaignSetsEntity.__table__.columns]
         columns_col_list = campaign_df.columns.tolist()
         set_col_to_insert = [
@@ -410,6 +410,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
                 key: value for key, value in set_list.items() if key != "set_group_list"
             }
 
+            # set_group_list를 제외하고 캠페인 세트 엔티티 생성
             set_req = CampaignSetsEntity(**set_list_insert)
 
             set_group_req_list = []

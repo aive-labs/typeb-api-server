@@ -41,9 +41,37 @@ def get_unix_timestamp() -> int:
 
 
 def convert_str_iso_8601_to_datetime(date_str: str):
+    # data_str
     # 주어진 날짜 문자열 포맷 "2017-12-19T14:39:22+09:00"
-
     return datetime.fromisoformat(date_str)
+
+
+def convert_datetime_to_iso8601(date):
+    """
+    Converts a datetime object to an ISO8601 formatted string.
+
+    Parameters:
+    dt (datetime): The datetime object to convert.
+
+    Returns:
+    str: The ISO8601 formatted string.
+    """
+    return date.isoformat(timespec="seconds")
+
+
+def convert_datetime_to_iso8601_with_timezone(date):
+    """
+    Converts a datetime object to an ISO8601 formatted string.
+
+    Parameters:
+    dt (datetime): The datetime object to convert.
+
+    Returns:
+    str: The ISO8601 formatted string.
+    """
+    tz = pytz.timezone("Asia/Seoul")
+    date = date.astimezone(tz)
+    return date.isoformat(timespec="seconds")
 
 
 def get_reservation_date(msg_send_type, start_date, send_date, remind_date):

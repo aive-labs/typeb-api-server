@@ -126,8 +126,8 @@ def recreate_basic_campaign_set(
 
     ## 세트 고객 집계
     group_keys = [
-        "campaign_theme_id",
-        "campaign_theme_name",
+        "strategy_theme_id",
+        "strategy_theme_name",
         "recsys_model_id",
         "audience_id",
         "audience_name",

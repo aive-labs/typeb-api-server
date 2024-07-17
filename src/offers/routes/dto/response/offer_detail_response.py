@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import List, Optional
 
 from pydantic import BaseModel
@@ -38,7 +37,7 @@ class OfferDetailResponse(BaseModel):
     issue_reserved: Optional[str] = None  # TF
     is_available: Optional[bool] = False
 
-    coupon_created_at: datetime
+    coupon_created_at: str
 
     @staticmethod
     def from_model(model: Offer):

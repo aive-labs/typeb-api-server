@@ -6,7 +6,6 @@ from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from src.common.timezone_setting import selected_timezone
-from src.common.utils.date_utils import convert_str_iso_8601_to_datetime
 from src.common.utils.string_utils import is_convertible_to_int
 from src.core.exceptions.exceptions import NotFoundException
 from src.offers.domain.cafe24_coupon import Cafe24CouponResponse
@@ -218,7 +217,7 @@ class OfferRepository:
                 coupon_name=coupon.coupon_name,
                 coupon_type=coupon.coupon_type,
                 coupon_description=coupon.coupon_description,
-                coupon_created_at=convert_str_iso_8601_to_datetime(coupon.created_date),
+                coupon_created_at=coupon.created_date,
                 benefit_type=coupon.benefit_type,
                 benefit_type_name=(
                     Cafe24CouponBenefitType[coupon.benefit_type].value
