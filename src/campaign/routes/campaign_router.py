@@ -102,6 +102,7 @@ def get_excluded_customer(
 
 
 @campaign_router.put("/campaigns/{campaign_id}/set")
+@inject
 def create_or_update_campaign_set(
     campaign_id: str,
     campaign_set_update: CampaignSetUpdate,
