@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from src.auth.infra.dto.cafe24_token import Cafe24TokenData
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.common.utils.get_env_variable import get_env_variable
-from src.core.exceptions.exceptions import Cafe24Exception, NotFoundException
+from src.core.exceptions.exceptions import NotFoundException
 from src.core.transactional import transactional
 from src.offers.domain.cafe24_coupon import Cafe24CouponResponse
 from src.offers.infra.offer_repository import OfferRepository
@@ -69,21 +69,14 @@ class GetOfferService(GetOfferUseCase):
                 "X-Cafe24-Api-Version": "2024-06-01",
             }
             async with session.get(url=url, headers=headers, ssl=False) as response:
-                if response.status != 200:
-                    raise Cafe24Exception(
-                        detail={
-                            "message": "쿠폰 정보를 불러오는데 실패했습니다. 잠시 후에 다시 시도해주세요."
-                        }
-                    )
-                response = await response.json()
-
-                print("cafe24 coupon")
-                print(len(response["coupons"]))
-                cafe24_coupon_response = Cafe24CouponResponse(**response)
-                print(len(cafe24_coupon_response.coupons))
-                print(cafe24_coupon_response)
-
-                self.offer_repository.save_new_coupon(cafe24_coupon_response, db)
+                if response.status == 200:
+                    response = await response.json()
+                    print("cafe24 coupon")
+                    print(len(response["coupons"]))
+                    cafe24_coupon_response = Cafe24CouponResponse(**response)
+                    print(len(cafe24_coupon_response.coupons))
+                    print(cafe24_coupon_response)
+                    self.offer_repository.save_new_coupon(cafe24_coupon_response, db)
 
         offers = self.offer_repository.get_all_offers(
             based_on, sort_by, start_date, end_date, query, db
