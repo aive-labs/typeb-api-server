@@ -113,5 +113,5 @@ def create_or_update_campaign_set(
     ),
 ):
     return update_campaign_set_service.update_campaign_set(
-        campaign_id, campaign_set_update, user, db
+        campaign_id, campaign_set_update, user, db=db
     )

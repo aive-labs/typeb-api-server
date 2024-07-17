@@ -4,7 +4,6 @@ import pandas as pd
 from src.campaign.infra.sqlalchemy_query.delete_campaign_sets import (
     delete_campaign_sets,
 )
-from src.campaign.infra.sqlalchemy_query.get_campaign_remind import get_campaign_remind
 from src.campaign.infra.sqlalchemy_query.get_coupons_by_ids import get_coupons_by_ids
 from src.campaign.infra.sqlalchemy_query.get_customer_by_audience_id import (
     get_customers_by_audience_id,
@@ -13,6 +12,7 @@ from src.campaign.infra.sqlalchemy_query.get_exclude_customer_list import (
     get_excluded_customer_list,
 )
 from src.campaign.infra.sqlalchemy_query.get_ltv import get_ltv
+from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdate
 from src.common.enums.campaign_media import CampaignMedia
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import localtime_converter
@@ -33,7 +33,7 @@ def recreate_basic_campaign_set(
     budget,
     campaigns_exc,
     audiences_exc,
-    campaign_set_updated,
+    campaign_set_update: CampaignSetUpdate,
 ):
     # 캠페인 세트 삭제
     delete_campaign_sets(db, campaign_id)
@@ -42,80 +42,44 @@ def recreate_basic_campaign_set(
         CampaignMedia.KAKAO_ALIM_TALK.value: MessageType.KAKAO_ALIM_TEXT.value,
         CampaignMedia.TEXT_MESSAGE.value: MessageType.LMS.value,
     }
-    budget_list = [(media, initial_msg_type[media])]
-    remind_data = get_campaign_remind(db, campaign_id)
-    for remind in remind_data:
-        budget_list.append((remind.remind_media, initial_msg_type[remind.remind_media]))
 
-    # 예산 적용 후
-    # 수정필요 > 리마인드 있는 경우 리마인드에 따라서 예산 분배 변경
-    # 리마인드 > 타입 동일
-    limit_count = None
-
-    # 예산 적용 후
     # 기본 캠페인에서는 입력된 set_seq 정보를 그대로 활용
-    themes_df = pd.DataFrame(campaign_set_updated)
+    themes_df = pd.DataFrame(campaign_set_update)
     themes_df = themes_df.sort_values("set_sort_num")
 
     audience_ids = list(set(themes_df["audience_id"]))
     offer_ids = list(set(themes_df["offer_id"]))
 
-    # cust_campaign_object : 고객 audience_ids
+    # 타겟오디언스에 매핑된 고객 조회
     cust_audiences = get_customers_by_audience_id(audience_ids, db)
-    #### Basic 캠페인에서는 SetSortNum이 항상 존재함.
     cust_audiences_df = DataConverter.convert_query_to_df(cust_audiences)
     campaign_set_df_merged = cust_audiences_df.merge(themes_df, on="audience_id", how="inner")
+
     ####방어로직###
     campaign_set_df = campaign_set_df_merged.loc[
         campaign_set_df_merged.groupby(["cus_cd"])["set_sort_num"].idxmin()
     ]
     del campaign_set_df_merged
-    ##############
 
     # 제외 캠페인 고객 필터
     if campaigns_exc:
-        exc_cus_query = get_excluded_customer_list(db, campaigns_exc)
-        exc_cus_df = DataConverter.convert_query_to_df(exc_cus_query).rename(
-            columns={"exc_cus_cd": "cus_cd"}
-        )
-        campaign_set_df = pd.merge(
-            campaign_set_df, exc_cus_df, on="cus_cd", how="left", indicator=True
-        )
-        campaign_set_df = campaign_set_df[campaign_set_df["_merge"] == "left_only"].drop(
-            columns=["_merge"]
+        campaign_set_df = exclude_customers_from_exclusion_campaign(
+            campaign_set_df, campaigns_exc, db
         )
 
-    # 제외 고객
+    # 제외 타겟 오디언스 고객 필터
     if audiences_exc:
-        exc_aud_query = get_customers_by_audience_id(audiences_exc, db)
-        exc_aud_df = DataConverter.convert_query_to_df(exc_aud_query)
-        exc_aud_df = exc_aud_df.drop(columns=["audience_id", "purpose"])
-        exc_aud_df = exc_aud_df.drop_duplicates("cus_cd")
-        campaign_set_df = pd.merge(
-            campaign_set_df, exc_aud_df, on="cus_cd", how="left", indicator=True
-        )
-        campaign_set_df = campaign_set_df[campaign_set_df["_merge"] == "left_only"].drop(
-            columns=["_merge"]
+        campaign_set_df = exclude_customers_from_exclusion_audiences(
+            audiences_exc, campaign_set_df, db
         )
 
-    ## 예산 적용
+    # 예산 적용
+    limit_count = None
     if isinstance(limit_count, int):
-        ltv_score = DataConverter.convert_queries_to_df(get_ltv(db))
-        campaign_set_df = pd.merge(campaign_set_df, ltv_score, on="cus_cd", how="left")
-        campaign_set_df["ltv_frequency"] = campaign_set_df["ltv_frequency"].fillna(0)
-        campaign_set_df = campaign_set_df.sort_values(by="ltv_frequency", ascending=False)
-        campaign_set_df = campaign_set_df.head(limit_count)
+        campaign_set_df = add_ltv_frequency(campaign_set_df, limit_count, db)
 
-    if len(campaign_set_df) == 0:
-        raise PolicyException(
-            detail={"code": "campaign/set/create", "message": "대상 고객이 존재하지 않습니다."},
-        )
-
-    # 한개의 cus_cd가 두개이상의 set_sort_num을 가지는 경우를 확인하고 에러 표시
-    if len(campaign_set_df["cus_cd"].unique()) != len(campaign_set_df):
-        raise PolicyException(
-            detail={"code": "campaign/set/create", "message": "중복된 고객이 존재합니다."},
-        )
+    # 고객 데이터 정합성 예외처리
+    check_customer_data_consistency(campaign_set_df)
 
     offer_query = get_coupons_by_ids(db, offer_ids)
     offer_df = DataConverter.convert_query_to_df(offer_query)
@@ -234,3 +198,48 @@ def recreate_basic_campaign_set(
         campaign_set_merged.at[idx, "set_group_list"] = group_dict_list
 
     return campaign_set_merged, set_cus_items_df
+
+
+def add_ltv_frequency(campaign_set_df, limit_count, db):
+    ltv_score = DataConverter.convert_queries_to_df(get_ltv(db))
+    campaign_set_df = pd.merge(campaign_set_df, ltv_score, on="cus_cd", how="left")
+    campaign_set_df["ltv_frequency"] = campaign_set_df["ltv_frequency"].fillna(0)
+    campaign_set_df = campaign_set_df.sort_values(by="ltv_frequency", ascending=False)
+    campaign_set_df = campaign_set_df.head(limit_count)
+    return campaign_set_df
+
+
+def check_customer_data_consistency(campaign_set_df):
+    if len(campaign_set_df) == 0:
+        raise PolicyException(
+            detail={"code": "campaign/set/create", "message": "대상 고객이 존재하지 않습니다."},
+        )
+    # 한개의 cus_cd가 두개이상의 set_sort_num을 가지는 경우를 확인하고 에러 표시
+    if len(campaign_set_df["cus_cd"].unique()) != len(campaign_set_df):
+        raise PolicyException(
+            detail={"code": "campaign/set/create", "message": "중복된 고객이 존재합니다."},
+        )
+
+
+def exclude_customers_from_exclusion_audiences(audiences_exc, campaign_set_df, db):
+    exc_aud_query = get_customers_by_audience_id(audiences_exc, db)
+    exc_aud_df = DataConverter.convert_query_to_df(exc_aud_query)
+    exc_aud_df = exc_aud_df.drop(columns=["audience_id", "purpose"])
+    exc_aud_df = exc_aud_df.drop_duplicates("cus_cd")
+    campaign_set_df = pd.merge(campaign_set_df, exc_aud_df, on="cus_cd", how="left", indicator=True)
+    campaign_set_df = campaign_set_df[campaign_set_df["_merge"] == "left_only"].drop(
+        columns=["_merge"]
+    )
+    return campaign_set_df
+
+
+def exclude_customers_from_exclusion_campaign(campaign_set_df, campaigns_exc, db):
+    exc_cus_query = get_excluded_customer_list(db, campaigns_exc)
+    exc_cus_df = DataConverter.convert_query_to_df(exc_cus_query).rename(
+        columns={"exc_cus_cd": "cus_cd"}
+    )
+    campaign_set_df = pd.merge(campaign_set_df, exc_cus_df, on="cus_cd", how="left", indicator=True)
+    campaign_set_df = campaign_set_df[campaign_set_df["_merge"] == "left_only"].drop(
+        columns=["_merge"]
+    )
+    return campaign_set_df

@@ -28,7 +28,6 @@ from src.campaign.service.port.base_campaign_set_repository import (
 )
 from src.core.exceptions.exceptions import PolicyException, ValidationException
 from src.core.transactional import transactional
-from src.offers.infra.entity.offers_entity import OffersEntity
 from src.users.domain.user import User
 
 
@@ -53,12 +52,19 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
             )
 
         campaign = self.campaign_repository.get_campaign_detail(campaign_id, user, db)
+        response = self.update_campaign_set_and_group(
+            campaign_id, campaign, campaign_set_update, user, db
+        )
 
-        response = self._set_update(campaign_id, campaign, campaign_set_update, user, db)
         return response
 
-    def _set_update(
-        self, campaign_id, campaign: Campaign, campaign_set_updated, user: User, db: Session
+    def update_campaign_set_and_group(
+        self,
+        campaign_id,
+        campaign: Campaign,
+        campaign_set_update: CampaignSetUpdate,
+        user: User,
+        db: Session,
     ):
         authorization_checker = AuthorizationChecker(user)
         campaign_dependency_manager = CampaignDependencyManager(user)
@@ -68,10 +74,11 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
         )
 
         if is_updatable:
-            # 기존 오디언스
+
+            # 캠페인에 속한 기존 오디언스
             audience_ids = self.campaign_set_repository.get_audience_ids(campaign_id, db)
             selected_themes, strategy_theme_ids = self._update_campaign_set(
-                user.user_id, campaign, campaign_set_updated, db
+                user.user_id, campaign, campaign_set_update, db
             )
 
             # 데이터 sync 진행
@@ -122,7 +129,9 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
         # 권한이 있는 경우
         return True
 
-    def _update_campaign_set(self, user_id, campaign: Campaign, campaign_set_updated, db: Session):
+    def _update_campaign_set(
+        self, user_id, campaign: Campaign, campaign_set_update: CampaignSetUpdate, db: Session
+    ):
         # 캠페인 기본정보
         campaign_obj = campaign.model_dump()
         campaign_type_code = campaign_obj["campaign_type_code"]
@@ -134,7 +143,7 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
         # strategy_id = campaign_obj["strategy_id"]
         selected_themes = campaign_obj["strategy_theme_ids"]
         media = campaign_obj["medias"].split(",")[0]  # 알림톡 있으면 알림톡, 없으면 문자
-        medias = campaign_obj["medias"]
+        # medias = campaign_obj["medias"]
         # has_remind = campaign_obj["has_remind"]
         is_personalized = campaign_obj["is_personalized"]
         campaigns_exc = campaign_obj["campaigns_exc"]
@@ -145,7 +154,7 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
 
         # set status
         ## campaign_set_updated 에 update_status 추가
-        for item in campaign_set_updated:
+        for item in campaign_set_update:
             if item["set_seq"] is not None:
                 item["update_status"] = "modify"
             else:
@@ -166,55 +175,21 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
                 budget,
                 campaigns_exc,
                 audiences_exc,
-                campaign_set_updated,
+                campaign_set_update,
             )
         else:
             recsys_model_ids = get_recommend_model_ids_by_strategy_themes(selected_themes, db)
             recsys_model_ids = [row.recsys_model_id for row in recsys_model_ids]
-
-            if len(recsys_model_ids) == 1 and recsys_model_ids[0] == 18:
-                #### Expert 캠페인, Top5 추천 모델
-                campaign_set_merged, set_cus_items_df = recreate_new_collection_recommend_set(
-                    db,
-                    shop_send_yn,
-                    user_id,
-                    campaign_id,
-                    campaign_group_id,
-                    media,
-                    msg_delivery_vendor,
-                    is_personalized,
-                    selected_themes,
-                    budget,
-                    campaigns_exc,
-                    audiences_exc,
-                    campaign_set_updated,
-                )
-            else:
-                campaign_set_merged, set_cus_items_df = recreate_segment_campaign_set(
-                    db,
-                    shop_send_yn,
-                    user_id,
-                    campaign_id,
-                    campaign_group_id,
-                    media,
-                    medias,
-                    msg_delivery_vendor,
-                    is_personalized,
-                    selected_themes,
-                    budget,
-                    campaigns_exc,
-                    audiences_exc,
-                    campaign_set_updated,
-                )
+            print(recsys_model_ids)
 
             # 오퍼에 매핑되는 캠페인 id 업데이트
-            coupon_no_list = list(campaign_set_merged["coupon_no"].unique())
-            db.query(OffersEntity).filter(OffersEntity.campaign_id == campaign_id).update(
-                {"campaign_id": None}
-            )
-            db.query(OffersEntity).filter(OffersEntity.coupon_no.in_(coupon_no_list)).update(
-                {"campaign_id": campaign_id}
-            )
+            # coupon_no_list = list(campaign_set_merged["coupon_no"].unique())
+            # db.query(OffersEntity).filter(OffersEntity.campaign_id == campaign_id).update(
+            #     {"campaign_id": None}
+            # )
+            # db.query(OffersEntity).filter(OffersEntity.coupon_no.in_(coupon_no_list)).update(
+            #     {"campaign_id": campaign_id}
+            # )
 
         # 실제 적용된 테마 아이디 리스트 추출 -> campaign_themes 와 동기화 시켜줌
         strategy_theme_ids = [
