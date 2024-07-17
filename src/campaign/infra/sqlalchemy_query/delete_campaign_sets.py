@@ -11,12 +11,6 @@ from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessages
 
 
 def delete_campaign_sets(campaign_id: str, db: Session):
-    # CampaignSetGroups
-    delete_statement = delete(CampaignSetGroupsEntity).where(
-        CampaignSetGroupsEntity.campaign_id == campaign_id
-    )
-
-    db.execute(delete_statement)
 
     # KakaoLinkButtons
     delete_query = (
@@ -29,10 +23,8 @@ def delete_campaign_sets(campaign_id: str, db: Session):
     )
 
     if db.query(delete_query.exists()).scalar():
-
         for record in delete_query.all():
             db.delete(record)
-
     else:
         pass
 
@@ -46,6 +38,13 @@ def delete_campaign_sets(campaign_id: str, db: Session):
     # CampaignSetRecipients
     delete_statement = delete(CampaignSetRecipientsEntity).where(
         CampaignSetRecipientsEntity.campaign_id == campaign_id
+    )
+
+    db.execute(delete_statement)
+
+    # CampaignSetGroups
+    delete_statement = delete(CampaignSetGroupsEntity).where(
+        CampaignSetGroupsEntity.campaign_id == campaign_id
     )
 
     db.execute(delete_statement)
