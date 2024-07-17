@@ -51,7 +51,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
     def create_campaign_set(self, campaign: Campaign, user_id: str, db: Session) -> tuple:
 
         #### 기본 캠페인
-        if campaign.campaign_type_code == CampaignType.basic.value:
+        if campaign.campaign_type_code == CampaignType.BASIC.value:
             return None, None
 
         # 자동분배 생성

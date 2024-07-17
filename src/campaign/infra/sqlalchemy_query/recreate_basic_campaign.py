@@ -12,7 +12,7 @@ from src.campaign.infra.sqlalchemy_query.get_exclude_customer_list import (
     get_excluded_customer_list,
 )
 from src.campaign.infra.sqlalchemy_query.get_ltv import get_ltv
-from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdate
+from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdateDetail
 from src.common.enums.campaign_media import CampaignMedia
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import localtime_converter
@@ -33,10 +33,10 @@ def recreate_basic_campaign_set(
     budget,
     campaigns_exc,
     audiences_exc,
-    campaign_set_update: CampaignSetUpdate,
+    campaign_set_update: list[CampaignSetUpdateDetail],
 ):
     # 캠페인 세트 삭제
-    delete_campaign_sets(db, campaign_id)
+    delete_campaign_sets(campaign_id, db)
 
     initial_msg_type = {
         CampaignMedia.KAKAO_ALIM_TALK.value: MessageType.KAKAO_ALIM_TEXT.value,
@@ -44,21 +44,34 @@ def recreate_basic_campaign_set(
     }
 
     # 기본 캠페인에서는 입력된 set_seq 정보를 그대로 활용
-    themes_df = pd.DataFrame(campaign_set_update.model_dump())
+
+    # ['set_seq', 'set_sort_num', 'is_group_added', 'strategy_theme_id',
+    #        'strategy_theme_name', 'recsys_model_id', 'audience_id',
+    #        'audience_name', 'rep_nm_list', 'coupon_no', 'coupon_name', 'medias']
+    themes_df = pd.DataFrame([set_update.model_dump() for set_update in campaign_set_update])
     themes_df = themes_df.sort_values("set_sort_num")
+    print("theme_df")
+    print(themes_df.columns)
 
     audience_ids = list(set(themes_df["audience_id"]))
-    offer_ids = list(set(themes_df["offer_id"]))
+    coupon_no_list = list(set(themes_df["coupon_no"]))
 
     # 타겟오디언스에 매핑된 고객 조회
     cust_audiences = get_customers_by_audience_id(audience_ids, db)
     cust_audiences_df = DataConverter.convert_query_to_df(cust_audiences)
     campaign_set_df_merged = cust_audiences_df.merge(themes_df, on="audience_id", how="inner")
 
-    ####방어로직###
+    # cus_cd 별로 각자 가장 랭크가 높은 set_sort_num에 속하게 필터링
+    # ['cus_cd', 'audience_id', 'set_seq', 'set_sort_num', 'is_group_added',
+    #        'strategy_theme_id', 'strategy_theme_name', 'recsys_model_id',
+    #        'audience_name', 'rep_nm_list', 'coupon_no', 'coupon_name', 'medias']
     campaign_set_df = campaign_set_df_merged.loc[
         campaign_set_df_merged.groupby(["cus_cd"])["set_sort_num"].idxmin()
     ]
+
+    print("campaign_set_df")
+    print(campaign_set_df.columns)
+
     del campaign_set_df_merged
 
     # 제외 캠페인 고객 필터
@@ -81,12 +94,17 @@ def recreate_basic_campaign_set(
     # 고객 데이터 정합성 예외처리
     check_customer_data_consistency(campaign_set_df)
 
-    offer_query = get_coupons_by_ids(db, offer_ids)
-    offer_df = DataConverter.convert_query_to_df(offer_query)
-    offer_df = offer_df.drop(columns=["offer_name"])
+    # offer
     # 고객 별 오퍼 & 전략 정보 붙이기: 전략 상 저장된 오퍼정보가 아닌 추천 마스터 테이블 row는 일부 제외될 수 있음
     # 오퍼가 존재하면 붙힌다.
-    campaign_set_df = campaign_set_df.merge(offer_df, on="offer_id", how="left")
+    # ['coupon_no', 'coupon_name', 'event_no', 'benefit_type', 'benefit_type_name', 'offer_amount']
+    offer_query = get_coupons_by_ids(coupon_no_list, db)
+    offer_df = DataConverter.convert_query_to_df(offer_query)
+    print("offer_df")
+    print(offer_df.columns)
+    offer_df = offer_df.drop(columns=["coupon_name"])
+
+    campaign_set_df = campaign_set_df.merge(offer_df, on="coupon_no", how="left")
 
     ## 세트 고객 집계
     group_keys = [
@@ -95,8 +113,8 @@ def recreate_basic_campaign_set(
         "recsys_model_id",
         "audience_id",
         "audience_name",
-        "offer_id",
-        "offer_name",
+        "coupon_no",
+        "coupon_name",
         "event_no",
     ]
     cols = group_keys + ["set_sort_num"]

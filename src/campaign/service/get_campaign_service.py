@@ -111,7 +111,7 @@ class GetCampaignService(GetCampaignUseCase):
         ]
 
         # rep_nm_list & contents_names
-        if campaign.campaign_type_code == CampaignType.expert.value:
+        if campaign.campaign_type_code == CampaignType.EXPERT.value:
             sets = self.add_set_rep_contents(sets, set_groups, campaign_id, db=db)
         else:
             sets = [
@@ -388,7 +388,7 @@ class GetCampaignService(GetCampaignUseCase):
         limit_count = None
 
         # 테마정보
-        if campaign_type_code == CampaignType.expert.value:
+        if campaign_type_code == CampaignType.EXPERT.value:
             themes_query = get_strategy_theme_audience_mapping_query(selected_themes, db)
             themes_df = DataConverter.convert_query_to_df(themes_query)
         else:
@@ -401,7 +401,7 @@ class GetCampaignService(GetCampaignUseCase):
 
         cust_audiences = get_customers_by_audience_id(audience_ids, db)
         cust_audiences_df = DataConverter.convert_query_to_df(cust_audiences)
-        if campaign_type_code == CampaignType.expert.value:
+        if campaign_type_code == CampaignType.EXPERT.value:
             audience_rank_between = get_audience_rank_between(audience_ids, db)
             audience_rank_between_df = DataConverter.convert_query_to_df(audience_rank_between)
             themes_df = pd.merge(themes_df, audience_rank_between_df, on="audience_id", how="inner")

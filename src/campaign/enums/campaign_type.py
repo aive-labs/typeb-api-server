@@ -9,8 +9,8 @@ class CampaignTypeEnum(Enum):
 
 
 class CampaignType(StrEnum):
-    expert = ("expert", "Expert 캠페인")
-    basic = ("basic", "기본 캠페인")
+    EXPERT = ("expert", "Expert 캠페인")
+    BASIC = ("basic", "기본 캠페인")
 
     description: str
 

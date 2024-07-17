@@ -11,19 +11,6 @@ from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessages
 
 
 def delete_campaign_sets(campaign_id: str, db: Session):
-    # CampaignSets
-    delete_statement = delete(CampaignSetsEntity).where(
-        CampaignSetsEntity.campaign_id == campaign_id
-    )
-
-    result = db.execute(delete_statement)
-
-    # 삭제된 행이 있는지 확인
-    if result.rowcount > 0:
-        pass
-    else:
-        return False
-
     # CampaignSetGroups
     delete_statement = delete(CampaignSetGroupsEntity).where(
         CampaignSetGroupsEntity.campaign_id == campaign_id
@@ -62,5 +49,18 @@ def delete_campaign_sets(campaign_id: str, db: Session):
     )
 
     db.execute(delete_statement)
+
+    # CampaignSets
+    delete_statement = delete(CampaignSetsEntity).where(
+        CampaignSetsEntity.campaign_id == campaign_id
+    )
+
+    result = db.execute(delete_statement)
+
+    # 삭제된 행이 있는지 확인
+    if result.rowcount > 0:
+        pass
+    else:
+        return False
 
     return True

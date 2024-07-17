@@ -81,7 +81,7 @@ class CreateCampaignService(CreateCampaignUseCase):
         else:
             shop_send_yn = "n"
 
-        if campaign_create.campaign_type_code == CampaignType.expert.value:
+        if campaign_create.campaign_type_code == CampaignType.EXPERT.value:
             strategy_id = campaign_create.strategy_id
             if strategy_id is None:
                 raise ValidationException(
@@ -200,7 +200,7 @@ class CreateCampaignService(CreateCampaignUseCase):
         )
         self.campaign_repository.save_timeline(timeline, db)
 
-        if campaign_create.campaign_type_code == CampaignType.expert.value:
+        if campaign_create.campaign_type_code == CampaignType.EXPERT.value:
             campaign_id = saved_campaign.campaign_id
             if not campaign_id:
                 raise ConsistencyException(detail={"message": "캠페인의 id가 발급되지 않았습니다."})
@@ -253,7 +253,7 @@ class CreateCampaignService(CreateCampaignUseCase):
         # expert 캠페인일 경우 데이터 sync 진행
         campaign_dependency_manager = CampaignDependencyManager(user)
 
-        if campaign_type_code == CampaignType.expert.value:
+        if campaign_type_code == CampaignType.EXPERT.value:
             campaign_dependency_manager.sync_campaign_base(
                 db, campaign_id, selected_themes, strategy_theme_ids
             )

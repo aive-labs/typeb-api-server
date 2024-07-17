@@ -36,7 +36,7 @@ def create_set_group_messages(
     """
 
     # phone_callback, vender_bottom_txt 초기값 추후 send_reservation 시 변환됨
-    phone_callback = get_phone_callback(db, user_id)  # 매장 번호 또는 대표번호
+    phone_callback = get_phone_callback(user_id, db)  # 매장 번호 또는 대표번호
     vender_bottom_txt = {"dau": "무료수신거부 080-801-7860", "ssg": "무료수신거부 080-801-7860"}
     bottom_text = vender_bottom_txt[msg_delivery_vendor]
 

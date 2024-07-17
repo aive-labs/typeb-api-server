@@ -82,7 +82,7 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
             )
 
             # 데이터 sync 진행
-            if campaign.campaign_type_code == CampaignType.expert.value:
+            if campaign.campaign_type_code == CampaignType.EXPERT.value:
                 # expert 캠페인일 경우 추가/삭제된 테마가 있는 경우
                 campaign_dependency_manager.sync_campaign_base(
                     db, campaign_id, selected_themes, strategy_theme_ids
@@ -153,18 +153,11 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
         send_date = campaign_obj["send_date"]
 
         # set status
-        ## campaign_set_updated 에 update_status 추가
 
         if not campaign_set_update.set_list:
             raise PolicyException(detail={"message": "1개 이상의 캠페인 세트 입력이 필요합니다."})
 
-        for item in campaign_set_update.set_list:
-            if item.set_seq is not None:
-                item.update_status = "modify"
-            else:
-                item.update_status = "add"
-
-        if campaign_type_code == CampaignType.basic.value:
+        if campaign_type_code == CampaignType.BASIC.value:
             #### 기본 캠페인, custom
             campaign_set_merged, set_cus_items_df = recreate_basic_campaign_set(
                 db,
@@ -179,8 +172,29 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
                 budget,
                 campaigns_exc,
                 audiences_exc,
-                campaign_set_update,
+                campaign_set_update.set_list,
             )
+
+            """
+            campaign_set_merged
+
+            ['strategy_theme_id', 'strategy_theme_name', 'recsys_model_id',
+               'audience_id', 'audience_name', 'coupon_no', 'coupon_name', 'event_no',
+               'set_sort_num', 'recipient_count', 'campaign_id', 'campaign_group_id',
+               'medias', 'is_confirmed', 'is_message_confirmed', 'is_group_added',
+               'is_personalized', 'created_at', 'created_by', 'updated_at',
+               'updated_by', 'rep_nm_list', 'set_group_list']
+            """
+
+            """
+            set_cus_items_df
+
+            ['cus_cd', 'recsys_model_id', 'set_sort_num', 'set_group_val',
+               'set_group_category', 'rep_nm', 'group_sort_num', 'contents_id',
+               'contents_name', 'campaign_id', 'send_result', 'created_at',
+               'created_by', 'updated_at', 'updated_by']
+            """
+
         else:
             recsys_model_ids = get_recommend_model_ids_by_strategy_themes(selected_themes, db)
             recsys_model_ids = [row.recsys_model_id for row in recsys_model_ids]
@@ -197,9 +211,9 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
 
         # 실제 적용된 테마 아이디 리스트 추출 -> campaign_themes 와 동기화 시켜줌
         strategy_theme_ids = [
-            i["strategy_theme_id"]
-            for i in campaign_set_updated
-            if i["strategy_theme_id"] is not None
+            campaign_set.strategy_theme_id
+            for campaign_set in campaign_set_update.set_list
+            if campaign_set.strategy_theme_id is not None
         ]
 
         # Todo: 업데이트시 변경사항 반영해서 로직 작동하도록 수정
@@ -224,11 +238,11 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
             # 기존 발송인 삭제 추가
             create_set_group_recipient(db, set_cus_items_df)
             strategy_theme_ids = strategy_theme_ids + list(
-                campaign_set_merged["strategy_theme_ids"].dropna()
+                campaign_set_merged["strategy_theme_id"].dropna()
             )
 
         # 기본 캠페인은 테마가 없음
-        if campaign_type_code == CampaignType.basic.value:
+        if campaign_type_code == CampaignType.BASIC.value:
             selected_themes = []
             strategy_theme_ids = []
 
