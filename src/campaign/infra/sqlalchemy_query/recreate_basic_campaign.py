@@ -44,7 +44,7 @@ def recreate_basic_campaign_set(
     }
 
     # 기본 캠페인에서는 입력된 set_seq 정보를 그대로 활용
-    themes_df = pd.DataFrame(campaign_set_update)
+    themes_df = pd.DataFrame(campaign_set_update.model_dump())
     themes_df = themes_df.sort_values("set_sort_num")
 
     audience_ids = list(set(themes_df["audience_id"]))

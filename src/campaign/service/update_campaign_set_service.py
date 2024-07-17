@@ -154,11 +154,15 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
 
         # set status
         ## campaign_set_updated 에 update_status 추가
-        for item in campaign_set_update:
-            if item["set_seq"] is not None:
-                item["update_status"] = "modify"
+
+        if not campaign_set_update.set_list:
+            raise PolicyException(detail={"message": "1개 이상의 캠페인 세트 입력이 필요합니다."})
+
+        for item in campaign_set_update.set_list:
+            if item.set_seq is not None:
+                item.update_status = "modify"
             else:
-                item["update_status"] = "add"
+                item.update_status = "add"
 
         if campaign_type_code == CampaignType.basic.value:
             #### 기본 캠페인, custom
