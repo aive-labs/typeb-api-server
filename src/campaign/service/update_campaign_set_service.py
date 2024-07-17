@@ -73,28 +73,26 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
             campaign, authorization_checker, campaign_dependency_manager
         )
 
-        if is_updatable:
-
-            # 캠페인에 속한 기존 오디언스
-            audience_ids = self.campaign_set_repository.get_audience_ids(campaign_id, db)
-            selected_themes, strategy_theme_ids = self._update_campaign_set(
-                user.user_id, campaign, campaign_set_update, db
-            )
-
-            # 데이터 sync 진행
-            if campaign.campaign_type_code == CampaignType.EXPERT.value:
-                # expert 캠페인일 경우 추가/삭제된 테마가 있는 경우
-                campaign_dependency_manager.sync_campaign_base(
-                    db, campaign_id, selected_themes, strategy_theme_ids
-                )
-
-            # 추가/삭제된 오디언스가 있는 경우
-            campaign_dependency_manager.sync_audience_status(db, campaign_id, audience_ids)
-
-        else:
+        if not is_updatable:
             raise PolicyException(
                 detail={"code": "campaign/update/denied", "message": "수정 불가"},
             )
+
+        # 캠페인에 속한 기존 오디언스
+        audience_ids = self.campaign_set_repository.get_audience_ids(campaign_id, db)
+        selected_themes, strategy_theme_ids = self._update_campaign_set(
+            user.user_id, campaign, campaign_set_update, db
+        )
+
+        # 데이터 sync 진행
+        if campaign.campaign_type_code == CampaignType.EXPERT.value:
+            # expert 캠페인일 경우 추가/삭제된 테마가 있는 경우
+            campaign_dependency_manager.sync_campaign_base(
+                db, campaign_id, selected_themes, strategy_theme_ids
+            )
+
+        # 추가/삭제된 오디언스가 있는 경우
+        campaign_dependency_manager.sync_audience_status(db, campaign_id, audience_ids)
 
         return True
 
@@ -236,7 +234,7 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
 
             # 캠페인 세트 그룹 발송인 저장 (발송인은 업데이트가 아닌 새로 생성)
             # 기존 발송인 삭제 추가
-            create_set_group_recipient(db, set_cus_items_df)
+            create_set_group_recipient(set_cus_items_df, db)
             strategy_theme_ids = strategy_theme_ids + list(
                 campaign_set_merged["strategy_theme_id"].dropna()
             )

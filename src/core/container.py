@@ -36,6 +36,9 @@ from src.campaign.infra.campaign_sqlalchemy_repository import CampaignSqlAlchemy
 from src.campaign.service.create_campaign_service import CreateCampaignService
 from src.campaign.service.generate_message_service import GenerateMessageService
 from src.campaign.service.get_campaign_service import GetCampaignService
+from src.campaign.service.update_campaign_set_message_group_service import (
+    UpdateCampaignSetMessageGroupService,
+)
 from src.campaign.service.update_campaign_set_service import UpdateCampaignSetService
 from src.common.infra.common_repository import CommonRepository
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
@@ -389,6 +392,10 @@ class Container(containers.DeclarativeContainer):
         provides=UpdateCampaignSetService,
         campaign_repository=campaign_repository,
         campaign_set_repository=campaign_set_repository,
+    )
+
+    update_campaign_set_message_group_service = providers.Singleton(
+        provides=UpdateCampaignSetMessageGroupService
     )
 
     """

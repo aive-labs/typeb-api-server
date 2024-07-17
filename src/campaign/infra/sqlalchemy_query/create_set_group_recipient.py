@@ -5,7 +5,7 @@ from src.campaign.infra.entity.campaign_set_recipients_entity import (
 )
 
 
-def create_set_group_recipient(db, recipients_df):
+def create_set_group_recipient(recipients_df, db):
     """캠페인 그룹 발송 고객 저장 (set_group_msg_seq)
 
     *recipients_df

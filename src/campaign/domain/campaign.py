@@ -32,6 +32,7 @@ class Campaign(BaseModel):
     end_date: str | None
     group_end_date: str | None
     has_remind: bool
+    remind_list: list[CampaignRemind] = []
     campaigns_exc: list[str] | None
     audiences_exc: list[str] | None
     strategy_id: str | None
@@ -41,7 +42,6 @@ class Campaign(BaseModel):
     msg_delivery_vendor: str
     shop_send_yn: str
     retention_day: int | None = None
-    remind_list: list[CampaignRemind] = []
     owned_by_dept: str
     owned_by_dept_name: str
     owned_by_dept_abb_name: str
