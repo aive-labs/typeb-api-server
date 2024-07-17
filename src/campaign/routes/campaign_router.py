@@ -9,6 +9,9 @@ from src.campaign.routes.dto.request.campaign_set_group_update import (
 )
 from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdate
 from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
+from src.campaign.routes.dto.response.campaign_set_group_update_response import (
+    CampaignSetGroupUpdateResponse,
+)
 from src.campaign.routes.dto.response.campaign_timeline_response import (
     CampaignTimelineResponse,
 )
@@ -134,7 +137,7 @@ def update_campaign_set_message_group(
     update_campaign_set_message_group_service: UpdateCampaignSetMessageGroupUseCase = Depends(
         dependency=Provide[Container.update_campaign_set_message_group_service]
     ),
-):
-    update_campaign_set_message_group_service.exec(
+) -> CampaignSetGroupUpdateResponse:
+    return update_campaign_set_message_group_service.exec(
         campaign_id, set_seq, set_group_updated, user, db=db
     )
