@@ -56,6 +56,8 @@ def convert_datetime_to_iso8601(date):
     Returns:
     str: The ISO8601 formatted string.
     """
+    tz = pytz.timezone("Asia/Seoul")
+    date = date.astimezone(tz)
     return date.isoformat(timespec="seconds")
 
 
