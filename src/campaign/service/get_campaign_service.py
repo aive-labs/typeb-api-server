@@ -94,15 +94,6 @@ class GetCampaignService(GetCampaignUseCase):
     def get_campaign_detail(self, campaign_id, user, db: Session) -> CampaignBasicResponse:
         campaign = self.campaign_repository.get_campaign_detail(campaign_id, user, db)
         campaign_reminds = self.campaign_repository.get_campaign_remind(campaign_id, db)
-
-        # remind_list = [
-        #     CampaignRemindResponse(
-        #         remind_step=remind.remind_step,
-        #         remind_media=remind.remind_media,
-        #         remind_duration=remind.remind_duration,
-        #     )
-        #     for remind in campaign_reminds
-        # ]
         campaign.remind_list = campaign_reminds
 
         sets = [row._asdict() for row in get_campaign_sets(campaign_id=campaign_id, db=db)]
@@ -123,8 +114,8 @@ class GetCampaignService(GetCampaignUseCase):
                 set_seq=campaign_set["set_seq"],
                 set_sort_num=campaign_set["set_sort_num"],
                 is_group_added=campaign_set["is_group_added"],
-                strategy_theme_ids=campaign_set["strategy_theme_ids"],
-                campaign_theme_name=campaign_set["campaign_theme_name"],
+                strategy_theme_id=campaign_set["strategy_theme_id"],
+                strategy_theme_name=campaign_set["strategy_theme_name"],
                 recsys_model_id=campaign_set["recsys_model_id"],
                 audience_id=campaign_set["audience_id"],
                 audience_name=campaign_set["audience_name"],
