@@ -81,8 +81,8 @@ class CampaignDependencyManager:
                 active_audience_query = (
                     db.query(func.distinct(CampaignSetsEntity.audience_id))
                     .join(
-                        CampaignSetsEntity,
-                        CampaignSetsEntity.campaign_id == CampaignSetsEntity.campaign_id,
+                        CampaignEntity,
+                        CampaignSetsEntity.campaign_id == CampaignEntity.campaign_id,
                     )
                     .filter(
                         CampaignSetsEntity.campaign_id != campaign_id,
