@@ -143,12 +143,6 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         for remind in remind_data:
             budget_list.append((remind.remind_media, initial_msg_type[remind.remind_media]))
 
-        # if budget:
-        #     delivery_cost = 0
-        #     for media, msg_type in budget_list:
-        #         delivery_cost += get_delivery_cost(db, shop_send_yn, msg_delivery_vendor, media, msg_type)
-        #     limit_count = math.floor(budget / delivery_cost)
-        # else:
         # limit_count = None
 
         campaign_msg_type = initial_msg_type[media]

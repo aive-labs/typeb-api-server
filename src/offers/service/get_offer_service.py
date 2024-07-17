@@ -59,12 +59,10 @@ class GetOfferService(GetOfferUseCase):
 
             # 날짜를 문자열로 포맷팅 (YYYY-MM-DD 형식)
             start_date = today.strftime("%Y-%m-%d")
-            start_date = "2024-01-01"
             end_date = tomorrow.strftime("%Y-%m-%d")
 
             url = f"https://{user.mall_id}.cafe24api.com/api/v2/admin/coupons?created_start_date={start_date}&created_end_date={end_date}"
-            print(url)
-            print(access_token)
+
             headers = {
                 "Authorization": f"Bearer {access_token}",
                 "Content-Type": "application/json",

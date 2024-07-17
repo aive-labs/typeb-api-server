@@ -70,7 +70,7 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
         if is_updatable:
             # 기존 오디언스
             audience_ids = self.campaign_set_repository.get_audience_ids(campaign_id, db)
-            selected_themes, campaign_theme_ids = self._update_campaign_set(
+            selected_themes, strategy_theme_ids = self._update_campaign_set(
                 user.user_id, campaign, campaign_set_updated, db
             )
 
@@ -78,7 +78,7 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
             if campaign.campaign_type_code == CampaignType.expert.value:
                 # expert 캠페인일 경우 추가/삭제된 테마가 있는 경우
                 campaign_dependency_manager.sync_campaign_base(
-                    db, campaign_id, selected_themes, campaign_theme_ids
+                    db, campaign_id, selected_themes, strategy_theme_ids
                 )
 
             # 추가/삭제된 오디언스가 있는 경우

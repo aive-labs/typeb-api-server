@@ -123,7 +123,7 @@ class GetCampaignService(GetCampaignUseCase):
                 set_seq=campaign_set["set_seq"],
                 set_sort_num=campaign_set["set_sort_num"],
                 is_group_added=campaign_set["is_group_added"],
-                campaign_theme_id=campaign_set["campaign_theme_id"],
+                strategy_theme_ids=campaign_set["strategy_theme_ids"],
                 campaign_theme_name=campaign_set["campaign_theme_name"],
                 recsys_model_id=campaign_set["recsys_model_id"],
                 audience_id=campaign_set["audience_id"],

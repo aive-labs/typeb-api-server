@@ -45,7 +45,7 @@ class CampaignBase(BaseModel):
     has_remind: bool
     remind_list: List[CampaignRemind] | None = None
     strategy_id: str | None = None
-    campaign_theme_ids: List[int] | None = None
+    strategy_theme_ids: List[int] | None = None
     is_personalized: bool
     msg_delivery_vendor: MsgDeliveryVendorEnum
     campaigns_exc: List[str] | None = None
@@ -88,8 +88,8 @@ class CampaignSet(BaseModel):
     set_seq: int | None = None
     set_sort_num: int | None = None
     is_group_added: bool | None = None
-    campaign_theme_id: int | None = None
-    campaign_theme_name: str | None = None
+    strategy_theme_id: int | None = None
+    strategy_theme_name: str | None = None
     recsys_model_id: int | None = None
     audience_id: str | None = None
     audience_name: str | None = None

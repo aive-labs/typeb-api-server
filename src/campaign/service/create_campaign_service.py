@@ -242,7 +242,7 @@ class CreateCampaignService(CreateCampaignUseCase):
         )
 
     def create_campaign_set(self, saved_campaign: Campaign, user: User, db: Session):
-        selected_themes, campaign_theme_ids = self.campaign_set_repository.create_campaign_set(
+        selected_themes, strategy_theme_ids = self.campaign_set_repository.create_campaign_set(
             saved_campaign, str(user.user_id), db
         )
 
@@ -255,7 +255,7 @@ class CreateCampaignService(CreateCampaignUseCase):
 
         if campaign_type_code == CampaignType.expert.value:
             campaign_dependency_manager.sync_campaign_base(
-                db, campaign_id, selected_themes, campaign_theme_ids
+                db, campaign_id, selected_themes, strategy_theme_ids
             )
             campaign_dependency_manager.sync_strategy_status(db, strategy_id)
         campaign_dependency_manager.sync_audience_status(db, campaign_id)

@@ -4,7 +4,7 @@ from src.campaign.infra.entity.rep_contents_rank_entity import RepContentsRankEn
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
 
 
-def get_rep_from_theme(db, campaign_theme_ids):
+def get_rep_from_theme(db, strategy_theme_ids):
     subquery = (
         db.query(
             StrategyThemesEntity.strategy_theme_id,
@@ -13,12 +13,12 @@ def get_rep_from_theme(db, campaign_theme_ids):
             StrategyThemesEntity.strategy_theme_name,
             func.unnest(StrategyThemesEntity.contents_tags).label("contents_id"),
         )
-        .filter(StrategyThemesEntity.strategy_theme_id.in_(campaign_theme_ids))
+        .filter(StrategyThemesEntity.strategy_theme_id.in_(strategy_theme_ids))
         .subquery()
     )
 
     return db.query(
-        subquery.c.campaign_theme_id,
+        subquery.c.strategy_theme_id,
         subquery.c.contents_id,
         RepContentsRankEntity.contents_name,
         RepContentsRankEntity.contents_url,

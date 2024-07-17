@@ -9,7 +9,7 @@ class CustomerPromotionMasterEntity(Base):
     cus_cd = Column(String, primary_key=True, nullable=False)
     campaign_strategy_id = Column(String, nullable=True)
     campaign_strategy_name = Column(String, nullable=True)
-    campaign_theme_id = Column(String, nullable=True)
+    strategy_theme_id = Column(String, nullable=True)
     campaign_theme_name = Column(String, nullable=True)
     campaign_id = Column(String, primary_key=True, nullable=False)
     campaign_name = Column(String, nullable=True)

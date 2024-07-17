@@ -37,14 +37,14 @@ class CampaignDependencyManager:
         else:
             return False
 
-    def sync_campaign_base(self, db, campaign_id, selected_themes, campaign_theme_ids) -> None:
+    def sync_campaign_base(self, db, campaign_id, selected_themes, strategy_theme_ids) -> None:
         """
         수정 또는 생성 후
         캠페인 테마 sync
         """
-        if selected_themes != campaign_theme_ids:
+        if selected_themes != strategy_theme_ids:
             db.query(CampaignEntity).filter(CampaignEntity.campaign_id == campaign_id).update(
-                {"campaign_theme_ids": list(campaign_theme_ids)}
+                {"strategy_theme_ids": list(strategy_theme_ids)}
             )
 
     def sync_strategy_status(self, db, strategy_id) -> None:
