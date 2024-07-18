@@ -30,3 +30,13 @@ class BaseCampaignSetRepository(ABC):
     @abstractmethod
     def update_confirm_status(self, campaign_id, set_seq, is_confirmed, db: Session):
         pass
+
+    @abstractmethod
+    def get_campaign_set_group_message_by_msg_seq(
+        self, campaign_id, set_group_msg_seq, db
+    ) -> SetGroupMessage:
+        pass
+
+    @abstractmethod
+    def update_use_status(self, campaign_id, set_group_msg_seq, is_used, db: Session):
+        pass

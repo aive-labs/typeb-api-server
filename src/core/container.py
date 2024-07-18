@@ -46,6 +46,7 @@ from src.campaign.service.update_campaign_set_message_group_service import (
     UpdateCampaignSetMessageGroupService,
 )
 from src.campaign.service.update_campaign_set_service import UpdateCampaignSetService
+from src.campaign.service.update_message_use_status import UpdateMessageUseStatus
 from src.common.infra.common_repository import CommonRepository
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
 from src.common.utils.file.s3_service import S3Service
@@ -412,6 +413,11 @@ class Container(containers.DeclarativeContainer):
 
     confirm_campaign_set_group_message = providers.Singleton(
         provides=ConfirmCampaignSetGroupMessage,
+        campaign_repository=campaign_repository,
+        campaign_set_repository=campaign_set_repository,
+    )
+    update_message_use_status_service = providers.Singleton(
+        provides=UpdateMessageUseStatus,
         campaign_repository=campaign_repository,
         campaign_set_repository=campaign_set_repository,
     )

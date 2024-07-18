@@ -651,3 +651,31 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         )
 
         db.execute(update_statement)
+
+    def get_campaign_set_group_message_by_msg_seq(
+        self, campaign_id, set_group_msg_seq, db
+    ) -> SetGroupMessage:
+        msg_obj_query = (
+            db.query(SetGroupMessagesEntity)
+            .filter(
+                SetGroupMessagesEntity.campaign_id == campaign_id,
+                SetGroupMessagesEntity.set_group_msg_seq == set_group_msg_seq,
+            )
+            .first()
+        )
+
+        return SetGroupMessage.model_validate(msg_obj_query)
+
+    def update_use_status(self, campaign_id, set_group_msg_seq, is_used, db: Session):
+        update_statement = (
+            update(SetGroupMessagesEntity)
+            .where(
+                and_(
+                    SetGroupMessagesEntity.campaign_id == campaign_id,
+                    SetGroupMessagesEntity.set_group_msg_seq == set_group_msg_seq,
+                )
+            )
+            .values(is_used=is_used)
+        )
+
+        db.execute(update_statement)

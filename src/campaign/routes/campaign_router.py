@@ -16,6 +16,9 @@ from src.campaign.routes.dto.request.campaign_set_group_update import (
 from src.campaign.routes.dto.request.campaign_set_message_confirm_request import (
     CampaignSetMessageConfirmReqeust,
 )
+from src.campaign.routes.dto.request.campaign_set_message_use_request import (
+    CampaignSetMessageUseRequest,
+)
 from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdate
 from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
 from src.campaign.routes.dto.response.campaign_set_group_update_response import (
@@ -44,6 +47,9 @@ from src.campaign.routes.port.update_campaign_set_message_group_usecase import (
 )
 from src.campaign.routes.port.update_campaign_set_usecase import (
     UpdateCampaignSetUseCase,
+)
+from src.campaign.routes.port.update_message_use_status_usecase import (
+    UpdateMessageUseStatusUseCase,
 )
 from src.core.container import Container
 from src.core.database import get_db_session
@@ -208,3 +214,18 @@ def update_set_message_confirmed(
 ):
     confirm_campaign_set_group_message.exec(campaign_id, set_seq, is_confirmed_obj, user, db=db)
     return {"status": "success"}
+
+
+@campaign_router.put("/campaigns/{campaign_id}/message/{set_group_msg_seq}/is_used")
+@inject
+def update_campaign_message_use_status(
+    campaign_id: str,
+    set_group_msg_seq: int,
+    is_used_obj: CampaignSetMessageUseRequest,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    update_message_use_status_service: UpdateMessageUseStatusUseCase = Depends(
+        dependency=Provide[Container.update_message_use_status_service]
+    ),
+):
+    update_message_use_status_service.exec(campaign_id, set_group_msg_seq, is_used_obj, user, db=db)
