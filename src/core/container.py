@@ -33,6 +33,9 @@ from src.auth.service.token_service import TokenService
 from src.campaign.infra.campaign_repository import CampaignRepository
 from src.campaign.infra.campaign_set_repository import CampaignSetRepository
 from src.campaign.infra.campaign_sqlalchemy_repository import CampaignSqlAlchemy
+from src.campaign.service.confrim_campaign_set_group_message import (
+    ConfirmCampaignSetGroupMessage,
+)
 from src.campaign.service.create_campaign_service import CreateCampaignService
 from src.campaign.service.generate_message_service import GenerateMessageService
 from src.campaign.service.get_campaign_service import GetCampaignService
@@ -405,6 +408,12 @@ class Container(containers.DeclarativeContainer):
     update_campaign_progress_service = providers.Singleton(
         provides=UpdateCampaignProgressService,
         campaign_repository=campaign_repository,
+    )
+
+    confirm_campaign_set_group_message = providers.Singleton(
+        provides=ConfirmCampaignSetGroupMessage,
+        campaign_repository=campaign_repository,
+        campaign_set_repository=campaign_set_repository,
     )
 
     """

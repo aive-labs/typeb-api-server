@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
+from src.campaign.domain.campaign_messages import SetGroupMessage
 
 
 class BaseCampaignSetRepository(ABC):
@@ -20,4 +21,12 @@ class BaseCampaignSetRepository(ABC):
 
     @abstractmethod
     def get_audience_ids(self, campaign_id: str, db: Session) -> list[str]:
+        pass
+
+    @abstractmethod
+    def get_campaign_set_group(self, campaign_id, set_seq, db: Session) -> list[SetGroupMessage]:
+        pass
+
+    @abstractmethod
+    def update_confirm_status(self, campaign_id, set_seq, is_confirmed, db: Session):
         pass

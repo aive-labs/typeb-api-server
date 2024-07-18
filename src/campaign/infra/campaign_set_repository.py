@@ -1,9 +1,10 @@
 import numpy as np
 import pandas as pd
-from sqlalchemy import func, inspect
+from sqlalchemy import and_, func, inspect, update
 from sqlalchemy.orm import Session, subqueryload
 
 from src.campaign.domain.campaign import Campaign
+from src.campaign.domain.campaign_messages import SetGroupMessage
 from src.campaign.enums.campaign_type import CampaignType, CampaignTypeEnum
 from src.campaign.infra.entity.campaign_remind_entity import CampaignRemindEntity
 from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
@@ -41,7 +42,10 @@ from src.common.enums.campaign_media import CampaignMedia
 from src.common.infra.entity.customer_master_entity import CustomerMasterEntity
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import get_reservation_date, localtime_converter
-from src.core.exceptions.exceptions import ConsistencyException, ValidationException
+from src.core.exceptions.exceptions import (
+    ConsistencyException,
+    ValidationException,
+)
 from src.message_template.enums.message_type import MessageType
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
 
@@ -618,3 +622,32 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         )
 
         return [audience_id[0] for audience_id in audience_ids]
+
+    def get_campaign_set_group(self, campaign_id, set_seq, db: Session) -> list[SetGroupMessage]:
+        entities = (
+            db.query(SetGroupMessagesEntity)
+            .filter(
+                SetGroupMessagesEntity.campaign_id == campaign_id,
+                SetGroupMessagesEntity.set_seq == set_seq,
+            )
+            .all()
+        )
+
+        return [SetGroupMessage.model_validate(entity) for entity in entities]
+
+    def update_confirm_status(self, campaign_id, set_seq, is_confirmed, db: Session):
+        print(is_confirmed)
+        print(set_seq)
+
+        update_statement = (
+            update(CampaignSetsEntity)
+            .where(
+                and_(
+                    CampaignSetsEntity.campaign_id == campaign_id,
+                    CampaignSetsEntity.set_seq == set_seq,
+                )
+            )
+            .values(is_message_confirmed=is_confirmed)
+        )
+
+        db.execute(update_statement)

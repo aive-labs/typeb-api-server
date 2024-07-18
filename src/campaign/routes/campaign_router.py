@@ -13,6 +13,9 @@ from src.campaign.routes.dto.request.campaign_set_group_message_request import (
 from src.campaign.routes.dto.request.campaign_set_group_update import (
     CampaignSetGroupUpdate,
 )
+from src.campaign.routes.dto.request.campaign_set_message_confirm_request import (
+    CampaignSetMessageConfirmReqeust,
+)
 from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdate
 from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
 from src.campaign.routes.dto.response.campaign_set_group_update_response import (
@@ -26,6 +29,9 @@ from src.campaign.routes.dto.response.exclusion_customer_detail import (
 )
 from src.campaign.routes.dto.response.update_campaign_set_group_message_response import (
     UpdateCampaignSetGroupMessageResponse,
+)
+from src.campaign.routes.port.confirm_campaign_set_group_message_usecase import (
+    ConfirmCampaignSetGroupMessageUseCase,
 )
 from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUseCase
 from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase
@@ -186,3 +192,19 @@ def update_campaign_message(
     return update_campaign_set_message_group_service.update_campaign_set_messages_contents(
         campaign_id, set_group_msg_seq, msg_input, user, db=db
     )
+
+
+@campaign_router.put("/campaigns/{campaign_id}/message/{set_seq}/is_confirmed")
+@inject
+def update_set_message_confirmed(
+    campaign_id: str,
+    set_seq: int,
+    is_confirmed_obj: CampaignSetMessageConfirmReqeust,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    confirm_campaign_set_group_message: ConfirmCampaignSetGroupMessageUseCase = Depends(
+        dependency=Provide[Container.confirm_campaign_set_group_message]
+    ),
+):
+    confirm_campaign_set_group_message.exec(campaign_id, set_seq, is_confirmed_obj, user, db=db)
+    return {"status": "success"}

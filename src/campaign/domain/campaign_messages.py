@@ -108,6 +108,26 @@ class Message(BaseModel):
         orm_mode = True
         from_attributes = True
 
+    @staticmethod
+    def from_set_group_message(model: SetGroupMessage) -> "Message":
+        return Message(
+            set_group_msg_seq=model.set_group_msg_seq,
+            msg_resv_date=model.msg_resv_date,
+            msg_title=model.msg_title,
+            msg_body=model.msg_body,
+            bottom_text=model.bottom_text,
+            msg_announcement=model.msg_announcement,
+            template_id=model.template_id,
+            msg_gen_key=model.msg_gen_key,
+            msg_photo_uri=model.msg_photo_uri,
+            msg_send_type=model.msg_send_type,
+            media=CampaignMedia.from_value(model.media) if model.media else None,
+            msg_type=(MessageType.from_value(model.msg_type) if model.msg_type else None),
+            kakao_button_links=model.kakao_button_links,
+            phone_callback=model.phone_callback,
+            is_used=model.is_used,
+        )
+
 
 class MessageGenerate(Message):
     rec_explanation: List[str] | None = None
