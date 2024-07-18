@@ -856,9 +856,9 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
                     web_link=data.web_link,
                     app_link=data.app_link,
                     created_at=created_at,
-                    created_by=user_obj.user_id,
+                    created_by=str(user_obj.user_id),
                     updated_at=created_at,
-                    updated_by=user_obj.user_id,
+                    updated_by=str(user_obj.user_id),
                 )
 
                 msg_obj.kakao_button_links.append(button_item)
