@@ -11,7 +11,6 @@ from src.core.exceptions.exceptions import NotFoundException
 from src.offers.domain.cafe24_coupon import Cafe24CouponResponse
 from src.offers.domain.offer import Offer
 from src.offers.enums.cafe24_coupon_benefit_type import Cafe24CouponBenefitType
-from src.offers.enums.offer_use_type import OfferUseType
 from src.offers.infra.entity.offer_details_entity import OfferDetailsEntity
 from src.offers.infra.entity.offers_entity import OffersEntity
 from src.search.routes.dto.id_with_label_response import IdWithLabel
@@ -60,12 +59,12 @@ class OfferRepository:
             )
 
         offer_entities = base_query.all()
-        use_type_dict = {v.value: v.description for _, v in OfferUseType.__members__.items()}
+        # use_type_dict = {v.value: v.description for _, v in OfferUseType.__members__.items()}
 
         offers = []
         for offer in offer_entities:
             temp_offer = Offer.model_validate(offer)
-            temp_offer.available_scope = use_type_dict.get(temp_offer.available_scope, "")
+            temp_offer.available_scope = offer.available_scope
             temp_offer.offer_source = temp_offer.offer_source if temp_offer.offer_source else ""
 
             offers.append(temp_offer)
