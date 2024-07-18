@@ -4,6 +4,9 @@ from sqlalchemy.orm import Session
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.campaign.routes.dto.request.campaign_create import CampaignCreate
+from src.campaign.routes.dto.request.campaign_progress_request import (
+    CampaignProgressRequest,
+)
 from src.campaign.routes.dto.request.campaign_set_group_update import (
     CampaignSetGroupUpdate,
 )
@@ -21,6 +24,9 @@ from src.campaign.routes.dto.response.exclusion_customer_detail import (
 from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUseCase
 from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase
 from src.campaign.routes.port.get_campaign_usecase import GetCampaignUseCase
+from src.campaign.routes.port.update_campaign_progress_usecase import (
+    UpdateCampaignProgressUseCase,
+)
 from src.campaign.routes.port.update_campaign_set_message_group_usecase import (
     UpdateCampaignSetMessageGroupUseCase,
 )
@@ -141,3 +147,19 @@ def update_campaign_set_message_group(
     return update_campaign_set_message_group_service.exec(
         campaign_id, set_seq, set_group_updated, user, db=db
     )
+
+
+@campaign_router.patch("/campaigns/{campaign_id}")
+@inject
+def patch_campaign_progress(
+    campaign_id: str,
+    progress_req: CampaignProgressRequest,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    update_campaign_progress_service: UpdateCampaignProgressUseCase = Depends(
+        dependency=Provide[Container.update_campaign_progress_service]
+    ),
+):
+    update_campaign_progress_service.exec(campaign_id, progress_req.progress, db=db)
+
+    return {"res": True}

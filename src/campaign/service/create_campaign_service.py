@@ -148,7 +148,7 @@ class CreateCampaignService(CreateCampaignUseCase):
             campaign_status_name=CampaignStatus.tempsave.description,
             send_type_code=campaign_create.send_type_code.value,
             send_type_name=SendType.get_name(campaign_create.send_type_code.value),
-            progress=CampaignProgress.base_complete.value,
+            progress=CampaignProgress.BASE_COMPLETE.value,
             repeat_type=repeat_type,
             # from user info
             created_by=str(user.user_id),

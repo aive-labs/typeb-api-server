@@ -8,7 +8,7 @@ from src.campaign.enums.campagin_status import (
     CampaignStatusEnum,
     CampaignStatusGroupEnum,
 )
-from src.campaign.enums.campaign_progress import CampaignProgressEnum
+from src.campaign.enums.campaign_progress import CampaignProgress
 from src.campaign.enums.campaign_type import CampaignTypeEnum
 from src.campaign.enums.repeat_type import RepeatTypeEnum
 from src.campaign.enums.send_type import SendTypeEnum
@@ -55,7 +55,7 @@ class CampaignBase(BaseModel):
     owned_by_dept: str
     owned_by_dept_name: str | None = None
     owned_by_dept_abb_name: str | None = None
-    progress: CampaignProgressEnum
+    progress: CampaignProgress
     created_at: datetime = Field(default_factory=localtime_converter)
     created_by: str | int | None = None
     created_by_name: str | None = None

@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from contextlib import AbstractContextManager
 
-from sqlalchemy import Integer, and_, desc, distinct, func, not_, or_
+from sqlalchemy import Integer, and_, desc, distinct, func, not_, or_, update
 from sqlalchemy.orm import Session, joinedload
 
 from src.audiences.infra.entity.audience_stats_entity import AudienceStatsEntity
@@ -481,3 +481,11 @@ class CampaignSqlAlchemy:
         )
 
         return [CampaignReviewerInfo.model_validate(entity) for entity in entities]
+
+    def update_campaign_progress_status(self, campaign_id, update_status: str, db: Session):
+        update_statement = (
+            update(CampaignEntity)
+            .where(CampaignEntity.campaign_id == campaign_id)
+            .values(progress=update_status)
+        )
+        db.execute(update_statement)

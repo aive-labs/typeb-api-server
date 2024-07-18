@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from src.campaign.domain.campaign import Campaign
 from src.campaign.domain.campaign_remind import CampaignRemind
 from src.campaign.domain.campaign_timeline import CampaignTimeline
+from src.campaign.enums.campaign_progress import CampaignProgress
 from src.campaign.infra.dto.campaign_reviewer_info import CampaignReviewerInfo
 from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.users.domain.user import User
@@ -53,4 +54,10 @@ class BaseCampaignRepository(ABC):
 
     @abstractmethod
     def get_campaign_reviewers(self, campaign_id: str, db: Session) -> list[CampaignReviewerInfo]:
+        pass
+
+    @abstractmethod
+    def update_campaign_progress_status(
+        self, campaign_id: str, update_status: CampaignProgress, db: Session
+    ):
         pass

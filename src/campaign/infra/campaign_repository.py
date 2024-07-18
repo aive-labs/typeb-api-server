@@ -4,6 +4,7 @@ from src.campaign.domain.campaign import Campaign
 from src.campaign.domain.campaign_remind import CampaignRemind
 from src.campaign.domain.campaign_timeline import CampaignTimeline
 from src.campaign.domain.send_reservation import SendReservation
+from src.campaign.enums.campaign_progress import CampaignProgress
 from src.campaign.infra.campaign_sqlalchemy_repository import CampaignSqlAlchemy
 from src.campaign.infra.dto.campaign_reviewer_info import CampaignReviewerInfo
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
@@ -73,3 +74,10 @@ class CampaignRepository(BaseCampaignRepository):
 
     def get_campaign_reviewers(self, campaign_id: str, db: Session) -> list[CampaignReviewerInfo]:
         return self.campaign_sqlalchemy.get_campaign_reviewers(campaign_id, db)
+
+    def update_campaign_progress_status(
+        self, campaign_id: str, update_status: CampaignProgress, db: Session
+    ):
+        return self.campaign_sqlalchemy.update_campaign_progress_status(
+            campaign_id, update_status.value, db
+        )
