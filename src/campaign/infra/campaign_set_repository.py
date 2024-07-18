@@ -44,6 +44,7 @@ from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import get_reservation_date, localtime_converter
 from src.core.exceptions.exceptions import (
     ConsistencyException,
+    NotFoundException,
     ValidationException,
 )
 from src.message_template.enums.message_type import MessageType
@@ -655,7 +656,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
     def get_campaign_set_group_message_by_msg_seq(
         self, campaign_id, set_group_msg_seq, db
     ) -> SetGroupMessage:
-        msg_obj_query = (
+        entity = (
             db.query(SetGroupMessagesEntity)
             .filter(
                 SetGroupMessagesEntity.campaign_id == campaign_id,
@@ -664,7 +665,10 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             .first()
         )
 
-        return SetGroupMessage.model_validate(msg_obj_query)
+        if not entity:
+            raise NotFoundException(detail={"message": "해당되는 메시지 정보를 찾지 못했습니다."})
+
+        return SetGroupMessage.model_validate(entity)
 
     def update_use_status(self, campaign_id, set_group_msg_seq, is_used, db: Session):
         update_statement = (

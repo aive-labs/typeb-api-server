@@ -229,3 +229,5 @@ def update_campaign_message_use_status(
     ),
 ):
     update_message_use_status_service.exec(campaign_id, set_group_msg_seq, is_used_obj, user, db=db)
+
+    return {"res": True}

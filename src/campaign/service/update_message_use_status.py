@@ -55,8 +55,6 @@ class UpdateMessageUseStatus(UpdateMessageUseStatusUseCase):
             campaign_id, set_group_msg_seq, is_used_obj.is_used, db
         )
 
-        return {"result": True}
-
     def check_reservation_time_expiry(
         self, campaign, campaign_set_group_message, is_used_obj, old_message_used
     ):
