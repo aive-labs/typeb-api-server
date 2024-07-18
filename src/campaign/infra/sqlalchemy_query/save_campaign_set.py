@@ -32,4 +32,5 @@ def save_campaign_set(db, campaign_df):
         set_req.set_group_list = set_group_req_list
         db.add(set_req)
 
+    db.flush()
     return True
