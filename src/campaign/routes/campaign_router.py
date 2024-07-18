@@ -240,6 +240,7 @@ def update_campaign_message_use_status(
 
 
 @campaign_router.get("/campaign/{campaign_id}/set-description")
+@inject
 def get_campaign_set_description(
     campaign_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
@@ -248,4 +249,4 @@ def get_campaign_set_description(
         dependency=Provide[Container.get_campaign_set_description]
     ),
 ) -> CampaignSetDescriptionResponse:
-    get_campaign_set_description.exec(campaign_id)
+    return get_campaign_set_description.exec(campaign_id, db)
