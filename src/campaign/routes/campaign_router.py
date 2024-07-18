@@ -162,7 +162,7 @@ def update_campaign_set_message_group(
         dependency=Provide[Container.update_campaign_set_message_group_service]
     ),
 ) -> CampaignSetGroupUpdateResponse:
-    return update_campaign_set_message_group_service.exec(
+    return update_campaign_set_message_group_service.update_campaign_set_message_group(
         campaign_id, set_seq, set_group_updated, user, db=db
     )
 
