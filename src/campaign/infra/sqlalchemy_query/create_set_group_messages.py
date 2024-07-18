@@ -35,6 +35,10 @@ def create_set_group_messages(
     - set_group_messages
     """
 
+    print("create message")
+    print("set_group_seqs")
+    print(set_group_seqs)
+
     # phone_callback, vender_bottom_txt 초기값 추후 send_reservation 시 변환됨
     phone_callback = get_phone_callback(user_id, db)  # 매장 번호 또는 대표번호
     vender_bottom_txt = {"dau": "무료수신거부 080-801-7860", "ssg": "무료수신거부 080-801-7860"}
@@ -43,7 +47,7 @@ def create_set_group_messages(
     # 기본 캠페인 -> (광고)[네파]
     # expert 캠페인 -> None
     if campaign_type_code == CampaignType.BASIC.value:
-        msg_body = "(광고)[네파]"
+        msg_body = "타입비 테스트"
     else:
         msg_body = None
 
@@ -65,6 +69,8 @@ def create_set_group_messages(
 
     set_group_messages_all = []
     for set_group_dict in set_group_seqs:
+
+        print(set_group_dict)
 
         set_campaign_message_dict = set_group_dict
         set_campaign_message_dict["msg_body"] = (
@@ -111,6 +117,5 @@ def create_set_group_messages(
             set_group_messages_all.extend(set_group_remind_messages)
 
     db.bulk_insert_mappings(SetGroupMessagesEntity, set_group_messages_all)
-    # insert_query = SetGroupMessages.__table__.insert().values(set_group_messages_all)
-    # db.execute(insert_query)
+
     return True
