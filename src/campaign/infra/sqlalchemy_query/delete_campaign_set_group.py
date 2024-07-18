@@ -24,4 +24,6 @@ def delete_campaign_set_group(set_seq: int, set_group_seqs: list, db: Session):
 
         db.delete(deleted_obj)
 
+    db.flush()
+
     return True
