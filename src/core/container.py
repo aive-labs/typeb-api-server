@@ -39,6 +39,7 @@ from src.campaign.service.confrim_campaign_set_group_message import (
 from src.campaign.service.create_campaign_service import CreateCampaignService
 from src.campaign.service.generate_message_service import GenerateMessageService
 from src.campaign.service.get_campaign_service import GetCampaignService
+from src.campaign.service.get_campaign_set_description import GetCampaignSetDescription
 from src.campaign.service.update_campaign_progress_service import (
     UpdateCampaignProgressService,
 )
@@ -418,6 +419,12 @@ class Container(containers.DeclarativeContainer):
     )
     update_message_use_status_service = providers.Singleton(
         provides=UpdateMessageUseStatus,
+        campaign_repository=campaign_repository,
+        campaign_set_repository=campaign_set_repository,
+    )
+
+    get_campaign_set_description = providers.Singleton(
+        provides=GetCampaignSetDescription,
         campaign_repository=campaign_repository,
         campaign_set_repository=campaign_set_repository,
     )

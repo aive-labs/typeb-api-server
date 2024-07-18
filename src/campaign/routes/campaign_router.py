@@ -21,6 +21,9 @@ from src.campaign.routes.dto.request.campaign_set_message_use_request import (
 )
 from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdate
 from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
+from src.campaign.routes.dto.response.campaign_set_description_response import (
+    CampaignSetDescriptionResponse,
+)
 from src.campaign.routes.dto.response.campaign_set_group_update_response import (
     CampaignSetGroupUpdateResponse,
 )
@@ -38,6 +41,9 @@ from src.campaign.routes.port.confirm_campaign_set_group_message_usecase import 
 )
 from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUseCase
 from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase
+from src.campaign.routes.port.get_campaign_set_description_usecase import (
+    GetCampaignSetDescriptionUseCase,
+)
 from src.campaign.routes.port.get_campaign_usecase import GetCampaignUseCase
 from src.campaign.routes.port.update_campaign_progress_usecase import (
     UpdateCampaignProgressUseCase,
@@ -231,3 +237,15 @@ def update_campaign_message_use_status(
     update_message_use_status_service.exec(campaign_id, set_group_msg_seq, is_used_obj, user, db=db)
 
     return {"res": True}
+
+
+@campaign_router.get("/campaign/{campaign_id}/set-description")
+def get_campaign_set_description(
+    campaign_id: str,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    get_campaign_set_description: GetCampaignSetDescriptionUseCase = Depends(
+        dependency=Provide[Container.get_campaign_set_description]
+    ),
+) -> CampaignSetDescriptionResponse:
+    get_campaign_set_description.exec(campaign_id)
