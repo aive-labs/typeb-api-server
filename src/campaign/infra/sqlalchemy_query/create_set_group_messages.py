@@ -53,7 +53,6 @@ def create_set_group_messages(
 
     if has_remind:
         remind_dict = [row._asdict() for row in get_campaign_remind(db, campaign_id)]
-
     else:
         remind_dict = None
 
@@ -69,8 +68,6 @@ def create_set_group_messages(
 
     set_group_messages_all = []
     for set_group_dict in set_group_seqs:
-
-        print(set_group_dict)
 
         set_campaign_message_dict = set_group_dict
         set_campaign_message_dict["msg_body"] = (

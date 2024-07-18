@@ -196,10 +196,7 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
         campaign_set = get_campaign_set_by_set_seq(set_seq, db)
         if campaign_set:
             recsys_model_id = campaign_set.recsys_model_id
-            print("recsys_model_id")
-            print(recsys_model_id)
             recsys_model_enum_dict = RecommendModels.get_eums()
-            print(recsys_model_enum_dict)
             personalized_recsys_model_id = [
                 i["_value_"] for i in recsys_model_enum_dict if i["personalized"] is True
             ]
@@ -394,32 +391,30 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
                 for key, value in row.items():
                     setattr(campaign_set_group_entity, key, value)
 
-                if campaign_set_group_entity.group_msg:
-                    group_msgs = [
-                        item
-                        for item in campaign_set_group_entity.group_msg
-                        if item.msg_send_type == "campaign"
-                    ][0]
-                    group_msgs.media = campaign_set_group_entity.media
+                group_msgs = [
+                    item
+                    for item in campaign_set_group_entity.group_msg
+                    if item.msg_send_type == "campaign"
+                ][0]
+                group_msgs.media = campaign_set_group_entity.media
 
-                    if group_msgs.msg_type != campaign_set_group_entity.msg_type:
-                        # 서버내 파일 & resource_id 삭제
-                        if (
-                            group_msgs.msg_photo_uri is not None
-                            and len(group_msgs.msg_photo_uri) > 0
-                        ):
-                            # 기존에 이미지 삭제하는 코드 있었음
-                            delete_message_resources_by_seq(group_msgs.set_group_msg_seq, db)
-                        # button 삭제
-                        db.query(KakaoLinkButtonsEntity).filter(
-                            KakaoLinkButtonsEntity.set_group_msg_seq == group_msgs.set_group_msg_seq
-                        ).delete()
-                        group_msgs.msg_type = campaign_set_group_entity.msg_type
-                        group_msgs.msg_title = None
-                        group_msgs.msg_body = None
-                        group_msgs.msg_gen_key = None
-                        group_msgs.rec_explanation = None
-                        group_msgs.msg_photo_uri = None
+                if group_msgs.msg_type != campaign_set_group_entity.msg_type:
+                    # 서버내 파일 & resource_id 삭제
+                    if group_msgs.msg_photo_uri is not None and len(group_msgs.msg_photo_uri) > 0:
+                        # 기존에 이미지 삭제하는 코드 있었음
+                        delete_message_resources_by_seq(group_msgs.set_group_msg_seq, db)
+
+                    # button 삭제
+                    db.query(KakaoLinkButtonsEntity).filter(
+                        KakaoLinkButtonsEntity.set_group_msg_seq == group_msgs.set_group_msg_seq
+                    ).delete()
+
+                    group_msgs.msg_type = campaign_set_group_entity.msg_type
+                    group_msgs.msg_title = None
+                    group_msgs.msg_body = None
+                    group_msgs.msg_gen_key = None
+                    group_msgs.rec_explanation = None
+                    group_msgs.msg_photo_uri = None
             else:
                 row["set_group_seq"] = None
                 # 존재하지 않는 경우 삽입
@@ -523,11 +518,8 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
                 result_recipient_df, db
             )  # pyright: ignore [reportPossiblyUnboundVariable]
 
-            return True
-        else:
-            result = True
-        db.commit()
-        return result
+        db.flush()
+        return True
 
     def is_updatable_campaign(
         self,
