@@ -3,8 +3,10 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
+from src.campaign.domain.campaign_messages import SetGroupMessage
 from src.campaign.domain.campaign_remind import CampaignRemind
 from src.campaign.domain.campaign_timeline import CampaignTimeline
+from src.campaign.domain.send_reservation import SendReservation
 from src.campaign.enums.campaign_progress import CampaignProgress
 from src.campaign.infra.dto.campaign_reviewer_info import CampaignReviewerInfo
 from src.search.routes.dto.id_with_item_response import IdWithItem
@@ -59,5 +61,23 @@ class BaseCampaignRepository(ABC):
     @abstractmethod
     def update_campaign_progress_status(
         self, campaign_id: str, update_status: CampaignProgress, db: Session
+    ):
+        pass
+
+    @abstractmethod
+    def get_campaign_set_group_message(
+        self, campaign_id: str, set_group_msg_seq: int, db: Session
+    ) -> SetGroupMessage:
+        pass
+
+    @abstractmethod
+    def get_message_in_send_reservation(
+        self, campaign_id, set_group_msg_seq, db
+    ) -> SendReservation:
+        pass
+
+    @abstractmethod
+    def update_campaign_set_group_message_type(
+        self, campaign_id, set_group_seq, message_type, db: Session
     ):
         pass

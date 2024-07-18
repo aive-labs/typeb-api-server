@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
+from src.campaign.domain.campaign_messages import SetGroupMessage
 from src.campaign.domain.campaign_remind import CampaignRemind
 from src.campaign.domain.campaign_timeline import CampaignTimeline
 from src.campaign.domain.send_reservation import SendReservation
@@ -80,4 +81,23 @@ class CampaignRepository(BaseCampaignRepository):
     ):
         return self.campaign_sqlalchemy.update_campaign_progress_status(
             campaign_id, update_status.value, db
+        )
+
+    def get_campaign_set_group_message(
+        self, campaign_id: str, set_group_msg_seq: int, db: Session
+    ) -> SetGroupMessage:
+        return self.campaign_sqlalchemy.get_campaign_set_group_message(
+            campaign_id, set_group_msg_seq, db
+        )
+
+    def get_message_in_send_reservation(
+        self, campaign_id, set_group_msg_seq, db
+    ) -> SendReservation:
+        return self.campaign_sqlalchemy.get_message_in_send_reservation(
+            campaign_id, set_group_msg_seq, db
+        )
+
+    def update_campaign_set_group_message_type(self, campaign_id, set_group_seq, message_type, db):
+        self.campaign_sqlalchemy.update_campaign_set_group_message_type(
+            campaign_id, set_group_seq, message_type, db
         )

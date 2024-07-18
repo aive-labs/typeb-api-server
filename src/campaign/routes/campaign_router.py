@@ -7,6 +7,9 @@ from src.campaign.routes.dto.request.campaign_create import CampaignCreate
 from src.campaign.routes.dto.request.campaign_progress_request import (
     CampaignProgressRequest,
 )
+from src.campaign.routes.dto.request.campaign_set_group_message_request import (
+    CampaignSetGroupMessageRequest,
+)
 from src.campaign.routes.dto.request.campaign_set_group_update import (
     CampaignSetGroupUpdate,
 )
@@ -20,6 +23,9 @@ from src.campaign.routes.dto.response.campaign_timeline_response import (
 )
 from src.campaign.routes.dto.response.exclusion_customer_detail import (
     ExcludeCustomerDetail,
+)
+from src.campaign.routes.dto.response.update_campaign_set_group_message_response import (
+    UpdateCampaignSetGroupMessageResponse,
 )
 from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUseCase
 from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase
@@ -163,3 +169,20 @@ def patch_campaign_progress(
     update_campaign_progress_service.exec(campaign_id, progress_req.progress, db=db)
 
     return {"res": True}
+
+
+@campaign_router.put("/campaigns/{campaign_id}/message/{set_group_msg_seq}")
+@inject
+def update_campaign_message(
+    campaign_id: str,
+    set_group_msg_seq: int,
+    msg_input: CampaignSetGroupMessageRequest,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    update_campaign_set_message_group_service: UpdateCampaignSetMessageGroupUseCase = Depends(
+        dependency=Provide[Container.update_campaign_set_message_group_service]
+    ),
+) -> UpdateCampaignSetGroupMessageResponse:
+    return update_campaign_set_message_group_service.update_campaign_set_messages_contents(
+        campaign_id, set_group_msg_seq, msg_input, user, db=db
+    )

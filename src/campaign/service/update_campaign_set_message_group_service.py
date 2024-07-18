@@ -5,6 +5,11 @@ import pandas as pd
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
+from src.campaign.domain.campaign_messages import (
+    KakaoLinkButtons,
+    Message,
+    SetGroupMessage,
+)
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
 from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
@@ -37,10 +42,23 @@ from src.campaign.infra.sqlalchemy_query.get_contents_name import get_contents_n
 from src.campaign.infra.sqlalchemy_query.get_recipients_by_campaign_set_sort_num import (
     get_recipients_by_campaign_set_sort_num,
 )
+from src.campaign.infra.sqlalchemy_query.get_set_group_message import (
+    get_set_group_msg,
+    save_set_group_msg,
+)
 from src.campaign.infra.sqlalchemy_query.get_set_groups_by_group_seqs import (
     get_set_groups_by_group_seqs,
 )
 from src.campaign.infra.sqlalchemy_query.get_set_rep_nm_list import get_set_rep_nm_list
+from src.campaign.infra.sqlalchemy_query.modify_reservation_sync_service import (
+    ModifyReservSync,
+)
+from src.campaign.infra.sqlalchemy_query.validate_phone_call import (
+    validate_phone_callback,
+)
+from src.campaign.routes.dto.request.campaign_set_group_message_request import (
+    CampaignSetGroupMessageRequest,
+)
 from src.campaign.routes.dto.request.campaign_set_group_update import (
     CampaignSetGroupUpdate,
 )
@@ -49,18 +67,23 @@ from src.campaign.routes.dto.response.campaign_set_group_update_response import 
     CampaignSetGroupUpdateResponse,
     CampaignSetResponse,
 )
+from src.campaign.routes.dto.response.update_campaign_set_group_message_response import (
+    UpdateCampaignSetGroupMessageResponse,
+)
 from src.campaign.routes.port.update_campaign_set_message_group_usecase import (
     UpdateCampaignSetMessageGroupUseCase,
 )
 from src.campaign.service.authorization_checker import AuthorizationChecker
 from src.campaign.service.campaign_dependency_manager import CampaignDependencyManager
+from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
 from src.campaign.utils.utils import (
     split_dataframe_by_ratios,
     split_df_stratified_by_column,
 )
 from src.common.enums.campaign_media import CampaignMedia
+from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
 from src.common.utils.data_converter import DataConverter
-from src.common.utils.date_utils import localtime_converter
+from src.common.utils.date_utils import get_localtime, localtime_converter
 from src.common.utils.get_values_from_dict import get_values_from_dict
 from src.core.exceptions.exceptions import (
     ConsistencyException,
@@ -68,6 +91,7 @@ from src.core.exceptions.exceptions import (
     PolicyException,
 )
 from src.core.transactional import transactional
+from src.message_template.enums.kakao_button_type import KakaoButtonType
 from src.message_template.enums.message_type import MessageType
 from src.strategy.enums.recommend_model import RecommendModels
 from src.users.domain.user import User
@@ -75,8 +99,11 @@ from src.users.domain.user import User
 
 class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase):
 
+    def __init__(self, campaign_repository: BaseCampaignRepository):
+        self.campaign_repository = campaign_repository
+
     @transactional
-    def exec(
+    def update_campaign_set_message_group(
         self,
         campaign_id: str,
         set_seq: int,
@@ -589,3 +616,259 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
                     # 콘텐츠명 중복 제거
                     sets[idx]["contents_names"] = list(set(result_dict[set_sort_num]))
         return sets
+
+    @transactional
+    def update_campaign_set_messages_contents(
+        self,
+        campaign_id: str,
+        set_group_msg_seq: int,
+        set_group_message_update: CampaignSetGroupMessageRequest,
+        user: User,
+        db: Session,
+    ) -> UpdateCampaignSetGroupMessageResponse:
+        set_group_message = self.campaign_repository.get_campaign_set_group_message(
+            campaign_id, set_group_msg_seq, db
+        )
+
+        if set_group_message is None:
+            raise NotFoundException(
+                detail={"code": 404, "message": "메시지 정보를 찾지 못했습니다."}
+            )
+
+        campaign = self.campaign_repository.get_campaign_detail(campaign_id, user, db)
+
+        if campaign is None:
+            raise NotFoundException(
+                detail={"code": 404, "message": "캠페인 정보를 찾지 못했습니다."}
+            )
+
+        if campaign.campaign_status_code == "r2":
+            first_send_message = self.campaign_repository.get_message_in_send_reservation(
+                campaign_id, set_group_msg_seq, db
+            )
+
+            if first_send_message:
+                raise PolicyException(
+                    detail={
+                        "code": "message/update/denied",
+                        "message": "이미 발송된 메세지는 수정이 불가합니다.",
+                    },
+                )
+
+        # 발신번호 validation
+        if set_group_message_update.phone_callback != set_group_message.phone_callback:
+            if set_group_message_update.phone_callback == "{{주관리매장전화번호}}":
+                is_available_phone_number = True
+            elif set_group_message_update.phone_callback == "1666-3096":
+                is_available_phone_number = True
+            else:
+                # 주관리매장번호 validation
+                is_available_phone_number = validate_phone_callback(
+                    set_group_message_update.phone_callback, db
+                )
+
+            if not is_available_phone_number:
+                raise PolicyException(
+                    detail={
+                        "code": "campaign/message/update/denied",
+                        "message": "유효하지 않은 대표번호입니다.",
+                    },
+                )
+            set_group_message.phone_callback = set_group_message_update.phone_callback
+
+        if set_group_message_update.msg_body is not None:
+            # 메세지 수정 또는 템플릿 적용
+            # msg_input -> pydantic 모델 적용된 객체
+            if set_group_message_update.msg_type.value != MessageType.KAKAO_ALIM_TEXT.value:
+                msg_delivery_vendor = campaign.msg_delivery_vendor
+                set_group_message_update = self.validate_message(
+                    msg_delivery_vendor, set_group_message_update
+                )
+
+            if set_group_message_update.media.value == CampaignMedia.TEXT_MESSAGE.value:
+                if set_group_message_update.msg_type.value != set_group_message.msg_type:
+                    set_group_message.msg_type = set_group_message_update.msg_type.value
+
+                    if set_group_message.msg_send_type == "campaign":
+                        self.campaign_repository.update_campaign_set_group_message_type(
+                            campaign_id,
+                            set_group_message.set_group_seq,
+                            set_group_message_update.msg_type.value,
+                            db,
+                        )
+
+            set_group_message.msg_title = set_group_message_update.msg_title
+            set_group_message.msg_body = set_group_message_update.msg_body
+            set_group_message.updated_by = user.username
+
+            if set_group_message_update.template_id:
+                set_group_message.template_id = set_group_message_update.template_id
+
+            set_group_message.bottom_text = set_group_message_update.bottom_text
+            set_group_message.phone_callback = set_group_message_update.phone_callback
+
+        else:
+            # 카카오링크 버튼 모달 수정의 경우 메세지 내용 업데이트 없음
+            pass
+
+        # 카카오링크 업데이트
+        res = self.modify_link_object(user, set_group_message, set_group_message_update, db)
+
+        save_set_group_msg(campaign_id, set_group_msg_seq, res, db)
+
+        # 수정단계 - 발송 예약 삭제
+        if campaign.campaign_status_code == "r2":
+            modify_resv_sync = ModifyReservSync(db, str(user.user_id), campaign.campaign_id)
+            modify_resv_sync.delete_send_reservation_by_seq([set_group_msg_seq])
+
+        db.flush()
+
+        group_msg_obj: SetGroupMessage = get_set_group_msg(campaign_id, set_group_msg_seq, db)
+
+        if not group_msg_obj:
+            raise NotFoundException(detail={"message": "메시지를 찾지 못했습니다."})
+
+        message = Message(
+            set_group_msg_seq=group_msg_obj.set_group_msg_seq,
+            msg_resv_date=group_msg_obj.msg_resv_date,
+            msg_title=group_msg_obj.msg_title,
+            msg_body=group_msg_obj.msg_body,
+            bottom_text=group_msg_obj.bottom_text,
+            msg_announcement=group_msg_obj.msg_announcement,
+            template_id=group_msg_obj.template_id,
+            msg_gen_key=group_msg_obj.msg_gen_key,
+            msg_photo_uri=group_msg_obj.msg_photo_uri,
+            msg_send_type=group_msg_obj.msg_send_type,
+            media=CampaignMedia.from_value(group_msg_obj.media) if group_msg_obj.media else None,
+            msg_type=(
+                MessageType.from_value(group_msg_obj.msg_type) if group_msg_obj.msg_type else None
+            ),
+            kakao_button_links=group_msg_obj.kakao_button_links,
+            phone_callback=group_msg_obj.phone_callback,
+            is_used=group_msg_obj.is_used,
+        )
+
+        return UpdateCampaignSetGroupMessageResponse(
+            set_group_msg_seq=set_group_msg_seq, msg_obj=message
+        )
+
+    def validate_message(self, msg_delivery_vendor: str, message: CampaignSetGroupMessageRequest):
+        message_title = message.msg_title if message.msg_title else ""
+
+        if msg_delivery_vendor == MsgDeliveryVendorEnum.DAU.value:
+            encode_type = "UTF-8"  # dau 40byte
+        else:
+            encode_type = "euc-kr"  # ssg 96byte
+
+        str_to_encode = message_title
+        encode_str = str_to_encode.encode(encode_type)
+        encode_size = len(encode_str)
+
+        self.validate_title(encode_size, msg_delivery_vendor)
+        self.validate_body_length(message)
+
+        # 메시지 타입별 validation checker
+        message_body = message.msg_body if message.msg_body else ""
+        message_bottom_text = message.bottom_text if message.bottom_text else ""
+        if message.media.value == "tms":
+            self.validate_tms(message, message_body, message_bottom_text)
+        elif message.media.value == "kft":
+            self.validate_kakao(message, message_body)
+
+        return message
+
+    def validate_title(self, encode_size, msg_delivery_vendor):
+        if (msg_delivery_vendor == MsgDeliveryVendorEnum.DAU.value) and (encode_size > 40):
+            raise PolicyException(
+                detail={
+                    "code": "campaign/message/dau/title_size",
+                    "message": f"문자 메세지 제목은 40 Byte 이하로 입력해주세요. 입력한 Byte 크기: {encode_size}",
+                },
+            )
+
+    def validate_body_length(self, message):
+        if message.msg_body and len(message.msg_body) > 1000:
+            raise PolicyException(
+                detail={
+                    "code": "campaign/message",
+                    "message": "본문은 1000자 이하로 입력해주세요.",
+                },
+            )
+
+    def validate_kakao(self, message, message_body):
+        if message.msg_type.value == "kakao_image_general":
+            if len(message_body) > 400:
+                raise PolicyException(
+                    detail={
+                        "code": "campaign/message",
+                        "message": "카카오 이미지 일반형은 400자 이하이어야 합니다.",
+                    },
+                )
+        if message.msg_type.value == "kakao_text":
+            if len(message_body) > 1000:
+                raise PolicyException(
+                    detail={
+                        "code": "campaign/message",
+                        "message": "카카오 텍스트형은 1000자 이하이어야 합니다.",
+                    },
+                )
+        if message.msg_type.value == "kakao_image_wide":
+            if len(message_body) > 76:
+                raise PolicyException(
+                    detail={
+                        "code": "campaign/message",
+                        "message": "카카오 이미지 와이드형은 76자 이하이어야 합니다.",
+                    },
+                )
+
+    def validate_tms(self, message, message_body, message_bottom_text):
+        if message.msg_photo_uri is not None:
+            message.msg_type = MessageType.MMS
+        elif len(message_body + message_bottom_text) < 45:
+            message.msg_type = MessageType.SMS
+        else:
+            message.msg_type = MessageType.LMS
+
+    def modify_link_object(self, user_obj, msg_obj, msg_input, db: Session):
+        """메시지 링크 수정 반영"""
+
+        if msg_obj.kakao_button_links is None:
+            msg_obj.kakao_button_links = []
+
+        if msg_input.kakao_button_links is None:
+            msg_input.kakao_button_links = []
+
+        # 현재 아이템이 적은 경우에는 높은 번호의 인덱스 삭제
+        if len(msg_obj.kakao_button_links) > len(msg_input.kakao_button_links):
+            for idx in range(len(msg_input.kakao_button_links), len(msg_obj.kakao_button_links)):
+                db.delete(msg_obj.kakao_button_links[idx])
+
+        for idx, data in enumerate(msg_input.kakao_button_links):
+
+            # 현재 아이템보다 추가된 아이템이 많은 경우
+            if idx >= len(msg_obj.kakao_button_links):
+
+                created_at = get_localtime()
+                button_item = KakaoLinkButtons(
+                    set_group_msg_seq=data.set_group_msg_seq,
+                    button_name=data.button_name,
+                    button_type=data.button_type.value,  # data.button_type -> Enum
+                    web_link=data.web_link,
+                    app_link=data.app_link,
+                    created_at=created_at,
+                    created_by=user_obj.user_id,
+                    updated_at=created_at,
+                    updated_by=user_obj.user_id,
+                )
+
+                msg_obj.kakao_button_links.append(button_item)
+
+            else:
+                # 기존 아이템
+                button_item = msg_obj.kakao_button_links[idx]
+                for k, v in data.dict().items():
+                    if isinstance(v, KakaoButtonType):
+                        v = v.value
+                    setattr(button_item, k, v)
+
+        return msg_obj

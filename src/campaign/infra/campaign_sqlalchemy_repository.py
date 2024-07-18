@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session, joinedload
 from src.audiences.infra.entity.audience_stats_entity import AudienceStatsEntity
 from src.audiences.infra.entity.variable_table_list import CustomerInfoStatusEntity
 from src.campaign.domain.campaign import Campaign
-from src.campaign.domain.campaign_messages import CampaignMessages, SetGroupMessages
+from src.campaign.domain.campaign_messages import CampaignMessages, SetGroupMessage
 from src.campaign.domain.campaign_remind import CampaignRemind
 from src.campaign.domain.campaign_timeline import CampaignTimeline
 from src.campaign.domain.send_reservation import SendReservation
@@ -312,7 +312,7 @@ class CampaignSqlAlchemy:
 
         result = []
         for set_group_message, remind_date, remind_duration in message_data:
-            set_group_message_model = SetGroupMessages.from_orm(set_group_message)
+            set_group_message_model = SetGroupMessage.from_orm(set_group_message)
             message_md = CampaignMessages(
                 set_group_message=set_group_message_model,
                 remind_date=remind_date,
@@ -487,5 +487,53 @@ class CampaignSqlAlchemy:
             update(CampaignEntity)
             .where(CampaignEntity.campaign_id == campaign_id)
             .values(progress=update_status)
+        )
+        db.execute(update_statement)
+
+    def get_campaign_set_group_message(
+        self, campaign_id, set_group_msg_seq, db: Session
+    ) -> SetGroupMessage:
+
+        entity = (
+            db.query(SetGroupMessagesEntity)
+            .filter(
+                SetGroupMessagesEntity.set_group_msg_seq == set_group_msg_seq,
+                SetGroupMessagesEntity.campaign_id == campaign_id,
+            )
+            .first()
+        )
+
+        return SetGroupMessage.model_validate(entity)
+
+    def get_message_in_send_reservation(
+        self, campaign_id, set_group_msg_seq, db
+    ) -> SendReservation:
+        send_msg_first = (
+            db.query(SendReservationEntity)
+            .filter(
+                SendReservationEntity.campaign_id == campaign_id,
+                SendReservationEntity.test_send_yn == "n",
+                SendReservationEntity.set_group_msg_seq == set_group_msg_seq,
+                SendReservationEntity.send_resv_state.not_in(
+                    ["21", "01", "00"]
+                ),  # 발송한 메세지 필터
+            )
+            .first()
+        )
+
+        return SendReservation.model_validate(send_msg_first)
+
+    def update_campaign_set_group_message_type(
+        self, campaign_id, set_group_seq, message_type, db: Session
+    ):
+        update_statement = (
+            update(CampaignSetGroupsEntity)
+            .where(
+                and_(
+                    CampaignSetGroupsEntity.campaign_id == campaign_id,
+                    CampaignSetGroupsEntity.set_group_seq == set_group_seq,
+                )
+            )
+            .values(msg_type=message_type)
         )
         db.execute(update_statement)

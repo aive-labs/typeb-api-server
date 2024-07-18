@@ -3,7 +3,7 @@ from random import choice
 from fastapi import HTTPException
 
 from src.campaign.domain.campaign_messages import Message, MessageGenerate
-from src.campaign.enums.msg_delivery_vendor import MsgDeliveryVendorEnum
+from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
 from src.message_template.enums.message_type import MessageType
 
 
