@@ -236,6 +236,7 @@ class OfferRepository:
                 ),
                 available_begin_datetime=coupon.available_begin_datetime,
                 available_end_datetime=coupon.available_end_datetime,
+                available_day_from_issued=coupon.available_day_from_issued,
                 issue_type=coupon.issue_type,
                 issue_sub_type=coupon.issue_sub_type,
                 issue_order_path=coupon.issue_order_path,
