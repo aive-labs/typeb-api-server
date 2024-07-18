@@ -14,10 +14,12 @@ from src.search.routes.dto.id_with_item_response import (
     IdWithItemDescription,
 )
 from src.search.routes.dto.id_with_label_response import IdWithLabel
+from src.search.routes.dto.send_user_response import SendUserResponse
 from src.search.routes.dto.strategy_search_response import StrategySearchResponse
 from src.search.routes.port.base_search_service import BaseSearchService
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.users.domain.user import User
+from src.users.infra.user_repository import UserRepository
 
 
 class SearchService(BaseSearchService):
@@ -31,6 +33,7 @@ class SearchService(BaseSearchService):
         campaign_repository: CampaignRepository,
         product_repository: ProductRepository,
         strategy_repository: StrategyRepository,
+        user_repository: UserRepository,
     ):
         self.audience_repository = audience_repository
         self.recommend_products_repository = recommend_products_repository
@@ -39,6 +42,7 @@ class SearchService(BaseSearchService):
         self.campaign_repository = campaign_repository
         self.product_repository = product_repository
         self.strategy_repository = strategy_repository
+        self.user_repository = user_repository
 
     def search_audience_with_strategy_id(
         self,
@@ -94,3 +98,6 @@ class SearchService(BaseSearchService):
 
     def search_strategy_themes(self, strategy_id: str, db: Session) -> list[IdWithItem]:
         return self.strategy_repository.search_strategy_themes_by_strategy_id(strategy_id, db)
+
+    def search_send_users(self, db: Session, keyword=None) -> list[SendUserResponse]:
+        return self.user_repository.get_send_users(db, keyword)

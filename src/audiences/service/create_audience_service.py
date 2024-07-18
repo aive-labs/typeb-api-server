@@ -70,6 +70,8 @@ class CreateAudienceService(CreateAudienceUseCase):
             conditions = audience_filter_condition[0].conditions
             query = self.get_final_query(user, conditions, db)
             execute_query_compiler(query)
+            print("query")
+            print(query)
 
             self.audience_repository.save_audience_list(new_audience_id, query, db)
 

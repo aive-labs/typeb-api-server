@@ -27,3 +27,7 @@ class BaseUserService(ABC):
     @abstractmethod
     def get_all_users(self, db: Session) -> list[UserResponse]:
         pass
+
+    @abstractmethod
+    def get_send_users(self, permission, db: Session, keyword=None):
+        pass

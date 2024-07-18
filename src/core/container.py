@@ -480,4 +480,5 @@ class Container(containers.DeclarativeContainer):
         campaign_repository=campaign_repository,
         product_repository=product_repository,
         strategy_repository=strategy_repository,
+        user_repository=user_repository,
     )

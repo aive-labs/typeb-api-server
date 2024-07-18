@@ -232,9 +232,6 @@ class AudienceSqlAlchemy:
 
     def get_db_filter_conditions(self, audience_id: str, db: Session) -> list[FilterCondition]:
 
-        print("audience_id")
-        print(audience_id)
-
         data = (
             db.query(
                 AudienceQueriesEntity.audience_id,
