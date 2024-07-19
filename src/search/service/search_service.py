@@ -14,6 +14,7 @@ from src.search.routes.dto.id_with_item_response import (
     IdWithItemDescription,
 )
 from src.search.routes.dto.id_with_label_response import IdWithLabel
+from src.search.routes.dto.reviewer_response import ReviewerResponse
 from src.search.routes.dto.send_user_response import SendUserResponse
 from src.search.routes.dto.strategy_search_response import StrategySearchResponse
 from src.search.routes.port.base_search_service import BaseSearchService
@@ -101,3 +102,14 @@ class SearchService(BaseSearchService):
 
     def search_send_users(self, db: Session, keyword=None) -> list[SendUserResponse]:
         return self.user_repository.get_send_users(db, keyword)
+
+    def search_reviewer(self, user, db: Session, keyword) -> list[ReviewerResponse]:
+        # 임시로 본인 넣어둠
+        return [
+            ReviewerResponse(
+                user_id=user.user_id,
+                user_name_object=f"{user.username}/{user.department_abb_name}",
+                test_callback_number=user.test_callback_number,
+                default_reviewer_yn="n",
+            )
+        ]

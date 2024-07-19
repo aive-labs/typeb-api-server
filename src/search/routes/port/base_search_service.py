@@ -7,6 +7,7 @@ from src.search.routes.dto.id_with_item_response import (
     IdWithItemDescription,
 )
 from src.search.routes.dto.id_with_label_response import IdWithLabel
+from src.search.routes.dto.reviewer_response import ReviewerResponse
 from src.search.routes.dto.send_user_response import SendUserResponse
 from src.search.routes.dto.strategy_search_response import StrategySearchResponse
 from src.users.domain.user import User
@@ -71,4 +72,8 @@ class BaseSearchService(ABC):
 
     @abstractmethod
     def search_send_users(self, db: Session, keyword=None) -> list[SendUserResponse]:
+        pass
+
+    @abstractmethod
+    def search_reviewer(self, user, db: Session, keyword) -> list[ReviewerResponse]:
         pass
