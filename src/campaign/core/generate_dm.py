@@ -24,8 +24,8 @@ class CreateDataDict:
     def generate_data_dict(self, request_generate_group_seq, input_data):
         # data_dict 초기값 설정
         data_dict = {
-            "campaign_type": "custom",
-            "audience_type": "custom",
+            # "campaign_type": "custom",
+            # "audience_type": "custom",
             "is_personalized": False,
             "product_yn": "n",
             "offer_yn": "n",
@@ -39,21 +39,9 @@ class CreateDataDict:
         data_dict["group_idx"] = request_generate_group_seq
 
         # 캠페인 테마 (세그먼트/커스텀)
-        if input_data["set_data"].get("recsys_model_id") is not None and input_data["set_data"].get(
-            "recsys_model_id"
-        ) in [1, 2, 3, 4, 6, 8, 9, 10, 11, 12, 13]:
-            data_dict["campaign_type"] = "segment"
-            data_dict["recsys_model_name"] = config["recsys_mode_name"][
-                input_data["set_data"].get("recsys_model_id")
-            ]
-
-        # 타겟 오디언스 (세그먼트/커스텀)
-        if input_data["base_data"].get("audience_type_code") == "s":
-            data_dict["audience_type"] = "segment"
-            data_dict["audience_name"] = input_data["set_data"]["audience_name"]
-            data_dict["audience_purpose"] = config["cus_purpose"][data_dict["audience_name"][1:2]]
-            data_dict["audience_purchase_level"] = data_dict["audience_name"][:1]
-            data_dict["audience_promotion_level"] = data_dict["audience_name"][2:]
+        data_dict["recsys_model_name"] = config["recsys_mode_name"][
+            input_data["set_data"].get("recsys_model_id")
+        ]
 
         # 개인화 여부
         if input_data["base_data"].get("is_personalized") == True:
@@ -106,27 +94,27 @@ class CreateDataDict:
                 ):
                     data_dict["rep_nm"] = input_data["group_info"][group_num].get("rep_nm")
 
-                # 그룹 개인화 변수
-                if (
-                    "set_group_category" in input_data["group_info"][group_num].keys()
-                    and input_data["group_info"][group_num].get("set_group_category") is not None
-                ):
+                # # 그룹 개인화 변수
+                # if (
+                #     "set_group_category" in input_data["group_info"][group_num].keys()
+                #     and input_data["group_info"][group_num].get("set_group_category") is not None
+                # ):
 
-                    data_dict["set_group_category"] = (
-                        input_data["group_info"][group_num].get("set_group_category").value
-                    )
-                    data_dict["set_group_val"] = input_data["group_info"][group_num].get(
-                        "set_group_val"
-                    )
-                    if input_data["group_info"][group_num].get("set_group_category") == "purpose":
-                        data_dict["audience_purpose"] = input_data["group_info"][group_num].get(
-                            "set_group_val"
-                        )
-                    if (
-                        data_dict["set_group_category"] == "rep_nm"
-                        and "rep_nm" not in data_dict.keys()
-                    ):
-                        data_dict["rep_nm"] = data_dict["set_group_val"]
+                #     data_dict["set_group_category"] = (
+                #         input_data["group_info"][group_num].get("set_group_category").value
+                #     )
+                #     data_dict["set_group_val"] = input_data["group_info"][group_num].get(
+                #         "set_group_val"
+                #     )
+                #     if input_data["group_info"][group_num].get("set_group_category") == "purpose":
+                #         data_dict["audience_purpose"] = input_data["group_info"][group_num].get(
+                #             "set_group_val"
+                #         )
+                #     if (
+                #         data_dict["set_group_category"] == "rep_nm"
+                #         and "rep_nm" not in data_dict.keys()
+                #     ):
+                #         data_dict["rep_nm"] = data_dict["set_group_val"]
 
                 # 문자 표출 형식 (lms/카카오톡 등)
                 if "media" in input_data["group_info"][group_num].keys():
@@ -155,17 +143,6 @@ class CreateDataDict:
                             for k, v in style_seg_ratio.items():
                                 if v >= 0.8:
                                     data_dict["audience_purpose"] = config["style_seg"][k]
-                    if (
-                        "rep_purpose_ratio"
-                        in input_data["group_info"][group_num]["group_stats"].keys()
-                    ):
-                        rep_purpose_ratio = input_data["group_info"][group_num]["group_stats"].get(
-                            "rep_purpose_ratio"
-                        )
-                        if rep_purpose_ratio is not None:
-                            for k, v in rep_purpose_ratio.items():
-                                if v >= 0.8:
-                                    data_dict["rep_purpose"] = config["rep_purpose"][k]
                     if "age_ratio" in input_data["group_info"][group_num]["group_stats"].keys():
                         age_ratio = input_data["group_info"][group_num]["group_stats"].get(
                             "age_ratio"
@@ -223,7 +200,7 @@ class CreateDataDict:
                     open_date = open_date.replace(year=st_year)
                     close_date = close_date.replace(year=st_year)
 
-                if k in ["설날", "추석"]:
+                if k in ["설날", "추석"]:  # 확인필요
                     calendar = KoreanLunarCalendar()
                     calendar.setLunarDate(open_date.year, open_date.month, open_date.day, False)
                     open_date = calendar.SolarIsoFormat()
@@ -241,20 +218,20 @@ class CreateDataDict:
         if "season" not in data_dict.keys():
             data_dict["season"] = "공통"
 
-        if data_dict.get("campaign_keyword") == "얼리버드" and data_dict["season"] in [
-            "봄",
-            "여름",
-            "초봄",
-            "초여름",
-        ]:
-            data_dict["campaign_keyword"] = "SS시즌 얼리버드"
-        elif data_dict.get("campaign_keyword") == "얼리버드" and data_dict["season"] in [
-            "가을",
-            "겨울",
-            "초가을",
-            "초겨울",
-        ]:
-            data_dict["campaign_keyword"] = "FW시즌 얼리버드"
+        # if data_dict.get("campaign_keyword") == "얼리버드" and data_dict["season"] in [
+        #     "봄",
+        #     "여름",
+        #     "초봄",
+        #     "초여름",
+        # ]:
+        #     data_dict["campaign_keyword"] = "SS시즌 얼리버드"
+        # elif data_dict.get("campaign_keyword") == "얼리버드" and data_dict["season"] in [
+        #     "가을",
+        #     "겨울",
+        #     "초가을",
+        #     "초겨울",
+        # ]:
+        #     data_dict["campaign_keyword"] = "FW시즌 얼리버드"
 
         return data_dict
 
@@ -331,16 +308,7 @@ class generate_message:
         msg_title_df = self.msg_data[self.msg_data["location"] == "title"]
 
         sample_df = pd.DataFrame()
-        if "audience_purpose" in data_dict.keys():
-            sample_df = pd.concat(
-                [
-                    sample_df,
-                    msg_title_df[
-                        (msg_title_df["index"].str.startswith("cs"))
-                        & (msg_title_df["detail"] == data_dict["audience_purpose"])
-                    ],
-                ]
-            )
+
         if "recsys_model_name" in data_dict.keys():
             sample_df = pd.concat(
                 [
@@ -362,13 +330,13 @@ class generate_message:
                 ]
             )
         if data_dict.get("offer_yn") == "y" and "offer_info" in data_dict.keys():
-            if "offer_type_name" in data_dict["offer_info"].keys():
+            if "benefit_type" in data_dict["offer_info"].keys():
                 sample_df = pd.concat(
                     [
                         sample_df,
                         msg_title_df[
                             (msg_title_df["index"].str.startswith("o_"))
-                            & (msg_title_df["detail"] == data_dict["offer_info"]["offer_type_name"])
+                            & (msg_title_df["detail"] == data_dict["offer_info"]["benefit_type"])
                         ],
                     ]
                 )
@@ -476,13 +444,13 @@ class generate_message:
                 )
 
         if data_dict.get("offer_yn") == "y" and "offer_info" in data_dict.keys():
-            if "offer_type_name" in data_dict["offer_info"].keys():
+            if "benefit_type" in data_dict["offer_info"].keys():
                 sample_df = pd.concat(
                     [
                         sample_df,
                         msg_main_df[
                             (msg_main_df["index"].str.startswith("o_"))
-                            & (msg_main_df["detail"] == data_dict["offer_info"]["offer_type_name"])
+                            & (msg_main_df["detail"] == data_dict["offer_info"]["benefit_type"])
                         ],
                     ]
                 )
@@ -617,7 +585,7 @@ class generate_message:
             "offer_amount" in data_dict["offer_info"].keys()
             and data_dict["offer_info"].get("offer_amount") is not None
         ):
-            offer_condition = data_dict["offer_info"].get("offer_type_name").lower()
+            offer_condition = data_dict["offer_info"].get("benefit_type").lower()
             if data_dict["msg_type"] in ("lms", "mms"):
                 self.msg_body = (
                     self.msg_body
@@ -800,12 +768,12 @@ class generate_message:
                     .replace("[apply_pcs]", str(data_dict["offer_info"]["apply_pcs"]))
                 )
 
-        if data_dict["offer_info"].get("offer_type_name") is not None:
+        if data_dict["offer_info"].get("benefit_type") is not None:
             self.msg_body = (
                 self.msg_body
                 + "\n"
                 + self.notice_df[
-                    self.notice_df.condition == data_dict["offer_info"]["offer_type_name"]
+                    self.notice_df.condition == data_dict["offer_info"]["benefit_type"]
                 ]["text"].values[0]
             )
         else:
@@ -917,33 +885,32 @@ def generate_dm(grp_idx, input_data, send_date, msg_type, remind_duration):
             output["rec_explanation"] = []
             output["kakao_button_link"] = {}
         else:
-            if data_dict.get("recsys_model_name") == "contents_only":
-                inst2 = generate_message()
-                inst2.contents_only(data_dict)
-                inst2.contents_template(data_dict)
+            # if data_dict.get("recsys_model_name") == "contents_only":
+            #     inst2 = generate_message()
+            #     inst2.contents_only(data_dict)
+            #     inst2.contents_template(data_dict)
+            # else:
+            inst2 = generate_message()
+            inst2.generate_title(data_dict)
+            inst2.generate_body(data_dict)
 
+            msg_link_button = []
+            if data_dict["product_yn"] == "y" and data_dict["msg_type"] in (
+                "lms",
+                "mms",
+            ):
+                inst2.product_template(data_dict)
+            if data_dict["offer_yn"] == "y":
+                inst2.offer_template(data_dict)
             else:
-                inst2 = generate_message()
-                inst2.generate_title(data_dict)
-                inst2.generate_body(data_dict)
-
-                msg_link_button = []
-                if data_dict["product_yn"] == "y" and data_dict["msg_type"] in (
-                    "lms",
-                    "mms",
-                ):
-                    inst2.product_template(data_dict)
-                if data_dict["offer_yn"] == "y":
-                    inst2.offer_template(data_dict)
-                else:
-                    inst2.cmp_date(data_dict)
-                if data_dict["contents_yn"] == "y":
-                    inst2.contents_template(data_dict)
-                if data_dict["offer_yn"] == "y" and data_dict["msg_type"] in (
-                    "lms",
-                    "mms",
-                ):
-                    inst2.notice_template(data_dict)
+                inst2.cmp_date(data_dict)
+            if data_dict["contents_yn"] == "y":
+                inst2.contents_template(data_dict)
+            if data_dict["offer_yn"] == "y" and data_dict["msg_type"] in (
+                "lms",
+                "mms",
+            ):
+                inst2.notice_template(data_dict)
 
             msg_title = inst2.msg_title
             msg_body = inst2.msg_body
