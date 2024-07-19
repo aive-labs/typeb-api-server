@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session, subqueryload
 
 from src.campaign.domain.campaign import Campaign
 from src.campaign.domain.campaign_messages import SetGroupMessage
-from src.campaign.enums.campaign_type import CampaignType, CampaignTypeEnum
+from src.campaign.enums.campaign_type import CampaignType
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.campaign.infra.entity.campaign_remind_entity import CampaignRemindEntity
 from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
@@ -14,6 +14,9 @@ from src.campaign.infra.entity.campaign_set_recipients_entity import (
 )
 from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
+from src.campaign.infra.sqlalchemy_query.create_set_group_messages import (
+    create_set_group_messages,
+)
 from src.campaign.infra.sqlalchemy_query.get_audience_rank_between import (
     get_audience_rank_between,
 )
@@ -32,7 +35,6 @@ from src.campaign.infra.sqlalchemy_query.get_exclude_customer_list import (
 from src.campaign.infra.sqlalchemy_query.get_first_offer_by_strategy_theme import (
     get_first_offer_by_strategy_theme,
 )
-from src.campaign.infra.sqlalchemy_query.get_phone_callback import get_phone_callback
 from src.campaign.infra.sqlalchemy_query.get_strategy_theme_audience_mapping import (
     get_strategy_theme_audience_mapping_query,
 )
@@ -42,7 +44,7 @@ from src.campaign.service.port.base_campaign_set_repository import (
 from src.common.enums.campaign_media import CampaignMedia
 from src.common.infra.entity.customer_master_entity import CustomerMasterEntity
 from src.common.utils.data_converter import DataConverter
-from src.common.utils.date_utils import get_reservation_date, localtime_converter
+from src.common.utils.date_utils import localtime_converter
 from src.core.exceptions.exceptions import (
     ConsistencyException,
     NotFoundException,
@@ -97,7 +99,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         set_group_seqs = [
             row._asdict() for row in self.get_set_group_seqs(campaign.campaign_id, db)
         ]
-        self.create_set_group_messages(
+        create_set_group_messages(
             user_id,
             campaign.campaign_id,
             campaign.msg_delivery_vendor,
@@ -456,112 +458,6 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             .filter(CampaignSetGroupsEntity.campaign_id == campaign_id)
             .all()
         )
-
-    def create_set_group_messages(
-        self,
-        user_id,
-        campaign_id,
-        msg_delivery_vendor,
-        start_date,
-        send_date,
-        has_remind,
-        set_group_seqs,
-        campaign_type_code,
-        db: Session,
-    ):
-        """캠페인 그룹 메세지 시퀀스 생성 (set_group_msg_seq)
-
-        *set_group_seq별 set_group_msg_seq를 미리 생성
-        추후 step3 진입(메세지 생성) 시 set_group_msg_seq의 정보가 채워짐
-          -msg_title
-          -msg_body
-          -msg_type
-          -msg_send_type ..등
-
-        추가 이슈:
-        set_group_messages 테이블에 remind_req를 저장할 것인지?
-        remind가 없는경우
-
-        insert tables
-        - set_group_messages
-        """
-
-        # phone_callback, vender_bottom_txt 초기값 추후 send_reservation 시 변환됨
-        phone_callback = get_phone_callback(user_id, db)  # 매장 번호 또는 대표번호
-        vender_bottom_txt = {"dau": "무료수신거부 080-801-7860", "ssg": "무료수신거부 080-801-7860"}
-        bottom_text = vender_bottom_txt[msg_delivery_vendor]
-
-        # 기본 캠페인 -> (광고)[네파]
-        # expert 캠페인 -> None
-        if campaign_type_code == CampaignTypeEnum.BASIC.value:
-            msg_body = "(광고)[네파]"
-        else:
-            msg_body = None
-
-        if has_remind:
-            remind_dict = [row._asdict() for row in self.get_campaign_remind(campaign_id, db)]
-
-        else:
-            remind_dict = None
-
-        initial_msg_type = {
-            CampaignMedia.KAKAO_ALIM_TALK.value: MessageType.KAKAO_ALIM_TEXT.value,
-            CampaignMedia.KAKAO_FRIEND_TALK.value: MessageType.KAKAO_IMAGE_GENERAL.value,
-            CampaignMedia.TEXT_MESSAGE.value: MessageType.LMS.value,
-        }
-
-        campaign_reservation_date = get_reservation_date(
-            msg_send_type="campaign", start_date=start_date, send_date=send_date, remind_date=None
-        )
-
-        set_group_messages_all = []
-        for set_group_dict in set_group_seqs:
-
-            set_campaign_message_dict = set_group_dict
-            set_campaign_message_dict["msg_body"] = (
-                msg_body if set_group_dict["media"] != "kat" else None
-            )
-            set_campaign_message_dict["bottom_text"] = bottom_text
-            set_campaign_message_dict["phone_callback"] = phone_callback
-            set_campaign_message_dict["campaign_id"] = campaign_id
-            set_campaign_message_dict["msg_send_type"] = "campaign"
-            set_campaign_message_dict["is_used"] = True
-            set_campaign_message_dict["remind_step"] = None
-            set_campaign_message_dict["msg_resv_date"] = campaign_reservation_date
-            set_campaign_message_dict["created_by"] = user_id
-            set_campaign_message_dict["updated_by"] = user_id
-
-            set_group_messages_all.append(set_campaign_message_dict)
-
-            if remind_dict:
-                set_group_remind_messages = []
-                for r_idx in range(len(remind_dict)):
-                    remind_date = remind_dict[r_idx]["remind_date"]
-                    media = remind_dict[r_idx]["remind_media"]
-                    msg_type = initial_msg_type[media]
-
-                    set_remind_message_dict = {
-                        "set_group_seq": set_campaign_message_dict["set_group_seq"],
-                        "set_seq": set_campaign_message_dict["set_seq"],
-                        "msg_type": msg_type,
-                        "media": media,
-                        "msg_body": msg_body,
-                        "bottom_text": bottom_text,
-                        "phone_callback": phone_callback,
-                        "campaign_id": campaign_id,
-                        "msg_send_type": "remind",
-                        "is_used": True,  # 기본값 True
-                        "remind_step": remind_dict[r_idx]["remind_step"],
-                        "msg_resv_date": remind_date,
-                        "created_by": user_id,
-                        "updated_by": user_id,
-                    }
-
-                    set_group_remind_messages.append(set_remind_message_dict)
-
-                set_group_messages_all.extend(set_group_remind_messages)
-
-        db.bulk_insert_mappings(SetGroupMessagesEntity, set_group_messages_all)
 
     def get_campaign_set_group_messages(self, campaign_id: str, db: Session) -> list:
         query_result = (
