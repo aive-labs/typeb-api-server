@@ -43,7 +43,7 @@ class ConfirmCampaignSetGroupMessage(ConfirmCampaignSetGroupMessageUseCase):
             self.message_validator(msg_delivery_vendor, message_model)
             self.message_image_validator(message_model)
 
-        self.campaign_set_repository.update_confirm_status(
+        self.campaign_set_repository.update_message_confirm_status(
             campaign_id, set_seq, is_confirmed_obj.is_confirmed, db
         )
 

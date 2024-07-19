@@ -636,7 +636,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
 
         return [SetGroupMessage.model_validate(entity) for entity in entities]
 
-    def update_confirm_status(self, campaign_id, set_seq, is_confirmed, db: Session):
+    def update_message_confirm_status(self, campaign_id, set_seq, is_confirmed, db: Session):
         print(is_confirmed)
         print(set_seq)
 
@@ -683,3 +683,31 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         )
 
         db.execute(update_statement)
+
+    def update_status_to_confirmed(self, campaign_id, set_seq, db: Session):
+        db.query(CampaignSetsEntity).filter(
+            CampaignSetsEntity.campaign_id == campaign_id,
+            CampaignSetsEntity.set_seq == set_seq,
+        ).update({CampaignSetsEntity.is_confirmed: True})
+
+    def update_all_sets_status_to_confirmed(self, campaign_id, db: Session):
+        # set_group_message의 is_used가 모두 False인 set는 제외하는 코드
+        set_seqs = (
+            db.query(CampaignSetGroupsEntity.set_seq)
+            .join(
+                SetGroupMessagesEntity,
+                CampaignSetGroupsEntity.set_group_seq == SetGroupMessagesEntity.set_group_seq,
+            )
+            .filter(
+                CampaignSetGroupsEntity.campaign_id == campaign_id,
+                SetGroupMessagesEntity.is_used.is_(True),
+            )
+            .distinct()
+            .all()
+        )
+
+        for set_seq in set_seqs:
+            db.query(CampaignSetsEntity).filter(
+                CampaignSetsEntity.campaign_id == campaign_id,
+                CampaignSetsEntity.set_seq == set_seq[0],
+            ).update({CampaignSetsEntity.is_confirmed: True})

@@ -47,6 +47,9 @@ from src.campaign.service.update_campaign_set_message_group_service import (
     UpdateCampaignSetMessageGroupService,
 )
 from src.campaign.service.update_campaign_set_service import UpdateCampaignSetService
+from src.campaign.service.update_campaign_set_status_to_confrim import (
+    UpdateCampaignStatusToConfirm,
+)
 from src.campaign.service.update_message_use_status import UpdateMessageUseStatus
 from src.common.infra.common_repository import CommonRepository
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
@@ -423,8 +426,14 @@ class Container(containers.DeclarativeContainer):
         campaign_set_repository=campaign_set_repository,
     )
 
-    get_campaign_set_description = providers.Singleton(
+    get_campaign_set_description_service = providers.Singleton(
         provides=GetCampaignSetDescription,
+        campaign_repository=campaign_repository,
+        campaign_set_repository=campaign_set_repository,
+    )
+
+    update_campaign_set_confirm_service = providers.Singleton(
+        provides=UpdateCampaignStatusToConfirm,
         campaign_repository=campaign_repository,
         campaign_set_repository=campaign_set_repository,
     )

@@ -57,6 +57,9 @@ from src.campaign.routes.port.update_campaign_set_usecase import (
 from src.campaign.routes.port.update_message_use_status_usecase import (
     UpdateMessageUseStatusUseCase,
 )
+from src.campaign.service.update_campaign_set_status_to_confrim import (
+    UpdateCampaignStatusToConfirm,
+)
 from src.core.container import Container
 from src.core.database import get_db_session
 
@@ -245,8 +248,37 @@ def get_campaign_set_description(
     campaign_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
     db=Depends(get_db_session),
-    get_campaign_set_description: GetCampaignSetDescriptionUseCase = Depends(
-        dependency=Provide[Container.get_campaign_set_description]
+    get_campaign_set_description_service: GetCampaignSetDescriptionUseCase = Depends(
+        dependency=Provide[Container.get_campaign_set_description_service]
     ),
 ) -> CampaignSetDescriptionResponse:
-    return get_campaign_set_description.exec(campaign_id, db)
+    return get_campaign_set_description_service.exec(campaign_id, db)
+
+
+@campaign_router.patch("/campaign/{campaign_id}/set-confirm/{set_seq}")
+@inject
+def update_campaign_set_confirmed(
+    campaign_id: str,
+    set_seq: int,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    update_campaign_set_confirm_service: UpdateCampaignStatusToConfirm = Depends(
+        dependency=Provide[Container.update_campaign_set_confirm_service]
+    ),
+):
+    update_campaign_set_confirm_service.campaign_set_status_to_confirm(campaign_id, set_seq, db=db)
+    return {"res": "success"}
+
+
+@campaign_router.patch("/campaign/{campaign_id}/set-confirm")
+@inject
+def update_campaign_set_all_confirm(
+    campaign_id: str,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    update_campaign_set_confirm_service: UpdateCampaignStatusToConfirm = Depends(
+        dependency=Provide[Container.update_campaign_set_confirm_service]
+    ),
+):
+    update_campaign_set_confirm_service.all_campaign_set_status_to_confrim(campaign_id, db=db)
+    return {"res": "success"}

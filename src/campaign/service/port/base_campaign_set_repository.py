@@ -28,7 +28,7 @@ class BaseCampaignSetRepository(ABC):
         pass
 
     @abstractmethod
-    def update_confirm_status(self, campaign_id, set_seq, is_confirmed, db: Session):
+    def update_message_confirm_status(self, campaign_id, set_seq, is_confirmed, db: Session):
         pass
 
     @abstractmethod
@@ -39,4 +39,12 @@ class BaseCampaignSetRepository(ABC):
 
     @abstractmethod
     def update_use_status(self, campaign_id, set_group_msg_seq, is_used, db: Session):
+        pass
+
+    @abstractmethod
+    def update_status_to_confirmed(self, campaign_id, set_seq, db: Session):
+        pass
+
+    @abstractmethod
+    def update_all_sets_status_to_confirmed(self, campaign_id, db: Session):
         pass
