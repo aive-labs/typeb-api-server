@@ -37,14 +37,14 @@ class CampaignDependencyManager:
         else:
             return False
 
-    def sync_campaign_base(self, db, campaign_id, selected_themes, campaign_theme_ids) -> None:
+    def sync_campaign_base(self, db, campaign_id, selected_themes, strategy_theme_ids) -> None:
         """
         수정 또는 생성 후
         캠페인 테마 sync
         """
-        if selected_themes != campaign_theme_ids:
+        if selected_themes != strategy_theme_ids:
             db.query(CampaignEntity).filter(CampaignEntity.campaign_id == campaign_id).update(
-                {"campaign_theme_ids": list(campaign_theme_ids)}
+                {"strategy_theme_ids": list(strategy_theme_ids)}
             )
 
     def sync_strategy_status(self, db, strategy_id) -> None:
@@ -81,13 +81,15 @@ class CampaignDependencyManager:
                 active_audience_query = (
                     db.query(func.distinct(CampaignSetsEntity.audience_id))
                     .join(
-                        CampaignSetsEntity,
-                        CampaignSetsEntity.campaign_id == CampaignSetsEntity.campaign_id,
+                        CampaignEntity,
+                        CampaignSetsEntity.campaign_id == CampaignEntity.campaign_id,
                     )
                     .filter(
                         CampaignSetsEntity.campaign_id != campaign_id,
                         CampaignSetsEntity.audience_id.in_(removed_ids),
-                        # CampaignSetsEntity.campaign_status_code.not_in(['o2', 's3'])  # 활성으로 사용되고 있는 오디언스
+                        CampaignEntity.campaign_status_code.not_in(
+                            ["o2", "s3"]
+                        ),  # 활성으로 사용되고 있는 오디언스
                     )
                     .all()
                 )
@@ -106,7 +108,7 @@ class CampaignDependencyManager:
                             "audience_status_name": AudienceStatus.inactive.description,
                         }
                     )
-                    db.commit()
+                    # db.commit()
         else:
             audience_ids = []
 
@@ -119,4 +121,4 @@ class CampaignDependencyManager:
                     "audience_status_name": AudienceStatus.active.description,
                 }
             )
-            db.commit()
+            # db.commit()

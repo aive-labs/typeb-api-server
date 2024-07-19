@@ -59,7 +59,11 @@ class UpdateAudienceService(UpdateAudienceUseCase):
         print("creation_options")
         print(creation_options)
         options = creation_options[0].conditions
+        print("options")
+        print(options)
         query = self.get_final_query(user, options, db)
+        print("query")
+        print(query)
 
         self.audience_repository.save_audience_list(audience_id, query, db)
 

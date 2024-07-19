@@ -84,5 +84,6 @@ extend-immutable-calls = [
 
 # https://github.com/microsoft/pyright/blob/main/docs/configuration.md
 [tool.pyright]
-#reportInvalidConditionalOperand = false
 reportGeneralTypeIssues = false
+reportAttributeAccessIssue = false
+reportUnhashable = false

@@ -33,9 +33,24 @@ from src.auth.service.token_service import TokenService
 from src.campaign.infra.campaign_repository import CampaignRepository
 from src.campaign.infra.campaign_set_repository import CampaignSetRepository
 from src.campaign.infra.campaign_sqlalchemy_repository import CampaignSqlAlchemy
+from src.campaign.service.confrim_campaign_set_group_message import (
+    ConfirmCampaignSetGroupMessage,
+)
 from src.campaign.service.create_campaign_service import CreateCampaignService
 from src.campaign.service.generate_message_service import GenerateMessageService
 from src.campaign.service.get_campaign_service import GetCampaignService
+from src.campaign.service.get_campaign_set_description import GetCampaignSetDescription
+from src.campaign.service.update_campaign_progress_service import (
+    UpdateCampaignProgressService,
+)
+from src.campaign.service.update_campaign_set_message_group_service import (
+    UpdateCampaignSetMessageGroupService,
+)
+from src.campaign.service.update_campaign_set_service import UpdateCampaignSetService
+from src.campaign.service.update_campaign_set_status_to_confrim import (
+    UpdateCampaignStatusToConfirm,
+)
+from src.campaign.service.update_message_use_status import UpdateMessageUseStatus
 from src.common.infra.common_repository import CommonRepository
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
 from src.common.utils.file.s3_service import S3Service
@@ -361,11 +376,13 @@ class Container(containers.DeclarativeContainer):
         ContentsRepository, contents_sqlalchemy=contents_sqlalchemy
     )
 
-    get_campaign_service = providers.Singleton(
-        provides=GetCampaignService, campaign_repository=campaign_repository
-    )
-
     campaign_set_repository = providers.Singleton(provides=CampaignSetRepository)
+
+    get_campaign_service = providers.Singleton(
+        provides=GetCampaignService,
+        campaign_repository=campaign_repository,
+        campaign_set_repository=campaign_set_repository,
+    )
 
     create_campaign_service = providers.Singleton(
         provides=CreateCampaignService,
@@ -380,6 +397,45 @@ class Container(containers.DeclarativeContainer):
         offer_repository=offer_repository,
         common_repository=common_repository,
         contents_repository=contents_repository,
+    )
+
+    update_campaign_set_service = providers.Singleton(
+        provides=UpdateCampaignSetService,
+        campaign_repository=campaign_repository,
+        campaign_set_repository=campaign_set_repository,
+    )
+
+    update_campaign_set_message_group_service = providers.Singleton(
+        provides=UpdateCampaignSetMessageGroupService,
+        campaign_repository=campaign_repository,
+    )
+
+    update_campaign_progress_service = providers.Singleton(
+        provides=UpdateCampaignProgressService,
+        campaign_repository=campaign_repository,
+    )
+
+    confirm_campaign_set_group_message = providers.Singleton(
+        provides=ConfirmCampaignSetGroupMessage,
+        campaign_repository=campaign_repository,
+        campaign_set_repository=campaign_set_repository,
+    )
+    update_message_use_status_service = providers.Singleton(
+        provides=UpdateMessageUseStatus,
+        campaign_repository=campaign_repository,
+        campaign_set_repository=campaign_set_repository,
+    )
+
+    get_campaign_set_description_service = providers.Singleton(
+        provides=GetCampaignSetDescription,
+        campaign_repository=campaign_repository,
+        campaign_set_repository=campaign_set_repository,
+    )
+
+    update_campaign_set_confirm_service = providers.Singleton(
+        provides=UpdateCampaignStatusToConfirm,
+        campaign_repository=campaign_repository,
+        campaign_set_repository=campaign_set_repository,
     )
 
     """
@@ -456,4 +512,5 @@ class Container(containers.DeclarativeContainer):
         campaign_repository=campaign_repository,
         product_repository=product_repository,
         strategy_repository=strategy_repository,
+        user_repository=user_repository,
     )

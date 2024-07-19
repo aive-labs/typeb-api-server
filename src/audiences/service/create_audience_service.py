@@ -70,6 +70,8 @@ class CreateAudienceService(CreateAudienceUseCase):
             conditions = audience_filter_condition[0].conditions
             query = self.get_final_query(user, conditions, db)
             execute_query_compiler(query)
+            print("query")
+            print(query)
 
             self.audience_repository.save_audience_list(new_audience_id, query, db)
 
@@ -173,7 +175,7 @@ class CreateAudienceService(CreateAudienceUseCase):
             no=0,
             conditions=[
                 TargetStrategyCondition(
-                    value="New_customer,Inactive_new_m1,Inactive_new_m3,Inactive_new_m6,Inactive_new_m9",
+                    value="NEW_CUSTOMER,INACTIVE_NEW_M1,INACTIVE_NEW_M3,INACTIVE_NEW_M6,INACTIVE_NEW_M9",
                     cell_type="multi_select",
                     data_type="d_cv",
                 )
@@ -189,7 +191,7 @@ class CreateAudienceService(CreateAudienceUseCase):
             no=0,
             conditions=[
                 TargetStrategyCondition(
-                    value="Active_customer1,Active_customer2,Active_customer3,Active_customer4,Inactive_act1_m3,Inactive_act1_m6,Inactive_act1_m9,Inactive_act2_m3,Inactive_act2_m6,Inactive_act2_m9,Inactive_act3_m3,Inactive_act3_m6,Inactive_act3_m9",
+                    value="ACTIVE_CUSTOMER1,ACTIVE_CUSTOMER2,ACTIVE_CUSTOMER3,ACTIVE_CUSTOMER4,INACTIVE_ACT1_M3,INACTIVE_ACT1_M6,INACTIVE_ACT1_M9,INACTIVE_ACT2_M3,INACTIVE_ACT2_M6,INACTIVE_ACT2_M9,INACTIVE_ACT3_M3,INACTIVE_ACT3_M6,INACTIVE_ACT3_M9",
                     cell_type="multi_select",
                     data_type="d_cv",
                 )
@@ -205,7 +207,7 @@ class CreateAudienceService(CreateAudienceUseCase):
             no=0,
             conditions=[
                 TargetStrategyCondition(
-                    value="Inactive_act4_m3,Inactive_act4_m6,Inactive_act4_m9",
+                    value="INACTIVE_ACT4_M3,INACTIVE_ACT4_M6,INACTIVE_ACT4_M9",
                     cell_type="multi_select",
                     data_type="d_cv",
                 )
@@ -221,7 +223,7 @@ class CreateAudienceService(CreateAudienceUseCase):
             no=0,
             conditions=[
                 TargetStrategyCondition(
-                    value="Inactive_act1_m9,Inactive_act2_m9,Inactive_act3_m9,Inactive_act4_m9",
+                    value="INACTIVE_ACT1_M9,INACTIVE_ACT2_M9,INACTIVE_ACT3_M9,INACTIVE_ACT4_M9",
                     cell_type="multi_select",
                     data_type="d_cv",
                 )
@@ -237,7 +239,7 @@ class CreateAudienceService(CreateAudienceUseCase):
             no=0,
             conditions=[
                 TargetStrategyCondition(
-                    value="Churn_m12,Churn_m18,Churn_m24,Churn_m30",
+                    value="CHURN_M12,CHURN_M18,CHURN_M24,CHURN_M30",
                     cell_type="multi_select",
                     data_type="d_cv",
                 )

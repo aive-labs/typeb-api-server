@@ -4,7 +4,7 @@ from src.core.database import Base
 
 
 class CustomerInfoStatusEntity(Base):
-    __tablename__ = "temp_cus_info_status"
+    __tablename__ = "cus_info_status"
 
     cus_info_id = Column(Integer, primary_key=True)
     shop_no = Column(BigInteger, nullable=False)
@@ -60,6 +60,10 @@ class CustomerInfoStatusEntity(Base):
     near_promotion_amount = Column(String, nullable=True)
     near_promotion_cnt = Column(String, nullable=True)
     promoted_customer = Column(String, nullable=True)
+
+    purchase_cnt = Column(Integer, nullable=True)
+    birthday_7_left = Column(String, nullable=True)
+    first_purchase = Column(String, nullable=True)
 
     etltime = Column(Date, nullable=True)
 

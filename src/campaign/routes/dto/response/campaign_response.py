@@ -3,16 +3,16 @@ from typing import List, Literal
 
 from pydantic import BaseModel, Field
 
+from src.campaign.domain.campaign_remind import CampaignRemind
 from src.campaign.enums.campagin_status import (
     CampaignStatusEnum,
     CampaignStatusGroupEnum,
 )
-from src.campaign.enums.campaign_progress import CampaignProgressEnum
+from src.campaign.enums.campaign_progress import CampaignProgress
 from src.campaign.enums.campaign_type import CampaignTypeEnum
 from src.campaign.enums.repeat_type import RepeatTypeEnum
 from src.campaign.enums.send_type import SendTypeEnum
 from src.campaign.enums.set_group_category import SetGroupCategoryEnum
-from src.campaign.routes.dto.request.campaign_remind import CampaignRemind
 from src.common.enums.campaign_media import CampaignMedia
 from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
 from src.common.utils.date_utils import localtime_converter
@@ -45,7 +45,7 @@ class CampaignBase(BaseModel):
     has_remind: bool
     remind_list: List[CampaignRemind] | None = None
     strategy_id: str | None = None
-    campaign_theme_ids: List[int] | None = None
+    strategy_theme_ids: List[int] | None = None
     is_personalized: bool
     msg_delivery_vendor: MsgDeliveryVendorEnum
     campaigns_exc: List[str] | None = None
@@ -55,7 +55,7 @@ class CampaignBase(BaseModel):
     owned_by_dept: str
     owned_by_dept_name: str | None = None
     owned_by_dept_abb_name: str | None = None
-    progress: CampaignProgressEnum
+    progress: CampaignProgress
     created_at: datetime = Field(default_factory=localtime_converter)
     created_by: str | int | None = None
     created_by_name: str | None = None
@@ -88,8 +88,8 @@ class CampaignSet(BaseModel):
     set_seq: int | None = None
     set_sort_num: int | None = None
     is_group_added: bool | None = None
-    campaign_theme_id: int | None = None
-    campaign_theme_name: str | None = None
+    strategy_theme_id: int | None = None
+    strategy_theme_name: str | None = None
     recsys_model_id: int | None = None
     audience_id: str | None = None
     audience_name: str | None = None

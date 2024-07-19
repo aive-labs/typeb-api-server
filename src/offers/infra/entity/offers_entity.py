@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import pytz
 from sqlalchemy import ARRAY, Boolean, Column, DateTime, Integer, String, text
 
 from src.core.database import Base
@@ -12,7 +13,7 @@ class OffersEntity(Base):
     coupon_name = Column(String, nullable=False)
     coupon_type = Column(String)
     coupon_description = Column(String)
-    coupon_created_at = Column(DateTime)
+    coupon_created_at = Column(String)
     benefit_type = Column(String)
     benefit_type_name = Column(String)
     comp_cd = Column(String)
@@ -55,9 +56,17 @@ class OffersEntity(Base):
     deleted = Column(String)
     cus_data_batch_yn = Column(String(1))
     offer_source = Column(String(10))
-    created_at = Column(DateTime(timezone=True), default=datetime.now())
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(pytz.timezone("Asia/Seoul")),
+    )
     created_by = Column(String, nullable=False, default=text("(user)"))
-    updated_at = Column(DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now())
+    updated_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(pytz.timezone("Asia/Seoul")),
+        onupdate=datetime.now(),
+    )
     updated_by = Column(String, nullable=False, default=text("(user)"))
 
     # offer_detail_options = relationship(

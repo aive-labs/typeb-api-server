@@ -4,7 +4,7 @@ from src.core.database import Base
 
 
 class PurchaseAnalyticsMasterStyle(Base):
-    __tablename__ = "temp_purchase_analytics_master_style"
+    __tablename__ = "purchase_analytics_master_style"
 
     purchase_analytics_master_style_seq = Column(Integer, primary_key=True)
     recp_no = Column(String)

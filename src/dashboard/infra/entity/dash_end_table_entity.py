@@ -15,7 +15,7 @@ class DashEndTable(Base):
     campaign_group_id = Column(String)
     strategy_id = Column(String)
     strategy_name = Column(String)
-    campaign_theme_id = Column(Integer, primary_key=True)
+    strategy_theme_id = Column(Integer, primary_key=True)
     campaign_theme_name = Column(String)
     audience_id = Column(String, primary_key=True)
     audience_name = Column(String)

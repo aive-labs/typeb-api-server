@@ -1,9 +1,10 @@
 import numpy as np
 import pandas as pd
-from sqlalchemy import func, inspect
+from sqlalchemy import and_, func, inspect, update
 from sqlalchemy.orm import Session, subqueryload
 
 from src.campaign.domain.campaign import Campaign
+from src.campaign.domain.campaign_messages import SetGroupMessage
 from src.campaign.enums.campaign_type import CampaignType, CampaignTypeEnum
 from src.campaign.infra.entity.campaign_remind_entity import CampaignRemindEntity
 from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
@@ -41,7 +42,11 @@ from src.common.enums.campaign_media import CampaignMedia
 from src.common.infra.entity.customer_master_entity import CustomerMasterEntity
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import get_reservation_date, localtime_converter
-from src.core.exceptions.exceptions import ConsistencyException, ValidationException
+from src.core.exceptions.exceptions import (
+    ConsistencyException,
+    NotFoundException,
+    ValidationException,
+)
 from src.message_template.enums.message_type import MessageType
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
 
@@ -51,7 +56,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
     def create_campaign_set(self, campaign: Campaign, user_id: str, db: Session) -> tuple:
 
         #### 기본 캠페인
-        if campaign.campaign_type_code == CampaignType.basic.value:
+        if campaign.campaign_type_code == CampaignType.BASIC.value:
             return None, None
 
         # 자동분배 생성
@@ -83,8 +88,10 @@ class CampaignSetRepository(BaseCampaignSetRepository):
 
         # 추천 캠페인 세트 저장
         self.save_campaign_set(campaign_set_merged, db)
+
         # 캠페인 세트 그룹 발송인 저장
         self.create_set_group_recipient(set_cus_items_df, db)
+
         # 캠페인 세트 그룹 메세지 더미 데이터 생성 & 저장
         set_group_seqs = [
             row._asdict() for row in self.get_set_group_seqs(campaign.campaign_id, db)
@@ -141,12 +148,6 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         for remind in remind_data:
             budget_list.append((remind.remind_media, initial_msg_type[remind.remind_media]))
 
-        # if budget:
-        #     delivery_cost = 0
-        #     for media, msg_type in budget_list:
-        #         delivery_cost += get_delivery_cost(db, shop_send_yn, msg_delivery_vendor, media, msg_type)
-        #     limit_count = math.floor(budget / delivery_cost)
-        # else:
         # limit_count = None
 
         campaign_msg_type = initial_msg_type[media]
@@ -167,13 +168,18 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         strategy_themes_df = pd.merge(
             strategy_themes_df, audience_rank_between_df, on="audience_id", how="inner"
         )
+
+        # audience_id 별로 가장 낮은 index 값으로 추출
+        # audience_id의 유니크한 수만큼 데이터가 나옴
         themes_df = strategy_themes_df.loc[
+            # 각 audience_id 그룹에서 rank 열의 최소값을 가지는 행의 인덱스
             strategy_themes_df.groupby(["audience_id"])["rank"].idxmin()
         ]
         themes_df["set_sort_num"] = range(1, len(themes_df) + 1)
         campaign_set_df_merged = cust_audiences_df.merge(themes_df, on="audience_id", how="inner")
 
         ####방어로직###
+        # cus_cd가 가장 낮은 숫자의 set_sort_num에 속하게 하기 위해
         campaign_set_df = campaign_set_df_merged.loc[
             campaign_set_df_merged.groupby(["cus_cd"])["set_sort_num"].idxmin()
         ]
@@ -205,14 +211,6 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             campaign_set_df = campaign_set_df[campaign_set_df["_merge"] == "left_only"].drop(
                 columns=["_merge"]
             )
-
-        ## 예산 적용, 커스텀에서는 고객을 가져올때 ltv가 없으므로 포함
-        # if isinstance(limit_count, int):
-        #     ltv_score = DataConverter.convert_queries_to_df(get_ltv(db))
-        #     campaign_set_df = pd.merge(campaign_set_df, ltv_score, on='cus_cd', how='left')
-        #     campaign_set_df['ltv_frequency'] = campaign_set_df['ltv_frequency'].fillna(0)
-        #     campaign_set_df = campaign_set_df.sort_values(by='ltv_frequency', ascending=False)
-        #     campaign_set_df = campaign_set_df.head(limit_count)
 
         if len(campaign_set_df) == 0:
             raise ValidationException(
@@ -376,12 +374,12 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         theme_contents_df = DataConverter.convert_query_to_df(theme_contents)
         contents_info_df = DataConverter.convert_query_to_df(contents_info)
 
-        theme_contents_df["campaign_theme_id"] = theme_contents_df["campaign_theme_id"].astype(int)
+        theme_contents_df["strategy_theme_id"] = theme_contents_df["strategy_theme_id"].astype(int)
         theme_contents_df["contents_id"] = theme_contents_df["contents_id"].astype(str)
         contents_info_df["contents_id"] = contents_info_df["contents_id"].astype(str)
 
         set_cus_items_df = set_cus_items_df.merge(
-            theme_contents_df, on="campaign_theme_id", how="left"
+            theme_contents_df, on="strategy_theme_id", how="left"
         )
         set_cus_items_df = set_cus_items_df.merge(contents_info_df, on="contents_id", how="left")
 
@@ -393,6 +391,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         campaign_df: 캠페인 세트 데이터프레임
         """
 
+        # insert할 컬럼 정의
         campaign_set_columns = [column.name for column in CampaignSetsEntity.__table__.columns]
         columns_col_list = campaign_df.columns.tolist()
         set_col_to_insert = [
@@ -410,6 +409,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
                 key: value for key, value in set_list.items() if key != "set_group_list"
             }
 
+            # set_group_list를 제외하고 캠페인 세트 엔티티 생성
             set_req = CampaignSetsEntity(**set_list_insert)
 
             set_group_req_list = []
@@ -601,23 +601,113 @@ class CampaignSetRepository(BaseCampaignSetRepository):
 
     def get_set_portion(self, campaign_id: str, db: Session) -> tuple:
 
-        total_cus = (
-            db.query(func.count(CustomerMasterEntity.cus_cd))
-            .filter(
-                CustomerMasterEntity.br_div == "NPC",
-                CustomerMasterEntity.cust_status == "1",
-                CustomerMasterEntity.cust_grade1 != "R",
-                CustomerMasterEntity.cust_name.notin_(["휴면", "탈퇴"]),
-            )
-            .scalar()
-        )
-
+        total_cus = db.query(func.count(CustomerMasterEntity.cus_cd)).scalar()
         set_cus_count = (
             db.query(func.count(CampaignSetRecipientsEntity.cus_cd))
             .filter(CampaignSetRecipientsEntity.campaign_id == campaign_id)
             .scalar()
         )
 
+        if total_cus == 0:
+            return (0, 0, 0)
+
         recipient_portion = round(set_cus_count / total_cus, 3)
 
         return recipient_portion, total_cus, set_cus_count
+
+    def get_audience_ids(self, campaign_id: str, db: Session) -> list[str]:
+        audience_ids = (
+            db.query(CampaignSetsEntity.audience_id)
+            .filter(CampaignSetsEntity.campaign_id == campaign_id)
+            .all()
+        )
+
+        return [audience_id[0] for audience_id in audience_ids]
+
+    def get_campaign_set_group(self, campaign_id, set_seq, db: Session) -> list[SetGroupMessage]:
+        entities = (
+            db.query(SetGroupMessagesEntity)
+            .filter(
+                SetGroupMessagesEntity.campaign_id == campaign_id,
+                SetGroupMessagesEntity.set_seq == set_seq,
+            )
+            .all()
+        )
+
+        return [SetGroupMessage.model_validate(entity) for entity in entities]
+
+    def update_message_confirm_status(self, campaign_id, set_seq, is_confirmed, db: Session):
+        print(is_confirmed)
+        print(set_seq)
+
+        update_statement = (
+            update(CampaignSetsEntity)
+            .where(
+                and_(
+                    CampaignSetsEntity.campaign_id == campaign_id,
+                    CampaignSetsEntity.set_seq == set_seq,
+                )
+            )
+            .values(is_message_confirmed=is_confirmed)
+        )
+
+        db.execute(update_statement)
+
+    def get_campaign_set_group_message_by_msg_seq(
+        self, campaign_id, set_group_msg_seq, db
+    ) -> SetGroupMessage:
+        entity = (
+            db.query(SetGroupMessagesEntity)
+            .filter(
+                SetGroupMessagesEntity.campaign_id == campaign_id,
+                SetGroupMessagesEntity.set_group_msg_seq == set_group_msg_seq,
+            )
+            .first()
+        )
+
+        if not entity:
+            raise NotFoundException(detail={"message": "해당되는 메시지 정보를 찾지 못했습니다."})
+
+        return SetGroupMessage.model_validate(entity)
+
+    def update_use_status(self, campaign_id, set_group_msg_seq, is_used, db: Session):
+        update_statement = (
+            update(SetGroupMessagesEntity)
+            .where(
+                and_(
+                    SetGroupMessagesEntity.campaign_id == campaign_id,
+                    SetGroupMessagesEntity.set_group_msg_seq == set_group_msg_seq,
+                )
+            )
+            .values(is_used=is_used)
+        )
+
+        db.execute(update_statement)
+
+    def update_status_to_confirmed(self, campaign_id, set_seq, db: Session):
+        db.query(CampaignSetsEntity).filter(
+            CampaignSetsEntity.campaign_id == campaign_id,
+            CampaignSetsEntity.set_seq == set_seq,
+        ).update({CampaignSetsEntity.is_confirmed: True})
+
+    def update_all_sets_status_to_confirmed(self, campaign_id, db: Session):
+        # set_group_message의 is_used가 모두 False인 set는 제외하는 코드
+        set_seqs = (
+            db.query(CampaignSetGroupsEntity.set_seq)
+            .join(
+                SetGroupMessagesEntity,
+                CampaignSetGroupsEntity.set_group_seq == SetGroupMessagesEntity.set_group_seq,
+            )
+            .filter(
+                CampaignSetGroupsEntity.campaign_id == campaign_id,
+                SetGroupMessagesEntity.is_used.is_(True),
+            )
+            .distinct()
+            .all()
+        )
+
+        for set_seq in set_seqs:
+            db.query(CampaignSetsEntity).filter(
+                CampaignSetsEntity.campaign_id == campaign_id,
+                CampaignSetsEntity.set_seq == set_seq[0],
+            ).update({CampaignSetsEntity.is_confirmed: True})

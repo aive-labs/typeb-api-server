@@ -11,6 +11,7 @@ from src.audiences.infra.entity.strategy_theme_audience_entity import (
 from src.common.enums.role import RoleEnum
 from src.common.utils.date_utils import localtime_converter
 from src.core.exceptions.exceptions import NotFoundException
+from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.search.routes.dto.strategy_search_response import StrategySearchResponse
 from src.strategy.domain.strategy import Strategy
 from src.strategy.domain.strategy_theme import StrategyTheme
@@ -320,12 +321,16 @@ class StrategySqlAlchemy:
                 .all()
             )
         else:
-            entities = db.query(
-                StrategyEntity.strategy_id,
-                StrategyEntity.strategy_name,
-                StrategyEntity.strategy_tags,
-                StrategyEntity.target_strategy,
-            ).all()
+            entities = (
+                db.query(
+                    StrategyEntity.strategy_id,
+                    StrategyEntity.strategy_name,
+                    StrategyEntity.strategy_tags,
+                    StrategyEntity.target_strategy,
+                )
+                .filter(~StrategyEntity.is_deleted)
+                .all()
+            )
 
         return [
             StrategySearchResponse(
@@ -334,5 +339,16 @@ class StrategySqlAlchemy:
                 strategy_tags=entity.strategy_tags,
                 target_strategy=entity.target_strategy,
             )
+            for entity in entities
+        ]
+
+    def search_strategy_themes_by_strategy_id(self, strategy_id, db) -> list[IdWithItem]:
+        entities = (
+            db.query(StrategyThemesEntity)
+            .filter(StrategyThemesEntity.strategy_id == strategy_id)
+            .all()
+        )
+        return [
+            IdWithItem(id=entity.strategy_theme_id, name=entity.strategy_theme_name)
             for entity in entities
         ]

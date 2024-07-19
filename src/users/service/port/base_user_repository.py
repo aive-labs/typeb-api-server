@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
+from src.search.routes.dto.send_user_response import SendUserResponse
 from src.users.domain.user import User
 from src.users.routes.dto.request.user_create import UserCreate
 from src.users.routes.dto.request.user_modify import UserModify
@@ -34,4 +35,8 @@ class BaseUserRepository(ABC):
 
     @abstractmethod
     def is_existing_user(self, email: str, db: Session) -> bool:
+        pass
+
+    @abstractmethod
+    def get_send_users(self, db: Session, keyword=None) -> list[SendUserResponse]:
         pass

@@ -3,7 +3,8 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from src.campaign.routes.dto.request.campaign_remind import CampaignRemind
+from src.campaign.domain.campaign_remind import CampaignRemind
+from src.common.utils.date_utils import localtime_converter
 
 
 class Campaign(BaseModel):
@@ -31,6 +32,7 @@ class Campaign(BaseModel):
     end_date: str | None
     group_end_date: str | None
     has_remind: bool
+    remind_list: list[CampaignRemind] = []
     campaigns_exc: list[str] | None
     audiences_exc: list[str] | None
     strategy_id: str | None
@@ -40,14 +42,13 @@ class Campaign(BaseModel):
     msg_delivery_vendor: str
     shop_send_yn: str
     retention_day: int | None = None
-    remind_list: list[CampaignRemind] = []
     owned_by_dept: str
     owned_by_dept_name: str
     owned_by_dept_abb_name: str
-    created_at: datetime | None
+    created_at: datetime = Field(default_factory=localtime_converter)
     created_by: str
     created_by_name: str
-    updated_at: datetime | None
+    updated_at: datetime = Field(default_factory=localtime_converter)
     updated_by: str
 
     model_config = ConfigDict(from_attributes=True)

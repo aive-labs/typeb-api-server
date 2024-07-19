@@ -6,13 +6,11 @@ from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from src.common.timezone_setting import selected_timezone
-from src.common.utils.date_utils import convert_str_iso_8601_to_datetime
 from src.common.utils.string_utils import is_convertible_to_int
 from src.core.exceptions.exceptions import NotFoundException
 from src.offers.domain.cafe24_coupon import Cafe24CouponResponse
 from src.offers.domain.offer import Offer
 from src.offers.enums.cafe24_coupon_benefit_type import Cafe24CouponBenefitType
-from src.offers.enums.offer_use_type import OfferUseType
 from src.offers.infra.entity.offer_details_entity import OfferDetailsEntity
 from src.offers.infra.entity.offers_entity import OffersEntity
 from src.search.routes.dto.id_with_label_response import IdWithLabel
@@ -61,12 +59,12 @@ class OfferRepository:
             )
 
         offer_entities = base_query.all()
-        use_type_dict = {v.value: v.description for _, v in OfferUseType.__members__.items()}
+        # use_type_dict = {v.value: v.description for _, v in OfferUseType.__members__.items()}
 
         offers = []
         for offer in offer_entities:
             temp_offer = Offer.model_validate(offer)
-            temp_offer.available_scope = use_type_dict.get(temp_offer.available_scope, "")
+            temp_offer.available_scope = offer.available_scope
             temp_offer.offer_source = temp_offer.offer_source if temp_offer.offer_source else ""
 
             offers.append(temp_offer)
@@ -110,7 +108,7 @@ class OfferRepository:
                 OffersEntity.coupon_no.label("code"),
             ).filter(
                 OffersEntity.coupon_no.in_(offer_ids),
-                OffersEntity.available_scope.isnot(None),
+                OffersEntity.benefit_type.isnot(None),
                 OffersEntity.available_end_datetime >= today,  # 이벤트 기간 필터
                 *condition,
             )
@@ -153,7 +151,7 @@ class OfferRepository:
                     OffersEntity.coupon_no.label("code"),
                 )
                 .filter(
-                    OffersEntity.available_scope.isnot(None),
+                    OffersEntity.benefit_type.isnot(None),
                     OffersEntity.available_end_datetime >= today,  # 이벤트 기간 필터
                     *condition,
                 )
@@ -218,7 +216,7 @@ class OfferRepository:
                 coupon_name=coupon.coupon_name,
                 coupon_type=coupon.coupon_type,
                 coupon_description=coupon.coupon_description,
-                coupon_created_at=convert_str_iso_8601_to_datetime(coupon.created_date),
+                coupon_created_at=coupon.created_date,
                 benefit_type=coupon.benefit_type,
                 benefit_type_name=(
                     Cafe24CouponBenefitType[coupon.benefit_type].value
@@ -237,6 +235,7 @@ class OfferRepository:
                 ),
                 available_begin_datetime=coupon.available_begin_datetime,
                 available_end_datetime=coupon.available_end_datetime,
+                available_day_from_issued=coupon.available_day_from_issued,
                 issue_type=coupon.issue_type,
                 issue_sub_type=coupon.issue_sub_type,
                 issue_order_path=coupon.issue_order_path,

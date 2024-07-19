@@ -1,8 +1,10 @@
 from collections.abc import Callable
 from contextlib import AbstractContextManager
 
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
+from src.search.routes.dto.send_user_response import SendUserResponse
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
 from src.users.infra.entity.user_password import UserPasswordEntity
@@ -121,3 +123,34 @@ class UserSqlAlchemy:
             modified_user_dict
         )
         db.commit()
+
+    def get_send_user(self, db: Session, keyword=None) -> list[SendUserResponse]:
+        base_query = db.query(
+            func.concat(UserEntity.username, "/", UserEntity.department_abb_name).label(
+                "user_name_object"
+            ),
+            UserEntity.test_callback_number,
+            UserEntity.cell_phone_number,
+            UserEntity.sys_id,
+        )
+
+        if keyword:
+            keyword = f"%{keyword}%"
+            base_query = base_query.filter(
+                or_(
+                    UserEntity.username.ilike(keyword),
+                    UserEntity.department_abb_name.ilike(keyword),
+                )
+            )
+
+        entities = base_query.all()
+
+        recipient_response = [
+            SendUserResponse(
+                user_name_object=entity.user_name_object,
+                test_callback_number=entity.test_callback_number,
+            )
+            for entity in entities
+        ]
+
+        return recipient_response

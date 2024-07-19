@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 
+from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.search.routes.dto.strategy_search_response import StrategySearchResponse
 from src.strategy.domain.strategy import Strategy
 from src.strategy.domain.strategy_theme import StrategyTheme
@@ -82,4 +83,11 @@ class StrategyRepository(BaseStrategyRepository):
     ) -> list[StrategySearchResponse]:
         return self.strategy_sqlalchemy_repository.search_keyword(
             campaign_type_code, search_keyword, db
+        )
+
+    def search_strategy_themes_by_strategy_id(
+        self, strategy_id: str, db: Session
+    ) -> list[IdWithItem]:
+        return self.strategy_sqlalchemy_repository.search_strategy_themes_by_strategy_id(
+            strategy_id, db
         )

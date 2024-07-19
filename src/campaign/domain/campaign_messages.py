@@ -8,7 +8,7 @@ from src.message_template.enums.message_type import MessageType
 
 
 class KakaoLinkButtons(BaseModel):
-    kakao_link_buttons_seq: int | None
+    kakao_link_buttons_seq: int | None = None
     set_group_msg_seq: int | None
     button_name: str
     button_type: str
@@ -38,7 +38,7 @@ class MessageResource(BaseModel):
         from_attributes = True
 
 
-class SetGroupMessages(BaseModel):
+class SetGroupMessage(BaseModel):
     set_group_msg_seq: int | None
     set_group_seq: int | None
     msg_send_type: str
@@ -73,7 +73,7 @@ class SetGroupMessages(BaseModel):
 
 
 class CampaignMessages(BaseModel):
-    set_group_message: SetGroupMessages
+    set_group_message: SetGroupMessage
     remind_date: datetime | None = None
     remind_duration: int | None = None
 
@@ -81,14 +81,14 @@ class CampaignMessages(BaseModel):
     def model_validate(cls, data):
         set_group_message, remind_date, remind_duration = data
         return cls(
-            set_group_message=SetGroupMessages.from_orm(set_group_message),
+            set_group_message=SetGroupMessage.from_orm(set_group_message),
             remind_date=remind_date,
             remind_duration=remind_duration,
         )
 
 
 class Message(BaseModel):
-    set_group_msg_seq: int  # 메세지 아이디
+    set_group_msg_seq: int | None = None  # 메세지 아이디
     msg_resv_date: str | None = None  # 메시지 발송일자
     msg_title: str | None = None  # 제목
     msg_body: str | None = None  # 본문
@@ -98,15 +98,35 @@ class Message(BaseModel):
     msg_gen_key: str | None = None
     msg_photo_uri: List[str] | None = None
     msg_send_type: str
-    media: CampaignMedia
-    msg_type: MessageType
-    kakao_button_links: List[KakaoLinkButtons] | None = None
+    media: CampaignMedia | None = None
+    msg_type: MessageType | None = None
+    kakao_button_links: list[KakaoLinkButtons] | None = None
     phone_callback: str | None = ""
     is_used: bool
 
     class Config:
         orm_mode = True
         from_attributes = True
+
+    @staticmethod
+    def from_set_group_message(model: SetGroupMessage) -> "Message":
+        return Message(
+            set_group_msg_seq=model.set_group_msg_seq,
+            msg_resv_date=model.msg_resv_date,
+            msg_title=model.msg_title,
+            msg_body=model.msg_body,
+            bottom_text=model.bottom_text,
+            msg_announcement=model.msg_announcement,
+            template_id=model.template_id,
+            msg_gen_key=model.msg_gen_key,
+            msg_photo_uri=model.msg_photo_uri,
+            msg_send_type=model.msg_send_type,
+            media=CampaignMedia.from_value(model.media) if model.media else None,
+            msg_type=(MessageType.from_value(model.msg_type) if model.msg_type else None),
+            kakao_button_links=model.kakao_button_links,
+            phone_callback=model.phone_callback,
+            is_used=model.is_used,
+        )
 
 
 class MessageGenerate(Message):

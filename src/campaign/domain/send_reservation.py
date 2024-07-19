@@ -20,6 +20,7 @@ class SendReservation(BaseModel):
     send_msg_body: str | None = None
     send_filecount: int | None = None
     send_filepath: str | None = None
+    send_filekey: str | None = None
     kko_yellowid: str | None = None
     kko_template_key: str | None = None
     kko_button_json: str | None = None

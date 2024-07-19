@@ -59,8 +59,8 @@ class CreateStrategyService(CreateStrategyUseCase):
             ]
 
             theme_offer = [
-                StrategyThemeOfferMapping(offer_id=offer_id)
-                for offer_id in theme.theme_audience_set.offer_ids
+                StrategyThemeOfferMapping(coupon_no=offer_id)
+                for offer_id in theme.theme_audience_set.coupon_no_list
             ]
 
             strategy_themes.append(
@@ -105,7 +105,7 @@ class CreateStrategyService(CreateStrategyUseCase):
 
     def _check_exclusive_new_collection_model(self, recommend_model_list):
         """Checks if the new collection recommendation model is used exclusively and raises an exception if not."""
-        if (RecommendModels.new_collection_rec.value in recommend_model_list) and len(
+        if (RecommendModels.NEW_COLLECTION.value in recommend_model_list) and len(
             set(recommend_model_list)
         ) > 1:
             raise ValidationException(

@@ -5,6 +5,7 @@ import pandas as pd
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
+from src.campaign.domain.campaign_remind import CampaignRemind
 from src.campaign.domain.campaign_timeline import CampaignTimeline
 from src.campaign.enums.campagin_status import CampaignStatus
 from src.campaign.enums.campaign_progress import CampaignProgress
@@ -17,7 +18,6 @@ from src.campaign.infra.sqlalchemy_query.get_campaign_set_groups import (
 from src.campaign.infra.sqlalchemy_query.get_campaign_sets import get_campaign_sets
 from src.campaign.infra.sqlalchemy_query.get_set_rep_nm_list import get_set_rep_nm_list
 from src.campaign.routes.dto.request.campaign_create import CampaignCreate
-from src.campaign.routes.dto.request.campaign_remind import CampaignRemind
 from src.campaign.routes.dto.request.campaign_remind_create import CampaignRemindCreate
 from src.campaign.routes.dto.response.campaign_basic_response import (
     CampaignBasicResponse,
@@ -81,7 +81,7 @@ class CreateCampaignService(CreateCampaignUseCase):
         else:
             shop_send_yn = "n"
 
-        if campaign_create.campaign_type_code == CampaignType.expert.value:
+        if campaign_create.campaign_type_code == CampaignType.EXPERT.value:
             strategy_id = campaign_create.strategy_id
             if strategy_id is None:
                 raise ValidationException(
@@ -148,7 +148,7 @@ class CreateCampaignService(CreateCampaignUseCase):
             campaign_status_name=CampaignStatus.tempsave.description,
             send_type_code=campaign_create.send_type_code.value,
             send_type_name=SendType.get_name(campaign_create.send_type_code.value),
-            progress=CampaignProgress.base_complete.value,
+            progress=CampaignProgress.BASE_COMPLETE.value,
             repeat_type=repeat_type,
             # from user info
             created_by=str(user.user_id),
@@ -200,7 +200,7 @@ class CreateCampaignService(CreateCampaignUseCase):
         )
         self.campaign_repository.save_timeline(timeline, db)
 
-        if campaign_create.campaign_type_code == CampaignType.expert.value:
+        if campaign_create.campaign_type_code == CampaignType.EXPERT.value:
             campaign_id = saved_campaign.campaign_id
             if not campaign_id:
                 raise ConsistencyException(detail={"message": "캠페인의 id가 발급되지 않았습니다."})
@@ -242,7 +242,7 @@ class CreateCampaignService(CreateCampaignUseCase):
         )
 
     def create_campaign_set(self, saved_campaign: Campaign, user: User, db: Session):
-        selected_themes, campaign_theme_ids = self.campaign_set_repository.create_campaign_set(
+        selected_themes, strategy_theme_ids = self.campaign_set_repository.create_campaign_set(
             saved_campaign, str(user.user_id), db
         )
 
@@ -253,9 +253,9 @@ class CreateCampaignService(CreateCampaignUseCase):
         # expert 캠페인일 경우 데이터 sync 진행
         campaign_dependency_manager = CampaignDependencyManager(user)
 
-        if campaign_type_code == CampaignType.expert.value:
+        if campaign_type_code == CampaignType.EXPERT.value:
             campaign_dependency_manager.sync_campaign_base(
-                db, campaign_id, selected_themes, campaign_theme_ids
+                db, campaign_id, selected_themes, strategy_theme_ids
             )
             campaign_dependency_manager.sync_strategy_status(db, strategy_id)
         campaign_dependency_manager.sync_audience_status(db, campaign_id)
@@ -295,7 +295,7 @@ class CreateCampaignService(CreateCampaignUseCase):
 
             campaign_remind_list.append(
                 CampaignRemind(
-                    send_type_code=send_type_code,
+                    send_type_code=send_type_code.value,
                     remind_step=remind_create.remind_step,
                     remind_duration=remind_create.remind_duration,
                     remind_media=(
@@ -348,7 +348,7 @@ class CreateCampaignService(CreateCampaignUseCase):
         personalized_recsys_model_id = [
             i["_value_"] for i in recsys_model_enum_dict if i["personalized"] is True
         ]
-        personalized_recsys_model_id.remove(RecommendModels.new_collection_rec.value)
+        personalized_recsys_model_id.remove(RecommendModels.NEW_COLLECTION.value)
         not_personalized_set = []
 
         for idx, row in enumerate(sets):

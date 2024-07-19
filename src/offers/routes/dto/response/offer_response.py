@@ -1,5 +1,8 @@
 from pydantic import BaseModel, ConfigDict
 
+from src.common.utils.date_utils import (
+    convert_datetime_to_iso8601,
+)
 from src.offers.domain.offer import Offer
 
 
@@ -28,8 +31,8 @@ class OfferResponse(BaseModel):
             available_scope=offer.available_scope,
             available_begin_datetime=offer.available_begin_datetime,
             available_end_datetime=offer.available_end_datetime,
-            coupon_created_at=offer.coupon_created_at.strftime("%Y-%m-%d %H:%M:%S"),
-            created_at=offer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            coupon_created_at=offer.coupon_created_at,
+            created_at=convert_datetime_to_iso8601(offer.created_at),
             updated_by=offer.updated_by,
-            updated_at=offer.updated_at.strftime("%Y-%m-%d %H:%M:%S"),
+            updated_at=convert_datetime_to_iso8601(offer.updated_at),
         )

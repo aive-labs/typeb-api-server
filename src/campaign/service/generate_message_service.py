@@ -5,7 +5,7 @@ import yaml
 
 from src.campaign.core import generate_dm
 from src.campaign.core.message_group_controller import MessageGroupController
-from src.campaign.domain.campaign_messages import CampaignMessages, SetGroupMessages
+from src.campaign.domain.campaign_messages import CampaignMessages, SetGroupMessage
 from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
 from src.campaign.routes.dto.response.campaign_response import (
     CampaignReadBase,
@@ -128,7 +128,7 @@ class GenerateMessageService(GenerateMessageUsecase):
         for msg in yaml_data["messages"]:
             msg["created_at"] = datetime.fromisoformat(msg["created_at"])
             msg["updated_at"] = datetime.fromisoformat(msg["updated_at"])
-            set_group_message = SetGroupMessages(**msg)
+            set_group_message = SetGroupMessage(**msg)
             message_md = CampaignMessages(set_group_message=set_group_message)
             message_data.append(message_md)
 

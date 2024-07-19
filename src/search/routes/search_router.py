@@ -12,6 +12,8 @@ from src.search.routes.dto.id_with_item_response import (
     IdWithItemDescription,
 )
 from src.search.routes.dto.id_with_label_response import IdWithLabel
+from src.search.routes.dto.reviewer_response import ReviewerResponse
+from src.search.routes.dto.send_user_response import SendUserResponse
 from src.search.routes.dto.strategy_search_response import StrategySearchResponse
 from src.search.routes.port.base_search_service import BaseSearchService
 from src.strategy.enums.target_strategy import TargetStrategy
@@ -121,3 +123,36 @@ def search_strategies(
     search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[StrategySearchResponse]:
     return search_service.search_strategies(campaign_type_code, keyword, db=db)
+
+
+@search_router.get("/themes")
+@inject
+def search_strategy_themes(
+    strategy_id: str,
+    db: Session = Depends(get_db_session),
+    user=Depends(get_permission_checker(required_permissions=[])),
+    search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
+) -> list[IdWithItem]:
+    return search_service.search_strategy_themes(strategy_id, db=db)
+
+
+@search_router.get("/send-users")
+@inject
+def search_send_users(
+    keyword: Optional[str] = None,
+    db: Session = Depends(get_db_session),
+    user=Depends(get_permission_checker(required_permissions=[])),
+    search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
+) -> list[SendUserResponse]:
+    return search_service.search_send_users(db=db, keyword=keyword)
+
+
+@search_router.get("/review-users")
+@inject
+def search_reviewers(
+    keyword: Optional[str] = None,
+    db: Session = Depends(get_db_session),
+    user=Depends(get_permission_checker(required_permissions=[])),
+    search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
+) -> list[ReviewerResponse]:
+    return search_service.search_reviewer(user=user, db=db, keyword=keyword)

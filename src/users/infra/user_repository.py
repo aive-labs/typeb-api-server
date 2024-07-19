@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
 from src.core.exceptions.exceptions import NotFoundException
+from src.search.routes.dto.send_user_response import SendUserResponse
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
 from src.users.infra.user_sqlalchemy import UserSqlAlchemy
@@ -10,6 +11,7 @@ from src.users.service.port.base_user_repository import BaseUserRepository
 
 
 class UserRepository(BaseUserRepository):
+
     def __init__(self, user_sqlalchemy: UserSqlAlchemy):
         self.user_sqlalchemy = user_sqlalchemy
 
@@ -49,3 +51,6 @@ class UserRepository(BaseUserRepository):
             return True
 
         return False
+
+    def get_send_users(self, db: Session, keyword=None) -> list[SendUserResponse]:
+        return self.user_sqlalchemy.get_send_user(db, keyword)
