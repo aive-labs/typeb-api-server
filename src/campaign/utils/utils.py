@@ -103,3 +103,13 @@ def split_df_stratified_by_column(df, initial_ratios: list, stratify_column):
         total_remaining_ratio -= ratio
 
     return result_df
+
+
+def flat(pool):
+    res = []
+    for v in pool:
+        if isinstance(v, list) or isinstance(v, tuple):
+            res += flat(v)
+        else:
+            res.append(v)
+    return res

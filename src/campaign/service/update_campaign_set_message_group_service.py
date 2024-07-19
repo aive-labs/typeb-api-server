@@ -651,7 +651,7 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
         if set_group_message_update.phone_callback != set_group_message.phone_callback:
             if set_group_message_update.phone_callback == "{{주관리매장전화번호}}":
                 is_available_phone_number = True
-            elif set_group_message_update.phone_callback == "1666-3096":
+            elif set_group_message_update.phone_callback == "02-2088-5502":
                 is_available_phone_number = True
             else:
                 # 주관리매장번호 validation

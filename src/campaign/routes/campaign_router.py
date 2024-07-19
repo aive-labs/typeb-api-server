@@ -1,6 +1,9 @@
+from typing import Optional
+
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from starlette.background import BackgroundTasks
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.campaign.routes.dto.request.campaign_create import CampaignCreate
@@ -21,6 +24,7 @@ from src.campaign.routes.dto.request.campaign_set_message_use_request import (
 )
 from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdate
 from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
+from src.campaign.routes.dto.request.test_send_request import TestSendRequest
 from src.campaign.routes.dto.response.campaign_set_description_response import (
     CampaignSetDescriptionResponse,
 )
@@ -39,6 +43,7 @@ from src.campaign.routes.dto.response.exclusion_customer_detail import (
 from src.campaign.routes.dto.response.update_campaign_set_group_message_response import (
     UpdateCampaignSetGroupMessageResponse,
 )
+from src.campaign.routes.port.approve_campaign_usecase import ApproveCampaignUseCase
 from src.campaign.routes.port.confirm_campaign_set_group_message_usecase import (
     ConfirmCampaignSetGroupMessageUseCase,
 )
@@ -51,6 +56,7 @@ from src.campaign.routes.port.get_campaign_set_description_usecase import (
     GetCampaignSetDescriptionUseCase,
 )
 from src.campaign.routes.port.get_campaign_usecase import GetCampaignUseCase
+from src.campaign.routes.port.test_message_send_usecase import TestSendMessageUseCase
 from src.campaign.routes.port.update_campaign_progress_usecase import (
     UpdateCampaignProgressUseCase,
 )
@@ -301,3 +307,35 @@ def get_campaign_summary(
     ),
 ) -> CampaignSummaryResponse:
     return campaign_summary_service.create_campaign_summary(campaign_id, db=db)
+
+
+@campaign_router.post("/campaigns/{campaign_id}/status_change")
+@inject
+def campaign_status_change(
+    campaign_id: str,
+    to_status: str,
+    reviewers: Optional[str],
+    background_task: BackgroundTasks,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    approve_campaign_service: ApproveCampaignUseCase = Depends(
+        dependency=Provide[Container.approve_campaign_service]
+    ),
+):
+    approve_campaign_service.exec(
+        campaign_id, to_status, db, user, background_task, reviewers=reviewers
+    )
+
+
+@campaign_router.post("/campaigns/{campaign_id}/message/test-send")
+@inject
+def test_message_send(
+    campaign_id: str,
+    test_send_request: TestSendRequest,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    test_send_service: TestSendMessageUseCase = Depends(
+        dependency=Provide[Container.test_send_service]
+    ),
+):
+    test_send_service.exec(campaign_id, test_send_request, user, db=db)
