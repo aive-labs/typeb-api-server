@@ -54,6 +54,9 @@ from src.campaign.routes.port.get_campaign_usecase import GetCampaignUseCase
 from src.campaign.routes.port.update_campaign_progress_usecase import (
     UpdateCampaignProgressUseCase,
 )
+from src.campaign.routes.port.update_campaign_set_confirm_usecase import (
+    UpdateCampaignSetStatusToConfirmUseCase,
+)
 from src.campaign.routes.port.update_campaign_set_message_group_usecase import (
     UpdateCampaignSetMessageGroupUseCase,
 )
@@ -265,7 +268,7 @@ def update_campaign_set_confirmed(
     set_seq: int,
     user=Depends(get_permission_checker(required_permissions=[])),
     db=Depends(get_db_session),
-    update_campaign_set_confirm_service: UpdateMessageUseStatusUseCase = Depends(
+    update_campaign_set_confirm_service: UpdateCampaignSetStatusToConfirmUseCase = Depends(
         dependency=Provide[Container.update_campaign_set_confirm_service]
     ),
 ):
@@ -279,11 +282,11 @@ def update_campaign_set_all_confirm(
     campaign_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
     db=Depends(get_db_session),
-    update_campaign_set_confirm_service: UpdateMessageUseStatusUseCase = Depends(
+    update_campaign_set_confirm_service: UpdateCampaignSetStatusToConfirmUseCase = Depends(
         dependency=Provide[Container.update_campaign_set_confirm_service]
     ),
 ):
-    update_campaign_set_confirm_service.all_campaign_set_status_to_confrim(campaign_id, db=db)
+    update_campaign_set_confirm_service.all_campaign_set_status_to_confirm(campaign_id, db=db)
     return {"res": "success"}
 
 

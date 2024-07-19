@@ -7,6 +7,7 @@ from src.campaign.infra.campaign_repository import CampaignRepository
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
 from src.common.timezone_setting import selected_timezone
 from src.contents.infra.contents_repository import ContentsRepository
+from src.core.exceptions.exceptions import ConsistencyException
 from src.offers.infra.offer_repository import OfferRepository
 from src.products.infra.product_repository import ProductRepository
 from src.search.routes.dto.id_with_item_response import (
@@ -105,11 +106,19 @@ class SearchService(BaseSearchService):
 
     def search_reviewer(self, user, db: Session, keyword) -> list[ReviewerResponse]:
         # 임시로 본인 넣어둠
+
+        user_info = self.user_repository.get_user_by_id(user.user_id, db)
+
+        if user_info.user_id is None:
+            raise ConsistencyException(detail={"message": "사용자 정보를 조회할 수 없습니다."})
+
         return [
             ReviewerResponse(
-                user_id=user.user_id,
-                user_name_object=f"{user.username}/{user.department_abb_name}",
-                test_callback_number=user.test_callback_number,
+                user_id=user_info.user_id,
+                user_name_object=f"{user_info.username}/{user_info.department_name}",
+                test_callback_number=(
+                    user_info.test_callback_number if user_info.test_callback_number else ""
+                ),
                 default_reviewer_yn="n",
             )
         ]

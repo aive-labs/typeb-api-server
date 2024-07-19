@@ -22,7 +22,7 @@ class BaseUserRepository(ABC):
         pass
 
     @abstractmethod
-    def get_user_by_id(self, user_id: int, db: Session) -> User | None:
+    def get_user_by_id(self, user_id: int, db: Session) -> User:
         pass
 
     @abstractmethod

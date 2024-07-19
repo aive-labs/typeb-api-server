@@ -4,6 +4,7 @@ from contextlib import AbstractContextManager
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
+from src.core.exceptions.exceptions import NotFoundException
 from src.search.routes.dto.send_user_response import SendUserResponse
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
@@ -65,8 +66,10 @@ class UserSqlAlchemy:
         )
 
     def get_user_by_id(self, user_id: int, db: Session):
-
-        return db.query(UserEntity).filter(UserEntity.user_id == user_id).first()
+        entity = db.query(UserEntity).filter(UserEntity.user_id == user_id).first()
+        if entity is None:
+            raise NotFoundException(detail={"message": "사용자를 찾지 못했습니다."})
+        return entity
 
     def get_all_users(self, db: Session):
 

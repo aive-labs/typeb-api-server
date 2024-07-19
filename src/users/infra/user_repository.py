@@ -26,7 +26,7 @@ class UserRepository(BaseUserRepository):
     def delete_user(self, user_id: int, db: Session):
         pass
 
-    def get_user_by_id(self, user_id: int, db: Session) -> User | None:
+    def get_user_by_id(self, user_id: int, db: Session) -> User:
         user_entity: UserEntity = self.user_sqlalchemy.get_user_by_id(user_id, db)
         return User.from_entity(user_entity=user_entity)
 
