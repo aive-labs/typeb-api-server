@@ -45,3 +45,8 @@ class ContentsRepository(BaseContentsRepository):
 
     def search_contents_tag(self, keyword, recsys_model_id, db: Session) -> list[IdWithItem]:
         return self.contents_sqlalchemy.search_contents_tag(keyword, recsys_model_id, db)
+
+    def count_contents_by_campaign_id(self, campaign_id, set_group_seqs, db: Session) -> int:
+        return self.contents_sqlalchemy.count_contents_by_campaign_id(
+            campaign_id, set_group_seqs, db
+        )

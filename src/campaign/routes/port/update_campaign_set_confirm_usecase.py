@@ -14,5 +14,5 @@ class UpdateCampaignSetStatusToConfirmUseCase(ABC):
 
     @transactional
     @abstractmethod
-    def all_campaign_set_status_to_confrim(self, campaign_id: str, db: Session):
+    def all_campaign_set_status_to_confirm(self, campaign_id: str, db: Session):
         pass

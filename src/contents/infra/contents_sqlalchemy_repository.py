@@ -1,9 +1,13 @@
 from collections.abc import Callable
 from contextlib import AbstractContextManager
 
-from sqlalchemy import or_, update
+from sqlalchemy import and_, distinct, func, or_, update
 from sqlalchemy.orm import Session
 
+from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
+from src.campaign.infra.entity.campaign_set_recipients_entity import (
+    CampaignSetRecipientsEntity,
+)
 from src.common.utils.model_converter import ModelConverter
 from src.contents.domain.contents import Contents
 from src.contents.domain.contents_menu import ContentsMenu
@@ -223,3 +227,25 @@ class ContentsSqlAlchemy:
         )
 
         return [IdWithItem(id=item.contents_id, name=item.contents_name) for item in results]
+
+    def count_contents_by_campaign_id(self, campaign_id, set_group_seqs, db) -> int:
+        contents_count = (
+            db.query(func.count(distinct(CampaignSetRecipientsEntity.contents_id)))
+            .join(
+                CampaignSetGroupsEntity,
+                and_(
+                    CampaignSetRecipientsEntity.campaign_id == CampaignSetGroupsEntity.campaign_id,
+                    CampaignSetRecipientsEntity.set_sort_num
+                    == CampaignSetGroupsEntity.set_sort_num,
+                    CampaignSetRecipientsEntity.group_sort_num
+                    == CampaignSetGroupsEntity.group_sort_num,
+                ),
+            )
+            .filter(
+                CampaignSetRecipientsEntity.campaign_id == campaign_id,
+                CampaignSetGroupsEntity.set_group_seq.in_(set_group_seqs),
+            )
+            .scalar()
+        )
+
+        return contents_count

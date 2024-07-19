@@ -49,3 +49,7 @@ class BaseContentsRepository(ABC):
     @abstractmethod
     def search_contents_tag(self, keyword, recsys_model_id, db: Session) -> list[IdWithItem]:
         pass
+
+    @abstractmethod
+    def count_contents_by_campaign_id(self, campaign_id, set_group_seqs, db: Session) -> int:
+        pass

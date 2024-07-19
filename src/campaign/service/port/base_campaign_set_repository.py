@@ -48,3 +48,11 @@ class BaseCampaignSetRepository(ABC):
     @abstractmethod
     def update_all_sets_status_to_confirmed(self, campaign_id, db: Session):
         pass
+
+    @abstractmethod
+    def get_campaign_info_for_summary(self, campaign_id, db: Session):
+        pass
+
+    @abstractmethod
+    def get_campaign_set_group_messages_in_use(self, campaign_id, db) -> list[SetGroupMessage]:
+        pass

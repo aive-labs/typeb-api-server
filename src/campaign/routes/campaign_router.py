@@ -27,6 +27,9 @@ from src.campaign.routes.dto.response.campaign_set_description_response import (
 from src.campaign.routes.dto.response.campaign_set_group_update_response import (
     CampaignSetGroupUpdateResponse,
 )
+from src.campaign.routes.dto.response.campaign_summary_response import (
+    CampaignSummaryResponse,
+)
 from src.campaign.routes.dto.response.campaign_timeline_response import (
     CampaignTimelineResponse,
 )
@@ -38,6 +41,9 @@ from src.campaign.routes.dto.response.update_campaign_set_group_message_response
 )
 from src.campaign.routes.port.confirm_campaign_set_group_message_usecase import (
     ConfirmCampaignSetGroupMessageUseCase,
+)
+from src.campaign.routes.port.create_campaign_summary_usecase import (
+    CreateCampaignSummaryUseCase,
 )
 from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUseCase
 from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase
@@ -56,9 +62,6 @@ from src.campaign.routes.port.update_campaign_set_usecase import (
 )
 from src.campaign.routes.port.update_message_use_status_usecase import (
     UpdateMessageUseStatusUseCase,
-)
-from src.campaign.service.update_campaign_set_status_to_confrim import (
-    UpdateCampaignStatusToConfirm,
 )
 from src.core.container import Container
 from src.core.database import get_db_session
@@ -262,7 +265,7 @@ def update_campaign_set_confirmed(
     set_seq: int,
     user=Depends(get_permission_checker(required_permissions=[])),
     db=Depends(get_db_session),
-    update_campaign_set_confirm_service: UpdateCampaignStatusToConfirm = Depends(
+    update_campaign_set_confirm_service: UpdateMessageUseStatusUseCase = Depends(
         dependency=Provide[Container.update_campaign_set_confirm_service]
     ),
 ):
@@ -276,9 +279,22 @@ def update_campaign_set_all_confirm(
     campaign_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
     db=Depends(get_db_session),
-    update_campaign_set_confirm_service: UpdateCampaignStatusToConfirm = Depends(
+    update_campaign_set_confirm_service: UpdateMessageUseStatusUseCase = Depends(
         dependency=Provide[Container.update_campaign_set_confirm_service]
     ),
 ):
     update_campaign_set_confirm_service.all_campaign_set_status_to_confrim(campaign_id, db=db)
     return {"res": "success"}
+
+
+@campaign_router.get("/campaign/{campaign_id}/summary")
+@inject
+def get_campaign_summary(
+    campaign_id: str,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    campaign_summary_service: CreateCampaignSummaryUseCase = Depends(
+        dependency=Provide[Container.campaign_summary_service]
+    ),
+) -> CampaignSummaryResponse:
+    return campaign_summary_service.create_campaign_summary(campaign_id, db=db)

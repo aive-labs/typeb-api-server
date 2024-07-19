@@ -37,6 +37,7 @@ from src.campaign.service.confrim_campaign_set_group_message import (
     ConfirmCampaignSetGroupMessage,
 )
 from src.campaign.service.create_campaign_service import CreateCampaignService
+from src.campaign.service.create_campaign_summary import CreateCampaignSummary
 from src.campaign.service.generate_message_service import GenerateMessageService
 from src.campaign.service.get_campaign_service import GetCampaignService
 from src.campaign.service.get_campaign_set_description import GetCampaignSetDescription
@@ -436,6 +437,13 @@ class Container(containers.DeclarativeContainer):
         provides=UpdateCampaignStatusToConfirm,
         campaign_repository=campaign_repository,
         campaign_set_repository=campaign_set_repository,
+    )
+
+    campaign_summary_service = providers.Singleton(
+        provides=CreateCampaignSummary,
+        campaign_repository=campaign_repository,
+        campaign_set_repository=campaign_set_repository,
+        contents_repository=contents_repository,
     )
 
     """

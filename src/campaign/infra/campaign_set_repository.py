@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session, subqueryload
 from src.campaign.domain.campaign import Campaign
 from src.campaign.domain.campaign_messages import SetGroupMessage
 from src.campaign.enums.campaign_type import CampaignType, CampaignTypeEnum
+from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.campaign.infra.entity.campaign_remind_entity import CampaignRemindEntity
 from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
 from src.campaign.infra.entity.campaign_set_recipients_entity import (
@@ -711,3 +712,65 @@ class CampaignSetRepository(BaseCampaignSetRepository):
                 CampaignSetsEntity.campaign_id == campaign_id,
                 CampaignSetsEntity.set_seq == set_seq[0],
             ).update({CampaignSetsEntity.is_confirmed: True})
+
+    def get_campaign_info_for_summary(self, campaign_id, db: Session):
+        is_used_group = (
+            db.query(SetGroupMessagesEntity.set_group_seq.label("is_used_group_seq"))
+            .filter(
+                SetGroupMessagesEntity.campaign_id == campaign_id,
+                SetGroupMessagesEntity.is_used == True,  # is_used=True인 group만 가져오기
+            )
+            .subquery()
+        )
+
+        campaign_summ_obj = (
+            db.query(
+                CampaignEntity.campaign_id,
+                CampaignEntity.campaign_type_code,
+                CampaignEntity.campaign_type_name,
+                CampaignEntity.start_date,
+                CampaignEntity.end_date,
+                CampaignEntity.send_type_code,
+                CampaignEntity.send_type_name,
+                CampaignEntity.timetosend,
+                CampaignEntity.repeat_type,
+                CampaignEntity.week_days,
+                CampaignEntity.send_date,
+                CampaignEntity.campaign_status_code,
+                CampaignEntity.campaign_status_name,
+                CampaignSetsEntity.set_seq,
+                CampaignSetsEntity.audience_id,
+                CampaignSetsEntity.media_cost,
+                CampaignSetGroupsEntity.set_group_seq,
+                CampaignSetGroupsEntity.group_sort_num,
+                CampaignSetGroupsEntity.recipient_group_count,
+            )
+            .join(
+                CampaignSetsEntity,
+                CampaignEntity.campaign_id == CampaignSetsEntity.campaign_id,
+            )
+            .join(
+                CampaignSetGroupsEntity,
+                CampaignSetsEntity.set_seq == CampaignSetGroupsEntity.set_seq,
+            )
+            .join(
+                is_used_group,
+                CampaignSetGroupsEntity.set_group_seq
+                == is_used_group.c.is_used_group_seq,  # is_used=True인 group만 가져오기
+            )
+            .filter(CampaignEntity.campaign_id == campaign_id)
+        )
+
+        return campaign_summ_obj
+
+    def get_campaign_set_group_messages_in_use(self, campaign_id, db) -> list[SetGroupMessage]:
+        entities = (
+            db.query(SetGroupMessagesEntity)
+            .filter(
+                SetGroupMessagesEntity.campaign_id == campaign_id,
+                SetGroupMessagesEntity.is_used == True,
+            )
+            .all()
+        )
+
+        return [SetGroupMessage.model_validate(entity) for entity in entities]
