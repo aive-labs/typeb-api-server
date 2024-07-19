@@ -170,7 +170,7 @@ class GenerateMessageService(GenerateMessageUsecase):
                     msg_obj.msg_gen_key = generation_msg["msg_gen_key"]
                     msg_obj.msg_title = generation_msg["msg_title"]
                     msg_obj.msg_body = (
-                        "(광고)[네파] " + generation_msg["msg_body"]
+                        "(광고) " + generation_msg["msg_body"]
                         if msg_obj.media.value == "tms"
                         else generation_msg["msg_body"]
                     )
@@ -319,9 +319,6 @@ class GenerateMessageService(GenerateMessageUsecase):
             )
             message_data_dict[send_type].append(set_group_msg.set_group_msg_seq)
 
-        print(generation_input)
-        raise Exception("error")
-
         # set_group_msg_seq로 obj 검색 간소화
         msg_rtn = []
         for key, values in message_data_dict.items():
@@ -352,7 +349,7 @@ class GenerateMessageService(GenerateMessageUsecase):
                     msg_obj.msg_gen_key = generation_msg["msg_gen_key"]
                     msg_obj.msg_title = generation_msg["msg_title"]
                     msg_obj.msg_body = (
-                        "(광고)[네파] " + generation_msg["msg_body"]
+                        "(광고) " + generation_msg["msg_body"]
                         if msg_obj.media.value == "tms"
                         else generation_msg["msg_body"]
                     )
@@ -389,7 +386,7 @@ class GenerateMessageService(GenerateMessageUsecase):
                     msg_obj.msg_gen_key = generation_msg["msg_gen_key"]
                     msg_obj.msg_title = generation_msg["msg_title"]
                     msg_obj.msg_body = (
-                        "(광고)[네파] " + generation_msg["msg_body"]
+                        "(광고) " + generation_msg["msg_body"]
                         if msg_obj.media.value == "tms"
                         else generation_msg["msg_body"]
                     )
