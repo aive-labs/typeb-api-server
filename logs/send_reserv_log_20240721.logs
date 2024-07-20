@@ -1,0 +1,131 @@
+2024-07-21 00:02:20 - INFO - 1.[Test] campaign_id: cam-000022
+2024-07-21 00:02:21 - INFO - 2.[Test] button 개인화 적용 전 row수 :1
+2024-07-21 00:02:21 - INFO - 3.[Test] button 개인화 적용 후 row수 :1
+2024-07-21 00:02:21 - INFO - 4.[Test] send_msg_body 개인화 적용 후 row수 :1
+2024-07-21 00:02:21 - INFO - 5.[Test] phone_callback 개인화 적용 후 row수 :1
+2024-07-21 00:02:21 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 00:02:21 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 00:03:23 - INFO - 1.[Test] campaign_id: cam-000022
+2024-07-21 00:03:23 - INFO - 2.[Test] button 개인화 적용 전 row수 :1
+2024-07-21 00:03:23 - INFO - 3.[Test] button 개인화 적용 후 row수 :1
+2024-07-21 00:03:23 - INFO - 4.[Test] send_msg_body 개인화 적용 후 row수 :1
+2024-07-21 00:03:23 - INFO - 5.[Test] phone_callback 개인화 적용 후 row수 :1
+2024-07-21 00:03:23 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 00:03:23 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 00:05:55 - INFO - 1.[Test] campaign_id: cam-000022
+2024-07-21 00:05:55 - INFO - 2.[Test] button 개인화 적용 전 row수 :1
+2024-07-21 00:05:55 - INFO - 3.[Test] button 개인화 적용 후 row수 :1
+2024-07-21 00:05:55 - INFO - 4.[Test] send_msg_body 개인화 적용 후 row수 :1
+2024-07-21 00:05:55 - INFO - 5.[Test] phone_callback 개인화 적용 후 row수 :1
+2024-07-21 00:05:55 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 00:05:55 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 00:05:55 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 00:05:55 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 00:05:55 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 00:05:55 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 00:05:55 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 00:05:55 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:06:07 - INFO - 1.[Test] campaign_id: cam-000022
+2024-07-21 01:06:07 - INFO - 2.[Test] button 개인화 적용 전 row수 :1
+2024-07-21 01:06:07 - INFO - 3.[Test] button 개인화 적용 후 row수 :1
+2024-07-21 01:06:07 - INFO - 4.[Test] send_msg_body 개인화 적용 후 row수 :1
+2024-07-21 01:06:07 - INFO - 5.[Test] phone_callback 개인화 적용 후 row수 :1
+2024-07-21 01:06:07 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:06:07 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:06:07 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:06:07 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:06:07 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:06:07 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:06:07 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:06:07 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:06:44 - INFO - 1.[Test] campaign_id: cam-000022
+2024-07-21 01:06:44 - INFO - 2.[Test] button 개인화 적용 전 row수 :1
+2024-07-21 01:06:44 - INFO - 3.[Test] button 개인화 적용 후 row수 :1
+2024-07-21 01:06:44 - INFO - 4.[Test] send_msg_body 개인화 적용 후 row수 :1
+2024-07-21 01:06:44 - INFO - 5.[Test] phone_callback 개인화 적용 후 row수 :1
+2024-07-21 01:06:44 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:06:44 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:06:44 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:06:44 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:06:44 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:06:44 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:06:44 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:06:44 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:07:13 - INFO - 1.[Test] campaign_id: cam-000022
+2024-07-21 01:07:13 - INFO - 2.[Test] button 개인화 적용 전 row수 :1
+2024-07-21 01:07:13 - INFO - 3.[Test] button 개인화 적용 후 row수 :1
+2024-07-21 01:07:13 - INFO - 4.[Test] send_msg_body 개인화 적용 후 row수 :1
+2024-07-21 01:07:13 - INFO - 5.[Test] phone_callback 개인화 적용 후 row수 :1
+2024-07-21 01:07:13 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:07:13 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:07:13 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:07:13 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:07:13 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:07:13 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:07:13 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:07:13 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:14:03 - INFO - 1.[Test] campaign_id: cam-000022
+2024-07-21 01:14:03 - INFO - 2.[Test] button 개인화 적용 전 row수 :1
+2024-07-21 01:14:03 - INFO - 3.[Test] button 개인화 적용 후 row수 :1
+2024-07-21 01:14:03 - INFO - 4.[Test] send_msg_body 개인화 적용 후 row수 :1
+2024-07-21 01:14:03 - INFO - 5.[Test] phone_callback 개인화 적용 후 row수 :1
+2024-07-21 01:14:03 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:14:03 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:14:03 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:14:03 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:14:03 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:14:03 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:14:03 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:14:03 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:23:06 - INFO - 1.[Test] campaign_id: cam-000022
+2024-07-21 01:23:06 - INFO - 2.[Test] button 개인화 적용 전 row수 :1
+2024-07-21 01:23:06 - INFO - 3.[Test] button 개인화 적용 후 row수 :1
+2024-07-21 01:23:06 - INFO - 4.[Test] send_msg_body 개인화 적용 후 row수 :1
+2024-07-21 01:23:06 - INFO - 5.[Test] phone_callback 개인화 적용 후 row수 :1
+2024-07-21 01:23:06 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:23:06 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:23:06 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:23:06 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:23:06 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:23:06 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:23:06 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:23:06 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:24:02 - INFO - 1.[Test] campaign_id: cam-000022
+2024-07-21 01:24:03 - INFO - 2.[Test] button 개인화 적용 전 row수 :1
+2024-07-21 01:24:03 - INFO - 3.[Test] button 개인화 적용 후 row수 :1
+2024-07-21 01:24:03 - INFO - 4.[Test] send_msg_body 개인화 적용 후 row수 :1
+2024-07-21 01:24:03 - INFO - 5.[Test] phone_callback 개인화 적용 후 row수 :1
+2024-07-21 01:24:03 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:24:03 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:24:03 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:24:03 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:24:03 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:24:03 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:24:03 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:24:03 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:25:00 - INFO - 1.[Test] campaign_id: cam-000022
+2024-07-21 01:25:00 - INFO - 2.[Test] button 개인화 적용 전 row수 :1
+2024-07-21 01:25:00 - INFO - 3.[Test] button 개인화 적용 후 row수 :1
+2024-07-21 01:25:00 - INFO - 4.[Test] send_msg_body 개인화 적용 후 row수 :1
+2024-07-21 01:25:00 - INFO - 5.[Test] phone_callback 개인화 적용 후 row수 :1
+2024-07-21 01:25:00 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:25:00 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:25:00 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:25:00 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:25:00 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:25:00 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:25:00 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:25:00 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:26:23 - INFO - 1.[Test] campaign_id: cam-000022
+2024-07-21 01:26:23 - INFO - 2.[Test] button 개인화 적용 전 row수 :1
+2024-07-21 01:26:23 - INFO - 3.[Test] button 개인화 적용 후 row수 :1
+2024-07-21 01:26:23 - INFO - 4.[Test] send_msg_body 개인화 적용 후 row수 :1
+2024-07-21 01:26:23 - INFO - 5.[Test] phone_callback 개인화 적용 후 row수 :1
+2024-07-21 01:26:23 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:26:23 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:26:23 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:26:23 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:26:23 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:26:23 - WARNING - Python-dotenv could not parse statement starting at line 20
+2024-07-21 01:26:23 - WARNING - Python-dotenv could not parse statement starting at line 3
+2024-07-21 01:26:23 - WARNING - Python-dotenv could not parse statement starting at line 20

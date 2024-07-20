@@ -9,7 +9,6 @@ from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import coalesce
 
-from src.campaign.domain.campaign_messages import KakaoLinkButtons
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
 from src.campaign.infra.entity.campaign_set_recipients_entity import (
@@ -21,6 +20,9 @@ from src.campaign.infra.entity.send_reservation_entity import SendReservationEnt
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.campaign.infra.sqlalchemy_query.get_message_resources import (
     get_message_resources,
+)
+from src.campaign.infra.sqlalchemy_query.personal_variable_formatting import (
+    personal_variable_formatting,
 )
 from src.campaign.routes.dto.request.test_send_request import TestSendRequest
 from src.campaign.routes.port.test_message_send_usecase import TestSendMessageUseCase
@@ -38,6 +40,8 @@ from src.message_template.infra.entity.message_template_entity import (
 from src.messages.service.message_reserve_controller import MessageReserveController
 from src.offers.infra.entity.offers_entity import OffersEntity
 from src.users.domain.user import User
+
+pd.set_option("display.max_columns", None)
 
 
 class TestMessageSendService(TestSendMessageUseCase):
@@ -74,10 +78,6 @@ class TestMessageSendService(TestSendMessageUseCase):
             item.test_callback_number.replace("-", "") for item in test_send_request.recipient_list
         ]
 
-        print("send_rsv_df")
-        print(send_rsv_df)
-        print(test_send_no)
-
         for msg in msg_seq_list:
             sample_df = send_rsv_df[send_rsv_df.set_group_msg_seq == msg].sample(
                 test_send_user_cnt, replace=True
@@ -96,10 +96,14 @@ class TestMessageSendService(TestSendMessageUseCase):
                 "set_group_msg_seq",
                 "contents_name",
                 "contents_url",
-                "track_id",
+                # "track_id",
             ]
         ]
+        print("test_send_rsv_format")
+        print(test_send_rsv_format.columns)
 
+        print("msg_seq_list")
+        print(msg_seq_list)
         button_df_convert = self.convert_to_button_format(db, msg_seq_list, test_send_rsv_format)
 
         print("button 개인화 적용 전 row수 :" + str(len(test_send_rsv_format)))
@@ -111,9 +115,17 @@ class TestMessageSendService(TestSendMessageUseCase):
             "cus_cd",
             "set_group_msg_seq",
         ]
-        test_send_rsv_format = test_send_rsv_format.merge(
-            button_df_convert, on=group_keys, how="left"
-        )
+
+        print("button_df_convert")
+        print(button_df_convert)
+
+        if button_df_convert is not None:
+            test_send_rsv_format = test_send_rsv_format.merge(
+                button_df_convert, on=group_keys, how="left"  # pyright: ignore [reportArgumentType]
+            )
+
+        print("test_send_rsv_format.columns")
+        print(test_send_rsv_format.columns)
         del test_send_rsv_format["contents_name"]
         del test_send_rsv_format["contents_url"]
 
@@ -122,7 +134,9 @@ class TestMessageSendService(TestSendMessageUseCase):
         notnullbtn = notnullbtn[
             ~notnullbtn["kko_button_json"].str.contains("{{")
         ]  # 포매팅이 안되어 있는 메세지는 제외한다.
+
         test_send_rsv_format = pd.concat([notnullbtn, isnullbtn])
+
         print("button 개인화 적용 후 row수 :" + str(len(test_send_rsv_format)))
         logging.info("3.[Test] button 개인화 적용 후 row수 :" + str(len(test_send_rsv_format)))
 
@@ -215,10 +229,13 @@ class TestMessageSendService(TestSendMessageUseCase):
         send_rsv_format.loc[:, "update_resv_user"] = "test-user"
 
         # 저장
+        print("send_rsv_format.columns")
+        print(send_rsv_format.columns)
+
         send_reserv_columns = [
             column.name
             for column in SendReservationEntity.__table__.columns
-            if column.name != "send_resv_seq"
+            if column.name not in ["send_resv_seq", "shop_cd", "coupon_no", "send_filekey"]
         ]
         res_df = send_rsv_format[send_reserv_columns]
         res_df = res_df.replace({np.nan: None})
@@ -402,14 +419,17 @@ class TestMessageSendService(TestSendMessageUseCase):
                 CampaignSetGroupsEntity.set_group_seq == SetGroupMessagesEntity.set_group_seq,
             )
             .join(
-                KakaoLinkButtons,
+                KakaoLinkButtonsEntity,
                 SetGroupMessagesEntity.set_group_msg_seq
                 == KakaoLinkButtonsEntity.set_group_msg_seq,
             )
             .filter(KakaoLinkButtonsEntity.set_group_msg_seq.in_(set_group_msg_seqs))
             .distinct()
         )
+
         button_df = DataConverter.convert_query_to_df(buttons)
+        print("button_df")
+        print(button_df.columns)
 
         if len(button_df) == 0:
             cols = [
@@ -493,6 +513,10 @@ class TestMessageSendService(TestSendMessageUseCase):
         ]
         send_rsv_btn["url_pc"] = np.select(cond, choice)
 
+        print("send_rsv_bt[send_rsv_btn]")
+        print(send_rsv_btn.columns)
+        print(send_rsv_btn[send_rsv_btn["type"].notnull()])
+
         if len(send_rsv_btn[send_rsv_btn["type"].notnull()]) == 0:
             cols = [
                 "campaign_id",
@@ -502,7 +526,6 @@ class TestMessageSendService(TestSendMessageUseCase):
                 "set_group_msg_seq",
                 "kko_button_json",
             ]
-
             empty_df = pd.DataFrame(columns=cols)
             return empty_df
 

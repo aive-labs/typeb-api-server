@@ -1,5 +1,3 @@
-import json
-
 import requests
 from requests.auth import HTTPBasicAuth
 
@@ -21,18 +19,18 @@ class MessageReserveController:
         dag_name: Airflow DAG 이름
         input_vars: 전달하고자 하는 JSON 데이터
         """
-        # if self.dag_access == "denied":
-        #     print("dag 트리거 호출 권한이 없는 환경입니다.")
-        #     return False
 
         # POST 요청 데이터
         data = {"conf": input_vars}
+        print("airflow send data")
+        print(f"{self.airflow_api}/dags/{dag_name}/dagRuns")
+        print(data)
 
         # POST 요청 보내기
         response = requests.post(
             url=f"{self.airflow_api}/dags/{dag_name}/dagRuns",
             auth=HTTPBasicAuth(self.airflow_username, self.airflow_password),
-            data=json.dumps(data),
+            json=data,
         )
         print(response.text)
         # 응답 출력
