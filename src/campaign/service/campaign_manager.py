@@ -1,12 +1,20 @@
 import numpy as np
 import pandas as pd
 from fastapi.encoders import jsonable_encoder
+from sqlalchemy import delete
 
 from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
 from src.campaign.infra.entity.campaign_set_recipients_entity import (
     CampaignSetRecipientsEntity,
 )
 from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
+from src.campaign.infra.sqlalchemy_query.campaign_set.recipient_custom_contents_mapping import (
+    recipient_custom_contents_mapping,
+)
+from src.campaign.infra.sqlalchemy_query.create_set_group_messages import (
+    create_set_group_messages,
+)
+from src.campaign.infra.sqlalchemy_query.get_campaign_remind import get_campaign_remind
 from src.campaign.infra.sqlalchemy_query.get_customer_by_audience_id import (
     get_customers_by_audience_id,
 )
@@ -369,7 +377,7 @@ class CampaignManager:
 
         # 고객 목록 호출
         cust_audiences = get_cus_by_audience_with_seg(self.db, audience_ids)
-        cust_audiences_df = utils.convert_query_to_df(cust_audiences)
+        cust_audiences_df = DataConverter.convert_query_to_df(cust_audiences)
 
         ## 제외고객 필터링 적용
         campaigns_exc = campaign_obj_dict.get("campaigns_exc")
@@ -749,9 +757,9 @@ class CampaignManager:
                                 recipient_count=int(group["recipient_count"]),
                                 set_group_category=group["set_group_category"],
                                 set_group_val=group["set_group_val"],
-                                created_at=utils.localtime_converter(),
+                                created_at=localtime_converter(),
                                 created_by=self.user_id,
-                                updated_at=utils.localtime_converter(),
+                                updated_at=localtime_converter(),
                                 updated_by=self.user_id,
                             )
                             self.db.add(new_group)
