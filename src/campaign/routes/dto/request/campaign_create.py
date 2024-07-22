@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from src.campaign.enums.campaign_type import CampaignType
 from src.campaign.enums.repeat_type import RepeatTypeEnum
@@ -38,3 +38,17 @@ class CampaignCreate(BaseModel):
     audiences_exc: list[str] | None = None
     created_at: datetime = Field(default_factory=localtime_converter)
     updated_at: datetime = Field(default_factory=localtime_converter)
+
+    @model_validator(mode="before")  # pyright: ignore [reportArgumentType]
+    @classmethod
+    def replace_changed_field(cls, values):
+        if "campaign_theme_id" in values:
+            values["strategy_theme_id"] = values.pop("campaign_theme_id")
+
+        if "campaign_theme_name" in values:
+            values["strategy_theme_name"] = values.pop("campaign_theme_name")
+
+        if "campaign_theme_ids" in values:
+            values["strategy_theme_ids"] = values.pop("campaign_theme_ids")
+
+        return values
