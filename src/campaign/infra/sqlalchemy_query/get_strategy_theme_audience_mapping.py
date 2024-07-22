@@ -13,6 +13,7 @@ def get_strategy_theme_audience_mapping_query(selected_themes, db: Session):
         db.query(
             StrategyThemeAudienceMappingEntity.strategy_theme_id,
             StrategyThemesEntity.strategy_theme_id,
+            StrategyThemesEntity.strategy_theme_name,
             StrategyThemesEntity.recsys_model_id,
             StrategyThemeAudienceMappingEntity.audience_id,
             AudienceEntity.audience_name,
