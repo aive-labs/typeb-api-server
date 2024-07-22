@@ -14,6 +14,9 @@ from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
 from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
 from src.campaign.infra.entity.kakao_link_buttons_entity import KakaoLinkButtonsEntity
+from src.campaign.infra.sqlalchemy_query.add_set_rep_contents import (
+    add_set_rep_contents,
+)
 from src.campaign.infra.sqlalchemy_query.create_set_group_messages import (
     create_set_group_messages,
 )
@@ -49,7 +52,6 @@ from src.campaign.infra.sqlalchemy_query.get_set_group_message import (
 from src.campaign.infra.sqlalchemy_query.get_set_groups_by_group_seqs import (
     get_set_groups_by_group_seqs,
 )
-from src.campaign.infra.sqlalchemy_query.get_set_rep_nm_list import get_set_rep_nm_list
 from src.campaign.infra.sqlalchemy_query.modify_reservation_sync_service import (
     ModifyReservSync,
 )
@@ -128,7 +130,7 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
 
         set_groups = [row._asdict() for row in get_campaign_set_groups(campaign_id, db)]
 
-        sets = self.add_set_rep_contents(sets, set_groups, campaign_id, db)[0]
+        sets = add_set_rep_contents(sets, set_groups, campaign_id, db)[0]
 
         return CampaignSetGroupUpdateResponse(
             campaign_set=CampaignSetResponse(**sets),
@@ -551,63 +553,6 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
 
         # 권한이 있는 경우
         return True
-
-    def add_set_rep_contents(self, sets, set_groups, campaign_id, db):
-        recsys_model_enum_dict = RecommendModels.get_eums()
-        personalized_recsys_model_id = [
-            i["_value_"] for i in recsys_model_enum_dict if i["personalized"] is True
-        ]
-
-        new_collection_model_value = RecommendModels.NEW_COLLECTION.value
-        if new_collection_model_value in personalized_recsys_model_id:
-            personalized_recsys_model_id.remove(new_collection_model_value)
-
-        not_personalized_set = []
-
-        for idx, row in enumerate(sets):
-            # row is dict
-            recsys_model_id = row.get("recsys_model_id")
-            recsys_model_id = int(float(recsys_model_id)) if recsys_model_id else None
-            set_sort_num = row["set_sort_num"]
-
-            if recsys_model_id in personalized_recsys_model_id:
-                sets[idx]["rep_nm_list"] = ["개인화"]
-                sets[idx]["contents_names"] = ["개인화"]
-            else:
-                sets[idx]["rep_nm_list"] = None
-                sets[idx]["contents_names"] = None
-                not_personalized_set.append(set_sort_num)
-        # rep_nm_list
-        query = get_set_rep_nm_list(
-            campaign_id=campaign_id, set_sort_num_list=not_personalized_set, db=db
-        )
-        recipients = DataConverter.convert_query_to_df(query)
-        sort_num_dict = (
-            recipients.set_index("set_sort_num")["rep_nm_list"]
-            .apply(lambda x: x if x != [None] else [])
-            .to_dict()
-        )
-        for idx, set_dict in enumerate(sets):
-            for set_sort_num in sort_num_dict:
-                if set_dict["set_sort_num"] == set_sort_num:
-                    sets[idx]["rep_nm_list"] = sort_num_dict[set_sort_num]
-        # contents_names
-        result_dict = {}
-        for item in set_groups:
-            key = item["set_sort_num"]
-            value = item["contents_name"]
-
-            if key in result_dict and value is not None:
-                result_dict[key].append(value)
-            else:
-                result_dict[key] = [] if value is None else [value]
-
-        for idx, set_dict in enumerate(sets):
-            for set_sort_num in result_dict:
-                if set_dict["set_sort_num"] == set_sort_num:
-                    # 콘텐츠명 중복 제거
-                    sets[idx]["contents_names"] = list(set(result_dict[set_sort_num]))
-        return sets
 
     @transactional
     def update_campaign_set_messages_contents(
