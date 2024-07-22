@@ -21,7 +21,7 @@ def get_customers_for_expert_campaign(
     conditions = [
         AudienceCustomerMappingEntity.audience_id.in_(audience_ids),
     ]
-    if len(recommend_models) == 1 and recommend_models[0] == 8:
+    if len(recommend_models) == 1 and recommend_models[0] == 18:
         conditions = [
             AudienceCustomerMappingEntity.audience_id.in_(audience_ids),
         ]

@@ -20,6 +20,9 @@ from src.campaign.infra.sqlalchemy_query.get_customers_for_expert_campaign impor
 from src.campaign.infra.sqlalchemy_query.get_first_offer_by_strategy_theme import (
     get_first_offer_by_strategy_theme,
 )
+from src.campaign.infra.sqlalchemy_query.get_strategy_theme_audience_mapping import (
+    get_strategy_theme_audience_mapping_query,
+)
 from src.campaign.infra.sqlalchemy_query.recreate_basic_campaign import (
     add_ltv_frequency,
     check_customer_data_consistency,
@@ -67,8 +70,11 @@ def recreate_expert_campaign_set(
     strategy_themes_df = strategy_themes_df.sort_values("set_sort_num")
 
     audience_ids = list(set(strategy_themes_df["audience_id"]))
+
+    strategy_themes_df = DataConverter.convert_query_to_df(
+        get_strategy_theme_audience_mapping_query(selected_themes, db)
+    )
     recsys_model_ids = list(set(strategy_themes_df["recsys_model_id"].apply(int)))
-    coupon_no_list = list(set(strategy_themes_df["coupon_no"]))
 
     # cust_campaign_object : 고객 audience_ids
     customer_query = get_customers_for_expert_campaign(audience_ids, recsys_model_ids, db)
@@ -86,17 +92,32 @@ def recreate_expert_campaign_set(
 
     # audience_id 별로 가장 낮은 index 값으로 추출
     # audience_id의 유니크한 수만큼 데이터가 나옴
+    print("themes_df1")
+    print(strategy_themes_df)
     themes_df = strategy_themes_df.loc[
         # 각 audience_id 그룹에서 rank 열의 최소값을 가지는 행의 인덱스
         strategy_themes_df.groupby(["audience_id"])["rank"].idxmin()
     ]
     themes_df["set_sort_num"] = range(1, len(themes_df) + 1)
+
+    print("themes_df2")
+    print(themes_df)
     campaign_set_df_merged = cust_audiences_df.merge(themes_df, on="audience_id", how="inner")
 
+    print("cust_audiences_df")
+    print(cust_audiences_df)
+
+    print("campaign_set_df_merged")
+    print(campaign_set_df_merged)
+
     # cus_cd가 가장 낮은 숫자의 set_sort_num에 속하게 하기 위해
+    print('campaign_set_df_merged.groupby(["cus_cd"])["set_sort_num"].idxmin()')
+    print(campaign_set_df_merged.groupby(["cus_cd"])["set_sort_num"].idxmin())
     campaign_set_df = campaign_set_df_merged.loc[
         campaign_set_df_merged.groupby(["cus_cd"])["set_sort_num"].idxmin()
     ]
+    print("campaign_set_df")
+    print(campaign_set_df)
 
     del campaign_set_df_merged
 
