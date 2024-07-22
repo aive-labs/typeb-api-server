@@ -1,7 +1,7 @@
 from typing import Optional
 
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from starlette.background import BackgroundTasks
 
@@ -51,6 +51,7 @@ from src.campaign.routes.port.create_campaign_summary_usecase import (
     CreateCampaignSummaryUseCase,
 )
 from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUseCase
+from src.campaign.routes.port.delete_campaign_usecase import DeleteCampaignUseCase
 from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase
 from src.campaign.routes.port.get_campaign_set_description_usecase import (
     GetCampaignSetDescriptionUseCase,
@@ -340,3 +341,16 @@ async def test_message_send(
     ),
 ):
     await test_send_service.exec(campaign_id, test_send_request, user, db=db)
+
+
+@campaign_router.delete("/campaigns/{campaign_id}", status_code=status.HTTP_204_NO_CONTENT)
+@inject
+def delete_campaign(
+    campaign_id: str,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    delete_campaign_service: DeleteCampaignUseCase = Depends(
+        dependency=Provide[Container.delete_campaign_service]
+    ),
+):
+    delete_campaign_service.exec(campaign_id, user, db=db)

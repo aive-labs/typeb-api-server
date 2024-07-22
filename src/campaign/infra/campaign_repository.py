@@ -101,3 +101,6 @@ class CampaignRepository(BaseCampaignRepository):
         self.campaign_sqlalchemy.update_campaign_set_group_message_type(
             campaign_id, set_group_seq, message_type, db
         )
+
+    def delete_campaign(self, campaign, db):
+        self.campaign_sqlalchemy.delete_campaign(campaign, db)
