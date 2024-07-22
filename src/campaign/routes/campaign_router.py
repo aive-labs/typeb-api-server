@@ -135,6 +135,7 @@ def get_campaign_detail(
 def generate_message(
     message_generate: MsgGenerationReq,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
     generate_message_service: GenerateMessageUsecase = Depends(
         dependency=Provide[Container.generate_message_service]
     ),

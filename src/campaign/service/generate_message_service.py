@@ -1,7 +1,8 @@
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import yaml
+from sqlalchemy.orm import Session
 
 from src.campaign.core import generate_dm
 from src.campaign.core.message_group_controller import MessageGroupController
@@ -36,13 +37,23 @@ class GenerateMessageService(GenerateMessageUsecase):
         self.common_repository = common_repository
         self.contents_repository = contents_repository
 
-    def generate_preview_message(self, preview_message_create: PreviewMessageCreate, user: User):
+    def generate_preview_message(
+        self, preview_message_create: PreviewMessageCreate, user: User, db: Session
+    ):
 
         with open("src/campaign/core/preview_data.yaml", encoding="utf-8") as file:
             yaml_data = yaml.safe_load(file)
 
         campaign_base_obj = CampaignReadBase(**yaml_data["campaign_read"])
         campaign_base_obj.campaign_name = "얼리버드 캠페인"
+        current_date = datetime.now()
+        start_date = current_date.replace(day=1)
+        end_date = (
+            current_date.replace(month=current_date.month + 1, day=1) - timedelta(days=1)
+        ).replace(hour=23, minute=59, second=59)
+
+        campaign_base_obj.start_date = start_date.strftime("%Y%m%d")
+        campaign_base_obj.end_date = end_date.strftime("%Y%m%d")
         set_data = CampaignSet(**yaml_data["set_data"])
         set_groups = [CampaignSetGroup(**info) for info in yaml_data["group_info"]]
 
@@ -53,21 +64,22 @@ class GenerateMessageService(GenerateMessageUsecase):
         ]
 
         recsys_model_id = preview_message_create.recsys_model_id  # recsys_model_id
-        # audience_id = preview_message_create.theme_audience_set.audience_ids[0]  # audience_id
+        audience_id = preview_message_create.theme_audience_set.audience_ids[0]  # audience_id
 
-        # contents_tag = preview_message_create.theme_audience_set.contents_tags
-        # if not contents_tag:
-        #     contents_id = []
-        #     contents_name = []
-        # else:
-        #     contents_id = contents_tag[0]
-        #     contents_name = ""
-
-        set_data.contents_names = "개인화"
+        contents_tag = preview_message_create.theme_audience_set.contents_tags
+        if not contents_tag:
+            contents_id = []
+            contents_name = []
+            set_data.contents_names = "개인화"
+        else:
+            contents_id = contents_tag[0]
+            contents_obj = self.contents_repository.get_contents_detail(recsys_model_id, db)
+            contents_name = contents_obj.contents_name
 
         if recsys_model_id:
             recsys_model_obj = self.common_repository.get_recsys_model(recsys_model_id)
             recsys_model_name = recsys_model_obj.recsys_model_name
+            set_data.recsys_model_id = recsys_model_id
         else:
             recsys_model_name = None
 
@@ -93,11 +105,11 @@ class GenerateMessageService(GenerateMessageUsecase):
             "set_seq": set_data.set_seq,
             "set_sort_num": set_data.set_sort_num,
             "is_group_added": set_data.is_group_added,
-            "campaign_theme_id": set_data.campaign_theme_id,
-            "campaign_theme_name": set_data.campaign_theme_name,
+            "campaign_theme_id": set_data.strategy_theme_id,
+            "campaign_theme_name": set_data.strategy_theme_name,
             "recsys_model_id": set_data.recsys_model_id,
             "recsys_model_name": recsys_model_name,
-            "audience_id": set_data.audience_id,
+            "audience_id": audience_id,
             "audience_name": set_data.audience_name,
             "audience_count": set_data.audience_count,
             "audience_portion": set_data.audience_portion,
@@ -244,8 +256,8 @@ class GenerateMessageService(GenerateMessageUsecase):
             "set_seq": set_data_obj.set_seq,
             "set_sort_num": set_data_obj.set_sort_num,
             "is_group_added": set_data_obj.is_group_added,
-            "campaign_theme_id": set_data_obj.campaign_theme_id,
-            "campaign_theme_name": set_data_obj.campaign_theme_name,
+            "strategy_theme_id": set_data_obj.strategy_theme_id,
+            "strategy_theme_name": set_data_obj.strategy_theme_name,
             "recsys_model_id": set_data_obj.recsys_model_id,
             "recsys_model_name": recsys_model_name,
             "audience_id": set_data_obj.audience_id,
