@@ -227,7 +227,6 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
             print(len(set_group_seqs))
             print(set_group_seqs)
             create_set_group_messages(
-                db,
                 user_id,
                 campaign_id,
                 msg_delivery_vendor,
@@ -236,6 +235,7 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
                 has_remind,
                 set_group_seqs,
                 campaign_type_code,
+                db,
             )
 
             # 캠페인 세트 그룹 발송인 저장 (발송인은 업데이트가 아닌 새로 생성)

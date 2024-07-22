@@ -4,7 +4,7 @@ from src.users.infra.entity.user_entity import UserEntity
 
 
 def get_phone_callback(user_id, db: Session):
-    user = db.query(UserEntity).filter(UserEntity.user_id == user_id).first()
+    user = db.query(UserEntity).filter(UserEntity.user_id == int(user_id)).first()
 
     if not user:
         return "123-456-789"

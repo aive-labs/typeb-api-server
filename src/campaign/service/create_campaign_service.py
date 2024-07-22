@@ -81,7 +81,7 @@ class CreateCampaignService(CreateCampaignUseCase):
         else:
             shop_send_yn = "n"
 
-        if campaign_create.campaign_type_code == CampaignType.EXPERT.value:
+        if campaign_create.campaign_type_code.value == CampaignType.EXPERT.value:
             strategy_id = campaign_create.strategy_id
             if strategy_id is None:
                 raise ValidationException(
@@ -102,7 +102,7 @@ class CreateCampaignService(CreateCampaignUseCase):
             repeat_type = campaign_create.repeat_type.value
 
         retention_day = campaign_create.retention_day
-        if campaign_create.send_type_code == SendTypeEnum.RECURRING.value:
+        if campaign_create.send_type_code.value == SendTypeEnum.RECURRING.value:
             created_date = datetime.now(selected_timezone)
             start_date, end_date = calculate_dates(
                 start_date=created_date,
@@ -181,26 +181,14 @@ class CreateCampaignService(CreateCampaignUseCase):
             updated_at=campaign_create.updated_at,
         )
 
+        # 캠페인 저장
         saved_campaign = self.campaign_repository.create_campaign(new_campaign, db)
 
-        # 캠페인 생성 타임라인 추가
-        timeline_type = "campaign_event"
-        timeline_description = self._get_timeline_description(
-            timeline_type=timeline_type,
-            created_by_name=user.username,
-            description="캠페인 생성",
-        )
-        # 캠페인 타임라인 테이블 저장
-        timeline = CampaignTimeline(
-            timeline_type=timeline_type,
-            campaign_id=saved_campaign.campaign_id,
-            description=timeline_description,
-            created_by=str(user.user_id),
-            created_by_name=user.username,
-        )
-        self.campaign_repository.save_timeline(timeline, db)
+        # 캠페인 타임라인 저장
+        self.create_campagin_timeline(db, saved_campaign, user)
 
-        if campaign_create.campaign_type_code == CampaignType.EXPERT.value:
+        if campaign_create.campaign_type_code.value == CampaignType.EXPERT.value:
+            # Expert 캠페인의 경우, 전략에 따라 캠페인 세트 생성
             campaign_id = saved_campaign.campaign_id
             if not campaign_id:
                 raise ConsistencyException(detail={"message": "캠페인의 id가 발급되지 않았습니다."})
@@ -224,6 +212,7 @@ class CreateCampaignService(CreateCampaignUseCase):
 
             recipient_descriptions = set_summary_sententce(set_cus_count, set_df)
         else:
+            # 기본 캠페인의 경우 캠페인 세트 생성 안함
             recipient_portion = 0
             recipient_descriptions = None
             sets = None
@@ -240,6 +229,24 @@ class CreateCampaignService(CreateCampaignUseCase):
             set_group_list=set_groups,
             set_group_message_list=set_group_message_list,
         )
+
+    def create_campagin_timeline(self, db, saved_campaign, user):
+        # 캠페인 생성 타임라인 추가
+        timeline_type = "campaign_event"
+        timeline_description = self._get_timeline_description(
+            timeline_type=timeline_type,
+            created_by_name=user.username,
+            description="캠페인 생성",
+        )
+        # 캠페인 타임라인 테이블 저장
+        timeline = CampaignTimeline(
+            timeline_type=timeline_type,
+            campaign_id=saved_campaign.campaign_id,
+            description=timeline_description,
+            created_by=str(user.user_id),
+            created_by_name=user.username,
+        )
+        self.campaign_repository.save_timeline(timeline, db)
 
     def create_campaign_set(self, saved_campaign: Campaign, user: User, db: Session):
         selected_themes, strategy_theme_ids = self.campaign_set_repository.create_campaign_set(
@@ -348,7 +355,11 @@ class CreateCampaignService(CreateCampaignUseCase):
         personalized_recsys_model_id = [
             i["_value_"] for i in recsys_model_enum_dict if i["personalized"] is True
         ]
-        personalized_recsys_model_id.remove(RecommendModels.NEW_COLLECTION.value)
+
+        new_collection_model_value = RecommendModels.NEW_COLLECTION.value
+        if new_collection_model_value in personalized_recsys_model_id:
+            personalized_recsys_model_id.remove(new_collection_model_value)
+
         not_personalized_set = []
 
         for idx, row in enumerate(sets):

@@ -760,7 +760,6 @@ class CampaignManager:
                             added += 1
                     if len(new_set_groups) > 0:
                         res = create_set_group_messages(
-                            self.db,
                             self.user_id,
                             self.campaign_id,
                             campaign_obj_dict["msg_delivery_vendor"],
@@ -769,6 +768,7 @@ class CampaignManager:
                             campaign_obj_dict["has_remind"],
                             new_set_groups,
                             campaign_type_code,
+                            self.db,
                         )
                         print(res)
                     print(f"renewed: {renewed}")

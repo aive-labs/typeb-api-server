@@ -10,7 +10,7 @@ class RecommendModels(StrEnum):
     JOIN_THANK_YOU_MESSAGE = (6, 6, "회원가입 감사 메시지 발송", False)
     FIRST_PURCHASE_DISCOUNT_COUPON = (7, 7, "첫 구매 할인 쿠폰 제공", False)
     FIRST_PURCHASE_BEST_PRODUCT_RECOMMENDATION = (8, 8, "첫 구매 Best 상품 추천", False)
-    GENDER_AGE_GROUP_BEST_PRODUCT_RECOMMENDATION = (9, 9, "성별&연령대별 Best 상품 추천", False)
+    GENDER_GROUP_BEST_PRODUCT_RECOMMENDATION = (9, 9, "성별 Best 상품 추천", False)
     BEST_PRODUCT_REVIEW = (10, 10, "Best 상품 후기 전달", False)
     FIRST_PURCHASE_THANK_YOU_MESSAGE = (11, 11, "첫 구매 감사 메시지 발송", False)
     NEXT_PURCHASE_RECOMMENDATION = (12, 12, "Next구매 확률 높은 상품 추천", False)
@@ -24,6 +24,7 @@ class RecommendModels(StrEnum):
     MAXIMUM_DISCOUNT_PRODUCT_RECOMMENDATION = (20, 20, "최대 할인 상품 추천", False)
     SECRET_COUPON_DISTRIBUTION = (21, 21, "시크릿 쿠폰 발송", False)
     WELCOME_BACK_COUPON = (22, 22, "웰컴백 쿠폰 전달", False)
+    AGE_GROUP_BEST_PRODUCT_RECOMMENDATION = (23, 23, "연령대별 Best 상품 추천", False)
 
     mstr_rec_id: int
     description: str

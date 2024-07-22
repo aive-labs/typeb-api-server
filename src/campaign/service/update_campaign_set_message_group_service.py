@@ -493,7 +493,6 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
 
             # 새로운 set_group_seq로 메세지 추가
             create_set_group_messages(
-                db,
                 user_id,
                 campaign_id,
                 msg_delivery_vendor,
@@ -502,6 +501,7 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
                 has_remind,
                 set_group_seqs,
                 campaign_type_code,
+                db,
             )
 
             # recipient 수신인 삭제 - by campaign_id, set_sort_num, group_sort_sum : CampaignSetRecipients

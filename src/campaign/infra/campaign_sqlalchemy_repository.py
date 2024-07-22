@@ -382,6 +382,7 @@ class CampaignSqlAlchemy:
 
         print("entity")
         print(entity.datetosend)
+        print(entity.strategy_theme_ids)
         print(entity.created_at)
         print(entity.updated_at)
 
