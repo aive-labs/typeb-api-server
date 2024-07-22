@@ -93,9 +93,10 @@ def update_strategy(
 def get_preview(
     preview_message_create: PreviewMessageCreate,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db_session),
     generate_message_service: GenerateMessageUsecase = Depends(
         dependency=Provide[Container.generate_message_service]
     ),
 ) -> PreviewMessageResponse:
 
-    return generate_message_service.generate_preview_message(preview_message_create, user)
+    return generate_message_service.generate_preview_message(preview_message_create, user, db)
