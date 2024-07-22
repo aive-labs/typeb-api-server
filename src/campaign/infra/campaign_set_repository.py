@@ -14,17 +14,20 @@ from src.campaign.infra.entity.campaign_set_recipients_entity import (
 )
 from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
+from src.campaign.infra.sqlalchemy_query.campaign_set.apply_personalized_option import (
+    apply_personalized_option,
+)
+from src.campaign.infra.sqlalchemy_query.campaign_set.recipient_custom_contents_mapping import (
+    recipient_custom_contents_mapping,
+)
 from src.campaign.infra.sqlalchemy_query.create_set_group_messages import (
     create_set_group_messages,
 )
+from src.campaign.infra.sqlalchemy_query.delete_campaign_sets import (
+    delete_campaign_sets,
+)
 from src.campaign.infra.sqlalchemy_query.get_audience_rank_between import (
     get_audience_rank_between,
-)
-from src.campaign.infra.sqlalchemy_query.get_contents_from_strategy import (
-    get_contents_from_strategy,
-)
-from src.campaign.infra.sqlalchemy_query.get_contents_name_with_rep_nm import (
-    get_contents_name_with_rep_nm,
 )
 from src.campaign.infra.sqlalchemy_query.get_customer_by_audience_id import (
     get_customers_by_audience_id,
@@ -116,6 +119,23 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         strategy_theme_ids = campaign_set_merged["strategy_theme_id"]
 
         return set(selected_themes), set(strategy_theme_ids)
+
+    def recreate_expert_campaign(
+        self,
+        shop_send_yn,
+        user_id,
+        campaign_id,
+        campaign_group_id,
+        media,
+        msg_delivery_vendor,
+        is_personalized,
+        selected_themes,
+        budget,
+        campaigns_exc,
+        audiences_exc,
+        db: Session,
+    ):
+        delete_campaign_sets(campaign_id, db)
 
     def get_recommend_models_by_strategy_id(
         self, strategy_theme_ids: list[int], db: Session
@@ -214,7 +234,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         print("campaign_set_df.columns")
         print(campaign_set_df.columns)
 
-        ## 세트 고객 집계
+        # 세트 고객 집계
         group_keys = [
             "strategy_theme_id",
             "strategy_theme_name",
@@ -250,13 +270,11 @@ class CampaignSetRepository(BaseCampaignSetRepository):
 
         # 발송대상
         # 개인화 타겟팅 옵션 적용 - group_category, group_val 세팅
-        campaign_set_df = self.apply_personalized_option(campaign_set_df, is_personalized)
+        campaign_set_df = apply_personalized_option(campaign_set_df, is_personalized)
 
         # 발송대상 2) 커스텀에서는 전략에서 선택한 콘텐츠를 매핑함
         # 있으면 매핑 없으면 None
-        campaign_set_df = self.recipient_custom_contents_mapping(
-            campaign_set_df, selected_themes, db
-        )
+        campaign_set_df = recipient_custom_contents_mapping(campaign_set_df, selected_themes, db)
 
         campaign_set_df["rep_nm"] = None
         campaign_set_df["campaign_id"] = campaign_id
@@ -271,7 +289,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         campaign_set_merged = campaign_set_merged.replace({np.nan: None})
 
         group_keys = ["set_sort_num", "group_sort_num"]
-        df_grouped1 = (
+        df_grouped1 = (  # pyright: ignore [reportCallIssue]
             campaign_set_df.groupby(group_keys)[["cus_cd"]]
             .agg({"cus_cd": "nunique"})
             .rename(columns={"cus_cd": "recipient_group_count"})
@@ -294,7 +312,10 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         print("df_grouped2")
         print(df_grouped2)
 
-        res_groups_df = pd.concat([df_grouped1, df_grouped2], axis=1).reset_index()
+        res_groups_df = pd.concat(  # pyright: ignore [reportCallIssue]
+            [df_grouped1, df_grouped2], axis=1  # pyright: ignore [reportArgumentType]
+        ).reset_index()  # pyright: ignore [reportCallIssue]
+        res_groups_df = res_groups_df.replace({np.nan: None})
 
         # sets : set_group_list 프로퍼티
         campaign_set_merged["set_group_list"] = None
@@ -328,20 +349,6 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             campaign_set_merged.at[idx, "set_group_list"] = group_dict_list
 
         return campaign_set_merged, campaign_set_df
-
-    def apply_personalized_option(self, campaign_set_df, is_personalized):
-        if is_personalized:
-            campaign_set_df = campaign_set_df.rename(columns={"age_group_10": "set_group_val"})
-            campaign_set_df["set_group_category"] = "age_group_10"
-
-            campaign_set_df["group_sort_num"] = campaign_set_df.groupby("set_sort_num")[
-                "set_group_val"
-            ].transform(lambda x: pd.factorize(x)[0] + 1)
-        else:
-            campaign_set_df["set_group_val"] = None
-            campaign_set_df["set_group_category"] = None
-            campaign_set_df["group_sort_num"] = 1
-        return campaign_set_df
 
     def validate_campagin_set_df(self, campaign_set_df):
         if len(campaign_set_df) == 0:
@@ -389,25 +396,6 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             .order_by(CampaignRemindEntity.remind_step)
             .all()
         )
-
-    def recipient_custom_contents_mapping(self, campaign_set_df, selected_themes, db: Session):
-        """전략에서 선택된 추천 콘텐츠의 아이디를 조인하여 정보를 매핑"""
-        theme_contents = get_contents_from_strategy(selected_themes, db)
-        theme_contents_df = DataConverter.convert_query_to_df(theme_contents)
-
-        contents_info = get_contents_name_with_rep_nm(db)
-        contents_info_df = DataConverter.convert_query_to_df(contents_info)
-
-        theme_contents_df["strategy_theme_id"] = theme_contents_df["strategy_theme_id"].astype(int)
-        theme_contents_df["contents_id"] = theme_contents_df["contents_id"].astype(str)
-        contents_info_df["contents_id"] = contents_info_df["contents_id"].astype(str)
-
-        campaign_set_df = campaign_set_df.merge(
-            theme_contents_df, on="strategy_theme_id", how="left"
-        )
-        campaign_set_df = campaign_set_df.merge(contents_info_df, on="contents_id", how="left")
-
-        return campaign_set_df
 
     def save_campaign_set(self, campaign_df, db: Session):
         """캠페인 오브젝트 저장 (CampaignSets, CampaignSetGroups)
