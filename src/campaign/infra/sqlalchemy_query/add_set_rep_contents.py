@@ -28,13 +28,14 @@ def add_set_rep_contents(sets, set_groups, campaign_id, db):
             sets[idx]["rep_nm_list"] = None
             sets[idx]["contents_names"] = None
             not_personalized_set.append(set_sort_num)
+
     # rep_nm_list
-    query = get_set_rep_nm_list(
+    rep_nm_query = get_set_rep_nm_list(
         campaign_id=campaign_id, set_sort_num_list=not_personalized_set, db=db
     )
-    recipients = DataConverter.convert_query_to_df(query)
+    rep_nm_list_of_recipients = DataConverter.convert_query_to_df(rep_nm_query)
     sort_num_dict = (
-        recipients.set_index("set_sort_num")["rep_nm_list"]
+        rep_nm_list_of_recipients.set_index("set_sort_num")["rep_nm_list"]
         .apply(lambda x: x if x != [None] else [])
         .to_dict()
     )

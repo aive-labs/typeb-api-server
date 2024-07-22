@@ -193,13 +193,15 @@ class CreateCampaignService(CreateCampaignUseCase):
             if not campaign_id:
                 raise ConsistencyException(detail={"message": "캠페인의 id가 발급되지 않았습니다."})
 
+            # campaign_set 생성
             self.create_campaign_set(saved_campaign, user, db)
+
             sets = [row._asdict() for row in get_campaign_sets(campaign_id=campaign_id, db=db)]
             set_groups = [
                 row._asdict() for row in get_campaign_set_groups(campaign_id=campaign_id, db=db)
             ]
 
-            # campaign set 조회
+            # campaign set rep_nm, contents 조회
             sets = add_set_rep_contents(sets, set_groups, campaign_id, db)
             set_df = pd.DataFrame(sets)
 

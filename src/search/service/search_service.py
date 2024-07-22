@@ -1,13 +1,20 @@
 from datetime import datetime, timedelta
 
+from sqlalchemy import distinct, func
 from sqlalchemy.orm import Session
+from sqlalchemy.sql.functions import coalesce
 
+from src.audiences.infra.entity.audience_customer_mapping_entity import (
+    AudienceCustomerMappingEntity,
+)
+from src.audiences.infra.entity.variable_table_list import CustomerInfoStatusEntity
 from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
 from src.campaign.infra.campaign_repository import CampaignRepository
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
 from src.common.timezone_setting import selected_timezone
 from src.contents.infra.contents_repository import ContentsRepository
 from src.core.exceptions.exceptions import ConsistencyException
+from src.offers.infra.entity.offers_entity import OffersEntity
 from src.offers.infra.offer_repository import OfferRepository
 from src.products.infra.product_repository import ProductRepository
 from src.search.routes.dto.id_with_item_response import (
@@ -19,13 +26,13 @@ from src.search.routes.dto.reviewer_response import ReviewerResponse
 from src.search.routes.dto.send_user_response import SendUserResponse
 from src.search.routes.dto.strategy_search_response import StrategySearchResponse
 from src.search.routes.port.base_search_service import BaseSearchService
+from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.users.domain.user import User
 from src.users.infra.user_repository import UserRepository
 
 
 class SearchService(BaseSearchService):
-
     def __init__(
         self,
         audience_repository: BaseAudienceRepository,
@@ -122,3 +129,62 @@ class SearchService(BaseSearchService):
                 default_reviewer_yn="n",
             )
         ]
+
+    def search_campaign_set_items(
+        self, strategy_theme_id, audience_id, coupon_no, db: Session
+    ) -> list[str]:
+        # 세트 추가 시, 선택한 strategy_theme_id, audience_id, coupon_no 해당하는 추천 대표상품목록
+
+        # 1. 오퍼 조회
+        offers = (
+            db.query(
+                OffersEntity.benefit_type,
+                func.min(
+                    coalesce(OffersEntity.benefit_price, OffersEntity.benefit_percentage)
+                ).label("offer_amount"),
+            )
+            .filter(OffersEntity.coupon_no == coupon_no)
+            .group_by(OffersEntity.benefit_type)
+        )
+
+        # 2. 추천 모델 조회
+        recsys_model_id = (
+            db.query(StrategyThemesEntity.recsys_model_id)
+            .filter(StrategyThemesEntity.strategy_theme_id == strategy_theme_id)
+            .scalar()
+        )
+
+        # 3. rep_nm_list 생성 <- cus_info_status, offer 조인, audience 조인
+        # 조회에 추천 모델 컬럼까지 선택
+        # TODO recsys_model_id에 따라서 어떤 컬럼을 선택할지 지정
+        columns_of_interest = [
+            CustomerInfoStatusEntity.first_best_items,
+            CustomerInfoStatusEntity.best_promo_items,
+            CustomerInfoStatusEntity.best_gender_items,
+            CustomerInfoStatusEntity.best_category_items,
+            CustomerInfoStatusEntity.best_age_items,
+            CustomerInfoStatusEntity.best_new_items,
+            CustomerInfoStatusEntity.steady_items,
+            CustomerInfoStatusEntity.best_cross_items,
+        ]
+
+        recommend_rep_nm_set = set()
+
+        for column in columns_of_interest:
+            subquery = (
+                db.query(distinct(column))
+                .join(
+                    AudienceCustomerMappingEntity,
+                    CustomerInfoStatusEntity.cus_cd == AudienceCustomerMappingEntity.cus_cd,
+                )
+                .filter(AudienceCustomerMappingEntity.audience_id == audience_id)
+                .subquery()
+            )
+
+            results = db.query(subquery).all()
+            recommend_rep_nm_set.update([result[0] for result in results if result[0] is not None])
+
+        # Convert the set to a list (if needed)
+        recommend_rep_nm_list = list(recommend_rep_nm_set)
+
+        return recommend_rep_nm_list

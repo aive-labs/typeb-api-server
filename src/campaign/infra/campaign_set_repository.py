@@ -291,6 +291,8 @@ class CampaignSetRepository(BaseCampaignSetRepository):
                 "contents_name": "first",
             }
         )
+        print("df_grouped2")
+        print(df_grouped2)
 
         res_groups_df = pd.concat([df_grouped1, df_grouped2], axis=1).reset_index()
 
