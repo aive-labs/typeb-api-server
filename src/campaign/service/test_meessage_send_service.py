@@ -45,7 +45,7 @@ pd.set_option("display.max_columns", None)
 
 
 class TestMessageSendService(TestSendMessageUseCase):
-    def exec(
+    async def exec(
         self, campaign_id, test_send_request: TestSendRequest, user: User, db: Session
     ) -> dict:
         """테스트 발송 실행"""
@@ -232,6 +232,7 @@ class TestMessageSendService(TestSendMessageUseCase):
         print("send_rsv_format.columns")
         print(send_rsv_format.columns)
 
+        # 컬럼 추출 추후 수정
         send_reserv_columns = [
             column.name
             for column in SendReservationEntity.__table__.columns
@@ -256,7 +257,7 @@ class TestMessageSendService(TestSendMessageUseCase):
         # airflow trigger api
         message_controller = MessageReserveController()
         input_variable = {"mallid": user.mall_id, "campaign_id": campaign_id, "test_send_yn": "y"}
-        message_controller.execute_dag("send_messages", input_variable)
+        await message_controller.execute_dag("send_messages", input_variable)
 
         return {
             "status": "success",

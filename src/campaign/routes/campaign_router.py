@@ -329,7 +329,7 @@ def campaign_status_change(
 
 @campaign_router.post("/campaigns/{campaign_id}/message/test-send")
 @inject
-def test_message_send(
+async def test_message_send(
     campaign_id: str,
     test_send_request: TestSendRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
@@ -338,4 +338,4 @@ def test_message_send(
         dependency=Provide[Container.test_send_service]
     ),
 ):
-    test_send_service.exec(campaign_id, test_send_request, user, db=db)
+    await test_send_service.exec(campaign_id, test_send_request, user, db=db)

@@ -9,7 +9,7 @@ from src.users.domain.user import User
 class TestSendMessageUseCase(ABC):
 
     @abstractmethod
-    def exec(
+    async def exec(
         self, campaign_id, test_send_request: TestSendRequest, user: User, db: Session
     ) -> dict:
         pass
