@@ -10,10 +10,6 @@ class MessageReserveController:
         self.airflow_username = username = get_env_variable("airflow_username")
         self.airflow_password = password = get_env_variable("airflow_password")
 
-        # self.url = "http://172.16.24.174:8080/api/v1/dags/{dag_name}/dagRuns"
-        # self.cred = cred
-        # self.dag_access = dag_access
-
     def execute_dag(self, dag_name, input_vars):
         """Airflow DAG에 메시지 전송 요청을 보냅니다.
         dag_name: Airflow DAG 이름
@@ -22,9 +18,6 @@ class MessageReserveController:
 
         # POST 요청 데이터
         data = {"conf": input_vars}
-        print("airflow send data")
-        print(f"{self.airflow_api}/dags/{dag_name}/dagRuns")
-        print(data)
 
         # POST 요청 보내기
         response = requests.post(
@@ -32,6 +25,5 @@ class MessageReserveController:
             auth=HTTPBasicAuth(self.airflow_username, self.airflow_password),
             json=data,
         )
-        print(response.text)
-        # 응답 출력
+
         return response.text
