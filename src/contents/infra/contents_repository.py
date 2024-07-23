@@ -50,3 +50,15 @@ class ContentsRepository(BaseContentsRepository):
         return self.contents_sqlalchemy.count_contents_by_campaign_id(
             campaign_id, set_group_seqs, db
         )
+    
+    def get_product_from_code(self, product_code, db: Session):
+        return self.contents_sqlalchemy.get_product_from_code(product_code, db)
+    
+    def get_product_media_resource(self, product_code, db: Session):
+        return self.contents_sqlalchemy.get_product_media_resource(product_code, db)
+    
+    def get_product_review(self, product_code, db: Session):
+        return self.contents_sqlalchemy.get_product_review(product_code, db)
+    
+    def get_product_img(self, product_code, db: Session):
+        return self.contents_sqlalchemy.get_product_img(product_code, db)

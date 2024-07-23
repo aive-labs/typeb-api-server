@@ -1,5 +1,6 @@
 from collections.abc import Callable
 from contextlib import AbstractContextManager
+from typing import List
 
 from sqlalchemy import and_, distinct, func, or_, update
 from sqlalchemy.orm import Session
@@ -14,6 +15,10 @@ from src.contents.domain.contents_menu import ContentsMenu
 from src.contents.infra.dto.response.contents_response import ContentsResponse
 from src.contents.infra.entity.contents_entity import ContentsEntity
 from src.contents.infra.entity.contents_menu_entity import ContentsMenuEntity
+from src.contents.infra.entity.creatives_entity import CreativesEntity
+from src.products.infra.entity.product_master_entity import ProductMasterEntity
+from src.products.infra.entity.product_link_entity import ProductLinkEntity
+from src.products.infra.entity.comment_master_entity import CommentMasterEntity
 from src.core.exceptions.exceptions import NotFoundException
 from src.search.routes.dto.id_with_item_response import IdWithItem
 
@@ -249,3 +254,71 @@ class ContentsSqlAlchemy:
         )
 
         return contents_count
+
+    def get_product_from_code(self, product_codes: List[str], db) -> List:
+        product_entities = (
+        db.query(
+            ProductMasterEntity.product_code,
+            ProductMasterEntity.product_name,
+            ProductMasterEntity.rep_nm,
+            ProductMasterEntity.category_name,
+            ProductMasterEntity.price,
+            ProductMasterEntity.summary_description,
+            ProductMasterEntity.simple_description,
+            ProductMasterEntity.product_tag,
+        )
+        .filter(
+            ProductMasterEntity.product_code.in_(product_codes)
+        )
+        .all()
+    )
+
+        return product_entities
+    
+    def get_product_media_resource(self, product_codes: List[str], db) -> List:
+        product_media_entities = (
+            db.query(
+                ProductLinkEntity.product_code,
+                ProductLinkEntity.link_type,
+                ProductLinkEntity.link,
+            )
+            .filter(
+                ProductLinkEntity.product_code.in_(product_codes)
+            )
+            .all()
+        )
+        return product_media_entities
+
+    def get_product_review(self, product_codes: List[str], db) -> List:
+        review_entities = (
+            db.query(
+                CommentMasterEntity.product_no,
+                CommentMasterEntity.content,
+                CommentMasterEntity.rating,
+            ).join(
+                ProductMasterEntity,
+                ProductMasterEntity.product_no == CommentMasterEntity.product_no
+            ).filter(
+                ProductMasterEntity.product_code.in_(product_codes)
+            ).order_by(
+                CommentMasterEntity.rating.desc()
+            ).all()
+        )
+        return review_entities
+
+    def get_product_img(self, product_codes: List[str], db) -> List:
+        product_img_entities = (
+            db.query(
+                CreativesEntity.style_cd.label("product_code"),
+                CreativesEntity.style_object_name.label("product_name"),
+                CreativesEntity.image_uri,
+                CreativesEntity.image_path,
+                CreativesEntity.creative_tags,
+            )
+            .filter(
+                CreativesEntity.style_cd.in_(product_codes),
+                ~CreativesEntity.is_deleted
+            )
+            .all()
+        )
+        return product_img_entities
