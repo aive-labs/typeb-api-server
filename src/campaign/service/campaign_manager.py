@@ -15,6 +15,9 @@ from src.campaign.infra.sqlalchemy_query.create_set_group_messages import (
     create_set_group_messages,
 )
 from src.campaign.infra.sqlalchemy_query.get_campaign_remind import get_campaign_remind
+from src.campaign.infra.sqlalchemy_query.get_contents_name import (
+    get_rep_nm_by_contents_id,
+)
 from src.campaign.infra.sqlalchemy_query.get_customer_by_audience_id import (
     get_customers_by_audience_id,
 )
@@ -325,6 +328,11 @@ class CampaignManager:
             for set_group in row["set_group_list"]:
                 # CampaignSetGroups 인서트
                 set_group_req = CampaignSetGroupsEntity(**set_group)
+
+                if set_group_req.contents_id:
+                    rep_nm = get_rep_nm_by_contents_id(set_group_req.contents_id, db)
+                    set_group_req.rep_nm = rep_nm
+
                 set_group_req_list.append(set_group_req)
 
             set_req.set_group_list = set_group_req_list

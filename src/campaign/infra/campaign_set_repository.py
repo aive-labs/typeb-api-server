@@ -29,6 +29,9 @@ from src.campaign.infra.sqlalchemy_query.delete_campaign_sets import (
 from src.campaign.infra.sqlalchemy_query.get_audience_rank_between import (
     get_audience_rank_between,
 )
+from src.campaign.infra.sqlalchemy_query.get_contents_name import (
+    get_rep_nm_by_contents_id,
+)
 from src.campaign.infra.sqlalchemy_query.get_customer_by_audience_id import (
     get_customers_by_audience_id,
 )
@@ -79,7 +82,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             )
 
         #### Expert 캠페인, 자동 분배
-        campaign_set_merged, set_cus_items_df = self.create_campaign_set_with_expert(
+        campaign_set_merged, set_cus_items_df = self.create_expert_campaign_set(
             campaign.shop_send_yn,
             user_id,
             campaign.campaign_id,
@@ -147,7 +150,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
 
         return [entity.recsys_model_id for entity in entities]
 
-    def create_campaign_set_with_expert(
+    def create_expert_campaign_set(
         self,
         shop_send_yn,
         user_id,
@@ -427,6 +430,11 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             for set_group in row["set_group_list"]:
                 # CampaignSetGroups 인서트
                 set_group_req = CampaignSetGroupsEntity(**set_group)
+
+                if set_group_req.contents_id:
+                    rep_nm = get_rep_nm_by_contents_id(set_group_req.contents_id, db)
+                    set_group_req.rep_nm = rep_nm
+
                 set_group_req_list.append(set_group_req)
 
             set_req.set_group_list = set_group_req_list
