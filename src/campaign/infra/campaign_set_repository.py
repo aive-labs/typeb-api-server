@@ -310,8 +310,6 @@ class CampaignSetRepository(BaseCampaignSetRepository):
                 "contents_name": "first",
             }
         )
-        print("df_grouped2")
-        print(df_grouped2)
 
         res_groups_df = pd.concat(  # pyright: ignore [reportCallIssue]
             [df_grouped1, df_grouped2], axis=1  # pyright: ignore [reportArgumentType]
@@ -685,3 +683,20 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         )
 
         return [SetGroupMessage.model_validate(entity) for entity in entities]
+
+    def get_set_group_message(self, campaign_id, set_group_msg_seq, db: Session) -> SetGroupMessage:
+        entity = (
+            db.query(SetGroupMessagesEntity)
+            .filter(
+                SetGroupMessagesEntity.campaign_id == campaign_id,
+                SetGroupMessagesEntity.set_group_msg_seq == set_group_msg_seq,
+            )
+            .first()
+        )
+
+        if not entity:
+            raise NotFoundException(
+                detail={"message": "캠페인 세트 그룹 메시지를 찾지 못했습니다."}
+            )
+
+        return SetGroupMessage.model_validate(entity)
