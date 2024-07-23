@@ -171,6 +171,7 @@ def search_reviewers(
 
 
 @search_router.get("/rep_items")
+@inject
 def get_campaign_set_rep_items(
     campaign_id: str,
     strategy_theme_id: str,
