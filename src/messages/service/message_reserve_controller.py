@@ -1,6 +1,6 @@
 import aiohttp
+from aiohttp import BasicAuth
 from fastapi import HTTPException
-from requests.auth import HTTPBasicAuth
 
 from src.common.utils.get_env_variable import get_env_variable
 
@@ -23,16 +23,14 @@ class MessageReserveController:
         async with aiohttp.ClientSession() as session:
             async with session.post(
                 url=f"{self.airflow_api}/dags/{dag_name}/dagRuns",
-                data=data,
-                auth=HTTPBasicAuth(self.airflow_username, self.airflow_password),
+                json=data,
+                auth=BasicAuth(self.airflow_username, self.airflow_password),
                 ssl=False,
             ) as response:
-                response = await response.json()
-
-                if response.status_code != 200:
+                if response.status != 200:
                     raise HTTPException(
-                        status_code=response.status_code,
+                        status_code=response.status,
                         detail={"code": "airflow call error", "message": response.text},
                     )
-
+                response = await response.json()
                 return response

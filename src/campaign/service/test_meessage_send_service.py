@@ -78,6 +78,12 @@ class TestMessageSendService(TestSendMessageUseCase):
             item.test_callback_number.replace("-", "") for item in test_send_request.recipient_list
         ]
 
+        print("msg_seq_list")
+        print(msg_seq_list)
+
+        print("send_rsv_df")
+        print(send_rsv_df)
+
         for msg in msg_seq_list:
             sample_df = send_rsv_df[send_rsv_df.set_group_msg_seq == msg].sample(
                 test_send_user_cnt, replace=True
@@ -403,6 +409,9 @@ class TestMessageSendService(TestSendMessageUseCase):
         )
 
         send_rsv = DataConverter.convert_query_to_df(send_rsv_query)
+
+        print("send_rsv")
+        print(send_rsv)
         return send_rsv, set_group_message
 
     def convert_to_button_format(self, db, set_group_msg_seqs, send_rsv_format):

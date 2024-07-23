@@ -167,8 +167,6 @@ class SearchService(BaseSearchService):
 
         # 3. rep_nm_list 생성 <- cus_info_status, offer 조인, audience 조인
         # 조회에 추천 모델 컬럼까지 선택
-        # TODO recommend_model_id 따라서 어떤 컬럼을 선택할지 지정
-
         recommend_columns = [
             CustomerInfoStatusEntity.first_best_items,
             CustomerInfoStatusEntity.best_promo_items,
