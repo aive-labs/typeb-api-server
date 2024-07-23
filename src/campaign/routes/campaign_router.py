@@ -75,6 +75,7 @@ from src.campaign.routes.port.update_message_use_status_usecase import (
 )
 from src.core.container import Container
 from src.core.database import get_db_session
+from src.search.routes.port.base_search_service import BaseSearchService
 
 campaign_router = APIRouter(tags=["Campaign-management"])
 
@@ -354,3 +355,20 @@ def delete_campaign(
     ),
 ):
     delete_campaign_service.exec(campaign_id, user, db=db)
+
+
+@campaign_router.get("/campaigns/search/rep_items")
+@inject
+def get_campaign_set_rep_items(
+    campaign_id: str,
+    strategy_theme_id: str,
+    audience_id: str,
+    coupon_no: Optional[str],
+    db: Session = Depends(get_db_session),
+    user=Depends(get_permission_checker(required_permissions=[])),
+    search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
+):
+    rep_nm_list = search_service.search_campaign_set_items(
+        strategy_theme_id, audience_id, coupon_no, db=db
+    )
+    return {"rep_nm_list": rep_nm_list}

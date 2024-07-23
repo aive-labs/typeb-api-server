@@ -168,20 +168,3 @@ def search_reviewers(
     search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[ReviewerResponse]:
     return search_service.search_reviewer(user=user, db=db, keyword=keyword)
-
-
-@search_router.get("/rep_items")
-@inject
-def get_campaign_set_rep_items(
-    campaign_id: str,
-    strategy_theme_id: str,
-    audience_id: str,
-    coupon_no: Optional[str],
-    db: Session = Depends(get_db_session),
-    user=Depends(get_permission_checker(required_permissions=[])),
-    search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
-):
-    rep_nm_list = search_service.search_campaign_set_items(
-        strategy_theme_id, audience_id, coupon_no, db=db
-    )
-    return {"rep_nm_list": rep_nm_list}
