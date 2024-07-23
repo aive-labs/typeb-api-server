@@ -13,7 +13,7 @@ from src.campaign.infra.campaign_repository import CampaignRepository
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
 from src.common.timezone_setting import selected_timezone
 from src.contents.infra.contents_repository import ContentsRepository
-from src.core.exceptions.exceptions import ConsistencyException
+from src.core.exceptions.exceptions import ConsistencyException, NotFoundException
 from src.offers.infra.entity.offers_entity import OffersEntity
 from src.offers.infra.offer_repository import OfferRepository
 from src.products.infra.product_repository import ProductRepository
@@ -150,16 +150,26 @@ class SearchService(BaseSearchService):
         )
 
         # 2. 추천 모델 조회
-        recsys_model_id = (
-            db.query(StrategyThemesEntity.recsys_model_id)
+        strategy_theme_entity: StrategyThemesEntity = (
+            db.query(StrategyThemesEntity)
             .filter(StrategyThemesEntity.strategy_theme_id == strategy_theme_id)
-            .scalar()
+            .first()
         )
+
+        if not strategy_theme_entity:
+            raise NotFoundException(detail={"message": "전략 테마가 존재하지 않습니다."})
+
+        recommend_model_id = strategy_theme_entity.recsys_model_id
+
+        if not recommend_model_id:
+            # 사용자 지정 전략이므로 추천 모델이 존재하지 않음
+            return []
 
         # 3. rep_nm_list 생성 <- cus_info_status, offer 조인, audience 조인
         # 조회에 추천 모델 컬럼까지 선택
-        # TODO recsys_model_id에 따라서 어떤 컬럼을 선택할지 지정
-        columns_of_interest = [
+        # TODO recommend_model_id 따라서 어떤 컬럼을 선택할지 지정
+
+        recommend_columns = [
             CustomerInfoStatusEntity.first_best_items,
             CustomerInfoStatusEntity.best_promo_items,
             CustomerInfoStatusEntity.best_gender_items,
@@ -170,9 +180,16 @@ class SearchService(BaseSearchService):
             CustomerInfoStatusEntity.best_cross_items,
         ]
 
+        selected_model_name = RecommendModels.get_value_by_number(recommend_model_id)
+
+        # Filter columns_of_interest based on the filter values
+        selected_recommend_item_columns = [
+            column for column in recommend_columns if column.key == selected_model_name
+        ]
+
         recommend_rep_nm_set = set()
 
-        for column in columns_of_interest:
+        for column in selected_recommend_item_columns:
             subquery = (
                 db.query(distinct(column))
                 .join(
