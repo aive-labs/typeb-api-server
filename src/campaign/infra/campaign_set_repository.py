@@ -278,7 +278,6 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         # 있으면 매핑 없으면 None
         campaign_set_df = recipient_custom_contents_mapping(campaign_set_df, selected_themes, db)
 
-        campaign_set_df["rep_nm"] = None
         campaign_set_df["campaign_id"] = campaign_id
         campaign_set_df["send_result"] = None
         campaign_set_df["created_at"] = created_at

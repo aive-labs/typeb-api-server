@@ -194,8 +194,6 @@ def recreate_expert_campaign_set(
     # 발송대상 2) 커스텀에서는 전략에서 선택한 콘텐츠를 매핑함
     # 있으면 매핑 없으면 None
     campaign_set_df = recipient_custom_contents_mapping(campaign_set_df, selected_themes, db)
-    print("contentes campaign_set_df")
-    print(campaign_set_df)
 
     campaign_set_df["campaign_id"] = campaign_id
     campaign_set_df["send_result"] = None
@@ -206,8 +204,6 @@ def recreate_expert_campaign_set(
 
     # ***캠페인 세트  campaign_set_merged 완성***
     campaign_set_merged = campaign_set_merged.replace({np.nan: None})
-    print("campaign_set_merged_final")
-    print(campaign_set_merged)
 
     group_keys = ["set_sort_num", "group_sort_num"]
     df_grouped1 = (  # pyright: ignore [reportCallIssue]
