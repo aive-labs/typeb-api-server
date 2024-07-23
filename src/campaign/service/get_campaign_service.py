@@ -105,6 +105,7 @@ class GetCampaignService(GetCampaignUseCase):
         # rep_nm_list & contents_names
         if campaign.campaign_type_code == CampaignType.EXPERT.value:
             sets = add_set_rep_contents(sets, set_groups, campaign_id, db=db)
+
         else:
             sets = [
                 {**data_dict, "rep_nm_list": None, "contents_names": None} for data_dict in sets

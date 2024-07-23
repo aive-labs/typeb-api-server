@@ -24,4 +24,7 @@ def recipient_custom_contents_mapping(campaign_set_df, selected_themes, db: Sess
     campaign_set_df = campaign_set_df.merge(theme_contents_df, on="strategy_theme_id", how="left")
     campaign_set_df = campaign_set_df.merge(contents_info_df, on="contents_id", how="left")
 
+    campaign_set_df = campaign_set_df.drop(columns=["rep_nm_x"])
+    campaign_set_df = campaign_set_df.rename(columns={"rep_nm_y": "rep_nm"})
+
     return campaign_set_df

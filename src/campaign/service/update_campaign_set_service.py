@@ -242,6 +242,9 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
 
             # 캠페인 세트 그룹 발송인 저장 (발송인은 업데이트가 아닌 새로 생성)
             # 기존 발송인 삭제 추가
+            print("set_cus_items_df.columns")
+            print(set_cus_items_df.columns)
+            print(set_cus_items_df)
             create_set_group_recipient(set_cus_items_df, db)
             strategy_theme_ids = strategy_theme_ids + list(
                 campaign_set_merged["strategy_theme_id"].dropna()

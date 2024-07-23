@@ -1,7 +1,7 @@
 from typing import Optional
 
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, File, UploadFile, status
 from sqlalchemy.orm import Session
 from starlette.background import BackgroundTasks
 
@@ -372,3 +372,15 @@ def get_campaign_set_rep_items(
         strategy_theme_id, audience_id, coupon_no, db=db
     )
     return {"rep_nm_list": rep_nm_list}
+
+
+@campaign_router.post("/campaigns/{campaign_id}/resource/{set_group_msg_seq}")
+async def upload_message_resources(
+    campaign_id: str,
+    set_group_msg_seq: int,
+    files: list[UploadFile] = File(...),
+    db: Session = Depends(get_db_session),
+    user=Depends(get_permission_checker(required_permissions=[])),
+):
+    """이미지 업로드 API"""
+    pass
