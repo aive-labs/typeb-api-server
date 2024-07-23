@@ -8,12 +8,12 @@ from src.campaign.infra.sqlalchemy_query.create_set_group_messages import (
 from src.campaign.infra.sqlalchemy_query.create_set_group_recipient import (
     create_set_group_recipient,
 )
-from src.campaign.infra.sqlalchemy_query.get_recommend_model_ids_by_strategy_themes import (
-    get_recommend_model_ids_by_strategy_themes,
-)
 from src.campaign.infra.sqlalchemy_query.get_set_group_seqs import get_set_group_seqs
 from src.campaign.infra.sqlalchemy_query.recreate_basic_campaign import (
     recreate_basic_campaign_set,
+)
+from src.campaign.infra.sqlalchemy_query.recreate_expert_campaign import (
+    recreate_expert_campaign_set,
 )
 from src.campaign.infra.sqlalchemy_query.save_campaign_set import save_campaign_set
 from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdate
@@ -75,7 +75,10 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
 
         if not is_updatable:
             raise PolicyException(
-                detail={"code": "campaign/update/denied", "message": "수정 불가"},
+                detail={
+                    "code": "campaign/update/denied",
+                    "message": "캠페인 세트 수정이 불가합니다.",
+                },
             )
 
         # 캠페인에 속한 기존 오디언스
@@ -194,18 +197,22 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
             """
 
         else:
-            recsys_model_ids = get_recommend_model_ids_by_strategy_themes(selected_themes, db)
-            recsys_model_ids = [row.recsys_model_id for row in recsys_model_ids]
-            print(recsys_model_ids)
-
-            # 오퍼에 매핑되는 캠페인 id 업데이트
-            # coupon_no_list = list(campaign_set_merged["coupon_no"].unique())
-            # db.query(OffersEntity).filter(OffersEntity.campaign_id == campaign_id).update(
-            #     {"campaign_id": None}
-            # )
-            # db.query(OffersEntity).filter(OffersEntity.coupon_no.in_(coupon_no_list)).update(
-            #     {"campaign_id": campaign_id}
-            # )
+            # Expert 캠페인 세트 업데이트
+            campaign_set_merged, set_cus_items_df = recreate_expert_campaign_set(
+                shop_send_yn,
+                user_id,
+                campaign_id,
+                campaign_group_id,
+                media,
+                msg_delivery_vendor,
+                is_personalized,
+                selected_themes,
+                budget,
+                campaigns_exc,
+                audiences_exc,
+                campaign_set_update.set_list,
+                db,
+            )
 
         # 실제 적용된 테마 아이디 리스트 추출 -> campaign_themes 와 동기화 시켜줌
         strategy_theme_ids = [
@@ -214,20 +221,14 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
             if campaign_set.strategy_theme_id is not None
         ]
 
-        # Todo: 업데이트시 변경사항 반영해서 로직 작동하도록 수정
-        # res = update_campaign_set_obj(db, campaign_set_merged)
-
-        print(campaign_set_merged)
-
         if len(campaign_set_merged) > 0:
+            print("save updated campaign_set")
             save_campaign_set(db, campaign_set_merged)
             # 캠페인 세트 그룹 메세지 더미 데이터 업데이트
             set_group_seqs = [row._asdict() for row in get_set_group_seqs(db, campaign_id)]
             print("set_group_seqs")
             print(len(set_group_seqs))
-            print(set_group_seqs)
             create_set_group_messages(
-                db,
                 user_id,
                 campaign_id,
                 msg_delivery_vendor,
@@ -236,10 +237,14 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
                 has_remind,
                 set_group_seqs,
                 campaign_type_code,
+                db,
             )
 
             # 캠페인 세트 그룹 발송인 저장 (발송인은 업데이트가 아닌 새로 생성)
             # 기존 발송인 삭제 추가
+            print("set_cus_items_df.columns")
+            print(set_cus_items_df.columns)
+            print(set_cus_items_df)
             create_set_group_recipient(set_cus_items_df, db)
             strategy_theme_ids = strategy_theme_ids + list(
                 campaign_set_merged["strategy_theme_id"].dropna()

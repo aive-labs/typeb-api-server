@@ -1,12 +1,23 @@
 import numpy as np
 import pandas as pd
 from fastapi.encoders import jsonable_encoder
+from sqlalchemy import delete
 
 from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
 from src.campaign.infra.entity.campaign_set_recipients_entity import (
     CampaignSetRecipientsEntity,
 )
 from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
+from src.campaign.infra.sqlalchemy_query.campaign_set.recipient_custom_contents_mapping import (
+    recipient_custom_contents_mapping,
+)
+from src.campaign.infra.sqlalchemy_query.create_set_group_messages import (
+    create_set_group_messages,
+)
+from src.campaign.infra.sqlalchemy_query.get_campaign_remind import get_campaign_remind
+from src.campaign.infra.sqlalchemy_query.get_contents_name import (
+    get_rep_nm_by_contents_id,
+)
 from src.campaign.infra.sqlalchemy_query.get_customer_by_audience_id import (
     get_customers_by_audience_id,
 )
@@ -317,6 +328,11 @@ class CampaignManager:
             for set_group in row["set_group_list"]:
                 # CampaignSetGroups 인서트
                 set_group_req = CampaignSetGroupsEntity(**set_group)
+
+                if set_group_req.contents_id:
+                    rep_nm = get_rep_nm_by_contents_id(set_group_req.contents_id, db)
+                    set_group_req.rep_nm = rep_nm
+
                 set_group_req_list.append(set_group_req)
 
             set_req.set_group_list = set_group_req_list
@@ -369,7 +385,7 @@ class CampaignManager:
 
         # 고객 목록 호출
         cust_audiences = get_cus_by_audience_with_seg(self.db, audience_ids)
-        cust_audiences_df = utils.convert_query_to_df(cust_audiences)
+        cust_audiences_df = DataConverter.convert_query_to_df(cust_audiences)
 
         ## 제외고객 필터링 적용
         campaigns_exc = campaign_obj_dict.get("campaigns_exc")
@@ -749,9 +765,9 @@ class CampaignManager:
                                 recipient_count=int(group["recipient_count"]),
                                 set_group_category=group["set_group_category"],
                                 set_group_val=group["set_group_val"],
-                                created_at=utils.localtime_converter(),
+                                created_at=localtime_converter(),
                                 created_by=self.user_id,
-                                updated_at=utils.localtime_converter(),
+                                updated_at=localtime_converter(),
                                 updated_by=self.user_id,
                             )
                             self.db.add(new_group)
@@ -760,7 +776,6 @@ class CampaignManager:
                             added += 1
                     if len(new_set_groups) > 0:
                         res = create_set_group_messages(
-                            self.db,
                             self.user_id,
                             self.campaign_id,
                             campaign_obj_dict["msg_delivery_vendor"],
@@ -769,6 +784,7 @@ class CampaignManager:
                             campaign_obj_dict["has_remind"],
                             new_set_groups,
                             campaign_type_code,
+                            self.db,
                         )
                         print(res)
                     print(f"renewed: {renewed}")

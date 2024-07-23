@@ -2,7 +2,5 @@ from enum import Enum
 
 
 class SetGroupCategoryEnum(Enum):
-    AGE = "age"
+    AGE = "age_group_10"
     REP_NM = "rep_nm"
-    PURPOSE = "purpose"
-    PURPOSE_LV2 = "purpose_lv2"

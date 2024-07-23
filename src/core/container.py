@@ -33,14 +33,17 @@ from src.auth.service.token_service import TokenService
 from src.campaign.infra.campaign_repository import CampaignRepository
 from src.campaign.infra.campaign_set_repository import CampaignSetRepository
 from src.campaign.infra.campaign_sqlalchemy_repository import CampaignSqlAlchemy
+from src.campaign.service.approve_campaign_service import ApproveCampaignService
 from src.campaign.service.confrim_campaign_set_group_message import (
     ConfirmCampaignSetGroupMessage,
 )
 from src.campaign.service.create_campaign_service import CreateCampaignService
 from src.campaign.service.create_campaign_summary import CreateCampaignSummary
+from src.campaign.service.delete_campaign_service import DeleteCampaignService
 from src.campaign.service.generate_message_service import GenerateMessageService
 from src.campaign.service.get_campaign_service import GetCampaignService
 from src.campaign.service.get_campaign_set_description import GetCampaignSetDescription
+from src.campaign.service.test_meessage_send_service import TestMessageSendService
 from src.campaign.service.update_campaign_progress_service import (
     UpdateCampaignProgressService,
 )
@@ -450,6 +453,20 @@ class Container(containers.DeclarativeContainer):
         campaign_repository=campaign_repository,
         campaign_set_repository=campaign_set_repository,
         contents_repository=contents_repository,
+    )
+
+    approve_campaign_service = providers.Singleton(
+        provides=ApproveCampaignService,
+        campaign_repository=campaign_repository,
+        campaign_set_repository=campaign_set_repository,
+    )
+
+    test_send_service = providers.Singleton(provides=TestMessageSendService)
+
+    delete_campaign_service = providers.Singleton(
+        provides=DeleteCampaignService,
+        campaign_repository=campaign_repository,
+        campaign_set_repository=campaign_set_repository,
     )
 
     """

@@ -65,6 +65,15 @@ class CustomerInfoStatusEntity(Base):
     birthday_7_left = Column(String, nullable=True)
     first_purchase = Column(String, nullable=True)
 
+    first_best_items = Column(String, nullable=True)
+    best_promo_items = Column(String, nullable=True)
+    best_gender_items = Column(String, nullable=True)
+    best_category_items = Column(String, nullable=True)
+    best_age_items = Column(String, nullable=True)
+    best_new_items = Column(String, nullable=True)
+    steady_items = Column(String, nullable=True)
+    best_cross_items = Column(String, nullable=True)
+
     etltime = Column(Date, nullable=True)
 
 

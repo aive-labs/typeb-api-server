@@ -77,3 +77,15 @@ class BaseSearchService(ABC):
     @abstractmethod
     def search_reviewer(self, user, db: Session, keyword) -> list[ReviewerResponse]:
         pass
+
+    @abstractmethod
+    def search_campaign_set_items(
+        self, strategy_theme_id, audience_id, coupon_no, db: Session
+    ) -> list[str]:
+        pass
+
+    @abstractmethod
+    def search_contents(
+        self, strategy_theme_id: int, db: Session, keyword: str | None = None
+    ) -> list:
+        pass

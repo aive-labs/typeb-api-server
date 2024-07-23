@@ -1,9 +1,11 @@
 from collections.abc import Callable
 from contextlib import AbstractContextManager
 
-from sqlalchemy import Integer, and_, desc, distinct, func, not_, or_, update
+from sqlalchemy import Integer, and_, delete, desc, distinct, func, not_, or_, update
 from sqlalchemy.orm import Session, joinedload
 
+from src.audiences.enums.audience_status import AudienceStatus
+from src.audiences.infra.entity.audience_entity import AudienceEntity
 from src.audiences.infra.entity.audience_stats_entity import AudienceStatsEntity
 from src.audiences.infra.entity.variable_table_list import CustomerInfoStatusEntity
 from src.campaign.domain.campaign import Campaign
@@ -27,12 +29,16 @@ from src.campaign.infra.entity.campaign_set_recipients_entity import (
 )
 from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
 from src.campaign.infra.entity.campaign_timeline_entity import CampaignTimelineEntity
+from src.campaign.infra.entity.coupon_custs import OfferCustEntity
 from src.campaign.infra.entity.send_reservation_entity import SendReservationEntity
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.common.sqlalchemy.object_access_condition import object_access_condition
 from src.common.utils.string_utils import is_convertible_to_int
+from src.offers.infra.entity.offers_entity import OffersEntity
 from src.products.infra.entity.product_master_entity import ProductMasterEntity
 from src.search.routes.dto.id_with_item_response import IdWithItem
+from src.strategy.enums.strategy_status import StrategyStatus
+from src.strategy.infra.entity.strategy_entity import StrategyEntity
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
 
@@ -382,6 +388,7 @@ class CampaignSqlAlchemy:
 
         print("entity")
         print(entity.datetosend)
+        print(entity.strategy_theme_ids)
         print(entity.created_at)
         print(entity.updated_at)
 
@@ -537,3 +544,126 @@ class CampaignSqlAlchemy:
             .values(msg_type=message_type)
         )
         db.execute(update_statement)
+
+    def delete_campaign(self, campaign, db):
+        campaign_id = campaign.campaign_id
+        strategy_id = campaign.strategy_id
+
+        select_query = db.query(CampaignEntity).filter(
+            ~(CampaignEntity.campaign_id == campaign_id)
+            & (CampaignEntity.strategy_id == strategy_id)
+            & (CampaignEntity.campaign_status_code.not_in(["o2", "s3"]))  # 미완료 캠페인
+        )
+        strategy_exist = db.query(select_query.exists()).scalar()
+
+        # 오디언스 상태변경 체크
+        set_aud_query = (
+            db.query(func.distinct(CampaignSetsEntity.audience_id))
+            .filter(CampaignSetsEntity.campaign_id == campaign_id)
+            .all()
+        )
+        aud_lst = [aud[0] for aud in set_aud_query]
+        select_aud_query = (
+            db.query(func.distinct(CampaignSetsEntity.audience_id))
+            .join(CampaignEntity, CampaignSetsEntity.campaign_id == CampaignEntity.campaign_id)
+            .filter(
+                ~(CampaignSetsEntity.campaign_id == campaign_id)  # 다른 캠페인에서도 사용
+                & (CampaignSetsEntity.audience_id.in_(aud_lst))  # 삭제하는 캠페인 오디언스
+                & (CampaignEntity.campaign_status_code.not_in(["o2", "s3"]))  # 미완료 캠페인
+            )
+        )
+        aud_active_to_lst = [aud[0] for aud in select_aud_query]
+        aud_delete_to_lst = [aud for aud in aud_lst if aud not in aud_active_to_lst]
+
+        # Offers 에 campaign_id 지우기
+        set_event_no_lst = (
+            db.query(CampaignSetsEntity.coupon_no)
+            .filter(
+                CampaignSetsEntity.campaign_id == campaign_id, CampaignSetsEntity.coupon_no != None
+            )
+            .all()
+        )
+
+        for evnt_obj in set_event_no_lst:
+            db.query(OffersEntity).filter(
+                OffersEntity.coupon_no == evnt_obj.coupon_no,
+            ).update({"campaign_id": None})
+
+        # Campaign 관련 엔티티 삭제
+        self._delete_entity_related_to_campaign(campaign_id, db)
+
+        # Strategy 상태변경 실행
+        if strategy_exist is False:
+            db.query(StrategyEntity).filter(StrategyEntity.strategy_id == strategy_id).update(
+                {
+                    "strategy_status_code": StrategyStatus.inactive.value,
+                    "strategy_status_name": StrategyStatus.inactive.description,
+                }
+            )
+            db.commit()
+
+        if len(aud_delete_to_lst) > 0:
+            db.query(AudienceEntity).filter(
+                AudienceEntity.audience_id.in_(aud_delete_to_lst)
+            ).update(
+                {
+                    "audience_status_code": AudienceStatus.inactive.value,
+                    "audience_status_name": AudienceStatus.inactive.description,
+                }
+            )
+            db.commit()
+
+    def _delete_entity_related_to_campaign(self, campaign_id, db: Session):
+        # campaign_object
+        deleted_obj = (
+            db.query(CampaignEntity).filter(CampaignEntity.campaign_id == campaign_id).first()
+        )
+
+        db.delete(deleted_obj)
+
+        # recipients
+        delete_statement = delete(CampaignSetRecipientsEntity).where(
+            CampaignSetRecipientsEntity.campaign_id == campaign_id
+        )
+
+        db.execute(delete_statement)
+
+        # approvers
+        delete_statement = delete(ApproverEntity).where(ApproverEntity.campaign_id == campaign_id)
+
+        db.execute(delete_statement)
+
+        # campaign_approvals, campaign_status_history
+        deleted_objs = (
+            db.query(CampaignApprovalEntity)
+            .filter(CampaignApprovalEntity.campaign_id == campaign_id)
+            .all()
+        )
+
+        for elem in deleted_objs:
+            deleted_obj = (
+                db.query(CampaignApprovalEntity)
+                .filter(CampaignApprovalEntity.approval_no == elem.approval_no)
+                .first()
+            )
+
+            db.delete(deleted_obj)
+
+        # campaign_timeline
+        delete_statement = delete(CampaignTimelineEntity).where(
+            CampaignTimelineEntity.campaign_id == campaign_id
+        )
+
+        db.execute(delete_statement)
+
+        # send_reservation
+        delete_statement = delete(SendReservationEntity).where(
+            SendReservationEntity.campaign_id == campaign_id
+        )
+
+        db.execute(delete_statement)
+
+        # offer_custs
+        delete_statement = delete(OfferCustEntity).where(OfferCustEntity.campaign_id == campaign_id)
+
+        db.execute(delete_statement)

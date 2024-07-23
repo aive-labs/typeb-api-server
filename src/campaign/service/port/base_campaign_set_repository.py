@@ -56,3 +56,7 @@ class BaseCampaignSetRepository(ABC):
     @abstractmethod
     def get_campaign_set_group_messages_in_use(self, campaign_id, db) -> list[SetGroupMessage]:
         pass
+
+    @abstractmethod
+    def get_set_group_message(self, campaign_id, set_group_msg_seq, db: Session) -> SetGroupMessage:
+        pass

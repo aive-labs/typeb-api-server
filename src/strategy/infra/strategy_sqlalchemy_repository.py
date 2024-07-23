@@ -352,3 +352,15 @@ class StrategySqlAlchemy:
             IdWithItem(id=entity.strategy_theme_id, name=entity.strategy_theme_name)
             for entity in entities
         ]
+
+    def get_tags(self, strategy_theme_id, db: Session):
+        entity = (
+            db.query(StrategyThemesEntity.contents_tags, StrategyThemesEntity.recsys_model_id)
+            .filter(StrategyThemesEntity.strategy_theme_id == strategy_theme_id)
+            .first()
+        )
+
+        if not entity:
+            raise NotFoundException(detail={"message": "전략테마를 찾을 수 없습니다."})
+
+        return entity.contents_tags, entity.recsys_model_id

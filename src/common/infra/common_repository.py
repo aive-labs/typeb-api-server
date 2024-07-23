@@ -4,7 +4,7 @@ from typing import Callable
 from sqlalchemy.orm import Session
 
 from src.common.domain.recsys_models import RecsysModels
-from src.common.infra.entity.recsys_models_entity import RecsysModelsEntity
+from src.common.infra.entity.recommend_products import RecommendProductsModelEntity
 
 
 class CommonRepository:
@@ -24,8 +24,8 @@ class CommonRepository:
         with self.db() as db:
 
             result = (
-                db.query(RecsysModelsEntity)
-                .filter(RecsysModelsEntity.recsys_model_id == recsys_model_id)
+                db.query(RecommendProductsModelEntity)
+                .filter(RecommendProductsModelEntity.recsys_model_id == recsys_model_id)
                 .first()
             )
 

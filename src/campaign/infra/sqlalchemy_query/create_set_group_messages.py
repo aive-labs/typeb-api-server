@@ -1,3 +1,5 @@
+from sqlalchemy.orm import Session
+
 from src.campaign.enums.campaign_type import CampaignType
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.campaign.infra.sqlalchemy_query.get_campaign_remind import get_campaign_remind
@@ -8,7 +10,6 @@ from src.message_template.enums.message_type import MessageType
 
 
 def create_set_group_messages(
-    db,
     user_id,
     campaign_id,
     msg_delivery_vendor,
@@ -17,6 +18,7 @@ def create_set_group_messages(
     has_remind,
     set_group_seqs,
     campaign_type_code,
+    db: Session,
 ):
     """캠페인 그룹 메세지 시퀀스 생성 (set_group_msg_seq)
 

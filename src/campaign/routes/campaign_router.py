@@ -1,6 +1,9 @@
+from typing import Optional
+
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, File, UploadFile, status
 from sqlalchemy.orm import Session
+from starlette.background import BackgroundTasks
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.campaign.routes.dto.request.campaign_create import CampaignCreate
@@ -21,6 +24,7 @@ from src.campaign.routes.dto.request.campaign_set_message_use_request import (
 )
 from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdate
 from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
+from src.campaign.routes.dto.request.test_send_request import TestSendRequest
 from src.campaign.routes.dto.response.campaign_set_description_response import (
     CampaignSetDescriptionResponse,
 )
@@ -39,6 +43,7 @@ from src.campaign.routes.dto.response.exclusion_customer_detail import (
 from src.campaign.routes.dto.response.update_campaign_set_group_message_response import (
     UpdateCampaignSetGroupMessageResponse,
 )
+from src.campaign.routes.port.approve_campaign_usecase import ApproveCampaignUseCase
 from src.campaign.routes.port.confirm_campaign_set_group_message_usecase import (
     ConfirmCampaignSetGroupMessageUseCase,
 )
@@ -46,11 +51,13 @@ from src.campaign.routes.port.create_campaign_summary_usecase import (
     CreateCampaignSummaryUseCase,
 )
 from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUseCase
+from src.campaign.routes.port.delete_campaign_usecase import DeleteCampaignUseCase
 from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase
 from src.campaign.routes.port.get_campaign_set_description_usecase import (
     GetCampaignSetDescriptionUseCase,
 )
 from src.campaign.routes.port.get_campaign_usecase import GetCampaignUseCase
+from src.campaign.routes.port.test_message_send_usecase import TestSendMessageUseCase
 from src.campaign.routes.port.update_campaign_progress_usecase import (
     UpdateCampaignProgressUseCase,
 )
@@ -68,6 +75,7 @@ from src.campaign.routes.port.update_message_use_status_usecase import (
 )
 from src.core.container import Container
 from src.core.database import get_db_session
+from src.search.routes.port.base_search_service import BaseSearchService
 
 campaign_router = APIRouter(tags=["Campaign-management"])
 
@@ -129,6 +137,7 @@ def get_campaign_detail(
 def generate_message(
     message_generate: MsgGenerationReq,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
     generate_message_service: GenerateMessageUsecase = Depends(
         dependency=Provide[Container.generate_message_service]
     ),
@@ -301,3 +310,77 @@ def get_campaign_summary(
     ),
 ) -> CampaignSummaryResponse:
     return campaign_summary_service.create_campaign_summary(campaign_id, db=db)
+
+
+@campaign_router.post("/campaigns/{campaign_id}/status_change")
+@inject
+def campaign_status_change(
+    campaign_id: str,
+    to_status: str,
+    reviewers: Optional[str],
+    background_task: BackgroundTasks,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    approve_campaign_service: ApproveCampaignUseCase = Depends(
+        dependency=Provide[Container.approve_campaign_service]
+    ),
+):
+    approve_campaign_service.exec(
+        campaign_id, to_status, db, user, background_task, reviewers=reviewers
+    )
+
+
+@campaign_router.post("/campaigns/{campaign_id}/message/test-send")
+@inject
+async def test_message_send(
+    campaign_id: str,
+    test_send_request: TestSendRequest,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    test_send_service: TestSendMessageUseCase = Depends(
+        dependency=Provide[Container.test_send_service]
+    ),
+):
+    await test_send_service.exec(campaign_id, test_send_request, user, db=db)
+
+
+@campaign_router.delete("/campaigns/{campaign_id}", status_code=status.HTTP_204_NO_CONTENT)
+@inject
+def delete_campaign(
+    campaign_id: str,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    delete_campaign_service: DeleteCampaignUseCase = Depends(
+        dependency=Provide[Container.delete_campaign_service]
+    ),
+):
+    delete_campaign_service.exec(campaign_id, user, db=db)
+
+
+@campaign_router.get("/campaigns/search/rep_items")
+@inject
+def get_campaign_set_rep_items(
+    campaign_id: str,
+    strategy_theme_id: str,
+    audience_id: str,
+    coupon_no: Optional[str],
+    db: Session = Depends(get_db_session),
+    user=Depends(get_permission_checker(required_permissions=[])),
+    search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
+):
+    rep_nm_list = search_service.search_campaign_set_items(
+        strategy_theme_id, audience_id, coupon_no, db=db
+    )
+    return {"rep_nm_list": rep_nm_list}
+
+
+@campaign_router.post("/campaigns/{campaign_id}/resource/{set_group_msg_seq}")
+async def upload_message_resources(
+    campaign_id: str,
+    set_group_msg_seq: int,
+    files: list[UploadFile] = File(...),
+    db: Session = Depends(get_db_session),
+    user=Depends(get_permission_checker(required_permissions=[])),
+):
+    """이미지 업로드 API"""
+    pass

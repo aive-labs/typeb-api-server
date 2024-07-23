@@ -12,11 +12,13 @@ from src.campaign.enums.campaign_progress import CampaignProgress
 from src.campaign.enums.campaign_timeline_type import CampaignTimelineType
 from src.campaign.enums.campaign_type import CampaignType
 from src.campaign.enums.send_type import SendType, SendTypeEnum
+from src.campaign.infra.sqlalchemy_query.add_set_rep_contents import (
+    add_set_rep_contents,
+)
 from src.campaign.infra.sqlalchemy_query.get_campaign_set_groups import (
     get_campaign_set_groups,
 )
 from src.campaign.infra.sqlalchemy_query.get_campaign_sets import get_campaign_sets
-from src.campaign.infra.sqlalchemy_query.get_set_rep_nm_list import get_set_rep_nm_list
 from src.campaign.routes.dto.request.campaign_create import CampaignCreate
 from src.campaign.routes.dto.request.campaign_remind_create import CampaignRemindCreate
 from src.campaign.routes.dto.response.campaign_basic_response import (
@@ -31,7 +33,6 @@ from src.campaign.service.port.base_campaign_set_repository import (
 )
 from src.campaign.utils.utils import set_summary_sententce
 from src.common.timezone_setting import selected_timezone
-from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import calculate_remind_date
 from src.common.utils.repeat_date import calculate_dates
 from src.core.exceptions.exceptions import (
@@ -40,7 +41,6 @@ from src.core.exceptions.exceptions import (
     ValidationException,
 )
 from src.core.transactional import transactional
-from src.strategy.enums.recommend_model import RecommendModels
 from src.strategy.service.port.base_strategy_repository import BaseStrategyRepository
 from src.users.domain.user import User
 
@@ -81,7 +81,7 @@ class CreateCampaignService(CreateCampaignUseCase):
         else:
             shop_send_yn = "n"
 
-        if campaign_create.campaign_type_code == CampaignType.EXPERT.value:
+        if campaign_create.campaign_type_code.value == CampaignType.EXPERT.value:
             strategy_id = campaign_create.strategy_id
             if strategy_id is None:
                 raise ValidationException(
@@ -102,7 +102,7 @@ class CreateCampaignService(CreateCampaignUseCase):
             repeat_type = campaign_create.repeat_type.value
 
         retention_day = campaign_create.retention_day
-        if campaign_create.send_type_code == SendTypeEnum.RECURRING.value:
+        if campaign_create.send_type_code.value == SendTypeEnum.RECURRING.value:
             created_date = datetime.now(selected_timezone)
             start_date, end_date = calculate_dates(
                 start_date=created_date,
@@ -181,49 +181,45 @@ class CreateCampaignService(CreateCampaignUseCase):
             updated_at=campaign_create.updated_at,
         )
 
+        # 캠페인 저장
         saved_campaign = self.campaign_repository.create_campaign(new_campaign, db)
 
-        # 캠페인 생성 타임라인 추가
-        timeline_type = "campaign_event"
-        timeline_description = self._get_timeline_description(
-            timeline_type=timeline_type,
-            created_by_name=user.username,
-            description="캠페인 생성",
-        )
-        # 캠페인 타임라인 테이블 저장
-        timeline = CampaignTimeline(
-            timeline_type=timeline_type,
-            campaign_id=saved_campaign.campaign_id,
-            description=timeline_description,
-            created_by=str(user.user_id),
-            created_by_name=user.username,
-        )
-        self.campaign_repository.save_timeline(timeline, db)
+        # 캠페인 타임라인 저장
+        self.create_campagin_timeline(db, saved_campaign, user)
 
-        if campaign_create.campaign_type_code == CampaignType.EXPERT.value:
+        if campaign_create.campaign_type_code.value == CampaignType.EXPERT.value:
+            # Expert 캠페인의 경우, 전략에 따라 캠페인 세트 생성
             campaign_id = saved_campaign.campaign_id
             if not campaign_id:
                 raise ConsistencyException(detail={"message": "캠페인의 id가 발급되지 않았습니다."})
 
+            # campaign_set 생성
             self.create_campaign_set(saved_campaign, user, db)
+
             sets = [row._asdict() for row in get_campaign_sets(campaign_id=campaign_id, db=db)]
             set_groups = [
                 row._asdict() for row in get_campaign_set_groups(campaign_id=campaign_id, db=db)
             ]
 
-            sets = self.add_set_rep_contents(sets, set_groups, campaign_id, db)
+            # campaign set rep_nm, contents 조회
+            sets = add_set_rep_contents(sets, set_groups, campaign_id, db)
+            set_df = pd.DataFrame(sets)
+
+            # campaign_set_group_message 조회
             set_group_messages = self.campaign_set_repository.get_campaign_set_group_messages(
                 campaign_id=campaign_id, db=db
             )
             set_group_message_list = self.convert_to_set_group_message_list(set_group_messages)
 
+            # campaign_set_recipient 통계 정보 조회
             recipient_portion, _, set_cus_count = self.campaign_set_repository.get_set_portion(
                 campaign_id, db
             )
-            set_df = pd.DataFrame(sets)
 
+            # campaign_set_recipient_summary 생성
             recipient_descriptions = set_summary_sententce(set_cus_count, set_df)
         else:
+            # 기본 캠페인의 경우 캠페인 세트 생성 안함
             recipient_portion = 0
             recipient_descriptions = None
             sets = None
@@ -240,6 +236,24 @@ class CreateCampaignService(CreateCampaignUseCase):
             set_group_list=set_groups,
             set_group_message_list=set_group_message_list,
         )
+
+    def create_campagin_timeline(self, db, saved_campaign, user):
+        # 캠페인 생성 타임라인 추가
+        timeline_type = "campaign_event"
+        timeline_description = self._get_timeline_description(
+            timeline_type=timeline_type,
+            created_by_name=user.username,
+            description="캠페인 생성",
+        )
+        # 캠페인 타임라인 테이블 저장
+        timeline = CampaignTimeline(
+            timeline_type=timeline_type,
+            campaign_id=saved_campaign.campaign_id,
+            description=timeline_description,
+            created_by=str(user.user_id),
+            created_by_name=user.username,
+        )
+        self.campaign_repository.save_timeline(timeline, db)
 
     def create_campaign_set(self, saved_campaign: Campaign, user: User, db: Session):
         selected_themes, strategy_theme_ids = self.campaign_set_repository.create_campaign_set(
@@ -342,59 +356,6 @@ class CreateCampaignService(CreateCampaignUseCase):
             raise ValidationException(detail={"message": "Invalid campagin status"})
 
         return description
-
-    def add_set_rep_contents(self, sets, set_groups, campaign_id, db):
-        recsys_model_enum_dict = RecommendModels.get_eums()
-        personalized_recsys_model_id = [
-            i["_value_"] for i in recsys_model_enum_dict if i["personalized"] is True
-        ]
-        personalized_recsys_model_id.remove(RecommendModels.NEW_COLLECTION.value)
-        not_personalized_set = []
-
-        for idx, row in enumerate(sets):
-            # row is dict
-            recsys_model_id = row.get("recsys_model_id")
-            recsys_model_id = int(float(recsys_model_id)) if recsys_model_id else None
-            set_sort_num = row["set_sort_num"]
-
-            if recsys_model_id in personalized_recsys_model_id:
-                sets[idx]["rep_nm_list"] = ["개인화"]
-                sets[idx]["contents_names"] = ["개인화"]
-            else:
-                sets[idx]["rep_nm_list"] = None
-                sets[idx]["contents_names"] = None
-                not_personalized_set.append(set_sort_num)
-        # rep_nm_list
-        query = get_set_rep_nm_list(
-            campaign_id=campaign_id, set_sort_num_list=not_personalized_set, db=db
-        )
-        recipients = DataConverter.convert_query_to_df(query)
-        sort_num_dict = (
-            recipients.set_index("set_sort_num")["rep_nm_list"]
-            .apply(lambda x: x if x != [None] else [])
-            .to_dict()
-        )
-        for idx, set_dict in enumerate(sets):
-            for set_sort_num in sort_num_dict:
-                if set_dict["set_sort_num"] == set_sort_num:
-                    sets[idx]["rep_nm_list"] = sort_num_dict[set_sort_num]
-        # contents_names
-        result_dict = {}
-        for item in set_groups:
-            key = item["set_sort_num"]
-            value = item["contents_name"]
-
-            if key in result_dict and value is not None:
-                result_dict[key].append(value)
-            else:
-                result_dict[key] = [] if value is None else [value]
-
-        for idx, set_dict in enumerate(sets):
-            for set_sort_num in result_dict:
-                if set_dict["set_sort_num"] == set_sort_num:
-                    # 콘텐츠명 중복 제거
-                    sets[idx]["contents_names"] = list(set(result_dict[set_sort_num]))
-        return sets
 
     def convert_to_set_group_message_list(self, set_group_messages):
 

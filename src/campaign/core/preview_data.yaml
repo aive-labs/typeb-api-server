@@ -50,7 +50,7 @@ set_data:
   is_group_added: null
   campaign_theme_id: 123
   campaign_theme_name: Summer Sale
-  # rec_sys_model_id: 456
+  recsys_model_id: null
   audience_count: 1000
   audience_id: 'aud-000001'
   audience_name: Audience Group 1
@@ -62,7 +62,7 @@ set_data:
   coupon_name: null
   recipient_count: 500
   medias: 'lms,kft'
-  # contents_names: null
+  contents_names: null
   is_confirmed : true
   is_message_confirmed: true
   media_cost: 0

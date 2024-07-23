@@ -217,4 +217,5 @@ dependency-injector==4.41.0
 # pre-commit & foramtting & linting & static
 pre-commit==3.7.1
 black==24.4.2
+ruff==0.4.8
 pyright==1.1.366

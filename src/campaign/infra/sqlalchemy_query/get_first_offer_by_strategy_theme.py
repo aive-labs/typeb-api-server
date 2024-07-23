@@ -23,13 +23,17 @@ def get_first_offer_by_strategy_theme(strategy_theme_ids: list, db: Session):
         .subquery()
     )
 
-    result = db.query(
-        StrategyThemeOfferMappingEntity.strategy_theme_id,
-        StrategyThemeOfferMappingEntity.coupon_no,
-        OffersEntity.coupon_name,
-        OffersEntity.benefit_type,
-        OffersEntity.benefit_type_name,
-        func.min(coalesce(OffersEntity.benefit_price, OffersEntity.benefit_percentage))
+    result = (
+        db.query(
+            StrategyThemeOfferMappingEntity.strategy_theme_id,
+            StrategyThemeOfferMappingEntity.coupon_no,
+            OffersEntity.coupon_name,
+            OffersEntity.benefit_type,
+            OffersEntity.benefit_type_name,
+            func.min(coalesce(OffersEntity.benefit_price, OffersEntity.benefit_percentage)).label(
+                "offer_amount"
+            ),
+        )
         .join(
             subquery,
             (StrategyThemeOfferMappingEntity.strategy_theme_id == subquery.c.strategy_theme_id)
@@ -38,7 +42,14 @@ def get_first_offer_by_strategy_theme(strategy_theme_ids: list, db: Session):
         .join(
             OffersEntity,
             StrategyThemeOfferMappingEntity.coupon_no == OffersEntity.coupon_no,
-        ),
+        )
+        .group_by(
+            StrategyThemeOfferMappingEntity.strategy_theme_id,
+            StrategyThemeOfferMappingEntity.coupon_no,
+            OffersEntity.coupon_name,
+            OffersEntity.benefit_type,
+            OffersEntity.benefit_type_name,
+        )
     )
 
     return result

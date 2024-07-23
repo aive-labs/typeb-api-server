@@ -14,20 +14,29 @@ from src.campaign.infra.entity.campaign_set_recipients_entity import (
 )
 from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
+from src.campaign.infra.sqlalchemy_query.campaign_set.apply_personalized_option import (
+    apply_personalized_option,
+)
+from src.campaign.infra.sqlalchemy_query.campaign_set.recipient_custom_contents_mapping import (
+    recipient_custom_contents_mapping,
+)
 from src.campaign.infra.sqlalchemy_query.create_set_group_messages import (
     create_set_group_messages,
+)
+from src.campaign.infra.sqlalchemy_query.delete_campaign_sets import (
+    delete_campaign_sets,
 )
 from src.campaign.infra.sqlalchemy_query.get_audience_rank_between import (
     get_audience_rank_between,
 )
-from src.campaign.infra.sqlalchemy_query.get_contents_from_strategy import (
-    get_contents_from_strategy,
-)
-from src.campaign.infra.sqlalchemy_query.get_contents_name_with_rep_nm import (
-    get_contents_name_with_rep_nm,
+from src.campaign.infra.sqlalchemy_query.get_contents_name import (
+    get_rep_nm_by_contents_id,
 )
 from src.campaign.infra.sqlalchemy_query.get_customer_by_audience_id import (
     get_customers_by_audience_id,
+)
+from src.campaign.infra.sqlalchemy_query.get_customers_for_expert_campaign import (
+    get_customers_for_expert_campaign,
 )
 from src.campaign.infra.sqlalchemy_query.get_exclude_customer_list import (
     get_excluded_customer_list,
@@ -58,7 +67,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
 
     def create_campaign_set(self, campaign: Campaign, user_id: str, db: Session) -> tuple:
 
-        #### 기본 캠페인
+        # 기본 캠페인
         if campaign.campaign_type_code == CampaignType.BASIC.value:
             return None, None
 
@@ -71,10 +80,9 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             raise ValidationException(
                 detail={"message": "expert 캠페인에 선택된 전략테마가 존재하지 않습니다."}
             )
-        # recommend_model_ids = self.get_recommend_models_by_strategy_id(selected_themes, db)
 
         #### Expert 캠페인, 자동 분배
-        campaign_set_merged, set_cus_items_df = self.create_campaign_set_with_expert(
+        campaign_set_merged, set_cus_items_df = self.create_expert_campaign_set(
             campaign.shop_send_yn,
             user_id,
             campaign.campaign_id,
@@ -114,6 +122,23 @@ class CampaignSetRepository(BaseCampaignSetRepository):
 
         return set(selected_themes), set(strategy_theme_ids)
 
+    def recreate_expert_campaign(
+        self,
+        shop_send_yn,
+        user_id,
+        campaign_id,
+        campaign_group_id,
+        media,
+        msg_delivery_vendor,
+        is_personalized,
+        selected_themes,
+        budget,
+        campaigns_exc,
+        audiences_exc,
+        db: Session,
+    ):
+        delete_campaign_sets(campaign_id, db)
+
     def get_recommend_models_by_strategy_id(
         self, strategy_theme_ids: list[int], db: Session
     ) -> list[int]:
@@ -125,7 +150,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
 
         return [entity.recsys_model_id for entity in entities]
 
-    def create_campaign_set_with_expert(
+    def create_expert_campaign_set(
         self,
         shop_send_yn,
         user_id,
@@ -146,28 +171,26 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             CampaignMedia.TEXT_MESSAGE.value: MessageType.LMS.value,
         }
 
-        budget_list = [(media, initial_msg_type[media])]
-        remind_data = self.get_campaign_remind(campaign_id, db)
-        for remind in remind_data:
-            budget_list.append((remind.remind_media, initial_msg_type[remind.remind_media]))
-
-        # limit_count = None
-
         campaign_msg_type = initial_msg_type[media]
 
+        # 전략테마에 속하는 audience_id 조회
+        # 전략테마 하나에 여러 audience_id가 있을 수도 있음
         strategy_themes_df = DataConverter.convert_query_to_df(
             get_strategy_theme_audience_mapping_query(selected_themes, db)
         )
         audience_ids = list(set(strategy_themes_df["audience_id"]))
+        recsys_model_ids = list(set(strategy_themes_df["recsys_model_id"].apply(int)))
 
         # cust_campaign_object : 고객 audience_ids
-        cust_audiences = get_customers_by_audience_id(audience_ids, db)
-        cust_audiences_df = DataConverter.convert_query_to_df(cust_audiences)
+        customer_query = get_customers_for_expert_campaign(audience_ids, recsys_model_ids, db)
+        # columns: [cus_cd, audience_id, ltv_frequency, age_group_10]
+        cust_audiences_df = DataConverter.convert_query_to_df(customer_query)
 
+        # audience_id 특정 조건(반응률 등)에 따라 순위 생성
         audience_rank_between = get_audience_rank_between(audience_ids, db)
         audience_rank_between_df = DataConverter.convert_query_to_df(audience_rank_between)
 
-        ####가장 점수가 높은 AUDIENCE MAPPING####
+        # strategy_themes_df의 audience_id에 audience 순위 매핑
         strategy_themes_df = pd.merge(
             strategy_themes_df, audience_rank_between_df, on="audience_id", how="inner"
         )
@@ -181,59 +204,39 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         themes_df["set_sort_num"] = range(1, len(themes_df) + 1)
         campaign_set_df_merged = cust_audiences_df.merge(themes_df, on="audience_id", how="inner")
 
-        ####방어로직###
         # cus_cd가 가장 낮은 숫자의 set_sort_num에 속하게 하기 위해
         campaign_set_df = campaign_set_df_merged.loc[
             campaign_set_df_merged.groupby(["cus_cd"])["set_sort_num"].idxmin()
         ]
         del campaign_set_df_merged
-        ##############
 
         # 제외 캠페인 고객 필터
-        if campaigns_exc:
-            exc_cus_query = get_excluded_customer_list(campaigns_exc, db)
-            exc_cus_df = DataConverter.convert_query_to_df(exc_cus_query).rename(
-                columns={"exc_cus_cd": "cus_cd"}
-            )
-            campaign_set_df = pd.merge(
-                campaign_set_df, exc_cus_df, on="cus_cd", how="left", indicator=True
-            )
-            campaign_set_df = campaign_set_df[campaign_set_df["_merge"] == "left_only"].drop(
-                columns=["_merge"]
-            )
+        campaign_set_df = self.exclude_customers_from_exclusion_campaigns(
+            campaign_set_df, campaigns_exc, db
+        )
 
         # 제외 고객 반영
-        if audiences_exc:
-            exc_aud_query = get_customers_by_audience_id(audiences_exc, db)
-            exc_aud_df = DataConverter.convert_query_to_df(exc_aud_query)
-            exc_aud_df = exc_aud_df.drop(columns=["audience_id", "purpose"])
-            exc_aud_df = exc_aud_df.drop_duplicates("cus_cd")
-            campaign_set_df = pd.merge(
-                campaign_set_df, exc_aud_df, on="cus_cd", how="left", indicator=True
-            )
-            campaign_set_df = campaign_set_df[campaign_set_df["_merge"] == "left_only"].drop(
-                columns=["_merge"]
-            )
+        campaign_set_df = self.exclude_customers_from_exclusion_audiences(
+            audiences_exc, campaign_set_df, db
+        )
 
-        if len(campaign_set_df) == 0:
-            raise ValidationException(
-                detail={"code": "campaign/set/create", "message": "대상 고객이 존재하지 않습니다."}
-            )
-
-        # 한개의 cus_cd가 두개이상의 set_sort_num을 가지는 경우를 확인하고 에러 표시
-        if len(campaign_set_df["cus_cd"].unique()) != len(campaign_set_df):
-            raise ValidationException(
-                detail={"code": "campaign/set/create", "message": "중복된 고객이 존재합니다."}
-            )
+        # 캠페인 세트 데이터 검증
+        self.validate_campagin_set_df(campaign_set_df)
 
         # 오퍼 매핑 : 테마별 첫번째 오퍼만을 사용
         # To-Do 전략단계에서 하나만 선택할 수 있도록 가이드 필요
         offer_query = get_first_offer_by_strategy_theme(selected_themes, db)
+
+        # columns: [strategy_theme_id, coupon_no, coupon_name, benefit_type,
+        #           benefit_type_name, {benefit_price} or {benefit_percentage}]
         offer_df = DataConverter.convert_query_to_df(offer_query)
 
         campaign_set_df = campaign_set_df.merge(offer_df, on="strategy_theme_id", how="left")
 
-        ## 세트 고객 집계
+        print("campaign_set_df.columns")
+        print(campaign_set_df.columns)
+
+        # 세트 고객 집계
         group_keys = [
             "strategy_theme_id",
             "strategy_theme_name",
@@ -267,31 +270,14 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         campaign_set_merged["updated_at"] = created_at
         campaign_set_merged["updated_by"] = user_id
 
-        # 발송대상 1) 추천 대표상품 매핑 group_category=?, group_val=?, rep_nm=None,
-        if is_personalized:
-            ###purpose_lv가 없는경우 nepa_starter로 대체 (신규고객 or 휴면 등 Seg가 없는 고객이 타겟될 수 있음)
-            campaign_set_df.loc[:, "purpose"] = campaign_set_df.loc[:, "purpose"].fillna(
-                "nepa_starter"
-            )
-            campaign_set_df = campaign_set_df.rename(columns={"purpose": "set_group_val"})
-            campaign_set_df["set_group_category"] = "purpose"
-
-            group_keys = ["set_sort_num", "set_group_val"]
-            campaign_set_df["group_sort_num"] = campaign_set_df.groupby("set_sort_num")[
-                "set_group_val"
-            ].transform(lambda x: pd.factorize(x)[0] + 1)
-        else:
-            campaign_set_df["set_group_val"] = None
-            campaign_set_df["set_group_category"] = None
-            campaign_set_df["group_sort_num"] = 1
+        # 발송대상
+        # 개인화 타겟팅 옵션 적용 - group_category, group_val 세팅
+        campaign_set_df = apply_personalized_option(campaign_set_df, is_personalized)
 
         # 발송대상 2) 커스텀에서는 전략에서 선택한 콘텐츠를 매핑함
         # 있으면 매핑 없으면 None
-        campaign_set_df = self.recipient_custom_contents_mapping(
-            db, campaign_set_df, selected_themes
-        )
+        campaign_set_df = recipient_custom_contents_mapping(campaign_set_df, selected_themes, db)
 
-        campaign_set_df["rep_nm"] = None
         campaign_set_df["campaign_id"] = campaign_id
         campaign_set_df["send_result"] = None
         campaign_set_df["created_at"] = created_at
@@ -304,11 +290,12 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         campaign_set_merged = campaign_set_merged.replace({np.nan: None})
 
         group_keys = ["set_sort_num", "group_sort_num"]
-        df_grouped1 = (
+        df_grouped1 = (  # pyright: ignore [reportCallIssue]
             campaign_set_df.groupby(group_keys)[["cus_cd"]]
             .agg({"cus_cd": "nunique"})
             .rename(columns={"cus_cd": "recipient_group_count"})
         )
+
         if set_cus_count["recipient_count"].sum() != df_grouped1["recipient_group_count"].sum():
             raise ConsistencyException(
                 detail={"code": "campaign/set/create", "message": "고객 수가 일치하지 않습니다."},
@@ -324,7 +311,10 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             }
         )
 
-        res_groups_df = pd.concat([df_grouped1, df_grouped2], axis=1).reset_index()
+        res_groups_df = pd.concat(  # pyright: ignore [reportCallIssue]
+            [df_grouped1, df_grouped2], axis=1  # pyright: ignore [reportArgumentType]
+        ).reset_index()  # pyright: ignore [reportCallIssue]
+        res_groups_df = res_groups_df.replace({np.nan: None})
 
         # sets : set_group_list 프로퍼티
         campaign_set_merged["set_group_list"] = None
@@ -355,12 +345,48 @@ class CampaignSetRepository(BaseCampaignSetRepository):
                     "updated_by": row["updated_by"],
                 }
                 group_dict_list.append(elem_dict)
-            #     medias.append(row['medias'])
-
-            # campaign_set_merged.at[idx, 'medias'] = list(set([m for m in medias if m is not None]))
             campaign_set_merged.at[idx, "set_group_list"] = group_dict_list
 
         return campaign_set_merged, campaign_set_df
+
+    def validate_campagin_set_df(self, campaign_set_df):
+        if len(campaign_set_df) == 0:
+            raise ValidationException(
+                detail={"code": "campaign/set/create", "message": "대상 고객이 존재하지 않습니다."}
+            )
+        # 한개의 cus_cd가 두개이상의 set_sort_num을 가지는 경우를 확인하고 에러 표시
+        if len(campaign_set_df["cus_cd"].unique()) != len(campaign_set_df):
+            raise ValidationException(
+                detail={"code": "campaign/set/create", "message": "중복된 고객이 존재합니다."}
+            )
+
+    def exclude_customers_from_exclusion_campaigns(self, campaign_set_df, campaigns_exc, db):
+        if campaigns_exc:
+            exc_cus_query = get_excluded_customer_list(campaigns_exc, db)
+            exc_cus_df = DataConverter.convert_query_to_df(exc_cus_query).rename(
+                columns={"exc_cus_cd": "cus_cd"}
+            )
+            campaign_set_df = pd.merge(
+                campaign_set_df, exc_cus_df, on="cus_cd", how="left", indicator=True
+            )
+            campaign_set_df = campaign_set_df[campaign_set_df["_merge"] == "left_only"].drop(
+                columns=["_merge"]
+            )
+        return campaign_set_df
+
+    def exclude_customers_from_exclusion_audiences(self, audiences_exc, campaign_set_df, db):
+        if audiences_exc:
+            exc_aud_query = get_customers_by_audience_id(audiences_exc, db)
+            exc_aud_df = DataConverter.convert_query_to_df(exc_aud_query)
+            exc_aud_df = exc_aud_df.drop(columns=["audience_id", "purpose"])
+            exc_aud_df = exc_aud_df.drop_duplicates("cus_cd")
+            campaign_set_df = pd.merge(
+                campaign_set_df, exc_aud_df, on="cus_cd", how="left", indicator=True
+            )
+            campaign_set_df = campaign_set_df[campaign_set_df["_merge"] == "left_only"].drop(
+                columns=["_merge"]
+            )
+        return campaign_set_df
 
     def get_campaign_remind(self, campaign_id: str, db: Session):
         return (
@@ -369,24 +395,6 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             .order_by(CampaignRemindEntity.remind_step)
             .all()
         )
-
-    def recipient_custom_contents_mapping(self, set_cus_items_df, selected_themes, db: Session):
-        """전략에서 선택된 추천 콘텐츠의 아이디를 조인하여 정보를 매핑"""
-        theme_contents = get_contents_from_strategy(selected_themes, db)
-        contents_info = get_contents_name_with_rep_nm(db)
-        theme_contents_df = DataConverter.convert_query_to_df(theme_contents)
-        contents_info_df = DataConverter.convert_query_to_df(contents_info)
-
-        theme_contents_df["strategy_theme_id"] = theme_contents_df["strategy_theme_id"].astype(int)
-        theme_contents_df["contents_id"] = theme_contents_df["contents_id"].astype(str)
-        contents_info_df["contents_id"] = contents_info_df["contents_id"].astype(str)
-
-        set_cus_items_df = set_cus_items_df.merge(
-            theme_contents_df, on="strategy_theme_id", how="left"
-        )
-        set_cus_items_df = set_cus_items_df.merge(contents_info_df, on="contents_id", how="left")
-
-        return set_cus_items_df
 
     def save_campaign_set(self, campaign_df, db: Session):
         """캠페인 오브젝트 저장 (CampaignSets, CampaignSetGroups)
@@ -419,9 +427,14 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             for set_group in row["set_group_list"]:
                 # CampaignSetGroups 인서트
                 set_group_req = CampaignSetGroupsEntity(**set_group)
+
+                if set_group_req.contents_id:
+                    rep_nm = get_rep_nm_by_contents_id(set_group_req.contents_id, db)
+                    set_group_req.rep_nm = rep_nm
+
                 set_group_req_list.append(set_group_req)
 
-            set_req.set_group_list.append(set_group_req_list)
+            set_req.set_group_list = set_group_req_list
             db.add(set_req)
 
     def create_set_group_recipient(self, recipients_df, db: Session):
@@ -670,3 +683,20 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         )
 
         return [SetGroupMessage.model_validate(entity) for entity in entities]
+
+    def get_set_group_message(self, campaign_id, set_group_msg_seq, db: Session) -> SetGroupMessage:
+        entity = (
+            db.query(SetGroupMessagesEntity)
+            .filter(
+                SetGroupMessagesEntity.campaign_id == campaign_id,
+                SetGroupMessagesEntity.set_group_msg_seq == set_group_msg_seq,
+            )
+            .first()
+        )
+
+        if not entity:
+            raise NotFoundException(
+                detail={"message": "캠페인 세트 그룹 메시지를 찾지 못했습니다."}
+            )
+
+        return SetGroupMessage.model_validate(entity)

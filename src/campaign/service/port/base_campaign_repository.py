@@ -81,3 +81,7 @@ class BaseCampaignRepository(ABC):
         self, campaign_id, set_group_seq, message_type, db: Session
     ):
         pass
+
+    @abstractmethod
+    def delete_campaign(self, campaign, db):
+        pass
