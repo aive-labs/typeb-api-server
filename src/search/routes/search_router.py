@@ -170,7 +170,7 @@ def search_reviewers(
     return search_service.search_reviewer(user=user, db=db, keyword=keyword)
 
 
-@search_router.get("/campaigns/search/rep_items")
+@search_router.get("/rep_items")
 def get_campaign_set_rep_items(
     campaign_id: str,
     strategy_theme_id: str,
