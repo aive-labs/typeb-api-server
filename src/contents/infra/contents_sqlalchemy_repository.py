@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from contextlib import AbstractContextManager
 
-from sqlalchemy import and_, distinct, func, or_, update
+from sqlalchemy import and_, case, distinct, func, literal, or_, update
 from sqlalchemy.orm import Session
 
 from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
@@ -249,3 +249,50 @@ class ContentsSqlAlchemy:
         )
 
         return contents_count
+
+    def get_contents_by_tags(
+        self, tags, db: Session, keyword: str | None = None
+    ) -> list[IdWithItem]:
+        if tags is None or len(tags) == 0:
+            # tags_list가 None인 경우에는 항상 2로 설정된 것을 사용
+            condition = literal(2)
+        else:
+            contents_tag_patterns = [f"%{contents_tag}%" for contents_tag in tags]
+
+            tag_conditions = or_(
+                *[ContentsEntity.contents_tags.like(pattern) for pattern in contents_tag_patterns]
+            )
+
+            condition = case(  # pyright: ignore [reportCallIssue]
+                (tag_conditions, 1),  # pyright: ignore [reportArgumentType]
+                else_=2,
+                # Pass the conditions as positional elements
+            )
+
+        subquery = (
+            db.query(
+                ContentsEntity.contents_id,
+                ContentsEntity.contents_name,
+                ContentsEntity.contents_tags,
+                condition.label("tags_yn"),
+            )
+            .filter(
+                ContentsEntity.contents_status == "published",
+                ~ContentsEntity.is_deleted,
+            )
+            .subquery()
+        )
+
+        if keyword:
+            keyword = f"%{keyword}%"
+            subquery = (
+                db.query(subquery.c.contents_id, subquery.c.contents_name, subquery.c.tags_yn)
+                .filter(subquery.c.contents_tags.ilike(keyword))
+                .subquery()
+            )
+
+        query = db.query(
+            subquery.c.contents_id.label("id"), subquery.c.contents_name.label("name")
+        ).order_by(subquery.c.tags_yn)
+
+        return [IdWithItem(id=data.id, name=data.name) for data in query.all()]

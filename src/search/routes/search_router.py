@@ -72,6 +72,18 @@ async def get_search_products(
     return search_service.search_recommend_products(keyword)
 
 
+@search_router.get("/contents")
+@inject
+def search_contents(
+    strategy_theme_id: int,
+    keyword: Optional[str] = None,
+    db: Session = Depends(get_db_session),
+    user=Depends(get_permission_checker(required_permissions=[])),
+    search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
+) -> list[IdWithItem]:
+    return search_service.search_contents(strategy_theme_id, db, keyword=keyword)
+
+
 @search_router.get("/contents_tag")
 @inject
 def get_contents_tag(

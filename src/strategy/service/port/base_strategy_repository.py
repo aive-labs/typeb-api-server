@@ -69,3 +69,7 @@ class BaseStrategyRepository(ABC):
         self, strategy_id: str, db: Session
     ) -> list[IdWithItem]:
         pass
+
+    @abstractmethod
+    def get_tags_search(self, strategy_theme_id, db: Session) -> tuple:
+        pass

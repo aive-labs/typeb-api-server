@@ -91,3 +91,6 @@ class StrategyRepository(BaseStrategyRepository):
         return self.strategy_sqlalchemy_repository.search_strategy_themes_by_strategy_id(
             strategy_id, db
         )
+
+    def get_tags_search(self, strategy_theme_id, db: Session) -> tuple:
+        return self.strategy_sqlalchemy_repository.get_tags(strategy_theme_id, db)

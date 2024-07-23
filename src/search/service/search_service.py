@@ -26,6 +26,7 @@ from src.search.routes.dto.reviewer_response import ReviewerResponse
 from src.search.routes.dto.send_user_response import SendUserResponse
 from src.search.routes.dto.strategy_search_response import StrategySearchResponse
 from src.search.routes.port.base_search_service import BaseSearchService
+from src.strategy.enums.recommend_model import RecommendModels
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.users.domain.user import User
@@ -33,6 +34,7 @@ from src.users.infra.user_repository import UserRepository
 
 
 class SearchService(BaseSearchService):
+
     def __init__(
         self,
         audience_repository: BaseAudienceRepository,
@@ -188,3 +190,20 @@ class SearchService(BaseSearchService):
         recommend_rep_nm_list = list(recommend_rep_nm_set)
 
         return recommend_rep_nm_list
+
+    def search_contents(
+        self, strategy_theme_id: int, db: Session, keyword: str | None = None
+    ) -> list:
+        recsys_model_enum_dict = RecommendModels.get_eums()
+        personalized_recsys_model_id = [
+            i["_value_"] for i in recsys_model_enum_dict if i["personalized"] is True
+        ]
+
+        contents_tags, recommend_model_id = self.strategy_repository.get_tags_search(
+            strategy_theme_id, db
+        )
+
+        if recommend_model_id == personalized_recsys_model_id:
+            return []
+
+        return self.contents_repository.get_contents_by_tags(contents_tags, db, keyword)

@@ -50,3 +50,6 @@ class ContentsRepository(BaseContentsRepository):
         return self.contents_sqlalchemy.count_contents_by_campaign_id(
             campaign_id, set_group_seqs, db
         )
+
+    def get_contents_by_tags(self, contents_tags, db: Session, keyword=None) -> list[IdWithItem]:
+        return self.contents_sqlalchemy.get_contents_by_tags(contents_tags, db, keyword)

@@ -53,3 +53,7 @@ class BaseContentsRepository(ABC):
     @abstractmethod
     def count_contents_by_campaign_id(self, campaign_id, set_group_seqs, db: Session) -> int:
         pass
+
+    @abstractmethod
+    def get_contents_by_tags(self, contents_tags, db: Session, keyword=None) -> list[IdWithItem]:
+        pass

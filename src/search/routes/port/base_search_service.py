@@ -83,3 +83,9 @@ class BaseSearchService(ABC):
         self, strategy_theme_id, audience_id, coupon_no, db: Session
     ) -> list[str]:
         pass
+
+    @abstractmethod
+    def search_contents(
+        self, strategy_theme_id: int, db: Session, keyword: str | None = None
+    ) -> list:
+        pass
