@@ -17,12 +17,6 @@ from src.campaign.infra.sqlalchemy_query.get_audience_rank_between import (
 from src.campaign.infra.sqlalchemy_query.get_customers_for_expert_campaign import (
     get_customers_for_expert_campaign,
 )
-from src.campaign.infra.sqlalchemy_query.get_first_offer_by_strategy_theme import (
-    get_first_offer_by_strategy_theme,
-)
-from src.campaign.infra.sqlalchemy_query.get_strategy_theme_audience_mapping import (
-    get_strategy_theme_audience_mapping_query,
-)
 from src.campaign.infra.sqlalchemy_query.recreate_basic_campaign import (
     add_ltv_frequency,
     check_customer_data_consistency,
@@ -67,42 +61,44 @@ def recreate_expert_campaign_set(
     strategy_themes_df = pd.DataFrame(
         [set_update.model_dump() for set_update in campaign_set_update]
     )
+    strategy_themes_df["rep_nm_list"] = strategy_themes_df["rep_nm_list"].apply(
+        lambda x: x[0] if x else np.nan
+    )
+    strategy_themes_df.rename(columns={"rep_nm_list": "rep_nm"}, inplace=True)
+
+    print("update strategy_themes_df")
+    print(strategy_themes_df)
+
     strategy_themes_df = strategy_themes_df.sort_values("set_sort_num")
 
     audience_ids = list(set(strategy_themes_df["audience_id"]))
 
-    strategy_themes_df = DataConverter.convert_query_to_df(
-        get_strategy_theme_audience_mapping_query(selected_themes, db)
-    )
-    recsys_model_ids = list(set(strategy_themes_df["recsys_model_id"].apply(int)))
+    # strategy_themes_df = DataConverter.convert_query_to_df(
+    #     get_strategy_theme_audience_mapping_query(selected_themes, db)
+    # )
+    recsys_model_ids = list(set(strategy_themes_df["recsys_model_id"]))
 
     # cust_campaign_object : 고객 audience_ids
     customer_query = get_customers_for_expert_campaign(audience_ids, recsys_model_ids, db)
     # columns: [cus_cd, audience_id, ltv_frequency, age_group_10]
     cust_audiences_df = DataConverter.convert_query_to_df(customer_query)
+    print("cust_audiences_df")
+    print(cust_audiences_df)
 
     # audience_id 특정 조건(반응률 등)에 따라 순위 생성
     audience_rank_between = get_audience_rank_between(audience_ids, db)
     audience_rank_between_df = DataConverter.convert_query_to_df(audience_rank_between)
+    print("audience_rank_between_df")
+    print(audience_rank_between_df)
 
     # strategy_themes_df의 audience_id에 audience 순위 매핑
     strategy_themes_df = pd.merge(
         strategy_themes_df, audience_rank_between_df, on="audience_id", how="inner"
     )
 
-    # audience_id 별로 가장 낮은 index 값으로 추출
-    # audience_id의 유니크한 수만큼 데이터가 나옴
-    print("themes_df1")
-    print(strategy_themes_df)
-    themes_df = strategy_themes_df.loc[
-        # 각 audience_id 그룹에서 rank 열의 최소값을 가지는 행의 인덱스
-        strategy_themes_df.groupby(["audience_id"])["rank"].idxmin()
-    ]
-    themes_df["set_sort_num"] = range(1, len(themes_df) + 1)
-
-    print("themes_df2")
-    print(themes_df)
-    campaign_set_df_merged = cust_audiences_df.merge(themes_df, on="audience_id", how="inner")
+    campaign_set_df_merged = cust_audiences_df.merge(
+        strategy_themes_df, on="audience_id", how="inner"
+    )
 
     print("cust_audiences_df")
     print(cust_audiences_df)
@@ -116,8 +112,6 @@ def recreate_expert_campaign_set(
     campaign_set_df = campaign_set_df_merged.loc[
         campaign_set_df_merged.groupby(["cus_cd"])["set_sort_num"].idxmin()
     ]
-    print("campaign_set_df")
-    print(campaign_set_df)
 
     del campaign_set_df_merged
 
@@ -144,12 +138,14 @@ def recreate_expert_campaign_set(
     # offer
     # 고객 별 오퍼 & 전략 정보 붙이기: 전략 상 저장된 오퍼정보가 아닌 추천 마스터 테이블 row는 일부 제외될 수 있음
     # 오퍼가 존재하면 붙힌다.
-    offer_query = get_first_offer_by_strategy_theme(selected_themes, db)
+    # offer_query = get_first_offer_by_strategy_theme(selected_themes, db)
     # columns: [strategy_theme_id, coupon_no, coupon_name, benefit_type,
     #           benefit_type_name, {benefit_price} or {benefit_percentage}]
-    offer_df = DataConverter.convert_query_to_df(offer_query)
+    # offer_df = DataConverter.convert_query_to_df(offer_query)
 
-    campaign_set_df = campaign_set_df.merge(offer_df, on="strategy_theme_id", how="left")
+    # campaign_set_df = campaign_set_df.merge(offer_df, on="strategy_theme_id", how="left")
+    print("campaign_set_df")
+    print(campaign_set_df)
 
     # 세트 고객 집계
     group_keys = [
@@ -161,8 +157,13 @@ def recreate_expert_campaign_set(
         "coupon_no",
         "coupon_name",
     ]
-    cols = group_keys + ["set_sort_num"]
-    campaign_set = campaign_set_df[cols].drop_duplicates()
+    cols = group_keys + ["set_sort_num", "rep_nm"]
+
+    campaign_set = campaign_set_df[cols]
+    campaign_set = campaign_set.drop_duplicates()
+
+    print("-----------------------------------------------------------------------")
+
     set_cus_count = (
         campaign_set_df.groupby("set_sort_num")["cus_cd"]
         .nunique()
@@ -203,8 +204,9 @@ def recreate_expert_campaign_set(
     campaign_set_df["updated_by"] = user_id
 
     # ***캠페인 세트  campaign_set_merged 완성***
-    campaign_set_merged["rep_nm_list"] = None
     campaign_set_merged = campaign_set_merged.replace({np.nan: None})
+    print("campaign_set_merged_final")
+    print(campaign_set_merged)
 
     group_keys = ["set_sort_num", "group_sort_num"]
     df_grouped1 = (  # pyright: ignore [reportCallIssue]

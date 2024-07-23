@@ -221,18 +221,13 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
             if campaign_set.strategy_theme_id is not None
         ]
 
-        # Todo: 업데이트시 변경사항 반영해서 로직 작동하도록 수정
-        # res = update_campaign_set_obj(db, campaign_set_merged)
-
-        print(campaign_set_merged)
-
         if len(campaign_set_merged) > 0:
+            print("save updated campaign_set")
             save_campaign_set(db, campaign_set_merged)
             # 캠페인 세트 그룹 메세지 더미 데이터 업데이트
             set_group_seqs = [row._asdict() for row in get_set_group_seqs(db, campaign_id)]
             print("set_group_seqs")
             print(len(set_group_seqs))
-            print(set_group_seqs)
             create_set_group_messages(
                 user_id,
                 campaign_id,
