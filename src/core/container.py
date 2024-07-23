@@ -251,11 +251,10 @@ class Container(containers.DeclarativeContainer):
         provides=GetContentsService,
         contents_repository=contents_repository,
     )
-    # 구분 애매
+
     generate_contents_service = providers.Singleton(
         provides=GenerateContentsService,
         contents_repository=contents_repository,
-        # db=db.provided.session
     )
 
     get_creative_recommendation = providers.Singleton(

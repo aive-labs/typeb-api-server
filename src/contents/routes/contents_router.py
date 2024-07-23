@@ -160,7 +160,9 @@ async def generate_contents(
     contents_generate_req: ContentsGenerate,
     db: Session = Depends(get_db_session),
     user=Depends(get_permission_checker(required_permissions=[])),
-    generate_contents_service: GenerateContentsService = Depends(Provide[Container.generate_contents_service]),
+    generate_contents_service: GenerateContentsService = Depends(
+        Provide[Container.generate_contents_service]
+    ),
 ) -> StreamingResponse:
     return StreamingResponse(
         generate_contents_service.exec(contents_generate_req, db),

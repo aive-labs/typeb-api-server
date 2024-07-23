@@ -1,8 +1,7 @@
-from datetime import datetime
-
-from sqlalchemy import Column, DateTime, Integer, String, text
+from sqlalchemy import Column, DateTime, Integer, String
 
 from src.core.database import Base
+
 
 class CommentMasterEntity(Base):
     __tablename__ = "comment_master"
@@ -17,4 +16,3 @@ class CommentMasterEntity(Base):
     content = Column(String)
     rating = Column(Integer)
     etltime = Column(DateTime(timezone=True))
-
