@@ -31,11 +31,11 @@ class DeleteCampaignService(DeleteCampaignUseCase):
         authorization_checker = AuthorizationChecker(user)
         campaign_dependency_manager = CampaignDependencyManager(user)
 
-        self.check_camapign_deletable(authorization_checker, campaign, campaign_dependency_manager)
+        self.check_campaign_deletable(authorization_checker, campaign, campaign_dependency_manager)
 
         self.campaign_repository.delete_campaign(campaign, db=db)
 
-    def check_camapign_deletable(
+    def check_campaign_deletable(
         self,
         authorization_checker: AuthorizationChecker,
         campaign,
