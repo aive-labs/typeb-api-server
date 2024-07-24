@@ -386,8 +386,6 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
         # 2. CampaignSetGroups UPSERT  & CampaignSetMessage 추가
         set_group_seqs = []
         for row in res_groups_dicts:
-            print('row["set_group_seq"]')
-            print(row["set_group_seq"])
             campaign_set_group_entity = db.query(CampaignSetGroupsEntity).get(row["set_group_seq"])
 
             if campaign_set_group_entity:
@@ -401,12 +399,12 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
                     if item.msg_send_type == "campaign"
                 ]
 
-                print("group_msgs_list")
-                print(group_msgs_list)
-
                 if group_msgs_list:
                     group_msgs = group_msgs_list[0]
                     group_msgs.media = campaign_set_group_entity.media
+
+                    # 타입이 달라진걸로 변경을 체크
+                    # expert 캠페인에서는 contents_id도 달라질 수 있음
                     if group_msgs.msg_type != campaign_set_group_entity.msg_type:
 
                         # 서버내 파일 & resource_id 삭제
@@ -429,7 +427,6 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
                         group_msgs.rec_explanation = None
                         group_msgs.msg_photo_uri = None
                     else:
-                        row["set_group_seq"] = None
                         # 존재하지 않는 경우 삽입
                         set_group = CampaignSetGroupsEntity(**row)
                         campaign_set_entity: CampaignSetsEntity = (
@@ -446,7 +443,10 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
                         campaign_set_entity.is_confirmed = False
                         campaign_set_entity.is_message_confirmed = False
 
-                        db.add(set_group)
+                        print("set_group.set_group_seq")
+                        print(set_group.set_group_seq)
+
+                        db.merge(set_group)
                         db.flush()
                         set_group_seq = set_group.set_group_seq
 
