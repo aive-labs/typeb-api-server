@@ -378,6 +378,7 @@ def get_campaign_set_rep_items(
 
 
 @campaign_router.post("/campaigns/{campaign_id}/resource/{set_group_msg_seq}")
+@inject
 async def upload_message_resources(
     campaign_id: str,
     set_group_msg_seq: int,
@@ -389,4 +390,4 @@ async def upload_message_resources(
     ),
 ):
     """이미지 업로드 API"""
-    await upload_image_for_message.exec(campaign_id, set_group_msg_seq, files, user, db=db)
+    return await upload_image_for_message.exec(campaign_id, set_group_msg_seq, files, user, db=db)

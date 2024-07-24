@@ -21,7 +21,10 @@ from src.campaign.service.port.base_campaign_set_repository import (
 )
 from src.common.utils.file.s3_service import S3Service
 from src.common.utils.get_env_variable import get_env_variable
-from src.core.exceptions.exceptions import PolicyException
+from src.core.exceptions.exceptions import (
+    ConsistencyException,
+    PolicyException,
+)
 from src.core.transactional import transactional
 from src.message_template.enums.message_type import MessageType
 from src.messages.service.message_service import MessageService
@@ -57,15 +60,21 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
         message_photo_uri = []
         message_resources = []
         for file in files:
+
+            print(file.filename)
+
             new_file_name = self.generate_timestamp_file_name(file.filename)
 
             # 이미지 저장(s3, ppurio)
-            filekey = await self.message_service.upload_file(new_file_name, file)
+            ppurio_filekey = await self.message_service.upload_file(new_file_name, file)
 
-            s3_file_key = (
-                f"messages_resource/{campaign_id}/{set_group_msg_seq}/images/{new_file_name}"
-            )
+            print("ppurio_filekey")
+            print(ppurio_filekey)
+
+            s3_file_key = f"{user.mall_id}/messages_resource/{campaign_id}/{set_group_msg_seq}/images/{new_file_name}"
             await self.s3_service.put_object_async(s3_file_key, file)
+            print("s3_file_key")
+            print(s3_file_key)
 
             # 카카오 landing URL 생성
             kakao_landing_url = None
@@ -75,7 +84,7 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                 MessageType.KAKAO_IMAGE_WIDE.value,
             ):
                 # 카카오 landing url 요청
-                pass
+                kakao_landing_url = "1"
 
             # 기존 이미지 삭제
             if original_message_photo_uri is not None and len(original_message_photo_uri) > 0:
@@ -87,13 +96,15 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
             # db에 new_image_resource 추가
             message_entity = MessageResourceEntity(
                 set_group_msg_seq=set_group_msg_seq,
-                resource_name=image_name,
-                resource_path=image_path,
-                img_uri=img_uri,
-                link_url=link_url,
-                landing_url=landing_url,
+                resource_name=s3_file_key,
+                resource_path=s3_file_key,
+                img_uri=s3_file_key,
+                link_url=ppurio_filekey,
+                landing_url=kakao_landing_url,
             )
-            message_photo_uri.append(img_uri)
+            message_photo_uri.append(s3_file_key)
+            print("message_photo_uri")
+            print(message_photo_uri)
 
             db.add(message_entity)
             db.flush()
@@ -107,10 +118,10 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
 
         # set_group_messages에 img_uri 저장  msg_photo_uri: List[]
         group_msg_dict = jsonable_encoder(set_group_message)
-        for k, v in group_msg_dict.items():
-            if k == "msg_photo_uri":
-                v = msg_photo_uris  # 누적 등록 기능 없음
-                setattr(group_msg_obj, k, v)
+        for key, value in group_msg_dict.items():
+            if key == "msg_photo_uri":
+                value = message_photo_uri  # 누적 등록 기능 없음
+                setattr(set_group_message, key, value)
 
         # 메세지 타입 업데이트(->mms)
         if message_type in (
@@ -128,7 +139,7 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
         elif message_type == MessageType.KAKAO_IMAGE_WIDE.value:
             update_msg_type = MessageType.KAKAO_IMAGE_WIDE.value
         else:
-            raise Exception("Invalid msg type")
+            raise ConsistencyException(detail={"message": "Invalid msg type"})
 
         if set_group_message.msg_send_type == "campaign":
             db.query(CampaignSetGroupsEntity).filter(
@@ -148,6 +159,8 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
             campaign_id, set_group_msg_seq, db
         )
         message = Message.from_set_group_message(set_group_message)
+
+        db.commit()
 
         return {
             "set_group_msg_seq": set_group_msg_seq,
