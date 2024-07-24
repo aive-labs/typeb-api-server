@@ -1,7 +1,10 @@
+from typing import Optional
+
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
 
 from src.auth.utils.permission_checker import get_permission_checker
+from src.common.enums.campaign_media import CampaignMedia
 from src.core.container import Container
 from src.message_template.domain.message_template import MessageTemplate
 from src.message_template.routes.dto.request.message_template_create import (
@@ -43,12 +46,13 @@ def create_message_template(
 @message_template_router.get("")
 @inject
 def get_all_templates(
+    media: Optional[CampaignMedia] = None,
     user=Depends(get_permission_checker(required_permissions=[])),
     get_template_service: GetMessageTemplateService = Depends(
         Provide[Container.get_template_service]
     ),
 ):
-    return get_template_service.get_all_templates()
+    return get_template_service.get_all_templates(media=media.value if media else None)
 
 
 @message_template_router.get("/{template_id}")
