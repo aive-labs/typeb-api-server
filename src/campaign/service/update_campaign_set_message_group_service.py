@@ -225,9 +225,13 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
                     "set_group_category",
                     "set_group_val",
                     "rep_nm",
+                    "recipient_group_count",
                 ]
             ]
-            res_groups_df["recipient_count"] = sum(res_groups_df["recipient_group_count"])
+            res_groups_df = res_groups_df.rename(
+                columns={"recipient_group_count": "recipient_count"}
+            )
+            # res_groups_df["recipient_count"] = sum(res_groups_df["recipient_group_count"])
             set_sort_num = list(set(update_group_df["set_sort_num"].dropna()))[0]
         else:
             set_seq = list(set(update_group_df["set_seq"]))[0]
