@@ -29,8 +29,15 @@ class MessageService:
 
         async with aiohttp.ClientSession() as session:
             url = get_env_variable("ppurio_file_upload_url")
+            account = get_env_variable("ppurio_account")
+
+            print(url, account)
 
             file_read = await file.read()
+
+            print("file_read")
+            print(file_read)
+
             data = aiohttp.FormData()
             data.add_field("account", "aivelabs_dev")
             data.add_field(

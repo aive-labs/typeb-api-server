@@ -64,6 +64,9 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
         message_photo_uri = []
         message_resources = []
         for file in files:
+
+            print(file.filename)
+
             # 파일 이름 변경(unix timestamp)
             new_file_name = self.generate_timestamp_file_name(file.filename)
 
