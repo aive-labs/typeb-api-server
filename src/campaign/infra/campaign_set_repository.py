@@ -107,6 +107,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         set_group_seqs = [
             row._asdict() for row in self.get_set_group_seqs(campaign.campaign_id, db)
         ]
+
         create_set_group_messages(
             user_id,
             campaign.campaign_id,
@@ -232,9 +233,6 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         offer_df = DataConverter.convert_query_to_df(offer_query)
 
         campaign_set_df = campaign_set_df.merge(offer_df, on="strategy_theme_id", how="left")
-
-        print("campaign_set_df.columns")
-        print(campaign_set_df.columns)
 
         # 세트 고객 집계
         group_keys = [
@@ -437,6 +435,8 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             set_req.set_group_list = set_group_req_list
             db.add(set_req)
 
+        db.flush()
+
     def create_set_group_recipient(self, recipients_df, db: Session):
         """캠페인 그룹 발송 고객 저장 (set_group_msg_seq)
 
@@ -459,6 +459,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         recipients_df = recipients_df.replace({np.nan: None})
         recipients_dict = recipients_df.to_dict("records")
         db.bulk_insert_mappings(CampaignSetRecipientsEntity, recipients_dict)
+        db.flush()
 
     def get_set_group_seqs(self, campaign_id, db: Session):
         return (
