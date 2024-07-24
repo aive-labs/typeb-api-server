@@ -55,36 +55,39 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
             campaign_id, set_group_msg_seq, db
         )
         message_type = set_group_message.msg_type
+
+        if message_type is None:
+            raise ConsistencyException(detail={"message": "메시지 타입이 존재하지 않습니다."})
+
         original_message_photo_uri = set_group_message.msg_photo_uri
 
         message_photo_uri = []
         message_resources = []
         for file in files:
-
-            print(file.filename)
-
+            # 파일 이름 변경(unix timestamp)
             new_file_name = self.generate_timestamp_file_name(file.filename)
 
-            # 이미지 저장(s3, ppurio)
-            ppurio_filekey = await self.message_service.upload_file(new_file_name, file)
-
-            print("ppurio_filekey")
-            print(ppurio_filekey)
-
+            # s3에 이미지 저장
             s3_file_key = f"{user.mall_id}/messages_resource/{campaign_id}/{set_group_msg_seq}/images/{new_file_name}"
             await self.s3_service.put_object_async(s3_file_key, file)
             print("s3_file_key")
             print(s3_file_key)
 
-            # 카카오 landing URL 생성
+            # 뿌리오 MMS 이미지 업로드
+            ppurio_filekey = None
+            if message_type == MessageType.MMS.value:
+                ppurio_filekey = await self.message_service.upload_file(new_file_name, file)
+            print("ppurio_filekey")
+            print(ppurio_filekey)
+
+            # 카카오 이미지 업로드
             kakao_landing_url = None
-            if message_type in (
-                MessageType.KAKAO_TEXT.value,
-                MessageType.KAKAO_IMAGE_GENERAL.value,
-                MessageType.KAKAO_IMAGE_WIDE.value,
-            ):
-                # 카카오 landing url 요청
-                kakao_landing_url = "1"
+            if self.is_message_type_kakao(message_type):
+                kakao_landing_url = await self.message_service.upload_file_for_kakao(
+                    new_file_name, file, message_type
+                )
+            print("kakao_landing_url")
+            print(kakao_landing_url)
 
             # 기존 이미지 삭제
             if original_message_photo_uri is not None and len(original_message_photo_uri) > 0:
@@ -103,8 +106,6 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                 landing_url=kakao_landing_url,
             )
             message_photo_uri.append(s3_file_key)
-            print("message_photo_uri")
-            print(message_photo_uri)
 
             db.add(message_entity)
             db.flush()
@@ -123,7 +124,48 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                 value = message_photo_uri  # 누적 등록 기능 없음
                 setattr(set_group_message, key, value)
 
-        # 메세지 타입 업데이트(->mms)
+        # 메세지 타입 업데이트(ex) sms-> mms)
+        new_message_type = self.adjust_message_type_on_image_upload(message_type)
+        self.update_message_type(
+            campaign_id, db, new_message_type, set_group_message, set_group_msg_seq
+        )
+
+        # 이미지 등록 후 메세지 검증
+        set_group_message = self.campaign_set_repository.get_campaign_set_group_message_by_msg_seq(
+            campaign_id, set_group_msg_seq, db
+        )
+        message = Message.from_set_group_message(set_group_message)
+
+        db.commit()
+
+        return {
+            "set_group_msg_seq": set_group_msg_seq,
+            "msg_obj": message,
+            "resources": message_resources,
+        }
+
+    def is_message_type_kakao(self, message_type):
+        return message_type in (
+            MessageType.KAKAO_TEXT.value,
+            MessageType.KAKAO_IMAGE_GENERAL.value,
+            MessageType.KAKAO_IMAGE_WIDE.value,
+        )
+
+    def update_message_type(
+        self, campaign_id, db, new_message_type, set_group_message, set_group_msg_seq
+    ):
+        if set_group_message.msg_send_type == "campaign":
+            db.query(CampaignSetGroupsEntity).filter(
+                CampaignSetGroupsEntity.campaign_id == campaign_id,
+                CampaignSetGroupsEntity.set_group_seq == set_group_message.set_group_seq,
+            ).update({CampaignSetGroupsEntity.msg_type: new_message_type})
+        db.query(SetGroupMessagesEntity).filter(
+            SetGroupMessagesEntity.campaign_id == campaign_id,
+            SetGroupMessagesEntity.set_group_msg_seq == set_group_msg_seq,
+        ).update({SetGroupMessagesEntity.msg_type: new_message_type})
+        db.flush()
+
+    def adjust_message_type_on_image_upload(self, message_type):
         if message_type in (
             MessageType.SMS.value,
             MessageType.LMS.value,
@@ -140,33 +182,7 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
             update_msg_type = MessageType.KAKAO_IMAGE_WIDE.value
         else:
             raise ConsistencyException(detail={"message": "Invalid msg type"})
-
-        if set_group_message.msg_send_type == "campaign":
-            db.query(CampaignSetGroupsEntity).filter(
-                CampaignSetGroupsEntity.campaign_id == campaign_id,
-                CampaignSetGroupsEntity.set_group_seq == set_group_message.set_group_seq,
-            ).update({CampaignSetGroupsEntity.msg_type: update_msg_type})
-
-        db.query(SetGroupMessagesEntity).filter(
-            SetGroupMessagesEntity.campaign_id == campaign_id,
-            SetGroupMessagesEntity.set_group_msg_seq == set_group_msg_seq,
-        ).update({SetGroupMessagesEntity.msg_type: update_msg_type})
-
-        db.flush()
-
-        # 이미지 등록 후 메세지 검증
-        set_group_message = self.campaign_set_repository.get_campaign_set_group_message_by_msg_seq(
-            campaign_id, set_group_msg_seq, db
-        )
-        message = Message.from_set_group_message(set_group_message)
-
-        db.commit()
-
-        return {
-            "set_group_msg_seq": set_group_msg_seq,
-            "msg_obj": message,
-            "resources": message_resources,
-        }
+        return update_msg_type
 
     def check_already_delivered_message(self, campaign, campaign_id, db, set_group_msg_seq):
         if campaign.campaign_status_code == "r2":

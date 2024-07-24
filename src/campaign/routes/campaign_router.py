@@ -388,6 +388,6 @@ async def upload_message_resources(
     upload_image_for_message: UploadImageForMessageUseCase = Depends(
         dependency=Provide[Container.upload_image_for_message]
     ),
-):
+) -> dict:
     """이미지 업로드 API"""
     return await upload_image_for_message.exec(campaign_id, set_group_msg_seq, files, user, db=db)
