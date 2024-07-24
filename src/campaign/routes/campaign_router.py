@@ -73,6 +73,9 @@ from src.campaign.routes.port.update_campaign_set_usecase import (
 from src.campaign.routes.port.update_message_use_status_usecase import (
     UpdateMessageUseStatusUseCase,
 )
+from src.campaign.routes.port.upload_image_for_message_usecase import (
+    UploadImageForMessageUseCase,
+)
 from src.core.container import Container
 from src.core.database import get_db_session
 from src.search.routes.port.base_search_service import BaseSearchService
@@ -381,6 +384,9 @@ async def upload_message_resources(
     files: list[UploadFile] = File(...),
     db: Session = Depends(get_db_session),
     user=Depends(get_permission_checker(required_permissions=[])),
+    upload_image_for_message: UploadImageForMessageUseCase = Depends(
+        dependency=Provide[Container.upload_image_for_message]
+    ),
 ):
     """이미지 업로드 API"""
-    pass
+    await upload_image_for_message.exec(campaign_id, set_group_msg_seq, files, user, db=db)

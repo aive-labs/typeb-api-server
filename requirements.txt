@@ -219,3 +219,7 @@ pre-commit==3.7.1
 black==24.4.2
 ruff==0.4.8
 pyright==1.1.366
+
+# async boto
+aioboto3==13.1.1
+aiobotocore==2.13.1
