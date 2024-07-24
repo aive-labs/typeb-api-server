@@ -70,27 +70,34 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
             # 파일 이름 변경(unix timestamp)
             new_file_name = self.generate_timestamp_file_name(file.filename)
 
-            # s3에 이미지 저장
-            s3_file_key = f"{user.mall_id}/messages_resource/{campaign_id}/{set_group_msg_seq}/images/{new_file_name}"
-            await self.s3_service.put_object_async(s3_file_key, file)
-            print("s3_file_key")
-            print(s3_file_key)
+            try:
+                file_read = await file.read()
 
-            # 뿌리오 MMS 이미지 업로드
-            ppurio_filekey = None
-            if message_type == MessageType.MMS.value:
-                ppurio_filekey = await self.message_service.upload_file(new_file_name, file)
-            print("ppurio_filekey")
-            print(ppurio_filekey)
+                # s3에 이미지 저장
+                s3_file_key = f"{user.mall_id}/messages_resource/{campaign_id}/{set_group_msg_seq}/images/{new_file_name}"
+                await self.s3_service.put_object_async(s3_file_key, file_read)
+                print("s3_file_key")
+                print(s3_file_key)
 
-            # 카카오 이미지 업로드
-            kakao_landing_url = None
-            if self.is_message_type_kakao(message_type):
-                kakao_landing_url = await self.message_service.upload_file_for_kakao(
-                    new_file_name, file, message_type
-                )
-            print("kakao_landing_url")
-            print(kakao_landing_url)
+                # 뿌리오 MMS 이미지 업로드
+                ppurio_filekey = None
+                if message_type == MessageType.MMS.value:
+                    ppurio_filekey = await self.message_service.upload_file(
+                        new_file_name, file_read, file.content_type
+                    )
+                print("ppurio_filekey")
+                print(ppurio_filekey)
+
+                # 카카오 이미지 업로드
+                kakao_landing_url = None
+                if self.is_message_type_kakao(message_type):
+                    kakao_landing_url = await self.message_service.upload_file_for_kakao(
+                        new_file_name, file_read, file.content_type, message_type
+                    )
+                print("kakao_landing_url")
+                print(kakao_landing_url)
+            finally:
+                await file.close()
 
             # 기존 이미지 삭제
             if original_message_photo_uri is not None and len(original_message_photo_uri) > 0:

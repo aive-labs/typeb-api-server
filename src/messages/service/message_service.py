@@ -1,5 +1,4 @@
 import aiohttp
-from fastapi import UploadFile
 
 from src.common.utils.get_env_variable import get_env_variable
 from src.core.exceptions.exceptions import PpurioException
@@ -25,7 +24,7 @@ class MessageService:
     def is_lms_success(self, ppurio_message_result):
         return ppurio_message_result.MEDIA == "LMS" and ppurio_message_result.RESULT == "6600"
 
-    async def upload_file(self, new_file_name, file: UploadFile) -> str:
+    async def upload_file(self, new_file_name, file_read, content_type: str | None) -> str:
 
         async with aiohttp.ClientSession() as session:
             url = get_env_variable("ppurio_file_upload_url")
@@ -33,10 +32,8 @@ class MessageService:
 
             print(url, account)
 
-            file_read = await file.read()
-
             print("file_read")
-            print(file_read)
+            print(file_read.size)
 
             data = aiohttp.FormData()
             data.add_field("account", "aivelabs_dev")
@@ -44,7 +41,7 @@ class MessageService:
                 "file",
                 file_read,
                 filename=new_file_name,
-                content_type=file.content_type,
+                content_type=content_type,
             )
 
             async with session.post(url, data=data, ssl=False) as response:
@@ -56,7 +53,7 @@ class MessageService:
         return response["filekey"]
 
     async def upload_file_for_kakao(
-        self, new_file_name: str, file: UploadFile, message_type: str
+        self, new_file_name: str, file_read, content_type: str | None, message_type: str
     ) -> str:
         if message_type in (MessageType.KAKAO_IMAGE_GENERAL.value, MessageType.KAKAO_TEXT.value):
             # 친구톡 이미지, 텍스트(?)
@@ -67,7 +64,6 @@ class MessageService:
 
         async with aiohttp.ClientSession() as session:
             url = get_env_variable("ppurio_kakao_image_upload_url")
-            file_read = await file.read()
 
             data = aiohttp.FormData()
             data.add_field("bizId", get_env_variable("ppurio_account"))
@@ -81,7 +77,7 @@ class MessageService:
                 "image",
                 file_read,
                 filename=new_file_name,
-                content_type=file.content_type,
+                content_type=content_type,
             )
 
             async with session.post(url, data=data, ssl=False) as response:

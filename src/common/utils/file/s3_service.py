@@ -1,7 +1,6 @@
 import aioboto3
 import boto3
 from botocore.exceptions import BotoCoreError, ClientError, NoCredentialsError
-from fastapi import UploadFile
 
 
 class S3Service:
@@ -54,7 +53,6 @@ class S3Service:
         except (BotoCoreError, ClientError) as e:
             raise e
 
-    async def put_object_async(self, s3_file_key: str, file: UploadFile):
+    async def put_object_async(self, s3_file_key: str, file_read):
         async with self.async_session.client("s3") as s3:
-            file_content = await file.read()
-            await s3.put_object(Bucket=self.bucket_name, Key=s3_file_key, Body=file_content)
+            await s3.put_object(Bucket=self.bucket_name, Key=s3_file_key, Body=file_read)
