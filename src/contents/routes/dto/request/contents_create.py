@@ -8,6 +8,13 @@ class StyleObject(BaseModel):
     style_object_name: str
 
 
+class ProductObject(BaseModel):
+    """Style 생성 API Object (Post)"""
+
+    product_code: str
+    product_object_name: str
+
+
 class ContentsCreate(BaseModel):
     """콘텐츠 생성 API Object"""
 

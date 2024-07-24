@@ -2,6 +2,7 @@ from typing import Optional, Union
 
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
 from src.auth.utils.permission_checker import get_permission_checker
@@ -9,6 +10,7 @@ from src.contents.infra.dto.response.contents_menu_response import ContentsMenuR
 from src.contents.infra.dto.response.contents_response import ContentsResponse
 from src.contents.infra.dto.response.creative_recommend import CreativeRecommend
 from src.contents.routes.dto.request.contents_create import ContentsCreate
+from src.contents.routes.dto.request.contents_generate import ContentsGenerate
 from src.contents.routes.port.usecase.add_contents_usecase import AddContentsUseCase
 from src.contents.routes.port.usecase.delete_contents_usecase import (
     DeleteContentsUseCase,
@@ -20,6 +22,7 @@ from src.contents.routes.port.usecase.get_creative_recommendations_for_content_u
 from src.contents.routes.port.usecase.update_contents_usecase import (
     UpdateContentsUseCase,
 )
+from src.contents.service.generate_contents_service import GenerateContentsService
 from src.core.container import Container
 from src.core.database import get_db_session
 
@@ -149,3 +152,19 @@ def delete_contents(
     ),
 ):
     delete_contents_service.exec(contents_id, db=db)
+
+
+@contents_router.post("/generate")
+@inject
+async def generate_contents(
+    contents_generate_req: ContentsGenerate,
+    db: Session = Depends(get_db_session),
+    user=Depends(get_permission_checker(required_permissions=[])),
+    generate_contents_service: GenerateContentsService = Depends(
+        Provide[Container.generate_contents_service]
+    ),
+) -> StreamingResponse:
+    return StreamingResponse(
+        generate_contents_service.exec(contents_generate_req, db),
+        media_type="text/event-stream",
+    )

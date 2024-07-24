@@ -2,11 +2,11 @@ from typing import List
 
 from pydantic import BaseModel, Field
 
-from src.contents.routes.dto.request.contents_create import StyleObject
+from src.contents.routes.dto.request.contents_create import ProductObject
 
 
 class ContentsGenerate(BaseModel):
-    style_object: List[StyleObject] = Field(..., description="List of style objects")
+    product_object: List[ProductObject] = Field(..., description="List of product objects")
     template: str = Field(..., description="Template code")
     subject: str = Field(..., description="Subject code")
     additional_prompt: str = Field(..., description="Additional prompt")
