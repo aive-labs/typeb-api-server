@@ -386,6 +386,8 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
         # 2. CampaignSetGroups UPSERT  & CampaignSetMessage 추가
         set_group_seqs = []
         for row in res_groups_dicts:
+            print('row["set_group_seq"]')
+            print(row["set_group_seq"])
             campaign_set_group_entity = db.query(CampaignSetGroupsEntity).get(row["set_group_seq"])
 
             if campaign_set_group_entity:
@@ -393,55 +395,66 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
                 for key, value in row.items():
                     setattr(campaign_set_group_entity, key, value)
 
-                group_msgs = [
+                group_msgs_list = [
                     item
                     for item in campaign_set_group_entity.group_msg
                     if item.msg_send_type == "campaign"
-                ][0]
-                group_msgs.media = campaign_set_group_entity.media
+                ]
 
-                if group_msgs.msg_type != campaign_set_group_entity.msg_type:
-                    # 서버내 파일 & resource_id 삭제
-                    if group_msgs.msg_photo_uri is not None and len(group_msgs.msg_photo_uri) > 0:
-                        # 기존에 이미지 삭제하는 코드 있었음
-                        delete_message_resources_by_seq(group_msgs.set_group_msg_seq, db)
+                print("group_msgs_list")
+                print(group_msgs_list)
 
-                    # button 삭제
-                    db.query(KakaoLinkButtonsEntity).filter(
-                        KakaoLinkButtonsEntity.set_group_msg_seq == group_msgs.set_group_msg_seq
-                    ).delete()
+                if group_msgs_list:
+                    group_msgs = group_msgs_list[0]
+                    group_msgs.media = campaign_set_group_entity.media
+                    if group_msgs.msg_type != campaign_set_group_entity.msg_type:
 
-                    group_msgs.msg_type = campaign_set_group_entity.msg_type
-                    group_msgs.msg_title = None
-                    group_msgs.msg_body = None
-                    group_msgs.msg_gen_key = None
-                    group_msgs.rec_explanation = None
-                    group_msgs.msg_photo_uri = None
-            else:
-                row["set_group_seq"] = None
-                # 존재하지 않는 경우 삽입
-                set_group = CampaignSetGroupsEntity(**row)
-                campaign_set_entity: CampaignSetsEntity = (
-                    db.query(CampaignSetsEntity)
-                    .filter(CampaignSetsEntity.set_seq == row["set_seq"])
-                    .first()
-                )
+                        # 서버내 파일 & resource_id 삭제
+                        if (
+                            group_msgs.msg_photo_uri is not None
+                            and len(group_msgs.msg_photo_uri) > 0
+                        ):
+                            # 기존에 이미지 삭제하는 코드 있었음
+                            delete_message_resources_by_seq(group_msgs.set_group_msg_seq, db)
 
-                if campaign_set_entity is None:
-                    raise NotFoundException(detail={"message": "캠페인 세트를 찾지 못했습니다."})
+                        # button 삭제
+                        db.query(KakaoLinkButtonsEntity).filter(
+                            KakaoLinkButtonsEntity.set_group_msg_seq == group_msgs.set_group_msg_seq
+                        ).delete()
 
-                campaign_set_entity.is_confirmed = False
-                campaign_set_entity.is_message_confirmed = False
+                        group_msgs.msg_type = campaign_set_group_entity.msg_type
+                        group_msgs.msg_title = None
+                        group_msgs.msg_body = None
+                        group_msgs.msg_gen_key = None
+                        group_msgs.rec_explanation = None
+                        group_msgs.msg_photo_uri = None
+                    else:
+                        row["set_group_seq"] = None
+                        # 존재하지 않는 경우 삽입
+                        set_group = CampaignSetGroupsEntity(**row)
+                        campaign_set_entity: CampaignSetsEntity = (
+                            db.query(CampaignSetsEntity)
+                            .filter(CampaignSetsEntity.set_seq == row["set_seq"])
+                            .first()
+                        )
 
-                db.add(set_group)
-                db.flush()
-                set_group_seq = set_group.set_group_seq
+                        if campaign_set_entity is None:
+                            raise NotFoundException(
+                                detail={"message": "캠페인 세트를 찾지 못했습니다."}
+                            )
 
-                # CampaignSetMessage에 추가될 딕셔너리 생성
-                selected_cols = ["set_group_seq", "set_seq", "msg_type", "media"]
-                set_group_dict = get_values_from_dict(row, selected_cols)
-                set_group_dict["set_group_seq"] = set_group_seq
-                set_group_seqs.append(set_group_dict)
+                        campaign_set_entity.is_confirmed = False
+                        campaign_set_entity.is_message_confirmed = False
+
+                        db.add(set_group)
+                        db.flush()
+                        set_group_seq = set_group.set_group_seq
+
+                        # CampaignSetMessage에 추가될 딕셔너리 생성
+                        selected_cols = ["set_group_seq", "set_seq", "msg_type", "media"]
+                        set_group_dict = get_values_from_dict(row, selected_cols)
+                        set_group_dict["set_group_seq"] = set_group_seq
+                        set_group_seqs.append(set_group_dict)
 
         # campaign_sets - medias 업데이트
         msg_types = (
