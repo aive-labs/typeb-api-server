@@ -8,8 +8,8 @@ class CampaignAudienceStatsResponse(BaseModel):
     campaign_name: str
     start_date: str
     end_date: str
-    campaign_theme_id: int | None = None
-    campaign_theme_name: str | None = None
+    strategy_theme_id: int | None = None
+    strategy_theme_name: str | None = None
     audience_id: str
     audience_name: str
     recipient_count: int | None = None

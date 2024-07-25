@@ -6,12 +6,12 @@ class CampaignStatsResponse(BaseModel):
 
     campaign_id: str
     campaign_name: str  ## 캠페인명
-    campaign_theme_id: int | None = None
-    campaign_theme_name: str | None = None  # 테마명
+    strategy_theme_id: int | None = None
+    strategy_theme_name: str | None = None  # 테마명
     audience_id: str | None = None
     audience_name: str | None = None  ## 타겟
-    offer_id: str | None = None
-    offer_name: str | None = None  ##오퍼
+    coupon_no: str | None = None
+    coupon_name: str | None = None  ##오퍼
     media: str | None = None  ##매체 (property명 바뀔수있음)
     recipient_count: int | None = None  ##발송고객(명)
     sent_cust_count: int | None = None  ##발송성공고객(명)
