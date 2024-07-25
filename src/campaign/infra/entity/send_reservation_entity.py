@@ -31,7 +31,6 @@ class SendReservationEntity(Base):
     send_msg_body = Column(String(3072))
     send_filecount = Column(Integer)
     send_filepath = Column(String)
-    send_filekey = Column(String)
     kko_yellowid = Column(String(100))
     kko_template_key = Column(String(50))
     kko_button_json = Column(String(3000))
