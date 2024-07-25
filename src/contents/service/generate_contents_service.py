@@ -91,16 +91,21 @@ class GenerateContentsService(GenerateContentsUseCase):
         try:
             if contents_generate.subject:
                 query_handler = ContentQueryHandler(contents_generate.subject, db)
+                product_item_cnt = (
+                    0
+                    if not contents_generate.product_object
+                    else len(contents_generate.product_object)
+                )
                 product_list = (
                     [item.product_code for item in contents_generate.product_object]
-                    if len(contents_generate.product_object) > 0
+                    if product_item_cnt > 0
                     else []
                 )
                 additional_remark = query_handler.input_data_handler(product_list)
                 query = query_handler.get_subject_query()
                 if contents_generate.emphasis_context:
                     query += query_handler.add_emphasis(contents_generate.emphasis_context)
-                if len(contents_generate.product_object) > 0:
+                if product_item_cnt > 0:
                     query += query_handler.add_product_data()
 
                 data = (json.dumps(i, ensure_ascii=False) + "\n" for i in additional_remark)
