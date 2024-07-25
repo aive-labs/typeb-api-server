@@ -10,6 +10,7 @@ from src.contents.routes.contents_router import contents_router
 from src.contents.routes.creatives_router import creatives_router
 from src.core.container import Container
 from src.core.exceptions.register_exception_handler import register_exception_handlers
+from src.dashboard.routes.dashboard_router import dashboard_router
 from src.message_template.routes.message_template_router import message_template_router
 from src.messages.routes.message_router import message_router
 from src.offers.routes.offer_router import offer_router
@@ -46,6 +47,7 @@ app.include_router(router=offer_router, prefix="/settings/offers")
 app.include_router(router=message_template_router, prefix="/settings/templates")
 app.include_router(router=admin_router, prefix="/settings/admin")
 app.include_router(router=product_router, prefix="/products")
+app.include_router(router=dashboard_router, prefix="/dashboard")
 
 origins = ["*"]
 

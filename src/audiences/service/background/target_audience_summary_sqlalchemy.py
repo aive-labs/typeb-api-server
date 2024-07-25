@@ -21,7 +21,7 @@ from src.audiences.infra.entity.purchase_analytics_master_style_entity import (
 from src.audiences.infra.entity.variable_table_list import CustomerInfoStatusEntity
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.campaign.infra.entity.send_reservation_entity import SendReservationEntity
-from src.dashboard.infra.entity.dash_end_table_entity import DashEndTable
+from src.dashboard.infra.entity.dash_end_table_entity import DashEndTableEntity
 
 
 class TargetAudienceSummarySqlAlchemy:
@@ -87,12 +87,12 @@ class TargetAudienceSummarySqlAlchemy:
 
         response_count_subquery = (
             db.query(
-                DashEndTable.cus_cd,
-                DashEndTable.campaign_id,
+                DashEndTableEntity.cus_cd,
+                DashEndTableEntity.campaign_id,
                 literal(1).label("response_count"),
             )
-            .group_by(DashEndTable.cus_cd, DashEndTable.campaign_id)
-            .having(func.sum(DashEndTable.sale_amt) > 0)
+            .group_by(DashEndTableEntity.cus_cd, DashEndTableEntity.campaign_id)
+            .having(func.sum(DashEndTableEntity.sale_amt) > 0)
             .subquery()
         )
 
