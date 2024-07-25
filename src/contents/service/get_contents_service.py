@@ -39,7 +39,7 @@ class GetContentsService(GetContentsUseCase):
             "template": [
                 ContentsMenuResponse(code=item.code, name=item.name)
                 for item in menu_map
-                if item.menu_type == "message_template"
+                if item.menu_type == "template"
             ],
         }
 
