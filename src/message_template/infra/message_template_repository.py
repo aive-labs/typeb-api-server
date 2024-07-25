@@ -67,11 +67,13 @@ class MessageTemplateRepository(BaseMessageTemplateRepository):
 
     def get_all_templates(self, media: str | None = None) -> list[MessageTemplate]:
         with self.db() as db:
-            entities = (
-                db.query(MessageTemplateEntity)
-                .filter(~MessageTemplateEntity.is_deleted, MessageTemplateEntity.media == media)
-                .all()
-            )
+            query = db.query(MessageTemplateEntity).filter(~MessageTemplateEntity.is_deleted)
+
+            if media is not None:
+                query = query.filter(MessageTemplateEntity.media == media)
+
+            entities = query.all()
+
             return [MessageTemplate.model_validate(entity) for entity in entities]
 
     def get_template_detail(self, template_id: str) -> MessageTemplate:
