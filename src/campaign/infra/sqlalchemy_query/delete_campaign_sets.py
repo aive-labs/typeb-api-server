@@ -11,7 +11,6 @@ from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessages
 
 
 def delete_campaign_sets(campaign_id: str, db: Session):
-
     # KakaoLinkButtons
     delete_query = (
         db.query(KakaoLinkButtonsEntity)
@@ -27,6 +26,7 @@ def delete_campaign_sets(campaign_id: str, db: Session):
             db.delete(record)
     else:
         pass
+    db.flush()
 
     # SetGroupMessages
     delete_statement = delete(SetGroupMessagesEntity).where(

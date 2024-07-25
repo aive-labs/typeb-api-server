@@ -8,6 +8,7 @@ from src.campaign.service.port.base_campaign_set_repository import (
     BaseCampaignSetRepository,
 )
 from src.core.exceptions.exceptions import PolicyException
+from src.core.transactional import transactional
 from src.users.domain.user import User
 
 
@@ -21,6 +22,7 @@ class DeleteCampaignService(DeleteCampaignUseCase):
         self.campaign_repository = campaign_repository
         self.campaign_set_repository = campaign_set_repository
 
+    @transactional
     def exec(self, campaign_id: str, user: User, db: Session):
 
         # 삭제하기 위한 pre-condition을 확인
@@ -29,11 +31,11 @@ class DeleteCampaignService(DeleteCampaignUseCase):
         authorization_checker = AuthorizationChecker(user)
         campaign_dependency_manager = CampaignDependencyManager(user)
 
-        self.check_camapign_deletable(authorization_checker, campaign, campaign_dependency_manager)
+        self.check_campaign_deletable(authorization_checker, campaign, campaign_dependency_manager)
 
         self.campaign_repository.delete_campaign(campaign, db=db)
 
-    def check_camapign_deletable(
+    def check_campaign_deletable(
         self,
         authorization_checker: AuthorizationChecker,
         campaign,

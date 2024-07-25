@@ -55,6 +55,7 @@ from src.campaign.service.update_campaign_set_status_to_confrim import (
     UpdateCampaignStatusToConfirm,
 )
 from src.campaign.service.update_message_use_status import UpdateMessageUseStatus
+from src.campaign.service.upload_image_for_message import UploadImageForMessage
 from src.common.infra.common_repository import CommonRepository
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
 from src.common.utils.file.s3_service import S3Service
@@ -573,4 +574,15 @@ class Container(containers.DeclarativeContainer):
 
     get_audience_stats_service = providers.Singleton(
         provides=GetAudienceStatsService, dashboard_repository=dashboard_repository
+    )
+
+    """
+    메시지에 사용할 이미지 업로드 의존성
+    """
+    upload_image_for_message = providers.Singleton(
+        provides=UploadImageForMessage,
+        campaign_repository=campaign_repository,
+        campaign_set_repository=campaign_set_repository,
+        message_service=message_service,
+        s3_service=s3_asset_service,
     )

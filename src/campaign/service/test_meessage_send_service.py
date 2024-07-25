@@ -588,7 +588,7 @@ class TestMessageSendService(TestSendMessageUseCase):
             ~(df["send_msg_type"].isin(kakao_msg_type)),
         ]
 
-        choice_kakao = [get_env_variable("kakao_send_profile_key"), None]
+        choice_kakao = [get_env_variable("kakao_sender_key"), None]
 
         df["kko_yellowid"] = np.select(cond_kakao, choice_kakao)
 

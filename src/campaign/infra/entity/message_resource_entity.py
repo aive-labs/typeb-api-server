@@ -16,5 +16,5 @@ class MessageResourceEntity(Base):
     resource_name = Column(String, nullable=False)
     resource_path = Column(String, nullable=False)
     img_uri = Column(String)  ##웹클라이언트 요청 uri
-    link_url = Column(String)  ##발송용 url
-    landing_url = Column(String)
+    link_url = Column(String, nullable=True)  ##발송용 url
+    landing_url = Column(String, nullable=True)

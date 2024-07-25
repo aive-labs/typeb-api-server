@@ -10,7 +10,7 @@ class BaseMessageTemplateRepository(ABC):
         pass
 
     @abstractmethod
-    def get_all_templates(self) -> list[MessageTemplate]:
+    def get_all_templates(self, media: str | None = None) -> list[MessageTemplate]:
         pass
 
     @abstractmethod

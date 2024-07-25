@@ -32,9 +32,6 @@ from src.campaign.infra.sqlalchemy_query.delete_campaign_set_group import (
 from src.campaign.infra.sqlalchemy_query.delete_message_reousrces_by_seq import (
     delete_message_resources_by_seq,
 )
-from src.campaign.infra.sqlalchemy_query.get_campaign_set_by_set_seq import (
-    get_campaign_set_by_set_seq,
-)
 from src.campaign.infra.sqlalchemy_query.get_campaign_set_groups import (
     get_campaign_set_groups,
 )
@@ -95,7 +92,6 @@ from src.core.exceptions.exceptions import (
 from src.core.transactional import transactional
 from src.message_template.enums.kakao_button_type import KakaoButtonType
 from src.message_template.enums.message_type import MessageType
-from src.strategy.enums.recommend_model import RecommendModels
 from src.users.domain.user import User
 
 
@@ -193,24 +189,7 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
         ## SEG 캠페인이면, 변경 후 메시지 타입 바꾸고 set_group_msg 변경
         ## 커스텀이면, 고객 분배 후 콘텐츠, 메시지 타입 바꾸고 set_group_msg 변경
 
-        ## 비교
-        ## 들어온 set_group_seq와 저장된 set_group_seq를 비교
-        campaign_set = get_campaign_set_by_set_seq(set_seq, db)
-        if campaign_set:
-            recsys_model_id = campaign_set.recsys_model_id
-            recsys_model_enum_dict = RecommendModels.get_eums()
-            personalized_recsys_model_id = [
-                i["_value_"] for i in recsys_model_enum_dict if i["personalized"] is True
-            ]
-
-            new_collection_model_value = RecommendModels.NEW_COLLECTION.value
-            if new_collection_model_value in personalized_recsys_model_id:
-                personalized_recsys_model_id.remove(new_collection_model_value)
-
-            ## 개인화 설정 적용 여부 확인
-            is_personalized = True if recsys_model_id in personalized_recsys_model_id else False
-        else:
-            is_personalized = False
+        is_personalized = set_group_updated.base.is_personalized
 
         # 확인 필요
         update_list_for_df = []
@@ -225,13 +204,13 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
            'msg_type', 'recipient_group_rate', 'recipient_group_count',
            'set_group_category', 'set_group_val', 'rep_nm', 'contents_id',
            'contents_name']
+
+        set_group_seq 값이 없으면 새로 추가된 set_group
         """
 
         update_group_df.loc[:, "recipient_group_rate"] = (
             update_group_df.loc[:, "recipient_group_rate"] / 100
         )
-        set_seq = list(set(update_group_df["set_seq"]))[0]
-        set_group_seqs = list(update_group_df["set_group_seq"].dropna())  # 변경된 set_group_seq
 
         if is_personalized:
             res_groups_df = update_group_df[
@@ -246,23 +225,31 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
                     "set_group_category",
                     "set_group_val",
                     "rep_nm",
+                    "recipient_group_count",
                 ]
             ]
-            res_groups_df["recipient_count"] = sum(res_groups_df["recipient_group_count"])
+            res_groups_df["recipient_count"] = sum(update_group_df["recipient_group_count"])
             set_sort_num = list(set(update_group_df["set_sort_num"].dropna()))[0]
         else:
-            # 1. 요청그룹에 없는 set_seq 삭제
-            delete_campaign_set_group(set_seq, set_group_seqs, db)
+            set_seq = list(set(update_group_df["set_seq"]))[0]
 
-            ##전체
-            query = get_set_groups_by_group_seqs(set_group_seqs, db)
+            # 변경사항이 있는 set_group_seq
+            update_set_group_seqs = list(update_group_df["set_group_seq"].dropna())
+
+            # 변경사항에 존재하지 않는(사용자가 삭제한 set_group) set_seq 삭제
+            delete_campaign_set_group(set_seq, update_set_group_seqs, db)
+
+            # 현재 set_group 조회
+            query = get_set_groups_by_group_seqs(update_set_group_seqs, db)
             before_group_df = DataConverter.convert_query_to_df(query)
-            ## msg_type, contents_id는 새로 입력된 값으로 대체
+
+            ## msg_type, contents_id는 새로 입력된 값으로 대체를 위해 삭제
             before_group_df = before_group_df.drop(columns=["msg_type", "contents_id"])
 
             # 새로 추가된 row는 set_group_seq가 없기때문에 join되는 컬럼값이 None 또는 NaN
             update_group_df = update_group_df.merge(before_group_df, on="set_group_seq", how="left")
             update_group_df = update_group_df.drop(columns=["contents_name"])
+
             # contents_id 존재하는지 확인하는 로직 추가
             if update_group_df["contents_id"].notnull().any():
                 contents_data = get_contents_name(db)
@@ -272,7 +259,7 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
             else:
                 update_group_df["contents_name"] = None
 
-            # recipient 기반으로 stratefy 추출
+            # recipient 기반으로 stratify 추출
             set_sort_num = list(set(update_group_df["set_sort_num"].dropna()))[0]
 
             recipients_query = get_recipients_by_campaign_set_sort_num(
@@ -393,32 +380,40 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
                 for key, value in row.items():
                     setattr(campaign_set_group_entity, key, value)
 
-                group_msgs = [
+                group_msgs_list = [
                     item
                     for item in campaign_set_group_entity.group_msg
                     if item.msg_send_type == "campaign"
-                ][0]
-                group_msgs.media = campaign_set_group_entity.media
+                ]
 
-                if group_msgs.msg_type != campaign_set_group_entity.msg_type:
-                    # 서버내 파일 & resource_id 삭제
-                    if group_msgs.msg_photo_uri is not None and len(group_msgs.msg_photo_uri) > 0:
-                        # 기존에 이미지 삭제하는 코드 있었음
-                        delete_message_resources_by_seq(group_msgs.set_group_msg_seq, db)
+                if group_msgs_list:
+                    group_msgs = group_msgs_list[0]
+                    group_msgs.media = campaign_set_group_entity.media
 
-                    # button 삭제
-                    db.query(KakaoLinkButtonsEntity).filter(
-                        KakaoLinkButtonsEntity.set_group_msg_seq == group_msgs.set_group_msg_seq
-                    ).delete()
+                    # 타입이 달라진걸로 변경을 체크
+                    # expert 캠페인에서는 contents_id도 달라질 수 있음
+                    if group_msgs.msg_type != campaign_set_group_entity.msg_type:
 
-                    group_msgs.msg_type = campaign_set_group_entity.msg_type
-                    group_msgs.msg_title = None
-                    group_msgs.msg_body = None
-                    group_msgs.msg_gen_key = None
-                    group_msgs.rec_explanation = None
-                    group_msgs.msg_photo_uri = None
+                        # 서버내 파일 & resource_id 삭제
+                        if (
+                            group_msgs.msg_photo_uri is not None
+                            and len(group_msgs.msg_photo_uri) > 0
+                        ):
+                            # 기존에 이미지 삭제하는 코드 있었음
+                            delete_message_resources_by_seq(group_msgs.set_group_msg_seq, db)
+
+                        # button 삭제
+                        db.query(KakaoLinkButtonsEntity).filter(
+                            KakaoLinkButtonsEntity.set_group_msg_seq == group_msgs.set_group_msg_seq
+                        ).delete()
+
+                        group_msgs.msg_type = campaign_set_group_entity.msg_type
+                        group_msgs.msg_title = None
+                        group_msgs.msg_body = None
+                        group_msgs.msg_gen_key = None
+                        group_msgs.rec_explanation = None
+                        group_msgs.msg_photo_uri = None
             else:
-                row["set_group_seq"] = None
                 # 존재하지 않는 경우 삽입
                 set_group = CampaignSetGroupsEntity(**row)
                 campaign_set_entity: CampaignSetsEntity = (
@@ -432,6 +427,9 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
 
                 campaign_set_entity.is_confirmed = False
                 campaign_set_entity.is_message_confirmed = False
+
+                print("set_group.set_group_seq")
+                print(set_group.set_group_seq)
 
                 db.add(set_group)
                 db.flush()
