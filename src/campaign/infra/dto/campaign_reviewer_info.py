@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 class CampaignReviewerInfo(BaseModel):
     approval_no: int
-    user_id: str
+    user_id: str | int
     user_name: str
     is_approved: bool
     department_abb_name: str
