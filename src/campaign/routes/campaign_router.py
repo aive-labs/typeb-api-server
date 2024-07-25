@@ -317,20 +317,18 @@ def get_campaign_summary(
 
 @campaign_router.post("/campaigns/{campaign_id}/status_change")
 @inject
-def campaign_status_change(
+async def campaign_status_change(
     campaign_id: str,
     to_status: str,
-    reviewers: Optional[str],
     background_task: BackgroundTasks,
+    reviewers: Optional[str] = None,
     user=Depends(get_permission_checker(required_permissions=[])),
     db=Depends(get_db_session),
     approve_campaign_service: ApproveCampaignUseCase = Depends(
         dependency=Provide[Container.approve_campaign_service]
     ),
 ):
-    approve_campaign_service.exec(
-        campaign_id, to_status, db, user, background_task, reviewers=reviewers
-    )
+    await approve_campaign_service.exec(campaign_id, to_status, db, user, reviewers=reviewers)
 
 
 @campaign_router.post("/campaigns/{campaign_id}/message/test-send")
