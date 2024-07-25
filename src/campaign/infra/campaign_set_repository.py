@@ -498,10 +498,11 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             }
 
             # 메시지 경로 변경
-            cloud_front_url = get_env_variable("cloud_front_asset_url")
-            set_group_message_dict["msg_photo_uri"] = [
-                f"{cloud_front_url}/{uri}" for uri in set_group_message.msg_photo_uri
-            ]
+            if set_group_message.msg_photo_uri:
+                cloud_front_url = get_env_variable("cloud_front_asset_url")
+                set_group_message_dict["msg_photo_uri"] = [
+                    f"{cloud_front_url}/{uri}" for uri in set_group_message.msg_photo_uri
+                ]
 
             # 관련된 kakao_button_links를 딕셔너리 리스트로 변환
             set_group_message_dict["kakao_button_links"] = [
