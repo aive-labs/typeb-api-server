@@ -30,13 +30,8 @@ class MessageService:
             url = get_env_variable("ppurio_file_upload_url")
             account = get_env_variable("ppurio_account")
 
-            print(url, account)
-
-            print("file_read")
-            print(file_read.size)
-
             data = aiohttp.FormData()
-            data.add_field("account", "aivelabs_dev")
+            data.add_field("account", account)
             data.add_field(
                 "file",
                 file_read,

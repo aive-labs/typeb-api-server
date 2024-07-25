@@ -76,8 +76,6 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                 # s3에 이미지 저장
                 s3_file_key = f"{user.mall_id}/messages_resource/{campaign_id}/{set_group_msg_seq}/images/{new_file_name}"
                 await self.s3_service.put_object_async(s3_file_key, file_read)
-                print("s3_file_key")
-                print(s3_file_key)
 
                 # 뿌리오 MMS 이미지 업로드
                 ppurio_filekey = None
@@ -85,8 +83,6 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                     ppurio_filekey = await self.message_service.upload_file(
                         new_file_name, file_read, file.content_type
                     )
-                print("ppurio_filekey")
-                print(ppurio_filekey)
 
                 # 카카오 이미지 업로드
                 kakao_landing_url = None
@@ -94,8 +90,7 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                     kakao_landing_url = await self.message_service.upload_file_for_kakao(
                         new_file_name, file_read, file.content_type, message_type
                     )
-                print("kakao_landing_url")
-                print(kakao_landing_url)
+
             finally:
                 await file.close()
 
