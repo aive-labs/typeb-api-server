@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import numpy as np
 import pandas as pd
 import pytz
+from fastapi import HTTPException
 from sqlalchemy import and_, desc, func
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import coalesce
@@ -109,8 +110,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         send_date = old_campaign.send_date if old_campaign.send_date else old_campaign.start_date
 
         # 초기값
-        approval_no = None
-        status_no = None
         approval_time_log_skip = False
         approval_excute = False
 
@@ -119,21 +118,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
 
             self.check_send_date_after_approval_date(send_date, today)
 
-            # 캠페인 승인 테이블 저장
-            new_approver = CampaignApprovalEntity(
-                campaign_id=campaign_id,
-                requester=user.user_id,
-                approval_status=CampaignApprovalStatus.REVIEW.value,  # 이 예시에서는 상태를 'REVIEW'로 가정
-                created_at=created_at,
-                created_by=user_id,
-                updated_at=created_at,  # 생성 시점에 updated_at도 설정
-                updated_by=user_id,
-            )
-            db.add(new_approver)
-
-            # 캠페인 승인번호
-            db.flush()
-            approval_no = new_approver.approval_no
+            approval_no = self.save_campaign_approval(campaign_id, created_at, db, user, user_id)
 
             # 캠페인 승인자 테이블 저장
             if reviewers:
@@ -146,22 +131,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             )
 
             for user in reviewer_entities:
-                approver_entity = ApproverEntity(
-                    campaign_id=campaign_id,
-                    approval_no=approval_no,
-                    user_id=user.user_id,
-                    user_name=user.username,
-                    department_id=user.department_id,
-                    department_name=user.department_name,
-                    department_abb_name=user.department_abb_name,
-                    is_approved=False,  # 기초값 False
-                    created_at=created_at,
-                    created_by=user_id,
-                    updated_at=created_at,
-                    updated_by=user_id,
-                )
-
-                db.add(approver_entity)
+                self.save_approver(approval_no, campaign_id, created_at, db, user, user_id)
 
         # 승인 거절: 승인자 중 한명이라도 거절했을 경우, 해당 승인 건은 무효. 캠페인 상태는 임시저장 상태로 변경
         elif is_status_review_to_tempsave(from_status, to_status):
@@ -261,7 +231,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                     created_at=created_at,
                     created_by=user_id,
                     created_by_name=user.username,
-                    to_status=CampaignStatus.pending.value,  # 분기처리에 필요한 값. 타임로그에는 저장 x
+                    to_status=to_status,  # 분기처리에 필요한 값. 타임로그에는 저장 x
                     status_no=None,
                 )
         else:
@@ -312,7 +282,8 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             )
         db.flush()
 
-        # 당일 (승인 -> 발송)
+        # 승인이 모두 완료 되어서 캠페인 진행대기 단계이면서 발송일자가 당일인 경우
+        # 일회성 캠페인의 경우?
         if (to_status == "w2") and (approval_excute is True) and (send_date == today):
 
             # 캠페인 상태를 "운영중"으로 변경
@@ -348,6 +319,40 @@ class ApproveCampaignService(ApproveCampaignUseCase):
 
         db.commit()
         return {"res": "success"}
+
+    def save_approver(self, approval_no, campaign_id, created_at, db, user, user_id):
+        approver_entity = ApproverEntity(
+            campaign_id=campaign_id,
+            approval_no=approval_no,
+            user_id=user.user_id,
+            user_name=user.username,
+            department_id=user.department_id,
+            department_name=user.department_name,
+            department_abb_name=user.department_abb_name,
+            is_approved=False,  # 기초값 False
+            created_at=created_at,
+            created_by=user_id,
+            updated_at=created_at,
+            updated_by=user_id,
+        )
+        db.add(approver_entity)
+
+    def save_campaign_approval(self, campaign_id, created_at, db, user, user_id):
+        # 캠페인 승인 테이블 저장
+        new_approver = CampaignApprovalEntity(
+            campaign_id=campaign_id,
+            requester=user.user_id,
+            approval_status=CampaignApprovalStatus.REVIEW.value,  # 이 예시에서는 상태를 'REVIEW'로 가정
+            created_at=created_at,
+            created_by=user_id,
+            updated_at=created_at,  # 생성 시점에 updated_at도 설정
+            updated_by=user_id,
+        )
+        db.add(new_approver)
+        # 캠페인 승인번호
+        db.flush()
+        approval_no = new_approver.approval_no
+        return approval_no
 
     def get_reviewer_ids(self, campaign_id, db):
         approvers = self.get_campaign_approvers_to_review(db, campaign_id)
@@ -497,6 +502,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         approver.is_approved = True
 
     async def status_general_change(self, db, user, from_status, to_status, campaign_id):
+        print(f"status_general_change: {from_status} {to_status}")
 
         if is_status_pending_to_haltbefore(from_status, to_status):
             # --진행대기 -> 일시중지 (00상태의 row 예약 상태 변경 "21")
@@ -523,6 +529,8 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 .count()
             )
 
+            print("send_reservation_count: ", send_reservation_count)
+
             if send_reservation_count > 0:
                 # 00상태의 row 예약 상태 변경 "21"
                 # to_status : s1 일시중지
@@ -547,7 +555,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 created_by_name=user.username,
                 description="캠페인 시작",
             )
-        # --운영중 -> 진행중지(s1)
+        # --운영중 -> 진행중지(s2)
         elif is_status_ongoing_to_haltafter(from_status, to_status):
 
             approval_no = self.get_campaign_approval_no(campaign_id, db)
@@ -556,7 +564,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             korea_timezone = pytz.timezone(tz)
             current_korea_timestamp = datetime.now(korea_timezone)
             current_korea_date = current_korea_timestamp.strftime("%Y%m%d")
-            current_korea_timestamp_plus_10_minutes = current_korea_timestamp + timedelta(
+            current_korea_timestamp_plus_5_minutes = current_korea_timestamp + timedelta(
                 minutes=5
             )  # 발송 5분 전부터 취소 불가능
             query = db.query(SendReservationEntity.set_group_msg_seq).filter(
@@ -567,7 +575,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             # 발송 취소 불가 case 1
             cancel_allowed_check_cond = [
                 SendReservationEntity.send_resv_date > current_korea_timestamp,
-                SendReservationEntity.send_resv_date <= current_korea_timestamp_plus_10_minutes,
+                SendReservationEntity.send_resv_date <= current_korea_timestamp_plus_5_minutes,
                 SendReservationEntity.send_resv_state == "01",  # 발송요청
             ]
             cancel_allowed_check = query.filter(*cancel_allowed_check_cond)
@@ -682,7 +690,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
 
             approval_no = self.get_campaign_approval_no(campaign_id, db)
 
-            # offer_custs insert
             send_msg_types = (
                 db.query(SendReservationEntity.msg_category)
                 .filter(
@@ -692,6 +699,20 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 )
                 .first()
             )
+
+            if not send_msg_types:
+                # res = self.save_campaign_reservation(db, user, campaign_id, msg_seqs_to_save)
+                res = self.save_campaign_reservation(db, user, campaign_id)
+                if res is False:
+                    # to-do: 진행대기 (발송일을 내일 이후로 변경하는 경우)
+                    # error
+                    raise HTTPException(
+                        status_code=400,
+                        detail={
+                            "code": "send_resv/insert/fail",
+                            "message": "당일({current_korea_date}) 정상 예약 메세지가 존재하지 않습니다.",
+                        },
+                    )
 
         # 진행중지, 운영중 -> 완료, 기간만료 **campaign-dag**
         elif is_status_to_complete_or_expired(from_status, to_status):
