@@ -3,7 +3,7 @@ from sqlalchemy import Column, DateTime, Integer, String
 from src.core.database import Base as Base
 
 
-class DashEndTable(Base):
+class DashEndTableEntity(Base):
     __tablename__ = "dash_end_table"
 
     sale_dt = Column(String, primary_key=True)
@@ -16,7 +16,7 @@ class DashEndTable(Base):
     strategy_id = Column(String)
     strategy_name = Column(String)
     strategy_theme_id = Column(Integer, primary_key=True)
-    campaign_theme_name = Column(String)
+    strategy_theme_name = Column(String)
     audience_id = Column(String, primary_key=True)
     audience_name = Column(String)
     coupon_no = Column(String)
@@ -25,22 +25,16 @@ class DashEndTable(Base):
     cus_cd = Column(String, primary_key=True)
     group_sort_num = Column(Integer, primary_key=True)
     recp_no = Column(String, primary_key=True)
-    seq_no = Column(Integer, primary_key=True)
+    order_item_code = Column(Integer, primary_key=True)
     cus_grade1 = Column(String)
     cus_grade1_nm = Column(String)
     age_group_10 = Column(String)
     cv_lv2 = Column(String)
-    mix_lv1 = Column(String)
-    cus_seg = Column(String)
-    prd_seg = Column(String)
-    promo_seg = Column(String)
-    coupon_no = Column(String)
-    add_sale_event_no = Column(String)
-    offer_usage = Column(Integer)
-    milege_usage = Column(Integer)
-    item_nm = Column(String)
-    purpose1 = Column(String)
+    order_coupon_no = Column(String)
+    coupon_usage = Column(Integer)
+    category_name = Column(String)
     rep_nm = Column(String)
+    product_name = Column(String)
     sale_amt = Column(Integer)
     sale_qty = Column(Integer)
     etl_time = Column(DateTime(timezone=True))

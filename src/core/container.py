@@ -76,6 +76,13 @@ from src.contents.service.get_creatives_service import GetCreativesService
 from src.contents.service.update_contents_service import UpdateContentsService
 from src.contents.service.update_creatives_service import UpdateCreativesService
 from src.core.database import Database, get_db_url
+from src.dashboard.infra.dashboard_repository import DashboardRepository
+from src.dashboard.infra.dashboard_sqlalchemy_repository import DashboardSqlAlchemy
+from src.dashboard.service.get_audience_stats_service import GetAudienceStatsService
+from src.dashboard.service.get_campaign_group_stats_service import (
+    GetCampaignGroupStatsService,
+)
+from src.dashboard.service.get_campaign_stats_service import GetCampaignStatsService
 from src.message_template.infra.message_template_repository import (
     MessageTemplateRepository,
 )
@@ -140,6 +147,7 @@ class Container(containers.DeclarativeContainer):
             "src.message_template.routes.message_template_router",
             "src.admin.routes.admin_router",
             "src.products.routes.product_router",
+            "src.dashboard.routes.dashboard_router",
         ]
     )
 
@@ -545,6 +553,27 @@ class Container(containers.DeclarativeContainer):
         product_repository=product_repository,
         strategy_repository=strategy_repository,
         user_repository=user_repository,
+    )
+
+    """
+    Dashboard 의존성
+    """
+    dashboard_sqlalchemy = providers.Singleton(provides=DashboardSqlAlchemy, db=db.provided.session)
+
+    dashboard_repository = providers.Singleton(
+        provides=DashboardRepository, dashboard_sqlalchemy=dashboard_sqlalchemy
+    )
+
+    get_campaign_stats_service = providers.Singleton(
+        provides=GetCampaignStatsService, dashboard_repository=dashboard_repository
+    )
+
+    get_campaign_group_stats_service = providers.Singleton(
+        provides=GetCampaignGroupStatsService, dashboard_repository=dashboard_repository
+    )
+
+    get_audience_stats_service = providers.Singleton(
+        provides=GetAudienceStatsService, dashboard_repository=dashboard_repository
     )
 
     """
