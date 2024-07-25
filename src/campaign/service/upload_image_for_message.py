@@ -3,7 +3,6 @@ import time
 import aioboto3
 from botocore.exceptions import NoCredentialsError
 from fastapi import UploadFile
-from fastapi.encoders import jsonable_encoder
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
 
@@ -123,12 +122,12 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
             }
             message_resources.append(selected_data)
 
-        # set_group_messages에 img_uri 저장  msg_photo_uri: List[]
-        group_msg_dict = jsonable_encoder(set_group_message)
-        for key, value in group_msg_dict.items():
-            if key == "msg_photo_uri":
-                value = message_photo_uri  # 누적 등록 기능 없음
-                setattr(set_group_message, key, value)
+        # set_group_messages에 img_uri 저장
+        # 누적 등록 기능 없음
+        if message_photo_uri:
+            self.campaign_set_repository.update_message_image(
+                campaign_id, set_group_msg_seq, message_photo_uri, db
+            )
 
         # 메세지 타입 업데이트(ex) sms-> mms)
         new_message_type = self.adjust_message_type_on_image_upload(message_type)

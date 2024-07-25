@@ -701,3 +701,21 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             )
 
         return SetGroupMessage.model_validate(entity)
+
+    def update_message_image(
+        self, campaign_id, set_group_msg_seq, message_photo_uri: list[str], db: Session
+    ):
+        update_statement = (
+            update(SetGroupMessagesEntity)
+            .where(
+                and_(
+                    SetGroupMessagesEntity.campaign_id == campaign_id,
+                    SetGroupMessagesEntity.set_group_msg_seq == set_group_msg_seq,
+                )
+            )
+            .values(msg_photo_uri=message_photo_uri)
+        )
+
+        query_update_result = db.execute(update_statement)
+        if query_update_result.rowcount == 0:
+            raise NotFoundException(detail={"message": "해당되는 메시지 정보를 찾지 못했습니다."})

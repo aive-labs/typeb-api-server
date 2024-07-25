@@ -60,3 +60,9 @@ class BaseCampaignSetRepository(ABC):
     @abstractmethod
     def get_set_group_message(self, campaign_id, set_group_msg_seq, db: Session) -> SetGroupMessage:
         pass
+
+    @abstractmethod
+    def update_message_image(
+        self, campaign_id, set_group_msg_seq, message_photo_uri: list[str], db: Session
+    ):
+        pass
