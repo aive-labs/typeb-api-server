@@ -4,6 +4,7 @@ from typing import List
 from pydantic import BaseModel
 
 from src.common.enums.campaign_media import CampaignMedia
+from src.common.utils.get_env_variable import get_env_variable
 from src.message_template.enums.message_type import MessageType
 
 
@@ -110,6 +111,8 @@ class Message(BaseModel):
 
     @staticmethod
     def from_set_group_message(model: SetGroupMessage) -> "Message":
+        cloud_front_url = get_env_variable("cloud_front_asset_url")
+
         return Message(
             set_group_msg_seq=model.set_group_msg_seq,
             msg_resv_date=model.msg_resv_date,
@@ -119,7 +122,11 @@ class Message(BaseModel):
             msg_announcement=model.msg_announcement,
             template_id=model.template_id,
             msg_gen_key=model.msg_gen_key,
-            msg_photo_uri=model.msg_photo_uri,
+            msg_photo_uri=(
+                [f"{cloud_front_url}/{uri}" for uri in model.msg_photo_uri]
+                if model.msg_photo_uri
+                else []
+            ),
             msg_send_type=model.msg_send_type,
             media=CampaignMedia.from_value(model.media) if model.media else None,
             msg_type=(MessageType.from_value(model.msg_type) if model.msg_type else None),

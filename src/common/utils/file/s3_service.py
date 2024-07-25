@@ -31,7 +31,7 @@ class S3Service:
             )
         except Exception as e:
             print(f"Error generating presigned URL: {e}")
-            return None
+            raise e
         return response
 
     def delete_object(self, key: str):

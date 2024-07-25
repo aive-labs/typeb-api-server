@@ -2,7 +2,7 @@ import time
 
 import aioboto3
 from botocore.exceptions import NoCredentialsError
-from fastapi import UploadFile
+from fastapi import HTTPException, UploadFile
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
 
@@ -70,11 +70,11 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
             # 파일 이름 변경(unix timestamp)
             new_file_name = self.generate_timestamp_file_name(file.filename)
 
+            s3_file_key = f"{user.mall_id}/messages_resource/{campaign_id}/{set_group_msg_seq}/images/{new_file_name}"
+
             try:
                 file_read = await file.read()
-
                 # s3에 이미지 저장
-                s3_file_key = f"{user.mall_id}/messages_resource/{campaign_id}/{set_group_msg_seq}/images/{new_file_name}"
                 await self.s3_service.put_object_async(s3_file_key, file_read)
 
                 # 뿌리오 MMS 이미지 업로드
@@ -90,7 +90,18 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                     kakao_landing_url = await self.message_service.upload_file_for_kakao(
                         new_file_name, file_read, file.content_type, message_type
                     )
-
+            except HTTPException as e:
+                self.s3_service.delete_object(s3_file_key)
+                raise e
+            except Exception as e2:
+                self.s3_service.delete_object(s3_file_key)
+                print(repr(e2))
+                raise HTTPException(
+                    status_code=500,
+                    detail={
+                        "message": "이미지 업로드에 실패하였습니다. 잠시 후 다시 시도해주세요."
+                    },
+                ) from e2
             finally:
                 await file.close()
 
