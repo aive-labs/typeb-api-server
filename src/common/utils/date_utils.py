@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import pytz
 
@@ -87,3 +87,25 @@ def get_reservation_date(msg_send_type, start_date, send_date, remind_date):
         resv_date = remind_date
 
     return resv_date
+
+
+def create_logical_date_for_airflow(date_str: str, time_str: str) -> str:
+    """
+    주어진 날짜와 시간을 UTC+9 시간대의 ISO 8601 형식의 문자열로 변환하는 함수.
+
+    :param date_str: 날짜 문자열 (형식: YYYYMMDD)
+    :param time_str: 시간 문자열 (형식: HH:MM)
+    :return: UTC+9 시간대의 ISO 8601 형식의 문자열
+    """
+    # 날짜와 시간을 합쳐서 datetime 객체로 변환
+    datetime_str = date_str + " " + time_str
+    datetime_obj = datetime.strptime(datetime_str, "%Y%m%d %H:%M")
+
+    # UTC+9 시간대로 변환
+    utc_plus_9 = timezone(timedelta(hours=9))
+    datetime_obj = datetime_obj.replace(tzinfo=utc_plus_9)
+
+    # ISO 8601 형식의 문자열로 변환
+    iso_format_str = datetime_obj.isoformat()
+
+    return iso_format_str

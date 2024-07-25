@@ -47,7 +47,11 @@ from src.common.infra.entity.customer_master_entity import CustomerMasterEntity
 from src.common.sqlalchemy.object_access_condition import object_access_condition
 from src.common.timezone_setting import selected_timezone
 from src.common.utils.data_converter import DataConverter
-from src.common.utils.date_utils import localtime_converter
+from src.common.utils.date_utils import (
+    create_logical_date_for_airflow,
+    get_unix_timestamp,
+    localtime_converter,
+)
 from src.contents.infra.entity.contents_entity import ContentsEntity
 from src.core.exceptions.exceptions import (
     DuplicatedException,
@@ -312,19 +316,19 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         if (to_status == "w2") and (approval_excute is True) and (send_date == today):
 
             # 캠페인 상태를 "운영중"으로 변경
-            old_campaign = (
+            campaign = (
                 db.query(CampaignEntity).filter(CampaignEntity.campaign_id == campaign_id).first()
             )
-            if not old_campaign:
+            if not campaign:
                 raise NotFoundException(detail={"message": "캠페인 정보를 찾지 못했습니다."})
 
-            old_campaign.campaign_status_code = "o1"
-            old_campaign.campaign_status_name = "운영중"
-            old_campaign.campaign_status_group_code = "o"
-            old_campaign.campaign_status_group_name = "운영단계"
+            campaign.campaign_status_code = "o1"
+            campaign.campaign_status_name = "운영중"
+            campaign.campaign_status_group_code = "o"
+            campaign.campaign_status_group_name = "운영단계"
 
             # 발송 예약
-            send_reservation_result = await self.today_approval_campaign_excute(
+            send_reservation_result = await self.today_approval_campaign_execute(
                 db,
                 from_status=CampaignStatus.pending.value,
                 to_status=CampaignStatus.ongoing.value,
@@ -333,6 +337,8 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 created_by=user_id,
                 created_by_name=user.username,
                 user_obj=user,
+                send_date=campaign.send_date,
+                send_time=campaign.timetosend,
                 approval_no=approval_no,
             )
 
@@ -717,7 +723,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         approval_no = approval_obj.approval_no
         return approval_no
 
-    async def today_approval_campaign_excute(
+    async def today_approval_campaign_execute(
         self,
         db,
         from_status,
@@ -727,6 +733,8 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         created_by,
         created_by_name,
         user_obj,
+        send_date,
+        send_time,
         approval_no=None,
     ):
 
@@ -774,7 +782,15 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         if res:
             # airflow trigger api to nepasend
             input_var = {"campaign_id": campaign_id, "test_send_yn": "n"}
-            await self.message_controller.execute_dag("send_messages", input_var)
+            unix_timestamp = get_unix_timestamp()
+            dag_run_id = f"{campaign_id}_{str(unix_timestamp)}"
+            logical_date = create_logical_date_for_airflow(send_date, send_time)
+            await self.message_controller.execute_dag(
+                dag_name="send_messages",
+                input_vars=input_var,
+                dag_run_id=dag_run_id,
+                logical_date=logical_date,
+            )
 
         else:
             return False
