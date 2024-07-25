@@ -43,6 +43,7 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
         self.campaign_set_repository = campaign_set_repository
         self.message_service = message_service
         self.s3_service = s3_service
+        self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
     @transactional
     async def exec(
@@ -117,7 +118,7 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
 
             selected_data = {
                 "resource_id": message_entity.resource_id,
-                "img_uri": message_entity.img_uri,
+                "img_uri": f"{self.cloud_front_url}/{message_entity.img_uri}",
                 "link_url": message_entity.link_url,
             }
             message_resources.append(selected_data)
