@@ -780,10 +780,13 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         res = self.save_campaign_reservation(db, user_obj, campaign_id)
 
         if res:
-            # airflow trigger api to nepasend
+            # airflow trigger api
+            print("today airflow trigger api")
             input_var = {"campaign_id": campaign_id, "test_send_yn": "n"}
             unix_timestamp = get_unix_timestamp()
             dag_run_id = f"{campaign_id}_{str(unix_timestamp)}"
+            print(f"dag_run_id: {dag_run_id}")
+            print(f"input_var: {input_var}")
             logical_date = create_logical_date_for_airflow(send_date, send_time)
             await self.message_controller.execute_dag(
                 dag_name="send_messages",

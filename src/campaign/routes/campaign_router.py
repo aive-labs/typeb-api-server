@@ -328,7 +328,9 @@ async def campaign_status_change(
         dependency=Provide[Container.approve_campaign_service]
     ),
 ):
-    await approve_campaign_service.exec(campaign_id, to_status, db, user, reviewers=reviewers)
+    return await approve_campaign_service.exec(
+        campaign_id, to_status, db, user, reviewers=reviewers
+    )
 
 
 @campaign_router.post("/campaigns/{campaign_id}/message/test-send")
