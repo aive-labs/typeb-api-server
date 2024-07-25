@@ -1,7 +1,8 @@
+import json
 from typing import Optional, Union
 
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Body, Depends, status
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
@@ -157,14 +158,19 @@ def delete_contents(
 @contents_router.post("/generate")
 @inject
 async def generate_contents(
-    contents_generate_req: ContentsGenerate,
+    contents_generate_req: str = Body(...),
     db: Session = Depends(get_db_session),
     user=Depends(get_permission_checker(required_permissions=[])),
     generate_contents_service: GenerateContentsService = Depends(
         Provide[Container.generate_contents_service]
     ),
 ) -> StreamingResponse:
+    """Generate contents from given request.
+    참고: 스트리밍 리스폰스를 사용할 때는, string으로 받아서 json.loads를 해야함.
+    """
+    generate_req = json.loads(contents_generate_req)
+    generation_obj = ContentsGenerate(**generate_req)
     return StreamingResponse(
-        generate_contents_service.exec(contents_generate_req, db),
+        generate_contents_service.exec(generation_obj, db),
         media_type="text/event-stream",
     )
