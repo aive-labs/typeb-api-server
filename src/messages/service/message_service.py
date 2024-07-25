@@ -41,8 +41,9 @@ class MessageService:
 
             async with session.post(url, data=data, ssl=False) as response:
                 if response.status != 200:
+                    print(await response.text())
                     raise PpurioException(
-                        detail={"message": "문자 발송 서버에 이미지 업로드 요청이 실패하였습니다."}
+                        detail={"message": "MMS 이미지 업로드 요청이 실패하였습니다."}
                     )
                 response = await response.json()
         return response["filekey"]
@@ -77,8 +78,9 @@ class MessageService:
 
             async with session.post(url, data=data, ssl=False) as response:
                 if response.status != 200:
+                    print(await response.text())
                     raise PpurioException(
-                        detail={"message": "문자 발송 서버에 이미지 업로드 요청이 실패하였습니다."}
+                        detail={"message": "카카오 이미지 업로드 요청이 실패하였습니다."}
                     )
 
                 response = await response.json()
