@@ -10,7 +10,7 @@ class GetCampaignGroupStatsService:
         self.code_dict = {
             "audience_name": "타겟 오디언스",
             "group_sort_num": "그룹",
-            "cus_grade1_nm": "멤버십 등급",
+            "cust_grade1_nm": "멤버십 등급",
             "age_group_10": "연령대",
             "cv_lv2": "CV",
         }
