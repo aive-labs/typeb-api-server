@@ -77,7 +77,7 @@ group_info:
     msg_type: lms
     recipient_group_rate: 1.0
     recipient_group_count: 7
-    set_group_category: purpose_lv2
+    set_group_category: rep_nm
     set_group_val: 신발
     rep_nm: null
     contents_id: null
@@ -97,7 +97,7 @@ group_info:
     msg_type: kakao_image_general
     recipient_group_rate: 1.0
     recipient_group_count: 7
-    set_group_category: purpose_lv2
+    set_group_category: rep_nm
     set_group_val: 신발
     rep_nm: null
     contents_id: null
