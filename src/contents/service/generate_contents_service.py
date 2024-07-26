@@ -47,15 +47,13 @@ class GenerateContentsService(GenerateContentsUseCase):
         youtube_resource = [
             entity.link
             for entity in product_media_entities
-            if entity.link_type == "youtube"
-            if entity.link
+            if entity.link_type == "youtube" and entity.link
         ]
 
         instagram_resource = [
             entity.link
             for entity in product_media_entities
-            if entity.link_type == "instagram"
-            if entity.link
+            if entity.link_type == "instagram" and entity.link
         ]
 
         review_list = [
@@ -158,7 +156,7 @@ class GenerateContentsService(GenerateContentsUseCase):
                 img_url = [
                     json.dumps(
                         {
-                            "url": f"{self.cloud_front_url}{item.img_path}",
+                            "url": f"{self.cloud_front_url}{item.image_path}",
                             "caption": item.creative_tags,
                             "alttext": item.creative_tags,
                         },
@@ -175,7 +173,7 @@ class GenerateContentsService(GenerateContentsUseCase):
                 else:
                     review_data = {}
                 kwargs_dict["review_resource"] = review_data
-                kwargs_dict["img_url"] = img_url if len(img_url) > 0 else []
+                kwargs_dict["img_uri"] = img_url if len(img_url) > 0 else []
 
         except Exception as e:
             raise HTTPException(
