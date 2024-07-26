@@ -804,7 +804,11 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         if res:
             # airflow trigger api
             print("today airflow trigger api")
-            input_var = {"campaign_id": campaign_id, "test_send_yn": "n"}
+            input_var = {
+                "mallid": user_obj.mall_id,
+                "campaign_id": campaign_id,
+                "test_send_yn": "n",
+            }
             yyyymmddhh24mi = get_current_datetime_yyyymmddhh24mi()
             dag_run_id = f"{campaign_id}_{str(yyyymmddhh24mi)}"
             print(f"dag_run_id: {dag_run_id}")
