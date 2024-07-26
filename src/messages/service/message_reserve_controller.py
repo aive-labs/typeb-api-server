@@ -36,9 +36,10 @@ class MessageReserveController:
                 ssl=False,
             ) as response:
                 if response.status != 200:
+                    response_text = await response.text()
                     raise HTTPException(
                         status_code=response.status,
-                        detail={"code": "airflow call error", "message": response.text},
+                        detail={"code": "airflow call error", "message": response_text},
                     )
                 response = await response.json()
                 return response
