@@ -83,6 +83,7 @@ from src.common.enums.campaign_media import CampaignMedia
 from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import get_localtime, localtime_converter
+from src.common.utils.get_env_variable import get_env_variable
 from src.common.utils.get_values_from_dict import get_values_from_dict
 from src.core.exceptions.exceptions import (
     ConsistencyException,
@@ -99,6 +100,7 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
 
     def __init__(self, campaign_repository: BaseCampaignRepository):
         self.campaign_repository = campaign_repository
+        self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
     @transactional
     def update_campaign_set_message_group(
@@ -672,7 +674,11 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
             msg_announcement=group_msg_obj.msg_announcement,
             template_id=group_msg_obj.template_id,
             msg_gen_key=group_msg_obj.msg_gen_key,
-            msg_photo_uri=group_msg_obj.msg_photo_uri,
+            msg_photo_uri=(
+                [f"{self.cloud_front_url}/{uri}" for uri in group_msg_obj.msg_photo_uri]
+                if group_msg_obj.msg_photo_uri
+                else []
+            ),
             msg_send_type=group_msg_obj.msg_send_type,
             media=CampaignMedia.from_value(group_msg_obj.media) if group_msg_obj.media else None,
             msg_type=(

@@ -50,7 +50,7 @@ from src.common.timezone_setting import selected_timezone
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import (
     create_logical_date_for_airflow,
-    get_unix_timestamp,
+    get_current_datetime_yyyymmddhh24mi,
     localtime_converter,
 )
 from src.contents.infra.entity.contents_entity import ContentsEntity
@@ -686,7 +686,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                     txt = f"{campaign_id} : 당일({current_korea_date}) 정상 예약 메세지가 존재하지 않습니다."
                     print(txt)
 
-        # --진행중지->운영 ("21" 상태의 row 예약 상태 변경 "00")
+        # --진행중지 -> 운영 ("21" 상태의 row 예약 상태 변경 "00")
         elif is_status_haltafter_to_ongoing(from_status, to_status):
 
             approval_no = self.get_campaign_approval_no(campaign_id, db)
@@ -804,9 +804,13 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         if res:
             # airflow trigger api
             print("today airflow trigger api")
-            input_var = {"campaign_id": campaign_id, "test_send_yn": "n"}
-            unix_timestamp = get_unix_timestamp()
-            dag_run_id = f"{campaign_id}_{str(unix_timestamp)}"
+            input_var = {
+                "mallid": user_obj.mall_id,
+                "campaign_id": campaign_id,
+                "test_send_yn": "n",
+            }
+            yyyymmddhh24mi = get_current_datetime_yyyymmddhh24mi()
+            dag_run_id = f"{campaign_id}_{str(yyyymmddhh24mi)}"
             print(f"dag_run_id: {dag_run_id}")
             print(f"input_var: {input_var}")
             logical_date = create_logical_date_for_airflow(send_date, send_time)

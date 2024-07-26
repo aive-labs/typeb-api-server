@@ -44,3 +44,38 @@
 2024-07-26 13:11:13 - INFO - 9. button 개인화 적용 후 row수 :1
 2024-07-26 13:11:13 - INFO - 10. send_msg_body 개인화 적용 전 row수 :1
 2024-07-26 13:11:13 - INFO - 11. send_msg_body 개인화 적용 후 row수 :1
+2024-07-26 15:20:13 - INFO - 1.[Test] campaign_id: cam-000076
+2024-07-26 15:20:14 - INFO - 2.[Test] button 개인화 적용 전 row수 :1
+2024-07-26 15:20:14 - INFO - 3.[Test] button 개인화 적용 후 row수 :1
+2024-07-26 15:20:14 - INFO - 4.[Test] send_msg_body 개인화 적용 후 row수 :1
+2024-07-26 15:20:14 - INFO - 5.[Test] phone_callback 개인화 적용 후 row수 :1
+2024-07-26 15:23:55 - INFO - 1.[Test] campaign_id: cam-000076
+2024-07-26 15:23:55 - INFO - 2.[Test] button 개인화 적용 전 row수 :1
+2024-07-26 15:23:55 - INFO - 3.[Test] button 개인화 적용 후 row수 :1
+2024-07-26 15:23:55 - INFO - 4.[Test] send_msg_body 개인화 적용 후 row수 :1
+2024-07-26 15:23:55 - INFO - 5.[Test] phone_callback 개인화 적용 후 row수 :1
+2024-07-26 15:25:05 - INFO - 1.[Test] campaign_id: cam-000076
+2024-07-26 15:25:06 - INFO - 2.[Test] button 개인화 적용 전 row수 :1
+2024-07-26 15:25:06 - INFO - 3.[Test] button 개인화 적용 후 row수 :1
+2024-07-26 15:25:06 - INFO - 4.[Test] send_msg_body 개인화 적용 후 row수 :1
+2024-07-26 15:25:06 - INFO - 5.[Test] phone_callback 개인화 적용 후 row수 :1
+2024-07-26 15:26:24 - INFO - 1.[Test] campaign_id: cam-000076
+2024-07-26 15:26:24 - INFO - 2.[Test] button 개인화 적용 전 row수 :1
+2024-07-26 15:26:24 - INFO - 3.[Test] button 개인화 적용 후 row수 :1
+2024-07-26 15:26:24 - INFO - 4.[Test] send_msg_body 개인화 적용 후 row수 :1
+2024-07-26 15:26:24 - INFO - 5.[Test] phone_callback 개인화 적용 후 row수 :1
+2024-07-26 15:27:06 - INFO - 1.[Test] campaign_id: cam-000076
+2024-07-26 15:27:06 - INFO - 2.[Test] button 개인화 적용 전 row수 :1
+2024-07-26 15:27:06 - INFO - 3.[Test] button 개인화 적용 후 row수 :1
+2024-07-26 15:27:06 - INFO - 4.[Test] send_msg_body 개인화 적용 후 row수 :1
+2024-07-26 15:27:06 - INFO - 5.[Test] phone_callback 개인화 적용 후 row수 :1
+2024-07-26 15:28:11 - INFO - 1.[Test] campaign_id: cam-000076
+2024-07-26 15:28:11 - INFO - 2.[Test] button 개인화 적용 전 row수 :1
+2024-07-26 15:28:11 - INFO - 3.[Test] button 개인화 적용 후 row수 :1
+2024-07-26 15:28:11 - INFO - 4.[Test] send_msg_body 개인화 적용 후 row수 :1
+2024-07-26 15:28:11 - INFO - 5.[Test] phone_callback 개인화 적용 후 row수 :1
+2024-07-26 15:28:44 - INFO - 1.[Test] campaign_id: cam-000076
+2024-07-26 15:28:44 - INFO - 2.[Test] button 개인화 적용 전 row수 :1
+2024-07-26 15:28:44 - INFO - 3.[Test] button 개인화 적용 후 row수 :1
+2024-07-26 15:28:44 - INFO - 4.[Test] send_msg_body 개인화 적용 후 row수 :1
+2024-07-26 15:28:44 - INFO - 5.[Test] phone_callback 개인화 적용 후 row수 :1
