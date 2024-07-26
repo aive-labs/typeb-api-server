@@ -151,7 +151,7 @@ class UserSqlAlchemy:
         recipient_response = [
             SendUserResponse(
                 user_name_object=entity.user_name_object,
-                test_callback_number=entity.test_callback_number,
+                test_callback_number=entity.cell_phone_number,
             )
             for entity in entities
         ]
