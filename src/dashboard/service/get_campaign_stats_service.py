@@ -91,6 +91,9 @@ class GetCampaignStatsService:
 
             campaign_summary_stats_df.replace({np.nan: None}, inplace=True)
             campaign_stats_df.replace({np.nan: None}, inplace=True)
+            campaign_stats_df["strategy_theme_name"] = campaign_stats_df[
+                "strategy_theme_name"
+            ].fillna("")
 
         del campaign_stats_df["start_date"]
         del campaign_stats_df["end_date"]
