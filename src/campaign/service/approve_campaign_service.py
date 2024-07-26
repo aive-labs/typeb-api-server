@@ -1008,7 +1008,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                     subquery.c.set_group_msg_seq,
                     subquery.c.campaign_name,
                     subquery.c.audience_id,
-                    subquery.c.event_no,
                     subquery.c.start_date.label("campaign_start_date"),
                     subquery.c.end_date.label("campaign_end_date"),
                     subquery.c.offer_amount.label("offer_amount"),
