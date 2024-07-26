@@ -173,4 +173,5 @@ async def generate_contents(
     return StreamingResponse(
         generate_contents_service.exec(generation_obj, db),
         media_type="text/event-stream",
+        headers={"X-Experimental-Stream-Data": "true"},
     )
