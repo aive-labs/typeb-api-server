@@ -39,6 +39,7 @@ class ContentsSqlAlchemy:
     def add_contents(self, contents: ContentsEntity, db: Session) -> ContentsResponse:
 
         db.add(contents)
+        db.flush()
 
         return ModelConverter.entity_to_model(contents, ContentsResponse)
 
