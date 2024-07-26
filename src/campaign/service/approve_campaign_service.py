@@ -55,6 +55,7 @@ from src.common.utils.date_utils import (
 )
 from src.contents.infra.entity.contents_entity import ContentsEntity
 from src.core.exceptions.exceptions import (
+    ConsistencyException,
     DuplicatedException,
     NotFoundException,
     PolicyException,
@@ -958,9 +959,11 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             cus_info_all = db.query(
                 CustomerMasterEntity.cus_cd,
                 CustomerMasterEntity.hp_no,
+                CustomerMasterEntity.track_id,
             ).distinct(
                 CustomerMasterEntity.cus_cd,
                 CustomerMasterEntity.hp_no,
+                CustomerMasterEntity.track_id,
             )
 
             # TODO [테스트 고객]이 고객마스터에 있는지 확인
@@ -1008,6 +1011,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                     subquery.c.set_group_msg_seq,
                     subquery.c.campaign_name,
                     subquery.c.audience_id,
+                    subquery.c.coupon_no,
                     subquery.c.start_date.label("campaign_start_date"),
                     subquery.c.end_date.label("campaign_end_date"),
                     subquery.c.offer_amount.label("offer_amount"),
@@ -1016,7 +1020,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                     subquery.c.msg_resv_date.label("send_resv_date"),  # -> to-do: timestamptz
                     subquery.c.timetosend,  # -> to-do: timestamptz
                     cus_info.c.hp_no.label("phone_send"),
-                    cus_info.c.main_shop.label("shop_cd"),  # shop_code
                     cus_info.c.track_id,  # track_id
                     subquery.c.msg_delivery_vendor.label("send_sv_type"),
                     subquery.c.msg_type.label("send_msg_type"),  # sms, lms, kakao_image_wide, ..
@@ -1228,7 +1231,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             send_reserv_columns = [
                 column.name
                 for column in SendReservationEntity.__table__.columns
-                if column.name != "send_resv_seq"
+                if column.name not in ["send_resv_seq", "shop_cd"]
             ]
 
             res_df = send_rsv_format[send_reserv_columns]
@@ -1257,6 +1260,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
 
         except Exception as e:
             db.rollback()
-            raise Exception(e)
+            raise ConsistencyException(detail={"message": "승인 완료 처리 중 문제가 발생했습니다."})
         # finally:
         #     db.close()

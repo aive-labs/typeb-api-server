@@ -39,5 +39,6 @@ class CustomerMasterEntity(Base):
     available_points = Column(String)
     used_points = Column(String)
     last_login_date = Column(Date)
+    track_id = Column(String)
     created_date = Column(TIMESTAMP(timezone=True))
     etl_time = Column(DateTime(timezone=True), default=datetime.now())
