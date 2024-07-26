@@ -109,3 +109,13 @@ def create_logical_date_for_airflow(date_str: str, time_str: str) -> str:
     iso_format_str = datetime_obj.isoformat()
 
     return iso_format_str
+
+
+def get_current_datetime_yyyymmddhh24mi():
+    # 현재 날짜와 시간 가져오기
+    now = datetime.now()
+
+    # YYYYMMDDHH24MI 형식으로 포맷팅
+    formatted_datetime = now.strftime("%Y%m%d%H%M")
+
+    return formatted_datetime
