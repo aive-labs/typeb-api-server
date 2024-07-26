@@ -108,11 +108,9 @@ class StreamingConversationChain:
             replace_dict["[youtube_uri]"] = kwargs["youtube_resource"]  # list
         if "insta_resource" in kwargs:
             replace_dict["[instagram_uri]"] = kwargs["insta_resource"]  # list
-        if "img_url" in kwargs:
-            replace_dict["[img_uri]"] = kwargs["img_url"]  # list
-
+        if "img_uri" in kwargs:
+            replace_dict["[img_uri]"] = kwargs["img_uri"]  # list
         find_words = replace_dict.keys()
-
         try:
             for chunk in chain.stream(message):
                 if self.generation_mode == "gpt":
@@ -171,7 +169,7 @@ class StreamingConversationChain:
                             msg = ""
                     elif "[img_uri]" in msg:
                         temp_msg = msg.split("[img_uri]")
-                        img_urls = replace_dict.get("[img_urls]", [])
+                        img_urls = replace_dict.get("[img_uri]", [])
                         if img_urls:
                             img_urls = img_urls.pop(0)
                             msg = temp_msg[0] + img_urls
