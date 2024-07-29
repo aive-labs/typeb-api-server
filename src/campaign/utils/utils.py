@@ -2,6 +2,24 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
+from src.campaign.enums.message_send_type import MessageSendType
+from src.core.exceptions.exceptions import ConsistencyException
+
+
+def get_resv_date(msg_send_type, start_date, send_date, remind_date):
+    if msg_send_type == MessageSendType.CAMPAIGN.value:
+        if send_date:
+            resv_date = send_date
+        else:
+            resv_date = start_date
+
+    elif msg_send_type == MessageSendType.REMIND.value:
+        resv_date = remind_date
+    else:
+        raise ConsistencyException(detail={"message": "날짜 계산 중 에러가 발생했습니다."})
+
+    return resv_date
+
 
 def set_summary_sententce(set_cus_count, set_df):
     audience_cnt = len(set(set_df["audience_id"]))

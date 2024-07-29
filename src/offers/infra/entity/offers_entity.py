@@ -68,7 +68,3 @@ class OffersEntity(Base):
         onupdate=datetime.now(),
     )
     updated_by = Column(String, nullable=False, default=text("(user)"))
-
-    # offer_detail_options = relationship(
-    #     OfferDetailsEntity, backref="offers", lazy=True, cascade="all, delete-orphan"
-    # )

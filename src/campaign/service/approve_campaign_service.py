@@ -409,7 +409,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         status_no=None,
         description=None,
         approval_excute=False,
-    ):
+    ) -> bool:
 
         if timeline_type == CampaignTimelineType.APPROVAL.value:
 
