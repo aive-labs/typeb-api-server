@@ -1,5 +1,5 @@
 import random
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import chardet
 import pandas as pd
@@ -37,6 +37,8 @@ class CreateDataDict:
         config = CreateDataDict.load_yaml(self)
 
         data_dict["group_idx"] = request_generate_group_seq
+        data_dict["mall_id"] = input_data.get("mall_id")
+        print(data_dict)
 
         # 캠페인 테마 (세그먼트/커스텀)
         data_dict["recsys_model_name"] = config["recsys_mode_name"][
@@ -102,25 +104,25 @@ class CreateDataDict:
 
                 # 그룹 통계 변수
                 if "group_stats" in input_data["group_info"][group_num].keys():
-                    if "item_ratio" in input_data["group_info"][group_num]["group_stats"].keys():
-                        item_ratio = input_data["group_info"][group_num]["group_stats"].get(
-                            "item_ratio"
-                        )
-                        if item_ratio is not None:
-                            for k, v in item_ratio.items():
-                                if v >= 0.8 and k in config["item_nm"].keys():
-                                    data_dict["prd_item_nm"] = config["item_nm"][k]
-                    if (
-                        "style_seg_ratio"
-                        in input_data["group_info"][group_num]["group_stats"].keys()
-                    ):
-                        style_seg_ratio = input_data["group_info"][group_num]["group_stats"].get(
-                            "style_seg_ratio"
-                        )
-                        if style_seg_ratio is not None:
-                            for k, v in style_seg_ratio.items():
-                                if v >= 0.8:
-                                    data_dict["audience_purpose"] = config["style_seg"][k]
+                    # if "item_ratio" in input_data["group_info"][group_num]["group_stats"].keys():
+                    #     item_ratio = input_data["group_info"][group_num]["group_stats"].get(
+                    #         "item_ratio"
+                    #     )
+                    #     if item_ratio is not None:
+                    #         for k, v in item_ratio.items():
+                    #             if v >= 0.8 and k in config["item_nm"].keys():
+                    #                 data_dict["prd_item_nm"] = config["item_nm"][k]
+                    # if (
+                    #     "style_seg_ratio"
+                    #     in input_data["group_info"][group_num]["group_stats"].keys()
+                    # ):
+                    #     style_seg_ratio = input_data["group_info"][group_num]["group_stats"].get(
+                    #         "style_seg_ratio"
+                    #     )
+                    #     if style_seg_ratio is not None:
+                    #         for k, v in style_seg_ratio.items():
+                    #             if v >= 0.8:
+                    #                 data_dict["audience_purpose"] = config["style_seg"][k]
                     if "age_ratio" in input_data["group_info"][group_num]["group_stats"].keys():
                         age_ratio = input_data["group_info"][group_num]["group_stats"].get(
                             "age_ratio"
@@ -488,11 +490,11 @@ class generate_message:
         basic = sample_df.sample(n=1)
         if data_dict.get("offer_yn") == "y":
             if (
-                "offer_amount" not in data_dict["offer_info"].keys()
-                and "offer_amount" in basic["text"].values[0]
+                "benefit_text" not in data_dict["offer_info"].keys()
+                and "benefit_text" in basic["text"].values[0]
             ):
                 basic = sample_df.sample(n=1)
-                while "offer_amount" in basic["text"].values[0]:
+                while "benefit_text" in basic["text"].values[0]:
                     basic = sample_df.sample(n=1)
 
         self.msg_gen_key.append(basic["gen_key"].values[0])
@@ -541,15 +543,16 @@ class generate_message:
             self.msg_body = self.msg_body + "\n\n▷ 추천 상품:{rep_nm}"
 
     def offer_template(self, data_dict):
-        if data_dict["offer_info"].get("offer_amount") is None:
-            data_dict["offer_info"]["offer_amount"] = data_dict["offer_info"].get("offer_rate")
+        if data_dict["offer_info"].get("benefit_text") is None:
+            data_dict["offer_info"]["benefit_text"] = data_dict["offer_info"].get("offer_rate")
 
         ## 할인 혜택 및 강도 (of-text)
         if (
-            "offer_amount" in data_dict["offer_info"].keys()
-            and data_dict["offer_info"].get("offer_amount") is not None
+            "benefit_text" in data_dict["offer_info"].keys()
+            and data_dict["offer_info"].get("benefit_text") is not None
         ):
             offer_condition = data_dict["offer_info"].get("benefit_type").lower()
+            print(offer_condition)
             if data_dict["msg_type"] in ("lms", "mms"):
                 self.msg_body = (
                     self.msg_body
@@ -560,8 +563,8 @@ class generate_message:
                     ]["text"]
                     .values[0]
                     .replace(
-                        "{offer_amount}",
-                        str(format(data_dict["offer_info"]["offer_amount"], ",d")),
+                        "{benefit_text}",
+                        str(format(data_dict["offer_info"]["benefit_text"])),
                     )
                 )
             else:
@@ -574,20 +577,35 @@ class generate_message:
                     ]["text"]
                     .values[0]
                     .replace(
-                        "{offer_amount}",
-                        str(format(data_dict["offer_info"]["offer_amount"], ",d")),
+                        "{benefit_text}",
+                        str(format(data_dict["offer_info"]["benefit_text"])),
                     )
                 )
 
         ## 기간
         if data_dict["msg_type"] != "kakao_image_wide":
+            end_of_this_month = (
+                datetime.now().replace(day=1, month=datetime.now().month + 1) - timedelta(days=1)
+            ).strftime("%y년%m월%d일")
+            available_day_from_issued = data_dict["offer_info"].get("available_day_from_issued")
+            event_str_dt = data_dict["offer_info"].get("available_begin_datetime")
+            if event_str_dt is not None:
+                event_str_dt = event_str_dt[:10]
+            event_end_dt = data_dict["offer_info"].get("available_end_datetime")
+            if event_end_dt is not None:
+                event_end_dt = event_end_dt[:10]
             self.msg_body = (
                 self.msg_body
                 + "\n"
-                + self.offer_df[(self.offer_df.index_id == "of-drt")]["text"]
+                + self.offer_df[
+                    (self.offer_df.index_id == "of-drt")
+                    & (self.offer_df.condition == data_dict["offer_info"]["available_period_type"])
+                ]["text"]
                 .values[0]
-                .replace("{event_str_dt}", "{offer_start_date}")
-                .replace("{event_end_dt}", "{offer_end_date}")
+                .replace("{event_str_dt}", event_str_dt)
+                .replace("{event_end_dt}", event_end_dt)
+                .replace("{end_of_this_month}", end_of_this_month)
+                .replace("{available_day_from_issued}", str(available_day_from_issued))
             )
 
     def cmp_date(self, data_dict):
@@ -733,12 +751,11 @@ class generate_message:
                 )
 
         if data_dict["offer_info"].get("benefit_type") is not None:
+            offer_condition = data_dict["offer_info"].get("benefit_type").lower()
             self.msg_body = (
                 self.msg_body
                 + "\n"
-                + self.notice_df[
-                    self.notice_df.condition == data_dict["offer_info"]["benefit_type"]
-                ]["text"].values[0]
+                + self.notice_df[self.notice_df.condition == offer_condition]["text"].values[0]
             )
         else:
             self.msg_body = (
@@ -750,11 +767,12 @@ class generate_message:
 
 def match_real_data(data_dict, msg_title, msg_body):
     msg_title = msg_title.replace("{year}", data_dict["start_date"][:4])
+    msg_title = msg_title.replace("{mall_id}", data_dict["mall_id"])
     if data_dict["offer_yn"] == "y":
-        if data_dict["offer_info"].get("offer_amount") is not None:
+        if data_dict["offer_info"].get("benefit_text") is not None:
             msg_title = msg_title.replace(
-                "{offer_amount}",
-                str(format(data_dict["offer_info"]["offer_amount"], ",d")),
+                "{benefit_text}",
+                str(format(data_dict["offer_info"]["benefit_text"])),
             )
         if data_dict["offer_info"].get("apply_pcs") is not None:
             msg_title = msg_title.replace("{apply_pcs}", str(data_dict["offer_info"]["apply_pcs"]))
@@ -762,16 +780,17 @@ def match_real_data(data_dict, msg_title, msg_body):
         msg_title = msg_title.replace("{rep_nm}", data_dict["rep_nm"])
 
     msg_body = msg_body.replace("{year}", data_dict["start_date"][:4])
+    msg_body = msg_body.replace("{mall_id}", data_dict["mall_id"])
     if "rep_nm" in data_dict.keys():
         msg_body = msg_body.replace("{rep_nm}", data_dict["rep_nm"])
     if "set_group_category" in data_dict.keys():
         if data_dict.get("set_group_category") == "rep_nm":
             msg_body = msg_body.replace("{rep_nm}", data_dict["set_group_val"])
     if data_dict["offer_yn"] == "y":
-        if data_dict["offer_info"].get("offer_amount") is not None:
+        if data_dict["offer_info"].get("benefit_text") is not None:
             msg_body = msg_body.replace(
-                "{offer_amount}",
-                str(format(data_dict["offer_info"]["offer_amount"], ",d")),
+                "{benefit_text}",
+                str(format(data_dict["offer_info"]["benefit_text"])),
             )
         if data_dict["offer_info"].get("apply_pcs") is not None:
             msg_body = msg_body.replace("{apply_pcs}", str(data_dict["offer_info"]["apply_pcs"]))
@@ -866,11 +885,13 @@ def generate_dm(grp_idx, input_data, send_date, msg_type, remind_duration):
                 inst2.cmp_date(data_dict)
             if data_dict["contents_yn"] == "y":
                 inst2.contents_template(data_dict)
-            # if data_dict["offer_yn"] == "y" and data_dict["msg_type"] in (
-            #     "lms",
-            #     "mms",
-            # ):
-            # inst2.notice_template(data_dict) #추후 적용 <- issue_order_available_category 컬럼 추가한 이후
+            if data_dict["offer_yn"] == "y" and data_dict["msg_type"] in (
+                "lms",
+                "mms",
+            ):
+                inst2.notice_template(
+                    data_dict
+                )  # 추후 적용 <- issue_order_available_category 컬럼 추가한 이후
 
             msg_title = inst2.msg_title
             msg_body = inst2.msg_body

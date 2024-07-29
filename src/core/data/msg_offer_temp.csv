@@ -1,27 +1,29 @@
 ﻿id,index_id,condition,text
 prd-temp-1,prd-temp,,▶추천 상품:{{recommend_product}}
-of-text-1,of-text,선마일리지,▷ {offer_amount}마일리지 지급 완료!
-of-text-2,of-text,후마일리지,▷ {offer_amount}마일리지 받아가세요!
-of-text-3,of-text,정액할인,▷ {offer_amount}원 할인 혜택
-of-text-4,of-text,정률할인,▷ {offer_amount}% 할인 혜택
-of-text-5,of-text,1+1 프로모션,▷ 1+1 이벤트
-of-text-6,of-text,Npcs 구매시 할인,"▷ {apply_pcs}pcs 구매 시, {offer_amount} 할인!"
-of-text-7,of-text,금액대별 정액할인,"▷ {offer_amount}원 구매 시, {offer_amount}원 할인"
-of-text-8,of-text,시착권,▷ 시착권 도착!
-of-text-9,of-text,증정 프로모션,▷ {offer_amount} 증정 이벤트!
-of-text-10,of-text,온라인 쿠폰,▷ {offer_amount} 할인 쿠폰 도착!
-of-text-11,of-text,기타,▷ {offer_amount} 혜택
+of-text-1,of-text,d,▷ {benefit_text} 지급 완료!
+of-text-2,of-text,c,▷ {benefit_text} 받아가세요!
+of-text-3,of-text,a,▷ {benefit_text} 혜택
+of-text-4,of-text,b,▷ {benefit_text} 혜택
+of-text-5,of-text,e,"▷ {benefit_text} 혜택 제공!"
+of-text-6,of-text,f,"▷ {benefit_text} 혜택 제공!"
+of-text-7,of-text,g,"▷ {benefit_text} 혜택 제공!"
+of-text-8,of-text,h,▷ {benefit_text} 혜택 제공!
+of-text-9,of-text,i,▷ {benefit_text} 이벤트 도착!
+of-text-10,of-text,j,▷ {benefit_text} 혜택 도착!
+of-text-11,of-text,기타,▷ {benefit_text} 혜택
 of-cond-1,of-cond,지급 조건 내용이 인풋 어디서 들어오는지 없음!,▷ {지급조건}
-of-drt-1,of-drt,오퍼 기간,▷ 기간:{event_str_dt}~{event_end_dt}
+of-drt-1,of-drt,F,▷ 유효기간: {event_str_dt}~{event_end_dt}
+of-drt-2,of-drt,R,▷ 유효기간: 발급 후 {available_day_from_issued}일 이내
+of-drt-3,of-drt,M,▷ 유효기간: ~{end_of_this_month}까지
 of-style-1,of-style-1,전 상품 / 공백,※ 전 상품
 of-style-2,of-style-2,전 상품 / 1개 이상 제외(스타일코드/복종/대표상품/...),※ 전 상품(*일부 품목 제외)
 of-style-3,of-style-3,전 상품x /,※ 일부 상품만 적용됩니다.
-of-ch-1,of-ch-1,"오프라인,온라인 / 공백",※ 전국 모든 네파 온/오프라인 매장에서 이용 가능합니다.
-of-ch-2,of-ch-2,오프라인 / 온라인,"※ 전국 모든 네파 매장에서 이용 가능합니다.
-*네파 온라인몰 사용 불가"
-of-ch-3,of-ch-3,일부 매장명(레벨 상관x 다수) / 공백,※ 일부 오프라인 매장 및 네파 온라인 몰에서 이용 가능합니다.
+of-ch-1,of-ch-1,"오프라인,온라인 / 공백",※ 전국 모든 온/오프라인 매장에서 이용 가능합니다.
+of-ch-2,of-ch-2,오프라인 / 온라인,"※ 전국 모든 매장에서 이용 가능합니다.
+*온라인몰 사용 불가"
+of-ch-3,of-ch-3,일부 매장명(레벨 상관x 다수) / 공백,※ 일부 오프라인 매장 및 온라인 몰에서 이용 가능합니다.
 of-ch-4,of-ch-4,일부 매장명(레벨 상관x 다수) / 온라인,"※ 일부 오프라인 매장에서 이용 가능합니다.
-*네파 온라인몰 사용 불가"
-of-ch-5,of-ch-5,온라인 / 오프라인,"※ 네파 온라인 몰(N plus+)에서만 사용 가능합니다.
+*온라인몰 사용 불가"
+of-ch-5,of-ch-5,온라인 / 오프라인,"※ 온라인 몰(N plus+)에서만 사용 가능합니다.
 *오프라인 매장 사용 불가"
 of-pcs-1,of-pcs,2개 이상,※ 1인당 {apply_pcs}개 한정

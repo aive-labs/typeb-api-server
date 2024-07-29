@@ -1,44 +1,44 @@
 location,gen_key,index,detail,text,rec_exp,age
 title,title-csc01,csc,lifestyle_casual,일상을 스타일리쉬하게,lifestyle_casual,
-title,title-csc02,csc,lifestyle_casual,네파의 나들이 패션,lifestyle_casual,
+title,title-csc02,csc,lifestyle_casual,{mall_id}의 나들이 패션,lifestyle_casual,
 title,title-csc03,csc,lifestyle_casual,편안한 패션 스타일,lifestyle_casual,
 title,title-csc04,csc,lifestyle_casual,캐주얼한 코디가 여기에!,lifestyle_casual,
 title,title-csc05,csc,lifestyle_casual,일상 스타일로 안성맞춤,lifestyle_casual,
 title,title-csc06,csc,lifestyle_casual,단순 심플 BUT 트렌디함,lifestyle_casual,
 title,title-csc07,csc,lifestyle_casual,"편안함과 스타일, 일거양득!",lifestyle_casual,
-title,title-csc08,csc,lifestyle_casual,네파의 깔끔한 캐주얼 패션,lifestyle_casual,
-title,title-csc09,csc,lifestyle_casual,네파룩으로 편안한 일상,lifestyle_casual,
-title,title-csc10,csc,lifestyle_casual,네파와 함께 패션 리드하기,lifestyle_casual,
-title,title-cse01,cse,easy_trekking&athleisure,트레킹 패션은 네파에서!,easy_trekking&athleisure,
-title,title-cse02,cse,easy_trekking&athleisure,네파와 함께 편안한 트레킹,easy_trekking&athleisure,
-title,title-cse03,cse,easy_trekking&athleisure,네파 룩으로 야외 정복!,easy_trekking&athleisure,
+title,title-csc08,csc,lifestyle_casual,{mall_id}의 깔끔한 캐주얼 패션,lifestyle_casual,
+title,title-csc09,csc,lifestyle_casual,{mall_id}룩으로 편안한 일상,lifestyle_casual,
+title,title-csc10,csc,lifestyle_casual,{mall_id}와 함께 패션 리드하기,lifestyle_casual,
+title,title-cse01,cse,easy_trekking&athleisure,트레킹 패션은 {mall_id}에서!,easy_trekking&athleisure,
+title,title-cse02,cse,easy_trekking&athleisure,{mall_id}와 함께 편안한 트레킹,easy_trekking&athleisure,
+title,title-cse03,cse,easy_trekking&athleisure,{mall_id} 룩으로 야외 정복!,easy_trekking&athleisure,
 title,title-cse04,cse,easy_trekking&athleisure,운동에도 등산에도,easy_trekking&athleisure,
 title,title-cse05,cse,easy_trekking&athleisure,레저활동 복장 고민 끝!,easy_trekking&athleisure,
-title,title-cse06,cse,easy_trekking&athleisure,네파 패션으로 등산력 UP,easy_trekking&athleisure,
+title,title-cse06,cse,easy_trekking&athleisure,{mall_id} 패션으로 등산력 UP,easy_trekking&athleisure,
 title,title-cse07,cse,easy_trekking&athleisure,활기찬 야외 활동룩,easy_trekking&athleisure,
 title,title-cse08,cse,easy_trekking&athleisure,액티브한 라이프 스타일은?,easy_trekking&athleisure,
-title,title-cse09,cse,easy_trekking&athleisure,일상의 취미도 네파와 함께!,easy_trekking&athleisure,
+title,title-cse09,cse,easy_trekking&athleisure,일상의 취미도 {mall_id}와 함께!,easy_trekking&athleisure,
 title,title-cse10,cse,easy_trekking&athleisure,실내 운동도 편안하게!,easy_trekking&athleisure,
 title,title-csl01,csl,lifestyle_casual&easy_trekking,가벼운 트레킹용 아웃핏,lifestyle_casual&easy_trekking,
 title,title-csl02,csl,lifestyle_casual&easy_trekking,캠핑 갈때 뭐 입지?,lifestyle_casual&easy_trekking,
 title,title-csl03,csl,lifestyle_casual&easy_trekking,즐거운 트레킹을 위한 선택,lifestyle_casual&easy_trekking,
-title,title-csl04,csl,lifestyle_casual&easy_trekking,산책에 딱인 네파 스타일,lifestyle_casual&easy_trekking,
-title,title-csl05,csl,lifestyle_casual&easy_trekking,네파와 함께 숲속을 걸어요,lifestyle_casual&easy_trekking,
-title,title-csl06,csl,lifestyle_casual&easy_trekking,일상의 경게를 허물다,lifestyle_casual&easy_trekking,
-title,title-csl07,csl,lifestyle_casual&easy_trekking,네파에는 다양하게 다 있다!,lifestyle_casual&easy_trekking,
+title,title-csl04,csl,lifestyle_casual&easy_trekking,산책에 딱인 {mall_id} 스타일,lifestyle_casual&easy_trekking,
+title,title-csl05,csl,lifestyle_casual&easy_trekking,{mall_id}와 함께 숲속을 걸어요,lifestyle_casual&easy_trekking,
+title,title-csl06,csl,lifestyle_casual&easy_trekking,일상의 경계를 허물다,lifestyle_casual&easy_trekking,
+title,title-csl07,csl,lifestyle_casual&easy_trekking,{mall_id}에는 다양하게 다 있다!,lifestyle_casual&easy_trekking,
 title,title-csl08,csl,lifestyle_casual&easy_trekking,도시와 자연을 넘나들어!,lifestyle_casual&easy_trekking,
 title,title-csl09,csl,lifestyle_casual&easy_trekking,스타일과 활동성 모두,lifestyle_casual&easy_trekking,
-title,title-csl10,csl,lifestyle_casual&easy_trekking,네파와 함께 준비 끝!,lifestyle_casual&easy_trekking,
+title,title-csl10,csl,lifestyle_casual&easy_trekking,{mall_id}와 함께 준비 끝!,lifestyle_casual&easy_trekking,
 title,title-csm01,csm,mountaineering,프로 등산러 추천 복장,mountaineering,
 title,title-csm02,csm,mountaineering,등산 매니아 필수템!,mountaineering,
-title,title-csm03,csm,mountaineering,네파와 함께 정상까지!,mountaineering,
-title,title-csm04,csm,mountaineering,"기능성 제품, 네파에서!",mountaineering,
-title,title-csm05,csm,mountaineering,네파와 함께 한계 극복!,mountaineering,
-title,title-csm06,csm,mountaineering,"정상을 향해, 네파와!",mountaineering,
+title,title-csm03,csm,mountaineering,{mall_id}와 함께 정상까지!,mountaineering,
+title,title-csm04,csm,mountaineering,"기능성 제품, {mall_id}에서!",mountaineering,
+title,title-csm05,csm,mountaineering,{mall_id}와 함께 한계 극복!,mountaineering,
+title,title-csm06,csm,mountaineering,"정상을 향해, {mall_id}와!",mountaineering,
 title,title-csm07,csm,mountaineering,산악 여행에도 안성맞춤,mountaineering,
 title,title-csm08,csm,mountaineering,등산 전문가도 반한 아이템,mountaineering,
 title,title-csm09,csm,mountaineering,등산마니아분들은 주목!,mountaineering,
-title,title-csm10,csm,mountaineering,네파와 등산 준비 끝!,mountaineering,
+title,title-csm10,csm,mountaineering,{mall_id}와 등산 준비 끝!,mountaineering,
 title,title-k_bf01,k_bf,블랙프라이데이,블랙 프라이데이 시작!,블랙프라이데이,
 title,title-k_bf02,k_bf,블랙프라이데이,블랙 프라이데이 딜!,블랙프라이데이,
 title,title-k_bf03,k_bf,블랙프라이데이,Black Friday 행사 안내,블랙프라이데이,
@@ -49,15 +49,15 @@ title,title-k_fe01,k_fe,fw시즌 얼리버드,얼리버드 전용 F/W 이벤트,fw시즌 얼리버드
 title,title-k_fe02,k_fe,fw시즌 얼리버드,얼리버드 F/W 이벤트 안내,fw시즌 얼리버드,
 title,title-k_fe03,k_fe,fw시즌 얼리버드,FW시즌 얼리버드 이벤트,fw시즌 얼리버드,
 title,title-k_fw01,k_fw,f/w,가을맞이 F/W 혜택,f/w,
-title,title-k_fw02,k_fw,f/w,FW시즌 이벤트는 네파에서!,f/w,
-title,title-k_fw03,k_fw,f/w,네파가 준비한 FW시즌 혜택!,f/w,
+title,title-k_fw02,k_fw,f/w,FW시즌 이벤트는 {mall_id}에서!,f/w,
+title,title-k_fw03,k_fw,f/w,{mall_id}가 준비한 FW시즌 혜택!,f/w,
 title,title-k_se01,k_se,ss시즌 얼리버드,얼리버드 전용 S/S 이벤트,ss시즌 얼리버드,
 title,title-k_se02,k_se,ss시즌 얼리버드,미리 준비하는 SS시즌 혜택!,ss시즌 얼리버드,
-title,title-k_se03,k_se,ss시즌 얼리버드,네파의 S/S 얼리버드 행사!,ss시즌 얼리버드,
+title,title-k_se03,k_se,ss시즌 얼리버드,{mall_id}의 S/S 얼리버드 행사!,ss시즌 얼리버드,
 title,title-k_se04,k_se,ss시즌 얼리버드,SS시즌 얼리버드 혜택모음!,ss시즌 얼리버드,
 title,title-k_se05,k_se,ss시즌 얼리버드,SS시즌 얼리버드 안내,ss시즌 얼리버드,
 title,title-k_se06,k_se,ss시즌 얼리버드,SS시즌 얼리버드 이벤트,ss시즌 얼리버드,
-title,title-k_se07,k_se,ss시즌 얼리버드,네파 SS시즌 얼리버드 혜택!,ss시즌 얼리버드,
+title,title-k_se07,k_se,ss시즌 얼리버드,{mall_id} SS시즌 얼리버드 혜택!,ss시즌 얼리버드,
 title,title-k_se08,k_se,ss시즌 얼리버드,얼리버드 전용 SS시즌 혜택,ss시즌 얼리버드,
 title,title-k_se09,k_se,ss시즌 얼리버드,얼리버드 S/S 혜택 시작,ss시즌 얼리버드,
 title,title-k_se10,k_se,ss시즌 얼리버드,SS시즌 얼리버드 진행 중,ss시즌 얼리버드,
@@ -72,7 +72,7 @@ title,title-k_se18,k_se,ss시즌 얼리버드,얼리버드 S/S 이벤트 안내,ss시즌 얼리버드
 title,title-k_se19,k_se,ss시즌 얼리버드,S/S 얼리버드 행사 안내,ss시즌 얼리버드,
 title,title-k_se20,k_se,ss시즌 얼리버드,S/S Early Bird 진행 중,ss시즌 얼리버드,
 title,title-k_so01,k_so,시즌오프,Season OFF Event,시즌오프,
-title,title-k_so03,k_so,시즌오프,네파의 시즌오프 이벤트!,시즌오프,
+title,title-k_so03,k_so,시즌오프,{mall_id}의 시즌오프 이벤트!,시즌오프,
 title,title-k_so02,k_so,시즌오프,시즌오프 시작,시즌오프,
 title,title-k_ss01,k_ss,s/s,S/S시즌 시작!,s/s,
 title,title-k_ss02,k_ss,s/s,SS시즌 맞이 이벤트!,s/s,
@@ -146,12 +146,12 @@ title,title-soal11,soal,공통,초특가 혜택 시작~,,
 title,title-soal12,soal,공통,고객님께만 드리는 혜택♡,,
 title,title-soal13,soal,공통,"놓치지 마세요, 최대 혜택!",,
 title,title-soal14,soal,공통,고객님만을 위한 혜택??,,
-title,title-soal15,soal,공통,네파의 혜택은 현재진행형~,,
+title,title-soal15,soal,공통,{mall_id}에서 준비한 혜택은 현재진행형~,,
 title,title-soal16,soal,공통,"다양한 혜택, 놓치지 마세요",,
-title,title-soal17,soal,공통,네파가 드리는 혜택 선물,,
-title,title-soal18,soal,공통,요즘 날씨에도 네파와 함께~,,
-title,title-soal19,soal,공통,네파 이벤트 확인하기!,,
-title,title-soal20,soal,공통,네파가 준비한 혜택 확인!,,
+title,title-soal17,soal,공통,{mall_id}가 드리는 혜택 선물,,
+title,title-soal18,soal,공통,요즘 날씨에도 {mall_id}와 함께~,,
+title,title-soal19,soal,공통,{mall_id} 이벤트 확인하기!,,
+title,title-soal20,soal,공통,{mall_id}에서 준비한 혜택 확인!,,
 title,title-soey20,soey,연말,따뜻한 연말 보내세요,,
 title,title-soey01,soey,연말,연말을 더 특별하게!,,
 title,title-soey02,soey,연말,소소한 연말 이벤트♥,,
@@ -166,7 +166,7 @@ title,title-sofm05,sofm,크리스마스,X-Mas 혜택 받아가세요!,,
 title,title-sofm06,sofm,크리스마스,혜택이 와르르 크리스마스!,,
 title,title-sofm07,sofm,가정의달,"사랑과 감사, 가정의 달",,
 title,title-sofm08,sofm,가정의달,"행복한 가정의 달, 5월",,
-title,title-sofw01,sofw,초겨울,포근한 네파 혜택!,,
+title,title-sofw01,sofw,초겨울,포근한 혜택!,,
 title,title-sofw02,sofw,초겨울,추워지니까 혜택은 더!,,
 title,title-sofw03,sofw,초겨울,"겨울, 혜택 대잔치!",,
 title,title-sogr01,sogr,졸업,졸업 축하 이벤트 시작!,,
@@ -196,7 +196,7 @@ title,title-sosd02,sosd,개강,"개학 시즌, 특별 혜택!",,
 title,title-sosd03,sosd,개강,새학기에는 혜택도 추가!,,
 title,title-sosf01,sosf,초가을,"선선한 날씨, 시원한 혜택!",,
 title,title-sosf02,sosf,초가을,가을 시작! 이벤트도 시작!,,
-title,title-sosf03,sosf,초가을,가을 맞이 네파의 이벤트!,,
+title,title-sosf03,sosf,초가을,가을 맞이 {mall_id}의 이벤트!,,
 title,title-sosp01,sosp,봄,봄날의 상큼한 특가 이벤트!,,
 title,title-sosp02,sosp,봄,봄맞이 혜택 방출!,,
 title,title-sosp03,sosp,봄,봄바람에 실려온 혜택,,
@@ -204,12 +204,12 @@ title,title-sosp04,sosp,봄,혜택 받고 봄 옷 쇼핑 시작!,,
 title,title-sosp05,sosp,봄,봄맞이 싱그러운 혜택!,,
 title,title-sosp06,sosp,봄,봄바람 휘날리며 찾아왔다!,,
 title,title-sosp07,sosp,봄,벚꽃과 함께 날아온 혜택,,
-title,title-sosp08,sosp,봄,봄과 함께 찾아온 네파 혜택,,
+title,title-sosp08,sosp,봄,봄과 함께 찾아온 {mall_id} 혜택,,
 title,title-sosp09,sosp,봄,날씨만큼 따뜻한 혜택 가득,,
-title,title-sosp10,sosp,봄,봄에 어올리는 네파 이벤트,,
-title,title-soss01,soss,초여름,여름맞이 네파 이벤트 공개!,,
+title,title-sosp10,sosp,봄,봄에 어올리는 {mall_id} 이벤트,,
+title,title-soss01,soss,초여름,여름맞이 {mall_id} 이벤트 공개!,,
 title,title-soss02,soss,초여름,더워지니까~ 혜택 팍팍!,,
-title,title-soss03,soss,초여름,네파가 드리는 여름 혜택!,,
+title,title-soss03,soss,초여름,{mall_id}가 드리는 여름 혜택!,,
 title,title-soss04,soss,초여름,기간한정 여름 이벤트!,,
 title,title-soss05,soss,초여름,"무더운 여름, 시원하게!",,
 title,title-soss06,soss,초여름,여름 특별 혜택 대잔치!,,
@@ -221,12 +221,12 @@ title,title-sosu01,sosu,여름,여름 아이템 혜택,,
 title,title-sosu02,sosu,여름,여름에 딱! 추천 상품 혜택!,,
 title,title-sosu03,sosu,여름,"더 아찔한 여름, 특가 팡팡!",,
 title,title-sosu04,sosu,여름,"뜨거운 여름, 아이템 혜택!",,
-title,title-sosu05,sosu,여름,무더위에는 네파 혜택으로!,,
-title,title-sosu06,sosu,여름,열대야 대비 네파 이벤트!,,
+title,title-sosu05,sosu,여름,무더위에는 {mall_id} 혜택으로!,,
+title,title-sosu06,sosu,여름,열대야 대비 {mall_id} 이벤트!,,
 title,title-sosu07,sosu,여름,에어컨만큼 시원한 혜택,,
 title,title-sosu08,sosu,여름,"여름맞이 혜택, 확인하세요!",,
-title,title-sosu09,sosu,여름,네파 이벤트로 무더위 나기!,,
-title,title-sosu10,sosu,여름,네파 혜택으로 장마철 준비!,,
+title,title-sosu09,sosu,여름,{mall_id} 이벤트로 무더위 나기!,,
+title,title-sosu10,sosu,여름,{mall_id} 혜택으로 장마철 준비!,,
 title,title-soth01,soth,추석,한가위 서프라이즈 혜택!,,
 title,title-soth02,soth,추석,"특별한 추석, 특별한 혜택",,
 title,title-soth03,soth,추석,"추석 연휴, 혜택 팍팍!",,
@@ -234,43 +234,43 @@ title,title-soth04,soth,추석,"풍성한 추석, 풍성한 혜택★",,
 title,title-soth05,soth,추석,"추석 선물, 도와드릴게요!",,
 title,title-sowi01,sowi,겨울,포근한 겨울을 위한 혜택들!,,
 title,title-sowi02,sowi,겨울,혜택이 눈처럼 내린다!,,
-title,title-sowi03,sowi,겨울,추워도 따뜻한 네파 이벤트,,
+title,title-sowi03,sowi,겨울,추워도 따뜻한 {mall_id} 이벤트,,
 title,title-sows01,sows,초봄,겨울이 가고 혜택이 오고!,,
 title,title-sows02,sows,초봄,"따뜻해진 봄, 대박 혜택??",,
 title,title-sows03,sows,초봄,갑자기 찾아온 봄의 이벤트!,,
-title,title-sows04,sows,초봄,봄에 어올리는 네파의 혜택,,
-title,title-sows05,sows,초봄,봄 준비는 네파와 함께,,
+title,title-sows04,sows,초봄,봄에 어올리는 {mall_id}의 혜택,,
+title,title-sows05,sows,초봄,봄 준비는 {mall_id}와 함께,,
 title,title-sows06,sows,초봄,따뜻해지는 봄맞이 이벤트!,,
-title,title-sows07,sows,초봄,네파가 준비한 봄맞이 혜택!,,
-title,title-sows08,sows,초봄,네파의 혜택은 봄에도 계속~,,
-title,title-sows09,sows,초봄,봄맞이 이벤트는 역시 네파!,,
-title,title-sows10,sows,초봄,네파가 드리는 봄맞이 선물,,
+title,title-sows07,sows,초봄,{mall_id}가 준비한 봄맞이 혜택!,,
+title,title-sows08,sows,초봄,{mall_id}의 혜택은 봄에도 계속~,,
+title,title-sows09,sows,초봄,봄맞이 이벤트는 역시 {mall_id}!,,
+title,title-sows10,sows,초봄,{mall_id}가 드리는 봄맞이 선물,,
 title,title-spal01,spal,공통,고객님만을 위한 아이템,,
-title,title-spal02,spal,공통,네파가 추천드리는 상품!,,
+title,title-spal02,spal,공통,{mall_id}가 추천드리는 상품!,,
 title,title-spal03,spal,공통,맞춤 상품 확인하세요,,
 title,title-spal04,spal,공통,고객님을 위한 추천 아이템!,,
 title,title-spal05,spal,공통,고객님께 추천드려요~,,
-title,title-spal06,spal,공통,NEPA의 추천 상품!,,
-title,title-spal07,spal,공통,네파가 추천해드려요!,,
-title,title-spal08,spal,공통,네파가 강력히 추천합니다!,,
+title,title-spal06,spal,공통,{mall_id}의 추천 상품!,,
+title,title-spal07,spal,공통,{mall_id}가 추천해드려요!,,
+title,title-spal08,spal,공통,{mall_id}가 강력히 추천합니다!,,
 title,title-spal09,spal,공통,고객님께 추천드리는 상품!,,
 title,title-spal10,spal,공통,고객님께 어올리는 아이템!,,
-title,title-spal11,spal,공통,강추! 네파의 추천 아이템!,,
+title,title-spal11,spal,공통,강추! {mall_id}의 추천 아이템!,,
 title,title-spal12,spal,공통,"추천 아이템, 확인해보세요!",,
-title,title-spal13,spal,공통,네파의 추천 상품 확인하기!,,
+title,title-spal13,spal,공통,{mall_id}의 추천 상품 확인하기!,,
 title,title-spal14,spal,공통,오늘의 추천 아이템!,,
 title,title-spal15,spal,공통,오늘의 추천 상품 보기▶,,
-title,title-spal16,spal,공통,네파의 추천 아이템 확인!,,
+title,title-spal16,spal,공통,{mall_id}의 추천 아이템 확인!,,
 title,title-spal17,spal,공통,추천하는 상품 보기▶,,
 title,title-spal18,spal,공통,이번주 추천 아이템!,,
-title,title-spal19,spal,공통,NEPA의 추천 상품 확인▶,,
-title,title-spal20,spal,공통,네파가 추천드리는 상품!,,
+title,title-spal19,spal,공통,{mall_id}의 추천 상품 확인▶,,
+title,title-spal20,spal,공통,{mall_id}가 추천드리는 상품!,,
 title,title-spch01,spch,크리스마스,크리스마스 선물 추천받기▶,,
 title,title-spch02,spch,크리스마스,크리스마스 아이템 추천,,
 title,title-spch03,spch,크리스마스,크리스마스에 딱인 아이템!,,
-title,title-spey01,spey,연말,연말연시 NEPA 상품 추천!,,
+title,title-spey01,spey,연말,연말연시 {mall_id} 상품 추천!,,
 title,title-spey02,spey,연말,"연말, 따뜻한 아이템 장만?",,
-title,title-spey03,spey,연말,네파가 추천하는 연말 패션!,,
+title,title-spey03,spey,연말,{mall_id}가 추천하는 연말 패션!,,
 title,title-spfa01,spfa,가을,올해의 가을 상품 추천!,,
 title,title-spfa02,spfa,가을,"쌀쌀해진 날씨, 새 옷 사자!",,
 title,title-spfa03,spfa,가을,가을에 어올리는 아이템!,,
@@ -278,22 +278,22 @@ title,title-spfm01,spfm,가정의달,가정의 달에 꼭 맞는 옷은?,,
 title,title-spfm02,spfm,가정의달,가족 선물 아이템 추천,,
 title,title-spfm03,spfm,가정의달,가정의 달 맞이 안내,,
 title,title-spfw06,spfw,초겨울,"겨울 아이템, 빠르게!",,
-title,title-spfw07,spfw,초겨울,네파가 추천하는 겨울 상품,,
+title,title-spfw07,spfw,초겨울,{mall_id}가 추천하는 겨울 상품,,
 title,title-spfw08,spfw,초겨울,겨울 맞이 추천 아이템!,,
 title,title-spgr01,spgr,졸업,"졸업 시즌, 아이템 추천!",,
 title,title-spgr02,spgr,졸업,졸업 기념 LOOK 추천!,,
-title,title-spgr03,spgr,졸업,"졸업 시즌, 네파의 추천 룩!",,
+title,title-spgr03,spgr,졸업,"졸업 시즌, {mall_id}의 추천 룩!",,
 title,title-spln01,spln,설날,설에 어울리는 아이템 추천,,
-title,title-spln02,spln,설날,설에도 네파 추천 받으세요!,,
+title,title-spln02,spln,설날,설에도 {mall_id} 추천 받으세요!,,
 title,title-spln03,spln,설날,설특집 패션 제안!,,
 title,title-spny04,spny,새해,"새해, 나만의 스타일 찾기!",,
 title,title-spny05,spny,새해,새해맞이 아이템 추천??,,
 title,title-spny06,spny,새해,새해에는 이 패션 어떠세요?,,
 title,title-sppd01,sppd,어버이날,어버이날 선물 추천??,,
-title,title-sppd02,sppd,어버이날,어버이날 NEPA 선물하세요!,,
+title,title-sppd02,sppd,어버이날,어버이날 {mall_id} 선물하세요!,,
 title,title-sppd03,sppd,어버이날,제안하는 부모님 선물,,
 title,title-spsd04,spsd,개강,새학기 맞이 응원 이벤트!,,
-title,title-spsd05,spsd,개강,올해 새학기 코디는 네파로!,,
+title,title-spsd05,spsd,개강,올해 새학기 코디는 {mall_id}로!,,
 title,title-spsd06,spsd,개강,"개강 첫 날, 코디 추천!",,
 title,title-spsf01,spsf,초가을,"선선해지는 가을, 뭐 입지?",,
 title,title-spsf02,spsf,초가을,추천하는 가을 맞이 상품,,
@@ -302,7 +302,7 @@ title,title-spsp01,spsp,봄,봄 날씨에 딱! 맞는 추천,,
 title,title-spsp02,spsp,봄,"봄 햇살, 눈부신 아이템☆",,
 title,title-spsp03,spsp,봄,올해의 봄 상품 추천!,,
 title,title-spsp04,spsp,봄,꽃피는 봄에 어올리는 상품!,,
-title,title-spsp05,spsp,봄,네파의 봄 스타일 추천!,,
+title,title-spsp05,spsp,봄,{mall_id}의 봄 스타일 추천!,,
 title,title-spsp06,spsp,봄,봄 패션 정복!,,
 title,title-spsp07,spsp,봄,봄 스타일 제안,,
 title,title-spsp08,spsp,봄,봄 패션을 제안드려요,,
@@ -311,40 +311,40 @@ title,title-spsp10,spsp,봄,추천하는 봄 패션!,,
 title,title-spss01,spss,초여름,"여름의 시작, 이건 어때요?",,
 title,title-spss02,spss,초여름,추천하는 여름 상품,,
 title,title-spss03,spss,초여름,올여름에 입기 좋은 패션!,,
-title,title-spss04,spss,초여름,"여름의 시작, 네파와 함께",,
+title,title-spss04,spss,초여름,"여름의 시작, {mall_id}와 함께",,
 title,title-spss05,spss,초여름,올 여름을 대비하자!,,
 title,title-spss06,spss,초여름,여름휴가를 위한 추천 상품!,,
 title,title-spss07,spss,초여름,여름에 어올리는 패션모음,,
 title,title-spss08,spss,초여름,여름 아이템 추천드려요!,,
 title,title-spss09,spss,초여름,여름에 입을 옷 추천!,,
-title,title-spss10,spss,초여름,여름에 어올리는 네파 추천,,
+title,title-spss10,spss,초여름,여름에 어올리는 {mall_id} 추천,,
 title,title-spsu08,spsu,여름,무더운 여름의 스타일 제안!,,
 title,title-spsu09,spsu,여름,"여름, 빛나는 아이템을 GET!",,
 title,title-spsu10,spsu,여름,여름 휴가 아이템 추천!,,
-title,title-spsu01,spsu,여름,NEPA가 추천하는 여름 패션!,,
+title,title-spsu01,spsu,여름,{mall_id}가 추천하는 여름 패션!,,
 title,title-spsu02,spsu,여름,여름에 어울리는 아이템,,
 title,title-spsu03,spsu,여름,시원한 여름을 위한 상품!,,
 title,title-spsu04,spsu,여름,올해의 여름 상품 추천!,,
-title,title-spsu05,spsu,여름,네파의 여름 스타일 추천!,,
+title,title-spsu05,spsu,여름,{mall_id}의 여름 스타일 추천!,,
 title,title-spsu06,spsu,여름,추천 상품으로 무더위 극복!,,
 title,title-spsu07,spsu,여름,더위를 날릴 추천 스타일!,,
-title,title-spth08,spth,추석,"특별한 추석, 네파 스타일",,
+title,title-spth08,spth,추석,"특별한 추석, {mall_id} 스타일",,
 title,title-spth09,spth,추석,"추석 선물, 추천해드릴게요!",,
 title,title-spth10,spth,추석,한가위 맞이 아이템 추천,,
 title,title-spth01,spth,추석,새 옷 입고 가족들 만나러~,,
 title,title-spwi02,spwi,겨울,겨울 아이템 추천,,
 title,title-spwi03,spwi,겨울,올해의 겨울 상품 추천!,,
 title,title-spwi04,spwi,겨울,겨울에 입을 추천 아이템!,,
-title,title-spws05,spws,초봄,"봄의 시작, 네파가 책임져요",,
-title,title-spws06,spws,초봄,네파가 추천하는 새봄 상품!,,
-title,title-spws07,spws,초봄,네파의 추천 상품과 새출발!,,
+title,title-spws05,spws,초봄,"봄의 시작, {mall_id}가 책임져요",,
+title,title-spws06,spws,초봄,{mall_id}가 추천하는 새봄 상품!,,
+title,title-spws07,spws,초봄,{mall_id}의 추천 상품과 새출발!,,
 title,title-spws08,spws,초봄,"봄 산책, 추천 상품!",,
 title,title-spws09,spws,초봄,봄바람에 어올리는 아이템!,,
 title,title-spws10,spws,초봄,봄의 시작을 위한 추천!,,
 title,title-spws01,spws,초봄,봄에 입을 옷 추천드려요!,,
 title,title-spws02,spws,초봄,환절기를 위한 패션 제안!,,
-title,title-spws03,spws,초봄,"일교차 클 때, 네파!",,
-title,title-spws04,spws,초봄,따스한 햇살과 네파의 추천!,,
+title,title-spws03,spws,초봄,"일교차 클 때, {mall_id}!",,
+title,title-spws04,spws,초봄,따스한 햇살과 {mall_id}의 추천!,,
 title,title-ssch01,ssch,크리스마스,X-mas를 더 특별하게!,,
 title,title-ssch02,ssch,크리스마스,화이트 크리스마스에 딱~!,,
 title,title-ssch03,ssch,크리스마스,빛나는 크리스마스 보내요~,,
@@ -354,12 +354,12 @@ title,title-ssey03,ssey,연말,"소중한 연말, 함께하세요",,
 title,title-ssey04,ssey,연말,"올해 마무리, 더 따뜻하게~",,
 title,title-ssey05,ssey,연말,포근한 연말 준비하자!,,
 title,title-ssey06,ssey,연말,희망찬 연말 시작!,,
-title,title-ssey07,ssey,연말,올해 마무리는 네파와 함께!,,
+title,title-ssey07,ssey,연말,올해 마무리는 {mall_id}와 함께!,,
 title,title-ssey08,ssey,연말,올해도 감사합니다,,
 title,title-ssfa01,ssfa,가을,가을 준비 시작하세요~,,
 title,title-ssfa02,ssfa,가을,알록달록 단풍놀이에도!,,
 title,title-ssfa03,ssfa,가을,세련된 가을 그리기,,
-title,title-ssfa04,ssfa,가을,"올 가을, 네파와 함께",,
+title,title-ssfa04,ssfa,가을,"올 가을, {mall_id}와 함께",,
 title,title-ssfa05,ssfa,가을,가을 풍경을 품안에,,
 title,title-ssfa06,ssfa,가을,"가을 바람, 문제없어!",,
 title,title-ssfa07,ssfa,가을,추천하는 가을 낭만!,,
@@ -368,14 +368,14 @@ title,title-ssfm02,ssfm,가정의달,사랑이 넘치는 가정의달,,
 title,title-ssfm03,ssfm,가정의달,소중한 사람과 함께하는 5월,,
 title,title-ssfw01,ssfw,초겨울,"추워지는 날씨, 준비하자!",,
 title,title-ssfw02,ssfw,초겨울,가을 안녕~ 겨울아 어서와!,,
-title,title-ssfw03,ssfw,초겨울,올 겨울도 네파와 함께,,
+title,title-ssfw03,ssfw,초겨울,올 겨울도 {mall_id}와 함께,,
 title,title-ssgr01,ssgr,졸업,"졸업 시즌, 스타일도 새롭게",,
 title,title-ssgr02,ssgr,졸업,모두 졸업 축하해요!,,
 title,title-ssgr03,ssgr,졸업,"기존의 스타일, 졸업하세요!",,
-title,title-ssln01,ssln,설날,"설날 기운 가득, 네파!",,
-title,title-ssln02,ssln,설날,"풍성한 설 연휴, 네파와!",,
+title,title-ssln01,ssln,설날,"설날 기운 가득, {mall_id}!",,
+title,title-ssln02,ssln,설날,"풍성한 설 연휴, {mall_id}와!",,
 title,title-ssln03,ssln,설날,설날을 더 따뜻하게,,
-title,title-ssln04,ssln,설날,"설날, 선물은 네파로",,
+title,title-ssln04,ssln,설날,"설날, 선물은 {mall_id}로",,
 title,title-ssln05,ssln,설날,올 설에도 함께해요♡,,
 title,title-ssny01,ssny,새해,"새해, 새로운 나!",,
 title,title-ssny02,ssny,새해,{year}년에도 트렌디하게,,
@@ -398,78 +398,78 @@ title,title-sssd06,sssd,개강,"새로운 출발, 응원해요!",,
 title,title-sssf01,sssf,초가을,"선선해지는 날씨, 가을이야!",,
 title,title-sssf02,sssf,초가을,외출을 장려하는 요즘 날씨!,,
 title,title-sssf03,sssf,초가을,"청명한 하늘, 시원한 공기",,
-title,title-sssp01,sssp,봄,"따뜻한 봄, 따뜻한 네파",,
-title,title-sssp02,sssp,봄,"설레는 봄, 네파와 함께",,
+title,title-sssp01,sssp,봄,"따뜻한 봄, 따뜻한 {mall_id}",,
+title,title-sssp02,sssp,봄,"설레는 봄, {mall_id}와 함께",,
 title,title-sssp03,sssp,봄,봄에도 역시 아웃도어는?,,
-title,title-sssp04,sssp,봄,봄 기운 가득한 네파와~,,
+title,title-sssp04,sssp,봄,봄 기운 가득한 {mall_id}와~,,
 title,title-sssp05,sssp,봄,새 옷 입고 봄 나들이 가자!,,
 title,title-sssp06,sssp,봄,"신선한 봄, 새로운 패션!",,
-title,title-sssp07,sssp,봄,"꽃피는 봄, 네파와 함께~",,
-title,title-sssp08,sssp,봄,봄에 어올리는 네파 스타일!,,
+title,title-sssp07,sssp,봄,"꽃피는 봄, {mall_id}와 함께~",,
+title,title-sssp08,sssp,봄,봄에 어올리는 {mall_id} 스타일!,,
 title,title-sssp09,sssp,봄,"꽃피는 계절, 새로운 패션!",,
 title,title-sssp10,sssp,봄,봄에는 스타일 업그레이드!,,
-title,title-sssp11,sssp,봄,네파는 따스한 햇살과 함께!,,
+title,title-sssp11,sssp,봄,{mall_id}는 따스한 햇살과 함께!,,
 title,title-sssp12,sssp,봄,"봄, 패션의 새로운 시작!",,
-title,title-sssp13,sssp,봄,네파와 함께 새봄맞이,,
-title,title-sssp14,sssp,봄,봄의 스타일은 네파와 함께!,,
+title,title-sssp13,sssp,봄,{mall_id}와 함께 새봄맞이,,
+title,title-sssp14,sssp,봄,봄의 스타일은 {mall_id}와 함께!,,
 title,title-sssp15,sssp,봄,"봄, 활기찬 스타일로 변신!",,
 title,title-sssp16,sssp,봄,올 봄에는 트렌디하게!,,
-title,title-sssp17,sssp,봄,네파와 준비하는 봄 나들이,,
+title,title-sssp17,sssp,봄,{mall_id}와 준비하는 봄 나들이,,
 title,title-sssp18,sssp,봄,봄에는 상큼한 스타일로~,,
 title,title-sssp19,sssp,봄,화사한 패션으로 새롭게!,,
 title,title-sssp20,sssp,봄,세련된 스타일로 변신!,,
 title,title-ssss01,ssss,초여름,더워지는 날씨 대비해요!,,
 title,title-ssss02,ssss,초여름,이번 여름에 어올리는 패션!,,
-title,title-ssss03,ssss,초여름,시원한 옷도 네파!,,
-title,title-ssss04,ssss,초여름,여름옷도 역시 네파에서~,,
-title,title-ssss05,ssss,초여름,"여름의 시작, 네파와 함께",,
-title,title-ssss06,ssss,초여름,네파와 함께 시원한 여름을!,,
-title,title-ssss07,ssss,초여름,여름 옷 쇼핑도 네파에서!,,
-title,title-ssss08,ssss,초여름,올여름 네파 필수템,,
+title,title-ssss03,ssss,초여름,시원한 옷도 {mall_id}!,,
+title,title-ssss04,ssss,초여름,여름옷도 역시 {mall_id}에서~,,
+title,title-ssss05,ssss,초여름,"여름의 시작, {mall_id}와 함께",,
+title,title-ssss06,ssss,초여름,{mall_id}와 함께 시원한 여름을!,,
+title,title-ssss07,ssss,초여름,여름 옷 쇼핑도 {mall_id}에서!,,
+title,title-ssss08,ssss,초여름,올여름 {mall_id} 필수템,,
 title,title-ssss09,ssss,초여름,여름에 어올리는 코디,,
 title,title-ssss10,ssss,초여름,더운 여름을 위한 준비!,,
 title,title-ssss11,ssss,초여름,올여름 옷은 지금부터 준비~,,
-title,title-ssss12,ssss,초여름,"올 여름, 네파와 함께하세요",,
-title,title-ssss13,ssss,초여름,여름휴가도 네파와 함께!,,
-title,title-ssss14,ssss,초여름,여름 옷도 네파와 준비완료!,,
+title,title-ssss12,ssss,초여름,"올 여름, {mall_id}와 함께하세요",,
+title,title-ssss13,ssss,초여름,여름휴가도 {mall_id}와 함께!,,
+title,title-ssss14,ssss,초여름,여름 옷도 {mall_id}와 준비완료!,,
 title,title-ssss15,ssss,초여름,여름 티셔츠도 트렌디하게~,,
-title,title-ssss16,ssss,초여름,"여름의 새로운 향기, 네파!",,
-title,title-ssss17,ssss,초여름,여름에 잘 어올리는 네파!,,
-title,title-ssss18,ssss,초여름,"요즘 날씨, 입기 좋은 네파!",,
-title,title-ssss19,ssss,초여름,여름에도 네파 입는다~,,
-title,title-ssss20,ssss,초여름,여름엔 NEPA!,,
+title,title-ssss16,ssss,초여름,"여름의 새로운 향기, {mall_id}!",,
+title,title-ssss17,ssss,초여름,여름에 잘 어올리는 {mall_id}!,,
+title,title-ssss18,ssss,초여름,"요즘 날씨, 입기 좋은 {mall_id}!",,
+title,title-ssss19,ssss,초여름,여름에도 {mall_id} 입는다~,,
+title,title-ssss20,ssss,초여름,여름엔 {mall_id}!,,
 title,title-sssu01,sssu,여름,Summer Festa 도착!,,
-title,title-sssu02,sssu,여름,무더운 여름 네파와 함께~,,
+title,title-sssu02,sssu,여름,무더운 여름 {mall_id}와 함께~,,
 title,title-sssu03,sssu,여름,"뜨거운 여름, 쿨하게 쇼핑!",,
-title,title-sssu04,sssu,여름,"올 여름, 네파와 떠나보자!",,
-title,title-sssu05,sssu,여름,Summer 바캉스룩도 네파!,,
+title,title-sssu04,sssu,여름,"올 여름, {mall_id}와 떠나보자!",,
+title,title-sssu05,sssu,여름,Summer 바캉스룩도 {mall_id}!,,
 title,title-sssu06,sssu,여름,더워지는 날씨 타파!,,
 title,title-sssu07,sssu,여름,"여름 휴가룩, 완벽 연출!",,
 title,title-sssu08,sssu,여름,"더워진 날씨, 시원하게!",,
 title,title-sssu09,sssu,여름,함께 쿨하게 떠나는 여름!,,
-title,title-sssu10,sssu,여름,이번 휴가는 네파와 함께,,
-title,title-sssu11,sssu,여름,여름에도 야외에선 NEPA,,
+title,title-sssu10,sssu,여름,이번 휴가는 {mall_id}와 함께,,
+title,title-sssu11,sssu,여름,여름에도 야외에선 {mall_id},,
 title,title-sssu12,sssu,여름,휴가지에서도 센스있게~,,
-title,title-sssu13,sssu,여름,여름에도 빛나는 네파 패션!,,
+title,title-sssu13,sssu,여름,여름에도 빛나는 {mall_id} 패션!,,
 title,title-sssu14,sssu,여름,"여름, 시원한 스타일로!",,
 title,title-sssu15,sssu,여름,"여름, 개성있는 패션으로!",,
 title,title-sssu16,sssu,여름,"여름 더위, 시원한 룩으로!",,
-title,title-sssu17,sssu,여름,네파 패션으로 무더위 극복!,,
+title,title-sssu17,sssu,여름,{mall_id} 패션으로 무더위 극복!,,
 title,title-sssu18,sssu,여름,더위를 날려버릴 스타일!,,
-title,title-sssu19,sssu,여름,여름에는 시원한 네파 패션~,,
-title,title-sssu20,sssu,여름,이번 여름은 네파와 함께!,,
+title,title-sssu19,sssu,여름,여름에는 시원한 {mall_id} 패션~,,
+title,title-sssu20,sssu,여름,이번 여름은 {mall_id}와 함께!,,
 title,title-ssth01,ssth,추석,함께하는 따뜻한 추석,,
 title,title-ssth02,ssth,추석,추석 기분 이제 시작,,
 title,title-ssth03,ssth,추석,"마음은 가볍게, 손은 무겁게",,
 title,title-ssth04,ssth,추석,"추석, 따뜻한 마음 전하세요",,
 title,title-sswi01,sswi,겨울,겨울 한파도 문제 없어요!,,
-title,title-sswi02,sswi,겨울,"겨울 스타일, 네파로 완성!",,
+title,title-sswi02,sswi,겨울,"겨울 스타일, {mall_id}로 완성!",,
 title,title-sswi03,sswi,겨울,"겨울 스타일, 더 포근하게~",,
-title,title-ssws01,ssws,초봄,"봄의 시작, 네파와 함께",,
+title,title-ssws01,ssws,초봄,"봄의 시작, {mall_id}와 함께",,
 title,title-ssws02,ssws,초봄,"봄, 활기 넘치는 시작을!",,
-title,title-ssws03,ssws,초봄,"꽃피는 봄, 네파와 새출발!",,
+title,title-ssws03,ssws,초봄,"꽃피는 봄, {mall_id}와 새출발!",,
 title,title-ssws04,ssws,초봄,미세먼지 주의하세요!,,
-title,title-ssws05,ssws,초봄,"봄, 네파와 산책은 어때요?",,
+title,title-ssws05,ssws,초봄,"봄, {mall_id}와 산책은 어때요?",,
 title,title-ssws06,ssws,초봄,꽃향기 가득한 봄!,,
 title,title-ssws07,ssws,초봄,따스한 햇살을 만끽해봐요!,,
 title,title-ssws08,ssws,초봄,"시원한 스타일, 활기찬 봄!",,
@@ -477,40 +477,40 @@ title,title-ssws09,ssws,초봄,햇살 가득한 따뜻한 봄!,,
 title,title-ssws10,ssws,초봄,"꽃피는 계절, 행복한 시작!",,
 title,title-ssws11,ssws,초봄,작은 변화로 새로운 감성을!,,
 title,title-ssws12,ssws,초봄,봄바람에 담긴 새로운 모습!,,
-title,title-ssws13,ssws,초봄,네파와 함께 맞는 봄 향기,,
+title,title-ssws13,ssws,초봄,{mall_id}와 함께 맞는 봄 향기,,
 title,title-ssws14,ssws,초봄,환절기 스타일로 새로움을!,,
-title,title-ssws15,ssws,초봄,봄의 상쾌함을 네파와 함께!,,
+title,title-ssws15,ssws,초봄,봄의 상쾌함을 {mall_id}와 함께!,,
 title,title-ssws16,ssws,초봄,봄의 소중한 순간을 함께.,,
-title,title-ssws17,ssws,초봄,"일교차 큰 요즘, 네파와",,
+title,title-ssws17,ssws,초봄,"일교차 큰 요즘, {mall_id}와",,
 title,title-ssws18,ssws,초봄,봄바람 따라 즐거운 쇼핑!,,
-title,title-ssws19,ssws,초봄,봄맞이 옷 쇼핑은 네파에서!,,
-title,title-ssws20,ssws,초봄,"봄의 따스함, 네파에서 계속",,
-title,title-sta01,sta,연령대별 top 추천,인기 상품 추천!,연령대별 top 추천,
-title,title-sta02,sta,연령대별 top 추천,인기 TOP 상품!,연령대별 top 추천,
-title,title-sta03,sta,연령대별 top 추천,네파의 Top 상품♡,연령대별 top 추천,
-title,title-sta04,sta,연령대별 top 추천,고객님을 위한 TOP 상품!,연령대별 top 추천,
-title,title-sta05,sta,연령대별 top 추천,네파 인기순위 확인하기!,연령대별 top 추천,
-title,title-sta06,sta,연령대별 top 추천,네파 TOP 상품 보기!,연령대별 top 추천,
-title,title-sta07,sta,연령대별 top 추천,요즘 HOT한 인기상품 보기!,연령대별 top 추천,
-title,title-sta08,sta,연령대별 top 추천,인기상품을 만나보세요!,연령대별 top 추천,
-title,title-sta09,sta,연령대별 top 추천,인기상품 보고 트렌드 잡자!,연령대별 top 추천,
-title,title-sta10,sta,연령대별 top 추천,요즘 친구들은 뭐 입지?,연령대별 top 추천,
+title,title-ssws19,ssws,초봄,봄맞이 옷 쇼핑은 {mall_id}에서!,,
+title,title-ssws20,ssws,초봄,"봄의 따스함, {mall_id}에서 계속",,
+title,title-sta01,sta,연령대별 Best 상품 추천,인기 상품 추천!,연령대별 Best 상품 추천,
+title,title-sta02,sta,연령대별 Best 상품 추천,인기 TOP 상품!,연령대별 Best 상품 추천,
+title,title-sta03,sta,연령대별 Best 상품 추천,{mall_id}의 Top 상품♡,연령대별 Best 상품 추천,
+title,title-sta04,sta,연령대별 Best 상품 추천,고객님을 위한 TOP 상품!,연령대별 Best 상품 추천,
+title,title-sta05,sta,연령대별 Best 상품 추천,{mall_id} 인기순위 확인하기!,연령대별 Best 상품 추천,
+title,title-sta06,sta,연령대별 Best 상품 추천,{mall_id} TOP 상품 보기!,연령대별 Best 상품 추천,
+title,title-sta07,sta,연령대별 Best 상품 추천,요즘 HOT한 인기상품 보기!,연령대별 Best 상품 추천,
+title,title-sta08,sta,연령대별 Best 상품 추천,인기상품을 만나보세요!,연령대별 Best 상품 추천,
+title,title-sta09,sta,연령대별 Best 상품 추천,인기상품 보고 트렌드 잡자!,연령대별 Best 상품 추천,
+title,title-sta10,sta,연령대별 Best 상품 추천,요즘 뭐 입지?,연령대별 Best 상품 추천,
 title,title-stal01,stal,공통,인기 추천 콘텐츠,,
-title,title-stal02,stal,공통,네파가 준비한 자연 이야기,,
-title,title-stal03,stal,공통,네파의 자연 힐링 여행,,
-title,title-stal04,stal,공통,자연 힐링 with 네파,,
-title,title-stal05,stal,공통,네파가 들려주는 이야기,,
-title,title-stal06,stal,공통,자연 속 힐링 with 네파,,
-title,title-stal07,stal,공통,네파가 드리는 일상의 휴식,,
-title,title-stal08,stal,공통,네파와 함께하는 휴식,,
-title,title-stal09,stal,공통,NEPA의 자연 이야기,,
-title,title-stal10,stal,공통,힐링 타임 with NEPA,,
+title,title-stal02,stal,공통,{mall_id}가 준비한 자연 이야기,,
+title,title-stal03,stal,공통,{mall_id}의 자연 힐링 여행,,
+title,title-stal04,stal,공통,자연 힐링 with {mall_id},,
+title,title-stal05,stal,공통,{mall_id}가 들려주는 이야기,,
+title,title-stal06,stal,공통,자연 속 힐링 with {mall_id},,
+title,title-stal07,stal,공통,{mall_id}가 드리는 일상의 휴식,,
+title,title-stal08,stal,공통,{mall_id}와 함께하는 휴식,,
+title,title-stal09,stal,공통,{mall_id}의 자연 이야기,,
+title,title-stal10,stal,공통,힐링 타임 with {mall_id},,
 title,title-stn02,stn,신상품 추천,신상품 출시 기념!,신상품 추천,
 title,title-stn03,stn,신상품 추천,☆신상☆ 놓치면 후회해요!,신상품 추천,
 title,title-stn04,stn,신상품 추천,트렌디한 신상품 출시♥,신상품 추천,
-title,title-stn05,stn,신상품 추천,신상 의류로 트렌디하게~,신상품 추천,
+title,title-stn05,stn,신상품 추천,신상으로 트렌디하게~,신상품 추천,
 title,title-stn09,stn,신상품 추천,신제품 출시♥,신상품 추천,
-title,title-stn10,stn,신상품 추천,"새로운 계절, 새로운 네파",신상품 추천,
+title,title-stn10,stn,신상품 추천,"새로운 계절, 새로운 {mall_id}",신상품 추천,
 main,main-pat01,pat,T,언제나 감사드리는 {고객명} 고객님,구매력 상,
 main,main-pat02,pat,T,사랑을 주시는 {고객명} 고객님,구매력 상,
 main,main-pat04,pat,T,오늘도 빛나는 {고객명} 고객님,구매력 상,
@@ -543,184 +543,184 @@ main,main-spsp02-1,spsp,봄,봄날 피크닉 꿀팁! 이거 하나면 완벽!,2030,2030
 main,main-spsp02-2,spsp,봄,꽃구경이나 나들이에 딱인 이런 상품은 어떠세요?,5060,5060
 main,main-spsp03-1,spsp,봄,"따스한 봄날의 햇살, 나들이에 딱인 아이템!",2030,2030
 main,main-spsp03-2,spsp,봄,봄을 맞아 바깥활동이 많아진 분들에게 이런 상품 추천드려요!,5060,5060
-main,main-spsp04-1,spsp,봄,네파가 엄선한 봄맞이 꿀템! 지금 바로 겟하자!,2030,2030
-main,main-spsp04-2,spsp,봄,네파가 추천해드리는 상품과 함께 봄을 맞이해보세요.,5060,5060
-main,main-spsp05-1,spsp,봄,봄바람 살랑살랑! 네파 옷 입고 나들이 떠나자!,2030,2030
-main,main-spsp05-2,spsp,봄,네파의 추천 의류와 함께 봄바람을 느껴보세요.,5060,5060
+main,main-spsp04-1,spsp,봄,{mall_id}가 엄선한 봄맞이 꿀템! 지금 바로 겟하자!,2030,2030
+main,main-spsp04-2,spsp,봄,{mall_id}가 추천해드리는 상품과 함께 봄을 맞이해보세요.,5060,5060
+main,main-spsp05-1,spsp,봄,봄바람 살랑살랑! {mall_id} 옷 입고 나들이 떠나자!,2030,2030
+main,main-spsp05-2,spsp,봄,{mall_id}의 추천 의류와 함께 봄바람을 느껴보세요.,5060,5060
 main,main-spsu01-1,spsu,여름,무더위 싹 날려줄 꿀템 등장!,2030,2030
 main,main-spsu01-2,spsu,여름,여름의 습한 무더위를 날려줄 거 같은 아이템을 가져왔어요.,5060,5060
 main,main-spsu02-1,spsu,여름,무더위 날려버릴 시원한 아이템 등장!,2030,2030
 main,main-spsu02-2,spsu,여름,시원한 여름을 나기 위한 이런 상품은 어떠세요?,5060,5060
-main,main-spsu03-1,spsu,여름,무더위도 덤벼! 네파 옷 입고 핫하게 여름 보내자!,2030,2030
-main,main-spsu03-2,spsu,여름,여름 날씨에 입기 좋은 네파 추천 상품들을 만나보세요.,5060,5060
-main,main-spsu04-1,spsu,여름,네파가 엄선한 여름 필수템 지금 바로 겟하자!,2030,2030
+main,main-spsu03-1,spsu,여름,무더위도 덤벼! {mall_id} 옷 입고 핫하게 여름 보내자!,2030,2030
+main,main-spsu03-2,spsu,여름,여름 날씨에 입기 좋은 {mall_id} 추천 상품들을 만나보세요.,5060,5060
+main,main-spsu04-1,spsu,여름,{mall_id}가 엄선한 여름 필수템 지금 바로 겟하자!,2030,2030
 main,main-spsu04-2,spsu,여름,고객님의 쾌적한 여름을 위한 아이템을 추천드립니다.,5060,5060
-main,main-spsu05-1,spsu,여름,무더위는 이제 그만! 네파 꿀템과 함께 시원한 여름 만끽해봐!,2030,2030
-main,main-spsu05-2,spsu,여름,네파가 추천하는 여름 상품과 함께 무더위를 이겨내보세요!,5060,5060
-main,main-spfa01-1,spfa,가을,가을 감성 폭발! 네파 옷 입고 나들이 떠나자!,2030,2030
-main,main-spfa01-2,spfa,가을,네파에서 가을의 캔버스를 담은 아이템을 추천해드립니다.,5060,5060
-main,main-spfa02-1,spfa,가을,친구들보다 먼저 가을 패피 되고 싶다면? 네파 옷만 있으면 딱!,2030,2030
-main,main-spfa02-2,spfa,가을,형형색색의 단풍처럼 다양한 네파의 상품을 추천드려요.,5060,5060
-main,main-spfa03-1,spfa,가을,"쌀쌀한 가을, 네파 옷 입고 따뜻하게 핫하게!",2030,2030
-main,main-spfa03-2,spfa,가을,쌀쌀한 가을에 입기 좋은 네파 상품들을 소개합니다.,5060,5060
-main,main-spfa04-1,spfa,가을,가을 감성 팡팡! 네파 옷 입고 핫플레이스 탐방 떠나자!,2030,2030
-main,main-spfa04-2,spfa,가을,가을 감성에 어울리는 네파의 추천 상품을 확인해보세요.,5060,5060
-main,main-spfa05-1,spfa,가을,쌀쌀한 가을도 끄떡없다! 네파 따뜻템으로 무장 완료!,2030,2030
-main,main-spfa05-2,spfa,가을,네파가 가을 분위기에 맞는 상품들을 추천해드려요!,5060,5060
-main,main-spwi01-1,spwi,겨울,지금 바로 네파 옷 입고 #겨울패피 도전!,2030,2030
-main,main-spwi01-2,spwi,겨울,따뜻함과 스타일을 동시에 담은 네파의 상품을 소개합니다.,5060,5060
-main,main-spwi02-1,spwi,겨울,"따뜻한 겨울 카페, 네파 옷 입고 여유로운 시간!",2030,2030
-main,main-spwi02-2,spwi,겨울,추운 겨울에 없어서는 안될 네파의 제품들을 확인해보세요.,5060,5060
-main,main-spwi03-1,spwi,겨울,겨울 한파에 떨지 마요! 네파 따뜻템 하나면 문제 해결!,2030,2030
-main,main-spwi03-2,spwi,겨울,겨울 한파를 물리칠 네파 추천 상품들을 만나보세요.,5060,5060
-main,main-spwi04-1,spwi,겨울,눈사람도 녹아버릴 네파 겨울 추천템! 지금 만나봐요!,2030,2030
-main,main-spwi04-2,spwi,겨울,네파가 겨울 추위를 이겨낼 상품들을 추천해드려요.,5060,5060
-main,main-spwi05-1,spwi,겨울,네파 겨울템 입고 힙한 겨울 사진을 찍어보세요!,2030,2030
-main,main-spwi05-2,spwi,겨울,네파의 추천 상품과 함께 겨울을 대비하세요!,5060,5060
-main,main-spws01-1,spws,초봄,꽃보다 더 예쁜 네파 봄 옷 입고 꽃길만 걷자!,2030,2030
+main,main-spsu05-1,spsu,여름,무더위는 이제 그만! {mall_id} 꿀템과 함께 시원한 여름 만끽해봐!,2030,2030
+main,main-spsu05-2,spsu,여름,{mall_id}가 추천하는 여름 상품과 함께 무더위를 이겨내보세요!,5060,5060
+main,main-spfa01-1,spfa,가을,가을 감성 폭발! {mall_id} 옷 입고 나들이 떠나자!,2030,2030
+main,main-spfa01-2,spfa,가을,{mall_id}에서 가을의 캔버스를 담은 아이템을 추천해드립니다.,5060,5060
+main,main-spfa02-1,spfa,가을,친구들보다 먼저 가을 패피 되고 싶다면? {mall_id} 옷만 있으면 딱!,2030,2030
+main,main-spfa02-2,spfa,가을,형형색색의 단풍처럼 다양한 {mall_id}의 상품을 추천드려요.,5060,5060
+main,main-spfa03-1,spfa,가을,"쌀쌀한 가을, {mall_id} 옷 입고 따뜻하게 핫하게!",2030,2030
+main,main-spfa03-2,spfa,가을,쌀쌀한 가을에 입기 좋은 {mall_id} 상품들을 소개합니다.,5060,5060
+main,main-spfa04-1,spfa,가을,가을 감성 팡팡! {mall_id} 옷 입고 핫플레이스 탐방 떠나자!,2030,2030
+main,main-spfa04-2,spfa,가을,가을 감성에 어울리는 {mall_id}의 추천 상품을 확인해보세요.,5060,5060
+main,main-spfa05-1,spfa,가을,쌀쌀한 가을도 끄떡없다! {mall_id} 따뜻템으로 무장 완료!,2030,2030
+main,main-spfa05-2,spfa,가을,{mall_id}가 가을 분위기에 맞는 상품들을 추천해드려요!,5060,5060
+main,main-spwi01-1,spwi,겨울,지금 바로 {mall_id} 옷 입고 #겨울패피 도전!,2030,2030
+main,main-spwi01-2,spwi,겨울,따뜻함과 스타일을 동시에 담은 {mall_id}의 상품을 소개합니다.,5060,5060
+main,main-spwi02-1,spwi,겨울,"따뜻한 겨울 카페, {mall_id} 옷 입고 여유로운 시간!",2030,2030
+main,main-spwi02-2,spwi,겨울,추운 겨울에 없어서는 안될 {mall_id}의 제품들을 확인해보세요.,5060,5060
+main,main-spwi03-1,spwi,겨울,겨울 한파에 떨지 마요! {mall_id} 따뜻템 하나면 문제 해결!,2030,2030
+main,main-spwi03-2,spwi,겨울,겨울 한파를 물리칠 {mall_id} 추천 상품들을 만나보세요.,5060,5060
+main,main-spwi04-1,spwi,겨울,눈사람도 녹아버릴 {mall_id} 겨울 추천템! 지금 만나봐요!,2030,2030
+main,main-spwi04-2,spwi,겨울,{mall_id}가 겨울 추위를 이겨낼 상품들을 추천해드려요.,5060,5060
+main,main-spwi05-1,spwi,겨울,{mall_id} 겨울템 입고 힙한 겨울 사진을 찍어보세요!,2030,2030
+main,main-spwi05-2,spwi,겨울,{mall_id}의 추천 상품과 함께 겨울을 대비하세요!,5060,5060
+main,main-spws01-1,spws,초봄,꽃보다 더 예쁜 {mall_id} 봄 옷 입고 꽃길만 걷자!,2030,2030
 main,main-spws01-2,spws,초봄,따뜻하고 편안한 봄맞춤 상품 추천을 확인하세요!,5060,5060
-main,main-spws02-1,spws,초봄,"따스한 햇살, 네파 봄 옷 입고 맘껏 즐겨봐!",2030,2030
+main,main-spws02-1,spws,초봄,"따스한 햇살, {mall_id} 봄 옷 입고 맘껏 즐겨봐!",2030,2030
 main,main-spws02-2,spws,초봄,다가오는 봄에 어울리는 상품을 추천해드려요.,5060,5060
-main,main-spss01-1,spss,초여름,네파 썸머룩 입고 힙한 여름 사진 남겨봐!,2030,2030
+main,main-spss01-1,spss,초여름,{mall_id} 썸머룩 입고 힙한 여름 사진 남겨봐!,2030,2030
 main,main-spss01-2,spss,초여름,다가오는 여름 맞이 아이템을 추천해드릴게요,5060,5060
-main,main-spss02-1,spss,초여름,여름에는 네파 옷 입고 시원하게 핫하게 즐기자!,2030,2030
-main,main-spss02-2,spss,초여름,네파의 추천 상품으로 무더운 여름을 준비해보세요.,5060,5060
-main,main-spsf01-1,spsf,초가을,가을 단풍 핫플레이스는 네파 옷 입고 가자!,2030,2030
+main,main-spss02-1,spss,초여름,여름에는 {mall_id} 옷 입고 시원하게 핫하게 즐기자!,2030,2030
+main,main-spss02-2,spss,초여름,{mall_id}의 추천 상품으로 무더운 여름을 준비해보세요.,5060,5060
+main,main-spsf01-1,spsf,초가을,가을 단풍 핫플레이스는 {mall_id} 옷 입고 가자!,2030,2030
 main,main-spsf01-2,spsf,초가을,가을 나들이를 함께할 상품들을 확인해보세요.,5060,5060
-main,main-spsf02-1,spsf,초가을,네파 입고 떠나는 설렘 가득한 가을 드라이브!,2030,2030
+main,main-spsf02-1,spsf,초가을,{mall_id} 입고 떠나는 설렘 가득한 가을 드라이브!,2030,2030
 main,main-spsf02-2,spsf,초가을,가을 야외활동을 위한 추천 상품들을 만나보세요.,5060,5060
-main,main-spfw01-1,spfw,초겨울,강추위는 네파 의류로 따뜻하게 녹여버리자!,2030,2030
+main,main-spfw01-1,spfw,초겨울,강추위는 {mall_id} 의류로 따뜻하게 녹여버리자!,2030,2030
 main,main-spfw01-2,spfw,초겨울,추위에 대비할 수 있는 상품들을 추천합니다.,5060,5060
-main,main-spfw02-1,spfw,초겨울,한파에 대비해서 네파 추천 상품을 미리 챙겨보세요!,2030,2030
-main,main-spfw02-2,spfw,초겨울,네파 추천 아이템으로 한파를 미리 대비하세요.,5060,5060
+main,main-spfw02-1,spfw,초겨울,한파에 대비해서 {mall_id} 추천 상품을 미리 챙겨보세요!,2030,2030
+main,main-spfw02-2,spfw,초겨울,{mall_id} 추천 아이템으로 한파를 미리 대비하세요.,5060,5060
 main,main-spny01-1,spny,새해,올해는 스타일을 새롭게 시작해보는 건 어떨까요?,2030,2030
-main,main-spny01-2,spny,새해,새해를 맞아 네파의 신상품들을 확인해보세요!,5060,5060
-main,main-spny02-1,spny,새해,새해에는 네파의 신상품으로 새로운 스타일을 연출해보세요.,2030,2030
-main,main-spny02-2,spny,새해,네파의 신년맞이 추천 신상품을 만나보세요.,5060,5060
+main,main-spny01-2,spny,새해,새해를 맞아 {mall_id}의 신상품들을 확인해보세요!,5060,5060
+main,main-spny02-1,spny,새해,새해에는 {mall_id}의 신상품으로 새로운 스타일을 연출해보세요.,2030,2030
+main,main-spny02-2,spny,새해,{mall_id}의 신년맞이 추천 신상품을 만나보세요.,5060,5060
 main,main-spln01-1,spln,설날,새해의 시작을 따뜻하고 스타일리시하게 준비하세요.,2030,2030
 main,main-spln01-2,spln,설날,설을 맞아 가족과 함께 입을만한 신상품을 추천합니다.,5060,5060
 main,main-spln02-1,spln,설날,새로운 해를 맞아 트렌디한 아이템으로 스타일을 업그레이드 해보세요.,2030,2030
-main,main-spln02-2,spln,설날,설선물로 딱 좋은 네파 상품을 추천받으세요.,5060,5060
-main,main-spth01-1,spth,추석,보름달처럼 빛나는 네파 상품들을 놓치지 마세요!,2030,2030
-main,main-spth01-2,spth,추석,한가위처럼 풍성한 네파 상품들을 확인해보세요!,5060,5060
-main,main-spth02-1,spth,추석,부모님 명절 선물로 네파 상품 어떠세요?,2030,2030
-main,main-spth02-2,spth,추석,명절에 선물하기 좋은 네파 상품을 추천드려요.,5060,5060
-main,main-sppd01-1,sppd,어버이날,부모님께 감사의 마음을 전해드릴 선물로 네파 상품을 추천해요!,2030,2030
+main,main-spln02-2,spln,설날,설선물로 딱 좋은 {mall_id} 상품을 추천받으세요.,5060,5060
+main,main-spth01-1,spth,추석,보름달처럼 빛나는 {mall_id} 상품들을 놓치지 마세요!,2030,2030
+main,main-spth01-2,spth,추석,한가위처럼 풍성한 {mall_id} 상품들을 확인해보세요!,5060,5060
+main,main-spth02-1,spth,추석,부모님 명절 선물로 {mall_id} 상품 어떠세요?,2030,2030
+main,main-spth02-2,spth,추석,명절에 선물하기 좋은 {mall_id} 상품을 추천드려요.,5060,5060
+main,main-sppd01-1,sppd,어버이날,부모님께 감사의 마음을 전해드릴 선물로 {mall_id} 상품을 추천해요!,2030,2030
 main,main-sppd01-2,sppd,어버이날,추천해드리는 상품으로 부모님께 감사의 마음을 전해보세요.,5060,5060
-main,main-sppd02-1,sppd,어버이날,네파가 준비한 추천 상품으로 감사의 마음을 전해봐요!,2030,2030
-main,main-sppd02-2,sppd,어버이날,감사의 마음을 담아 네파가 준비한 추천 상품이에요.,5060,5060
-main,main-spfm01-1,spfm,가정의달,네파가 준비한 가족 맞춤형 상품으로 가정의 달을 축하해보세요!,2030,2030
-main,main-spfm01-2,spfm,가정의달,가정의 달을 맞아 네파가 가족 맞춤형 상품을 추천해드립니다!,5060,5060
-main,main-spfm02-1,spfm,가정의달,네파 추천 아이템으로 가정의달 선물 고민 해결!,2030,2030
-main,main-spfm02-2,spfm,가정의달,네파의 추천 상품으로 가족 선물 고민을 해결하세요!,5060,5060
-main,main-spch01-1,spch,크리스마스,네파가 준비한 올해 크리스마스 선물을 확인해보세요!,2030,2030
-main,main-spch01-2,spch,크리스마스,올해 크리스마스 선물을 네파가 추천해드릴게요!,5060,5060
-main,main-spch02-1,spch,크리스마스,네파와 함게 힙한 크리스마스룩 완성!,2030,2030
-main,main-spch02-2,spch,크리스마스,네파 산타의 크리스마스 상품 추천을 확인하세요!,5060,5060
+main,main-sppd02-1,sppd,어버이날,{mall_id}가 준비한 추천 상품으로 감사의 마음을 전해봐요!,2030,2030
+main,main-sppd02-2,sppd,어버이날,감사의 마음을 담아 {mall_id}가 준비한 추천 상품이에요.,5060,5060
+main,main-spfm01-1,spfm,가정의달,{mall_id}가 준비한 가족 맞춤형 상품으로 가정의 달을 축하해보세요!,2030,2030
+main,main-spfm01-2,spfm,가정의달,가정의 달을 맞아 {mall_id}가 가족 맞춤형 상품을 추천해드립니다!,5060,5060
+main,main-spfm02-1,spfm,가정의달,{mall_id} 추천 아이템으로 가정의달 선물 고민 해결!,2030,2030
+main,main-spfm02-2,spfm,가정의달,{mall_id}의 추천 상품으로 가족 선물 고민을 해결하세요!,5060,5060
+main,main-spch01-1,spch,크리스마스,{mall_id}가 준비한 올해 크리스마스 선물을 확인해보세요!,2030,2030
+main,main-spch01-2,spch,크리스마스,올해 크리스마스 선물을 {mall_id}가 추천해드릴게요!,5060,5060
+main,main-spch02-1,spch,크리스마스,{mall_id}와 함게 힙한 크리스마스룩 완성!,2030,2030
+main,main-spch02-2,spch,크리스마스,{mall_id} 산타의 크리스마스 상품 추천을 확인하세요!,5060,5060
 main,main-spey01-1,spey,연말,나 자신을 위한 특별한 선물로 힐링타임을 가져보세요!,2030,2030
 main,main-spey01-2,spey,연말,한 해동안 정말 고생한 나에게 주는 선물 추천!,5060,5060
-main,main-spey02-1,spey,연말,네파의 추천 상품과 함께 올해를 마무리해보세요!,2030,2030
-main,main-spey02-2,spey,연말,올해 마무리는 네파의 추천 상품과 함께 해보세요.,5060,5060
-main,main-spsd01-1,spsd,개강,새로운 학기를 맞아 네파의 추천 신상품을 확인해보세요!,2030,2030
+main,main-spey02-1,spey,연말,{mall_id}의 추천 상품과 함께 올해를 마무리해보세요!,2030,2030
+main,main-spey02-2,spey,연말,올해 마무리는 {mall_id}의 추천 상품과 함께 해보세요.,5060,5060
+main,main-spsd01-1,spsd,개강,새로운 학기를 맞아 {mall_id}의 추천 신상품을 확인해보세요!,2030,2030
 main,main-spsd01-2,spsd,개강,새학기 맞이 신상품을 추천드려요!,5060,5060
 main,main-spsd02-1,spsd,개강,아이들을 위한 신학기 선물을 찾고 계신가요?,2030,2030
 main,main-spsd02-2,spsd,개강,우리 아이 신학기 선물로 딱인 상품을 추천합니다.,5060,5060
-main,main-spgr01-1,spgr,졸업,네파가 제안하는 졸업 선물!,2030,2030
-main,main-spgr01-2,spgr,졸업,우리 아이의 졸업을 축하하는 선물로 네파가 추천합니다!,5060,5060
-main,main-spgr02-1,spgr,졸업,졸업 시즌을 맞아 네파가 추천하는 상품을 확인하세요!,2030,2030
-main,main-spgr02-2,spgr,졸업,졸업 시즌 맞이 네파의 상품 추천을 확인하세요.,5060,5060
+main,main-spgr01-1,spgr,졸업,{mall_id}가 제안하는 졸업 선물!,2030,2030
+main,main-spgr01-2,spgr,졸업,우리 아이의 졸업을 축하하는 선물로 {mall_id}가 추천합니다!,5060,5060
+main,main-spgr02-1,spgr,졸업,졸업 시즌을 맞아 {mall_id}가 추천하는 상품을 확인하세요!,2030,2030
+main,main-spgr02-2,spgr,졸업,졸업 시즌 맞이 {mall_id}의 상품 추천을 확인하세요.,5060,5060
 main,main-sosp01-1,sosp,봄,봄바람과 함께 특별한 혜택을 경험해보세요!,2030,2030
-main,main-sosp01-2,sosp,봄,봄바람과 함께 날아온 네파의 한정 혜택을 확인해보세요.,5060,5060
-main,main-sosp02-1,sosp,봄,봄의 햇살과 어울리는 따스한 혜택을 네파에서 만나보세요!,2030,2030
+main,main-sosp01-2,sosp,봄,봄바람과 함께 날아온 {mall_id}의 한정 혜택을 확인해보세요.,5060,5060
+main,main-sosp02-1,sosp,봄,봄의 햇살과 어울리는 따스한 혜택을 {mall_id}에서 만나보세요!,2030,2030
 main,main-sosp02-2,sosp,봄,햇살 가득한 봄에 어울리는 따스한 혜택을 만나보세요.,5060,5060
-main,main-sosp03-1,sosp,봄,네파의 혜택으로 봄 스타일을 즐겨보세요!,2030,2030
-main,main-sosp03-2,sosp,봄,네파에서 혜택받고 봄 나들이 패션을 완성하세요.,5060,5060
+main,main-sosp03-1,sosp,봄,{mall_id}의 혜택으로 봄 스타일을 즐겨보세요!,2030,2030
+main,main-sosp03-2,sosp,봄,{mall_id}에서 혜택받고 봄 나들이 패션을 완성하세요.,5060,5060
 main,main-sosp04-1,sosp,봄,새로운 봄을 맞이하는 특별한 혜택을 확인해보세요!,2030,2030
-main,main-sosp04-2,sosp,봄,네파가 준비한 봄 혜택으로 다양한 상품들을 만나보세요.,5060,5060
-main,main-sosp05-1,sosp,봄,봄을 맞아 네파가 제공하는 혜택으로 설레는 계절을 함께하세요!,2030,2030
-main,main-sosp05-2,sosp,봄,네파가 드리는 봄 한정 혜택과 함께 설레는 계절을 맞이하세요.,5060,5060
-main,main-sosu01-1,sosu,여름,네파의 여름 혜택으로 무더운 햇살을 시원하게 이겨내세요!,2030,2030
-main,main-sosu01-2,sosu,여름,"무더운 여름 햇살, 네파가 보내드리는 혜택으로 시원하게~",5060,5060
+main,main-sosp04-2,sosp,봄,{mall_id}가 준비한 봄 혜택으로 다양한 상품들을 만나보세요.,5060,5060
+main,main-sosp05-1,sosp,봄,봄을 맞아 {mall_id}가 제공하는 혜택으로 설레는 계절을 함께하세요!,2030,2030
+main,main-sosp05-2,sosp,봄,{mall_id}가 드리는 봄 한정 혜택과 함께 설레는 계절을 맞이하세요.,5060,5060
+main,main-sosu01-1,sosu,여름,{mall_id}의 여름 혜택으로 무더운 햇살을 시원하게 이겨내세요!,2030,2030
+main,main-sosu01-2,sosu,여름,"무더운 여름 햇살, {mall_id}가 보내드리는 혜택으로 시원하게~",5060,5060
 main,main-sosu02-1,sosu,여름,여름의 더위를 시원하게 이겨내는 특별한 혜택을 확인해보세요!,2030,2030
-main,main-sosu02-2,sosu,여름,네파가 준비한 혜택으로 여름 더위를 날려버려요.,5060,5060
-main,main-sosu03-1,sosu,여름,"무더위에 녹지 말고, 혜택 가득한 네파에서 시원한 여름을 만나보세요!",2030,2030
-main,main-sosu03-2,sosu,여름,뜨거운 태양을 피해 네파로 오셔서 혜택도 받아가세요~,5060,5060
-main,main-sosu04-1,sosu,여름,네파 혜택과 함께 즐거운 휴가를 떠나보자고!,2030,2030
-main,main-sosu04-2,sosu,여름,네파 혜택 받으시고 여름 휴가를 준비하세요!,5060,5060
+main,main-sosu02-2,sosu,여름,{mall_id}가 준비한 혜택으로 여름 더위를 날려버려요.,5060,5060
+main,main-sosu03-1,sosu,여름,"무더위에 녹지 말고, 혜택 가득한 {mall_id}에서 시원한 여름을 만나보세요!",2030,2030
+main,main-sosu03-2,sosu,여름,뜨거운 태양을 피해 {mall_id}로 오셔서 혜택도 받아가세요~,5060,5060
+main,main-sosu04-1,sosu,여름,{mall_id} 혜택과 함께 즐거운 휴가를 떠나보자고!,2030,2030
+main,main-sosu04-2,sosu,여름,{mall_id} 혜택 받으시고 여름 휴가를 준비하세요!,5060,5060
 main,main-sosu05-1,sosu,여름,여름을 시원하게 보내는 특별한 혜택을 만나보세요!,2030,2030
-main,main-sosu05-2,sosu,여름,여름 무더위를 싹~ 씻어낼 네파의 혜택을 확인하세요.,5060,5060
-main,main-sofa01-1,sofa,가을,네파가 준비한 혜택으로 쌀쌀한 날씨를 미리 대비하세요!,2030,2030
-main,main-sofa01-2,sofa,가을,커지는 일교차 만큼이나 큰 네파의 혜택을 확인하세요.,5060,5060
+main,main-sosu05-2,sosu,여름,여름 무더위를 싹~ 씻어낼 {mall_id}의 혜택을 확인하세요.,5060,5060
+main,main-sofa01-1,sofa,가을,{mall_id}가 준비한 혜택으로 쌀쌀한 날씨를 미리 대비하세요!,2030,2030
+main,main-sofa01-2,sofa,가을,커지는 일교차 만큼이나 큰 {mall_id}의 혜택을 확인하세요.,5060,5060
 main,main-sofa02-1,sofa,가을,가을 특별 혜택으로 나들이 준비를 더욱 즐겁게 해보세요!,2030,2030
-main,main-sofa02-2,sofa,가을,가을 나들이도 네파 혜택과 함께 준비하세요~,5060,5060
-main,main-sofa03-1,sofa,가을,네파의 혜택으로 가을의 매력을 담은 스타일링을 즐겨보세요!,2030,2030
-main,main-sofa03-2,sofa,가을,네파에서 준비한 한정 혜택으로 가을 옷 장만하세요.,5060,5060
+main,main-sofa02-2,sofa,가을,가을 나들이도 {mall_id} 혜택과 함께 준비하세요~,5060,5060
+main,main-sofa03-1,sofa,가을,{mall_id}의 혜택으로 가을의 매력을 담은 스타일링을 즐겨보세요!,2030,2030
+main,main-sofa03-2,sofa,가을,{mall_id}에서 준비한 한정 혜택으로 가을 옷 장만하세요.,5060,5060
 main,main-sofa04-1,sofa,가을,가을의 멋을 완성하는 데 도움이 될 혜택이 기다리고 있어요.,2030,2030
-main,main-sofa04-2,sofa,가을,이번 가을 패션은 네파 혜택과 함께 준비해보세요.,5060,5060
+main,main-sofa04-2,sofa,가을,이번 가을 패션은 {mall_id} 혜택과 함께 준비해보세요.,5060,5060
 main,main-sofa05-1,sofa,가을,환절기 스타일링을 더욱 특별하게 만들어줄 혜택을 준비했어요~,2030,2030
-main,main-sofa05-2,sofa,가을,환절기 옷차림도 네파 혜택으로 완성해보세요.,5060,5060
+main,main-sofa05-2,sofa,가을,환절기 옷차림도 {mall_id} 혜택으로 완성해보세요.,5060,5060
 main,main-sowi01-1,sowi,겨울,겨울철 특별한 혜택으로 따뜻한 아이템을 찾아보세요!,2030,2030
-main,main-sowi01-2,sowi,겨울,네파가 드리는 한정 혜택으로 추운 겨울을 이겨내세요!,5060,5060
-main,main-sowi02-1,sowi,겨울,겨울철 필수템부터 센스있는 패션템까지 네파 혜택과 함께하세요!,2030,2030
-main,main-sowi02-2,sowi,겨울,네파가 어울리는 겨울에도 많은 혜택 받아가세요.,5060,5060
-main,main-sowi03-1,sowi,겨울,"네파와 함께하는 겨울, 따뜻한 혜택을 만나보세요!",2030,2030
-main,main-sowi03-2,sowi,겨울,추운 겨울에도 따뜻하시라고 네파가 혜택을 챙겨드려요.,5060,5060
-main,main-sowi04-1,sowi,겨울,네파 혜택으로 포근하고 트렌디한 아이템들을 만나보세요!,2030,2030
-main,main-sowi04-2,sowi,겨울,겨울 바람을 뚫고 도착한 네파의 혜택을 확인하세요.,5060,5060
+main,main-sowi01-2,sowi,겨울,{mall_id}가 드리는 한정 혜택으로 추운 겨울을 이겨내세요!,5060,5060
+main,main-sowi02-1,sowi,겨울,겨울철 필수템부터 센스있는 패션템까지 {mall_id} 혜택과 함께하세요!,2030,2030
+main,main-sowi02-2,sowi,겨울,{mall_id}가 어울리는 겨울에도 많은 혜택 받아가세요.,5060,5060
+main,main-sowi03-1,sowi,겨울,"{mall_id}와 함께하는 겨울, 따뜻한 혜택을 만나보세요!",2030,2030
+main,main-sowi03-2,sowi,겨울,추운 겨울에도 따뜻하시라고 {mall_id}가 혜택을 챙겨드려요.,5060,5060
+main,main-sowi04-1,sowi,겨울,{mall_id} 혜택으로 포근하고 트렌디한 아이템들을 만나보세요!,2030,2030
+main,main-sowi04-2,sowi,겨울,겨울 바람을 뚫고 도착한 {mall_id}의 혜택을 확인하세요.,5060,5060
 main,main-sowi05-1,sowi,겨울,겨울철 특별한 선물과 혜택으로 포근한 시간을 보내보세요!,2030,2030
-main,main-sowi05-2,sowi,겨울,네파가 준비한 한정 혜택 받으시고 따뜻한 겨울 되세요!,5060,5060
-main,main-sows01-1,sows,초봄,네파가 보내드린 혜택으로 봄바람을 만끽하세요!,2030,2030
-main,main-sows01-2,sows,초봄,네파가 보내드린 혜택과 함께 봄바람을 맞이하세요~,5060,5060
-main,main-sows02-1,sows,초봄,봄봄봄~ 네파의 혜택과 함께 봄을 느껴보세요!,2030,2030
-main,main-sows02-2,sows,초봄,봄봄봄 봄이 왔어요~ 네파 혜택과 함께 봄이 왔어요~,5060,5060
-main,main-soss01-1,soss,초여름,"여름의 시작, 네파가 준비한 특별한 혜택으로 여름을 맞이해요!",2030,2030
-main,main-soss01-2,soss,초여름,"여름의 시작, 네파가 드리는 혜택으로 함께하세요.",5060,5060
-main,main-soss02-1,soss,초여름,네파가 준비한 초여름 혜택으로 더욱 특별한 여름을 만나보세요!,2030,2030
-main,main-soss02-2,soss,초여름,여름 맞이 네파 혜택을 놓치지 마세요.,5060,5060
-main,main-sosf01-1,sosf,초가을,상쾌한 가을에 어울리는 유쾌한 네파 혜택!,2030,2030
-main,main-sosf01-2,sosf,초가을,가을의 상쾌함을 느끼며 네파의 특별한 혜택을 즐겨보세요!,5060,5060
-main,main-sosf02-1,sosf,초가을,가을을 맞아 네파의 한정 혜택을 놓치지 마세요!,2030,2030
+main,main-sowi05-2,sowi,겨울,{mall_id}가 준비한 한정 혜택 받으시고 따뜻한 겨울 되세요!,5060,5060
+main,main-sows01-1,sows,초봄,{mall_id}가 보내드린 혜택으로 봄바람을 만끽하세요!,2030,2030
+main,main-sows01-2,sows,초봄,{mall_id}가 보내드린 혜택과 함께 봄바람을 맞이하세요~,5060,5060
+main,main-sows02-1,sows,초봄,봄봄봄~ {mall_id}의 혜택과 함께 봄을 느껴보세요!,2030,2030
+main,main-sows02-2,sows,초봄,봄봄봄 봄이 왔어요~ {mall_id} 혜택과 함께 봄이 왔어요~,5060,5060
+main,main-soss01-1,soss,초여름,"여름의 시작, {mall_id}가 준비한 특별한 혜택으로 여름을 맞이해요!",2030,2030
+main,main-soss01-2,soss,초여름,"여름의 시작, {mall_id}가 드리는 혜택으로 함께하세요.",5060,5060
+main,main-soss02-1,soss,초여름,{mall_id}가 준비한 초여름 혜택으로 더욱 특별한 여름을 만나보세요!,2030,2030
+main,main-soss02-2,soss,초여름,여름 맞이 {mall_id} 혜택을 놓치지 마세요.,5060,5060
+main,main-sosf01-1,sosf,초가을,상쾌한 가을에 어울리는 유쾌한 {mall_id} 혜택!,2030,2030
+main,main-sosf01-2,sosf,초가을,가을의 상쾌함을 느끼며 {mall_id}의 특별한 혜택을 즐겨보세요!,5060,5060
+main,main-sosf02-1,sosf,초가을,가을을 맞아 {mall_id}의 한정 혜택을 놓치지 마세요!,2030,2030
 main,main-sosf02-2,sosf,초가을,가을을 맞아 드리는 한정 혜택을 확인해보세요.,5060,5060
-main,main-sofw01-1,sofw,초겨울,네파의 특별한 혜택으로 따뜻한 겨울을 준비해보세요!,2030,2030
-main,main-sofw01-2,sofw,초겨울,네파가 준비한 혜택으로 추위를 대비하세요~,5060,5060
-main,main-sofw02-1,sofw,초겨울,네파의 혜택으로 올겨울 강추위를 날려버리세요!,2030,2030
-main,main-sofw02-2,sofw,초겨울,올겨울 강추위는 네파 혜택 받고 준비하세요.,5060,5060
-main,main-sony01-1,sony,새해,네파의 혜택으로 새로운 시작을 즐겨봐요!,2030,2030
-main,main-sony01-2,sony,새해,네파가 드리는 혜택으로 새로운 시작을 함께 하세요.,5060,5060
-main,main-sony02-1,sony,새해,새해에도 네파 혜택으로 풍성한 시작을!,2030,2030
-main,main-sony02-2,sony,새해,네파가 준비한 새해 혜택 많이 받으세요~,5060,5060
-main,main-soln01-1,soln,설날,네파 혜택으로 새해 기운 가득하세요!,2030,2030
-main,main-soln01-2,soln,설날,"새해 복 많이 받으시고, 네파 혜택도 많이 받아가세요!",5060,5060
-main,main-soln02-1,soln,설날,네파가 준비한 명절 혜택으로 특별한 순간을 함께하세요!,2030,2030
-main,main-soln02-2,soln,설날,새해 명절에도 네파가 준비한 혜택과 함께 해보세요.,5060,5060
-main,main-soth01-1,soth,추석,네파와 함께 특별한 명절을 즐겨보세요!,2030,2030
-main,main-soth01-2,soth,추석,네파의 혜택과 함께 즐거운 명절 보내세요.,5060,5060
-main,main-soth02-1,soth,추석,한가위를 맞아 네파의 혜택을 누려보세요!,2030,2030
-main,main-soth02-2,soth,추석,한가위를 맞아 네파가 준비한 혜택을 살펴보세요.,5060,5060
-main,main-sopd01-1,sopd,어버이날,"네파 혜택 확인하고, 부모님에게 감사를 표현해보세요!",2030,2030
-main,main-sopd01-2,sopd,어버이날,"네파 혜택 확인하시고, 부모님께 감사한 마음을 전해보세요.",5060,5060
-main,main-sopd02-1,sopd,어버이날,네파 혜택으로 부모님 감사 선물을 준비하시는건 어때요?,2030,2030
-main,main-sopd02-2,sopd,어버이날,네파 혜택을 활용하여 부모님을 위한 감사 선물을 준비해보세요!,5060,5060
-main,main-sofm01-1,sofm,가정의달,네파가 제공하는 혜택으로 가족과 특별한 시간을 함께하세요!,2030,2030
-main,main-sofm01-2,sofm,가정의달,네파가 드리는 혜택을 소중한 가족과 함께 사용해보세요.,5060,5060
-main,main-sofm02-1,sofm,가정의달,가족과 함께 네파의 혜택을 활용하여 행복한 시간을 보내보세요!,2030,2030
-main,main-sofm02-2,sofm,가정의달,사랑하는 가족과 함께 네파의 혜택을 활용하세요.,5060,5060
-main,main-soch01-1,soch,크리스마스,네파의 크리스마스 혜택 수신 완료!,2030,2030
-main,main-soch01-2,soch,크리스마스,네파가 준비한 크리스마스 혜택이 도착했어요.,5060,5060
-main,main-soch02-1,soch,크리스마스,네파가 크리스마스 선물로 한정 혜택을 드려요!,2030,2030
-main,main-soch02-2,soch,크리스마스,크리스마스 선물로 네파가 한정 혜택을 제공해드려요.,5060,5060
-main,main-soey01-1,soey,연말,연말에도 놓칠 수 없는 네파의 혜택!,2030,2030
-main,main-soey01-2,soey,연말,네파가 연말을 맞아 특별한 혜택을 준비했어요!,5060,5060
-main,main-soey02-1,soey,연말,연말까지 이어지는 네파의 혜택을 놓치지 마세요!,2030,2030
-main,main-soey02-2,soey,연말,연말까지 계속되는 네파의 혜택을 만나보세요.,5060,5060
-main,main-sosd01-1,sosd,개강,신학기 맞이 네파의 혜택을 즐겨보세요!,2030,2030
-main,main-sosd01-2,sosd,개강,신학기를 위한 네파의 혜택을 누려보세요.,5060,5060
-main,main-sosd02-1,sosd,개강,네파 혜택으로 힙한 새학기룩 완성!,2030,2030
-main,main-sosd02-2,sosd,개강,네파가 준비한 혜택으로 새학기를 준비해보세요.,5060,5060
-main,main-sogr01-1,sogr,졸업,네파 혜택으로 졸업 선물 고민 끝! 핵꿀템만 쏙쏙!,2030,2030
-main,main-sogr01-2,sogr,졸업,아이들 졸업 선물도 네파 혜택받고 준비해요!,5060,5060
-main,main-sogr02-1,sogr,졸업,졸업식에 빛나고 싶다면? 네파 한정 혜택!,2030,2030
-main,main-sogr02-2,sogr,졸업,네파의 졸업식 기간 한정 혜택을 확인해보세요.,5060,5060
+main,main-sofw01-1,sofw,초겨울,{mall_id}의 특별한 혜택으로 따뜻한 겨울을 준비해보세요!,2030,2030
+main,main-sofw01-2,sofw,초겨울,{mall_id}가 준비한 혜택으로 추위를 대비하세요~,5060,5060
+main,main-sofw02-1,sofw,초겨울,{mall_id}의 혜택으로 올겨울 강추위를 날려버리세요!,2030,2030
+main,main-sofw02-2,sofw,초겨울,올겨울 강추위는 {mall_id} 혜택 받고 준비하세요.,5060,5060
+main,main-sony01-1,sony,새해,{mall_id}의 혜택으로 새로운 시작을 즐겨봐요!,2030,2030
+main,main-sony01-2,sony,새해,{mall_id}가 드리는 혜택으로 새로운 시작을 함께 하세요.,5060,5060
+main,main-sony02-1,sony,새해,새해에도 {mall_id} 혜택으로 풍성한 시작을!,2030,2030
+main,main-sony02-2,sony,새해,{mall_id}가 준비한 새해 혜택 많이 받으세요~,5060,5060
+main,main-soln01-1,soln,설날,{mall_id} 혜택으로 새해 기운 가득하세요!,2030,2030
+main,main-soln01-2,soln,설날,"새해 복 많이 받으시고, {mall_id} 혜택도 많이 받아가세요!",5060,5060
+main,main-soln02-1,soln,설날,{mall_id}가 준비한 명절 혜택으로 특별한 순간을 함께하세요!,2030,2030
+main,main-soln02-2,soln,설날,새해 명절에도 {mall_id}가 준비한 혜택과 함께 해보세요.,5060,5060
+main,main-soth01-1,soth,추석,{mall_id}와 함께 특별한 명절을 즐겨보세요!,2030,2030
+main,main-soth01-2,soth,추석,{mall_id}의 혜택과 함께 즐거운 명절 보내세요.,5060,5060
+main,main-soth02-1,soth,추석,한가위를 맞아 {mall_id}의 혜택을 누려보세요!,2030,2030
+main,main-soth02-2,soth,추석,한가위를 맞아 {mall_id}가 준비한 혜택을 살펴보세요.,5060,5060
+main,main-sopd01-1,sopd,어버이날,"{mall_id} 혜택 확인하고, 부모님에게 감사를 표현해보세요!",2030,2030
+main,main-sopd01-2,sopd,어버이날,"{mall_id} 혜택 확인하시고, 부모님께 감사한 마음을 전해보세요.",5060,5060
+main,main-sopd02-1,sopd,어버이날,{mall_id} 혜택으로 부모님 감사 선물을 준비하시는건 어때요?,2030,2030
+main,main-sopd02-2,sopd,어버이날,{mall_id} 혜택을 활용하여 부모님을 위한 감사 선물을 준비해보세요!,5060,5060
+main,main-sofm01-1,sofm,가정의달,{mall_id}가 제공하는 혜택으로 가족과 특별한 시간을 함께하세요!,2030,2030
+main,main-sofm01-2,sofm,가정의달,{mall_id}가 드리는 혜택을 소중한 가족과 함께 사용해보세요.,5060,5060
+main,main-sofm02-1,sofm,가정의달,가족과 함께 {mall_id}의 혜택을 활용하여 행복한 시간을 보내보세요!,2030,2030
+main,main-sofm02-2,sofm,가정의달,사랑하는 가족과 함께 {mall_id}의 혜택을 활용하세요.,5060,5060
+main,main-soch01-1,soch,크리스마스,{mall_id}의 크리스마스 혜택 수신 완료!,2030,2030
+main,main-soch01-2,soch,크리스마스,{mall_id}가 준비한 크리스마스 혜택이 도착했어요.,5060,5060
+main,main-soch02-1,soch,크리스마스,{mall_id}가 크리스마스 선물로 한정 혜택을 드려요!,2030,2030
+main,main-soch02-2,soch,크리스마스,크리스마스 선물로 {mall_id}가 한정 혜택을 제공해드려요.,5060,5060
+main,main-soey01-1,soey,연말,연말에도 놓칠 수 없는 {mall_id}의 혜택!,2030,2030
+main,main-soey01-2,soey,연말,{mall_id}가 연말을 맞아 특별한 혜택을 준비했어요!,5060,5060
+main,main-soey02-1,soey,연말,연말까지 이어지는 {mall_id}의 혜택을 놓치지 마세요!,2030,2030
+main,main-soey02-2,soey,연말,연말까지 계속되는 {mall_id}의 혜택을 만나보세요.,5060,5060
+main,main-sosd01-1,sosd,개강,신학기 맞이 {mall_id}의 혜택을 즐겨보세요!,2030,2030
+main,main-sosd01-2,sosd,개강,신학기를 위한 {mall_id}의 혜택을 누려보세요.,5060,5060
+main,main-sosd02-1,sosd,개강,{mall_id} 혜택으로 힙한 새학기룩 완성!,2030,2030
+main,main-sosd02-2,sosd,개강,{mall_id}가 준비한 혜택으로 새학기를 준비해보세요.,5060,5060
+main,main-sogr01-1,sogr,졸업,{mall_id} 혜택으로 졸업 선물 고민 끝! 핵꿀템만 쏙쏙!,2030,2030
+main,main-sogr01-2,sogr,졸업,아이들 졸업 선물도 {mall_id} 혜택받고 준비해요!,5060,5060
+main,main-sogr02-1,sogr,졸업,졸업식에 빛나고 싶다면? {mall_id} 한정 혜택!,2030,2030
+main,main-sogr02-2,sogr,졸업,{mall_id}의 졸업식 기간 한정 혜택을 확인해보세요.,5060,5060
 main,main-sssp01-1,sssp,봄,봄빛과 함께 행복 가득한 날들이 되길 바라요!,2030,2030
 main,main-sssp01-2,sssp,봄,따스한 봄 햇살과 함께 행복한 일들이 가득하시길 바래요,5060,5060
 main,main-sssp02-1,sssp,봄,"봄이 왔다구~ 겨울아, 바이바이~",2030,2030
@@ -729,7 +729,7 @@ main,main-sssp03-1,sssp,봄,"꽃들이 만발, 날씨가 따땃~해졌어요!",2030,2030
 main,main-sssp03-2,sssp,봄,꽃들이 만개할 정도로 따뜻해진 날씨네요.,5060,5060
 main,main-sssp04-1,sssp,봄,"봄의 싱그러움과 함께, 진짜 행복을 느껴보아요!",2030,2030
 main,main-sssp04-2,sssp,봄,봄날의 싱그러운 풍경과 함께 행복한 시간을 보내보세요.,5060,5060
-main,main-sssp05-1,sssp,봄,"따스한 봄, 새 출발은 네파와 함께해요~!",2030,2030
+main,main-sssp05-1,sssp,봄,"따스한 봄, 새 출발은 {mall_id}와 함께해요~!",2030,2030
 main,main-sssp05-2,sssp,봄,새로운 시작을 함께하는 따뜻한 봄날을 느껴보세요,5060,5060
 main,main-sssu01-1,sssu,여름,"여름엔 물로 채워, 탈수 OUT!",2030,2030
 main,main-sssu01-2,sssu,여름,여름 + 물 = 탈수 예방,5060,5060
@@ -759,8 +759,8 @@ main,main-sswi03-1,sswi,겨울,바람의 역습에 맞서려면? 방한템으로 무장!,2030,2030
 main,main-sswi03-2,sswi,겨울,매서운 바람이 부는 날에는 외출시 방한용품을 꼭 착용하세요.,5060,5060
 main,main-sswi04-1,sswi,겨울,"추위야 가라, 면역력 IN! 감기 OUT!",2030,2030
 main,main-sswi04-2,sswi,겨울,추운 겨울에는 면역력 잘 챙기셔서 감기 예방하세요!,5060,5060
-main,main-sswi05-1,sswi,겨울,네파랑 같이 따스하고 포근포근~ 겨울나기!,2030,2030
-main,main-sswi05-2,sswi,겨울,"겨울 + 네파 = 따뜻, 포근함으로 Perfect!",5060,5060
+main,main-sswi05-1,sswi,겨울,{mall_id}랑 같이 따스하고 포근포근~ 겨울나기!,2030,2030
+main,main-sswi05-2,sswi,겨울,"겨울 + {mall_id} = 따뜻, 포근함으로 Perfect!",5060,5060
 main,main-ssws01-1,ssws,초봄,풀린 날씨처럼 행복 가득한 하루 되길!,2030,2030
 main,main-ssws01-2,ssws,초봄,풀리는 날씨 만큼이나 따뜻하고 행복한 하루 되세요~,5060,5060
 main,main-ssws02-1,ssws,초봄,새싹들이 봄 속에서 새로운 시작을 하고 있어요~!,2030,2030
@@ -811,76 +811,76 @@ main,main-sssd02-1,sssd,개강,새 학기를 앞둔 아이들에게 응원의 에너지를 전해줘요!
 main,main-sssd02-2,sssd,개강,새 학년의 출발선에 서있는 아이들을 응원해 주세요!,5060,5060
 main,main-ssgr01-1,ssgr,졸업,노력의 씨앗으로 졸업이라는 열매를 맺으신 걸 축하드려요!,2030,2030
 main,main-ssgr01-2,ssgr,졸업,"많은 노력의 결실, 졸업을 진심으로 축하합니다.",5060,5060
-main,main-ssgr02-1,ssgr,졸업,네파가 졸업과 입학을 진심으로 축하해요~!,2030,2030
-main,main-ssgr02-2,ssgr,졸업,네파가 졸업과 입학 모두 진심을 담아 축하드려요!,5060,5060
+main,main-ssgr02-1,ssgr,졸업,{mall_id}가 졸업과 입학을 진심으로 축하해요~!,2030,2030
+main,main-ssgr02-2,ssgr,졸업,{mall_id}가 졸업과 입학 모두 진심을 담아 축하드려요!,5060,5060
 main,main-sti01-1,sti,"1,2차 아이템 추천","첫 구매의 설렘, 다시 경험해보세요~!","1,2차 아이템 추천,2030",2030
 main,main-sti01-2,sti,"1,2차 아이템 추천","첫 구매 후 잊지 못할 설렘, 다시 한 번 느껴보세요!","1,2차 아이템 추천,5060",5060
 main,main-sti02-1,sti,"1,2차 아이템 추천","이런 스타일, 딱이지 않나요? 꼭 한 번 보세요!","1,2차 아이템 추천,2030",2030
 main,main-sti02-2,sti,"1,2차 아이템 추천",이런 스타일은 어떠세요? 한 번 살펴보세요~,"1,2차 아이템 추천,5060",5060
-main,main-sti03-1,sti,"1,2차 아이템 추천",네파에서 구매하셨던 제품과 완벽 매치 아이템 추천!,"1,2차 아이템 추천,2030",2030
+main,main-sti03-1,sti,"1,2차 아이템 추천",{mall_id}에서 구매하셨던 제품과 완벽 매치 아이템 추천!,"1,2차 아이템 추천,2030",2030
 main,main-sti03-2,sti,"1,2차 아이템 추천",이전에 구매하신 제품과 어울리는 아이템을 추천드립니다.,"1,2차 아이템 추천,5060",5060
-main,main-sti04-1,sti,"1,2차 아이템 추천",고객님께 어울리는 다음 네파 Pick!,"1,2차 아이템 추천,2030",2030
-main,main-sti04-2,sti,"1,2차 아이템 추천",고객님께 어울리는 네파의 추천 상품을 소개합니다.,"1,2차 아이템 추천,5060",5060
+main,main-sti04-1,sti,"1,2차 아이템 추천",고객님께 어울리는 다음 {mall_id} Pick!,"1,2차 아이템 추천,2030",2030
+main,main-sti04-2,sti,"1,2차 아이템 추천",고객님께 어울리는 {mall_id}의 추천 상품을 소개합니다.,"1,2차 아이템 추천,5060",5060
 main,main-sti05-1,sti,"1,2차 아이템 추천",구매했던 제품과 딱 맞는 상품 도착!,"1,2차 아이템 추천,2030",2030
 main,main-sti05-2,sti,"1,2차 아이템 추천",구매했던 제품과 잘 어울리는 상품이 도착했습니다.,"1,2차 아이템 추천,5060",5060
-main,main-sti06-1,sti,"1,2차 아이템 추천",다음 네파 컬렉션에 추가할 아이템 추천!,"1,2차 아이템 추천,2030",2030
-main,main-sti06-2,sti,"1,2차 아이템 추천","다음 네파 아이템은, 아래 추천 상품으로 어떠세요?","1,2차 아이템 추천,5060",5060
-main,main-sti07-1,sti,"1,2차 아이템 추천",이번 네파 아이템도 트렌디한 최고의 선택!,"1,2차 아이템 추천,2030",2030
-main,main-sti07-2,sti,"1,2차 아이템 추천",이번 네파 아이템도 여전히 최고의 선택이 될거에요!,"1,2차 아이템 추천,5060",5060
-main,main-sti08-1,sti,"1,2차 아이템 추천",기존 구매했던 상품과 궁합이 딱! 네파템 추천!,"1,2차 아이템 추천,2030",2030
+main,main-sti06-1,sti,"1,2차 아이템 추천",다음 {mall_id} 컬렉션에 추가할 아이템 추천!,"1,2차 아이템 추천,2030",2030
+main,main-sti06-2,sti,"1,2차 아이템 추천","다음 {mall_id} 아이템은, 아래 추천 상품으로 어떠세요?","1,2차 아이템 추천,5060",5060
+main,main-sti07-1,sti,"1,2차 아이템 추천",이번 {mall_id} 아이템도 트렌디한 최고의 선택!,"1,2차 아이템 추천,2030",2030
+main,main-sti07-2,sti,"1,2차 아이템 추천",이번 {mall_id} 아이템도 여전히 최고의 선택이 될거에요!,"1,2차 아이템 추천,5060",5060
+main,main-sti08-1,sti,"1,2차 아이템 추천",기존 구매했던 상품과 궁합이 딱! {mall_id}템 추천!,"1,2차 아이템 추천,2030",2030
 main,main-sti08-2,sti,"1,2차 아이템 추천",구입하셨던 상품과 잘 어울리는 제품을 소개해드려요!,"1,2차 아이템 추천,5060",5060
 main,main-sti09-1,sti,"1,2차 아이템 추천",고객님의 취향을 저격할 찰떡궁합 아이템!,"1,2차 아이템 추천,2030",2030
 main,main-sti09-2,sti,"1,2차 아이템 추천",기존에 애정하셨던 제품과 잘 어울릴만한 아이템을 소개해드려요.,"1,2차 아이템 추천,5060",5060
-main,main-sti10-1,sti,"1,2차 아이템 추천",다음 쇼핑도 네파를 생각하신다면 주목!,"1,2차 아이템 추천,2030",2030
-main,main-sti10-2,sti,"1,2차 아이템 추천","네파를 생각하신다면, 다음 쇼핑에서는 이런 건 어떠세요?","1,2차 아이템 추천,5060",5060
+main,main-sti10-1,sti,"1,2차 아이템 추천",다음 쇼핑도 {mall_id}를 생각하신다면 주목!,"1,2차 아이템 추천,2030",2030
+main,main-sti10-2,sti,"1,2차 아이템 추천","{mall_id}를 생각하신다면, 다음 쇼핑에서는 이런 건 어떠세요?","1,2차 아이템 추천,5060",5060
 main,main-stp01-1,stp,Purpose 추천,취향 저격 아이템을 가져왔어요.,"Purpose 추천,2030",2030
 main,main-stp01-2,stp,Purpose 추천,고객님 취향에 딱 맞는 아이템을 가져왔습니다.,"Purpose 추천,5060",5060
-main,main-stp02-1,stp,Purpose 추천,고객님의 취향을 사로잡을 네파 룩!,"Purpose 추천,2030",2030
-main,main-stp02-2,stp,Purpose 추천,고객님의 멋진 취향을 만족시킬 네파 스타일을 추천드려요,"Purpose 추천,5060",5060
-main,main-stp03-1,stp,Purpose 추천,네파에서 준비한 고객님 맞춤 추천!,"Purpose 추천,2030",2030
-main,main-stp03-2,stp,Purpose 추천,네파가 고객님의 취향을 고려해 추천드리는 아이템입니다.,"Purpose 추천,5060",5060
-main,main-stp04-1,stp,Purpose 추천,트렌디한 고객님에게 딱 맞는 네파 스타일 추천!,"Purpose 추천,2030",2030
-main,main-stp04-2,stp,Purpose 추천,고객님의 취향을 반영한 네파 스타일을 제안해드립니다.,"Purpose 추천,5060",5060
+main,main-stp02-1,stp,Purpose 추천,고객님의 취향을 사로잡을 {mall_id} 룩!,"Purpose 추천,2030",2030
+main,main-stp02-2,stp,Purpose 추천,고객님의 멋진 취향을 만족시킬 {mall_id} 스타일을 추천드려요,"Purpose 추천,5060",5060
+main,main-stp03-1,stp,Purpose 추천,{mall_id}에서 준비한 고객님 맞춤 추천!,"Purpose 추천,2030",2030
+main,main-stp03-2,stp,Purpose 추천,{mall_id}가 고객님의 취향을 고려해 추천드리는 아이템입니다.,"Purpose 추천,5060",5060
+main,main-stp04-1,stp,Purpose 추천,트렌디한 고객님에게 딱 맞는 {mall_id} 스타일 추천!,"Purpose 추천,2030",2030
+main,main-stp04-2,stp,Purpose 추천,고객님의 취향을 반영한 {mall_id} 스타일을 제안해드립니다.,"Purpose 추천,5060",5060
 main,main-stp05-1,stp,Purpose 추천,이건 못 참지! 장바구니에 쏙 들어갈 추천 제품!,"Purpose 추천,2030",2030
-main,main-stp05-2,stp,Purpose 추천,한번 보면 그냥 지나칠 수 없는 네파 제품을 확인하세요.,"Purpose 추천,5060",5060
+main,main-stp05-2,stp,Purpose 추천,한번 보면 그냥 지나칠 수 없는 {mall_id} 제품을 확인하세요.,"Purpose 추천,5060",5060
 main,main-stp06-1,stp,Purpose 추천,마음에 쏙 드는 아이템 추천!,"Purpose 추천,2030",2030
 main,main-stp06-2,stp,Purpose 추천,고객님 마음에 쏙 드실만한 아이템을 추천합니다.,"Purpose 추천,5060",5060
-main,main-stp07-1,stp,Purpose 추천,쇼핑 욕구를 채워줄 끌리는 네파템 추천!,"Purpose 추천,2030",2030
-main,main-stp07-2,stp,Purpose 추천,오늘 쇼핑은 이걸로 종결! 네파 상품 추천!,"Purpose 추천,5060",5060
+main,main-stp07-1,stp,Purpose 추천,쇼핑 욕구를 채워줄 끌리는 {mall_id}템 추천!,"Purpose 추천,2030",2030
+main,main-stp07-2,stp,Purpose 추천,오늘 쇼핑은 이걸로 종결! {mall_id} 상품 추천!,"Purpose 추천,5060",5060
 main,main-stp08-1,stp,Purpose 추천,심쿵주의! 찾고 있던 그 아이템.,"Purpose 추천,2030",2030
 main,main-stp08-2,stp,Purpose 추천,고객님께서 찾고 계셨을 상품을 보여드릴게요!,"Purpose 추천,5060",5060
 main,main-stp09-1,stp,Purpose 추천,끌리는 아이템은 뭐다? 이유가 있다~,"Purpose 추천,2030",2030
 main,main-stp09-2,stp,Purpose 추천,끌리는 아이템에는 다 이유가 있죠?,"Purpose 추천,5060",5060
 main,main-stp10-1,stp,Purpose 추천,코디 고민 끝! 스타일 보장 아이템 추천!,"Purpose 추천,2030",2030
-main,main-stp10-2,stp,Purpose 추천,스타일 고민을 해결해줄 네파 상품을 추천합니다.,"Purpose 추천,5060",5060
+main,main-stp10-2,stp,Purpose 추천,스타일 고민을 해결해줄 {mall_id} 상품을 추천합니다.,"Purpose 추천,5060",5060
 main,main-sta01-1,sta,연령대별 TOP 추천,다들 팔로우하는 인기 상품 확인해보세요~,"연령대별 TOP 추천,2030",2030
 main,main-sta01-2,sta,연령대별 TOP 추천,모두가 좋아하는 인기 상품 확인해보세요~,"연령대별 TOP 추천,5060",5060
-main,main-sta02-1,sta,연령대별 TOP 추천,지금 핫한 네파룩을 만나보세요!,"연령대별 TOP 추천,2030",2030
-main,main-sta02-2,sta,연령대별 TOP 추천,요즘 사랑받는 네파룩을 만나보세요!,"연령대별 TOP 추천,5060",5060
-main,main-sta03-1,sta,연령대별 TOP 추천,현재 네파 유저들의 구매 상품 1위!,"연령대별 TOP 추천,2030",2030
+main,main-sta02-1,sta,연령대별 TOP 추천,지금 핫한 {mall_id}룩을 만나보세요!,"연령대별 TOP 추천,2030",2030
+main,main-sta02-2,sta,연령대별 TOP 추천,요즘 사랑받는 {mall_id}룩을 만나보세요!,"연령대별 TOP 추천,5060",5060
+main,main-sta03-1,sta,연령대별 TOP 추천,현재 {mall_id} 유저들의 구매 상품 1위!,"연령대별 TOP 추천,2030",2030
 main,main-sta03-2,sta,연령대별 TOP 추천,지금 가장 많은 고객님들이 구매하는 상품!,"연령대별 TOP 추천,5060",5060
-main,main-sta04-1,sta,연령대별 TOP 추천,인싸들이 선택한 네파 상품을 확인해보세요.,"연령대별 TOP 추천,2030",2030
-main,main-sta04-2,sta,연령대별 TOP 추천,인기있는 네파 상품을 확인해보세요.,"연령대별 TOP 추천,5060",5060
+main,main-sta04-1,sta,연령대별 TOP 추천,인싸들이 선택한 {mall_id} 상품을 확인해보세요.,"연령대별 TOP 추천,2030",2030
+main,main-sta04-2,sta,연령대별 TOP 추천,인기있는 {mall_id} 상품을 확인해보세요.,"연령대별 TOP 추천,5060",5060
 main,main-sta05-1,sta,연령대별 TOP 추천,요즘 가장 HOT한 필수템 확인하기!,"연령대별 TOP 추천,2030",2030
 main,main-sta05-2,sta,연령대별 TOP 추천,요즘 가장 인기 넘치는 아이템 확인하기!,"연령대별 TOP 추천,5060",5060
-main,main-sta06-1,sta,연령대별 TOP 추천,가장 인기있는 네파 잇템 구경해보세요~,"연령대별 TOP 추천,2030",2030
+main,main-sta06-1,sta,연령대별 TOP 추천,가장 인기있는 {mall_id} 잇템 구경해보세요~,"연령대별 TOP 추천,2030",2030
 main,main-sta06-2,sta,연령대별 TOP 추천,고객님들의 눈길을 끄는 아이템 구경해보세요~,"연령대별 TOP 추천,5060",5060
-main,main-sta07-1,sta,연령대별 TOP 추천,네파의 추천 인기상품!,"연령대별 TOP 추천,2030",2030
-main,main-sta07-2,sta,연령대별 TOP 추천,네파가 추천드리는 인기상품을 확인하세요!,"연령대별 TOP 추천,5060",5060
+main,main-sta07-1,sta,연령대별 TOP 추천,{mall_id}의 추천 인기상품!,"연령대별 TOP 추천,2030",2030
+main,main-sta07-2,sta,연령대별 TOP 추천,{mall_id}가 추천드리는 인기상품을 확인하세요!,"연령대별 TOP 추천,5060",5060
 main,main-sta08-1,sta,연령대별 TOP 추천,친구들은 다~ 있다! 하는 아이템 확인하기!,"연령대별 TOP 추천,2030",2030
 main,main-sta08-2,sta,연령대별 TOP 추천,남들은 다 가지고 있는 인기 제품 확인하기!,"연령대별 TOP 추천,5060",5060
-main,main-sta09-1,sta,연령대별 TOP 추천,주변 친구들이 다 가지고 있는 네파 아이템!,"연령대별 TOP 추천,2030",2030
-main,main-sta09-2,sta,연령대별 TOP 추천,다른 고객님들이 가장 많이 선택하신 네파 제품!,"연령대별 TOP 추천,5060",5060
+main,main-sta09-1,sta,연령대별 TOP 추천,주변 친구들이 다 가지고 있는 {mall_id} 아이템!,"연령대별 TOP 추천,2030",2030
+main,main-sta09-2,sta,연령대별 TOP 추천,다른 고객님들이 가장 많이 선택하신 {mall_id} 제품!,"연령대별 TOP 추천,5060",5060
 main,main-sta10-1,sta,연령대별 TOP 추천,또래 고객들이 많이 구매하는 아이템을 소개합니다!,"연령대별 TOP 추천,2030",2030
 main,main-sta10-2,sta,연령대별 TOP 추천,비슷한 연령대 분들이 많이 구매하시는 제품을 소개해드릴게요!,"연령대별 TOP 추천,5060",5060
 main,main-stb01-1,stb,월별 번들 추천,이런 조합은 어떠세요?,"월별 번들 추천,2030",2030
-main,main-stb01-2,stb,월별 번들 추천,네파가 추천해드리는 상품 조합!,"월별 번들 추천,5060",5060
+main,main-stb01-2,stb,월별 번들 추천,{mall_id}가 추천해드리는 상품 조합!,"월별 번들 추천,5060",5060
 main,main-stb02-1,stb,월별 번들 추천,최근 구매 아이템과 잘 어울리는 아이템을 확인하세요!,"월별 번들 추천,2030",2030
 main,main-stb02-2,stb,월별 번들 추천,최근 구매하신 제품과 잘 어울리는 상품을 둘러보세요!,"월별 번들 추천,5060",5060
 main,main-stb03-1,stb,월별 번들 추천,스타일을 완성해 줄 꿀조합 아이템을 만나보세요!,"월별 번들 추천,2030",2030
 main,main-stb03-2,stb,월별 번들 추천,패션의 마지막 조각을 채워줄 상품을 만나보세요.,"월별 번들 추천,5060",5060
 main,main-stb04-1,stb,월별 번들 추천,지난 구매 아이템과 함께 인기를 얻고 있는 상품 추천!,"월별 번들 추천,2030",2030
-main,main-stb04-2,stb,월별 번들 추천,지난번 구매하신 제품과 함께 인기를 얻고 있는 네파 상품 추천!,"월별 번들 추천,5060",5060
+main,main-stb04-2,stb,월별 번들 추천,지난번 구매하신 제품과 함께 인기를 얻고 있는 {mall_id} 상품 추천!,"월별 번들 추천,5060",5060
 main,main-stb05-1,stb,월별 번들 추천,고객님을 위해 추천드리는 아이템 번들!,"월별 번들 추천,2030",2030
 main,main-stb05-2,stb,월별 번들 추천,고객님만을 위해 추천드리는 세트 아이템이에요!,"월별 번들 추천,5060",5060
 main,main-stb06-1,stb,월별 번들 추천,함께 사기 좋은 아이템들을 소개해드릴게요~,"월별 번들 추천,2030",2030
@@ -895,48 +895,48 @@ main,main-stb10-1,stb,월별 번들 추천,비슷한 선택을 하신 고객님들의 구매 제품 보�
 main,main-stb10-2,stb,월별 번들 추천,최근 구매 제품과 같은 제품을 구매하신 분들의 선택!,"월별 번들 추천,5060",5060
 main,main-sts01-1,sts,세그먼트 추천,최근 구매 제품과 연관성이 높은 아이템입니다.,"세그먼트 추천,2030",2030
 main,main-sts01-2,sts,세그먼트 추천,최근 구매하신 제품과 연관성이 높은 상품을 보여드릴게요.,"세그먼트 추천,5060",5060
-main,main-sts02-1,sts,세그먼트 추천,고객님 마음에 쏙~ 드실 네파 아이템을 추천해요!,"세그먼트 추천,2030",2030
-main,main-sts02-2,sts,세그먼트 추천,고객님이 좋아하실만한 네파 아이템을 추천드려요!,"세그먼트 추천,5060",5060
-main,main-sts03-1,sts,세그먼트 추천,콕! 집어서 추천하는 네파 스타일링 아이템!,"세그먼트 추천,2030",2030
-main,main-sts03-2,sts,세그먼트 추천,네파가 콕! 집어서 추천드리는 스타일링 아이템!,"세그먼트 추천,5060",5060
+main,main-sts02-1,sts,세그먼트 추천,고객님 마음에 쏙~ 드실 {mall_id} 아이템을 추천해요!,"세그먼트 추천,2030",2030
+main,main-sts02-2,sts,세그먼트 추천,고객님이 좋아하실만한 {mall_id} 아이템을 추천드려요!,"세그먼트 추천,5060",5060
+main,main-sts03-1,sts,세그먼트 추천,콕! 집어서 추천하는 {mall_id} 스타일링 아이템!,"세그먼트 추천,2030",2030
+main,main-sts03-2,sts,세그먼트 추천,{mall_id}가 콕! 집어서 추천드리는 스타일링 아이템!,"세그먼트 추천,5060",5060
 main,main-sts04-1,sts,세그먼트 추천,최근 구매 아이템과 어울리는 상품 추천!,"세그먼트 추천,2030",2030
 main,main-sts04-2,sts,세그먼트 추천,최근 구매하신 제품과 어울리는 상품을 추천합니다!,"세그먼트 추천,5060",5060
 main,main-sts05-1,sts,세그먼트 추천,선호하실만한 스타일의 아이템을 추천드려요.,"세그먼트 추천,2030",2030
 main,main-sts05-2,sts,세그먼트 추천,고객님께서 선호하실만한 스타일의 상품을 추천드려요.,"세그먼트 추천,5060",5060
 main,main-sts06-1,sts,세그먼트 추천,고객님께 잘 어울릴만한 상품을 추천합니다.,"세그먼트 추천,2030",2030
 main,main-sts06-2,sts,세그먼트 추천,고객님께 잘 어울릴만한 추천 상품을 확인해보세요.,"세그먼트 추천,5060",5060
-main,main-sts07-1,sts,세그먼트 추천,네파가 고객님께 추천하는 연관 상품이에요.,"세그먼트 추천,2030",2030
-main,main-sts07-2,sts,세그먼트 추천,네파가 고객님만을 위해 추천드리는 연관 상품이에요.,"세그먼트 추천,5060",5060
+main,main-sts07-1,sts,세그먼트 추천,{mall_id}가 고객님께 추천하는 연관 상품이에요.,"세그먼트 추천,2030",2030
+main,main-sts07-2,sts,세그먼트 추천,{mall_id}가 고객님만을 위해 추천드리는 연관 상품이에요.,"세그먼트 추천,5060",5060
 main,main-sts08-1,sts,세그먼트 추천,최근 구매 아이템과 잘 어울리는 상품을 추천해요.,"세그먼트 추천,2030",2030
 main,main-sts08-2,sts,세그먼트 추천,구매하신 제품과 어울릴만한 추천 상품을 확인해보세요.,"세그먼트 추천,5060",5060
 main,main-sts09-1,sts,세그먼트 추천,고객님 선호 스타일에 맞는 추천 제품입니다.,"세그먼트 추천,2030",2030
 main,main-sts09-2,sts,세그먼트 추천,고객님의 선호 스타일을 고려한 추천 제품입니다.,"세그먼트 추천,5060",5060
 main,main-sts10-1,sts,세그먼트 추천,최근 선택하신 제품과 관련성 높은 상품 추천!,"세그먼트 추천,2030",2030
 main,main-sts10-2,sts,세그먼트 추천,고객님께서 선택하신 제품과 관련성 높은 상품으로 추천드려요.,"세그먼트 추천,5060",5060
-main,main-stn01-1,stn,신상품 추천,NEPA 신상 도착! 신상품을 만나보세요.,"신상품 추천,2030",2030
-main,main-stn01-2,stn,신상품 추천,NEPA 신상품 출시! 따끈따끈한 신상품을 지금 만나보세요.,"신상품 추천,5060",5060
+main,main-stn01-1,stn,신상품 추천,{mall_id} 신상 도착! 신상품을 만나보세요.,"신상품 추천,2030",2030
+main,main-stn01-2,stn,신상품 추천,{mall_id} 신상품 출시! 따끈따끈한 신상품을 지금 만나보세요.,"신상품 추천,5060",5060
 main,main-stn02-1,stn,신상품 추천,신상품 추천★ 이라고 할때 확인해 볼 걸,"신상품 추천,2030",2030
 main,main-stn02-2,stn,신상품 추천,★신상품 추천★ 지금 바로 만나보세요!,"신상품 추천,5060",5060
 main,main-stn03-1,stn,신상품 추천,시선집중! 지금 가장 핫한 신상품,"신상품 추천,2030",2030
 main,main-stn03-2,stn,신상품 추천,지금 가장 핫한 신상품을 놓치지 마세요!,"신상품 추천,5060",5060
-main,main-stn04-1,stn,신상품 추천,네파 신상으로 취향저격! 지금 바로 확인하세요!,"신상품 추천,2030",2030
-main,main-stn04-2,stn,신상품 추천,고객님의 취향을 사로잡을 네파 신상품! 지금 바로 확인하세요!,"신상품 추천,5060",5060
+main,main-stn04-1,stn,신상품 추천,{mall_id} 신상으로 취향저격! 지금 바로 확인하세요!,"신상품 추천,2030",2030
+main,main-stn04-2,stn,신상품 추천,고객님의 취향을 사로잡을 {mall_id} 신상품! 지금 바로 확인하세요!,"신상품 추천,5060",5060
 main,main-stn05-1,stn,신상품 추천,놓치면 나만 손해! 신상품을 바로 만나보세요!,"신상품 추천,2030",2030
 main,main-stn05-2,stn,신상품 추천,놓칠 수 없는 기회! 지금 바로 신상품을 만나보세요!,"신상품 추천,5060",5060
 main,main-stn06-1,stn,신상품 추천,{year} 신상이오! 지금 바로 만나보시오!,"신상품 추천,2030",2030
 main,main-stn06-2,stn,신상품 추천,{year}년 신상품 출시! 지금 바로 만나보세요!,"신상품 추천,5060",5060
-main,main-stn07-1,stn,신상품 추천,네파 신상품을 바로 만나볼 기회!,"신상품 추천,2030",2030
-main,main-stn07-2,stn,신상품 추천,네파 신상품 출시! 빠르게 만나보세요.,"신상품 추천,5060",5060
-main,main-stn08-1,stn,신상품 추천,네파 신상품이 도착했어요!,"신상품 추천,2030",2030
-main,main-stn08-2,stn,신상품 추천,네파가 신상품을 가져왔어요!,"신상품 추천,5060",5060
+main,main-stn07-1,stn,신상품 추천,{mall_id} 신상품을 바로 만나볼 기회!,"신상품 추천,2030",2030
+main,main-stn07-2,stn,신상품 추천,{mall_id} 신상품 출시! 빠르게 만나보세요.,"신상품 추천,5060",5060
+main,main-stn08-1,stn,신상품 추천,{mall_id} 신상품이 도착했어요!,"신상품 추천,2030",2030
+main,main-stn08-2,stn,신상품 추천,{mall_id}가 신상품을 가져왔어요!,"신상품 추천,5060",5060
 main,main-stn09-1,stn,신상품 추천,새로운 스타일의 신상품이 도착했어요!,"신상품 추천,2030",2030
 main,main-stn09-2,stn,신상품 추천,새로운 시즌에 맞는 신상품이 도착했어요.,"신상품 추천,5060",5060
-main,main-stn10-1,stn,신상품 추천,최신 트렌드 반영완료! 네파 신상품 확인 고고!,"신상품 추천,2030",2030
+main,main-stn10-1,stn,신상품 추천,최신 트렌드 반영완료! {mall_id} 신상품 확인 고고!,"신상품 추천,2030",2030
 main,main-stn10-2,stn,신상품 추천,최신 트렌드를 반영한 신상품을 확인해보세요.,"신상품 추천,5060",5060
 main,main-k_eb01-1,k_eb,얼리버드,"누구보다 빠르게 남들과는 다르게!
-네파와 함께 다음 계절을 준비해 보자고~","얼리버드,2030",2030
+{mall_id}와 함께 다음 계절을 준비해 보자고~","얼리버드,2030",2030
 main,main-k_eb01-2,k_eb,얼리버드,"누구보다 빠르게!
-네파와 함께 다음 계절을 준비해 보세요~","얼리버드,5060",5060
+{mall_id}와 함께 다음 계절을 준비해 보세요~","얼리버드,5060",5060
 main,main-k_eb02-1,k_eb,얼리버드,"신상품을 가장 먼저 만나고,
 기간 한정 얼리버드 혜택도 누리세요~","얼리버드,2030",2030
 main,main-k_eb02-2,k_eb,얼리버드,"신상품을 남들보다 먼저 만나보시고,
@@ -962,9 +962,9 @@ main,main-k_bf01-1,k_bf,블랙프라이데이,"Happy Black Friday!
 main,main-k_bf01-2,k_bf,블랙프라이데이,"엄청난 Black Friday 혜택 도착!
 고민하시던 제품이 있으셨다면, 지금 바로 혜택가에 만나보세요!","블랙프라이데이,5060",5060
 main,main-k_bf02-1,k_bf,블랙프라이데이,"블랙 프라이데이 스페셜 이벤트!
-네파의 특별 혜택과 함께 쌀쌀한 날씨를 이겨내요!","블랙프라이데이,2030",2030
+{mall_id}의 특별 혜택과 함께 쌀쌀한 날씨를 이겨내요!","블랙프라이데이,2030",2030
 main,main-k_bf02-2,k_bf,블랙프라이데이,"블랙 프라이데이 특별 이벤트!
-네파가 드리는 특별 혜택 받으시고, 쌀쌀한 날씨를 이겨내세요!","블랙프라이데이,5060",5060
+{mall_id}가 드리는 특별 혜택 받으시고, 쌀쌀한 날씨를 이겨내세요!","블랙프라이데이,5060",5060
 main,main-k_se01-1,k_se,SS시즌 얼리버드,"이번 봄에 뭐 입지?
 풍성한 혜택으로 남들보다 빠르게 봄 상품을 마련해보세요~","SS시즌 얼리버드,2030",2030
 main,main-k_se01-2,k_se,SS시즌 얼리버드,"봄 옷 마련하신다면 주목!
@@ -974,61 +974,61 @@ main,main-k_se02-1,k_se,SS시즌 얼리버드,"SS시즌 얼리버드 이벤트!
 main,main-k_se02-2,k_se,SS시즌 얼리버드,"SS시즌 얼리버드 이벤트가 열립니다!
 봄에 입을 옷들 미리 구매하시고 특별 혜택도 받으세요!","SS시즌 얼리버드,5060",5060
 main,main-k_fe01-1,k_fe,FW시즌 얼리버드,"빠르게 준비하는 가을 겨울 옷!
-네파의 다양한 혜택을 누려보세요!","FW시즌 얼리버드,2030",2030
+{mall_id}의 다양한 혜택을 누려보세요!","FW시즌 얼리버드,2030",2030
 main,main-k_fe01-2,k_fe,FW시즌 얼리버드,"지금! 더 빠르게 준비하는 가을/겨울 옷!
-네파에서 준비한 다양한 혜택을 누려보세요!","FW시즌 얼리버드,5060",5060
+{mall_id}에서 준비한 다양한 혜택을 누려보세요!","FW시즌 얼리버드,5060",5060
 main,main-k_fe02-1,k_fe,FW시즌 얼리버드,"올겨울용 새 패딩 장만?
 얼리버드 구매 고객께만 드리는 F/W 혜택을 활용하세요!","FW시즌 얼리버드,2030",2030
 main,main-k_fe02-2,k_fe,FW시즌 얼리버드,"올 겨울에 입을만한 옷이 마땅치 않으신가요?
 얼리버드 구매 고객께만 드리는 F/W 혜택, 놓치지 마세요!","FW시즌 얼리버드,5060",5060
-main,main-o_mf01,o_mf,선마일리지,"{offer_amount} 마일리지 지급 완료!
+main,main-o_mf01,o_mf,d,"{benefit_text} 지급 완료!
 지급된 마일리지가 소멸되기 전에 꼭 사용하세요!",,
-main,main-o_mf02,o_mf,선마일리지,"특별 마일리지가 지급되었습니다!
-{offer_amount} 마일리지를 활용해서 평소에 관심 가지셨던 상품을 구매해보세요!",,
-main,main-o_mf03,o_mf,선마일리지,"고객님께 {offer_amount} 마일리지를 선물해드렸어요.
+main,main-o_mf02,o_mf,d,"특별 마일리지가 지급되었습니다!
+{benefit_text} 지급완료! 평소에 관심 가지셨던 상품을 구매해보세요!",,
+main,main-o_mf03,o_mf,d,"고객님께 {benefit_text}를 선물해드렸어요.
 기존 마일리지와 함께 더 많은 제품을 만나보세요~",,
-main,main-o_mf04,o_mf,선마일리지,"{offer_amount} 마일리지 도착!
+main,main-o_mf04,o_mf,d,"{benefit_text} 도착!
 평소 눈여겨 보셨던 제품을 합리적인 가격으로 구매해보세요!",,
-main,main-o_mf05,o_mf,선마일리지,"추가 마일리지를 넣어드렸어요!
-소멸되기 전에 사용하시고 다양한 네파 제품들을 만나보세요.",,
-main,main-o_ml01,o_ml,후마일리지,"지금 네파에서 구매하시면 추가 마일리지 적립!
-기본 마일리지에 {offer_amount} 마일리지를 추가로 받아가세요!",,
-main,main-o_ml02,o_ml,후마일리지,"네파에서 구매하시고 추가 마일리지를 적립해보세요!
+main,main-o_mf05,o_mf,d,"추가 마일리지를 넣어드렸어요!
+소멸되기 전에 사용하시고 다양한 {mall_id} 제품들을 만나보세요.",,
+main,main-o_ml01,o_ml,c,"지금 {mall_id}에서 구매하시면 추가 마일리지 적립!
+기본 마일리지에 {benefit_text}를 추가로 받아가세요!",,
+main,main-o_ml02,o_ml,c,"{mall_id}에서 구매하시고 추가 마일리지를 적립해보세요!
 기간 한정 혜택이니 서두르세요.",,
-main,main-o_ml03,o_ml,후마일리지,"{offer_amount} 마일리지 추가 증정 이벤트!
-지금 네파 제품 구매하시고 추가 마일리지도 챙기세요~",,
-main,main-o_ml04,o_ml,후마일리지,"아낌없이 드리는 마일리지 혜택!
-지금 네파 제품 구매하시면 {offer_amount}점을 추가로 적립해드려요.",,
-main,main-o_ml05,o_ml,후마일리지,"옷도 사고, 추가 마일리지 받자!
+main,main-o_ml03,o_ml,c,"{benefit_text} 추가 증정 이벤트!
+지금 {mall_id} 제품 구매하시고 추가 마일리지도 챙기세요~",,
+main,main-o_ml04,o_ml,c,"아낌없이 드리는 마일리지 혜택!
+지금 {mall_id} 제품 구매하시면 {benefit_text} 혜택을 드려요.",,
+main,main-o_ml05,o_ml,c,"옷도 사고, 추가 마일리지 받자!
 추가 적립 이벤트를 놓치지 마세요!",,
-main,main-o_ad01,o_ad,정액할인,"고객님께만 {offer_amount}원 추가 혜택을!
+main,main-o_ad01,o_ad,a,"고객님께만 {benefit_text} 추가 혜택을!
 잊지 말고 사용해보세요!",,
-main,main-o_ad02,o_ad,정액할인,"고객님께 드리는 {offer_amount}원 혜택!
+main,main-o_ad02,o_ad,a,"고객님께 드리는 {benefit_text} 혜택!
 지금 확인해보세요!",,
-main,main-o_ad03,o_ad,정액할인,네파가 보내드린 {offer_amount}원 혜택으로 원하시는 상품을 구매하세요!,,
-main,main-o_ad04,o_ad,정액할인,"네파에서 구매하고 싶으신 제품이 있으셨나요?
-지금 드리는 {offer_amount}원 혜택을 활용해보세요!",,
-main,main-o_ad05,o_ad,정액할인,"{offer_amount}원 혜택이 도착했어요~
+main,main-o_ad03,o_ad,a,{mall_id}가 보내드린 {benefit_text} 혜택으로 원하시는 상품을 구매하세요!,,
+main,main-o_ad04,o_ad,a,"{mall_id}에서 구매하고 싶으신 제품이 있으셨나요?
+지금 드리는 {benefit_text} 혜택을 활용해보세요!",,
+main,main-o_ad05,o_ad,a,"{benefit_text} 혜택이 도착했어요~
 더 좋은 상품들을 만나보세요!",,
-main,main-o_pd01,o_pd,정률할인,"고객님께 {offer_amount}% 혜택을 가져왔습니다.
+main,main-o_pd01,o_pd,b,"고객님께 {benefit_text} 혜택을 가져왔습니다.
 기간내에 꼭 사용해보세요!",,
-main,main-o_pd02,o_pd,정률할인,"고객님께만 드리는 {offer_amount}% 혜택!
+main,main-o_pd02,o_pd,b,"고객님께만 드리는 {benefit_text} 혜택!
 지금 바로 확인해보세요!",,
-main,main-o_pd03,o_pd,정률할인,"살지 말지 고민하고 계셨나요?
-네파가 드리는 {offer_amount}% 혜택을 활용해보세요!",,
-main,main-o_pd04,o_pd,정률할인,"고객님께 선물이 도착했어요!
-원하시는 상품, {offer_amount}% 혜택으로 지금 구매해보세요!",,
-main,main-o_pd05,o_pd,정률할인,"고객님을 위해 혜택을 준비했어요!
-{offer_amount}%의 기회를 놓치지 마세요.",,
+main,main-o_pd03,o_pd,b,"살지 말지 고민하고 계셨나요?
+{mall_id}가 드리는 {benefit_text} 혜택을 활용해보세요!",,
+main,main-o_pd04,o_pd,b,"고객님께 선물이 도착했어요!
+원하시는 상품, {benefit_text} 혜택으로 지금 구매해보세요!",,
+main,main-o_pd05,o_pd,b,"고객님을 위해 혜택을 준비했어요!
+{benefit_text} 제공 완료! 잊지말고 사용해보세요.",,
 main,main-o_op01,o_op,1+1 프로모션,"1+1 혜택이 도착했습니다!
 제품을 구매하시고 하나 더 추가로 받아가세요!",,
 main,main-o_op02,o_op,1+1 프로모션,"1가지 색상만 고르기에 아쉬웠다면?
 1+1 혜택 받으시고 두 개 모두 구매하세요~",,
-main,main-o_op03,o_op,1+1 프로모션,"네파의 1+1 이벤트를 소개합니다!
+main,main-o_op03,o_op,1+1 프로모션,"{mall_id}의 1+1 이벤트를 소개합니다!
 이번 기회에 소중한 사람과의 커플템을 맞춰보세요~",,
 main,main-o_op04,o_op,1+1 프로모션,"더 많은 즐거움을 위해,
-지금 네파의 1+1 혜택으로 두 배의 즐거움을 누려보세요!",,
-main,main-o_op05,o_op,1+1 프로모션,네파의 1+1 혜택으로 두 배로 즐거운 쇼핑을 시작하세요!,,
+지금 {mall_id}의 1+1 혜택으로 두 배의 즐거움을 누려보세요!",,
+main,main-o_op05,o_op,1+1 프로모션,{mall_id}의 1+1 혜택으로 두 배로 즐거운 쇼핑을 시작하세요!,,
 main,main-o_nd01,o_nd,Npcs 구매시 할인,"지금 진행중인 이벤트!
 많이 구매하시면 추가 할인을 받으실 수 있어요!",,
 main,main-o_nd02,o_nd,Npcs 구매시 할인,"다양한 아이템을 GET할 찬스!
@@ -1047,30 +1047,30 @@ main,main-o_rd04,o_rd,금액대별 정액 할인,"높은 구매 금액일수록 더 큰 혜택!
 main,main-o_rd05,o_rd,금액대별 정액 할인,"구매 금액이 커질수록 더 많은 혜택!
 이 특별한 혜택을 놓치지 마세요!",,
 main,main-o_gp01,o_gp,증정 프로모션,"지금 구매하시면 사은품을 드립니다!
-네파 방문하시고 선물 받아가세요♬",,
-main,main-o_gp02,o_gp,증정 프로모션,"네파에서 쇼핑하고 선물받자!
-네파 제품을 구매하시고 사은품도 받아가세요.",,
+{mall_id} 방문하시고 선물 받아가세요♬",,
+main,main-o_gp02,o_gp,증정 프로모션,"{mall_id}에서 쇼핑하고 선물받자!
+{mall_id} 제품을 구매하시고 사은품도 받아가세요.",,
 main,main-o_gp03,o_gp,증정 프로모션,"사은품 증정 이벤트 진행중!
-네파에서 구매해주시는 고객님들께 사은품을 드립니다.",,
-main,main-o_gp04,o_gp,증정 프로모션,"지금 네파에서 특별한 사은품을 드립니다!
-네파 매장을 방문하시고 선물도 받아가세요",,
+{mall_id}에서 구매해주시는 고객님들께 사은품을 드립니다.",,
+main,main-o_gp04,o_gp,증정 프로모션,"지금 {mall_id}에서 특별한 사은품을 드립니다!
+{mall_id} 매장을 방문하시고 선물도 받아가세요",,
 main,main-o_gp05,o_gp,증정 프로모션,고객님의 하루를 더 특별하게 만들어줄 사은품을 놓지치 마세요~,,
 main,main-o_oc01,o_oc,온라인 쿠폰,"고객님을 위해 준비한 온라인 쿠폰 선물!
-네파 온라인 몰에서 지금 바로 사용해보세요!",,
-main,main-o_oc02,o_oc,온라인 쿠폰,"네파에서 온라인 쿠폰을 지급해드렸어요.
+{mall_id} 온라인 몰에서 지금 바로 사용해보세요!",,
+main,main-o_oc02,o_oc,온라인 쿠폰,"{mall_id}에서 온라인 쿠폰을 지급해드렸어요.
 확인해보시고 만료 되기 전에 사용 하세요!",,
-main,main-o_oc03,o_oc,온라인 쿠폰,"네파 온라인 쿠폰 도착 알림!
-네파 온라인몰에서 더욱 다양한 상품들 구경하시고 쿠폰도 사용해보세요.",,
+main,main-o_oc03,o_oc,온라인 쿠폰,"{mall_id} 온라인 쿠폰 도착 알림!
+{mall_id} 온라인몰에서 더욱 다양한 상품들 구경하시고 쿠폰도 사용해보세요.",,
 main,main-o_oc04,o_oc,온라인 쿠폰,"집에서 편하게, 온라인으로!
-보내드린 쿠폰으로 네파 온라인몰에서 더 편하게 구매하세요~",,
+보내드린 쿠폰으로 {mall_id} 온라인몰에서 더 편하게 구매하세요~",,
 main,main-o_oc05,o_oc,온라인 쿠폰,"직접 가지 않아도 충분해!
 온라인 몰에서 편하게 둘러보고, 보내드린 쿠폰도 활용해보세요!",,
 main,main-o_al01,o_al,공통,"고객님만을 위해 혜택을 준비했습니다!
 잊지 말고 사용해보세요!",,
 main,main-o_al02,o_al,공통,"고객님께 드리는 혜택!
 지금 확인해보세요!",,
-main,main-o_al03,o_al,공통,네파가 드리는 혜택으로 원하시는 상품을 구매하세요!,,
-main,main-o_al04,o_al,공통,"네파에서 구매하고 싶으신 제품이 있으셨나요?
+main,main-o_al03,o_al,공통,{mall_id}가 드리는 혜택으로 원하시는 상품을 구매하세요!,,
+main,main-o_al04,o_al,공통,"{mall_id}에서 구매하고 싶으신 제품이 있으셨나요?
 지금 드리는 혜택을 활용해보세요!",,
 main,main-o_al05,o_al,공통,"고객님께만 드리는 혜택!
 지금 확인하시고 꼭 사용해보세요~",,
@@ -1079,75 +1079,67 @@ main,main-o_al06,o_al,공통,"고객님께만 드리는 혜택!
 main,main-o_al07,o_al,공통,"지금 구매하시면 {rep_nm}이 {sale_price}원!
 바로 확인해보세요!",,
 main,main-o_al08,o_al,공통,"고객님만을 위해 드리는 혜택!
-{sale_price}원으로 {rep_nnm)을 만나보세요!",,
+{sale_price}원으로 {rep_nm}을 만나보세요!",,
 main,main-o_al09,o_al,공통,"지금, 바로, 여기! {rep_nm}을 {sale_price}원으로!",,
-main,main-o_al10,o_al,공통,"네파가 보내드리는 선물!
+main,main-o_al10,o_al,공통,"{mall_id}가 보내드리는 선물!
 {sale_price}원으로 만나는 {rep_nm}!
 지금 확인하세요!",,
 main,main-csc01,csc,lifestyle_casual,편안하고 스타일리쉬한 일상룩을 연출해보세요.,lifestyle_casual,
 main,main-csc02,csc,lifestyle_casual,나들이에 적합한 제품들을 만나보세요.,lifestyle_casual,
-main,main-csc03,csc,lifestyle_casual,어디에나 잘 어울리는 네파의 디자인을 느껴보세요.,lifestyle_casual,
-main,main-csc04,csc,lifestyle_casual,캐주얼한 스타일을 원하신다면 네파가 딱이에요.,lifestyle_casual,
+main,main-csc03,csc,lifestyle_casual,어디에나 잘 어울리는 {mall_id}의 디자인을 느껴보세요.,lifestyle_casual,
+main,main-csc04,csc,lifestyle_casual,캐주얼한 스타일을 원하신다면 {mall_id}가 딱이에요.,lifestyle_casual,
 main,main-csc05,csc,lifestyle_casual,심플하면서 멋진 스타일을 만들어보세요!,lifestyle_casual,
-main,main-csc06,csc,lifestyle_casual,네파와 함께 편안하고 세련된 룩을 완성하세요!,lifestyle_casual,
+main,main-csc06,csc,lifestyle_casual,{mall_id}와 함께 편안하고 세련된 룩을 완성하세요!,lifestyle_casual,
 main,main-csc07,csc,lifestyle_casual,스타일과 편안함이 결합된 일상을 즐겨보세요!,lifestyle_casual,
 main,main-csc08,csc,lifestyle_casual,매일의 일상을 더욱 즐겁고 편안하게 만들어보세요!,lifestyle_casual,
 main,main-csc09,csc,lifestyle_casual,단순함과 스타일이 어우러진 라이프스타일을 즐겨보세요!,lifestyle_casual,
 main,main-csc10,csc,lifestyle_casual,편안한 착용감과 스타일리한 디자인을 경험해보세요.,lifestyle_casual,
-main,main-cse01,cse,easy_trekking&athleisure,가벼운 운동이나 산책 할 때도 네파 스타일로~,easy_trekking&athleisure,
-main,main-cse02,cse,easy_trekking&athleisure,등산 입문자에게는 네파가 필수!,easy_trekking&athleisure,
-main,main-cse03,cse,easy_trekking&athleisure,가벼운 등산도 네파와 함께!,easy_trekking&athleisure,
-main,main-cse04,cse,easy_trekking&athleisure,여가활동이나 취미도 네파와 함께하세요.,easy_trekking&athleisure,
-main,main-cse05,cse,easy_trekking&athleisure,다양한 상황에서 입기 좋은 네파 제품들을 만나보세요!,easy_trekking&athleisure,
+main,main-cse01,cse,easy_trekking&athleisure,가벼운 운동이나 산책 할 때도 {mall_id} 스타일로~,easy_trekking&athleisure,
+main,main-cse02,cse,easy_trekking&athleisure,등산 입문자에게는 {mall_id}가 필수!,easy_trekking&athleisure,
+main,main-cse03,cse,easy_trekking&athleisure,가벼운 등산도 {mall_id}와 함께!,easy_trekking&athleisure,
+main,main-cse04,cse,easy_trekking&athleisure,여가활동이나 취미도 {mall_id}와 함께하세요.,easy_trekking&athleisure,
+main,main-cse05,cse,easy_trekking&athleisure,다양한 상황에서 입기 좋은 {mall_id} 제품들을 만나보세요!,easy_trekking&athleisure,
 main,main-cse06,cse,easy_trekking&athleisure,활동적이면서 편안한 스타일을 만나보세요!,easy_trekking&athleisure,
 main,main-cse07,cse,easy_trekking&athleisure,액티브한 라이프스타일을 함께 경험하세요!,easy_trekking&athleisure,
 main,main-cse08,cse,easy_trekking&athleisure,활기찬 야외 활동과 도심 속 휴식을 위한 조합을 만나보세요!,easy_trekking&athleisure,
 main,main-cse09,cse,easy_trekking&athleisure,트레킹과 액티브한 라이프스타일을 함께 누리세요!,easy_trekking&athleisure,
 main,main-cse10,cse,easy_trekking&athleisure,스포티한 감각과 편안한 착용을 동시에 누려보세요!,easy_trekking&athleisure,
 main,main-csl01,csl,lifestyle_casual&easy_trekking,"일상 생활에서도, 휴식이 필요할 때도!",lifestyle_casual&easy_trekking,
-main,main-csl02,csl,lifestyle_casual&easy_trekking,자연 속에서 힐링할 때에도 네파와 함께!,lifestyle_casual&easy_trekking,
+main,main-csl02,csl,lifestyle_casual&easy_trekking,자연 속에서 힐링할 때에도 {mall_id}와 함께!,lifestyle_casual&easy_trekking,
 main,main-csl03,csl,lifestyle_casual&easy_trekking,캠핑이나 여행에도 잘 어울릴거에요!,lifestyle_casual&easy_trekking,
-main,main-csl04,csl,lifestyle_casual&easy_trekking,다양한 종류의 네파 제품들을 확인해보세요.,lifestyle_casual&easy_trekking,
-main,main-csl05,csl,lifestyle_casual&easy_trekking,네파와 함께하는 여행을 즐겨보세요!,lifestyle_casual&easy_trekking,
+main,main-csl04,csl,lifestyle_casual&easy_trekking,다양한 종류의 {mall_id} 제품들을 확인해보세요.,lifestyle_casual&easy_trekking,
+main,main-csl05,csl,lifestyle_casual&easy_trekking,{mall_id}와 함께하는 여행을 즐겨보세요!,lifestyle_casual&easy_trekking,
 main,main-csl06,csl,lifestyle_casual&easy_trekking,마음의 여유를 채우는 휴식시간을 함께하세요.,lifestyle_casual&easy_trekking,
-main,main-csl07,csl,lifestyle_casual&easy_trekking,네파와 함께 자연 속 힐링을 즐겨보세요.,lifestyle_casual&easy_trekking,
+main,main-csl07,csl,lifestyle_casual&easy_trekking,{mall_id}와 함께 자연 속 힐링을 즐겨보세요.,lifestyle_casual&easy_trekking,
 main,main-csl08,csl,lifestyle_casual&easy_trekking,스타일과 활동성을 함께 누리세요!,lifestyle_casual&easy_trekking,
 main,main-csl09,csl,lifestyle_casual&easy_trekking,"트레킹과 일상, 두 가지를 함께 즐겨보세요!",lifestyle_casual&easy_trekking,
 main,main-csl10,csl,lifestyle_casual&easy_trekking,"도시에서부터 자연으로, 어디든 편안하게!",lifestyle_casual&easy_trekking,
-main,main-csm01,csm,mountaineering,어떤 도전이라도 네파와 함께라면 문제 없어요!,mountaineering,
-main,main-csm02,csm,mountaineering,힘겨운 등산에서도 네파 제품으로 안전을 지키세요.,mountaineering,
-main,main-csm03,csm,mountaineering,고기능성의 네파 제품들을 확인해보세요.,mountaineering,
+main,main-csm01,csm,mountaineering,어떤 도전이라도 {mall_id}와 함께라면 문제 없어요!,mountaineering,
+main,main-csm02,csm,mountaineering,힘겨운 등산에서도 {mall_id} 제품으로 안전을 지키세요.,mountaineering,
+main,main-csm03,csm,mountaineering,고기능성의 {mall_id} 제품들을 확인해보세요.,mountaineering,
 main,main-csm04,csm,mountaineering,등산 매니아라면 꼭 확인해보세요!,mountaineering,
 main,main-csm05,csm,mountaineering,더욱 편안하고 건강한 등산을 위한 제품을 만나보세요.,mountaineering,
 main,main-csm06,csm,mountaineering,"아웃도어 활동을 위한 기능성 제품을 원하신다면, 지금 확인해보세요.",mountaineering,
-main,main-csm07,csm,mountaineering,험한 지형이나 어려운 등산에도 언제나 네파와 함께!,mountaineering,
-main,main-csm08,csm,mountaineering,극한 환경에서도 네파와 함께!,mountaineering,
-main,main-csm09,csm,mountaineering,"네파의 기술력, 직접 확인해보세요.",mountaineering,
+main,main-csm07,csm,mountaineering,험한 지형이나 어려운 등산에도 언제나 {mall_id}와 함께!,mountaineering,
+main,main-csm08,csm,mountaineering,극한 환경에서도 {mall_id}와 함께!,mountaineering,
+main,main-csm09,csm,mountaineering,"{mall_id}의 기술력, 직접 확인해보세요.",mountaineering,
 main,main-csm10,csm,mountaineering,어떤 날씨에서도 걱정 없어요!,mountaineering,
-main,main-css01,css,nepa_starter,안유진's PICK! 네파의 제품을 만나보세요.,nepa_starter,
-main,main-css02,css,nepa_starter,준호가 선택한 아이템을 확인해보세요.,nepa_starter,
-main,main-css03,css,nepa_starter,많은 인기를 얻고있는 네파 제품입니다.,nepa_starter,
-main,main-css04,css,nepa_starter,유진이가 추천하는 네파 스타일을 입어보세요.,nepa_starter,
-main,main-css05,css,nepa_starter,네파와 조금 더 친해져보세요!,nepa_starter,
-main,main-css06,css,nepa_starter,네파의 다양한 상품들을 둘러보세요.,nepa_starter,
-main,main-css07,css,nepa_starter,준호도 반한 네파의 매력을 느껴보세요.,nepa_starter,
-main,main-css08,css,nepa_starter,코디하기 쉬운 네파의 제품을 만나보세요.,nepa_starter,
-main,main-css09,css,nepa_starter,유진이도 빠져버린 네파의 매력!,nepa_starter,
-main,main-css10,css,nepa_starter,자연의 즐거움을 네파와 함께 경험하세요!,nepa_starter,
+main,main-css05,css,nepa_starter,{mall_id}와 조금 더 친해져보세요!,nepa_starter,
+main,main-css06,css,nepa_starter,{mall_id}의 다양한 상품들을 둘러보세요.,nepa_starter,
 main,main-ppe01,ppe,easy_trekking,가벼운 산책에도 잘 어울린답니다.,easy_trekking,
 main,main-ppe02,ppe,easy_trekking,트레킹에도 딱인 아이템이에요!,easy_trekking,
 main,main-ppe03,ppe,easy_trekking,자연과 하나 되는 힐링 트레킹을 위한 아이템!,easy_trekking,
 main,main-ppe04,ppe,easy_trekking,"가족, 친구와 즐기는 가벼운 발걸음에 함께하세요!",easy_trekking,
-main,main-ppe05,ppe,easy_trekking,"부담없이 즐기는 아웃도어, 네파와 시작하세요!",easy_trekking,
+main,main-ppe05,ppe,easy_trekking,"부담없이 즐기는 아웃도어, {mall_id}와 시작하세요!",easy_trekking,
 main,main-ppe06,ppe,easy_trekking,트레킹을 더욱 편안하고 즐겁게 준비하세요!,easy_trekking,
-main,main-ppe07,ppe,easy_trekking,네파와 함께 여유로운 트레킹을 만끽하세요!,easy_trekking,
+main,main-ppe07,ppe,easy_trekking,{mall_id}와 함께 여유로운 트레킹을 만끽하세요!,easy_trekking,
 main,main-ppe08,ppe,easy_trekking,자유로운 움직임과 스타일을 동시에 즐겨보세요!,easy_trekking,
 main,main-ppe09,ppe,easy_trekking,세련된 디자인과 편안한 착용감을 갖춘 스타일을 완성하세요!,easy_trekking,
 main,main-ppe10,ppe,easy_trekking,활동적인 일상을 더욱 즐겁게 채워보세요!,easy_trekking,
 main,main-ppm01,ppm,mountaineering,등산을 즐기시는 분들을 위한 기능성 제품이에요!,mountaineering,
 main,main-ppm02,ppm,mountaineering,고기능성 제품을 원하시는 분들에게 딱이에요.,mountaineering,
 main,main-ppm03,ppm,mountaineering,등산 전문가분들이 선호하시는 제품이에요.,mountaineering,
-main,main-ppm04,ppm,mountaineering,"정상을 향하는 동반자, 네파와 함께해요!",mountaineering,
+main,main-ppm04,ppm,mountaineering,"정상을 향하는 동반자, {mall_id}와 함께해요!",mountaineering,
 main,main-ppm05,ppm,mountaineering,안전한 등산을 도와줄 아이템을 만나보세요!,mountaineering,
 main,main-ppm06,ppm,mountaineering,탁월한 보호 기능과 성능을 제공하는 제품과 함께하세요!,mountaineering,
 main,main-ppm07,ppm,mountaineering,힘든 환경에서도 효과적인 보온과 방수 기능을 보장합니다.,mountaineering,
@@ -1155,7 +1147,7 @@ main,main-ppm08,ppm,mountaineering,높은 방수 및 방풍 기능으로 안정적인 등반을 즐
 main,main-ppm09,ppm,mountaineering,튼튼한 소재와 우수한 보호 기능으로 안전을 챙겨보세요!,mountaineering,
 main,main-ppm10,ppm,mountaineering,구조적 디자인으로 안정감 있는 클라이밍을 경험하세요!,mountaineering,
 main,main-pph01,pph,hard_trekking,도전적인 취미 활동에도 문제 없어요!,hard_trekking,
-main,main-pph02,pph,hard_trekking,숙련된 트레커를 도와줄 네파를 만나보세요!,hard_trekking,
+main,main-pph02,pph,hard_trekking,숙련된 트레커를 도와줄 {mall_id}를 만나보세요!,hard_trekking,
 main,main-pph03,pph,hard_trekking,날씨 변덕에도 끄떡없는 기능을 갖춘 아이템,hard_trekking,
 main,main-pph04,pph,hard_trekking,높은 난이도를 즐기는 고객님을 위한 제품!,hard_trekking,
 main,main-pph05,pph,hard_trekking,다양한 환경에 적응할 수 있어요!,hard_trekking,
@@ -1163,20 +1155,20 @@ main,main-pph06,pph,hard_trekking,험난한 지형에서도 안정된 착용감을 느껴보세요!,
 main,main-pph07,pph,hard_trekking,어떤 환경에서도 높은 내구성을 유지하는 제품과 함께하세요!,hard_trekking,
 main,main-pph08,pph,hard_trekking,도전적인 트레킹에 안정성과 편안함을 더해보세요!,hard_trekking,
 main,main-pph09,pph,hard_trekking,통기성 있는 소재와 수분 관리 기능으로 편안하게 즐기세요!,hard_trekking,
-main,main-pph10,pph,hard_trekking,네파와 함께 트레킹을 더욱 자유롭게 경험해보세요!,hard_trekking,
+main,main-pph10,pph,hard_trekking,{mall_id}와 함께 트레킹을 더욱 자유롭게 경험해보세요!,hard_trekking,
 main,main-ppc01,ppc,lifestyle_casual,언제 어디서나 활용하기 좋은 아이템이에요.,lifestyle_casual,
 main,main-ppc02,ppc,lifestyle_casual,일상 생활에서 편안하게 착용 가능해요.,lifestyle_casual,
-main,main-ppc03,ppc,lifestyle_casual,실용적인 네파 아이템을 만나보세요.,lifestyle_casual,
-main,main-ppc04,ppc,lifestyle_casual,네파와 함께 활동적인 일상을 즐겨보세요.,lifestyle_casual,
-main,main-ppc05,ppc,lifestyle_casual,"편안하고 스타일리쉬한 일상, 네파와 함께!",lifestyle_casual,
+main,main-ppc03,ppc,lifestyle_casual,실용적인 {mall_id} 아이템을 만나보세요.,lifestyle_casual,
+main,main-ppc04,ppc,lifestyle_casual,{mall_id}와 함께 활동적인 일상을 즐겨보세요.,lifestyle_casual,
+main,main-ppc05,ppc,lifestyle_casual,"편안하고 스타일리쉬한 일상, {mall_id}와 함께!",lifestyle_casual,
 main,main-ppc06,ppc,lifestyle_casual,일상적인 활동에서 편안함과 스타일을 동시에 즐기세요!,lifestyle_casual,
-main,main-ppc07,ppc,lifestyle_casual,고품질 원단으로 제작된 네파 아이템으로 룩을 완성해보세요!,lifestyle_casual,
+main,main-ppc07,ppc,lifestyle_casual,고품질 원단으로 제작된 {mall_id} 아이템으로 룩을 완성해보세요!,lifestyle_casual,
 main,main-ppc08,ppc,lifestyle_casual,패션 스포츠웨어로 일상을 더욱 즐겁게 채워보세요!,lifestyle_casual,
-main,main-ppc09,ppc,lifestyle_casual,캐주얼한 룩을 완성하는 스타일리쉬한 네파를 만나보세요!,lifestyle_casual,
+main,main-ppc09,ppc,lifestyle_casual,캐주얼한 룩을 완성하는 스타일리쉬한 {mall_id}를 만나보세요!,lifestyle_casual,
 main,main-ppc10,ppc,lifestyle_casual,자유롭고 편안한 착용감을 경험해보세요!,lifestyle_casual,
 main,main-ppa01,ppa,athleisure,가벼운 스포츠를 즐겨보세요!,athleisure,
 main,main-ppa02,ppa,athleisure,스포티한 스타일을 완성하세요.,athleisure,
-main,main-ppa03,ppa,athleisure,운동 좋아하세요? 네파와 함께하세요.,athleisure,
+main,main-ppa03,ppa,athleisure,운동 좋아하세요? {mall_id}와 함께하세요.,athleisure,
 main,main-ppa04,ppa,athleisure,기능성과 디자인을 같이 담은 아이템,athleisure,
 main,main-ppa05,ppa,athleisure,"운동도, 일상도! 하나로 해결하는 애슬레저 아이템",athlesure,
 main,main-ppf01,ppf,fishing,빠른 건조와 방수 기능으로 낚시를 더욱 즐겁게!,fishing,
@@ -1186,5 +1178,5 @@ main,main-ppp01,ppp,camping,"캠핑 갈 때, 필수품이에요!",camping,
 main,main-ppp02,ppp,camping,캠핑 마니아라면 놓칠 수 없는 제품 만나보세요!,camping,
 main,main-ppp03,ppp,camping,가벼우면서 내구성 있는 소재로 캠핑을 안전하게 즐기세요!,camping,
 main,main-ppt01,ppt,travel,즐거운 여행에 함께하세요.,travel,
-main,main-ppt02,ppt,travel,여행 계획이 있으시다면 네파가 빠질 수 없죠!,travel,
+main,main-ppt02,ppt,travel,여행 계획이 있으시다면 {mall_id}가 빠질 수 없죠!,travel,
 main,main-ppt03,ppt,travel,탁월한 통기성을 갖춘 아이템과 편안한 여행을 누려보세요!,travel,

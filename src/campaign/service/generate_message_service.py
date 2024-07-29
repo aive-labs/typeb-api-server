@@ -56,6 +56,7 @@ class GenerateMessageService(GenerateMessageUsecase):
         campaign_base_obj.end_date = end_date.strftime("%Y%m%d")
         set_data = CampaignSet(**yaml_data["set_data"])
         set_groups = [CampaignSetGroup(**info) for info in yaml_data["group_info"]]
+        mall_id = user.mall_id
 
         group_info = [
             item.dict()  # data변환 가정
@@ -127,6 +128,7 @@ class GenerateMessageService(GenerateMessageUsecase):
             "base_data": campaign_base_obj.dict(),
             "set_data": set_data_dict,
             "group_info": group_info,
+            "mall_id": mall_id,
         }
 
         # rep_nm
@@ -209,6 +211,7 @@ class GenerateMessageService(GenerateMessageUsecase):
         set_data_obj = message_generate.set_object
         set_groups = message_generate.set_group_list
         req_set_group_seqs = message_generate.req_generate_msg_seq
+        mall_id = user.mall_id
 
         if campaign_base_obj.campaign_status_code == "r2":
 
@@ -239,6 +242,11 @@ class GenerateMessageService(GenerateMessageUsecase):
                 "coupon_description": offer_data.coupon_description,
                 "benefit_type": offer_data.benefit_type,
                 "benefit_type_name": offer_data.benefit_type_name,
+                "benefit_text": offer_data.benefit_text,
+                "available_period_type": offer_data.available_period_type,
+                "available_day_from_issued": offer_data.available_day_from_issued,
+                "available_begin_datetime": offer_data.available_begin_datetime,
+                "available_end_datetime": offer_data.available_end_datetime,
             }
         else:
             offer_info_dict = {}
@@ -307,6 +315,7 @@ class GenerateMessageService(GenerateMessageUsecase):
             "base_data": campaign_base_obj.dict(),
             "set_data": set_data,
             "group_info": group_info,
+            "mall_id": mall_id,
         }
 
         message_data = self.campaign_repository.get_campaign_messages(
