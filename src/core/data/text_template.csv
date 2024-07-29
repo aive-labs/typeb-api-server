@@ -1,36 +1,35 @@
 ﻿gen_key,location,text,index,detail
 remind-1,content,"얼마 남지 않은 혜택!
 
-고객님, 네파가 보내드린 혜택이 이제 얼마 남지 않았어요.
+고객님, 혜택이 이제 얼마 남지 않았어요.
 기간 내에 잊지말고 꼭 사용해보세요♡",remind,
 remind-2,content,"혜택 소멸 예정 안내
 
-{{고객명}}고객님, 
-보유하신 혜택이 소멸될 예정입니다. 
-얼마 남지 않았어요! 
+{{고객명}}고객님,
+보유하신 혜택이 소멸될 예정입니다.
+얼마 남지 않았어요!
 지금 바로 확인해보세요!",remind,
 remind-3,content,"당첨 혜택 기간 만료 예정
 
-고객님께 발급된 혜택이 곧 소멸 예정입니다. 
+고객님께 발급된 혜택이 곧 소멸 예정입니다.
 기간 내에 꼭 확인하세요~",remind,
 remind-4,content,"기간 임박!
 
-고객님~ 보유하신 혜택의 기간이 얼마 남지 않았습니다. 
-더 저렴하게 네파를 만나볼 수 있는 지금! 
+고객님~ 보유하신 혜택의 기간이 얼마 남지 않았습니다.
 기간 내에 사용해보세요♡",remind,
 remind-5,content,"혜택이 얼마 남지 않았어요
 
-{{고객명}}고객님, 
-보내드린 혜택이 이제 곧 만료됩니다. 
+{{고객명}}고객님,
+보내드린 혜택이 이제 곧 만료됩니다.
 깜짝 혜택, 놓치지 마세요!",remind,
-content-lc-1,content,"네파와 함께하는 자연 산책
+content-lc-1,content,"{mall_id}와 함께하는 자연 산책
 
-네파가 가벼운 산책을 즐길 수 있는 코스를 준비했어요. 
-아래에서 네파가 추천하는 자연을 확인해보세요~♡",contents_only,lifestyle_casual
-content-lc-2,content,"캐쥬얼 여행 with NEPA
+가벼운 산책을 즐길 수 있는 코스를 준비했어요.
+아래에서 추천 콘텐츠를 확인해보세요~♡",contents_only,lifestyle_casual
+content-lc-2,content,"캐쥬얼 여행 with {mall_id}
 
 어디든 떠나고 싶은 욕구가 생긴다면?
-가까운 곳으로의 여행으로 꽤나 특별한 하루가 될 수 있어요. 
+가까운 곳으로의 여행으로 꽤나 특별한 하루가 될 수 있어요.
 
 행복한 일상을 항상 응원합니다♡",contents_only,lifestyle_casual
 content-lc-3,content,"NEPA와 가벼운 여행해요!
@@ -41,25 +40,25 @@ content-lc-3,content,"NEPA와 가벼운 여행해요!
 아래 링크를 클릭해서 즐거운 계획을 시작해보세요!",contents_only,lifestyle_casual
 content-lc-4,content,"네파와 함께하는 캐쥬얼 여행
 
-일상을 떠나 가벼운 여행을 해보는 건 어떠세요? 
+일상을 떠나 가벼운 여행을 해보는 건 어떠세요?
 
 아래 링크에서 네파가 준비한 자연의 이야기를 만나보세요.",contents_only,lifestyle_casual
 content-lc-5,content,"네파가 들려주는 산책 이야기
 
-네파와 함께 근교로 산책 어떠세요? 
-자연을 만끽하며 일상의 스트레스를 날려보세요! 
+네파와 함께 근교로 산책 어떠세요?
+자연을 만끽하며 일상의 스트레스를 날려보세요!
 
 아래 링크를 확인해보세요!",contents_only,lifestyle_casual
 content-ea-1,content,"네파의 자연 운동 코스
 
-자연에서의 모험이 여러분을 기다리고 있어요! 
+자연에서의 모험이 여러분을 기다리고 있어요!
 
-네파가 준비한 힐링 장소를 확인하시고, 
+네파가 준비한 힐링 장소를 확인하시고,
 새로운 경험을 찾아 떠나요!",contents_only,easy_trekking&athleisure
 content-ea-2,content,"네파의 자연 운동 코스
 
-가벼운 등산을 즐기시나요? 
-자연으로 뛰어들어 건강과 기분 전환을 한 번에 챙겨보세요. 
+가벼운 등산을 즐기시나요?
+자연으로 뛰어들어 건강과 기분 전환을 한 번에 챙겨보세요.
 자연의 아름다움이 그 곳에 있답니다!",contents_only,easy_trekking&athleisure
 content-ea-3,content,"자연도 즐기고, 운동도 하고!
 
@@ -69,93 +68,93 @@ content-ea-3,content,"자연도 즐기고, 운동도 하고!
 나만의 모험을 시작해보세요!",contents_only,easy_trekking&athleisure
 content-ea-4,content,"네파와 함께하는 트레킹 모험
 
-이번 주말엔 등산 어떠세요? 
+이번 주말엔 등산 어떠세요?
 
-네파가 보내드린 추천 코스 확인하시고, 
+네파가 보내드린 추천 코스 확인하시고,
 산과 자연이 주는 특별한 에너지를 직접 느껴보세요.",contents_only,easy_trekking&athleisure
 content-ea-5,content,"네파와 가벼운 트레킹 GO!
 
-지치는 일상, 소소한 행복을 찾아보세요! 
+지치는 일상, 소소한 행복을 찾아보세요!
 자연에서 즐기는 가벼운 트레킹으로 가볍게 땀을 흘려보세요.
 
 당신의 모험을 네파가 응원해요.",contents_only,easy_trekking&athleisure
 content-le-1,content,"NEPA와 함께 자연 속 휴식
 
 고객님~
-이번 주말에는 밖에 나가 하늘과 바람을 느껴보세요! 
+이번 주말에는 밖에 나가 하늘과 바람을 느껴보세요!
 
-네파가 보내드리는 추천 장소 확인하시고, 
+네파가 보내드리는 추천 장소 확인하시고,
 즐거운 주말 보내세요!",contents_only,lifestyle_casual&easy_trekking
 content-le-2,content,"네파의 산과 자연 이야기
 
-산과 자연을 사랑하는 사람들을 위한 힐링 스팟을 추천해드려요! 
+산과 자연을 사랑하는 사람들을 위한 힐링 스팟을 추천해드려요!
 
 아래 링크에서 네파가 추천하는 이야기를 확인해보세요~",contents_only,lifestyle_casual&easy_trekking
 content-le-3,content,"일상을 벗어난 트레킹 추천!
 
-매일 똑같은 일상이 지겨우시다면? 
+매일 똑같은 일상이 지겨우시다면?
 같은 산이어도 길이 다르다면 그 속에 새로운 이야기를 찾을 수 있을거에요.
 
 아래의 링크에서 추천 코스를 확인해보세요.",contents_only,lifestyle_casual&easy_trekking
 content-le-4,content,"네파가 준비한 산책 이야기
 
-고객님의 일상에 작은 여행이 필요하신가요? 
+고객님의 일상에 작은 여행이 필요하신가요?
 네파와 함께 가벼운 산책으로 리프레쉬!
 
 자연을 느끼며 새로운 감각을 일깨워보세요.",contents_only,lifestyle_casual&easy_trekking
-content-le-5,content,"네파의 자연 힐링 스팟 추천 
+content-le-5,content,"네파의 자연 힐링 스팟 추천
 
-자연을 만끽하며 일상의 스트레스를 날려보세요! 
+자연을 만끽하며 일상의 스트레스를 날려보세요!
 
 아래 링크를 클릭하시면 네파가 고객님만을 위해 추천하는 이야기를 보실 수 있어요!",contents_only,lifestyle_casual&easy_trekking
 content-mt-1,content,"NEPA가 들려주는 등산 스토리
 
-오늘은 신선한 공기와 멋진 풍경을 만나러 가보시는거 어떠세요? 
+오늘은 신선한 공기와 멋진 풍경을 만나러 가보시는거 어떠세요?
 
-네파가 준비한 이야기 확인하시고, 
+네파가 준비한 이야기 확인하시고,
 새로운 경험을 즐겨보세요!",contents_only,mountaineering
 content-mt-2,content,"힐링을 위한 하이킹 플랜
 
-지친 일상, 힐링이 필요하다면? 
+지친 일상, 힐링이 필요하다면?
 
-네파가 준비한 이야기를 읽어보시고, 
+네파가 준비한 이야기를 읽어보시고,
 신나는 하이킹으로 일상을 벗어나보세요!",contents_only,mountaineering
 content-mt-3,content,"네파와 등산하고 힐링하자!
 
-{고객명} 고객님, 
+{고객명} 고객님,
 신나는 등산으로 특별한 순간을 만들어 보는 건 어떠세요?
 
 자연과 함께하는 힐링 여정, 네파가 추천해드릴게요!",contents_only,mountaineering
 content-mt-4,content,"등산으로 스트레스 해소!
 
-일상의 스트레스는 자연에서의 액티비티로 날려버리세요! 
+일상의 스트레스는 자연에서의 액티비티로 날려버리세요!
 
 네파가 준비한 등산 코스에 대한 이야기를 확인하시고 스트레스도 날려보세요~",contents_only,mountaineering
 content-mt-5,content,"네파가 준비한 등산 코스
 
-등산은 마음을 정화하고 몸을 단련시킬 수 있게 도와준답니다! 
+등산은 마음을 정화하고 몸을 단련시킬 수 있게 도와준답니다!
 
-네파가 추천하는 산에 관한 이야기를 읽어보시고, 
+네파가 추천하는 산에 관한 이야기를 읽어보시고,
 행복한 하루 되세요~",contents_only,mountaineering
-content-ns-1,content,"자연으로 리프레쉬! 
+content-ns-1,content,"자연으로 리프레쉬!
 
-바쁜 일상, 자연 속 산책으로 재충전하세요! 
+바쁜 일상, 자연 속 산책으로 재충전하세요!
 
 네파가 들려드리는 자연 이야기를 따라 걸어보세요.",contents_only,nepa_starter
 content-ns-2,content,"자연에서 즐기는 힐링 타임
 
-{고객명}님, 자연과 함께 힐링하세요! 
+{고객명}님, 자연과 함께 힐링하세요!
 네파가 힐링 스팟을 추천해드립니다.
 
 아래 링크에서 확인해보세요.",contents_only,nepa_starter
 content-ns-3,content,"네파와 함께 자연으로 떠나요
 
-이번 주말에는 맑은 하늘과 넓은 땅을 느낄 수 있는 푸르른 자연으로 떠나보세요. 
+이번 주말에는 맑은 하늘과 넓은 땅을 느낄 수 있는 푸르른 자연으로 떠나보세요.
 
 네파가 추천하는 자연으로의 힐링 타임이 도착했어요~",contents_only,nepa_starter
 content-ns-4,content,"일상 속 휴식을 위한 스팟
 
-지친 일상에 휴식이 필요하신가요? 
+지친 일상에 휴식이 필요하신가요?
 
 네파가 준비한 추천 힐링 장소를 아래 링크에서 확인해보세요~
 언제나 고객님을 기다리고 있어요.",contents_only,nepa_starter
@@ -167,19 +166,19 @@ content-ns-5,content,"지친 나에게 주는 힐링타임
 자세한 내용은 아래 링크에서 확인하세요.",contents_only,nepa_starter
 content-ns-6,content,"푸르른 자연 이야기
 
-{고객명} 고객님을 위해 행복한 자연 이야기를 들려드립니다. 
-네파와 함께 멋진 자연도 즐기고 여유로운 힐링 타임을 가져보세요. 
+{고객명} 고객님을 위해 행복한 자연 이야기를 들려드립니다.
+네파와 함께 멋진 자연도 즐기고 여유로운 힐링 타임을 가져보세요.
 
 아래 링크에서 만나보세요.",contents_only,nepa_starter
 content-ns-7,content,"네파와 등산 입문하기
 
-혹시 등산 좋아하시나요? 
+혹시 등산 좋아하시나요?
 누구나 즐길 수 있는 아웃도어 활동을 추천해드릴게요.
 
 아래 보내드린 링크에서 이야기를 확인해보세요!",contents_only,nepa_starter
 content-ns-8,content,"자연으로 떠나자~
 
-매일 똑같은 일상이 지겨우신가요? 
+매일 똑같은 일상이 지겨우신가요?
 자연에서의 새로운 일상을 계획해보세요.
 
 네파가 준비한 이야기를 확인해보세요.",contents_only,nepa_starter
