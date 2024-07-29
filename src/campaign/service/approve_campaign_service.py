@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import pytz
 from fastapi import HTTPException
-from sqlalchemy import and_, desc, func
+from sqlalchemy import and_, delete, desc, func, update
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import coalesce
 
@@ -44,6 +44,7 @@ from src.campaign.service.port.base_campaign_set_repository import (
 )
 from src.campaign.utils.campagin_status_utils import *
 from src.campaign.utils.convert_by_message_format import convert_by_message_format
+from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
 from src.common.infra.entity.customer_master_entity import CustomerMasterEntity
 from src.common.sqlalchemy.object_access_condition import object_access_condition
 from src.common.timezone_setting import selected_timezone
@@ -308,7 +309,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 created_at=created_at,
                 created_by=user_id,
                 created_by_name=user.username,
-                user_obj=user,
+                user=user,
                 send_date=campaign.send_date,
                 send_time=campaign.timetosend,
                 approval_no=approval_no,
@@ -506,6 +507,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         print(f"status_general_change: {from_status} {to_status}")
 
         if is_status_pending_to_haltbefore(from_status, to_status):
+            # w2(캠페인 진행대기) -> s1(
             # --진행대기 -> 일시중지 (00상태의 row 예약 상태 변경 "21")
             approval_no = self.get_campaign_approval_no(campaign_id, db)
 
@@ -520,6 +522,26 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 created_by_name=user.username,
                 description="캠페인 일시 정지",
             )
+
+            update_pending_to_haltbefore = (
+                update(SendReservationEntity)
+                .where(
+                    and_(
+                        SendReservationEntity.campaign_id == campaign_id,
+                        SendReservationEntity.send_sv_type == MsgDeliveryVendorEnum.DAU.value,
+                        SendReservationEntity.test_send_yn == "n",
+                    )
+                )
+                .values(
+                    {
+                        "send_resv_state": "21",
+                        "log_comment": "캠페인이 일시중지 되었습니다.",
+                        "log_date": created_at,
+                        "update_resv_date": created_at,
+                    }
+                )
+            )
+            db.execute(update_pending_to_haltbefore)
 
             send_reservation_count = (
                 db.query(SendReservationEntity)
@@ -573,11 +595,11 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 SendReservationEntity.test_send_yn == "n",
             )
 
-            # 발송 취소 불가 case 1
+            # 5분 전에는 발송 취소 불가
             cancel_allowed_check_cond = [
                 SendReservationEntity.send_resv_date > current_korea_timestamp,
                 SendReservationEntity.send_resv_date <= current_korea_timestamp_plus_5_minutes,
-                SendReservationEntity.send_resv_state == "01",  # 발송요청
+                SendReservationEntity.send_resv_state == "00",  # 발송요청
             ]
             cancel_allowed_check = query.filter(*cancel_allowed_check_cond)
             if cancel_allowed_check.count() > 0:
@@ -588,74 +610,70 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                     },
                 )
 
-            # 발송 취소 불가 case 2
-            cancel_allowed_check_cond_2 = [
-                SendReservationEntity.send_resv_date <= current_korea_timestamp,
-                SendReservationEntity.send_resv_state == "01",  # 발송요청
-            ]
-            cancel_allowed_check_2 = query.filter(*cancel_allowed_check_cond_2)
-            if cancel_allowed_check_2.count() > 0:
+            # 리마인드 메세지가 존재하지 않고, 캠페인 메세지가 발송되었을 경우 진행 중지 불가
+            remind_msgs = db.query(SetGroupMessagesEntity).filter(
+                SetGroupMessagesEntity.campaign_id == campaign_id,
+                SetGroupMessagesEntity.msg_resv_date > current_korea_date,
+            )
+            if remind_msgs.count() == 0:
                 raise PolicyException(
                     detail={
-                        "code": "send_resv/halt/denied/02",
-                        "message": "발송 진행 중인 메세지가 존재하여 캠페인 진행을 중지할 수 없습니다.",
+                        "code": "send_resv/halt/denied/03",
+                        "message": "남은 메세지가 존재하지 않아 캠페인 진행을 중지할 수 없습니다.",
                     },
                 )
 
-            # 아직 발송 예약 시간이 도래하지 않았고, 발송 요청인 상태의 메세지에 대해 진행 중지를 한다.
-            cancel_allowed_cond = [
-                SendReservationEntity.send_resv_date > current_korea_timestamp,
-                SendReservationEntity.send_resv_state == "01",  # 발송요청
-            ]
-            cancel_query = query.filter(*cancel_allowed_cond)
-            if cancel_query.count() > 0:
-                # 발송 취소 로깅
-
-                # 취소 dag execute (s2) : 미발송메세지 send_reservation 삭제 & nepa_send 삭제
-                input_var = {
-                    "camp_id": campaign_id,
-                    "test_send_yn": "n",
-                    "to_status": to_status,
-                }
-                await self.message_controller.execute_dag("nepasend_cancel_resv", input_var)
-
-            else:
-                # 리마인드 메세지가 존재하지 않고, 캠페인 메세지가 발송되었을 경우 진행 중지 불가
-                remind_msgs = db.query(SetGroupMessagesEntity).filter(
-                    SetGroupMessagesEntity.campaign_id == campaign_id,
-                    SetGroupMessagesEntity.msg_resv_date > current_korea_date,
+            # 예약 삭제
+            delete_statement = delete(SendReservationEntity).where(
+                and_(
+                    SendReservationEntity.campaign_id == campaign_id,
+                    SendReservationEntity.test_send_yn == "n",
                 )
-                if remind_msgs.count() == 0:
-                    raise PolicyException(
-                        detail={
-                            "code": "send_resv/halt/denied/03",
-                            "message": "남은 메세지가 존재하지 않아 캠페인 진행을 중지할 수 없습니다.",
-                        },
-                    )
+            )
+            db.execute(delete_statement)
 
         elif is_status_haltbefore_to_pending(from_status, to_status):
-            # --일시중지-> 진행대기
+            # 일시중지(s1) -> 진행대기(w2)
 
             approval_no = self.get_campaign_approval_no(campaign_id, db)
 
-            # "21" -> "00"
-            db.query(SendReservationEntity).filter(
-                SendReservationEntity.campaign_id == campaign_id,
-                SendReservationEntity.test_send_yn == "n",
-            ).update({SendReservationEntity.send_resv_state: "00"})
+            created_at = localtime_converter()
+            update_haltbefore_to_pending = (
+                update(SendReservationEntity)
+                .where(
+                    and_(
+                        SendReservationEntity.campaign_id == campaign_id,
+                        SendReservationEntity.send_resv_state == "21",
+                        SendReservationEntity.test_send_yn == "n",
+                    )
+                )
+                .values(
+                    {
+                        "send_resv_state": "00",
+                        "log_comment": "캠페인 진행대기 상태로 변경되었습니다.",
+                        "log_date": created_at,
+                        "update_resv_date": created_at,
+                    }
+                )
+            )
+            db.execute(update_haltbefore_to_pending)
 
             db.commit()
 
-        # --일시중지->임시저장 (예약 삭제 & nepasend 삭제,  validation: "11"상태 row가 존재하는지)
         elif is_status_haltbefore_to_tempsave(from_status, to_status):
-
+            # 일시중지(s1) -> 임시저장(r1)
             # campaign_approvals 해당 approval_status를 canceled로 변경
+
             approval_no = self.cancel_campaign_approval(db, campaign_id)
 
-            # 예약 삭제 & nepasend 삭제
-            # to_status : r1 임시저장
-            input_var = {"camp_id": campaign_id, "test_send_yn": "n", "to_status": to_status}
-            await self.message_controller.execute_dag("nepasend_cancel_resv", input_var)
+            # 예약 삭제
+            delete_statement = delete(SendReservationEntity).where(
+                and_(
+                    SendReservationEntity.campaign_id == campaign_id,
+                    SendReservationEntity.test_send_yn == "n",
+                )
+            )
+            db.execute(delete_statement)
 
         elif is_status_haltafter_to_modify(from_status, to_status):
             # --진행중지->수정 단계 ("r2")
@@ -702,7 +720,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             )
 
             if not send_msg_types:
-                # res = self.save_campaign_reservation(db, user, campaign_id, msg_seqs_to_save)
                 res = self.save_campaign_reservation(db, user, campaign_id)
                 if res is False:
                     # to-do: 진행대기 (발송일을 내일 이후로 변경하는 경우)
@@ -754,7 +771,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         created_at,
         created_by,
         created_by_name,
-        user_obj,
+        user,
         send_date,
         send_time,
         approval_no=None,
@@ -799,13 +816,13 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         )
 
         # insert to send_reservation
-        res = self.save_campaign_reservation(db, user_obj, campaign_id)
+        res = self.save_campaign_reservation(db, user, campaign_id)
 
         if res:
             # airflow trigger api
             print("today airflow trigger api")
             input_var = {
-                "mallid": user_obj.mall_id,
+                "mallid": user.mall_id,
                 "campaign_id": campaign_id,
                 "test_send_yn": "n",
             }
@@ -815,6 +832,13 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             logical_date = create_logical_date_for_airflow(send_date, send_time)
             await self.message_controller.execute_dag(
                 dag_name="send_messages",
+                input_vars=input_var,
+                dag_run_id=dag_run_id,
+                logical_date=logical_date,
+            )
+
+            await self.message_controller.execute_dag(
+                dag_name=f"{user.mall_id}_issue_coupon",
                 input_vars=input_var,
                 dag_run_id=dag_run_id,
                 logical_date=logical_date,
@@ -1174,11 +1198,11 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 inplace=True,
             )
 
-            send_rsv_format = send_rsv_format[
+            send_rsv_format = send_rsv_format[  # pyright: ignore [reportAssignmentType]
                 ~send_rsv_format["send_msg_body"].str.contains("{{")
             ]  # 포매팅이 안되어 있는 메세지는 제외한다.
 
-            send_rsv_format = send_rsv_format[
+            send_rsv_format = send_rsv_format[  # pyright: ignore [reportAssignmentType]
                 ~send_rsv_format["phone_callback"].str.contains("{{")
             ]  # 포매팅이 안되어 있는 메세지는 제외한다.
 
@@ -1187,7 +1211,9 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             # 발송사, 메세지 타입에 따른 기타 변수 생성
             ##카카오발신프로필, 카카오템플릿키, 카카오친구톡광고표시, 카카오친구톡와이드이미지사용, 카카오알림톡 유형
             ##SSG 재발송 시도 여부, kko_send_timeout, kakao_send_profile_key
-            send_rsv_format = convert_by_message_format(send_rsv_format)
+            send_rsv_format = convert_by_message_format(  # pyright: ignore [reportAssignmentType]
+                send_rsv_format
+            )  # pyright: ignore [reportAssignmentType]
 
             # 고객 중복 여부 체크
             keys = ["campaign_id", "remind_step", "cus_cd"]
@@ -1264,5 +1290,3 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         except Exception as e:
             db.rollback()
             raise ConsistencyException(detail={"message": "승인 완료 처리 중 문제가 발생했습니다."})
-        # finally:
-        #     db.close()

@@ -155,6 +155,14 @@ class ReserveCampaignsService(ReserveCampaignsUseCase):
                 dag_run_id=dag_run_id,
                 logical_date=logical_date,
             )
+
+            await self.message_controller.execute_dag(
+                dag_name=f"{user.mall_id}_issue_coupon",
+                input_vars=input_var,
+                dag_run_id=dag_run_id,
+                logical_date=logical_date,
+            )
+
         else:
             txt = f"{campaign_id} : 당일({execution_date}) 정상 예약 메세지가 존재하지 않습니다."
             return {"result": txt}

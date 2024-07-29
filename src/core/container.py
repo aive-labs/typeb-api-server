@@ -39,6 +39,7 @@ from src.campaign.service.confrim_campaign_set_group_message import (
 )
 from src.campaign.service.create_campaign_service import CreateCampaignService
 from src.campaign.service.create_campaign_summary import CreateCampaignSummary
+from src.campaign.service.create_recurring_campaign import CreateRecurringCampaign
 from src.campaign.service.delete_campaign_service import DeleteCampaignService
 from src.campaign.service.generate_message_service import GenerateMessageService
 from src.campaign.service.get_campaign_service import GetCampaignService
@@ -483,6 +484,12 @@ class Container(containers.DeclarativeContainer):
     reserve_campaign_service = providers.Singleton(
         provides=ReserveCampaignsService,
         approve_campaign_service=approve_campaign_service,
+    )
+
+    create_recurring_campaign_service = providers.Singleton(
+        provides=CreateRecurringCampaign,
+        campaign_repository=campaign_repository,
+        campaign_set_repository=campaign_set_repository,
     )
 
     """
