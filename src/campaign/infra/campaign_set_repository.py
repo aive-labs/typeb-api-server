@@ -4,7 +4,7 @@ from sqlalchemy import and_, func, inspect, update
 from sqlalchemy.orm import Session, subqueryload
 
 from src.campaign.domain.campaign import Campaign
-from src.campaign.domain.campaign_messages import SetGroupMessage
+from src.campaign.domain.campaign_messages import MessageResource, SetGroupMessage
 from src.campaign.enums.campaign_type import CampaignType
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.campaign.infra.entity.campaign_remind_entity import CampaignRemindEntity
@@ -13,6 +13,7 @@ from src.campaign.infra.entity.campaign_set_recipients_entity import (
     CampaignSetRecipientsEntity,
 )
 from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
+from src.campaign.infra.entity.message_resource_entity import MessageResourceEntity
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.campaign.infra.sqlalchemy_query.campaign_set.apply_personalized_option import (
     apply_personalized_option,
@@ -727,3 +728,18 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         query_update_result = db.execute(update_statement)
         if query_update_result.rowcount == 0:
             raise NotFoundException(detail={"message": "해당되는 메시지 정보를 찾지 못했습니다."})
+
+    def delete_message_image_source(self, set_group_msg_seq, db: Session):
+        pass
+
+    def get_message_image_source(self, set_group_msg_seq, db: Session) -> MessageResource:
+        entity = (
+            db.query(MessageResourceEntity)
+            .filter(MessageResourceEntity.set_group_msg_seq == set_group_msg_seq)
+            .first()
+        )
+
+        if not entity:
+            raise NotFoundException(detail={"message": "해당되는 이미지 정보를 찾지 못했습니다."})
+
+        return MessageResource.model_validate(entity)

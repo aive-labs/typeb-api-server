@@ -41,6 +41,7 @@ from src.campaign.service.create_campaign_service import CreateCampaignService
 from src.campaign.service.create_campaign_summary import CreateCampaignSummary
 from src.campaign.service.create_recurring_campaign import CreateRecurringCampaign
 from src.campaign.service.delete_campaign_service import DeleteCampaignService
+from src.campaign.service.delete_image_for_message import DeleteImageForMessage
 from src.campaign.service.generate_message_service import GenerateMessageService
 from src.campaign.service.get_campaign_service import GetCampaignService
 from src.campaign.service.get_campaign_set_description import GetCampaignSetDescription
@@ -598,5 +599,11 @@ class Container(containers.DeclarativeContainer):
         campaign_repository=campaign_repository,
         campaign_set_repository=campaign_set_repository,
         message_service=message_service,
+        s3_service=s3_asset_service,
+    )
+
+    delete_image_for_message = providers.Singleton(
+        provides=DeleteImageForMessage,
+        campaign_set_repository=campaign_set_repository,
         s3_service=s3_asset_service,
     )

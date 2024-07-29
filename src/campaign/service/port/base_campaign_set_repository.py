@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
-from src.campaign.domain.campaign_messages import SetGroupMessage
+from src.campaign.domain.campaign_messages import MessageResource, SetGroupMessage
 
 
 class BaseCampaignSetRepository(ABC):
@@ -65,4 +65,12 @@ class BaseCampaignSetRepository(ABC):
     def update_message_image(
         self, campaign_id, set_group_msg_seq, message_photo_uri: list[str], db: Session
     ):
+        pass
+
+    @abstractmethod
+    def get_message_image_source(self, set_group_msg_seq, db: Session) -> MessageResource:
+        pass
+
+    @abstractmethod
+    def delete_message_image_source(self, set_group_msg_seq, db: Session):
         pass

@@ -52,6 +52,9 @@ from src.campaign.routes.port.create_campaign_summary_usecase import (
 )
 from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUseCase
 from src.campaign.routes.port.delete_campaign_usecase import DeleteCampaignUseCase
+from src.campaign.routes.port.delete_image_for_message_usecase import (
+    DeleteImageForMessageUseCase,
+)
 from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase
 from src.campaign.routes.port.get_campaign_set_description_usecase import (
     GetCampaignSetDescriptionUseCase,
@@ -391,3 +394,18 @@ async def upload_message_resources(
 ) -> dict:
     """이미지 업로드 API"""
     return await upload_image_for_message.exec(campaign_id, set_group_msg_seq, files, user, db=db)
+
+
+@campaign_router.delete("/campaigns/{campaign_id}/resource/{set_group_msg_seq}")
+@inject
+async def delete_message_resources(
+    campaign_id: str,
+    set_group_msg_seq: int,
+    db: Session = Depends(get_db_session),
+    user=Depends(get_permission_checker(required_permissions=[])),
+    delete_image_for_message: DeleteImageForMessageUseCase = Depends(
+        dependency=Provide[Container.delete_image_for_message]
+    ),
+) -> dict:
+    """이미지 업로드 API"""
+    return await delete_image_for_message.exec(campaign_id, set_group_msg_seq, user, db=db)
