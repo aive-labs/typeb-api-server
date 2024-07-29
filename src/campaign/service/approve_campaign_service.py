@@ -61,6 +61,7 @@ from src.core.exceptions.exceptions import (
     NotFoundException,
     PolicyException,
 )
+from src.core.transactional import transactional
 from src.message_template.infra.entity.message_template_entity import (
     MessageTemplateEntity,
 )
@@ -81,6 +82,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         self.campaign_set_repository = campaign_set_repository
         self.message_controller = MessageReserveController()
 
+    @transactional
     async def exec(
         self,
         campaign_id,
@@ -319,7 +321,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 txt = f"{campaign_id} : 당일 발송할 정상 예약 메세지가 존재하지 않습니다."
                 return {"result": txt}
 
-        db.commit()
+        db.flush()
         return {"res": "success"}
 
     def save_approver(self, approval_no, campaign_id, created_at, db, user, user_id):
@@ -543,27 +545,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             )
             db.execute(update_pending_to_haltbefore)
 
-            send_reservation_count = (
-                db.query(SendReservationEntity)
-                .filter(
-                    SendReservationEntity.campaign_id == campaign_id,
-                    SendReservationEntity.test_send_yn == "n",
-                )
-                .count()
-            )
-
-            print("send_reservation_count: ", send_reservation_count)
-
-            if send_reservation_count > 0:
-                # 00상태의 row 예약 상태 변경 "21"
-                # to_status : s1 일시중지
-                input_var = {
-                    "camp_id": campaign_id,
-                    "test_send_yn": "n",
-                    "to_status": to_status,
-                }
-                await self.message_controller.execute_dag("nepasend_cancel_resv", input_var)
-
         elif is_status_pending_to_ongoing(from_status, to_status):
             # 진행대기(PENDING) -> 운영(ONGOING)
             approval_no = self.get_campaign_approval_no(campaign_id, db)
@@ -578,8 +559,8 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 created_by_name=user.username,
                 description="캠페인 시작",
             )
-        # --운영중 -> 진행중지(s2)
         elif is_status_ongoing_to_haltafter(from_status, to_status):
+            # 운영중(o1) -> 진행중지(s2)
 
             approval_no = self.get_campaign_approval_no(campaign_id, db)
 
@@ -657,8 +638,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 )
             )
             db.execute(update_haltbefore_to_pending)
-
-            db.commit()
 
         elif is_status_haltbefore_to_tempsave(from_status, to_status):
             # 일시중지(s1) -> 임시저장(r1)
@@ -1270,6 +1249,8 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 return False
 
             res_df = res_df.replace({np.nan: None})
+            res_df["phone_callback"] = res_df["phone_callback"].str.replace("-", "")
+            res_df["phone_send"] = res_df["phone_send"].str.replace("-", "")
             send_rsv_dict = res_df.to_dict("records")  # pyright: ignore [reportArgumentType]
             db.bulk_insert_mappings(SendReservationEntity, send_rsv_dict)
 
@@ -1283,7 +1264,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 description=f"{initial_rsv_count:,}건 중 {final_rsv:,} 건 발송 예약",  # to-do: campagin/remind 발송 구분
             )
 
-            db.commit()
+            db.flush()
 
             return True
 

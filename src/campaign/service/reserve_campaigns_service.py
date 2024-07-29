@@ -76,6 +76,9 @@ class ReserveCampaignsService(ReserveCampaignsUseCase):
         logging.info(f"[dag-reservation] campaign_id: {campaign_id} 예약일({execution_date})")
 
         # 당일 예약이 필요한 메세지 가져오기
+
+        print(f"{execution_date} execution_date")
+
         set_group_msg_obj = (
             db.query(SetGroupMessagesEntity.set_group_msg_seq)
             .filter(
@@ -129,12 +132,14 @@ class ReserveCampaignsService(ReserveCampaignsUseCase):
 
         print(f"변경 후: {len(recipient_df)}명")
         logging.info(f"[dag-reservation] 변경 후: {len(recipient_df)}명")
-        db.commit()
+        db.flush()
 
         # insert to send_reservation : 이미 예약한 메세지를 제외하고 예약하기
         res = self.approve_campaign_service.save_campaign_reservation(
             db, user, campaign_id, msg_seqs_to_save
         )
+
+        db.commit()
 
         if res:
             # airflow trigger api
@@ -146,8 +151,10 @@ class ReserveCampaignsService(ReserveCampaignsUseCase):
             }
             yyyymmddhh24mi = get_current_datetime_yyyymmddhh24mi()
             dag_run_id = f"{campaign_id}_{str(yyyymmddhh24mi)}"
-            print(f"dag_run_id: {dag_run_id} / input_var: {input_var}")
             logical_date = create_logical_date_for_airflow(send_date, send_time)
+            print(
+                f"dag_run_id: {dag_run_id} / input_var: {input_var} / logical_date: {logical_date}"
+            )
 
             await self.message_controller.execute_dag(
                 dag_name="send_messages",

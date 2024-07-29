@@ -143,6 +143,7 @@ class ModifyReservSync:
         # to-do: 발송예약시간이 지난 메세지 제외하기
 
         # 당일 예약이 필요한 메세지 가져오기
+        print(f"{current_korea_date} current_korea_date")
         set_group_msg_obj = (
             self.db.query(SetGroupMessagesEntity.set_group_msg_seq)
             .filter(

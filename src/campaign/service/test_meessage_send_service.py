@@ -256,6 +256,7 @@ class TestMessageSendService(TestSendMessageUseCase):
             )
 
         res_df["phone_callback"] = res_df["phone_callback"].str.replace("-", "")
+        res_df["phone_send"] = res_df["phone_send"].str.replace("-", "")
         send_rsv_dict = res_df.to_dict("records")
 
         db.bulk_insert_mappings(SendReservationEntity, send_rsv_dict)

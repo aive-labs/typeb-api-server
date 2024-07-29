@@ -21,11 +21,17 @@ from src.campaign.infra.sqlalchemy_query.get_contents_name import (
 from src.campaign.infra.sqlalchemy_query.get_customer_by_audience_id import (
     get_customers_by_audience_id,
 )
+from src.campaign.infra.sqlalchemy_query.get_customers_for_expert_campaign import (
+    get_customers_for_expert_campaign,
+)
 from src.campaign.infra.sqlalchemy_query.get_exclude_customer_list import (
     get_excluded_customer_list,
 )
 from src.campaign.infra.sqlalchemy_query.get_ltv import get_ltv
-from src.campaign.utils.campaign_creation import add_group_type
+from src.campaign.utils.utils import (
+    split_dataframe_by_ratios,
+    split_df_stratified_by_column,
+)
 from src.common.enums.campaign_media import CampaignMedia
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import localtime_converter
@@ -83,72 +89,7 @@ class CampaignManager:
         if campaign_obj_dict.get("campaign_type_code") == "basic":
             self.model = "basic"
         else:
-            if campaign_obj_dict.get("audience_type_code") == "c":
-                self.model = "custom"
-            else:
-                recsys_models = self.campaign_set_df["recsys_model_id"].unique().tolist()
-                if len(recsys_models) == 1 and recsys_models[0] == 8:
-                    self.model = "new_collection"
-                else:
-                    self.model = "seg_rec"
-
-    def _new_collection_preprocessing(self, cust_audiences_df):
-        """신상품 추천 데이터 전처리 함수
-        1. 세그먼트 추천 데이터 호출
-        2. 세그먼트 추천 데이터 전처리
-          - contents_id, rep_nm, coverage_score, rep_nm2, coverage_score2
-          - 번들 추천으로 인해 rep_nm2, coverage_score2 추가
-        """
-        # 세그추천 모델용도
-        cust_audiences_df = cust_audiences_df.drop(columns=["recsys_model_id", "offer_id"])
-        cust_rec_df = self.campaign_set_df.merge(cust_audiences_df, on="audience_id", how="right")
-        cust_rec_df = cust_rec_df.sort_values(by="set_sort_num", ascending=True).drop_duplicates(
-            "cus_cd", keep="first"
-        )
-        cust_rec_df = add_group_type(cust_rec_df)
-
-        temp_group_df = self.campaign_group_df[
-            [
-                "set_sort_num",
-                "group_sort_num",
-                "set_group_category",
-                "set_group_val",
-                "contents_id",
-                "rep_nm",
-            ]
-        ].drop_duplicates()
-        # 'set_sort_num', 'set_group_category', 'set_group_val' 기준으로 2개 이상의 데이터가 존재하는 경우 에러 발생
-        valid_df = (  # pyright: ignore [reportCallIssue]
-            temp_group_df.groupby(["set_sort_num", "group_sort_num"])
-            .size()
-            .reset_index(name="count")
-        )
-        valid_df = valid_df[valid_df["count"] > 1]
-        if len(valid_df) > 0:
-            raise Exception("동일한 그룹 내 콘텐츠가 2개 이상 존재합니다.")
-
-        if self.campaign_obj_dict.get("is_personalized"):
-            temp_group_df = temp_group_df.drop(columns=["group_sort_num"])
-            cust_rec_df = cust_rec_df.merge(
-                temp_group_df,
-                on=["set_sort_num", "set_group_category", "set_group_val"],
-                how="left",
-            )
-        else:
-            temp_group_df = temp_group_df.drop(
-                columns=["group_sort_num", "set_group_category", "set_group_val"]
-            )
-            cust_rec_df = cust_rec_df.merge(temp_group_df, on=["set_sort_num"], how="left")
-
-        # assign set_sort_num
-        # 추천 모델 매칭
-        set_sort_num_df = cust_rec_df[["cus_cd", "audience_id", "offer_id"]]
-        set_sort_num_df = set_sort_num_df.drop_duplicates()
-        set_sort_num_df = self.campaign_set_df[
-            ["set_seq", "set_sort_num", "recsys_model_id", "audience_id", "offer_id"]
-        ].merge(set_sort_num_df, on=["audience_id", "offer_id"], how="left")
-
-        return cust_rec_df, set_sort_num_df
+            self.model = "custom"
 
     def _custom_preprocessing(self, cust_audiences_df):
         """커스텀 캠페인 데이터 전처리 함수
@@ -158,7 +99,7 @@ class CampaignManager:
           - 번들 추천으로 인해 rep_nm2, coverage_score2 추가
         """
         # 커스텀 캠페인 모델용도
-        cust_audiences_df = cust_audiences_df.drop(columns=["recsys_model_id", "offer_id"])
+        cust_audiences_df = cust_audiences_df.drop(columns=["recsys_model_id", "coupon_no"])
         cust_rec_df = self.campaign_set_df.merge(cust_audiences_df, on="audience_id", how="right")
 
         cust_rec_df = cust_rec_df.sort_values(by="set_sort_num", ascending=True).drop_duplicates(
@@ -166,28 +107,26 @@ class CampaignManager:
         )
 
         if self.campaign_obj_dict.get("is_personalized"):
-            cust_rec_df.loc[:, "purpose_lv1"] = cust_rec_df.loc[:, "purpose_lv1"].fillna(
-                "nepa_starter"
-            )
-            cust_rec_df = cust_rec_df.rename(columns={"purpose_lv1": "set_group_val"})
+            cust_rec_df.loc[:, "age_group_10"] = cust_rec_df.loc[:, "age_group_10"].fillna("")
+            cust_rec_df = cust_rec_df.rename(columns={"age_group_10": "set_group_val"})
             cust_rec_df["set_group_category"] = "purpose"
         else:
             cust_rec_df["set_group_val"] = None
             cust_rec_df["set_group_category"] = None
 
-        selected_themes = self.campaign_obj_dict.get("campaign_theme_ids")
+        selected_themes = self.campaign_obj_dict.get("strategy_theme_ids")
 
         cust_rec_df = recipient_custom_contents_mapping(self.db, cust_rec_df, selected_themes)
         cust_rec_df["rep_nm"] = None
 
         # assign set_sort_num
-        set_sort_num_df = cust_rec_df[["cus_cd", "audience_id", "offer_id"]]
+        set_sort_num_df = cust_rec_df[["cus_cd", "audience_id", "coupon_no"]]
         set_sort_num_df = set_sort_num_df.drop_duplicates()
 
         # join_key -> campaign_theme_id?
         set_sort_num_df = self.campaign_set_df[
-            ["set_seq", "set_sort_num", "recsys_model_id", "audience_id", "offer_id"]
-        ].merge(set_sort_num_df, on=["audience_id", "offer_id"], how="left")
+            ["set_seq", "set_sort_num", "recsys_model_id", "audience_id", "coupon_no"]
+        ].merge(set_sort_num_df, on=["audience_id", "coupon_no"], how="left")
 
         return cust_rec_df, set_sort_num_df
 
@@ -364,27 +303,14 @@ class CampaignManager:
         for remind in remind_data:
             budget_list.append((remind.remind_media, self.initial_msg_type[remind.remind_media]))
 
-        budget = campaign_obj_dict["budget"]
-        if budget:
-            delivery_cost = 0
-            for media, msg_type in budget_list:
-                delivery_cost += get_delivery_cost(
-                    self.db,
-                    self.shop_send_yn,
-                    campaign_obj_dict["msg_delivery_vendor"],
-                    media,
-                    msg_type,
-                )
-            limit_count = math.floor(budget / delivery_cost)
-        else:
-            limit_count = None
+        limit_count = None
 
         # audience 추출
         audience_ids = self.campaign_set_df["audience_id"].unique().tolist()
-        # Todo: 세그먼트 기준 체크
 
         # 고객 목록 호출
-        cust_audiences = get_cus_by_audience_with_seg(self.db, audience_ids)
+        recommend_models = self.campaign_set_df["recsys_model_id"].unique().tolist()
+        cust_audiences = get_customers_for_expert_campaign(audience_ids, recommend_models, self.db)
         cust_audiences_df = DataConverter.convert_query_to_df(cust_audiences)
 
         ## 제외고객 필터링 적용
@@ -406,7 +332,7 @@ class CampaignManager:
         if audiences_exc:
             exc_aud_query = get_customers_by_audience_id(self.db, audiences_exc)
             exc_aud_df = DataConverter.convert_query_to_df(exc_aud_query)
-            exc_aud_df = exc_aud_df.drop(columns=["audience_id", "purpose"])
+            exc_aud_df = exc_aud_df.drop(columns=["audience_id", "age_group_10"])
             exc_aud_df = exc_aud_df.drop_duplicates("cus_cd")
             cust_audiences_df = pd.merge(
                 cust_audiences_df, exc_aud_df, on="cus_cd", how="left", indicator=True
@@ -445,7 +371,7 @@ class CampaignManager:
             campaign_set_df = self.campaign_set_df.merge(
                 cust_audiences_df, on="audience_id", how="right"
             )
-            campaign_set_df["mix_lv1"] = campaign_set_df["mix_lv1"].fillna("")
+            campaign_set_df["age_group_10"] = campaign_set_df["age_group_10"].fillna("")
             cust_audiences_df = campaign_set_df.sort_values(
                 by="set_sort_num", ascending=True
             ).drop_duplicates("cus_cd", keep="first")
@@ -460,7 +386,7 @@ class CampaignManager:
             # 그룹별 비율 계산
             recipient_df = pd.DataFrame()
             for set_sort_num in unique_set_sort_num:
-                set_df = cust_audiences_df[["cus_cd", "set_sort_num", "mix_lv1"]][
+                set_df = cust_audiences_df[["cus_cd", "set_sort_num", "age_group_10"]][
                     cust_audiences_df["set_sort_num"] == set_sort_num
                 ]
                 sub_group = self.campaign_group_df[
@@ -472,7 +398,7 @@ class CampaignManager:
                 if len(set_df) <= 1000:
                     result_df = split_dataframe_by_ratios(set_df, ratio_tuple)
                 else:
-                    result_df = split_df_stratified_by_column(set_df, ratio_tuple, "mix_lv1")
+                    result_df = split_df_stratified_by_column(set_df, ratio_tuple, "age_group_10")
                 result_df["group_sort_num"] = result_df["group_sort_num"].apply(int)
 
                 group_info = sub_group[
@@ -554,17 +480,12 @@ class CampaignManager:
         # 2. 개인화 > 그룹이 변경될 수 있음 / 줄거나 늘 수 있음
         # 개인화 캠페인 - 세그먼트, 커스텀, 신상품
         else:
-            if self.model == "seg_rec":
-                cust_rec_df, set_sort_num_df = self._seg_rec_preprocessing(cust_audiences_df)
-            elif self.model == "custom":
-                cust_rec_df, set_sort_num_df = self._custom_preprocessing(cust_audiences_df)
-            elif self.model == "new_collection":
-                cust_rec_df, set_sort_num_df = self._new_collection_preprocessing(cust_audiences_df)
+            cust_rec_df, set_sort_num_df = self._custom_preprocessing(cust_audiences_df)
 
             if self.recurring_campaign_id and self.model == "custom":
                 # 주기성 - 커스텀캠페인 is_personalized = True
                 group_sort_num_df = cust_rec_df[
-                    ["cus_cd", "set_group_category", "set_group_val", "mix_lv1"]
+                    ["cus_cd", "set_group_category", "set_group_val", "age_group_10"]
                 ]
 
                 group_sort_num_subset = set_sort_num_df[["set_sort_num", "cus_cd"]]
@@ -842,6 +763,9 @@ class CampaignManager:
                     print(f"renewed: {renewed}")
                     recipient_df = recipient_df[recipient_df["group_sort_num"].notna()]
 
+        self.db.commit()
+        print("recipient_df")
+        print(recipient_df)
         return recipient_df
 
     def update_campaign_recipients(self, recipient_df):
