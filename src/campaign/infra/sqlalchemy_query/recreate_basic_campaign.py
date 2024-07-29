@@ -242,7 +242,7 @@ def check_customer_data_consistency(campaign_set_df):
 def exclude_customers_from_exclusion_audiences(audiences_exc, campaign_set_df, db):
     exc_aud_query = get_customers_by_audience_id(audiences_exc, db)
     exc_aud_df = DataConverter.convert_query_to_df(exc_aud_query)
-    exc_aud_df = exc_aud_df.drop(columns=["audience_id", "purpose"])
+    exc_aud_df = exc_aud_df.drop(columns=["audience_id", "age_group_10"])
     exc_aud_df = exc_aud_df.drop_duplicates("cus_cd")
     campaign_set_df = pd.merge(campaign_set_df, exc_aud_df, on="cus_cd", how="left", indicator=True)
     campaign_set_df = campaign_set_df[campaign_set_df["_merge"] == "left_only"].drop(

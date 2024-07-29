@@ -109,7 +109,7 @@ class CampaignManager:
         if self.campaign_obj_dict.get("is_personalized"):
             cust_rec_df.loc[:, "age_group_10"] = cust_rec_df.loc[:, "age_group_10"].fillna("")
             cust_rec_df = cust_rec_df.rename(columns={"age_group_10": "set_group_val"})
-            cust_rec_df["set_group_category"] = "purpose"
+            cust_rec_df["set_group_category"] = "age_group_10"
         else:
             cust_rec_df["set_group_val"] = None
             cust_rec_df["set_group_category"] = None
