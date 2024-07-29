@@ -10,14 +10,13 @@ from src.campaign.infra.entity.campaign_remind_entity import CampaignRemindEntit
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.campaign.infra.sqlalchemy_query.get_phone_callback import get_phone_callback
 from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
-from src.common.infra.entity.recsys_models_entity import RecsysModelsEntity
 from src.common.utils.calculate_ratios import calculate_ratios
 from src.common.utils.date_utils import localtime_converter
 from src.contents.infra.entity.contents_entity import ContentsEntity
 from src.offers.infra.entity.offers_entity import OffersEntity
 
 
-def generate_campaingn_messages_api_logic(db, dep, cam_data: MsgGenerationReq):
+def generate_campaign_messages_api_logic(db, dep, cam_data: MsgGenerationReq):
     """
     메세지 생성
     dep : user_obj
@@ -72,8 +71,8 @@ def generate_campaingn_messages_api_logic(db, dep, cam_data: MsgGenerationReq):
 
     if set_data_obj.recsys_model_id:
         recsys_model_name = (
-            db.query(RecsysModelsEntity.recsys_model_name)
-            .filter(RecsysModelsEntity.recsys_model_id == set_data_obj.recsys_model_id)
+            db.query(RecommendProductsModelEntity.recsys_model_name)
+            .filter(RecommendProductsModelEntity.recsys_model_id == set_data_obj.recsys_model_id)
             .first()
             .recsys_model_name
         )

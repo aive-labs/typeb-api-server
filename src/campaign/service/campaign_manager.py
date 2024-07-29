@@ -771,22 +771,19 @@ class CampaignManager:
     def update_campaign_recipients(self, recipient_df):
         """캠페인 수신자 데이터 업데이트 함수"""
         # remove previous recipients
-        try:
-            delete_statement = delete(CampaignSetRecipientsEntity).where(
-                CampaignSetRecipientsEntity.campaign_id == self.campaign_id
-            )
-            self.db.execute(delete_statement)
+        delete_statement = delete(CampaignSetRecipientsEntity).where(
+            CampaignSetRecipientsEntity.campaign_id == self.campaign_id
+        )
+        self.db.execute(delete_statement)
 
-            recipient_df["campaign_id"] = self.campaign_id
-            recipient_df = recipient_df.replace({np.nan: None})
-            recipient_df["created_at"] = localtime_converter()
-            recipient_df["created_by"] = self.user_id
-            recipient_df["updated_at"] = localtime_converter()
-            recipient_df["updated_by"] = self.user_id
-            recipient_dict = recipient_df.to_dict(orient="records")
-            self.db.bulk_insert_mappings(CampaignSetRecipientsEntity, recipient_dict)
-        except Exception as e:
-            print(e)
-            self.db.rollback()
-            return False
+        recipient_df["campaign_id"] = self.campaign_id
+        recipient_df = recipient_df.replace({np.nan: None})
+        recipient_df["created_at"] = localtime_converter()
+        recipient_df["created_by"] = self.user_id
+        recipient_df["updated_at"] = localtime_converter()
+        recipient_df["updated_by"] = self.user_id
+        recipient_dict = recipient_df.to_dict(orient="records")
+        self.db.bulk_insert_mappings(CampaignSetRecipientsEntity, recipient_dict)
+
+        self.db.flush()
         return True

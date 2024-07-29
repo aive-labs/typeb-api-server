@@ -49,7 +49,7 @@ def get_campaigns_api_logic(db, campaign_id):
     set_groups = [row._asdict() for row in get_campaign_set_groups(campaign_id=campaign_id, db=db)]
 
     # rep_nm_list & contents_names
-    if campaign_type_code == CampaignType.expert.value:
+    if campaign_type_code == CampaignType.EXPERT.value:
         sets = add_set_rep_contents(db, sets, set_groups, campaign_id)
     else:
         sets = [{**data_dict, "rep_nm_list": None, "contents_names": None} for data_dict in sets]

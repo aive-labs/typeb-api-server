@@ -1,14 +1,26 @@
 from sqlalchemy.orm import Session
 
+from src.campaign.domain.campaign import Campaign
+from src.campaign.enums.campaign_type import CampaignType
+from src.campaign.infra.campaign_set_repository import CampaignSetRepository
+from src.campaign.infra.entity.campaign_entity import CampaignEntity
+from src.campaign.infra.sqlalchemy_query.recurring_campaign.create_message import (
+    create_message,
+)
 from src.campaign.infra.sqlalchemy_query.recurring_campaign.create_recurring_message import (
     create_recurring_message,
 )
+from src.campaign.service.campaign_dependency_manager import CampaignDependencyManager
 from src.campaign.service.campaign_manager import CampaignManager
 from src.users.domain.user import User
 
 
 def recurring_create(
-    is_msg_creation_recurred, org_campaign_set_df, campaign_obj_dict, user: User, db: Session
+    is_msg_creation_recurred,
+    org_campaign_set_df,
+    campaign_obj_dict,
+    user: User,
+    db: Session,
 ):
     user_id = user.user_id
 
@@ -29,22 +41,42 @@ def recurring_create(
         if recipient_df is not None:
             campaign_manager.update_campaign_recipients(recipient_df)
 
+        db.flush()
+
         # 메세지 생성
         create_recurring_message(
-            db, dep, user_id, org_campaign_set_df, campaign_id, campaign_base_dict
+            db, user, user_id, org_campaign_set_df, campaign_id, campaign_base_dict
         )
 
-    elif (
-        is_msg_creation_recurred is False
-        and campaign_base_dict["audience_type_code"] == enums.AudienceType.segment.value
-    ):
-        # # segment -> 캠페인 재생성
-        res = self.create(db, campaign_obj_dict)
-
-        recurring_campaigns.create_message(db, dep, headers, campaign_id)
-
     else:
-        raise ValueError("Invalid recurring case")
+
+        entity = db.query(CampaignEntity).filter(CampaignEntity.campaign_id == campaign_id).first()
+        campaigns = Campaign.model_validate(entity)
+
+        campaign_set_repository = CampaignSetRepository()
+
+        selected_themes, strategy_theme_ids = campaign_set_repository.create_campaign_set(
+            campaigns, str(user.user_id), db
+        )
+
+        campaign_type_code = campaigns.campaign_type_code
+        strategy_id = campaigns.strategy_id
+        campaign_id = campaigns.campaign_id
+
+        # expert 캠페인일 경우 데이터 sync 진행
+        campaign_dependency_manager = CampaignDependencyManager(user)
+
+        if campaign_type_code == CampaignType.EXPERT.value:
+            campaign_dependency_manager.sync_campaign_base(
+                db, campaign_id, selected_themes, strategy_theme_ids
+            )
+            campaign_dependency_manager.sync_strategy_status(db, strategy_id)
+        campaign_dependency_manager.sync_audience_status(db, campaign_id)
+
+        db.flush()
+
+        # 메시지 생성
+        create_message(db, user, campaign_id)
 
     db.commit()
 

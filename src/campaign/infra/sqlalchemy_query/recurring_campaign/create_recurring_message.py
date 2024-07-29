@@ -11,6 +11,9 @@ from src.campaign.infra.sqlalchemy_query.create_set_group_messages import (
     create_set_group_messages,
 )
 from src.campaign.infra.sqlalchemy_query.get_set_group_seqs import get_set_group_seqs
+from src.campaign.infra.sqlalchemy_query.recurring_campaign.generate_campaingn_messages_api_logic import (
+    generate_campaign_messages_api_logic,
+)
 from src.campaign.infra.sqlalchemy_query.recurring_campaign.get_campaign_api_logic import (
     get_campaigns_api_logic,
 )
@@ -23,7 +26,7 @@ from src.common.utils.date_utils import localtime_converter
 
 
 def create_recurring_message(
-    db, dep, user_id, org_campaign_set_df, campaign_id, campaign_base_dict
+    db, user, user_id, org_campaign_set_df, campaign_id, campaign_base_dict
 ):
     # set_group_message
     subquery_1 = (
@@ -252,7 +255,7 @@ def create_recurring_message(
                             result_dict[set_seq].extend(set_msg_list)
 
     if len(set_group_seqs) > 0:
-        res = create_set_group_messages(
+        create_set_group_messages(
             db,
             user_id,
             campaign_id,
@@ -290,7 +293,7 @@ def create_recurring_message(
                 req_generate_msg_seq=set_group_msg_seqs,
             )
 
-            generate_campaingn_messages_api_logic(db, dep, msg_generation_req)
+            generate_campaign_messages_api_logic(db, user, msg_generation_req)
 
             # # 캠페인 세트 메세지 검토 : is_message_confirmed
             db.query(CampaignSetsEntity).filter(

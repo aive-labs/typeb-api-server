@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from src.campaign.enums.campagin_status import CampaignStatus
@@ -30,7 +31,7 @@ from src.campaign.service.port.base_campaign_set_repository import (
 from src.common.timezone_setting import selected_timezone
 from src.common.utils import repeat_date
 from src.common.utils.data_converter import DataConverter
-from src.common.utils.date_utils import localtime_converter
+from src.common.utils.date_utils import calculate_remind_date, localtime_converter
 from src.core.exceptions.exceptions import ConsistencyException, NotFoundException
 from src.core.transactional import transactional
 from src.users.domain.user import User
@@ -372,7 +373,7 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
 
             # 리마인드 발송일 계산
             remind_duration = remind_elem["remind_duration"]
-            remind_date = utils.calculate_remind_date(end_date, remind_duration)
+            remind_date = calculate_remind_date(end_date, remind_duration)
 
             if int(remind_date) == int(send_date):
                 raise HTTPException(
@@ -394,7 +395,7 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
             remind_step_dict["remind_date"] = remind_date
 
             # send_type_code & created_by & updated_by
-            time_at = utils.localtime_converter()
+            time_at = localtime_converter()
 
             remind_step_dict["send_type_code"] = send_type_code
             remind_step_dict["created_by"] = str(user_id)
