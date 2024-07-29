@@ -74,8 +74,6 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
 
             try:
                 file_read = await file.read()
-                # s3에 이미지 저장
-                await self.s3_service.put_object_async(s3_file_key, file_read)
 
                 # 뿌리오 MMS 이미지 업로드
                 ppurio_filekey = None
@@ -90,11 +88,15 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                     kakao_landing_url = await self.message_service.upload_file_for_kakao(
                         new_file_name, file_read, file.content_type, message_type
                     )
+
+                # s3에 이미지 저장
+                await self.s3_service.put_object_async(s3_file_key, file_read)
+
             except HTTPException as e:
-                self.s3_service.delete_object(s3_file_key)
+                await self.s3_service.delete_object_async(s3_file_key)
                 raise e
             except Exception as e2:
-                self.s3_service.delete_object(s3_file_key)
+                await self.s3_service.delete_object_async(s3_file_key)
                 print(repr(e2))
                 raise HTTPException(
                     status_code=500,

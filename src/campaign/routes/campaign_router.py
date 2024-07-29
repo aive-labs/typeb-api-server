@@ -406,6 +406,6 @@ async def delete_message_resources(
     delete_image_for_message: DeleteImageForMessageUseCase = Depends(
         dependency=Provide[Container.delete_image_for_message]
     ),
-) -> dict:
+):
     """이미지 업로드 API"""
-    return await delete_image_for_message.exec(campaign_id, set_group_msg_seq, user, db=db)
+    await delete_image_for_message.exec(campaign_id, set_group_msg_seq, user, db=db)
