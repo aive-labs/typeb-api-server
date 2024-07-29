@@ -811,8 +811,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             }
             yyyymmddhh24mi = get_current_datetime_yyyymmddhh24mi()
             dag_run_id = f"{campaign_id}_{str(yyyymmddhh24mi)}"
-            print(f"dag_run_id: {dag_run_id}")
-            print(f"input_var: {input_var}")
+            print(f"dag_run_id: {dag_run_id} / input_var: {input_var}")
             logical_date = create_logical_date_for_airflow(send_date, send_time)
             await self.message_controller.execute_dag(
                 dag_name="send_messages",

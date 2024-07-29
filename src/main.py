@@ -5,6 +5,7 @@ from src.admin.routes.admin_router import admin_router
 from src.audiences.routes.audience_router import audience_router
 from src.auth.routes.auth_router import auth_router
 from src.auth.routes.onboarding_router import onboarding_router
+from src.campaign.routes.campaign_dag_router import campaign_dag_router
 from src.campaign.routes.campaign_router import campaign_router
 from src.contents.routes.contents_router import contents_router
 from src.contents.routes.creatives_router import creatives_router
@@ -37,6 +38,7 @@ app.include_router(router=auth_router, prefix="/auth")
 app.include_router(router=onboarding_router, prefix="/auth/onboarding")
 app.include_router(router=user_router, prefix="/users")
 app.include_router(router=campaign_router, prefix="/campaign-management")
+app.include_router(router=campaign_dag_router, prefix="/campaign-dag")
 app.include_router(router=creatives_router, prefix="/contents-management/creatives")
 app.include_router(router=contents_router, prefix="/contents-management/contents")
 app.include_router(router=audience_router, prefix="/audience-management")

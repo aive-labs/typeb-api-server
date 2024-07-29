@@ -17,3 +17,7 @@ class ApproveCampaignUseCase(ABC):
         reviewers: str | None = None,
     ) -> dict:
         pass
+
+    @abstractmethod
+    def save_campaign_reservation(self, db, user_obj, campaign_id, msg_seqs_to_save=None):
+        pass

@@ -82,9 +82,10 @@ def get_reservation_date(msg_send_type, start_date, send_date, remind_date):
             resv_date = send_date
         else:
             resv_date = start_date
-
     elif msg_send_type == MessageSendType.REMIND.value:
         resv_date = remind_date
+    else:
+        raise ConsistencyException(detail={"발송 날짜가 존재하지 않습니다."})
 
     return resv_date
 

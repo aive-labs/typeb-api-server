@@ -43,6 +43,7 @@ from src.campaign.service.delete_campaign_service import DeleteCampaignService
 from src.campaign.service.generate_message_service import GenerateMessageService
 from src.campaign.service.get_campaign_service import GetCampaignService
 from src.campaign.service.get_campaign_set_description import GetCampaignSetDescription
+from src.campaign.service.reserve_campaigns_service import ReserveCampaignsService
 from src.campaign.service.test_meessage_send_service import TestMessageSendService
 from src.campaign.service.update_campaign_progress_service import (
     UpdateCampaignProgressService,
@@ -139,6 +140,7 @@ class Container(containers.DeclarativeContainer):
             "src.audiences.service.background.execute_target_audience_summary",
             "src.auth.routes.onboarding_router",
             "src.campaign.routes.campaign_router",
+            "src.campaign.routes.campaign_dag_router",
             "src.contents.routes.contents_router",
             "src.contents.routes.creatives_router",
             "src.search.routes.search_router",
@@ -476,6 +478,11 @@ class Container(containers.DeclarativeContainer):
         provides=DeleteCampaignService,
         campaign_repository=campaign_repository,
         campaign_set_repository=campaign_set_repository,
+    )
+
+    reserve_campaign_service = providers.Singleton(
+        provides=ReserveCampaignsService,
+        approve_campaign_service=approve_campaign_service,
     )
 
     """
