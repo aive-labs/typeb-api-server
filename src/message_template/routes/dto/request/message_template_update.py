@@ -18,7 +18,7 @@ class KakaoTemplateButtonUpdate(BaseModel):
 
 
 class TemplateUpdate(BaseModel):
-    template_id: int
+    template_id: int | None = None
     template_name: str
     access_level: int
     media: CampaignMedia

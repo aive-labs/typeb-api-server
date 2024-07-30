@@ -24,6 +24,8 @@ class UpdateMessageTemplateService(UpdateMessageTemplateUseCase):
         self.message_template_repository = message_template_repository
 
     def exec(self, template_id: str, template_update: TemplateUpdate, user: User):
+
+        template_update.template_id = int(template_id)
         # if admin -> 1
         access_level = [level.value for level in AccessLevel if level.name == user.role_id][0]
 
