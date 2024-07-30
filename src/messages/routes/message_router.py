@@ -2,6 +2,7 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, HTTPException, Request
 
 from src.core.container import Container
+from src.core.database import get_db_session
 from src.messages.routes.dto.ppurio_message_result import PpurioMessageResult
 from src.messages.service.message_service import MessageService
 
@@ -40,7 +41,8 @@ def verify_ip(request: Request):
 def get_message_result_from_ppurio(
     ppurio_message_result: PpurioMessageResult,
     client_ip: str = Depends(get_client_ip),
+    db=Depends(get_db_session),
     message_service: MessageService = Depends(Provide[Container.message_service]),
 ):
     print(f"Bizppurio result log from ip: {client_ip}")
-    message_service.save_message_result(ppurio_message_result)
+    message_service.save_message_result(ppurio_message_result, db=db)

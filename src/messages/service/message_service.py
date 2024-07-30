@@ -1,5 +1,7 @@
 import aiohttp
+from sqlalchemy.orm import Session
 
+from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
 from src.common.utils.get_env_variable import get_env_variable
 from src.core.exceptions.exceptions import PpurioException
 from src.message_template.enums.message_type import MessageType
@@ -9,16 +11,21 @@ from src.messages.routes.dto.ppurio_message_result import PpurioMessageResult
 
 class MessageService:
 
-    def __init__(self, message_repository: PpurioMessageRepository):
+    def __init__(
+        self,
+        message_repository: PpurioMessageRepository,
+        campaign_repository: BaseCampaignRepository,
+    ):
         self.message_repository = message_repository
+        self.campaign_repository = campaign_repository
         self.account = get_env_variable("ppurio_account")
         self.file_upload_url = get_env_variable("ppurio_file_upload_url")
 
-    def save_message_result(self, ppurio_message_result: PpurioMessageResult):
+    def save_message_result(self, ppurio_message_result: PpurioMessageResult, db: Session):
         self.message_repository.save_message_result(ppurio_message_result)
 
         if self.is_message_success(ppurio_message_result):
-            pass
+            self.campaign_repository.update_send_reservation_status(ppurio_message_result.REFKEY)
 
     def is_message_success(self, ppurio_message_result):
         if ppurio_message_result.MEDIA == "LMS":

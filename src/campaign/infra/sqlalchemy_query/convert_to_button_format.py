@@ -32,7 +32,7 @@ def create_dict_list(group):
             for item in btn_list_sorted
         ]
         btn_list_final = json.dumps(btn_list_final, ensure_ascii=False)
-        return '"button": ' + btn_list_final
+        return '{"button": ' + btn_list_final + "}"
 
     else:
         return None

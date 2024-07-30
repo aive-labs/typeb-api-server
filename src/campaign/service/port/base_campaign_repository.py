@@ -9,6 +9,7 @@ from src.campaign.domain.campaign_timeline import CampaignTimeline
 from src.campaign.domain.send_reservation import SendReservation
 from src.campaign.enums.campaign_progress import CampaignProgress
 from src.campaign.infra.dto.campaign_reviewer_info import CampaignReviewerInfo
+from src.core.transactional import transactional
 from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.users.domain.user import User
 
@@ -84,4 +85,9 @@ class BaseCampaignRepository(ABC):
 
     @abstractmethod
     def delete_campaign(self, campaign, db):
+        pass
+
+    @transactional
+    @abstractmethod
+    def update_send_reservation_status(self, refkey: str):
         pass
