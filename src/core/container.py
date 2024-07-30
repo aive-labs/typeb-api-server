@@ -180,14 +180,6 @@ class Container(containers.DeclarativeContainer):
     s3_asset_service = providers.Singleton(provides=S3Service, bucket_name="aice-asset-dev")
 
     """
-    message 객체
-    """
-    message_repository = providers.Singleton(provides=PpurioMessageRepository)
-    message_service = providers.Singleton(
-        provides=MessageService, message_repository=message_repository
-    )
-
-    """
     사용자 의존성 주입
     """
     user_sqlalchemy = providers.Singleton(UserSqlAlchemy, db=db.provided.session)
@@ -587,6 +579,16 @@ class Container(containers.DeclarativeContainer):
 
     get_audience_stats_service = providers.Singleton(
         provides=GetAudienceStatsService, dashboard_repository=dashboard_repository
+    )
+
+    """
+    message 객체
+    """
+    message_repository = providers.Singleton(provides=PpurioMessageRepository)
+    message_service = providers.Singleton(
+        provides=MessageService,
+        message_repository=message_repository,
+        campaign_repository=campaign_repository,
     )
 
     """
