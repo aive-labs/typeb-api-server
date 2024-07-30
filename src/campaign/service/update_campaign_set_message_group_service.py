@@ -327,9 +327,6 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
                 ]
             ]
 
-            print("update_df")
-            print(update_group_df)
-
             res_groups_df = (
                 result_df.groupby("group_sort_num")
                 .agg({"cus_cd": "nunique"})
@@ -357,13 +354,9 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
             MessageType.MMS.value: CampaignMedia.TEXT_MESSAGE.value,
         }
 
-        print(res_groups_df[["media", "msg_type"]])
-
         res_groups_df["media"] = res_groups_df["msg_type"].map(
             initial_msg_type  # pyright: ignore [reportArgumentType]
         )
-
-        print(res_groups_df[["media", "msg_type"]])
 
         res_groups_df["campaign_id"] = campaign_id
         res_groups_df["created_at"] = created_at
@@ -464,15 +457,10 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
             "kat": ["kakao_alim_text"],
             "kft": ["kakao_image_wide", "kakao_image_general", "kakao_texts"],
         }
-        print("msg_types")
-        print(msg_types)
 
         medias = list(
             {key for elem in msg_types for key, value in msg_type_dict.items() if elem[0] in value}
         )
-
-        print("medias")
-        print(medias)
 
         campaign_set_by_set_seq = (
             db.query(CampaignSetsEntity)

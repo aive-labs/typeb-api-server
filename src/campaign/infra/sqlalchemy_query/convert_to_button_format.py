@@ -1,3 +1,4 @@
+import json
 import re
 
 import numpy as np
@@ -8,6 +9,33 @@ from src.campaign.infra.entity.kakao_link_buttons_entity import KakaoLinkButtons
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.string_utils import replace_multiple
+
+
+def create_dict_list(group):
+    if group["name"].values[0] is not None:
+
+        btn_list = group.apply(
+            lambda row: {
+                "kakao_link_buttons_seq": row["kakao_link_buttons_seq"],
+                "name": row["name"],
+                "type": row["type"],
+                "url_pc": row["url_pc"],
+                "url_mobile": row["url_mobile"],
+            },
+            axis=1,
+        ).tolist()
+
+        btn_list_sorted = sorted(btn_list, key=lambda x: x["kakao_link_buttons_seq"])
+
+        btn_list_final = [
+            {key: value for key, value in item.items() if key != "kakao_link_buttons_seq"}
+            for item in btn_list_sorted
+        ]
+        btn_list_final = json.dumps(btn_list_final, ensure_ascii=False)
+        return '"button": ' + btn_list_final
+
+    else:
+        return None
 
 
 def convert_to_button_format(db, set_group_msg_seqs, send_rsv_format):
@@ -34,6 +62,7 @@ def convert_to_button_format(db, set_group_msg_seqs, send_rsv_format):
     button_df = DataConverter.convert_query_to_df(buttons)
     print("button_df")
     print(button_df.columns)
+    print(len(button_df))
 
     if len(button_df) == 0:
         cols = [
@@ -134,3 +163,15 @@ def convert_to_button_format(db, set_group_msg_seqs, send_rsv_format):
         ]
         empty_df = pd.DataFrame(columns=cols)
         return empty_df
+
+    group_keys = ["campaign_id", "set_sort_num", "group_sort_num", "cus_cd", "set_group_msg_seq"]
+
+    button_df = (
+        send_rsv_btn.groupby(group_keys).apply(create_dict_list).reset_index(name="kko_button_json")
+    )
+
+    print("버튼 포매팅 실패 row 수 :")
+    notnullbtn = button_df[button_df["kko_button_json"].notnull()]
+    print(len(notnullbtn[notnullbtn["kko_button_json"].str.contains("{{")]))
+
+    return button_df

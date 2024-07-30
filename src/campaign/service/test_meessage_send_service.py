@@ -102,7 +102,7 @@ class TestMessageSendService(TestSendMessageUseCase):
                 "set_group_msg_seq",
                 "contents_name",
                 "contents_url",
-                # "track_id",
+                "track_id",
             ]
         ]
         print("test_send_rsv_format")
@@ -110,7 +110,6 @@ class TestMessageSendService(TestSendMessageUseCase):
 
         print("msg_seq_list")
         print(msg_seq_list)
-        button_df_convert = convert_to_button_format(db, msg_seq_list, test_send_rsv_format)
 
         print("button 개인화 적용 전 row수 :" + str(len(test_send_rsv_format)))
         logging.info("2.[Test] button 개인화 적용 전 row수 :" + str(len(test_send_rsv_format)))
@@ -122,18 +121,19 @@ class TestMessageSendService(TestSendMessageUseCase):
             "set_group_msg_seq",
         ]
 
+        del test_send_rsv_format["contents_name"]
+        del test_send_rsv_format["contents_url"]
+
+        button_df_convert = convert_to_button_format(db, msg_seq_list, test_send_rsv_format)
         print("button_df_convert")
         print(button_df_convert)
 
-        if button_df_convert is not None:
-            test_send_rsv_format = test_send_rsv_format.merge(
-                button_df_convert, on=group_keys, how="left"  # pyright: ignore [reportArgumentType]
-            )
+        test_send_rsv_format = test_send_rsv_format.merge(
+            button_df_convert, on=group_keys, how="left"  # pyright: ignore [reportArgumentType]
+        )
 
         print("test_send_rsv_format.columns")
         print(test_send_rsv_format.columns)
-        del test_send_rsv_format["contents_name"]
-        del test_send_rsv_format["contents_url"]
 
         notnullbtn = test_send_rsv_format[test_send_rsv_format["kko_button_json"].notnull()]
         isnullbtn = test_send_rsv_format[test_send_rsv_format["kko_button_json"].isnull()]
@@ -382,6 +382,7 @@ class TestMessageSendService(TestSendMessageUseCase):
                 subquery.c.msg_resv_date.label("send_resv_date"),  # -> to-do: timestamptz
                 subquery.c.timetosend,  # -> to-do: timestamptz
                 CustomerMasterEntity.hp_no.label("phone_send"),
+                CustomerMasterEntity.track_id,
                 subquery.c.msg_delivery_vendor.label("send_sv_type"),
                 subquery.c.msg_type.label("send_msg_type"),  # sms, lms, kakao_image_wide, ..
                 subquery.c.msg_send_type.label("msg_category"),  # campaign, remind
@@ -412,8 +413,6 @@ class TestMessageSendService(TestSendMessageUseCase):
 
         send_rsv = DataConverter.convert_query_to_df(send_rsv_query)
 
-        print("send_rsv")
-        print(send_rsv)
         return send_rsv, set_group_message
 
     def add_send_formatting(self, df: pd.DataFrame, user_obj, is_test_send=False):
