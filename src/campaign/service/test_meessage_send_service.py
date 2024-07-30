@@ -242,7 +242,8 @@ class TestMessageSendService(TestSendMessageUseCase):
         send_reserv_columns = [
             column.name
             for column in SendReservationEntity.__table__.columns
-            if column.name not in ["send_resv_seq", "shop_cd", "coupon_no"]
+            if column.name
+            not in ["send_resv_seq", "shop_cd", "coupon_no", "log_date", "log_comment"]
         ]
         res_df = send_rsv_format[send_reserv_columns]
         res_df = res_df.replace({np.nan: None})
