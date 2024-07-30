@@ -17,28 +17,24 @@ class MessageService:
     def save_message_result(self, ppurio_message_result: PpurioMessageResult):
         self.message_repository.save_message_result(ppurio_message_result)
 
-        if self.is_lms_success(ppurio_message_result):
-            print("lms success")
-            # TODO send_reservation DB 성공 상태 업데이트
+        if self.is_message_success(ppurio_message_result):
+            pass
 
-        # SMS 일 때
-        # MMS 일 때
-        # 카카오 일 때
-
-    def is_lms_success(self, ppurio_message_result):
-        return ppurio_message_result.MEDIA == "LMS" and ppurio_message_result.RESULT == "6600"
-
-    def is_mms_success(self, ppurio_message_result):
-        return ppurio_message_result.MEDIA == "MMS" and ppurio_message_result.RESULT == "6600"
-
-    def is_sms_success(self, ppurio_message_result):
-        return ppurio_message_result.MEDIA == "SMS" and ppurio_message_result.RESULT == "4100"
-
-    def is_kakao_success(self, ppurio_message_result):
-        return (
-            ppurio_message_result.MEDIA in ("KAT", "KFT", "KFP")
-            and ppurio_message_result.RESULT == "7000"
-        )
+    def is_message_success(self, ppurio_message_result):
+        if ppurio_message_result.MEDIA == "LMS":
+            return ppurio_message_result.MEDIA == "LMS" and ppurio_message_result.RESULT == "6600"
+        if ppurio_message_result.MEDIA == "MMS":
+            return ppurio_message_result.MEDIA == "MMS" and ppurio_message_result.RESULT == "6600"
+        if ppurio_message_result.MEDIA == "SMS":
+            return ppurio_message_result.MEDIA == "SMS" and ppurio_message_result.RESULT == "4100"
+        if ppurio_message_result.MEDIA in ("KAT", "KFT", "KFP"):
+            return (
+                ppurio_message_result.MEDIA in ("KAT", "KFT", "KFP")
+                and ppurio_message_result.RESULT == "7000"
+            )
+        # TODO 로그로 전환
+        print("지원되지 않는 매체 타입입니다.")
+        return False
 
     async def upload_file(self, new_file_name, file_read, content_type: str | None) -> str:
 
