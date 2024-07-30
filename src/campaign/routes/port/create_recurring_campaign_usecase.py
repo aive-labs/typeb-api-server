@@ -10,5 +10,5 @@ class CreateRecurringCampaignUseCase(ABC):
 
     @transactional
     @abstractmethod
-    def exec(self, campaign_id, user: User, db: Session):
+    def exec(self, campaign_id, user: User, db: Session) -> dict:
         pass

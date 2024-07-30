@@ -730,7 +730,11 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             raise NotFoundException(detail={"message": "해당되는 메시지 정보를 찾지 못했습니다."})
 
     def delete_message_image_source(self, set_group_msg_seq, db: Session):
-        pass
+        db.query(MessageResourceEntity).filter(
+            MessageResourceEntity.set_group_msg_seq == set_group_msg_seq
+        ).delete()
+
+        db.commit()
 
     def get_message_image_source(self, set_group_msg_seq, db: Session) -> MessageResource:
         entity = (
