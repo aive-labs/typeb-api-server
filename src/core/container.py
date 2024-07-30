@@ -182,9 +182,7 @@ class Container(containers.DeclarativeContainer):
     """
     message 객체
     """
-    message_repository = providers.Singleton(
-        provides=PpurioMessageRepository, db=db.provided.session
-    )
+    message_repository = providers.Singleton(provides=PpurioMessageRepository)
     message_service = providers.Singleton(
         provides=MessageService, message_repository=message_repository
     )

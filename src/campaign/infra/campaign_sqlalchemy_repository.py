@@ -667,3 +667,12 @@ class CampaignSqlAlchemy:
         delete_statement = delete(OfferCustEntity).where(OfferCustEntity.campaign_id == campaign_id)
 
         db.execute(delete_statement)
+
+    def update_send_reservation_status_to_success(self, refkey, db):
+        update_statement = (
+            update(SendReservationEntity)
+            .where(SendReservationEntity.send_resv_seq == refkey)
+            .values(sent_success="y", send_resv_state="21")
+        )
+
+        db.execute(update_statement)

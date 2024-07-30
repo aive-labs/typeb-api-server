@@ -105,5 +105,5 @@ class CampaignRepository(BaseCampaignRepository):
     def delete_campaign(self, campaign, db):
         self.campaign_sqlalchemy.delete_campaign(campaign, db)
 
-    def update_send_reservation_status(self, refkey):
-        return None
+    def update_send_reservation_status_to_success(self, refkey, db):
+        self.campaign_sqlalchemy.update_send_reservation_status_to_success(refkey, db)

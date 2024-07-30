@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
 from src.common.utils.get_env_variable import get_env_variable
 from src.core.exceptions.exceptions import PpurioException
+from src.core.transactional import transactional
 from src.message_template.enums.message_type import MessageType
 from src.messages.infra.ppurio_message_repository import PpurioMessageRepository
 from src.messages.routes.dto.ppurio_message_result import PpurioMessageResult
@@ -21,11 +22,15 @@ class MessageService:
         self.account = get_env_variable("ppurio_account")
         self.file_upload_url = get_env_variable("ppurio_file_upload_url")
 
+    @transactional
     def save_message_result(self, ppurio_message_result: PpurioMessageResult, db: Session):
-        self.message_repository.save_message_result(ppurio_message_result)
+        self.message_repository.save_message_result(ppurio_message_result, db)
 
         if self.is_message_success(ppurio_message_result):
-            self.campaign_repository.update_send_reservation_status(ppurio_message_result.REFKEY)
+            if ppurio_message_result.REFKEY:
+                self.campaign_repository.update_send_reservation_status_to_success(
+                    ppurio_message_result.REFKEY, db
+                )
 
     def is_message_success(self, ppurio_message_result):
         if ppurio_message_result.MEDIA == "LMS":
