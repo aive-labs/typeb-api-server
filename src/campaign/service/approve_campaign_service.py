@@ -321,7 +321,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 txt = f"{campaign_id} : 당일 발송할 정상 예약 메세지가 존재하지 않습니다."
                 return {"result": txt}
 
-        db.flush()
+        db.commit()
         return {"res": "success"}
 
     def save_approver(self, approval_no, campaign_id, created_at, db, user, user_id):
