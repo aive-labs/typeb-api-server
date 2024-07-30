@@ -87,8 +87,8 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         self,
         campaign_id,
         to_status,
-        db: Session,
         user: User,
+        db: Session,
         reviewers: str | None = None,
     ) -> dict:
         """

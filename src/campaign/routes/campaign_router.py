@@ -332,7 +332,7 @@ async def campaign_status_change(
     ),
 ):
     return await approve_campaign_service.exec(
-        campaign_id, to_status, db, user, reviewers=reviewers
+        campaign_id, to_status, user, db=db, reviewers=reviewers
     )
 
 
