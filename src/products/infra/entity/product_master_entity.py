@@ -6,7 +6,7 @@ from src.core.database import Base
 
 
 class ProductMasterEntity(Base):
-    __tablename__ = "temp_product_master"
+    __tablename__ = "product_master"
 
     shop_no = Column(BigInteger)
     product_no = Column(BigInteger)
