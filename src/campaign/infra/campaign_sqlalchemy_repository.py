@@ -672,7 +672,7 @@ class CampaignSqlAlchemy:
         update_statement = (
             update(SendReservationEntity)
             .where(SendReservationEntity.send_resv_seq == refkey)
-            .values(sent_success="y", send_resv_state="21")
+            .values(sent_success="y", send_resv_state="02")
         )
 
         db.execute(update_statement)
