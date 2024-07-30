@@ -19,7 +19,7 @@ def convert_send_msg_type(row):
         return row["send_msg_type"]
 
 
-def convert_by_message_format(df: pd.DataFrame | None = None):
+def convert_by_message_format(df: pd.DataFrame):
     # 발송사, 메세지 타입에 따른 기타 변수 생성
 
     ## kakao

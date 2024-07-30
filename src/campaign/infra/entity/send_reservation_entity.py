@@ -64,3 +64,6 @@ class SendReservationEntity(Base):
         onupdate=datetime.now(),
     )
     update_resv_user = Column(String(20), nullable=False, default=text("(user)"))
+
+    log_comment = Column(String)
+    log_date = Column(DateTime(timezone=True), nullable=False, default=datetime.now())
