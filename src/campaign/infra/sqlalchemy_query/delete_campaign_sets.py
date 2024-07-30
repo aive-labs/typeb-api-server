@@ -7,6 +7,7 @@ from src.campaign.infra.entity.campaign_set_recipients_entity import (
 )
 from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
 from src.campaign.infra.entity.kakao_link_buttons_entity import KakaoLinkButtonsEntity
+from src.campaign.infra.entity.send_reservation_entity import SendReservationEntity
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 
 
@@ -27,6 +28,12 @@ def delete_campaign_sets(campaign_id: str, db: Session):
     else:
         pass
     db.flush()
+
+    # SetGroupMessages
+    delete_statement = delete(SendReservationEntity).where(
+        SendReservationEntity.campaign_id == campaign_id
+    )
+    db.execute(delete_statement)
 
     # SetGroupMessages
     delete_statement = delete(SetGroupMessagesEntity).where(
