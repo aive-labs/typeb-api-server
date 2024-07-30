@@ -481,6 +481,8 @@ class Container(containers.DeclarativeContainer):
         provides=CreateRecurringCampaign,
         campaign_repository=campaign_repository,
         campaign_set_repository=campaign_set_repository,
+        approve_campaign_service=approve_campaign_service,
+        generate_message_service=generate_message_service,
     )
 
     """

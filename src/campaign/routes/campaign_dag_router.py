@@ -24,7 +24,7 @@ async def create_recurring_campaign(
         dependency=Provide[Container.create_recurring_campaign_service]
     ),
 ):
-    create_recurring_campaign_service.exec(campaign_id, user, db)
+    create_recurring_campaign_service.exec(campaign_id, user, db=db)
 
 
 @campaign_dag_router.post("/campaigns/{campaign_id}/send-reservation/{execution_date}")

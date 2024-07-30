@@ -146,9 +146,8 @@ class CampaignManager:
             "recsys_model_id",
             "audience_id",
             "audience_name",
-            "offer_id",
-            "offer_name",
-            "event_no",
+            "coupon_no",
+            "coupon_name",
             "is_message_confirmed",
         ]
         campaign_set = cust_audiences_df[cols].drop_duplicates()
@@ -426,12 +425,8 @@ class CampaignManager:
             if self.recurring_campaign_id:
                 # 주기성 - is_personalized = False
 
-                del cust_audiences_df["recsys_model_id_y"]
-                del cust_audiences_df["offer_id_y"]
-
-                cust_audiences_df = cust_audiences_df.rename(
-                    columns={"offer_id_x": "offer_id", "recsys_model_id_x": "recsys_model_id"}
-                )
+                print("cust_audiences_df.columns")
+                print(cust_audiences_df.columns)
 
                 campaign_set_merged, res_groups_df = self.create_recurred_set_group(
                     cust_audiences_df, recipient_df, campaign_obj_dict

@@ -74,6 +74,9 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
         user_id = str(user.user_id)
         user_name = str(user.username)
 
+        print("recurring")
+        print(user_id, user_name)
+
         # 생성해야될 주기성 캠페인 조회
         org_campaign = (
             db.query(CampaignEntity).filter(CampaignEntity.campaign_id == campaign_id).first()
@@ -91,6 +94,7 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
             )
 
         if self.is_campaign_end(org_campaign):
+            print("campaign_end")
             return {"campaign_id": "has ended"}
 
         # 직전 캠페인의 종료일
@@ -117,6 +121,9 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
         end_date_f = datetime.strptime(end_date, "%Y%m%d")
         end_date = end_date_f + timedelta(days=int(retention_day))
         end_date = end_date.strftime("%Y%m%d")
+
+        print("start_date, end_date")
+        print(start_date, end_date)
 
         current_datetime = localtime_converter()
 
@@ -222,6 +229,8 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
             description="주기성 캠페인 생성",
         )
 
+        print("save_log")
+
         db.flush()
 
         campaign_base_dict = DataConverter.convert_model_to_dict(cloned_campaign)
@@ -233,14 +242,15 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
 
         # 생성해야될 주기성 캠페인의 캠페인 세트 조회
         org_campaign_set = (
-            db.query(CampaignSetGroupsEntity, CampaignSetGroupsEntity)
+            db.query(CampaignSetsEntity, CampaignSetGroupsEntity)
             .join(CampaignSetGroupsEntity)
-            .filter(CampaignSetGroupsEntity.campaign_id == campaign_id)
+            .filter(CampaignSetsEntity.campaign_id == campaign_id)
         )
 
         org_campaign_set_df = DataConverter.convert_query_to_df(org_campaign_set)
         is_msg_creation_recurred = org_campaign.is_msg_creation_recurred
 
+        print("recurring_create")
         self.recurring_create(
             is_msg_creation_recurred, org_campaign_set_df, campaign_obj_dict, user, db
         )
@@ -329,7 +339,7 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
             # 캠페인 상태 변경
             campaign_status = CampaignStatus.get_eums()
             campaign_status_input = [
-                (i["_value_"], i["desc"], i["group"], i["group_desc"])
+                (i["_value_"], i["description"], i["group"], i["group_description"])
                 for i in campaign_status
                 if i["_value_"] == to_status
             ][0]
@@ -369,11 +379,18 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
         return {"campaign_id": new_campaign_id}
 
     def is_campaign_end(self, org_campaign):
+
+        print("org_campaign.group_end_date")
+        print(org_campaign.group_end_date)
+
         if org_campaign.group_end_date:
             # 주기성 캠페인 생성 종료
             group_end_date = datetime.strptime(org_campaign.group_end_date, "%Y%m%d")
             current_korea_date = datetime.now(selected_timezone).strftime("%Y%m%d")
             current_korea_date = datetime.strptime(current_korea_date, "%Y%m%d")
+
+            print("current_korea_date")
+            print(current_korea_date)
 
             return group_end_date <= current_korea_date
 
@@ -552,7 +569,6 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
 
         campaign_type_code = campaign_base_dict["campaign_type_code"]
         is_personalized = campaign_base_dict["is_personalized"]
-        audience_type_code = campaign_base_dict["audience_type_code"]
         msg_delivery_vendor = campaign_base_dict["msg_delivery_vendor"]
         has_remind = campaign_base_dict["has_remind"]
 
@@ -608,7 +624,7 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
                     ]
                     org_msg = org_msg[0] if len(org_msg) > 0 else None
 
-                elif campaign_type_code == "expert" and audience_type_code == "c":
+                elif campaign_type_code == "expert":
                     # set_group_val를 그룹으로 나눴으므로
                     # set_group_val 로 이어 붙이기
                     org_msg = [
