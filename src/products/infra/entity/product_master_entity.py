@@ -1,4 +1,13 @@
-from sqlalchemy import TIMESTAMP, BigInteger, Column, DateTime, Integer, String, text
+from sqlalchemy import (
+    TIMESTAMP,
+    BigInteger,
+    Column,
+    DateTime,
+    Integer,
+    String,
+    func,
+    text,
+)
 
 from src.core.database import Base
 

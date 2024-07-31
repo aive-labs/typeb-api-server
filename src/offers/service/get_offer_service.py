@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from src.auth.infra.dto.cafe24_token import Cafe24TokenData
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
+from src.common.timezone_setting import selected_timezone
 from src.common.utils.get_env_variable import get_env_variable
 from src.core.exceptions.exceptions import NotFoundException
 from src.core.transactional import transactional
@@ -54,12 +55,11 @@ class GetOfferService(GetOfferUseCase):
 
         async with aiohttp.ClientSession() as session:
             # 현재 날짜와 내일 날짜 계산
-            today = datetime.now()
+            today = datetime.now(selected_timezone)
             tomorrow = today + timedelta(days=1)
 
             # 날짜를 문자열로 포맷팅 (YYYY-MM-DD 형식)
             start_date = today.strftime("%Y-%m-%d")
-            start_date = "2024-05-01"
             end_date = tomorrow.strftime("%Y-%m-%d")
 
             url = f"https://{user.mall_id}.cafe24api.com/api/v2/admin/coupons?created_start_date={start_date}&created_end_date={end_date}"

@@ -51,7 +51,7 @@ from src.common.timezone_setting import selected_timezone
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import (
     create_logical_date_for_airflow,
-    get_current_datetime_yyyymmddhh24mi,
+    get_korean_current_datetime_yyyymmddhh24mi,
     localtime_converter,
 )
 from src.contents.infra.entity.contents_entity import ContentsEntity
@@ -805,7 +805,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 "campaign_id": campaign_id,
                 "test_send_yn": "n",
             }
-            yyyymmddhh24mi = get_current_datetime_yyyymmddhh24mi()
+            yyyymmddhh24mi = get_korean_current_datetime_yyyymmddhh24mi()
             dag_run_id = f"{campaign_id}_{str(yyyymmddhh24mi)}"
             print(f"dag_run_id: {dag_run_id} / input_var: {input_var}")
             logical_date = create_logical_date_for_airflow(send_date, send_time)

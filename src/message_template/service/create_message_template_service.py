@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from src.common.enums.campaign_media import CampaignMedia
 from src.core.exceptions.exceptions import ValidationException
 from src.message_template.domain.message_template import MessageTemplate
@@ -62,9 +60,7 @@ class CreateMessageTemplateService(CreateMessageTemplateUseCase):
             access_level=template_create.access_level,
             owned_by_dept=user.department_id if user.department_id else "",
             owned_by_dept_name=user.department_name if user.department_name else "",
-            created_at=datetime.now(),
             created_by=user.username,
-            updated_at=datetime.now(),
             updated_by=user.username,
         )
 

@@ -23,9 +23,9 @@ class MessageTemplate(BaseModel):
     access_level: int
     owned_by_dept: str
     owned_by_dept_name: str
-    created_at: Optional[datetime] = None
+    created_at: datetime | None = None
     created_by: Optional[str] = None
-    updated_at: datetime
+    updated_at: datetime | None = None
     updated_by: str
     button: list[MessageTemplateButtonDetail] = []
 
