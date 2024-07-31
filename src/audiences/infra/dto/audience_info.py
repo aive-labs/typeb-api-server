@@ -13,8 +13,8 @@ class AudienceInfo(BaseModel):
     user_exc_deletable: bool | None
     update_cycle: str | None
     description: str | None
-    created_at: datetime
-    updated_at: datetime
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
     owned_by_dept: str | None
     audience_count: int
     audience_unit_price: float
