@@ -676,3 +676,12 @@ class CampaignSqlAlchemy:
         )
 
         db.execute(update_statement)
+
+    def update_send_reservation_status_to_failure(self, refkey, db):
+        update_statement = (
+            update(SendReservationEntity)
+            .where(SendReservationEntity.send_resv_seq == refkey)
+            .values(send_resv_state="41")
+        )
+
+        db.execute(update_statement)
