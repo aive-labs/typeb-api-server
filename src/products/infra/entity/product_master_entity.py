@@ -79,8 +79,8 @@ class ProductMasterEntity(Base):
     recommend_yn = Column(String, default="N")
     rep_nm = Column(String)
 
-    created_at = Column(DateTime(timezone=True), default=datetime.now())
+    created_at = Column(DateTime, default=datetime.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
-    updated_at = Column(DateTime(timezone=True), default=datetime.now())
+    updated_at = Column(DateTime, default=datetime.now())
     updated_by = Column(String, nullable=False, default=text("(user)"))
     etltime = Column(TIMESTAMP(timezone=True))

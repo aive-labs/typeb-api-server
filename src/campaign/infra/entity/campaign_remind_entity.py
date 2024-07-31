@@ -23,7 +23,7 @@ class CampaignRemindEntity(Base):
     remind_step = Column(Integer, nullable=False)
     remind_date = Column(String, nullable=False)
     remind_duration = Column(Integer, nullable=False)
-    created_at = Column(DateTime(timezone=True), default=datetime.now())
+    created_at = Column(DateTime, default=datetime.now())
     created_by = Column(String, nullable=False)
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
     updated_by = Column(String, nullable=False)

@@ -37,4 +37,4 @@ class ChannelMasterEntity(Base):
     tel_no3 = Column(String(5))
     zip_cd = Column(String(7))
     addr2 = Column(String(80))
-    etl_time = Column(DateTime(timezone=True), default=datetime.now())
+    etl_time = Column(DateTime, default=datetime.now())

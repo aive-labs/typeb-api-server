@@ -37,4 +37,4 @@ class DashEndTableEntity(Base):
     product_name = Column(String)
     sale_amt = Column(Integer)
     sale_qty = Column(Integer)
-    etl_time = Column(DateTime(timezone=True))
+    etl_time = Column(DateTime)

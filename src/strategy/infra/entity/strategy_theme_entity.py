@@ -20,9 +20,9 @@ class StrategyThemesEntity(Base):
     strategy_id = Column(String, ForeignKey("strategies.strategy_id"))
     recsys_model_id = Column(Integer, nullable=False)
     contents_tags = Column(ARRAY(String))
-    created_at = Column(DateTime(timezone=True), default=datetime.now())
+    created_at = Column(DateTime, default=datetime.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
-    updated_at = Column(DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now())
+    updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
     updated_by = Column(String, nullable=False, default=text("(user)"))
 
     # 1:n relationship

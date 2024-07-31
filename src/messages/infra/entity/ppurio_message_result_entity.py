@@ -40,10 +40,10 @@ class PpurioMessageResultEntity(Base):
     RETRY_FLAG = Column("retry_flag", String, nullable=True, comment="대체 발송 정보")
     RESEND_FLAG = Column("resend_flag", String, nullable=True, comment="대체 발송 메시지 유형")
     REFKEY = Column("refkey", String, nullable=True, comment="고객사에서 부여한 키")
-    created_at = Column("created_at", DateTime(timezone=True), default=datetime.now)
+    created_at = Column("created_at", DateTime, default=datetime.now)
     updated_at = Column(
         "updated_at",
-        DateTime(timezone=True),
+        DateTime,
         default=datetime.now,
         onupdate=datetime.now,
     )

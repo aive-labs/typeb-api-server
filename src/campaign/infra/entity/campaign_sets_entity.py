@@ -33,9 +33,9 @@ class CampaignSetsEntity(Base):
     is_message_confirmed = Column(Boolean, nullable=True)
     recipient_count = Column(Integer, nullable=False)
     set_send_count = Column(Integer, nullable=True)
-    created_at = Column(DateTime(timezone=True))
+    created_at = Column(DateTime)
     created_by = Column(String, nullable=False)
-    updated_at = Column(DateTime(timezone=True))
+    updated_at = Column(DateTime)
     updated_by = Column(String, nullable=False)
 
     # 1:n relationship

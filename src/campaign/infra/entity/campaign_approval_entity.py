@@ -15,9 +15,9 @@ class CampaignApprovalEntity(Base):
     campaign_id = Column(String, nullable=False)
     requester = Column(Integer, nullable=False)
     approval_status = Column(String, nullable=False)
-    created_at = Column(DateTime(timezone=True))
+    created_at = Column(DateTime)
     created_by = Column(String, nullable=False)
-    updated_at = Column(DateTime(timezone=True))
+    updated_at = Column(DateTime)
     updated_by = Column(String, nullable=False)
 
     # 1:n relationship

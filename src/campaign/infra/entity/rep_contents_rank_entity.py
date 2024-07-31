@@ -9,7 +9,7 @@ class RepContentsRankEntity(Base):
     contents_id = Column(Integer, primary_key=True)
     contents_name = Column(String, nullable=False)
     rep_nm = Column(String(100), nullable=False, primary_key=True)
-    updated_at = Column(DateTime(timezone=True))
+    updated_at = Column(DateTime)
     contents_url = Column(String, nullable=False)
     coverage_score = Column(Float(precision=24), nullable=False)
     rk = Column(Integer, nullable=False, primary_key=True)

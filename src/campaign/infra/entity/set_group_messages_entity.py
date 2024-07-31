@@ -37,9 +37,9 @@ class SetGroupMessagesEntity(Base):
     msg_photo_uri = Column(ARRAY(String), nullable=True)
     phone_callback = Column(String, nullable=True)
     is_used = Column(Boolean, nullable=False)  # 재생성 시, default False
-    created_at = Column(DateTime(timezone=True))
+    created_at = Column(DateTime)
     created_by = Column(String, nullable=False)
-    updated_at = Column(DateTime(timezone=True))
+    updated_at = Column(DateTime)
     updated_by = Column(String, nullable=False)
 
     # 1:n relationship

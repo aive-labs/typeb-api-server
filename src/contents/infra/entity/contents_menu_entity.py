@@ -18,6 +18,6 @@ class ContentsMenuEntity(Base):
     style_yn = Column(String, nullable=False)
     subject_with = Column(String)
     created_by = Column(String, nullable=False)
-    created_at = Column(DateTime(timezone=True))
+    created_at = Column(DateTime)
     updated_by = Column(String, nullable=False)
-    updated_at = Column(DateTime(timezone=True))
+    updated_at = Column(DateTime)

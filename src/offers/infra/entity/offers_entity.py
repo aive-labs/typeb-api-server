@@ -57,13 +57,13 @@ class OffersEntity(Base):
     cus_data_batch_yn = Column(String(1))
     offer_source = Column(String(10))
     created_at = Column(
-        DateTime(timezone=True),
+        DateTime,
         nullable=False,
         default=lambda: datetime.now(pytz.timezone("Asia/Seoul")),
     )
     created_by = Column(String, nullable=False, default=text("(user)"))
     updated_at = Column(
-        DateTime(timezone=True),
+        DateTime,
         default=lambda: datetime.now(pytz.timezone("Asia/Seoul")),
         onupdate=datetime.now(),
     )
