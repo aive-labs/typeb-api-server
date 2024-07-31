@@ -428,14 +428,9 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
 
             remind_step_dict["remind_date"] = remind_date
 
-            # send_type_code & created_by & updated_by
-            time_at = localtime_converter()
-
             remind_step_dict["send_type_code"] = send_type_code
             remind_step_dict["created_by"] = str(user_id)
             remind_step_dict["updated_by"] = str(user_id)
-            remind_step_dict["created_at"] = time_at
-            remind_step_dict["updated_at"] = time_at
 
             remind_dict_list.append(remind_step_dict)
 
