@@ -12,6 +12,6 @@ class UpdateCampaignUseCase(ABC):
     @transactional
     @abstractmethod
     def exec(
-        self, campaign_id: str, campaign_create: CampaignCreate, user: User, db: Session
+        self, campaign_id: str, campaign_update: CampaignCreate, user: User, db: Session
     ) -> dict:
         pass

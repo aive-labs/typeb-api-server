@@ -5,7 +5,6 @@ import pandas as pd
 from sqlalchemy import and_, delete, func, update
 from sqlalchemy.orm import Session
 
-from src.campaign.domain.campaign import Campaign
 from src.campaign.enums.campagin_status import CampaignStatus
 from src.campaign.enums.campaign_timeline_type import CampaignTimelineType
 from src.campaign.enums.campaign_type import CampaignType
@@ -37,6 +36,9 @@ from src.campaign.infra.sqlalchemy_query.recurring_campaign.get_set_portion impo
 )
 from src.campaign.routes.dto.request.campaign_create import CampaignCreate
 from src.campaign.routes.port.update_campaign_usecase import UpdateCampaignUseCase
+from src.campaign.service.authorization_checker import AuthorizationChecker
+from src.campaign.service.campaign_dependency_manager import CampaignDependencyManager
+from src.campaign.service.campaign_manager import CampaignManager
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
 from src.campaign.utils.utils import set_summary_sententce
 from src.common.enums.campaign_media import CampaignMedia
@@ -56,18 +58,20 @@ class UpdateCampaignService(UpdateCampaignUseCase):
 
     @transactional
     def exec(
-        self, campaign_id: str, campaign_create: CampaignCreate, user: User, db: Session
+        self, campaign_id: str, campaign_update: CampaignCreate, user: User, db: Session
     ) -> dict:
 
-        campaign = self.campaign_repository.get_campaign_detail(campaign_id, user, db)
+        campaign: CampaignEntity = (
+            db.query(CampaignEntity).filter(CampaignEntity.campaign_id == campaign_id).first()
+        )
 
         if campaign.campaign_status_code == "r1":
             campaign_schema_obj, remind_dict_list = self.update_campaign_with_remind(
-                db, user, campaign_create, campaign
+                db, user, campaign_update, campaign
             )
         elif campaign.campaign_status_code == "r2":
             campaign_schema_obj, remind_dict_list = self.update_campaign_obj_modification(
-                db, user, campaign_create, campaign
+                db, user, campaign_update, campaign
             )
         else:
             raise PolicyException(detail={"message": "캠페인을 수정할 수 없는 상태입니다."})
@@ -81,9 +85,37 @@ class UpdateCampaignService(UpdateCampaignUseCase):
             description="캠페인 변경",
         )
 
-        # update_campaign_child_obj(
-        #     db, dep, campaign_base_dict, campaign_req_obj
-        # )
+        if not self.is_updatable(campaign, user):
+            raise PolicyException(detail={"message": "캠페인을 수정할 수 없습니다."})
+
+        user_id = user.user_id
+        campaign_base_dict = campaign.as_dict()
+        shop_send_yn = campaign_base_dict["shop_send_yn"]
+        req_campaigns_exc = campaign_update.campaigns_exc if campaign_update.campaigns_exc else []
+        req_audiences_exc = campaign_update.audiences_exc if campaign_update.audiences_exc else []
+        base_campaigns_exc = (
+            []
+            if campaign_base_dict.get("campaigns_exc") is None
+            else campaign_base_dict.get("campaigns_exc")
+        )
+        base_audiences_exc = (
+            []
+            if campaign_base_dict.get("audiences_exc") is None
+            else campaign_base_dict.get("audiences_exc")
+        )
+
+        if (set(base_campaigns_exc) != set(req_campaigns_exc)) or (
+            set(base_audiences_exc) != set(req_audiences_exc)
+        ):
+            campaign_base_dict["campaigns_exc"] = req_campaigns_exc
+            campaign.campaigns_exc = req_campaigns_exc
+            campaign_base_dict["audiences_exc"] = req_audiences_exc
+            campaign.audiences_exc = req_audiences_exc
+            campaign_manager = CampaignManager(db, shop_send_yn, user_id)
+            recipient_df = campaign_manager.prepare_campaign_recipients(campaign_base_dict)
+            if recipient_df is not None:
+                campaign_manager.update_campaign_recipients(recipient_df)
+        db.flush()
 
         if campaign.campaign_type_code == CampaignType.EXPERT.value:
             sets = [row._asdict() for row in get_campaign_sets(db=db, campaign_id=campaign_id)]
@@ -107,7 +139,7 @@ class UpdateCampaignService(UpdateCampaignUseCase):
 
         return {
             "progress": campaign.progress,
-            "base": campaign,
+            "base": campaign.as_dict(),
             "set_summary": {
                 "recipient_portion": recipient_portion,
                 "recipient_descriptions": recipient_descriptions,
@@ -116,6 +148,31 @@ class UpdateCampaignService(UpdateCampaignUseCase):
             "set_group_list": set_groups,
             "set_group_message_list": set_group_message_list,
         }
+
+    def is_updatable(self, campaign, user):
+        authorization_checker = AuthorizationChecker(user)
+        campaign_dependency_manager = CampaignDependencyManager(user)
+
+        object_role_access = authorization_checker.object_role_access()
+        object_department_access = authorization_checker.object_department_access(campaign)
+        is_object_deletable = campaign_dependency_manager.is_object_deletable(campaign)
+        if object_department_access + object_role_access == 0:
+            raise PolicyException(
+                detail={
+                    "code": "campaign/update/denied/access",
+                    "message": "수정 권한이 존재하지 않습니다.",
+                },
+            )
+        else:
+            # 권한이 있는 경우
+            if not is_object_deletable:
+                raise PolicyException(
+                    detail={
+                        "code": "campaign/update/denied/status",
+                        "message": "캠페인이 임시저장 상태가 아닙니다.",
+                    },
+                )
+        return True
 
     def save_campaign_logs(
         self,
@@ -176,7 +233,7 @@ class UpdateCampaignService(UpdateCampaignUseCase):
         db.add(timelines)
 
     def update_campaign_with_remind(
-        self, db, user, campaign_update: CampaignCreate, campaign_base: Campaign
+        self, db, user, campaign_update: CampaignCreate, campaign_base: CampaignEntity
     ):
         """캠페인 업데이트 반영
         - campaign_base: 캠페인 기본 정보 (Base 모델)
@@ -297,8 +354,10 @@ class UpdateCampaignService(UpdateCampaignUseCase):
 
         else:
             end_date = campaign_base.end_date
+
         # 캠페인 리마인드 체크
         req_remind_update = campaign_update.remind_list
+
         send_type_code = campaign_update.send_type_code
 
         remind_dict_list = None
@@ -309,8 +368,7 @@ class UpdateCampaignService(UpdateCampaignUseCase):
             )
             campaign_base = self.update_remind_obj(db, campaign_base, remind_dict_list)
 
-        entity = CampaignEntity(**campaign_base.model_dump())
-        db.merge(entity)
+        db.add(campaign_base)
         db.flush()
 
         return campaign_base, remind_dict_list
@@ -477,8 +535,7 @@ class UpdateCampaignService(UpdateCampaignUseCase):
             )
             campaign_base = self.update_remind_obj(db, campaign_base, remind_dict_list)
 
-        entity = CampaignEntity(**campaign_base.model_dump())
-        db.merge(entity)
+        db.add(campaign_base)
         db.flush()
 
         # 주기성 정보 동기화
@@ -521,6 +578,7 @@ class UpdateCampaignService(UpdateCampaignUseCase):
                         db, recurring_campaign_base, recurring_remind_dict_list
                     )
 
+                # TODO
                 db.add(recurring_campaign_base)
                 db.flush()
 
@@ -530,7 +588,11 @@ class UpdateCampaignService(UpdateCampaignUseCase):
         """캠페인 리마인드 인서트 딕셔너리 리스트 생성"""
 
         remind_dict_list = []
+
+        print("remind_list")
+        print(remind_list)
         for remind_elem in remind_list:
+
             """
             remind_step
             remind_duration
@@ -540,8 +602,10 @@ class UpdateCampaignService(UpdateCampaignUseCase):
             # insert step & duration
             remind_step_dict.update(remind_elem)
 
+            remind_step_dict["remind_media"] = remind_step_dict["remind_media"].value
+
             # 리마인드 발송일 계산
-            remind_duration = remind_elem["remind_duration"]
+            remind_duration = remind_elem.remind_duration
             remind_date = calculate_remind_date(end_date, remind_duration)
 
             if int(remind_date) == int(send_date):
@@ -644,6 +708,7 @@ class UpdateCampaignService(UpdateCampaignUseCase):
                 added_remind = [
                     added for added in remind_dict_list if added["remind_step"] == steps
                 ][0]
+
                 campaign_base.remind_list.append(CampaignRemindEntity(**added_remind))
 
                 # 추가된 경우 빈 메시지 오브젝트 추가
