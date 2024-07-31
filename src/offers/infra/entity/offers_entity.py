@@ -1,7 +1,4 @@
-from datetime import datetime
-
-import pytz
-from sqlalchemy import ARRAY, Boolean, Column, DateTime, Integer, String, text
+from sqlalchemy import ARRAY, Boolean, Column, DateTime, Integer, String, func, text
 
 from src.core.database import Base
 
@@ -56,15 +53,7 @@ class OffersEntity(Base):
     deleted = Column(String)
     cus_data_batch_yn = Column(String(1))
     offer_source = Column(String(10))
-    created_at = Column(
-        DateTime(timezone=True),
-        nullable=False,
-        default=lambda: datetime.now(pytz.timezone("Asia/Seoul")),
-    )
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
-    updated_at = Column(
-        DateTime(timezone=True),
-        default=lambda: datetime.now(pytz.timezone("Asia/Seoul")),
-        onupdate=datetime.now(),
-    )
+    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
     updated_by = Column(String, nullable=False, default=text("(user)"))

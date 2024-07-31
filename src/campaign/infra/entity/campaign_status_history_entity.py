@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
 
 from src.core.database import Base
 
@@ -13,5 +13,5 @@ class CampaignStatusHistoryEntity(Base):
     approval_no = Column(
         Integer, ForeignKey("aivelabs_sv.campaign_approvals.approval_no"), nullable=True
     )
-    created_at = Column(DateTime(timezone=True))
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False)

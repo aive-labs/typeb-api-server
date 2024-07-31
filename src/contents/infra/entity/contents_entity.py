@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from sqlalchemy import (
     ARRAY,
     Boolean,
@@ -8,6 +6,7 @@ from sqlalchemy import (
     Float,
     Integer,
     String,
+    func,
 )
 
 from src.core.database import Base
@@ -36,7 +35,7 @@ class ContentsEntity(Base):
     coverage_score = Column(Float)
     contents_type = Column(String)
     created_by = Column(String, nullable=False)
-    created_at = Column(DateTime(timezone=True), default=datetime.now)
+    created_at = Column(DateTime(timezone=True), default=func.now())
     updated_by = Column(String, nullable=False)
-    updated_at = Column(DateTime(timezone=True), default=datetime.now)
+    updated_at = Column(DateTime(timezone=True), default=func.now())
     is_deleted = Column(Boolean, nullable=False, default=False)

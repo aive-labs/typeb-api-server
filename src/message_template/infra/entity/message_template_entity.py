@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from sqlalchemy import (
     Boolean,
     Column,
@@ -7,6 +5,7 @@ from sqlalchemy import (
     Integer,
     SmallInteger,
     String,
+    func,
     text,
 )
 from sqlalchemy.orm import relationship
@@ -28,9 +27,9 @@ class MessageTemplateEntity(Base):
     access_level = Column(SmallInteger, nullable=False)
     owned_by_dept = Column(String, nullable=False)
     owned_by_dept_name = Column(String, nullable=False)
-    created_at = Column(DateTime(timezone=True), default=datetime.now())
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
-    updated_at = Column(DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now())
+    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
     updated_by = Column(String, nullable=False, default=text("(user)"))
     is_deleted = Column(Boolean, nullable=False, default=False)
 

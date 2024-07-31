@@ -1,6 +1,4 @@
-from datetime import datetime
-
-from sqlalchemy import TIMESTAMP, BigInteger, Column, Date, DateTime, String
+from sqlalchemy import TIMESTAMP, BigInteger, Column, Date, DateTime, String, func
 
 from src.core.database import Base
 
@@ -41,4 +39,4 @@ class CustomerMasterEntity(Base):
     last_login_date = Column(Date)
     track_id = Column(String)
     created_date = Column(TIMESTAMP(timezone=True))
-    etl_time = Column(DateTime(timezone=True), default=datetime.now())
+    etl_time = Column(DateTime(timezone=True), default=func.now())

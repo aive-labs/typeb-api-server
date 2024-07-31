@@ -1,10 +1,9 @@
-from datetime import datetime
-
 from sqlalchemy import (
     Column,
     DateTime,
     Integer,
     String,
+    func,
 )
 
 from src.core.database import Base
@@ -22,8 +21,8 @@ class UserEntity(Base):
     email = Column(String(20), unique=True, nullable=False)
     language = Column(String(10), unique=False, nullable=False)
     last_login = Column(DateTime)
-    created_at = Column(DateTime(timezone=True), default=datetime.now())
-    updated_at = Column(DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now())
+    created_at = Column(DateTime(timezone=True), default=func.now())
+    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
     login_id = Column(String(20), unique=True)
     erp_id = Column(String(20))
     sys_id = Column(String(2))

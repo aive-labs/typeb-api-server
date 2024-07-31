@@ -1,11 +1,10 @@
-from datetime import datetime
-
 from sqlalchemy import (
     ARRAY,
     Column,
     DateTime,
     Integer,
     String,
+    func,
     text,
 )
 
@@ -24,7 +23,7 @@ class AudiencePredefVariableEntity(Base):
     input_cell_type = Column(String, nullable=True)
     additional_variable = Column(ARRAY(String), nullable=False)
     access_level = Column(Integer, nullable=False)
-    created_at = Column(DateTime(timezone=True), default=datetime.now())
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
-    updated_at = Column(DateTime(timezone=True), default=datetime.now())
+    updated_at = Column(DateTime(timezone=True), default=func.now())
     updated_by = Column(String, nullable=False, default=text("(user)"))

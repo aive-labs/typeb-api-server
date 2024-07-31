@@ -1,11 +1,10 @@
-from datetime import datetime
-
 from sqlalchemy import (
     Column,
     DateTime,
     ForeignKey,
     Integer,
     String,
+    func,
     text,
 )
 
@@ -21,7 +20,7 @@ class StrategyThemeAudienceMappingEntity(Base):
         primary_key=True,
     )
     audience_id = Column(String, ForeignKey("audiences.audience_id"), primary_key=True)
-    created_at = Column(DateTime(timezone=True), default=datetime.now())
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
-    updated_at = Column(DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now())
+    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
     updated_by = Column(String, nullable=False, default=text("(user)"))

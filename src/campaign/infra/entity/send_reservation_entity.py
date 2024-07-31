@@ -1,11 +1,10 @@
-from datetime import datetime
-
 from sqlalchemy import (
     Column,
     DateTime,
     ForeignKey,
     Integer,
     String,
+    func,
     text,
 )
 
@@ -55,15 +54,15 @@ class SendReservationEntity(Base):
     test_send_yn = Column(String(5))
     audience_id = Column(String)
     coupon_no = Column(String)
-    create_resv_date = Column(DateTime(timezone=True), nullable=False, default=datetime.now())
+    create_resv_date = Column(DateTime(timezone=True), nullable=False, default=func.now())
     create_resv_user = Column(String(20), nullable=False, default=text("(user)"))
     update_resv_date = Column(
         DateTime(timezone=True),
         nullable=False,
-        default=datetime.now(),
-        onupdate=datetime.now(),
+        default=func.now(),
+        onupdate=func.now(),
     )
     update_resv_user = Column(String(20), nullable=False, default=text("(user)"))
 
     log_comment = Column(String)
-    log_date = Column(DateTime(timezone=True), nullable=False, default=datetime.now())
+    log_date = Column(DateTime(timezone=True), nullable=False, default=func.now())

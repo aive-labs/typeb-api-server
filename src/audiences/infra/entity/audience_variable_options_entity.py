@@ -1,11 +1,10 @@
-from datetime import datetime
-
 from sqlalchemy import (
     Column,
     DateTime,
     ForeignKey,
     Integer,
     String,
+    func,
     text,
 )
 
@@ -31,9 +30,9 @@ class AudienceVariableOptionsEntity(Base):
     cell_type = Column(String, nullable=False)
     input_cell_type = Column(String, nullable=False)
     querying_type = Column(String, nullable=False)
-    created_at = Column(DateTime(timezone=True), default=datetime.now())
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
-    updated_at = Column(DateTime(timezone=True), default=datetime.now())
+    updated_at = Column(DateTime(timezone=True), default=func.now())
     updated_by = Column(String, nullable=False, default=text("(user)"))
     additional_only = Column(String(2), nullable=False, default="N")
     option_order_cols = Column(Integer, nullable=False)

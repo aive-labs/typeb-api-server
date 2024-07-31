@@ -4,6 +4,7 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     String,
+    func,
 )
 
 from src.core.database import Base as Base
@@ -25,7 +26,7 @@ class KakaoLinkButtonsEntity(Base):
     button_type = Column(String, nullable=False)
     web_link = Column(String, nullable=True)
     app_link = Column(String, nullable=True)
-    created_at = Column(DateTime(timezone=True))
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False)
-    updated_at = Column(DateTime(timezone=True))
+    updated_at = Column(DateTime(timezone=True), default=func.now())
     updated_by = Column(String, nullable=False)
