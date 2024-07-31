@@ -252,7 +252,7 @@ def exclude_customers_from_exclusion_audiences(audiences_exc, campaign_set_df, d
 
 
 def exclude_customers_from_exclusion_campaign(campaign_set_df, campaigns_exc, db):
-    exc_cus_query = get_excluded_customer_list(db, campaigns_exc)
+    exc_cus_query = get_excluded_customer_list(campaigns_exc, db)
     exc_cus_df = DataConverter.convert_query_to_df(exc_cus_query).rename(
         columns={"exc_cus_cd": "cus_cd"}
     )
