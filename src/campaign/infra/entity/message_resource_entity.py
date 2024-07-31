@@ -1,8 +1,10 @@
 from sqlalchemy import (
     Column,
+    DateTime,
     ForeignKey,
     Integer,
     String,
+    func,
 )
 
 from src.core.database import Base as Base
@@ -18,3 +20,5 @@ class MessageResourceEntity(Base):
     img_uri = Column(String)  ##웹클라이언트 요청 uri
     link_url = Column(String, nullable=True)  ##발송용 url
     landing_url = Column(String, nullable=True)
+    created_at = Column(DateTime(timezone=True), default=func.now())
+    updated_at = Column(DateTime(timezone=True), default=func.now())

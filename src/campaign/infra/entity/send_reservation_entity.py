@@ -1,11 +1,10 @@
-from datetime import datetime
-
 from sqlalchemy import (
     Column,
     DateTime,
     ForeignKey,
     Integer,
     String,
+    func,
     text,
 )
 
@@ -19,9 +18,9 @@ class SendReservationEntity(Base):
     set_group_msg_seq = Column(Integer, ForeignKey("set_group_messages.set_group_msg_seq"))
     campaign_id = Column(String(10), nullable=False)
     campaign_name = Column(String(100))
-    send_resv_date = Column(DateTime, nullable=False)
+    send_resv_date = Column(DateTime(timezone=True), nullable=False)
     send_resv_state = Column(String(2), nullable=False, server_default=text("'00'"))
-    send_rslt_date = Column(DateTime)
+    send_rslt_date = Column(DateTime(timezone=True))
     send_rslt_state = Column(String(4))
     phone_send = Column(String(15), nullable=False)
     phone_callback = Column(String(15), nullable=False)
@@ -55,15 +54,15 @@ class SendReservationEntity(Base):
     test_send_yn = Column(String(5))
     audience_id = Column(String)
     coupon_no = Column(String)
-    create_resv_date = Column(DateTime, nullable=False, default=datetime.now())
+    create_resv_date = Column(DateTime(timezone=True), nullable=False, default=func.now())
     create_resv_user = Column(String(20), nullable=False, default=text("(user)"))
     update_resv_date = Column(
-        DateTime,
+        DateTime(timezone=True),
         nullable=False,
-        default=datetime.now(),
-        onupdate=datetime.now(),
+        default=func.now(),
+        onupdate=func.now(),
     )
     update_resv_user = Column(String(20), nullable=False, default=text("(user)"))
 
     log_comment = Column(String)
-    log_date = Column(DateTime, nullable=False, default=datetime.now())
+    log_date = Column(DateTime(timezone=True), nullable=False, default=func.now())

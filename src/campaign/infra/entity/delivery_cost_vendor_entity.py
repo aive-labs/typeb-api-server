@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Float, String
+from sqlalchemy import Column, DateTime, Float, String, func
 
 from src.core.database import Base as Base
 
@@ -11,3 +11,5 @@ class DeliveryCostVendorEntity(Base):
     msg_type = Column(String, nullable=False)
     shop_send_yn = Column(String, nullable=False)
     cost_per_send = Column(Float(precision=24), nullable=False)
+    created_at = Column(DateTime(timezone=True), default=func.now())
+    updated_at = Column(DateTime(timezone=True), default=func.now())

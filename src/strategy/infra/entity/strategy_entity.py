@@ -1,6 +1,4 @@
-from datetime import datetime
-
-from sqlalchemy import ARRAY, Boolean, Column, DateTime, String, text
+from sqlalchemy import ARRAY, Boolean, Column, DateTime, String, func, text
 from sqlalchemy.orm import relationship
 
 from src.core.database import Base
@@ -21,9 +19,9 @@ class StrategyEntity(Base):
     strategy_status_name = Column(String, unique=False, nullable=False)
     target_strategy = Column(String, unique=False, nullable=False)
     owned_by_dept = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.now())
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
-    updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
+    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
     updated_by = Column(String, nullable=False, default=text("(user)"))
     is_deleted = Column(Boolean, nullable=False, default=False)
 

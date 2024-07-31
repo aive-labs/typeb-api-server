@@ -3,6 +3,7 @@ from sqlalchemy import (
     DateTime,
     Integer,
     String,
+    func,
 )
 
 from src.core.database import Base
@@ -18,6 +19,6 @@ class ContentsMenuEntity(Base):
     style_yn = Column(String, nullable=False)
     subject_with = Column(String)
     created_by = Column(String, nullable=False)
-    created_at = Column(DateTime)
+    created_at = Column(DateTime(timezone=True), default=func.now())
     updated_by = Column(String, nullable=False)
-    updated_at = Column(DateTime)
+    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())

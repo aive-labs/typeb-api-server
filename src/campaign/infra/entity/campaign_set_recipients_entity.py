@@ -3,6 +3,7 @@ from sqlalchemy import (
     DateTime,
     Integer,
     String,
+    func,
 )
 
 from src.core.database import Base
@@ -21,7 +22,7 @@ class CampaignSetRecipientsEntity(Base):
     rep_nm = Column(String, nullable=True)
     contents_id = Column(Integer, nullable=True)
     send_result = Column(String, nullable=True)
-    created_at = Column(DateTime)
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False)
-    updated_at = Column(DateTime)
+    updated_at = Column(DateTime(timezone=True), default=func.now())
     updated_by = Column(String, nullable=False)

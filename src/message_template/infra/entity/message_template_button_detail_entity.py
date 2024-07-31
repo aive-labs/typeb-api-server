@@ -1,8 +1,10 @@
 from sqlalchemy import (
     Column,
+    DateTime,
     ForeignKey,
     Integer,
     String,
+    func,
 )
 
 from src.core.database import Base
@@ -17,3 +19,5 @@ class MessageTemplateButtonDetailEntity(Base):
     button_name = Column(String, nullable=False)
     web_link = Column(String)
     app_link = Column(String)
+    created_at = Column(DateTime(timezone=True), default=func.now())
+    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())

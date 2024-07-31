@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy import Column, DateTime, Integer, String, func
 from sqlalchemy.orm import relationship
 
 from src.campaign.infra.entity.approver_entity import ApproverEntity
@@ -15,10 +15,10 @@ class CampaignApprovalEntity(Base):
     campaign_id = Column(String, nullable=False)
     requester = Column(Integer, nullable=False)
     approval_status = Column(String, nullable=False)
-    created_at = Column(DateTime)
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False)
-    updated_at = Column(DateTime)
-    updated_by = Column(String, nullable=False)
+    updated_at = Column(DateTime(timezone=True))
+    updated_by = Column(DateTime(timezone=True), default=func.now())
 
     # 1:n relationship
     approvers = relationship(ApproverEntity, backref="campaign_approvals")
