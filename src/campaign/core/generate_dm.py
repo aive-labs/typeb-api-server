@@ -609,7 +609,9 @@ class generate_message:
             )
 
     def cmp_date(self, data_dict):
-        self.msg_body = self.msg_body + "\n\n▷ 기간 : {campaign_start_date}~{campaign_end_date}"
+        self.msg_body = (
+            self.msg_body + f'\n\n▷ 기간 : {data_dict["start_date"]}~{data_dict["end_date"]}'
+        )
 
     def contents_template(self, data_dict):
         config = CreateDataDict.load_yaml(self)

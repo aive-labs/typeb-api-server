@@ -156,7 +156,7 @@ class GenerateContentsService(GenerateContentsUseCase):
                 img_url = [
                     json.dumps(
                         {
-                            "url": f"{self.cloud_front_url}{item.image_path}",
+                            "url": f"{self.cloud_front_url}/{item.image_path}",
                             "caption": item.creative_tags,
                             "alttext": item.creative_tags,
                         },

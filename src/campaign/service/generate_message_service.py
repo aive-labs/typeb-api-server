@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from src.campaign.core import generate_dm
 from src.campaign.core.message_group_controller import MessageGroupController
 from src.campaign.domain.campaign_messages import CampaignMessages, SetGroupMessage
+from src.campaign.infra.sqlalchemy_query.get_set_group_message import save_set_group_msg
 from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
 from src.campaign.routes.dto.response.campaign_response import (
     CampaignReadBase,
@@ -36,6 +37,11 @@ class GenerateMessageService(GenerateMessageUsecase):
         self.offer_repository = offer_repository
         self.common_repository = common_repository
         self.contents_repository = contents_repository
+
+    def save_generate_message(self, msg_obj, db: Session):
+        for msg in msg_obj:
+            save_set_group_msg(msg.campaign_id, msg.set_group_msg_seq, msg, db)
+        db.commit()
 
     def generate_preview_message(
         self, preview_message_create: PreviewMessageCreate, user: User, db: Session
@@ -138,7 +144,7 @@ class GenerateMessageService(GenerateMessageUsecase):
         # set_group_msg_seq로 obj 검색 간소화
 
         message_data = []
-        phone_callback = "02-0000-0000"  # 매장 번호 또는 대표번호
+        phone_callback = "02-2088-5502"  # 매장 번호 또는 대표번호
         for msg in yaml_data["messages"]:
             msg["created_at"] = datetime.fromisoformat(msg["created_at"])
             msg["updated_at"] = datetime.fromisoformat(msg["updated_at"])
@@ -205,7 +211,7 @@ class GenerateMessageService(GenerateMessageUsecase):
 
         return res
 
-    def generate_message(self, message_generate: MsgGenerationReq, user: User):
+    def generate_message(self, message_generate: MsgGenerationReq, user: User, db: Session):
         """메세지 생성"""
         campaign_base_obj = message_generate.campaign_base
         set_data_obj = message_generate.set_object
@@ -233,9 +239,8 @@ class GenerateMessageService(GenerateMessageUsecase):
         ]
 
         # # ### 데이터 인풋 메시지 생성 요청 형태와 동일하게 맞추기
-        offer_data = self.offer_repository.get_offer_by_id(set_data_obj.coupon_no)
-
-        if offer_data:
+        if set_data_obj.coupon_no:
+            offer_data = self.offer_repository.get_offer_by_id(set_data_obj.coupon_no)
             offer_info_dict = {
                 "coupon_no": offer_data.coupon_no,
                 "coupon_name": offer_data.coupon_name,
@@ -322,7 +327,7 @@ class GenerateMessageService(GenerateMessageUsecase):
             campaign_base_obj.campaign_id, req_set_group_seqs
         )
 
-        phone_callback = "02-0000-0000"  # 매장 번호 또는 대표번호
+        phone_callback = "02-2088-5502"  # 매장 번호 또는 대표번호
         msg_controller = MessageGroupController(phone_callback, campaign_base_obj, message_data)
 
         ## message send type campaing / remind
@@ -425,5 +430,24 @@ class GenerateMessageService(GenerateMessageUsecase):
                     )
 
                     msg_rtn.append(msg_obj)
+
+        # 생성된 메시지 정보를 저장한다
+        updated_sgm_obj = []
+        for msg in msg_rtn:
+            # get SetGroupMessagesEntity obj
+            sgm_obj = [
+                sgm.set_group_message
+                for sgm in message_data
+                if sgm.set_group_message.set_group_msg_seq == msg.set_group_msg_seq
+            ][0]
+            sgm_obj.is_used = True
+            sgm_obj.msg_gen_key = msg.msg_gen_key
+            sgm_obj.msg_title = msg.msg_title
+            sgm_obj.msg_body = msg.msg_body
+            sgm_obj.rec_explanation = msg.rec_explanation
+            sgm_obj.kakao_button_links = msg.kakao_button_links
+            updated_sgm_obj.append(sgm_obj)
+
+        self.save_generate_message(updated_sgm_obj, db)
 
         return msg_rtn
