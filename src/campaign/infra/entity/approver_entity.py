@@ -9,7 +9,7 @@ class ApproverEntity(Base):
     campaign_id = Column(String, primary_key=True, index=True)
     approval_no = Column(
         Integer,
-        ForeignKey("aivelabs_sv.campaign_approvals.approval_no"),
+        ForeignKey("campaign_approvals.approval_no"),
         primary_key=True,
         nullable=False,
     )

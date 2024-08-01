@@ -10,8 +10,6 @@ class CampaignStatusHistoryEntity(Base):
     campaign_id = Column(String, nullable=False)
     from_status = Column(String, nullable=False)
     to_status = Column(String, nullable=False)
-    approval_no = Column(
-        Integer, ForeignKey("aivelabs_sv.campaign_approvals.approval_no"), nullable=True
-    )
+    approval_no = Column(Integer, ForeignKey("campaign_approvals.approval_no"), nullable=True)
     created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False)

@@ -80,10 +80,7 @@ def get_db_session():
     with db.session() as session:
         schema_name = schema_context.get()
         print(f"[get_db_session] {schema_name}")
-        # print(f"[get_db_session] SET search_path TO {schema_name}")
         # session.execute(text(f"SET search_path TO {schema_name}"))
-        print("--------")
-
         yield session
 
 
