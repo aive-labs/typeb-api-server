@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from sqlalchemy.orm import Session
 
 from src.core.exceptions.exceptions import (
@@ -64,7 +62,6 @@ class UpdateStrategyService(UpdateStrategyUseCase):
                 StrategyThemeAudienceMapping(
                     audience_id=audience_id,
                     strategy_theme_id=theme.strategy_theme_id,
-                    updated_at=datetime.now(),
                     updated_by=user.username,
                 )
                 for audience_id in theme.theme_audience_set.audience_ids
@@ -74,7 +71,6 @@ class UpdateStrategyService(UpdateStrategyUseCase):
                 StrategyThemeOfferMapping(
                     coupon_no=coupon_no,
                     strategy_theme_id=theme.strategy_theme_id,
-                    updated_at=datetime.now(),
                     updated_by=user.username,
                 )
                 for coupon_no in theme.theme_audience_set.coupon_no_list
@@ -89,7 +85,6 @@ class UpdateStrategyService(UpdateStrategyUseCase):
                     contents_tags=theme.theme_audience_set.contents_tags,
                     strategy_theme_audience_mapping=theme_audience,
                     strategy_theme_offer_mapping=theme_offer,
-                    updated_at=datetime.now(),
                     updated_by=user.username,
                 )
             )

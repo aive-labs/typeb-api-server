@@ -1,6 +1,4 @@
-from datetime import datetime
-
-from sqlalchemy import Column, DateTime, Integer, String, text
+from sqlalchemy import Column, DateTime, Integer, String, func, text
 
 from src.core.database import Base
 
@@ -13,7 +11,7 @@ class ProductLinkEntity(Base):
     link_type = Column(String)
     title = Column(String)
     link = Column(String)
-    created_at = Column(DateTime, default=datetime.now())
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
-    updated_at = Column(DateTime, default=datetime.now())
+    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
     updated_by = Column(String, nullable=False, default=text("(user)"))

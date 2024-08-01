@@ -107,3 +107,6 @@ class CampaignRepository(BaseCampaignRepository):
 
     def update_send_reservation_status_to_success(self, refkey, db):
         self.campaign_sqlalchemy.update_send_reservation_status_to_success(refkey, db)
+
+    def update_send_reservation_status_to_failure(self, refkey: str, db: Session):
+        self.campaign_sqlalchemy.update_send_reservation_status_to_failure(refkey, db)

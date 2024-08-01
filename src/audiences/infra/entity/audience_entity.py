@@ -1,6 +1,4 @@
-from datetime import datetime
-
-from sqlalchemy import Boolean, Column, DateTime, String, text
+from sqlalchemy import Boolean, Column, DateTime, String, func, text
 from sqlalchemy.orm import relationship
 
 from src.core.database import Base as Base
@@ -23,9 +21,9 @@ class AudienceEntity(Base):
     create_type_code = Column(String, nullable=True)
     target_strategy = Column(String, nullable=True)
     owned_by_dept = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.now())
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
-    updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
+    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
     updated_by = Column(String, nullable=False, default=text("(user)"))
     is_exclude = Column(Boolean, nullable=False, default=False)
     update_cycle = Column(String(15), nullable=False, default="skip")

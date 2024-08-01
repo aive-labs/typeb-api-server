@@ -29,4 +29,4 @@ class DashDailySendInfoEntity(Base):
     tot_recipient_count = Column(Integer)
     tot_success_count = Column(Integer)
     tot_send_cost = Column(Integer)
-    etl_time = Column(DateTime)
+    etl_time = Column(DateTime(timezone=True))

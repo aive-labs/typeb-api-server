@@ -73,6 +73,7 @@ from src.campaign.routes.port.update_campaign_set_message_group_usecase import (
 from src.campaign.routes.port.update_campaign_set_usecase import (
     UpdateCampaignSetUseCase,
 )
+from src.campaign.routes.port.update_campaign_usecase import UpdateCampaignUseCase
 from src.campaign.routes.port.update_message_use_status_usecase import (
     UpdateMessageUseStatusUseCase,
 )
@@ -110,6 +111,20 @@ def get_campaign_timeline(
     ),
 ) -> list[CampaignTimelineResponse]:
     return get_campaign_service.get_timeline(campaign_id, db=db)
+
+
+@campaign_router.put("/campaigns/{campaign_id}")
+@inject
+def update_campaign(
+    campaign_id: str,
+    campaign_update: CampaignCreate,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db=Depends(get_db_session),
+    update_campaign_service: UpdateCampaignUseCase = Depends(
+        Provide[Container.update_campaign_service]
+    ),
+):
+    return update_campaign_service.exec(campaign_id, campaign_update, user, db=db)
 
 
 @campaign_router.post("/campaigns")

@@ -11,6 +11,6 @@ class CampaignTimelineEntity(Base):
     campaign_id = Column(String, nullable=False)
     description = Column(String, nullable=False)
     status_no = Column(String, nullable=True)
-    created_at = Column(DateTime, default=func.now())
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False)
     created_by_name = Column(String, nullable=False)

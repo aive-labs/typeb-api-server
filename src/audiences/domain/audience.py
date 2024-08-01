@@ -20,8 +20,8 @@ class Audience(BaseModel):
     audience_count: int | None = None
     audience_unit_price: float | None = None
     rep_list: list[RepresentativeItems] | None = None
-    created_at: datetime = datetime.now()
-    updated_at: datetime = datetime.now()
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
     @staticmethod
     def from_entity(entity: AudienceEntity) -> "Audience":

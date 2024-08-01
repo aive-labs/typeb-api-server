@@ -89,3 +89,7 @@ class BaseCampaignRepository(ABC):
     @abstractmethod
     def update_send_reservation_status_to_success(self, refkey: str, db: Session):
         pass
+
+    @abstractmethod
+    def update_send_reservation_status_to_failure(self, refkey: str, db: Session):
+        pass

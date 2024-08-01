@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 import pytz
 
 from src.campaign.enums.message_send_type import MessageSendType
+from src.core.exceptions.exceptions import ConsistencyException
 
 
 def get_localtime():
@@ -36,7 +37,10 @@ def calculate_remind_date(end_date, remind_duration):
 
 def get_unix_timestamp() -> int:
     # datetime 객체를 Unix 시간 (마이크로초 단위)로 변환
-    now = datetime.now()
+    local_timezone = pytz.timezone("Asia/Seoul")
+
+    # 현재 날짜와 시간을 한국 타임존으로 가져오기
+    now = datetime.now(local_timezone)
     return int(now.timestamp() * 1_000_000)
 
 
@@ -112,9 +116,11 @@ def create_logical_date_for_airflow(date_str: str, time_str: str) -> str:
     return iso_format_str
 
 
-def get_current_datetime_yyyymmddhh24mi():
-    # 현재 날짜와 시간 가져오기
-    now = datetime.now()
+def get_korean_current_datetime_yyyymmddhh24mi():
+    local_timezone = pytz.timezone("Asia/Seoul")
+
+    # 현재 날짜와 시간을 한국 타임존으로 가져오기
+    now = datetime.now(local_timezone)
 
     # YYYYMMDDHH24MI 형식으로 포맷팅
     formatted_datetime = now.strftime("%Y%m%d%H%M")

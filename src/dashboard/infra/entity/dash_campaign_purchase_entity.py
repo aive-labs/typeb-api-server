@@ -17,4 +17,4 @@ class DashCampaignPurchaseEntity(Base):
     purchase_days = Column(Integer)
     first_sale_dt = Column(String)
     last_sale_dt = Column(String)
-    etl_time = Column(DateTime)
+    etl_time = Column(DateTime(timezone=True))

@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from sqlalchemy import (
     ARRAY,
     Boolean,
@@ -8,6 +6,7 @@ from sqlalchemy import (
     Float,
     Integer,
     String,
+    func,
 )
 
 from src.core.database import Base
@@ -30,13 +29,13 @@ class ContentsEntity(Base):
     emphasis_context = Column(String)
     thumbnail_uri = Column(String, nullable=False)
     contents_url = Column(String, nullable=False)
-    publication_start = Column(DateTime)
-    publication_end = Column(DateTime)
+    publication_start = Column(DateTime(timezone=True))
+    publication_end = Column(DateTime(timezone=True))
     contents_tags = Column(String)
     coverage_score = Column(Float)
     contents_type = Column(String)
     created_by = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime(timezone=True), default=func.now())
     updated_by = Column(String, nullable=False)
-    updated_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime(timezone=True), default=func.now())
     is_deleted = Column(Boolean, nullable=False, default=False)

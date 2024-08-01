@@ -1,6 +1,13 @@
-from datetime import datetime
-
-from sqlalchemy import TIMESTAMP, BigInteger, Column, DateTime, Integer, String, text
+from sqlalchemy import (
+    TIMESTAMP,
+    BigInteger,
+    Column,
+    DateTime,
+    Integer,
+    String,
+    func,
+    text,
+)
 
 from src.core.database import Base
 
@@ -79,8 +86,8 @@ class ProductMasterEntity(Base):
     recommend_yn = Column(String, default="N")
     rep_nm = Column(String)
 
-    created_at = Column(DateTime, default=datetime.now())
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
-    updated_at = Column(DateTime, default=datetime.now())
+    updated_at = Column(DateTime(timezone=True), default=func.now())
     updated_by = Column(String, nullable=False, default=text("(user)"))
     etltime = Column(TIMESTAMP(timezone=True))

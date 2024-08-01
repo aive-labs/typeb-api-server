@@ -31,6 +31,11 @@ class MessageService:
                 self.campaign_repository.update_send_reservation_status_to_success(
                     ppurio_message_result.REFKEY, db
                 )
+        else:
+            if ppurio_message_result.REFKEY:
+                self.campaign_repository.update_send_reservation_status_to_failure(
+                    ppurio_message_result.REFKEY, db
+                )
 
     def is_message_success(self, ppurio_message_result):
         if ppurio_message_result.MEDIA == "LMS":
@@ -90,7 +95,7 @@ class MessageService:
             data.add_field("apiKey", get_env_variable("kakao_api_key"))
             data.add_field("imageType", image_type)
             data.add_field("title", new_file_name)
-            data.add_field("link", "https://www.aivelabs.com")
+            data.add_field("link", "www.aivelabs.com")
             data.add_field("senderKey", get_env_variable("kakao_sender_key"))
 
             data.add_field(

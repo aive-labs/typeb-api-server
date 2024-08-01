@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from src.common.enums.access_level import AccessLevel
 from src.core.exceptions.exceptions import AuthorizationException
 from src.message_template.domain.message_template import MessageTemplate
@@ -48,7 +46,6 @@ class UpdateMessageTemplateService(UpdateMessageTemplateUseCase):
             access_level=template_update.access_level,
             owned_by_dept=user.department_id if user.department_id else "",
             owned_by_dept_name=user.department_name if user.department_name else "",
-            updated_at=datetime.now(),
             updated_by=user.username,
         )
         # 메시지 타입 정의

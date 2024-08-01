@@ -5,6 +5,7 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     String,
+    func,
 )
 from sqlalchemy.orm import relationship
 
@@ -31,9 +32,9 @@ class CampaignSetGroupsEntity(Base):
     set_group_category = Column(String, nullable=True)
     set_group_val = Column(String, nullable=True)
     rep_nm = Column(String, nullable=True)
-    created_at = Column(DateTime)
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False)
-    updated_at = Column(DateTime)
+    updated_at = Column(DateTime(timezone=True), default=func.now())
     updated_by = Column(String, nullable=False)
 
     # 1:n relationship

@@ -80,7 +80,7 @@ class GenerateMessageService(GenerateMessageUsecase):
             set_data.contents_names = "개인화"
         else:
             contents_id = contents_tag[0]
-            contents_obj = self.contents_repository.get_contents_detail(recsys_model_id, db)
+            contents_obj = self.contents_repository.get_contents_detail(int(contents_id), db)
             contents_name = contents_obj.contents_name
 
         if recsys_model_id:
@@ -104,6 +104,7 @@ class GenerateMessageService(GenerateMessageUsecase):
                 "coupon_description": offer_data.coupon_description,
                 "benefit_type": offer_data.benefit_type,
                 "benefit_type_name": offer_data.benefit_type_name,
+                "available_period_type": offer_data.available_period_type,
             }
 
         set_data.rep_nm_list = ""

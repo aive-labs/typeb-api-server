@@ -12,8 +12,8 @@ class StrategyResponse(BaseModel):
     strategy_status_code: str
     strategy_status_name: str
     target_strategy: str
-    created_at: datetime = datetime.now()
-    updated_at: datetime = datetime.now()
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
     @staticmethod
     def from_model(model: Strategy) -> "StrategyResponse":

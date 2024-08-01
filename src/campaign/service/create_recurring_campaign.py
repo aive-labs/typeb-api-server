@@ -48,7 +48,7 @@ from src.common.timezone_setting import selected_timezone
 from src.common.utils import repeat_date
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import calculate_remind_date, localtime_converter
-from src.core.exceptions.exceptions import ConsistencyException, NotFoundException
+from src.core.exceptions.exceptions import NotFoundException
 from src.core.transactional import transactional
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
@@ -87,17 +87,12 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
                 detail={"message": f"캠페인({campaign_id})이 존재하지 않습니다."}
             )
 
-        retention_day = org_campaign.retention_day
-        if not retention_day:
-            raise ConsistencyException(
-                detail={"message": "주기성 캠페인에 설정된 유지기간이 존재하지 않습니다."}
-            )
-
         if self.is_campaign_end(org_campaign):
             print("campaign_end")
             return {"campaign_id": "has ended"}
 
         # 직전 캠페인의 종료일
+        retention_day = org_campaign.retention_day
         create_date = datetime.strptime(org_campaign.end_date, "%Y%m%d")
         create_date = (
             create_date - timedelta(days=int(retention_day)) if retention_day else create_date
@@ -433,14 +428,9 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
 
             remind_step_dict["remind_date"] = remind_date
 
-            # send_type_code & created_by & updated_by
-            time_at = localtime_converter()
-
             remind_step_dict["send_type_code"] = send_type_code
             remind_step_dict["created_by"] = str(user_id)
             remind_step_dict["updated_by"] = str(user_id)
-            remind_step_dict["created_at"] = time_at
-            remind_step_dict["updated_at"] = time_at
 
             remind_dict_list.append(remind_step_dict)
 

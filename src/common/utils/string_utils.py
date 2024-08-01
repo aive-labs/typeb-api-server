@@ -1,6 +1,8 @@
 import random
 import string
 
+import pandas as pd
+
 
 def generate_random_string(length=6):
     characters = string.ascii_letters + string.digits  # 대소문자 알파벳과 숫자를 포함

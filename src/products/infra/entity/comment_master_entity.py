@@ -15,4 +15,4 @@ class CommentMasterEntity(Base):
     secret = Column(String)
     content = Column(String)
     rating = Column(Integer)
-    etltime = Column(DateTime)
+    etltime = Column(DateTime(timezone=True))

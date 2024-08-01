@@ -153,7 +153,11 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
         start_date = campaign_obj["start_date"]
         send_date = campaign_obj["send_date"]
 
-        # set status
+        print("campaigns_exc")
+        print(campaigns_exc)
+
+        print("audiences_exc")
+        print(audiences_exc)
 
         if not campaign_set_update.set_list:
             raise PolicyException(detail={"message": "1개 이상의 캠페인 세트 입력이 필요합니다."})

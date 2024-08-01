@@ -50,6 +50,7 @@ from src.campaign.service.test_meessage_send_service import TestMessageSendServi
 from src.campaign.service.update_campaign_progress_service import (
     UpdateCampaignProgressService,
 )
+from src.campaign.service.update_campaign_service import UpdateCampaignService
 from src.campaign.service.update_campaign_set_message_group_service import (
     UpdateCampaignSetMessageGroupService,
 )
@@ -402,6 +403,10 @@ class Container(containers.DeclarativeContainer):
         campaign_repository=campaign_repository,
         campaign_set_repository=campaign_set_repository,
         strategy_repository=strategy_repository,
+    )
+
+    update_campaign_service = providers.Singleton(
+        provides=UpdateCampaignService, campaign_repository=campaign_repository
     )
 
     generate_message_service = providers.Singleton(

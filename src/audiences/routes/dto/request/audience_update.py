@@ -14,4 +14,4 @@ class AudienceUpdate(BaseModel):
     filters: list[FilterObj] | None = None
     exclusions: list[FilterObj] | None = None
     upload: dict | None = None
-    updated_at: datetime = datetime.now()
+    updated_at: datetime | None = None

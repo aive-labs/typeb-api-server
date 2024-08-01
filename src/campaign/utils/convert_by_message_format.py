@@ -117,12 +117,12 @@ def convert_by_message_format(df: pd.DataFrame):
     ]
 
     choice_msg_tp = [
-        "kko",  # 알림톡
-        "kki",  # 친구톡와이드 & 이미지 O
-        "kki",  # 친구톡 & 이미지 O
-        "kkf",  # 친구톡와이드 & 이미지 X,
-        "kkf",  # 카카오 텍스트
-        "kkf",  # 친구톡 & 이미지 X
+        "at",  # 알림톡
+        "fw",  # 친구톡와이드 & 이미지 O
+        "fi",  # 친구톡 & 이미지 O
+        "ft",  # 친구톡와이드 & 이미지 X,
+        "ft",  # 카카오 텍스트
+        "ft",  # 친구톡 & 이미지 X
         df["send_msg_type"],
     ]
     df["send_msg_type"] = np.select(cond_msg_tp, choice_msg_tp)

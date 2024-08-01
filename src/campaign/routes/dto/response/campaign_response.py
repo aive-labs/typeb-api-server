@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from src.campaign.domain.campaign_remind import CampaignRemind
 from src.campaign.enums.campagin_status import (
@@ -15,7 +15,6 @@ from src.campaign.enums.send_type import SendTypeEnum
 from src.campaign.enums.set_group_category import SetGroupCategoryEnum
 from src.common.enums.campaign_media import CampaignMedia
 from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
-from src.common.utils.date_utils import localtime_converter
 from src.message_template.enums.message_type import MessageType
 
 
@@ -56,10 +55,10 @@ class CampaignBase(BaseModel):
     owned_by_dept_name: str | None = None
     owned_by_dept_abb_name: str | None = None
     progress: CampaignProgress
-    created_at: datetime = Field(default_factory=localtime_converter)
+    created_at: datetime | None = None
     created_by: str | int | None = None
     created_by_name: str | None = None
-    updated_at: datetime = Field(default_factory=localtime_converter)
+    updated_at: datetime | None = None
     updated_by: str | int | None = None
 
 

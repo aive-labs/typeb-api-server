@@ -9,4 +9,4 @@ class DashDailySaleAmtEntity(Base):
     sale_dt = Column(String, primary_key=True)
     tot_cust_count = Column(Integer)
     tot_sale_amt = Column(Integer)
-    etl_time = Column(DateTime)
+    etl_time = Column(DateTime(timezone=True))
