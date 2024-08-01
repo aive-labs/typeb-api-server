@@ -7,6 +7,8 @@ from sqlalchemy.orm import Session
 from src.campaign.core import generate_dm
 from src.campaign.core.message_group_controller import MessageGroupController
 from src.campaign.domain.campaign_messages import CampaignMessages, SetGroupMessage
+from src.campaign.infra.entity.kakao_link_buttons_entity import KakaoLinkButtonsEntity
+from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
 from src.campaign.routes.dto.response.campaign_response import (
     CampaignReadBase,
@@ -205,7 +207,7 @@ class GenerateMessageService(GenerateMessageUsecase):
 
         return res
 
-    def generate_message(self, message_generate: MsgGenerationReq, user: User):
+    def generate_message(self, message_generate: MsgGenerationReq, user: User, db: Session):
         """메세지 생성"""
         campaign_base_obj = message_generate.campaign_base
         set_data_obj = message_generate.set_object
@@ -425,5 +427,51 @@ class GenerateMessageService(GenerateMessageUsecase):
                     )
 
                     msg_rtn.append(msg_obj)
+
+        # 생성 메시지 Db 업데이트
+        set_group_msg_seqs = []
+        for msg_obj_elem in msg_rtn:
+
+            db_obj = SetGroupMessagesEntity(
+                set_group_msg_seq=msg_obj_elem.set_group_msg_seq,
+                msg_resv_date=msg_obj_elem.msg_resv_date,
+                msg_title=msg_obj_elem.msg_title,
+                msg_body=msg_obj_elem.msg_body,
+                bottom_text=msg_obj_elem.bottom_text,
+                msg_announcement=msg_obj_elem.msg_announcement,
+                template_id=None,  ##생성되는 메세지는 연결된 템플릿이 없음
+                msg_gen_key=msg_obj_elem.msg_gen_key,
+                msg_photo_uri=msg_obj_elem.msg_photo_uri,
+                msg_send_type=msg_obj_elem.msg_send_type,
+                phone_callback=msg_obj_elem.phone_callback,
+                is_used=True,  # 초기값 :True
+                rec_explanation=msg_obj_elem.rec_explanation,
+            )
+            set_group_msg_seqs.append(msg_obj_elem.set_group_msg_seq)
+            # 데이터베이스에 추가 또는 업데이트
+            db.merge(db_obj)
+
+            if msg_obj_elem.kakao_button_links:
+
+                for btn_link in msg_obj_elem.kakao_button_links:
+                    # 기존에 링크가 존재하지 않았던 경우, insert
+                    # kakao link button delete & create
+                    db.query(KakaoLinkButtonsEntity).filter(
+                        KakaoLinkButtonsEntity.set_group_msg_seq == msg_obj_elem.set_group_msg_seq
+                    ).delete()
+
+                    added_btn = KakaoLinkButtonsEntity(
+                        set_group_msg_seq=msg_obj_elem.set_group_msg_seq,
+                        button_name=btn_link["button_name"],
+                        button_type=btn_link["button_type"],
+                        web_link=btn_link["web_link"],
+                        app_link=btn_link["app_link"],
+                        created_by=str(user.user_id),
+                        updated_by=str(user.user_id),
+                    )
+
+                    db.add(added_btn)
+
+        db.commit()
 
         return msg_rtn
