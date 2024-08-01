@@ -163,7 +163,7 @@ def generate_message(
         dependency=Provide[Container.generate_message_service]
     ),
 ):
-    return generate_message_service.generate_message(message_generate, user)
+    return generate_message_service.generate_message(message_generate, user, db)
 
 
 @campaign_router.get("/campaigns/excluded-custs/{campaign_id}")
