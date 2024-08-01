@@ -123,7 +123,9 @@ class UpdateCampaignService(UpdateCampaignUseCase):
                 row._asdict() for row in get_campaign_set_groups(db=db, campaign_id=campaign_id)
             ]
 
-            sets = add_set_rep_contents(db, sets, set_groups, campaign_id)
+            print("sets sets")
+            print(sets)
+            sets = add_set_rep_contents(sets, set_groups, campaign_id, db)
             set_group_messages = get_campaign_set_group_messages(db=db, campaign_id=campaign_id)
             set_group_message_list = convert_to_set_group_message_list(set_group_messages)
             recipient_portion, _, set_cus_count = get_set_portion(campaign_id, db)
