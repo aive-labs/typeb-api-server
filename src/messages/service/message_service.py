@@ -95,7 +95,7 @@ class MessageService:
             data.add_field("apiKey", get_env_variable("kakao_api_key"))
             data.add_field("imageType", image_type)
             data.add_field("title", new_file_name)
-            data.add_field("link", "")
+            data.add_field("link", "www.aivelabs.com")
             data.add_field("senderKey", get_env_variable("kakao_sender_key"))
 
             data.add_field(

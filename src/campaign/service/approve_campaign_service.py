@@ -797,6 +797,9 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         # insert to send_reservation
         res = self.save_campaign_reservation(db, user, campaign_id)
 
+        print("res")
+        print(res)
+
         if res:
             # airflow trigger api
             print("today airflow trigger api")
@@ -1129,6 +1132,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             send_rsv_format: pd.DataFrame = send_rsv_format.merge(
                 resource_df, on="set_group_msg_seq", how="left"
             )
+
             # 파일이 없는 경우 nan -> 0
             send_rsv_format["send_filecount"] = send_rsv_format["send_filecount"].fillna(0)
 
@@ -1244,6 +1248,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             ]
 
             res_df = send_rsv_format[send_reserv_columns]
+
             final_rsv = len(res_df)
             if final_rsv == 0:
                 logging.info("12. 오늘 발송되는 정상 메세지가 존재하지 않습니다")
