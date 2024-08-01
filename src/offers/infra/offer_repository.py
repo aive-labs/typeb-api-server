@@ -144,19 +144,39 @@ class OfferRepository:
                 else:
                     condition.append(OffersEntity.coupon_name.ilike(keyword))  # offer_name
 
-            result = (
-                db.query(
-                    OffersEntity.coupon_no.label("id"),
-                    OffersEntity.coupon_name.label("name"),
-                    OffersEntity.coupon_no.label("code"),
-                )
-                .filter(
-                    OffersEntity.benefit_type.isnot(None),
-                    OffersEntity.available_end_datetime >= today,  # 이벤트 기간 필터
-                    *condition,
-                )
-                .all()
+            # result = (
+            #     db.query(
+            #         OffersEntity.coupon_no.label("id"),
+            #         OffersEntity.coupon_name.label("name"),
+            #         OffersEntity.coupon_no.label("code"),
+            #     )
+            #     .filter(
+            #         OffersEntity.benefit_type.isnot(None),
+            #         OffersEntity.available_end_datetime >= today,  # 이벤트 기간 필터
+            #         *condition,
+            #     )
+            #     .all()
+            # )
+
+            # 기본 쿼리 생성
+            query = db.query(
+                OffersEntity.coupon_no.label("id"),
+                OffersEntity.coupon_name.label("name"),
+                OffersEntity.coupon_no.label("code"),
+            ).filter(
+                OffersEntity.benefit_type.isnot(None),
+                *condition,
             )
+
+            # 조건에 따른 필터 추가
+            query = query.filter(
+                or_(
+                    OffersEntity.available_period_type != "F",
+                    OffersEntity.available_end_datetime >= today,
+                )
+            )
+
+            result = query.all()
 
             return [
                 IdWithLabel(
