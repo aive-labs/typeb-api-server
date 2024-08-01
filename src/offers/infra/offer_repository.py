@@ -13,6 +13,7 @@ from src.offers.domain.offer import Offer
 from src.offers.enums.cafe24_coupon_benefit_type import Cafe24CouponBenefitType
 from src.offers.infra.entity.offer_details_entity import OfferDetailsEntity
 from src.offers.infra.entity.offers_entity import OffersEntity
+from src.offers.service.port.base_offer_repository import BaseOfferRepository
 from src.search.routes.dto.id_with_label_response import IdWithLabel
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
 from src.strategy.infra.entity.strategy_theme_offers_entity import (
@@ -21,7 +22,7 @@ from src.strategy.infra.entity.strategy_theme_offers_entity import (
 from src.users.domain.user import User
 
 
-class OfferRepository:
+class OfferRepository(BaseOfferRepository):
     def __init__(self, db: Callable[..., AbstractContextManager[Session]]):
         """_summary_
 

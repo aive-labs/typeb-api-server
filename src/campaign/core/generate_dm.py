@@ -594,19 +594,26 @@ class generate_message:
             event_end_dt = data_dict["offer_info"].get("available_end_datetime")
             if event_end_dt is not None:
                 event_end_dt = event_end_dt[:10]
-            self.msg_body = (
-                self.msg_body
-                + "\n"
-                + self.offer_df[
-                    (self.offer_df.index_id == "of-drt")
-                    & (self.offer_df.condition == data_dict["offer_info"]["available_period_type"])
-                ]["text"]
-                .values[0]
-                .replace("{event_str_dt}", event_str_dt)
-                .replace("{event_end_dt}", event_end_dt)
-                .replace("{end_of_this_month}", end_of_this_month)
-                .replace("{available_day_from_issued}", str(available_day_from_issued))
-            )
+            # 기존 텍스트 가져오기
+            offer_text = self.offer_df[
+                (self.offer_df.index_id == "of-drt")
+                & (self.offer_df.condition == data_dict["offer_info"]["available_period_type"])
+            ]["text"].values[0]
+
+            # None이 아닐 때만 replace 적용
+            if event_str_dt is not None:
+                offer_text = offer_text.replace("{event_str_dt}", event_str_dt)
+            if event_end_dt is not None:
+                offer_text = offer_text.replace("{event_end_dt}", event_end_dt)
+            if end_of_this_month is not None:
+                offer_text = offer_text.replace("{end_of_this_month}", end_of_this_month)
+            if available_day_from_issued is not None:
+                offer_text = offer_text.replace(
+                    "{available_day_from_issued}", str(available_day_from_issued)
+                )
+
+            # msg_body에 추가
+            self.msg_body = self.msg_body + "\n" + offer_text
 
     def cmp_date(self, data_dict):
         self.msg_body = self.msg_body + "\n\n▷ 기간 : {campaign_start_date}~{campaign_end_date}"
