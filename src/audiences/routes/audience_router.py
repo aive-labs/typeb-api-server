@@ -75,7 +75,12 @@ def get_audiences(
     user=Depends(get_permission_checker(required_permissions=[])),
 ):
     # get_all_audience에서 리턴 타입이 dictionary 형태임
-    return get_audience_service.get_all_audiences(user=user, db=db, is_exclude=is_exclude)
+
+    result = get_audience_service.get_all_audiences(user=user, db=db, is_exclude=is_exclude)
+    print("response")
+    print(result)
+
+    return result
 
 
 @audience_router.get("/audiences/{audience_id}/summary", response_model=AudienceStatsInfo)

@@ -163,7 +163,6 @@ class UpdateAudienceService(UpdateAudienceUseCase):
             "create_type_code": create_type_code,
             "target_strategy": audience_update.target_strategy.value,
             "updated_by": str(user.user_id),
-            "updated_at": audience_update.updated_at,
         }
 
         # Audience filter conditions 저장 - 새로 생성 필요
@@ -175,7 +174,6 @@ class UpdateAudienceService(UpdateAudienceUseCase):
             "exclusion_condition": {"exclusion_condition": exclusions},
             # TODO - 설명 문장 수정 필요
             "exclusion_description": ["1샘플 수정문장입니다.", "2샘플 수정문장입니다."],
-            "updated_at": audience_update.updated_at,
         }
 
         self.audience_repository.update_by_filter(
