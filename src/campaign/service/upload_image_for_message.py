@@ -77,7 +77,11 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
 
                 # 뿌리오 MMS 이미지 업로드
                 ppurio_filekey = None
-                if message_type == MessageType.MMS.value:
+                if message_type in (
+                    MessageType.MMS.value,
+                    MessageType.LMS.value,
+                    MessageType.SMS.value,
+                ):
                     ppurio_filekey = await self.message_service.upload_file(
                         new_file_name, file_read, file.content_type
                     )
@@ -113,6 +117,9 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                     MessageResourceEntity.set_group_msg_seq == set_group_msg_seq
                 )
                 db.execute(delete_statement)
+
+            print("ppurio_filekey")
+            print(ppurio_filekey)
 
             # db에 new_image_resource 추가
             message_entity = MessageResourceEntity(
