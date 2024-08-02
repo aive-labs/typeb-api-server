@@ -500,9 +500,9 @@ title,title-stf02,stf,첫 구매 Best 상품 추천,첫 구매 인기 상품,첫 구매 Best 상품
 title,title-stf03,stf,첫 구매 Best 상품 추천,첫 구매 베스트 아이템,첫 구매 Best 상품 추천,
 title,title-stst01,stst,스테디셀러 상품 추천,스테디셀러 상품 모음,스테디셀러 상품 추천,
 title,title-stst02,stst,스테디셀러 상품 추천,꾸준히 사랑받는 상품,스테디셀러 상품 추천,
-title,title-stcr01,stcr,Next구매 확률 높은 상품 추천,이런 상품은 어때요?,Next구매 확률 높은 상품 추천,
-title,title-stcr02,stcr,Next구매 확률 높은 상품 추천,고객님을 위한 추천!,Next구매 확률 높은 상품 추천,
-title,title-stcr03,stcr,Next구매 확률 높은 상품 추천,지금 핫한 상품 추천!!,Next구매 확률 높은 상품 추천,
+title,title-stcr01,stcr,Next구매 확률 높은 상품 추천,다음 구매 추천 상품,Next구매 확률 높은 상품 추천,
+title,title-stcr02,stcr,Next구매 확률 높은 상품 추천,다음 구매 유망 상품,Next구매 확률 높은 상품 추천,
+title,title-stcr03,stcr,Next구매 확률 높은 상품 추천,다음에 살만한 상품,Next구매 확률 높은 상품 추천,
 title,title-stn02,stn,신상품 추천,새로운 상품 소개,신상품 추천,
 title,title-stn03,stn,신상품 추천,신상품 추천,신상품 추천,
 title,title-stn04,stn,신상품 추천,새로운 상품을 만나보세요,신상품 추천,
@@ -545,6 +545,13 @@ title,title-stre01,stre,Best 상품 후기 전달,베스트 상품 후기 모음,Best 상품 후기
 title,title-stre02,stre,Best 상품 후기 전달,인기 상품 후기 전달,Best 상품 후기 전달,
 title,title-stfc01,stfc,첫 구매 할인 쿠폰 제공,첫 구매 할인쿠폰 도착!,첫 구매 할인 쿠폰 제공,
 title,title-stfc02,stfc,첫 구매 할인 쿠폰 제공,첫 구매 할인 쿠폰,첫 구매 할인 쿠폰 제공,
+title,title-stfp01,stfp,첫 구매 감사 메시지 발송,첫 구매 감사드립니다,첫 구매 감사 메시지 발송,
+title,title-stfp02,stfp,첫 구매 감사 메시지 발송,첫 구매 감사합니다!,첫 구매 감사 메시지 발송,
+title,title-stfp03,stfp,첫 구매 감사 메시지 발송,첫 구매 감사 메시지,첫 구매 감사 메시지 발송,
+title,title-stfp04,stfp,첫 구매 감사 메시지 발송,앞으로도 함께해요,첫 구매 감사 메시지 발송,
+title,title-stbr01,stbr,선호 카테고리 Best 상품 후기 전달,베스트 상품 후기 모음!,선호 카테고리 Best 상품 후기 전달,
+title,title-stbr02,stbr,선호 카테고리 Best 상품 후기 전달,인기상품 후기만 모아봤어요,선호 카테고리 Best 상품 후기 전달,
+title,title-stbr03,stbr,선호 카테고리 Best 상품 후기 전달,직접 구매하신분들의 후기!,선호 카테고리 Best 상품 후기 전달,
 title,title-stal01,stal,공통,인기 추천 콘텐츠,,
 title,title-stal02,stal,공통,{mall_id}가 준비한 자연 이야기,,
 title,title-stal03,stal,공통,{mall_id}의 자연 힐링 여행,,
@@ -1003,75 +1010,75 @@ main,main-ste07-1,ste,성별 Best 상품 추천,고객님들께서 가장 사랑하는 베스트셀러 
 main,main-ste08-1,ste,성별 Best 상품 추천,고객님들께 가장 많이 선택받은 상품을 추천합니다!,성별 Best 상품 추천,2030
 main,main-ste09-1,ste,성별 Best 상품 추천,고객님들 사이에서 가장 인기 있는 상품을 추천해드려요!,성별 Best 상품 추천,2030
 main,main-ste10-1,ste,성별 Best 상품 추천,고객님들께서 가장 많이 구매한 인기 상품을 확인해보세요!,성별 Best 상품 추천,2030
-main,main-stf01-1,stf,첫 구매 Best 상품 추천,첫 구매 고객님들께 가장 많이 사랑받는 {first_best_items} 상품을 추천해드립니다!,첫 구매 Best 상품 추천,2030
-main,main-stf02-1,stf,첫 구매 Best 상품 추천,처음 방문하신 고객님들을 위한 베스트셀러 {first_best_items} 상품을 소개합니다!,첫 구매 Best 상품 추천,2030
-main,main-stf03-1,stf,첫 구매 Best 상품 추천,우리 쇼핑몰에서 첫 구매하시는 분들이 가장 많이 선택한 {first_best_items} 상품을 만나보세요!,첫 구매 Best 상품 추천,2030
-main,main-stf04-1,stf,첫 구매 Best 상품 추천,첫 구매 고객님들을 위한 {first_best_items} 상품을 추천드립니다!,첫 구매 Best 상품 추천,2030
-main,main-stf05-1,stf,첫 구매 Best 상품 추천,신규 고객님들이 가장 많이 구매한 {first_best_items} 상품을 확인해보세요!,첫 구매 Best 상품 추천,2030
-main,main-stf06-1,stf,첫 구매 Best 상품 추천,첫 구매 고객님들 사이에서 가장 인기 있는 {first_best_items} 상품을 추천합니다!,첫 구매 Best 상품 추천,2030
-main,main-stf07-1,stf,첫 구매 Best 상품 추천,첫 구매를 기념하여 인기 {first_best_items} 상품을 추천해드립니다!,첫 구매 Best 상품 추천,2030
-main,main-stf08-1,stf,첫 구매 Best 상품 추천,첫 방문 고객님들이 가장 많이 찾는 {first_best_items} 상품을 소개해드립니다!,첫 구매 Best 상품 추천,2030
-main,main-stf09-1,stf,첫 구매 Best 상품 추천,첫 구매 고객님들께 인기 있는 {first_best_items} 상품을 추천해드려요!,첫 구매 Best 상품 추천,2030
-main,main-stf10-1,stf,첫 구매 Best 상품 추천,처음 방문한 고객님들이 가장 많이 구매한 인기 {first_best_items} 상품을 추천합니다!,첫 구매 Best 상품 추천,2030
-main,main-stst01-1,stst,스테디셀러 상품 추천,꾸준히 사랑받는 스테디셀러 {steady_items} 상품을 추천드립니다!,스테디셀러 상품 추천,2030
-main,main-stst02-1,stst,스테디셀러 상품 추천,오랫동안 인기 있는 스테디셀러 {steady_items} 상품을 만나보세요!,스테디셀러 상품 추천,2030
-main,main-stst03-1,stst,스테디셀러 상품 추천,믿고 구매하는 스테디셀러 {steady_items} 상품을 소개합니다!,스테디셀러 상품 추천,2030
-main,main-stst04-1,stst,스테디셀러 상품 추천,고객님들이 꾸준히 찾는 {steady_items} 스테디셀러를 추천해드립니다!,스테디셀러 상품 추천,2030
-main,main-stst05-1,stst,스테디셀러 상품 추천,시간이 지나도 변치 않는 스테디셀러 {steady_items} 상품을 확인해보세요!,스테디셀러 상품 추천,2030
-main,main-stst06-1,stst,스테디셀러 상품 추천,늘 인기 있는 스테디셀러 {steady_items} 상품을 추천합니다!,스테디셀러 상품 추천,2030
-main,main-stst07-1,stst,스테디셀러 상품 추천,오랜 시간 사랑받아온 스테디셀러 {steady_items} 상품을 소개해드립니다!,스테디셀러 상품 추천,2030
-main,main-stst08-1,stst,스테디셀러 상품 추천,항상 인기 있는 스테디셀러 {steady_items} 상품을 추천드려요!,스테디셀러 상품 추천,2030
-main,main-stst09-1,stst,스테디셀러 상품 추천,많은 고객님들이 꾸준히 선택하는 {steady_items} 를 만나보세요!,스테디셀러 상품 추천,2030
-main,main-stst10-1,stst,스테디셀러 상품 추천,언제나 인기 있는 스테디셀러 {steady_items} 상품을 추천해드립니다!,스테디셀러 상품 추천,2030
-main,main-stcr01-1,stcr,Next구매 확률 높은 상품 추천,이전에 구매하신 상품과 함께 구매하면 더 좋은 {best_cross_items} 상품을 추천드립니다!,Next구매 확률 높은 상품 추천,2030
-main,main-stcr02-1,stcr,Next구매 확률 높은 상품 추천,구매하신 상품과 찰떡궁합! {best_cross_items} 상품을 만나보세요!,Next구매 확률 높은 상품 추천,2030
-main,main-stcr03-1,stcr,Next구매 확률 높은 상품 추천,이전에 구매하셨던 상품을 구매한 고객님들이 함께 구매하는 인기 {best_cross_items} 상품을 소개합니다!,Next구매 확률 높은 상품 추천,2030
-main,main-stcr04-1,stcr,Next구매 확률 높은 상품 추천,이전에 구매하신 상품과 어울리는 {best_cross_items} 추천 상품을 확인해보세요!,Next구매 확률 높은 상품 추천,2030
-main,main-stcr05-1,stcr,Next구매 확률 높은 상품 추천,더 나은 쇼핑 경험을 위한 {best_cross_items} 상품을 추천드립니다!,Next구매 확률 높은 상품 추천,2030
-main,main-stcr06-1,stcr,Next구매 확률 높은 상품 추천,이전에 구매하신 상품과 함께 구매하면 완벽한 {best_cross_items} 상품을 추천해드립니다!,Next구매 확률 높은 상품 추천,2030
-main,main-stcr07-1,stcr,Next구매 확률 높은 상품 추천,이전 구매 상품과 상품과 완벽하게 어울리는 {best_cross_items} 아이템을 만나보세요!,Next구매 확률 높은 상품 추천,2030
-main,main-stcr08-1,stcr,Next구매 확률 높은 상품 추천,고객님들이 함께 많이 사는 {best_cross_items} 상품을 소개해드립니다!,Next구매 확률 높은 상품 추천,2030
-main,main-stcr09-1,stcr,Next구매 확률 높은 상품 추천,더 큰 만족을 위한 {best_cross_items} 추천 상품을 확인해보세요!,Next구매 확률 높은 상품 추천,2030
-main,main-stcr10-1,stcr,Next구매 확률 높은 상품 추천,구하신 상품과 최고의 조합! {best_cross_items} 상품을 추천합니다!,Next구매 확률 높은 상품 추천,2030
-main,main-stn01-1,stn,신상품 추천,최신 트렌드를 만나보세요! {best_new_items}을 추천드립니다!,신상품 추천,2030
-main,main-stn02-1,stn,신상품 추천,새롭게 출시된 신상품 {best_new_items}을 소개합니다!,신상품 추천,2030
-main,main-stn03-1,stn,신상품 추천,따끈따끈한 신상품 {best_new_items}을 확인해보세요!,신상품 추천,2030
-main,main-stn04-1,stn,신상품 추천,"지금 바로 만나보세요, 최신 신상품 {best_new_items}!",신상품 추천,2030
-main,main-stn05-1,stn,신상품 추천,새로운 신상품 {best_new_items}으로 스타일을 업그레이드하세요!,신상품 추천,2030
-main,main-stn06-1,stn,신상품 추천,지금 가장 핫한 신상품 {best_new_items}을 추천드립니다!,신상품 추천,2030
+main,main-stf01-1,stf,첫 구매 Best 상품 추천,첫 구매 고객님들께 가장 많이 사랑받는 {{first_best_items}} 상품을 추천해드립니다!,첫 구매 Best 상품 추천,2030
+main,main-stf02-1,stf,첫 구매 Best 상품 추천,처음 방문하신 고객님들을 위한 베스트셀러 {{first_best_items}} 상품을 소개합니다!,첫 구매 Best 상품 추천,2030
+main,main-stf03-1,stf,첫 구매 Best 상품 추천,우리 쇼핑몰에서 첫 구매하시는 분들이 가장 많이 선택한 {{first_best_items}} 상품을 만나보세요!,첫 구매 Best 상품 추천,2030
+main,main-stf04-1,stf,첫 구매 Best 상품 추천,첫 구매 고객님들을 위한 {{first_best_items}} 상품을 추천드립니다!,첫 구매 Best 상품 추천,2030
+main,main-stf05-1,stf,첫 구매 Best 상품 추천,신규 고객님들이 가장 많이 구매한 {{first_best_items}} 상품을 확인해보세요!,첫 구매 Best 상품 추천,2030
+main,main-stf06-1,stf,첫 구매 Best 상품 추천,첫 구매 고객님들 사이에서 가장 인기 있는 {{first_best_items}} 상품을 추천합니다!,첫 구매 Best 상품 추천,2030
+main,main-stf07-1,stf,첫 구매 Best 상품 추천,첫 구매를 기념하여 인기 {{first_best_items}} 상품을 추천해드립니다!,첫 구매 Best 상품 추천,2030
+main,main-stf08-1,stf,첫 구매 Best 상품 추천,첫 방문 고객님들이 가장 많이 찾는 {{first_best_items}} 상품을 소개해드립니다!,첫 구매 Best 상품 추천,2030
+main,main-stf09-1,stf,첫 구매 Best 상품 추천,첫 구매 고객님들께 인기 있는 {{first_best_items}} 상품을 추천해드려요!,첫 구매 Best 상품 추천,2030
+main,main-stf10-1,stf,첫 구매 Best 상품 추천,처음 방문한 고객님들이 가장 많이 구매한 인기 {{first_best_items}} 상품을 추천합니다!,첫 구매 Best 상품 추천,2030
+main,main-stst01-1,stst,스테디셀러 상품 추천,꾸준히 사랑받는 스테디셀러 {{steady_items}} 상품을 추천드립니다!,스테디셀러 상품 추천,2030
+main,main-stst02-1,stst,스테디셀러 상품 추천,오랫동안 인기 있는 스테디셀러 {{steady_items}} 상품을 만나보세요!,스테디셀러 상품 추천,2030
+main,main-stst03-1,stst,스테디셀러 상품 추천,믿고 구매하는 스테디셀러 {{steady_items}} 상품을 소개합니다!,스테디셀러 상품 추천,2030
+main,main-stst04-1,stst,스테디셀러 상품 추천,고객님들이 꾸준히 찾는 {{steady_items}} 스테디셀러를 추천해드립니다!,스테디셀러 상품 추천,2030
+main,main-stst05-1,stst,스테디셀러 상품 추천,시간이 지나도 변치 않는 스테디셀러 {{steady_items}} 상품을 확인해보세요!,스테디셀러 상품 추천,2030
+main,main-stst06-1,stst,스테디셀러 상품 추천,늘 인기 있는 스테디셀러 {{steady_items}} 상품을 추천합니다!,스테디셀러 상품 추천,2030
+main,main-stst07-1,stst,스테디셀러 상품 추천,오랜 시간 사랑받아온 스테디셀러 {{steady_items}} 상품을 소개해드립니다!,스테디셀러 상품 추천,2030
+main,main-stst08-1,stst,스테디셀러 상품 추천,항상 인기 있는 스테디셀러 {{steady_items}} 상품을 추천드려요!,스테디셀러 상품 추천,2030
+main,main-stst09-1,stst,스테디셀러 상품 추천,많은 고객님들이 꾸준히 선택하는 {{steady_items}} 를 만나보세요!,스테디셀러 상품 추천,2030
+main,main-stst10-1,stst,스테디셀러 상품 추천,언제나 인기 있는 스테디셀러 {{steady_items}} 상품을 추천해드립니다!,스테디셀러 상품 추천,2030
+main,main-stcr01-1,stcr,Next구매 확률 높은 상품 추천,이전에 구매하신 상품과 함께 구매하면 더 좋은 {{best_cross_items}} 상품을 추천드립니다!,Next구매 확률 높은 상품 추천,2030
+main,main-stcr02-1,stcr,Next구매 확률 높은 상품 추천,구매하신 상품과 찰떡궁합! {{best_cross_items}} 상품을 만나보세요!,Next구매 확률 높은 상품 추천,2030
+main,main-stcr03-1,stcr,Next구매 확률 높은 상품 추천,이전에 구매하셨던 상품을 구매한 고객님들이 함께 구매하는 인기 {{best_cross_items}} 상품을 소개합니다!,Next구매 확률 높은 상품 추천,2030
+main,main-stcr04-1,stcr,Next구매 확률 높은 상품 추천,이전에 구매하신 상품과 어울리는 {{best_cross_items}} 추천 상품을 확인해보세요!,Next구매 확률 높은 상품 추천,2030
+main,main-stcr05-1,stcr,Next구매 확률 높은 상품 추천,더 나은 쇼핑 경험을 위한 {{best_cross_items}} 상품을 추천드립니다!,Next구매 확률 높은 상품 추천,2030
+main,main-stcr06-1,stcr,Next구매 확률 높은 상품 추천,이전에 구매하신 상품과 함께 구매하면 완벽한 {{best_cross_items}} 상품을 추천해드립니다!,Next구매 확률 높은 상품 추천,2030
+main,main-stcr07-1,stcr,Next구매 확률 높은 상품 추천,이전 구매 상품과 상품과 완벽하게 어울리는 {{best_cross_items}} 아이템을 만나보세요!,Next구매 확률 높은 상품 추천,2030
+main,main-stcr08-1,stcr,Next구매 확률 높은 상품 추천,고객님들이 함께 많이 사는 {{best_cross_items}} 상품을 소개해드립니다!,Next구매 확률 높은 상품 추천,2030
+main,main-stcr09-1,stcr,Next구매 확률 높은 상품 추천,더 큰 만족을 위한 {{best_cross_items}} 추천 상품을 확인해보세요!,Next구매 확률 높은 상품 추천,2030
+main,main-stcr10-1,stcr,Next구매 확률 높은 상품 추천,구하신 상품과 최고의 조합! {{best_cross_items}} 상품을 추천합니다!,Next구매 확률 높은 상품 추천,2030
+main,main-stn01-1,stn,신상품 추천,최신 트렌드를 만나보세요! {{best_new_items}}을 추천드립니다!,신상품 추천,2030
+main,main-stn02-1,stn,신상품 추천,새롭게 출시된 신상품 {{best_new_items}}을 소개합니다!,신상품 추천,2030
+main,main-stn03-1,stn,신상품 추천,따끈따끈한 신상품 {{best_new_items}}을 확인해보세요!,신상품 추천,2030
+main,main-stn04-1,stn,신상품 추천,"지금 바로 만나보세요, 최신 신상품 {{best_new_items}}!",신상품 추천,2030
+main,main-stn05-1,stn,신상품 추천,새로운 신상품 {{best_new_items}}으로 스타일을 업그레이드하세요!,신상품 추천,2030
+main,main-stn06-1,stn,신상품 추천,지금 가장 핫한 신상품 {{best_new_items}}을 추천드립니다!,신상품 추천,2030
 main,main-stn07-1,stn,신상품 추천,"놓치지 마세요, 신상품이 입고되었습니다!",신상품 추천,2030
-main,main-stn08-1,stn,신상품 추천,인기 폭발! 신상품 {best_new_items}을 만나보세요!,신상품 추천,2030
+main,main-stn08-1,stn,신상품 추천,인기 폭발! 신상품 {{best_new_items}}을 만나보세요!,신상품 추천,2030
 main,main-stn09-1,stn,신상품 추천,가장 먼저 신상품을 경험해보세요!,신상품 추천,2030
-main,main-stca01-1,stca,장바구니 상품 추천,"고객님이 장바구니에 담아놓은 {item_name}, 지금 바로 구매해보세요!",장바구니 상품 추천,2030
-main,main-stca02-1,stca,장바구니 상품 추천,"장바구니에 담아둔 {item_name}, 놓치지 마세요!",장바구니 상품 추천,2030
-main,main-stca03-1,stca,장바구니 상품 추천,"고객님께서 담아놓으신 {item_name}, 지금 아니면 구매하기 어려울 수 있어요!",장바구니 상품 추천,2030
-main,main-stca04-1,stca,장바구니 상품 추천,"고객님이 선택한 {item_name}, 까먹으신 거 아니죠?! 지금 바로 결제하세요!",장바구니 상품 추천,2030
+main,main-stca01-1,stca,장바구니 상품 추천,"고객님이 장바구니에 담아놓은 {{item_name}}, 지금 바로 구매해보세요!",장바구니 상품 추천,2030
+main,main-stca02-1,stca,장바구니 상품 추천,"장바구니에 담아둔 {{item_name}}, 놓치지 마세요!",장바구니 상품 추천,2030
+main,main-stca03-1,stca,장바구니 상품 추천,"고객님께서 담아놓으신 {{item_name}}, 지금 아니면 구매하기 어려울 수 있어요!",장바구니 상품 추천,2030
+main,main-stca04-1,stca,장바구니 상품 추천,"고객님이 선택한 {{item_name}}, 까먹으신 거 아니죠?! 지금 바로 결제하세요!",장바구니 상품 추천,2030
 main,main-stca05-1,stca,장바구니 상품 추천,장바구니 속 상품을 특별한 가격에 만나보세요!,장바구니 상품 추천,2030
-main,main-stca06-1,stca,장바구니 상품 추천,"고객님의 장바구니에 담긴 {item_name}, 잊지말아요~!",장바구니 상품 추천,2030
+main,main-stca06-1,stca,장바구니 상품 추천,"고객님의 장바구니에 담긴 {{item_name}}, 잊지말아요~!",장바구니 상품 추천,2030
 main,main-stca07-1,stca,장바구니 상품 추천,장바구니에 담은 상품을 구매할 완벽한 타이밍!,장바구니 상품 추천,2030
-main,main-stca08-1,stca,장바구니 상품 추천,"고객님께서 담아두신 {item_name}, 품절되기 전에 구매하세요!",장바구니 상품 추천,2030
-main,main-stca09-1,stca,장바구니 상품 추천,"고객님이 담아 놓은 {item_name}, 지금 바로 확인해보세요!",장바구니 상품 추천,2030
-main,main-stca10-1,stca,장바구니 상품 추천,장바구니에 담긴 {item_name}이 지금 인기 폭발하고 있어요! 품절 되기 전에 지금 구매해보세요!,장바구니 상품 추천,2030
-main,main-stwi01-1,stwi,위시리스트 상품 추천,"고객님이 위시리스트에 찜해놓은 {item_name}, 지금 바로 구매해보세요!",위시리스트 상품 추천,2030
-main,main-stwi02-1,stwi,위시리스트 상품 추천,"위시리스트에 찜해둔 {item_name}, 놓치지 마세요!",위시리스트 상품 추천,2030
-main,main-stwi03-1,stwi,위시리스트 상품 추천,"고객님께서 찜해놓은 {item_name}, 지금 아니면 구매하기 어려울 수 있어요!",위시리스트 상품 추천,2030
-main,main-stwi04-1,stwi,위시리스트 상품 추천,"고객님이 선택한 {item_name}, 까먹으신 거 아니죠?! 지금 바로 결제하세요!",위시리스트 상품 추천,2030
+main,main-stca08-1,stca,장바구니 상품 추천,"고객님께서 담아두신 {{item_name}}, 품절되기 전에 구매하세요!",장바구니 상품 추천,2030
+main,main-stca09-1,stca,장바구니 상품 추천,"고객님이 담아 놓은 {{item_name}}, 지금 바로 확인해보세요!",장바구니 상품 추천,2030
+main,main-stca10-1,stca,장바구니 상품 추천,장바구니에 담긴 {{item_name}}이 지금 인기 폭발하고 있어요! 품절 되기 전에 지금 구매해보세요!,장바구니 상품 추천,2030
+main,main-stwi01-1,stwi,위시리스트 상품 추천,"고객님이 위시리스트에 찜해놓은 {{item_name}}, 지금 바로 구매해보세요!",위시리스트 상품 추천,2030
+main,main-stwi02-1,stwi,위시리스트 상품 추천,"위시리스트에 찜해둔 {{item_name}}, 놓치지 마세요!",위시리스트 상품 추천,2030
+main,main-stwi03-1,stwi,위시리스트 상품 추천,"고객님께서 찜해놓은 {{item_name}}, 지금 아니면 구매하기 어려울 수 있어요!",위시리스트 상품 추천,2030
+main,main-stwi04-1,stwi,위시리스트 상품 추천,"고객님이 선택한 {{item_name}}, 까먹으신 거 아니죠?! 지금 바로 결제하세요!",위시리스트 상품 추천,2030
 main,main-stwi05-1,stwi,위시리스트 상품 추천,위시리스트 속 상품을 특별한 가격에 만나보세요!,위시리스트 상품 추천,2030
-main,main-stwi06-1,stwi,위시리스트 상품 추천,"고객님의 위시리스트에 담긴 {item_name}, 잊지말아요~!",위시리스트 상품 추천,2030
+main,main-stwi06-1,stwi,위시리스트 상품 추천,"고객님의 위시리스트에 담긴 {{item_name}}, 잊지말아요~!",위시리스트 상품 추천,2030
 main,main-stwi07-1,stwi,위시리스트 상품 추천,위시리스트에 담은 상품을 구매할 완벽한 타이밍!,위시리스트 상품 추천,2030
-main,main-stwi08-1,stwi,위시리스트 상품 추천,"고객님께서 담아두신 {item_name}, 품절되기 전에 구매하세요!",위시리스트 상품 추천,2030
-main,main-stwi09-1,stwi,위시리스트 상품 추천,"고객님이 담아 놓은 {item_name}, 지금 바로 확인해보세요!",위시리스트 상품 추천,2030
-main,main-stwi10-1,stwi,위시리스트 상품 추천,위시리스트에 담긴 {item_name}이 지금 인기 폭발하고 있어요! 품절 되기 전에 지금 구매해보세요!,위시리스트 상품 추천,2030
-main,main-stwb01-1,stwb,선호 카테고리 Best 상품 추천,"고객님이 선호하는 카테고리의 {best_category_items}, 지금 바로 확인해보세요!",선호 카테고리 Best 상품 추천,2030
-main,main-stwb02-1,stwb,선호 카테고리 Best 상품 추천,"인기 카테고리의 {best_category_items}, 지금 구매하시면 특별한 혜택을 드립니다!",선호 카테고리 Best 상품 추천,2030
-main,main-stwb03-1,stwb,선호 카테고리 Best 상품 추천,"고객님이 사랑하는 카테고리의 {best_category_items}, 놓치지 마세요!",선호 카테고리 Best 상품 추천,2030
-main,main-stwb04-1,stwb,선호 카테고리 Best 상품 추천,"선호 카테고리의 {best_category_items}, 지금이 구매할 완벽한 타이밍입니다!",선호 카테고리 Best 상품 추천,2030
-main,main-stwb05-1,stwb,선호 카테고리 Best 상품 추천,"고객님의 관심 카테고리에서 추천드리는 {best_category_items}, 지금 바로 만나보세요!",선호 카테고리 Best 상품 추천,2030
-main,main-stsb01-1,stsb,최대 할인 상품 추천,"고객님을 위한 최대 할인 {best_promo_items}, 지금 바로 확인해보세요!",최대 할인 상품 추천,2030
-main,main-stsb02-1,stsb,최대 할인 상품 추천,"할인율 최고! {best_promo_items}, 지금 구매하시면 더욱 저렴하게 만나보실 수 있습니다!",최대 할인 상품 추천,2030
-main,main-stsb03-1,stsb,최대 할인 상품 추천,"이번 기회에 최대 할인 받으세요! {best_promo_items}, 놓치지 마세요!",최대 할인 상품 추천,2030
-main,main-stsb04-1,stsb,최대 할인 상품 추천,"지금이 찬스! 최대 할인된 {best_promo_items}, 바로 구매하세요!",최대 할인 상품 추천,2030
-main,main-stsb05-1,stsb,최대 할인 상품 추천,"특별 할인 중인 {best_promo_items}, 지금 아니면 구매하기 어려울 수 있어요!",최대 할인 상품 추천,2030
+main,main-stwi08-1,stwi,위시리스트 상품 추천,"고객님께서 담아두신 {{item_name}}, 품절되기 전에 구매하세요!",위시리스트 상품 추천,2030
+main,main-stwi09-1,stwi,위시리스트 상품 추천,"고객님이 담아 놓은 {{item_name}}, 지금 바로 확인해보세요!",위시리스트 상품 추천,2030
+main,main-stwi10-1,stwi,위시리스트 상품 추천,위시리스트에 담긴 {{item_name}}이 지금 인기 폭발하고 있어요! 품절 되기 전에 지금 구매해보세요!,위시리스트 상품 추천,2030
+main,main-stwb01-1,stwb,선호 카테고리 Best 상품 추천,"고객님이 선호하는 카테고리의 {{best_category_items}}, 지금 바로 확인해보세요!",선호 카테고리 Best 상품 추천,2030
+main,main-stwb02-1,stwb,선호 카테고리 Best 상품 추천,"인기 카테고리의 {{best_category_items}}, 지금 구매하시면 특별한 혜택을 드립니다!",선호 카테고리 Best 상품 추천,2030
+main,main-stwb03-1,stwb,선호 카테고리 Best 상품 추천,"고객님이 사랑하는 카테고리의 {{best_category_items}}, 놓치지 마세요!",선호 카테고리 Best 상품 추천,2030
+main,main-stwb04-1,stwb,선호 카테고리 Best 상품 추천,"선호 카테고리의 {{best_category_items}}, 지금이 구매할 완벽한 타이밍입니다!",선호 카테고리 Best 상품 추천,2030
+main,main-stwb05-1,stwb,선호 카테고리 Best 상품 추천,"고객님의 관심 카테고리에서 추천드리는 {{best_category_items}}, 지금 바로 만나보세요!",선호 카테고리 Best 상품 추천,2030
+main,main-stsb01-1,stsb,최대 할인 상품 추천,"고객님을 위한 최대 할인 {{best_promo_items}}, 지금 바로 확인해보세요!",최대 할인 상품 추천,2030
+main,main-stsb02-1,stsb,최대 할인 상품 추천,"할인율 최고! {{best_promo_items}}, 지금 구매하시면 더욱 저렴하게 만나보실 수 있습니다!",최대 할인 상품 추천,2030
+main,main-stsb03-1,stsb,최대 할인 상품 추천,"이번 기회에 최대 할인 받으세요! {{best_promo_items}}, 놓치지 마세요!",최대 할인 상품 추천,2030
+main,main-stsb04-1,stsb,최대 할인 상품 추천,"지금이 찬스! 최대 할인된 {{best_promo_items}}, 바로 구매하세요!",최대 할인 상품 추천,2030
+main,main-stsb05-1,stsb,최대 할인 상품 추천,"특별 할인 중인 {{best_promo_items}}, 지금 아니면 구매하기 어려울 수 있어요!",최대 할인 상품 추천,2030
 main,main-stap01-1,stap,회원가입 감사 메시지 발송,회원가입을 환영합니다! 함께하게 되어 기쁩니다!,회원가입 감사 메시지 발송,2030
 main,main-stap02-1,stap,회원가입 감사 메시지 발송,"감사합니다! 회원가입을 축하드리며, 특별 혜택을 즐겨보세요!",회원가입 감사 메시지 발송,2030
 main,main-stap03-1,stap,회원가입 감사 메시지 발송,"고객님, 가입해주셔서 감사합니다! 지금 바로 다양한 혜택을 확인해보세요!",회원가입 감사 메시지 발송,2030
@@ -1132,10 +1139,20 @@ main,main-stre02-1,stre,Best 상품 후기 전달,Best 상품의 실제 후기를 소개합니다. 
 main,main-stre03-1,stre,Best 상품 후기 전달,"고객님, Best 상품의 후기를 전달드립니다. 많은 고객들이 추천하는 상품을 놓치지 마세요!",Best 상품 후기 전달,2030
 main,main-stre04-1,stre,Best 상품 후기 전달,다른 고객들이 극찬한 Best 상품 후기를 확인해보세요. 지금 구매하여 특별한 혜택을 누리세요.,Best 상품 후기 전달,2030
 main,main-stre05-1,stre,Best 상품 후기 전달,인기 최고! Best 상품의 후기를 소개합니다. 고객님도 만족하실 상품을 지금 확인해보세요.,Best 상품 후기 전달,2030
+main,main-stbr01-1,stbr,선호 카테고리 Best 상품 후기 전달,"고객님, 다른 고객들이 사랑하는 Best 상품 후기를 확인해보세요! 지금 바로 인기 상품을 만나보세요.",선호 카테고리 Best 상품 후기 전달,2030
+main,main-stbr02-1,stbr,선호 카테고리 Best 상품 후기 전달,Best 상품의 실제 후기를 소개합니다. 고객님도 만족하실 인기 아이템을 지금 확인해보세요!,선호 카테고리 Best 상품 후기 전달,2030
+main,main-stbr03-1,stbr,선호 카테고리 Best 상품 후기 전달,"고객님, Best 상품의 후기를 전달드립니다. 많은 고객들이 추천하는 상품을 놓치지 마세요!",선호 카테고리 Best 상품 후기 전달,2030
+main,main-stbr04-1,stbr,선호 카테고리 Best 상품 후기 전달,다른 고객들이 극찬한 Best 상품 후기를 확인해보세요. 지금 구매하여 특별한 혜택을 누리세요.,선호 카테고리 Best 상품 후기 전달,2030
+main,main-stbr05-1,stbr,선호 카테고리 Best 상품 후기 전달,인기 최고! Best 상품의 후기를 소개합니다. 고객님도 만족하실 상품을 지금 확인해보세요.,선호 카테고리 Best 상품 후기 전달,2030
 main,main-stfc01-1,stfc,첫 구매 할인 쿠폰 제공,"고객님, 첫 구매를 축하드립니다! 첫 구매 할인 쿠폰을 보내드립니다. 지금 바로 사용하여 특별한 혜택을 누리세요.",첫 구매 할인 쿠폰 제공,2030
 main,main-stfc02-1,stfc,첫 구매 할인 쿠폰 제공,첫 구매 감사드립니다! 고객님을 위한 첫 구매 할인 쿠폰을 드립니다. 이번 기회에 특별한 할인을 받아보세요.,첫 구매 할인 쿠폰 제공,2030
 main,main-stfc03-1,stfc,첫 구매 할인 쿠폰 제공,첫 구매를 기념하여 할인 쿠폰을 제공해드립니다. 지금 바로 쇼핑하여 혜택을 확인해보세요!,첫 구매 할인 쿠폰 제공,2030
 main,main-stfc04-1,stfc,첫 구매 할인 쿠폰 제공,"고객님의 첫 구매를 축하하며, 첫 구매 할인 쿠폰을 준비했습니다. 지금 사용하여 특별한 할인을 누리세요.",첫 구매 할인 쿠폰 제공,2030
+main,main-stfp01-1,stfp,첫 구매 감사 메시지 발송,{고객명}님의 첫 구매에 깊은 감사의 마음을 전합니다! 앞으로도 저희 제품과 서비스에 많은 관심과 사랑 부탁드립니다. 행복한 하루 되세요!,첫 구매 감사 메시지 발송,2030
+main,main-stfp02-1,stfp,첫 구매 감사 메시지 발송,"첫 구매 진심으로 감사드립니다, {고객명}님! 함께 더욱 즐거운 쇼핑 경험을 만들어 가시길 바라며, 앞으로도 많은 이용 부탁드립니다!",첫 구매 감사 메시지 발송,2030
+main,main-stfp03-1,stfp,첫 구매 감사 메시지 발송,"{고객명}님, 첫 구매해주셔서 진심으로 감사드립니다! 저희와 함께 특별한 순간들을 만들어가시길 바라며, 앞으로도 좋은 서비스로 보답하겠습니다.",첫 구매 감사 메시지 발송,2030
+main,main-stfp04-1,stfp,첫 구매 감사 메시지 발송,첫 구매를 해주신 {고객명}님께 진심으로 감사의 말씀을 전합니다! 항상 최선을 다하도록 노력하겠습니다. 앞으로도 많은 사랑 부탁드립니다.,첫 구매 감사 메시지 발송,2030
+main,main-stfp05-1,stfp,첫 구매 감사 메시지 발송,"첫 구매에 감사드립니다, {고객명}님! 앞으로도 함께 특별한 경험을 이어가시길 바라며, 저희와 함께하는 모든 순간이 즐겁고 만족스럽기를 기원합니다.",첫 구매 감사 메시지 발송,2030
 main,main-stfc05-1,stfc,첫 구매 할인 쿠폰 제공,"환영합니다! 첫 구매를 감사드리며, 첫 구매 할인 쿠폰을 드립니다. 지금 바로 쇼핑을 시작해보세요.",첫 구매 할인 쿠폰 제공,2030
 main,main-sta01-2,sta,연령대별 Best 상품 추천,고객님들께 가장 인기 있는 상품을 추천해드립니다!,연령대별 Best 상품 추천,5060
 main,main-sta02-2,sta,연령대별 Best 상품 추천,고객님들이 가장 많이 사랑하는 상품을 소개합니다!,연령대별 Best 상품 추천,5060
@@ -1157,75 +1174,75 @@ main,main-ste07-2,ste,성별 Best 상품 추천,고객님들께서 가장 사랑하는 베스트셀러 
 main,main-ste08-2,ste,성별 Best 상품 추천,고객님들께 가장 많이 선택받은 상품을 추천합니다!,성별 Best 상품 추천,5060
 main,main-ste09-2,ste,성별 Best 상품 추천,고객님들 사이에서 가장 인기 있는 상품을 추천해드려요!,성별 Best 상품 추천,5060
 main,main-ste10-2,ste,성별 Best 상품 추천,고객님들께서 가장 많이 구매한 인기 상품을 확인해보세요!,성별 Best 상품 추천,5060
-main,main-stf01-2,stf,첫 구매 Best 상품 추천,첫 구매 고객님들께 가장 많이 사랑받는 {first_best_items} 상품을 추천해드립니다!,첫 구매 Best 상품 추천,5060
-main,main-stf02-2,stf,첫 구매 Best 상품 추천,처음 방문하신 고객님들을 위한 베스트셀러 {first_best_items} 상품을 소개합니다!,첫 구매 Best 상품 추천,5060
-main,main-stf03-2,stf,첫 구매 Best 상품 추천,우리 쇼핑몰에서 첫 구매하시는 분들이 가장 많이 선택한 {first_best_items} 상품을 만나보세요!,첫 구매 Best 상품 추천,5060
-main,main-stf04-2,stf,첫 구매 Best 상품 추천,첫 구매 고객님들을 위한 {first_best_items} 상품을 추천드립니다!,첫 구매 Best 상품 추천,5060
-main,main-stf05-2,stf,첫 구매 Best 상품 추천,신규 고객님들이 가장 많이 구매한 {first_best_items} 상품을 확인해보세요!,첫 구매 Best 상품 추천,5060
-main,main-stf06-2,stf,첫 구매 Best 상품 추천,첫 구매 고객님들 사이에서 가장 인기 있는 {first_best_items} 상품을 추천합니다!,첫 구매 Best 상품 추천,5060
-main,main-stf07-2,stf,첫 구매 Best 상품 추천,첫 구매를 기념하여 인기 {first_best_items} 상품을 추천해드립니다!,첫 구매 Best 상품 추천,5060
-main,main-stf08-2,stf,첫 구매 Best 상품 추천,첫 방문 고객님들이 가장 많이 찾는 {first_best_items} 상품을 소개해드립니다!,첫 구매 Best 상품 추천,5060
-main,main-stf09-2,stf,첫 구매 Best 상품 추천,첫 구매 고객님들께 인기 있는 {first_best_items} 상품을 추천해드려요!,첫 구매 Best 상품 추천,5060
-main,main-stf10-2,stf,첫 구매 Best 상품 추천,처음 방문한 고객님들이 가장 많이 구매한 인기 {first_best_items} 상품을 추천합니다!,첫 구매 Best 상품 추천,5060
-main,main-stst01-2,stst,스테디셀러 상품 추천,꾸준히 사랑받는 스테디셀러 {steady_items} 상품을 추천드립니다!,스테디셀러 상품 추천,5060
-main,main-stst02-2,stst,스테디셀러 상품 추천,오랫동안 인기 있는 스테디셀러 {steady_items} 상품을 만나보세요!,스테디셀러 상품 추천,5060
-main,main-stst03-2,stst,스테디셀러 상품 추천,믿고 구매하는 스테디셀러 {steady_items} 상품을 소개합니다!,스테디셀러 상품 추천,5060
-main,main-stst04-2,stst,스테디셀러 상품 추천,고객님들이 꾸준히 찾는 {steady_items} 스테디셀러를 추천해드립니다!,스테디셀러 상품 추천,5060
-main,main-stst05-2,stst,스테디셀러 상품 추천,시간이 지나도 변치 않는 스테디셀러 {steady_items} 상품을 확인해보세요!,스테디셀러 상품 추천,5060
-main,main-stst06-2,stst,스테디셀러 상품 추천,늘 인기 있는 스테디셀러 {steady_items} 상품을 추천합니다!,스테디셀러 상품 추천,5060
-main,main-stst07-2,stst,스테디셀러 상품 추천,오랜 시간 사랑받아온 스테디셀러 {steady_items} 상품을 소개해드립니다!,스테디셀러 상품 추천,5060
-main,main-stst08-2,stst,스테디셀러 상품 추천,항상 인기 있는 스테디셀러 {steady_items} 상품을 추천드려요!,스테디셀러 상품 추천,5060
-main,main-stst09-2,stst,스테디셀러 상품 추천,많은 고객님들이 꾸준히 선택하는 {steady_items} 를 만나보세요!,스테디셀러 상품 추천,5060
-main,main-stst10-2,stst,스테디셀러 상품 추천,언제나 인기 있는 스테디셀러 {steady_items} 상품을 추천해드립니다!,스테디셀러 상품 추천,5060
-main,main-stcr01-2,stcr,Next구매 확률 높은 상품 추천,이전에 구매하신 상품과 함께 구매하면 더 좋은 {best_cross_items} 상품을 추천드립니다!,Next구매 확률 높은 상품 추천,5060
-main,main-stcr02-2,stcr,Next구매 확률 높은 상품 추천,구매하신 상품과 찰떡궁합! {best_cross_items} 상품을 만나보세요!,Next구매 확률 높은 상품 추천,5060
-main,main-stcr03-2,stcr,Next구매 확률 높은 상품 추천,이전에 구매하셨던 상품을 구매한 고객님들이 함께 구매하는 인기 {best_cross_items} 상품을 소개합니다!,Next구매 확률 높은 상품 추천,5060
-main,main-stcr04-2,stcr,Next구매 확률 높은 상품 추천,이전에 구매하신 상품과 어울리는 {best_cross_items} 추천 상품을 확인해보세요!,Next구매 확률 높은 상품 추천,5060
-main,main-stcr05-2,stcr,Next구매 확률 높은 상품 추천,더 나은 쇼핑 경험을 위한 {best_cross_items} 상품을 추천드립니다!,Next구매 확률 높은 상품 추천,5060
-main,main-stcr06-2,stcr,Next구매 확률 높은 상품 추천,이전에 구매하신 상품과 함께 구매하면 완벽한 {best_cross_items} 상품을 추천해드립니다!,Next구매 확률 높은 상품 추천,5060
-main,main-stcr07-2,stcr,Next구매 확률 높은 상품 추천,이전 구매 상품과 상품과 완벽하게 어울리는 {best_cross_items} 아이템을 만나보세요!,Next구매 확률 높은 상품 추천,5060
-main,main-stcr08-2,stcr,Next구매 확률 높은 상품 추천,고객님들이 함께 많이 사는 {best_cross_items} 상품을 소개해드립니다!,Next구매 확률 높은 상품 추천,5060
-main,main-stcr09-2,stcr,Next구매 확률 높은 상품 추천,더 큰 만족을 위한 {best_cross_items} 추천 상품을 확인해보세요!,Next구매 확률 높은 상품 추천,5060
-main,main-stcr10-2,stcr,Next구매 확률 높은 상품 추천,구하신 상품과 최고의 조합! {best_cross_items} 상품을 추천합니다!,Next구매 확률 높은 상품 추천,5060
-main,main-stn01-2,stn,신상품 추천,최신 트렌드를 만나보세요! {best_new_items}을 추천드립니다!,신상품 추천,5060
-main,main-stn02-2,stn,신상품 추천,새롭게 출시된 신상품 {best_new_items}을 소개합니다!,신상품 추천,5060
-main,main-stn03-2,stn,신상품 추천,따끈따끈한 신상품 {best_new_items}을 확인해보세요!,신상품 추천,5060
-main,main-stn04-2,stn,신상품 추천,"지금 바로 만나보세요, 최신 신상품 {best_new_items}!",신상품 추천,5060
-main,main-stn05-2,stn,신상품 추천,새로운 신상품 {best_new_items}으로 스타일을 업그레이드하세요!,신상품 추천,5060
-main,main-stn06-2,stn,신상품 추천,지금 가장 핫한 신상품 {best_new_items}을 추천드립니다!,신상품 추천,5060
+main,main-stf01-2,stf,첫 구매 Best 상품 추천,첫 구매 고객님들께 가장 많이 사랑받는 {{first_best_items}} 상품을 추천해드립니다!,첫 구매 Best 상품 추천,5060
+main,main-stf02-2,stf,첫 구매 Best 상품 추천,처음 방문하신 고객님들을 위한 베스트셀러 {{first_best_items}} 상품을 소개합니다!,첫 구매 Best 상품 추천,5060
+main,main-stf03-2,stf,첫 구매 Best 상품 추천,우리 쇼핑몰에서 첫 구매하시는 분들이 가장 많이 선택한 {{first_best_items}} 상품을 만나보세요!,첫 구매 Best 상품 추천,5060
+main,main-stf04-2,stf,첫 구매 Best 상품 추천,첫 구매 고객님들을 위한 {{first_best_items}} 상품을 추천드립니다!,첫 구매 Best 상품 추천,5060
+main,main-stf05-2,stf,첫 구매 Best 상품 추천,신규 고객님들이 가장 많이 구매한 {{first_best_items}} 상품을 확인해보세요!,첫 구매 Best 상품 추천,5060
+main,main-stf06-2,stf,첫 구매 Best 상품 추천,첫 구매 고객님들 사이에서 가장 인기 있는 {{first_best_items}} 상품을 추천합니다!,첫 구매 Best 상품 추천,5060
+main,main-stf07-2,stf,첫 구매 Best 상품 추천,첫 구매를 기념하여 인기 {{first_best_items}} 상품을 추천해드립니다!,첫 구매 Best 상품 추천,5060
+main,main-stf08-2,stf,첫 구매 Best 상품 추천,첫 방문 고객님들이 가장 많이 찾는 {{first_best_items}} 상품을 소개해드립니다!,첫 구매 Best 상품 추천,5060
+main,main-stf09-2,stf,첫 구매 Best 상품 추천,첫 구매 고객님들께 인기 있는 {{first_best_items}} 상품을 추천해드려요!,첫 구매 Best 상품 추천,5060
+main,main-stf10-2,stf,첫 구매 Best 상품 추천,처음 방문한 고객님들이 가장 많이 구매한 인기 {{first_best_items}} 상품을 추천합니다!,첫 구매 Best 상품 추천,5060
+main,main-stst01-2,stst,스테디셀러 상품 추천,꾸준히 사랑받는 스테디셀러 {{steady_items}} 상품을 추천드립니다!,스테디셀러 상품 추천,5060
+main,main-stst02-2,stst,스테디셀러 상품 추천,오랫동안 인기 있는 스테디셀러 {{steady_items}} 상품을 만나보세요!,스테디셀러 상품 추천,5060
+main,main-stst03-2,stst,스테디셀러 상품 추천,믿고 구매하는 스테디셀러 {{steady_items}} 상품을 소개합니다!,스테디셀러 상품 추천,5060
+main,main-stst04-2,stst,스테디셀러 상품 추천,고객님들이 꾸준히 찾는 {{steady_items}} 스테디셀러를 추천해드립니다!,스테디셀러 상품 추천,5060
+main,main-stst05-2,stst,스테디셀러 상품 추천,시간이 지나도 변치 않는 스테디셀러 {{steady_items}} 상품을 확인해보세요!,스테디셀러 상품 추천,5060
+main,main-stst06-2,stst,스테디셀러 상품 추천,늘 인기 있는 스테디셀러 {{steady_items}} 상품을 추천합니다!,스테디셀러 상품 추천,5060
+main,main-stst07-2,stst,스테디셀러 상품 추천,오랜 시간 사랑받아온 스테디셀러 {{steady_items}} 상품을 소개해드립니다!,스테디셀러 상품 추천,5060
+main,main-stst08-2,stst,스테디셀러 상품 추천,항상 인기 있는 스테디셀러 {{steady_items}} 상품을 추천드려요!,스테디셀러 상품 추천,5060
+main,main-stst09-2,stst,스테디셀러 상품 추천,많은 고객님들이 꾸준히 선택하는 {{steady_items}} 를 만나보세요!,스테디셀러 상품 추천,5060
+main,main-stst10-2,stst,스테디셀러 상품 추천,언제나 인기 있는 스테디셀러 {{steady_items}} 상품을 추천해드립니다!,스테디셀러 상품 추천,5060
+main,main-stcr01-2,stcr,Next구매 확률 높은 상품 추천,이전에 구매하신 상품과 함께 구매하면 더 좋은 {{best_cross_items}} 상품을 추천드립니다!,Next구매 확률 높은 상품 추천,5060
+main,main-stcr02-2,stcr,Next구매 확률 높은 상품 추천,구매하신 상품과 찰떡궁합! {{best_cross_items}} 상품을 만나보세요!,Next구매 확률 높은 상품 추천,5060
+main,main-stcr03-2,stcr,Next구매 확률 높은 상품 추천,이전에 구매하셨던 상품을 구매한 고객님들이 함께 구매하는 인기 {{best_cross_items}} 상품을 소개합니다!,Next구매 확률 높은 상품 추천,5060
+main,main-stcr04-2,stcr,Next구매 확률 높은 상품 추천,이전에 구매하신 상품과 어울리는 {{best_cross_items}} 추천 상품을 확인해보세요!,Next구매 확률 높은 상품 추천,5060
+main,main-stcr05-2,stcr,Next구매 확률 높은 상품 추천,더 나은 쇼핑 경험을 위한 {{best_cross_items}} 상품을 추천드립니다!,Next구매 확률 높은 상품 추천,5060
+main,main-stcr06-2,stcr,Next구매 확률 높은 상품 추천,이전에 구매하신 상품과 함께 구매하면 완벽한 {{best_cross_items}} 상품을 추천해드립니다!,Next구매 확률 높은 상품 추천,5060
+main,main-stcr07-2,stcr,Next구매 확률 높은 상품 추천,이전 구매 상품과 상품과 완벽하게 어울리는 {{best_cross_items}} 아이템을 만나보세요!,Next구매 확률 높은 상품 추천,5060
+main,main-stcr08-2,stcr,Next구매 확률 높은 상품 추천,고객님들이 함께 많이 사는 {{best_cross_items}} 상품을 소개해드립니다!,Next구매 확률 높은 상품 추천,5060
+main,main-stcr09-2,stcr,Next구매 확률 높은 상품 추천,더 큰 만족을 위한 {{best_cross_items}} 추천 상품을 확인해보세요!,Next구매 확률 높은 상품 추천,5060
+main,main-stcr10-2,stcr,Next구매 확률 높은 상품 추천,구하신 상품과 최고의 조합! {{best_cross_items}} 상품을 추천합니다!,Next구매 확률 높은 상품 추천,5060
+main,main-stn01-2,stn,신상품 추천,최신 트렌드를 만나보세요! {{best_new_items}}을 추천드립니다!,신상품 추천,5060
+main,main-stn02-2,stn,신상품 추천,새롭게 출시된 신상품 {{best_new_items}}을 소개합니다!,신상품 추천,5060
+main,main-stn03-2,stn,신상품 추천,따끈따끈한 신상품 {{best_new_items}}을 확인해보세요!,신상품 추천,5060
+main,main-stn04-2,stn,신상품 추천,"지금 바로 만나보세요, 최신 신상품 {{best_new_items}}!",신상품 추천,5060
+main,main-stn05-2,stn,신상품 추천,새로운 신상품 {{best_new_items}}으로 스타일을 업그레이드하세요!,신상품 추천,5060
+main,main-stn06-2,stn,신상품 추천,지금 가장 핫한 신상품 {{best_new_items}}을 추천드립니다!,신상품 추천,5060
 main,main-stn07-2,stn,신상품 추천,"놓치지 마세요, 신상품이 입고되었습니다!",신상품 추천,5060
-main,main-stn08-2,stn,신상품 추천,인기 폭발! 신상품 {best_new_items}을 만나보세요!,신상품 추천,5060
+main,main-stn08-2,stn,신상품 추천,인기 폭발! 신상품 {{best_new_items}}을 만나보세요!,신상품 추천,5060
 main,main-stn09-2,stn,신상품 추천,가장 먼저 신상품을 경험해보세요!,신상품 추천,5060
-main,main-stca01-2,stca,장바구니 상품 추천,"고객님이 장바구니에 담아놓은 {item_name}, 지금 바로 구매해보세요!",장바구니 상품 추천,5060
-main,main-stca02-2,stca,장바구니 상품 추천,"장바구니에 담아둔 {item_name}, 놓치지 마세요!",장바구니 상품 추천,5060
-main,main-stca03-2,stca,장바구니 상품 추천,"고객님께서 담아놓으신 {item_name}, 지금 아니면 구매하기 어려울 수 있어요!",장바구니 상품 추천,5060
-main,main-stca04-2,stca,장바구니 상품 추천,"고객님이 선택한 {item_name}, 까먹으신 거 아니죠?! 지금 바로 결제하세요!",장바구니 상품 추천,5060
+main,main-stca01-2,stca,장바구니 상품 추천,"고객님이 장바구니에 담아놓은 {{item_name}}, 지금 바로 구매해보세요!",장바구니 상품 추천,5060
+main,main-stca02-2,stca,장바구니 상품 추천,"장바구니에 담아둔 {{item_name}}, 놓치지 마세요!",장바구니 상품 추천,5060
+main,main-stca03-2,stca,장바구니 상품 추천,"고객님께서 담아놓으신 {{item_name}}, 지금 아니면 구매하기 어려울 수 있어요!",장바구니 상품 추천,5060
+main,main-stca04-2,stca,장바구니 상품 추천,"고객님이 선택한 {{item_name}}, 까먹으신 거 아니죠?! 지금 바로 결제하세요!",장바구니 상품 추천,5060
 main,main-stca05-2,stca,장바구니 상품 추천,장바구니 속 상품을 특별한 가격에 만나보세요!,장바구니 상품 추천,5060
-main,main-stca06-2,stca,장바구니 상품 추천,"고객님의 장바구니에 담긴 {item_name}, 잊지말아요~!",장바구니 상품 추천,5060
+main,main-stca06-2,stca,장바구니 상품 추천,"고객님의 장바구니에 담긴 {{item_name}}, 잊지말아요~!",장바구니 상품 추천,5060
 main,main-stca07-2,stca,장바구니 상품 추천,장바구니에 담은 상품을 구매할 완벽한 타이밍!,장바구니 상품 추천,5060
-main,main-stca08-2,stca,장바구니 상품 추천,"고객님께서 담아두신 {item_name}, 품절되기 전에 구매하세요!",장바구니 상품 추천,5060
-main,main-stca09-2,stca,장바구니 상품 추천,"고객님이 담아 놓은 {item_name}, 지금 바로 확인해보세요!",장바구니 상품 추천,5060
-main,main-stca10-2,stca,장바구니 상품 추천,장바구니에 담긴 {item_name}이 지금 인기 폭발하고 있어요! 품절 되기 전에 지금 구매해보세요!,장바구니 상품 추천,5060
-main,main-stwi01-2,stwi,위시리스트 상품 추천,"고객님이 위시리스트에 찜해놓은 {item_name}, 지금 바로 구매해보세요!",위시리스트 상품 추천,5060
-main,main-stwi02-2,stwi,위시리스트 상품 추천,"위시리스트에 찜해둔 {item_name}, 놓치지 마세요!",위시리스트 상품 추천,5060
-main,main-stwi03-2,stwi,위시리스트 상품 추천,"고객님께서 찜해놓은 {item_name}, 지금 아니면 구매하기 어려울 수 있어요!",위시리스트 상품 추천,5060
-main,main-stwi04-2,stwi,위시리스트 상품 추천,"고객님이 선택한 {item_name}, 까먹으신 거 아니죠?! 지금 바로 결제하세요!",위시리스트 상품 추천,5060
+main,main-stca08-2,stca,장바구니 상품 추천,"고객님께서 담아두신 {{item_name}}, 품절되기 전에 구매하세요!",장바구니 상품 추천,5060
+main,main-stca09-2,stca,장바구니 상품 추천,"고객님이 담아 놓은 {{item_name}}, 지금 바로 확인해보세요!",장바구니 상품 추천,5060
+main,main-stca10-2,stca,장바구니 상품 추천,장바구니에 담긴 {{item_name}}이 지금 인기 폭발하고 있어요! 품절 되기 전에 지금 구매해보세요!,장바구니 상품 추천,5060
+main,main-stwi01-2,stwi,위시리스트 상품 추천,"고객님이 위시리스트에 찜해놓은 {{item_name}}, 지금 바로 구매해보세요!",위시리스트 상품 추천,5060
+main,main-stwi02-2,stwi,위시리스트 상품 추천,"위시리스트에 찜해둔 {{item_name}}, 놓치지 마세요!",위시리스트 상품 추천,5060
+main,main-stwi03-2,stwi,위시리스트 상품 추천,"고객님께서 찜해놓은 {{item_name}}, 지금 아니면 구매하기 어려울 수 있어요!",위시리스트 상품 추천,5060
+main,main-stwi04-2,stwi,위시리스트 상품 추천,"고객님이 선택한 {{item_name}}, 까먹으신 거 아니죠?! 지금 바로 결제하세요!",위시리스트 상품 추천,5060
 main,main-stwi05-2,stwi,위시리스트 상품 추천,위시리스트 속 상품을 특별한 가격에 만나보세요!,위시리스트 상품 추천,5060
-main,main-stwi06-2,stwi,위시리스트 상품 추천,"고객님의 위시리스트에 담긴 {item_name}, 잊지말아요~!",위시리스트 상품 추천,5060
+main,main-stwi06-2,stwi,위시리스트 상품 추천,"고객님의 위시리스트에 담긴 {{item_name}}, 잊지말아요~!",위시리스트 상품 추천,5060
 main,main-stwi07-2,stwi,위시리스트 상품 추천,위시리스트에 담은 상품을 구매할 완벽한 타이밍!,위시리스트 상품 추천,5060
-main,main-stwi08-2,stwi,위시리스트 상품 추천,"고객님께서 담아두신 {item_name}, 품절되기 전에 구매하세요!",위시리스트 상품 추천,5060
-main,main-stwi09-2,stwi,위시리스트 상품 추천,"고객님이 담아 놓은 {item_name}, 지금 바로 확인해보세요!",위시리스트 상품 추천,5060
-main,main-stwi10-2,stwi,위시리스트 상품 추천,위시리스트에 담긴 {item_name}이 지금 인기 폭발하고 있어요! 품절 되기 전에 지금 구매해보세요!,위시리스트 상품 추천,5060
-main,main-stwb01-2,stwb,선호 카테고리 Best 상품 추천,"고객님이 선호하는 카테고리의 {best_category_items}, 지금 바로 확인해보세요!",선호 카테고리 Best 상품 추천,5060
-main,main-stwb02-2,stwb,선호 카테고리 Best 상품 추천,"인기 카테고리의 {best_category_items}, 지금 구매하시면 특별한 혜택을 드립니다!",선호 카테고리 Best 상품 추천,5060
-main,main-stwb03-2,stwb,선호 카테고리 Best 상품 추천,"고객님이 사랑하는 카테고리의 {best_category_items}, 놓치지 마세요!",선호 카테고리 Best 상품 추천,5060
-main,main-stwb04-2,stwb,선호 카테고리 Best 상품 추천,"선호 카테고리의 {best_category_items}, 지금이 구매할 완벽한 타이밍입니다!",선호 카테고리 Best 상품 추천,5060
-main,main-stwb05-2,stwb,선호 카테고리 Best 상품 추천,"고객님의 관심 카테고리에서 추천드리는 {best_category_items}, 지금 바로 만나보세요!",선호 카테고리 Best 상품 추천,5060
-main,main-stsb01-2,stsb,최대 할인 상품 추천,"고객님을 위한 최대 할인 {best_promo_items}, 지금 바로 확인해보세요!",최대 할인 상품 추천,5060
-main,main-stsb02-2,stsb,최대 할인 상품 추천,"할인율 최고! {best_promo_items}, 지금 구매하시면 더욱 저렴하게 만나보실 수 있습니다!",최대 할인 상품 추천,5060
-main,main-stsb03-2,stsb,최대 할인 상품 추천,"이번 기회에 최대 할인 받으세요! {best_promo_items}, 놓치지 마세요!",최대 할인 상품 추천,5060
-main,main-stsb04-2,stsb,최대 할인 상품 추천,"지금이 찬스! 최대 할인된 {best_promo_items}, 바로 구매하세요!",최대 할인 상품 추천,5060
-main,main-stsb05-2,stsb,최대 할인 상품 추천,"특별 할인 중인 {best_promo_items}, 지금 아니면 구매하기 어려울 수 있어요!",최대 할인 상품 추천,5060
+main,main-stwi08-2,stwi,위시리스트 상품 추천,"고객님께서 담아두신 {{item_name}}, 품절되기 전에 구매하세요!",위시리스트 상품 추천,5060
+main,main-stwi09-2,stwi,위시리스트 상품 추천,"고객님이 담아 놓은 {{item_name}}, 지금 바로 확인해보세요!",위시리스트 상품 추천,5060
+main,main-stwi10-2,stwi,위시리스트 상품 추천,위시리스트에 담긴 {{item_name}}이 지금 인기 폭발하고 있어요! 품절 되기 전에 지금 구매해보세요!,위시리스트 상품 추천,5060
+main,main-stwb01-2,stwb,선호 카테고리 Best 상품 추천,"고객님이 선호하는 카테고리의 {{best_category_items}}, 지금 바로 확인해보세요!",선호 카테고리 Best 상품 추천,5060
+main,main-stwb02-2,stwb,선호 카테고리 Best 상품 추천,"인기 카테고리의 {{best_category_items}}, 지금 구매하시면 특별한 혜택을 드립니다!",선호 카테고리 Best 상품 추천,5060
+main,main-stwb03-2,stwb,선호 카테고리 Best 상품 추천,"고객님이 사랑하는 카테고리의 {{best_category_items}}, 놓치지 마세요!",선호 카테고리 Best 상품 추천,5060
+main,main-stwb04-2,stwb,선호 카테고리 Best 상품 추천,"선호 카테고리의 {{best_category_items}}, 지금이 구매할 완벽한 타이밍입니다!",선호 카테고리 Best 상품 추천,5060
+main,main-stwb05-2,stwb,선호 카테고리 Best 상품 추천,"고객님의 관심 카테고리에서 추천드리는 {{best_category_items}}, 지금 바로 만나보세요!",선호 카테고리 Best 상품 추천,5060
+main,main-stsb01-2,stsb,최대 할인 상품 추천,"고객님을 위한 최대 할인 {{best_promo_items}}, 지금 바로 확인해보세요!",최대 할인 상품 추천,5060
+main,main-stsb02-2,stsb,최대 할인 상품 추천,"할인율 최고! {{best_promo_items}}, 지금 구매하시면 더욱 저렴하게 만나보실 수 있습니다!",최대 할인 상품 추천,5060
+main,main-stsb03-2,stsb,최대 할인 상품 추천,"이번 기회에 최대 할인 받으세요! {{best_promo_items}}, 놓치지 마세요!",최대 할인 상품 추천,5060
+main,main-stsb04-2,stsb,최대 할인 상품 추천,"지금이 찬스! 최대 할인된 {{best_promo_items}}, 바로 구매하세요!",최대 할인 상품 추천,5060
+main,main-stsb05-2,stsb,최대 할인 상품 추천,"특별 할인 중인 {{best_promo_items}}, 지금 아니면 구매하기 어려울 수 있어요!",최대 할인 상품 추천,5060
 main,main-stap01-2,stap,회원가입 감사 메시지 발송,회원가입을 환영합니다! 함께하게 되어 기쁩니다!,회원가입 감사 메시지 발송,5060
 main,main-stap02-2,stap,회원가입 감사 메시지 발송,"감사합니다! 회원가입을 축하드리며, 특별 혜택을 즐겨보세요!",회원가입 감사 메시지 발송,5060
 main,main-stap03-2,stap,회원가입 감사 메시지 발송,"고객님, 가입해주셔서 감사합니다! 지금 바로 다양한 혜택을 확인해보세요!",회원가입 감사 메시지 발송,5060
@@ -1291,6 +1308,16 @@ main,main-stfc02-2,stfc,첫 구매 할인 쿠폰 제공,첫 구매 감사드립니다! 고객님을 위
 main,main-stfc03-2,stfc,첫 구매 할인 쿠폰 제공,첫 구매를 기념하여 할인 쿠폰을 제공해드립니다. 지금 바로 쇼핑하여 혜택을 확인해보세요!,첫 구매 할인 쿠폰 제공,5060
 main,main-stfc04-2,stfc,첫 구매 할인 쿠폰 제공,"고객님의 첫 구매를 축하하며, 첫 구매 할인 쿠폰을 준비했습니다. 지금 사용하여 특별한 할인을 누리세요.",첫 구매 할인 쿠폰 제공,5060
 main,main-stfc05-2,stfc,첫 구매 할인 쿠폰 제공,"환영합니다! 첫 구매를 감사드리며, 첫 구매 할인 쿠폰을 드립니다. 지금 바로 쇼핑을 시작해보세요.",첫 구매 할인 쿠폰 제공,5060
+main,main-stfp01-2,stfp,첫 구매 감사 메시지 발송,{고객명}님의 첫 구매에 깊은 감사의 마음을 전합니다! 앞으로도 저희 제품과 서비스에 많은 관심과 사랑 부탁드립니다. 행복한 하루 되세요!,첫 구매 감사 메시지 발송,5060
+main,main-stfp02-2,stfp,첫 구매 감사 메시지 발송,"첫 구매 진심으로 감사드립니다, {고객명}님! 함께 더욱 즐거운 쇼핑 경험을 만들어 가시길 바라며, 앞으로도 많은 이용 부탁드립니다!",첫 구매 감사 메시지 발송,5060
+main,main-stfp03-2,stfp,첫 구매 감사 메시지 발송,"{고객명}님, 첫 구매해주셔서 진심으로 감사드립니다! 저희와 함께 특별한 순간들을 만들어가시길 바라며, 앞으로도 좋은 서비스로 보답하겠습니다.",첫 구매 감사 메시지 발송,5060
+main,main-stfp04-2,stfp,첫 구매 감사 메시지 발송,첫 구매를 해주신 {고객명}님께 진심으로 감사의 말씀을 전합니다! 항상 최선을 다하도록 노력하겠습니다. 앞으로도 많은 사랑 부탁드립니다.,첫 구매 감사 메시지 발송,5060
+main,main-stfp05-2,stfp,첫 구매 감사 메시지 발송,"첫 구매에 감사드립니다, {고객명}님! 앞으로도 함께 특별한 경험을 이어가시길 바라며, 저희와 함께하는 모든 순간이 즐겁고 만족스럽기를 기원합니다.",첫 구매 감사 메시지 발송,5060
+main,main-stbr01-2,stbr,선호 카테고리 Best 상품 후기 전달,"고객님, 다른 고객들이 사랑하는 Best 상품 후기를 확인해보세요! 지금 바로 인기 상품을 만나보세요.",선호 카테고리 Best 상품 후기 전달,5060
+main,main-stbr02-2,stbr,선호 카테고리 Best 상품 후기 전달,Best 상품의 실제 후기를 소개합니다. 고객님도 만족하실 인기 아이템을 지금 확인해보세요!,선호 카테고리 Best 상품 후기 전달,5060
+main,main-stbr03-2,stbr,선호 카테고리 Best 상품 후기 전달,"고객님, Best 상품의 후기를 전달드립니다. 많은 고객들이 추천하는 상품을 놓치지 마세요!",선호 카테고리 Best 상품 후기 전달,5060
+main,main-stbr04-2,stbr,선호 카테고리 Best 상품 후기 전달,다른 고객들이 극찬한 Best 상품 후기를 확인해보세요. 지금 구매하여 특별한 혜택을 누리세요.,선호 카테고리 Best 상품 후기 전달,5060
+main,main-stbr05-2,stbr,선호 카테고리 Best 상품 후기 전달,인기 최고! Best 상품의 후기를 소개합니다. 고객님도 만족하실 상품을 지금 확인해보세요.,선호 카테고리 Best 상품 후기 전달,5060
 main,main-k_eb01-1,k_eb,얼리버드,"누구보다 빠르게 남들과는 다르게!
 {mall_id}와 함께 다음 계절을 준비해 보자고~","얼리버드,2030",2030
 main,main-k_eb01-2,k_eb,얼리버드,"누구보다 빠르게!
