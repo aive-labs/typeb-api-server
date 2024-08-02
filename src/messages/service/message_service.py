@@ -124,7 +124,9 @@ class MessageService:
 
                 response = await response.json()
 
-                if response["code"] != "0000":
+                if response["code"] not in ["200", "0000"]:
+                    print("code", response["code"])
+                    print(response)
                     match = re.search(r"Exception\((.*?)\)$", response["message"])
                     if match:
                         extracted_message = match.group(1)
