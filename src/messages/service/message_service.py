@@ -1,9 +1,11 @@
+import re
+
 import aiohttp
 from sqlalchemy.orm import Session
 
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
 from src.common.utils.get_env_variable import get_env_variable
-from src.core.exceptions.exceptions import PpurioException
+from src.core.exceptions.exceptions import PolicyException, PpurioException
 from src.core.transactional import transactional
 from src.message_template.enums.message_type import MessageType
 from src.messages.infra.ppurio_message_repository import PpurioMessageRepository
@@ -55,6 +57,11 @@ class MessageService:
 
     async def upload_file(self, new_file_name, file_read, content_type: str | None) -> str:
 
+        # 파일 크기 확인 (300 KB = 300 * 1024 bytes)
+        max_size = 300 * 1024
+        if len(file_read) > max_size:
+            raise PolicyException(detail={"message": "이미지 파일의 크기는 300KB 이하여야 합니다."})
+
         async with aiohttp.ClientSession() as session:
             url = get_env_variable("ppurio_file_upload_url")
             account = get_env_variable("ppurio_account")
@@ -72,7 +79,9 @@ class MessageService:
                 if response.status != 200:
                     print(await response.text())
                     raise PpurioException(
-                        detail={"message": "MMS 이미지 업로드 요청이 실패하였습니다."}
+                        detail={
+                            "message": "이미지 업로드에 실패하였습니다. 잠시 후에 다시 시도해주세요."
+                        }
                     )
                 response = await response.json()
         return response["filekey"]
@@ -107,16 +116,21 @@ class MessageService:
 
             async with session.post(url, data=data, ssl=False) as response:
                 if response.status != 200:
-                    print(await response.text())
                     raise PpurioException(
-                        detail={"message": "카카오 이미지 업로드 요청이 실패하였습니다."}
+                        detail={
+                            "message": "이미지 업로드에 실패하였습니다. 잠시 후에 다시 시도해주세요."
+                        }
                     )
 
                 response = await response.json()
 
-                if response["code"] != "200":
-                    raise PpurioException(detail={"message": response["message"]})
+                if response["code"] != "0000":
+                    match = re.search(r"Exception\((.*?)\)$", response["message"])
+                    if match:
+                        extracted_message = match.group(1)
+                    else:
+                        extracted_message = response["message"]
 
-                print("kakao upload response")
-                print(response)
+                    raise PolicyException(detail={"message": extracted_message})
+
         return response["image"]
