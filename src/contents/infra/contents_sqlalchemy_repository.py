@@ -17,7 +17,9 @@ from src.contents.infra.entity.contents_entity import ContentsEntity
 from src.contents.infra.entity.contents_menu_entity import ContentsMenuEntity
 from src.contents.infra.entity.creatives_entity import CreativesEntity
 from src.core.exceptions.exceptions import NotFoundException
-from src.products.infra.entity.comment_master_entity import CommentMasterEntity
+from src.products.infra.entity.comment_master_entity import (
+    ProductReviewEntity,
+)
 from src.products.infra.entity.product_link_entity import ProductLinkEntity
 from src.products.infra.entity.product_master_entity import ProductMasterEntity
 from src.search.routes.dto.id_with_item_response import IdWithItem
@@ -289,16 +291,16 @@ class ContentsSqlAlchemy:
     def get_product_review(self, product_codes: List[str], db) -> List:
         review_entities = (
             db.query(
-                CommentMasterEntity.product_no,
-                CommentMasterEntity.content,
-                CommentMasterEntity.rating,
+                ProductReviewEntity.product_no,
+                ProductReviewEntity.content,
+                ProductReviewEntity.rating,
             )
             .join(
                 ProductMasterEntity,
-                ProductMasterEntity.product_no == CommentMasterEntity.product_no,
+                ProductMasterEntity.product_no == ProductReviewEntity.product_no,
             )
             .filter(ProductMasterEntity.product_code.in_(product_codes))
-            .order_by(CommentMasterEntity.rating.desc())
+            .order_by(ProductReviewEntity.rating.desc())
             .all()
         )
         return review_entities

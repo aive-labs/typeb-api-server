@@ -15,8 +15,8 @@ from src.core.database import Base
 class ProductMasterEntity(Base):
     __tablename__ = "product_master"
 
-    shop_no = Column(BigInteger)
-    product_no = Column(BigInteger)
+    shop_no = Column(Integer)
+    product_no = Column(Integer)
     product_code = Column(String, primary_key=True, index=True)
     custom_product_code = Column(String)
     brand_code = Column(String)
