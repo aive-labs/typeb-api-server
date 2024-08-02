@@ -259,7 +259,6 @@ class StrategySqlAlchemy:
                 recsys_model_id=theme.recsys_model_id,
                 contents_tags=theme.contents_tags,
                 updated_by=theme.updated_by,
-                updated_at=theme.updated_at,
             )
 
             theme_audience_entities = [
