@@ -40,6 +40,9 @@ from src.campaign.routes.dto.response.campaign_timeline_response import (
 from src.campaign.routes.dto.response.exclusion_customer_detail import (
     ExcludeCustomerDetail,
 )
+from src.campaign.routes.dto.response.set_group_seq_with_message_response import (
+    SetGroupSeqWithMessageResponse,
+)
 from src.campaign.routes.dto.response.update_campaign_set_group_message_response import (
     UpdateCampaignSetGroupMessageResponse,
 )
@@ -421,6 +424,6 @@ async def delete_message_resources(
     delete_image_for_message: DeleteImageForMessageUseCase = Depends(
         dependency=Provide[Container.delete_image_for_message]
     ),
-):
+) -> SetGroupSeqWithMessageResponse:
     """이미지 업로드 API"""
-    await delete_image_for_message.exec(campaign_id, set_group_msg_seq, user, db=db)
+    return await delete_image_for_message.exec(campaign_id, set_group_msg_seq, user, db=db)

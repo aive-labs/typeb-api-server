@@ -78,3 +78,9 @@ class BaseCampaignSetRepository(ABC):
     @abstractmethod
     def delete_msg_photo_uri_by_set_group_msg_req(self, set_group_msg_seq, db: Session):
         pass
+
+    @abstractmethod
+    def update_campaign_set_group_message_type(
+        self, campaign_id, set_group_message, msg_type_update, db: Session
+    ):
+        pass

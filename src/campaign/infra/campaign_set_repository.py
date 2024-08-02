@@ -755,3 +755,33 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             .values(msg_photo_uri=None)
         )
         db.execute(update_statement)
+
+    def update_campaign_set_group_message_type(
+        self, campaign_id, set_group_message, msg_type_update, db: Session
+    ):
+        if set_group_message.msg_send_type == "campaign":
+            update_statement = (
+                update(CampaignSetGroupsEntity)
+                .where(
+                    and_(
+                        CampaignSetGroupsEntity.campaign_id == campaign_id,
+                        CampaignSetGroupsEntity.set_group_seq == set_group_message.set_group_seq,
+                    )
+                )
+                .values(msg_type=msg_type_update)
+            )
+            db.execute(update_statement)
+
+        set_group_update_statement = (
+            update(SetGroupMessagesEntity)
+            .where(
+                and_(
+                    SetGroupMessagesEntity.campaign_id == campaign_id,
+                    SetGroupMessagesEntity.set_group_seq == set_group_message.set_group_seq,
+                )
+            )
+            .values(msg_type=msg_type_update)
+        )
+        db.execute(set_group_update_statement)
+
+        db.flush()
