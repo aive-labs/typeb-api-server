@@ -38,7 +38,6 @@ class CreateDataDict:
 
         data_dict["group_idx"] = request_generate_group_seq
         data_dict["mall_id"] = input_data.get("mall_id")
-        print(data_dict)
 
         # 캠페인 테마 (세그먼트/커스텀)
         data_dict["recsys_model_name"] = config["recsys_mode_name"][
@@ -552,7 +551,7 @@ class generate_message:
             and data_dict["offer_info"].get("benefit_text") is not None
         ):
             offer_condition = data_dict["offer_info"].get("benefit_type").lower()
-            print(offer_condition)
+
             if data_dict["msg_type"] in ("lms", "mms"):
                 self.msg_body = (
                     self.msg_body

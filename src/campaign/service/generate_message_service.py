@@ -451,4 +451,7 @@ class GenerateMessageService(GenerateMessageUsecase):
 
         self.save_generate_message(updated_sgm_obj, db)
 
+        for msg in msg_rtn:
+            msg.msg_photo_uri = msg.add_cloud_front_url(msg.msg_photo_uri)
+
         return msg_rtn
