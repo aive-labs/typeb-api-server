@@ -138,3 +138,9 @@ class Message(BaseModel):
 
 class MessageGenerate(Message):
     rec_explanation: List[str] | None = None
+
+    @staticmethod
+    def add_cloud_front_url(msg_photo_uri: List[str]) -> List[str]:
+        cloud_front_url = get_env_variable("cloud_front_asset_url")
+
+        return [f"{cloud_front_url}/{uri}" for uri in msg_photo_uri] if msg_photo_uri else []
