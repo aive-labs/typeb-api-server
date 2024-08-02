@@ -29,5 +29,7 @@ class DeleteImageForMessage(DeleteImageForMessageUseCase):
             await self.s3_service.delete_object_async(s3_key)
 
         self.campaign_set_repository.delete_message_image_source(set_group_msg_seq, db)
-
+        self.campaign_set_repository.delete_msg_photo_uri_by_set_group_msg_req(
+            set_group_msg_seq, db
+        )
         db.commit()

@@ -747,3 +747,11 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             raise NotFoundException(detail={"message": "해당되는 이미지 정보를 찾지 못했습니다."})
 
         return MessageResource.model_validate(entity)
+
+    def delete_msg_photo_uri_by_set_group_msg_req(self, set_group_msg_seq, db: Session):
+        update_statement = (
+            update(SetGroupMessagesEntity)
+            .where(SetGroupMessagesEntity.set_group_msg_seq == set_group_msg_seq)
+            .values(msg_photo_uri=None)
+        )
+        db.execute(update_statement)
