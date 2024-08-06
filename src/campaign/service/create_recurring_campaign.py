@@ -9,6 +9,7 @@ from src.campaign.enums.campaign_approval_status import CampaignApprovalStatus
 from src.campaign.enums.campaign_progress import CampaignProgress
 from src.campaign.enums.campaign_timeline_type import CampaignTimelineType
 from src.campaign.enums.campaign_type import CampaignType
+from src.campaign.enums.repeat_type import RepeatTypeEnum
 from src.campaign.infra.entity.approver_entity import ApproverEntity
 from src.campaign.infra.entity.campaign_approval_entity import CampaignApprovalEntity
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
@@ -103,9 +104,14 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
         # 직전 캠페인 종료일 + 1day 가 start_date로 지정됨
         # 캠페인 생성일 != 캠페인 시작일
         tz = "Asia/Seoul"
+
+        repeat_type = org_campaign.repeat_type
+        if isinstance(repeat_type, str):
+            repeat_type = RepeatTypeEnum(org_campaign.repeat_type)
+
         start_date, end_date = repeat_date.calculate_dates(
             org_campaign_end_date,
-            period=org_campaign.repeat_type,
+            period=repeat_type,
             week_days=org_campaign.week_days,
             datetosend=(
                 int(org_campaign.datetosend) if org_campaign.datetosend else None
