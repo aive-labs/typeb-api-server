@@ -1,0 +1,56 @@
+from fastapi import Depends
+from jose import jwt
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+
+from src.auth.service.auth_service import reuseable_oauth
+from src.common.utils.get_env_variable import get_env_variable
+from src.core.database import Base
+from src.core.exceptions.exceptions import AuthException
+
+
+def get_engine(db_url: str):
+    return create_engine(db_url)
+
+
+def get_session(engine):
+    return scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
+
+
+def prefix_db_url(db_name: str):
+    db_url = get_env_variable("prefix_db_url")
+    print(f"prefix_db_url: {db_url}/{db_name}")
+    return f"{db_url}/{db_name}"
+
+
+def get_db(token: str = Depends(reuseable_oauth)):
+    print("---------------")
+    print("get db token")
+    print(token)
+
+    secret_key = get_env_variable("secret_key")
+    algorithm = get_env_variable("hash_algorithm")
+    payload = jwt.decode(token, secret_key, algorithms=[algorithm])
+    mall_id = payload.get("mall_id")
+    print(f"get db for {mall_id}")
+    if mall_id is None:
+        raise AuthException(detail={"message": "계정에 해당하는 쇼핑몰 정보를 찾지 못하였습니다."})
+
+    # Base.metadata.schema = "aivelabs_sv"
+    engine = get_engine(prefix_db_url(mall_id))
+    print(str(engine.url))
+
+    session_local = get_session(engine)
+    db = session_local()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+def get_db_for_login(mall_id):
+    engine = get_engine(prefix_db_url(mall_id))
+    Base.metadata.create_all(bind=engine)
+    session_local = get_session(engine)
+    db = session_local()
+    return db

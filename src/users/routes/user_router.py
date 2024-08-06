@@ -13,7 +13,10 @@ from src.auth.service.auth_service import AuthService
 from src.auth.service.token_service import TokenService
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
-from src.core.database import get_db_session
+from src.core.database import (
+    get_mall_id_by_user,
+)
+from src.core.db_dependency import get_db, get_db_for_login
 from src.users.domain.gnb_permission import GNBPermissions
 from src.users.domain.resource_permission import ResourcePermission
 from src.users.domain.user_role import UserPermissions
@@ -36,7 +39,7 @@ user_router = APIRouter(
 def sign_up(
     user_create: UserCreate,
     user_service: BaseUserService = Depends(dependency=Provide[Container.user_service]),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
 ) -> UserResponse:
     logger.debug(f"user_service: {user_service}")
     saved_user = user_service.register_user(user_create, db=db)
@@ -47,7 +50,7 @@ def sign_up(
 @inject
 def get_me(
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
     onboarding_service: BaseOnboardingService = Depends(Provide[Container.onboarding_service]),
 ):
@@ -80,12 +83,14 @@ def get_me(
 def sign_in(
     form_data: OAuth2PasswordRequestForm = Depends(),
     auth_service: AuthService = Depends(dependency=Provide[Container.auth_service]),
-    db: Session = Depends(get_db_session),
 ):
     login_id = form_data.username
     password = form_data.password
 
-    token_response = auth_service.login(login_id, password, db=db)
+    mall_id = get_mall_id_by_user(login_id)
+    db = get_db_for_login(mall_id)
+
+    token_response = auth_service.login(login_id, password, mall_id, db=db)
 
     response = JSONResponse(content=token_response.model_dump())
     response.set_cookie(
@@ -95,6 +100,8 @@ def sign_in(
         secure=True,
     )
 
+    db.close()
+
     return response
 
 
@@ -103,7 +110,7 @@ def sign_in(
 def update_user_profile(
     user_modify: UserModify,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     user_service: BaseUserService = Depends(dependency=Provide[Container.user_service]),
 ):
     user_service.update_user(user_modify, db=db)

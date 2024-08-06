@@ -11,7 +11,7 @@ class AudienceEntity(Base):
         String,
         primary_key=True,
         index=True,
-        server_default=text("'aud-' || LPAD(nextval('audience_seq')::TEXT, 6, '0')"),
+        server_default=text("'aud-' || LPAD(nextval('aivelabs_sv.audience_seq')::TEXT, 6, '0')"),
     )
     audience_name = Column(String, nullable=False)
     main_mix_lv1 = Column(String)

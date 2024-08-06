@@ -2,13 +2,14 @@ import os
 from collections.abc import Callable
 from contextlib import AbstractContextManager, contextmanager
 
+import psycopg2
 from pydantic_settings import BaseSettings
 from sqlalchemy import MetaData, create_engine, orm
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, scoped_session, sessionmaker
+from sqlalchemy.orm import Session
 
 from src.common.utils.get_env_variable import get_env_variable
-from src.core.schema import schema_context
+from src.core.exceptions.exceptions import NotFoundException
 
 
 class DBSettings(BaseSettings):
@@ -58,7 +59,16 @@ class Database:
     def _create_database(self) -> None:
         # SQLAlchemy의 create_all 메서드는 테이블이 없는 경우에만 테이블을 생성. 기존 테이블의 스키마를 업데이트하지 않음
         print(f"CREATING DATABASE: {self._engine}")
-        Base.metadata.create_all(self._engine)
+
+        default_url = self._engine.url
+        base_db_name = str(default_url).split("/")[-1]
+
+        if base_db_name == "common":
+            print(f"in {base_db_name}")
+            print(f"schema: {Base.metadata.schema}")
+        else:
+            print(f"in {base_db_name}")
+            Base.metadata.create_all(bind=self._engine)
 
     @contextmanager  # type: ignore
     def session(self) -> Callable[..., AbstractContextManager[Session]]:  # type: ignore
@@ -78,32 +88,34 @@ db = Database(get_db_url())
 # 의존성 주입을 위한 함수
 def get_db_session():
     with db.session() as session:
-        schema_name = schema_context.get()
-        print(f"[get_db_session] {schema_name}")
-        # session.execute(text(f"SET search_path TO {schema_name}"))
         yield session
 
 
-def get_engine(db_url: str):
-    return create_engine(db_url)
+user_db_conn = psycopg2.connect(
+    dbname=get_env_variable("user_db_name"),
+    user=get_env_variable("user_db_user"),
+    password=get_env_variable("user_db_password"),
+    host=get_env_variable("user_db_host"),
+    port=get_env_variable("user_db_port"),
+)
 
 
-def get_session(engine):
-    return scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
+def get_mall_id_by_user(user_id: str) -> str:
+    with user_db_conn.cursor() as cursor:
+        cursor.execute(
+            """
+                    select *
+                    from public.users
+                    where user_id = %s
+        """,
+            (user_id,),
+        )
 
+        result = cursor.fetchone()
+        if result is None:
+            raise NotFoundException(detail={"message": "사용자 정보를 찾을 수 없습니다."})
 
-def prefix_db_url(db_name: str):
-    db_url = get_env_variable("prefix_db_url")
-    return f"{db_url}/{db_name}"
-
-
-def get_db():
-    db_name = "aivelabsdb"
-    engine = get_engine(prefix_db_url(db_name))
-    session_local = get_session(engine)
-    Base.metadata.create_all(bind=engine)
-    db = session_local()
-    try:
-        yield db
-    finally:
-        db.close()
+        mall_id = result[1]
+        if mall_id is None:
+            raise NotFoundException(detail={"message": "사용자 정보를 찾을 수 없습니다."})
+        return mall_id

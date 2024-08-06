@@ -43,10 +43,6 @@ def calculate_dates(
     if datetosend is None:
         datetosend = 1
 
-    print(period)
-    print(RepeatTypeEnum.DAILY)
-    print(period == RepeatTypeEnum.DAILY)
-
     if period == RepeatTypeEnum.DAILY:
         start = start_date + timedelta(days=1)
         end = start

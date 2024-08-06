@@ -6,22 +6,24 @@ from jose import jwt
 
 from src.auth.routes.dto.response.token_response import TokenResponse
 from src.auth.utils.jwt_settings import JwtSettings
+from src.common.utils.get_env_variable import get_env_variable
 from src.users.domain.user import User
-
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-REFRESH_TOKEN_EXPIRE_MINUTES = 120
 
 
 class TokenService:
+    SECRET_KEY = get_env_variable("secret_key")
+    ALGORITHM = get_env_variable("hash_algorithm")
+    ACCESS_TOKEN_EXPIRE_MINUTES = int(get_env_variable("access_token_expires_in"))
+    REFRESH_TOKEN_EXPIRE_MINUTES = int(get_env_variable("refresh_token_expires_in"))
+
     def __init__(self):
         self.jwt_setting = JwtSettings()
 
-    def create_token(self, user: User):
+    def create_token(self, user: User, mall_id):
         payload = {
             "email": user.email,
             "department": user.department_name,
+            "mall_id": mall_id,
             "language": user.language,
             "permissions": user.permissions,
             "role": user.role_id,
@@ -35,17 +37,17 @@ class TokenService:
 
         return TokenResponse(
             access_token=access_token,
-            access_token_expires_in=ACCESS_TOKEN_EXPIRE_MINUTES,
+            access_token_expires_in=self.ACCESS_TOKEN_EXPIRE_MINUTES,
             refresh_token=refresh_token,
             token_type="Bearer",
-            refresh_token_expires_in=REFRESH_TOKEN_EXPIRE_MINUTES,
+            refresh_token_expires_in=self.REFRESH_TOKEN_EXPIRE_MINUTES,
         )
 
     def create_access_token(self, data: dict):
         to_encode = data.copy()
-        expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=self.ACCESS_TOKEN_EXPIRE_MINUTES)
         to_encode.update({"exp": expire})
-        encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+        encoded_jwt = jwt.encode(to_encode, self.SECRET_KEY, algorithm=self.ALGORITHM)
         return encoded_jwt
 
     def create_refresh_token(
