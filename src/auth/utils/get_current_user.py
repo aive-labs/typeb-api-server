@@ -40,11 +40,7 @@ def get_current_user(
     if cafe24_info:
         mall_id = cafe24_info.mall_id if cafe24_info.mall_id else None
         user.mall_id = mall_id
-
-        print(f"Cafe24: Login Mall Id -> Schema: {mall_id}")
         schema_context.set(mall_id if mall_id else "aivelabs_sv")
     else:
-        print("Non Cafe24: Login Mall Id -> Schema: aivelabs_sv")
         schema_context.set("aivelabs_sv")
-
     return user
