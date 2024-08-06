@@ -1,3 +1,4 @@
+import random
 from datetime import datetime, timedelta, timezone
 
 import pytz
@@ -111,27 +112,27 @@ def create_logical_date_for_airflow(date_str: str, time_str: str) -> str:
     datetime_obj = datetime_obj.replace(tzinfo=utc_plus_9)
 
     # 초와 밀리세컨드 랜덤 생성
-    # random_seconds = random.randint(0, 59)
-    # random_milliseconds = random.randint(0, 999)
+    random_seconds = random.randint(0, 59)
+    random_milliseconds = random.randint(0, 999)
     #
-    # datetime_obj = datetime_obj.replace(
-    #     second=random_seconds, microsecond=random_milliseconds * 1000
-    # )
-    # formatted_date_str = datetime_obj.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+    datetime_obj = datetime_obj.replace(
+        second=random_seconds, microsecond=random_milliseconds * 1000
+    )
+    formatted_date_str = datetime_obj.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
     # ISO 8601 형식의 문자열로 변환
     iso_format_str = datetime_obj.isoformat()
 
-    return iso_format_str
+    return formatted_date_str
 
 
-def get_korean_current_datetime_yyyymmddhh24mi():
+def get_korean_current_datetime_yyyymmddhh24mims():
     local_timezone = pytz.timezone("Asia/Seoul")
 
     # 현재 날짜와 시간을 한국 타임존으로 가져오기
     now = datetime.now(local_timezone)
 
     # YYYYMMDDHH24MI 형식으로 포맷팅
-    formatted_datetime = now.strftime("%Y%m%d%H%M")
+    formatted_datetime = now.strftime("%Y%m%d%H%M%S%f")[:-3]
 
     return formatted_datetime
