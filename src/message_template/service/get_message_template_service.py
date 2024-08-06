@@ -1,3 +1,5 @@
+from sqlalchemy.orm import Session
+
 from src.message_template.domain.message_template import MessageTemplate
 from src.message_template.routes.port.get_message_template_usecase import (
     GetMessageTemplateUseCase,
@@ -12,8 +14,8 @@ class GetMessageTemplateService(GetMessageTemplateUseCase):
     def __init__(self, message_template_repository: BaseMessageTemplateRepository):
         self.message_template_repository = message_template_repository
 
-    def get_all_templates(self, media: str | None = None) -> list[MessageTemplate]:
-        return self.message_template_repository.get_all_templates(media=media)
+    def get_all_templates(self, db: Session, media: str | None = None) -> list[MessageTemplate]:
+        return self.message_template_repository.get_all_templates(db=db, media=media)
 
-    def get_template_detail(self, template_id: str) -> MessageTemplate:
-        return self.message_template_repository.get_template_detail(template_id)
+    def get_template_detail(self, template_id: str, db: Session) -> MessageTemplate:
+        return self.message_template_repository.get_template_detail(template_id, db)

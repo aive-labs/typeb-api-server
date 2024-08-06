@@ -79,14 +79,16 @@ class SearchService(BaseSearchService):
             search_keyword, is_exclude, db, target_strategy
         )
 
-    def search_offers_search_of_sets(self, strategy_id, keyword, user: User) -> list[IdWithLabel]:
-        return self.offer_repository.get_search_offers_of_sets(strategy_id, keyword, user)
+    def search_offers_search_of_sets(
+        self, strategy_id, keyword, user: User, db: Session
+    ) -> list[IdWithLabel]:
+        return self.offer_repository.get_search_offers_of_sets(strategy_id, keyword, user, db)
 
-    def search_offers(self, keyword, user: User) -> list[IdWithLabel]:
-        return self.offer_repository.get_search_offers(keyword, user)
+    def search_offers(self, keyword, user: User, db: Session) -> list[IdWithLabel]:
+        return self.offer_repository.get_search_offers(keyword, user, db)
 
-    def search_recommend_products(self, keyword) -> list[IdWithItemDescription]:
-        return self.recommend_products_repository.search_recommend_products(keyword)
+    def search_recommend_products(self, keyword, db: Session) -> list[IdWithItemDescription]:
+        return self.recommend_products_repository.search_recommend_products(keyword, db)
 
     def search_contents_tag(self, keyword, recsys_model_id, db: Session) -> list[IdWithItem]:
         return self.contents_repository.search_contents_tag(keyword, recsys_model_id, db)

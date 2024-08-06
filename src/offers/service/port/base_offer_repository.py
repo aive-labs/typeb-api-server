@@ -8,7 +8,7 @@ from src.offers.domain.offer import Offer
 class BaseOfferRepository(ABC):
 
     @abstractmethod
-    def get_offer(self, coupon_no) -> Offer:
+    def get_offer(self, coupon_no, db: Session) -> Offer:
         pass
 
     @abstractmethod
@@ -16,5 +16,5 @@ class BaseOfferRepository(ABC):
         pass
 
     @abstractmethod
-    def get_offer_by_id(self, coupon_no: str) -> Offer:
+    def get_offer_by_id(self, coupon_no: str, db: Session) -> Offer:
         pass

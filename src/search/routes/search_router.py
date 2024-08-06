@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
-from src.core.database import get_db_session
+from src.core.db_dependency import get_db
 from src.search.routes.dto.id_with_item_response import (
     IdWithItem,
     IdWithItemDescription,
@@ -29,7 +29,7 @@ def get_strategies(
     keyword: Optional[str] = None,
     is_exclude: Optional[bool] = False,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[IdWithLabel]:
     if is_exclude is None:
@@ -51,14 +51,15 @@ def get_search_offers(
     strategy_id: Optional[str] = None,
     keyword: Optional[str] = None,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
     search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[IdWithLabel]:
     """드롭다운 오퍼 목록을 조회하는 API"""
 
     if strategy_id:
-        return search_service.search_offers_search_of_sets(strategy_id, keyword, user)
+        return search_service.search_offers_search_of_sets(strategy_id, keyword, user, db=db)
     else:
-        return search_service.search_offers(keyword, user)
+        return search_service.search_offers(keyword, user, db=db)
 
 
 @search_router.get("/recommend-products-models")
@@ -66,10 +67,11 @@ def get_search_offers(
 async def get_search_products(
     keyword: Optional[str] = None,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
     search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[IdWithItemDescription]:
     """드롭다운 추천모델 목록을 조회하는 API"""
-    return search_service.search_recommend_products(keyword)
+    return search_service.search_recommend_products(keyword, db=db)
 
 
 @search_router.get("/contents")
@@ -77,11 +79,11 @@ async def get_search_products(
 def search_contents(
     strategy_theme_id: int,
     keyword: Optional[str] = None,
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     user=Depends(get_permission_checker(required_permissions=[])),
     search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[IdWithItem]:
-    return search_service.search_contents(strategy_theme_id, db, keyword=keyword)
+    return search_service.search_contents(strategy_theme_id, db=db, keyword=keyword)
 
 
 @search_router.get("/contents_tag")
@@ -89,18 +91,18 @@ def search_contents(
 def get_contents_tag(
     keyword: Optional[str] = None,
     recsys_model_id: Optional[str] = None,
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     user=Depends(get_permission_checker(required_permissions=[])),
     search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[IdWithItem]:
-    return search_service.search_contents_tag(keyword, recsys_model_id, db)
+    return search_service.search_contents_tag(keyword, recsys_model_id, db=db)
 
 
 @search_router.get("/campaigns")
 @inject
 def search_campaign(
     keyword: Optional[str] = None,
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     user=Depends(get_permission_checker(required_permissions=[])),
     search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[IdWithItem]:
@@ -117,7 +119,7 @@ def search_campaign(
 @inject
 def search_rep_nms(
     product_id: Optional[str] = None,
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     user=Depends(get_permission_checker(required_permissions=[])),
     search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[str]:
@@ -130,7 +132,7 @@ def search_rep_nms(
 def search_strategies(
     campaign_type_code: str,
     keyword: Optional[str] = None,
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     user=Depends(get_permission_checker(required_permissions=[])),
     search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[StrategySearchResponse]:
@@ -141,7 +143,7 @@ def search_strategies(
 @inject
 def search_strategy_themes(
     strategy_id: str,
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     user=Depends(get_permission_checker(required_permissions=[])),
     search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[IdWithItem]:
@@ -152,7 +154,7 @@ def search_strategy_themes(
 @inject
 def search_send_users(
     keyword: Optional[str] = None,
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     user=Depends(get_permission_checker(required_permissions=[])),
     search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[SendUserResponse]:
@@ -163,7 +165,7 @@ def search_send_users(
 @inject
 def search_reviewers(
     keyword: Optional[str] = None,
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     user=Depends(get_permission_checker(required_permissions=[])),
     search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ) -> list[ReviewerResponse]:

@@ -1,6 +1,3 @@
-from contextlib import AbstractContextManager
-from typing import Callable
-
 from sqlalchemy import update
 from sqlalchemy.orm import Session
 
@@ -19,137 +16,125 @@ from src.message_template.service.port.base_message_template_repository import (
 
 class MessageTemplateRepository(BaseMessageTemplateRepository):
 
-    def __init__(self, db: Callable[..., AbstractContextManager[Session]]):
-        """_summary_
+    def save_message_template(self, model: MessageTemplate, db: Session) -> MessageTemplate:
 
-        Args:
-            db (Callable[..., AbstractContextManager[Session]]):
-            - Callable 호출 가능한 객체
-            - AbstractContextManager[Session]: 세션 객체를 반환하는 컨텍스트 관리자
-            - Session: SQLAlchemy의 세션 객체
-
-        """
-        self.db = db
-
-    def save_message_template(self, model: MessageTemplate) -> MessageTemplate:
-        with self.db() as db:
-            button_entities = [
-                MessageTemplateButtonDetailEntity(
-                    button_type=button.button_type,
-                    button_name=button.button_name,
-                    web_link=button.web_link,
-                    app_link=button.app_link,
-                )
-                for button in model.button
-            ]
-            template_entity = MessageTemplateEntity(
-                template_name=model.template_name,
-                media=model.media,
-                message_type=model.message_type,
-                message_title=model.message_title,
-                message_body=model.message_body,
-                message_announcement=model.message_announcement,
-                template_key=model.template_key,
-                access_level=model.access_level,
-                owned_by_dept=model.owned_by_dept,
-                owned_by_dept_name=model.owned_by_dept_name,
-                created_at=model.created_at,
-                created_by=model.created_by,
-                updated_at=model.updated_at,
-                updated_by=model.updated_by,
-                button=button_entities,
+        button_entities = [
+            MessageTemplateButtonDetailEntity(
+                button_type=button.button_type,
+                button_name=button.button_name,
+                web_link=button.web_link,
+                app_link=button.app_link,
             )
+            for button in model.button
+        ]
+        template_entity = MessageTemplateEntity(
+            template_name=model.template_name,
+            media=model.media,
+            message_type=model.message_type,
+            message_title=model.message_title,
+            message_body=model.message_body,
+            message_announcement=model.message_announcement,
+            template_key=model.template_key,
+            access_level=model.access_level,
+            owned_by_dept=model.owned_by_dept,
+            owned_by_dept_name=model.owned_by_dept_name,
+            created_at=model.created_at,
+            created_by=model.created_by,
+            updated_at=model.updated_at,
+            updated_by=model.updated_by,
+            button=button_entities,
+        )
 
-            db.add(template_entity)
-            db.commit()
+        db.add(template_entity)
+        db.commit()
 
-            return MessageTemplate.model_validate(template_entity)
+        return MessageTemplate.model_validate(template_entity)
 
-    def get_all_templates(self, media: str | None = None) -> list[MessageTemplate]:
-        with self.db() as db:
-            query = db.query(MessageTemplateEntity).filter(~MessageTemplateEntity.is_deleted)
+    def get_all_templates(self, db: Session, media: str | None = None) -> list[MessageTemplate]:
 
-            if media is not None:
-                query = query.filter(MessageTemplateEntity.media == media)
+        query = db.query(MessageTemplateEntity).filter(~MessageTemplateEntity.is_deleted)
 
-            entities = query.all()
+        if media is not None:
+            query = query.filter(MessageTemplateEntity.media == media)
 
-            return [MessageTemplate.model_validate(entity) for entity in entities]
+        entities = query.all()
 
-    def get_template_detail(self, template_id: str) -> MessageTemplate:
-        with self.db() as db:
-            entity = (
-                db.query(MessageTemplateEntity)
-                .filter(~MessageTemplateEntity.is_deleted)
-                .filter(MessageTemplateEntity.template_id == template_id)
-                .first()
+        return [MessageTemplate.model_validate(entity) for entity in entities]
+
+    def get_template_detail(self, template_id: str, db: Session) -> MessageTemplate:
+
+        entity = (
+            db.query(MessageTemplateEntity)
+            .filter(~MessageTemplateEntity.is_deleted)
+            .filter(MessageTemplateEntity.template_id == template_id)
+            .first()
+        )
+
+        if entity is None:
+            raise NotFoundException(detail={"message": "존재하지 않는 템플릿입니다."})
+
+        return MessageTemplate.model_validate(entity)
+
+    def update(self, template_id: str, model: MessageTemplate, db: Session):
+
+        entity = (
+            db.query(MessageTemplateEntity)
+            .filter(~MessageTemplateEntity.is_deleted)
+            .filter(MessageTemplateEntity.template_id == template_id)
+            .first()
+        )
+
+        if entity is None:
+            raise NotFoundException(detail={"message": "존재하지 않는 템플릿입니다."})
+
+        button_entities = [
+            MessageTemplateButtonDetailEntity(
+                button_id=button.button_id,
+                template_id=button.template_id,
+                button_type=button.button_type,
+                button_name=button.button_name,
+                web_link=button.web_link,
+                app_link=button.app_link,
             )
+            for button in model.button
+        ]
+        template_entity = MessageTemplateEntity(
+            template_id=model.template_id,
+            template_name=model.template_name,
+            media=model.media,
+            message_type=model.message_type,
+            message_title=model.message_title,
+            message_body=model.message_body,
+            message_announcement=model.message_announcement,
+            template_key=model.template_key,
+            access_level=model.access_level,
+            owned_by_dept=model.owned_by_dept,
+            owned_by_dept_name=model.owned_by_dept_name,
+            updated_at=model.updated_at,
+            updated_by=model.updated_by,
+            button=button_entities,
+        )
 
-            if entity is None:
-                raise NotFoundException(detail={"message": "존재하지 않는 템플릿입니다."})
+        db.merge(template_entity)
+        db.commit()
 
-            return MessageTemplate.model_validate(entity)
+    def delete(self, template_id: str, db: Session):
 
-    def update(self, template_id: str, model: MessageTemplate):
-        with self.db() as db:
-            entity = (
-                db.query(MessageTemplateEntity)
-                .filter(~MessageTemplateEntity.is_deleted)
-                .filter(MessageTemplateEntity.template_id == template_id)
-                .first()
-            )
+        entity = (
+            db.query(MessageTemplateEntity)
+            .filter(~MessageTemplateEntity.is_deleted)
+            .filter(MessageTemplateEntity.template_id == template_id)
+            .first()
+        )
 
-            if entity is None:
-                raise NotFoundException(detail={"message": "존재하지 않는 템플릿입니다."})
+        if entity is None:
+            raise NotFoundException(detail={"message": "존재하지 않는 템플릿입니다."})
 
-            button_entities = [
-                MessageTemplateButtonDetailEntity(
-                    button_id=button.button_id,
-                    template_id=button.template_id,
-                    button_type=button.button_type,
-                    button_name=button.button_name,
-                    web_link=button.web_link,
-                    app_link=button.app_link,
-                )
-                for button in model.button
-            ]
-            template_entity = MessageTemplateEntity(
-                template_id=model.template_id,
-                template_name=model.template_name,
-                media=model.media,
-                message_type=model.message_type,
-                message_title=model.message_title,
-                message_body=model.message_body,
-                message_announcement=model.message_announcement,
-                template_key=model.template_key,
-                access_level=model.access_level,
-                owned_by_dept=model.owned_by_dept,
-                owned_by_dept_name=model.owned_by_dept_name,
-                updated_at=model.updated_at,
-                updated_by=model.updated_by,
-                button=button_entities,
-            )
+        update_statement = (
+            update(MessageTemplateEntity)
+            .where(MessageTemplateEntity.template_id == template_id)
+            .values(is_deleted=True)
+        )
 
-            db.merge(template_entity)
-            db.commit()
-
-    def delete(self, template_id: str):
-        with self.db() as db:
-            entity = (
-                db.query(MessageTemplateEntity)
-                .filter(~MessageTemplateEntity.is_deleted)
-                .filter(MessageTemplateEntity.template_id == template_id)
-                .first()
-            )
-
-            if entity is None:
-                raise NotFoundException(detail={"message": "존재하지 않는 템플릿입니다."})
-
-            update_statement = (
-                update(MessageTemplateEntity)
-                .where(MessageTemplateEntity.template_id == template_id)
-                .values(is_deleted=True)
-            )
-
-            db.execute(update_statement)
-            db.commit()
+        db.execute(update_statement)
+        db.commit()

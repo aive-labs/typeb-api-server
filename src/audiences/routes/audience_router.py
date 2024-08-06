@@ -61,7 +61,7 @@ from src.audiences.service.background.execute_target_audience_summary import (
 )
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
-from src.core.database import get_db_session
+from src.core.db_dependency import get_db
 
 audience_router = APIRouter(tags=["Audience-management"])
 
@@ -71,7 +71,7 @@ audience_router = APIRouter(tags=["Audience-management"])
 def get_audiences(
     is_exclude: bool | None = None,
     get_audience_service: GetAudienceUseCase = Depends(Provide[Container.get_audience_service]),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     user=Depends(get_permission_checker(required_permissions=[])),
 ):
     # get_all_audience에서 리턴 타입이 dictionary 형태임
@@ -83,7 +83,7 @@ def get_audiences(
 def get_audience_detail(
     audience_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_audience_service: GetAudienceUseCase = Depends(Provide[Container.get_audience_service]),
 ):
     return get_audience_service.get_audience_stat_details(audience_id, db=db)
@@ -97,7 +97,7 @@ def create_audience(
     create_audience_service: CreateAudienceUseCase = Depends(
         Provide[Container.create_audience_service]
     ),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     user=Depends(get_permission_checker([])),
 ):
     audience_id = create_audience_service.create_audience(
@@ -111,7 +111,7 @@ def create_audience(
 @inject
 def get_audience_target_strategy_combinations(
     user=Depends(get_permission_checker([])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     create_audience_service: CreateAudienceUseCase = Depends(
         Provide[Container.create_audience_service]
     ),
@@ -124,7 +124,7 @@ def get_audience_target_strategy_combinations(
 @inject
 def get_audience_variable_combinations(
     user=Depends(get_permission_checker([])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     create_audience_service: CreateAudienceUseCase = Depends(
         Provide[Container.create_audience_service]
     ),
@@ -143,7 +143,7 @@ def get_audience_variable_combinations(
 def get_audience_creation_options(
     audience_id: str,
     user=Depends(get_permission_checker([])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_audience_service: GetAudienceUseCase = Depends(Provide[Container.get_audience_service]),
     get_audience_creation_option: GetAudienceCreationOptionsUseCase = Depends(
         Provide[Container.get_audience_creation_option]
@@ -169,7 +169,7 @@ def update_audience_creation_options(
     audience_update: AudienceUpdate,
     background_task: BackgroundTasks,
     user=Depends(get_permission_checker([])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     update_audience_service: UpdateAudienceUseCase = Depends(
         Provide[Container.update_audience_service]
     ),
@@ -207,7 +207,7 @@ def update_audience_creation_options(
 def delete_audience(
     audience_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     delete_audience_service: DeleteAudienceUseCase = Depends(
         Provide[Container.delete_audience_service]
     ),
@@ -239,7 +239,7 @@ def delete_audience(
 def download_audience(
     audience_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     download_audience_service: DownloadAudienceUseCase = Depends(
         Provide[Container.download_audience_service]
     ),
@@ -309,7 +309,7 @@ def audience_update_cycles(
     audience_id: str,
     cycle: TargetAudienceUpdateCycle,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     audience_update_cycle_service: AudienceUpdateCycleUseCase = Depends(
         Provide[Container.audience_update_cycle_service]
     ),
@@ -328,7 +328,7 @@ def audience_update_cycles(
 @inject
 def get_audience_default_exclude(
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_audience_service: GetAudienceUseCase = Depends(Provide[Container.get_audience_service]),
 ) -> list[DefaultExcludeAudience]:
     return get_audience_service.get_default_exclude(user, db=db)
@@ -340,7 +340,7 @@ def update_audience_exclude_status(
     audience_id: str,
     is_exclude: bool = False,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     update_audience_exclude_service: UpdateAudienceExcludeStatusUseCase = Depends(
         Provide[Container.update_audience_exclude_service]
     ),

@@ -20,29 +20,28 @@ class RecommendProductsRepository:
         """
         self.db = db
 
-    def search_recommend_products(self, keyword: str) -> list[IdWithItemDescription]:
-        with self.db() as db:
-            if keyword:
-                keyword = f"%{keyword}%"
-                result = (
-                    db.query(
-                        RecommendProductsModelEntity.recsys_model_id.label("id"),
-                        RecommendProductsModelEntity.recsys_model_name.label("name"),
-                        RecommendProductsModelEntity.description.label("description"),
-                    )
-                    .filter(
-                        RecommendProductsModelEntity.recsys_model_name.ilike(keyword),
-                    )
-                    .all()
-                )
-            else:
-                result = db.query(
+    def search_recommend_products(self, keyword: str, db: Session) -> list[IdWithItemDescription]:
+        if keyword:
+            keyword = f"%{keyword}%"
+            result = (
+                db.query(
                     RecommendProductsModelEntity.recsys_model_id.label("id"),
                     RecommendProductsModelEntity.recsys_model_name.label("name"),
                     RecommendProductsModelEntity.description.label("description"),
-                ).all()
+                )
+                .filter(
+                    RecommendProductsModelEntity.recsys_model_name.ilike(keyword),
+                )
+                .all()
+            )
+        else:
+            result = db.query(
+                RecommendProductsModelEntity.recsys_model_id.label("id"),
+                RecommendProductsModelEntity.recsys_model_name.label("name"),
+                RecommendProductsModelEntity.description.label("description"),
+            ).all()
 
-            return [
-                IdWithItemDescription(id=data.id, name=data.name, description=data.description)
-                for data in result
-            ]
+        return [
+            IdWithItemDescription(id=data.id, name=data.name, description=data.description)
+            for data in result
+        ]

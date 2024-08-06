@@ -37,15 +37,17 @@ class BaseSearchService(ABC):
         pass
 
     @abstractmethod
-    def search_offers_search_of_sets(self, strategy_id, keyword, user) -> list[IdWithLabel]:
+    def search_offers_search_of_sets(
+        self, strategy_id, keyword, user, db: Session
+    ) -> list[IdWithLabel]:
         pass
 
     @abstractmethod
-    def search_offers(self, keyword, user) -> list[IdWithLabel]:
+    def search_offers(self, keyword, user, db: Session) -> list[IdWithLabel]:
         pass
 
     @abstractmethod
-    def search_recommend_products(self, keyword) -> list[IdWithItemDescription]:
+    def search_recommend_products(self, keyword, db: Session) -> list[IdWithItemDescription]:
         pass
 
     @abstractmethod

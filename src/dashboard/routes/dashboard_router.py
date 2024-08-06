@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from src.core.container import Container
-from src.core.database import get_db_session
+from src.core.db_dependency import get_db
 from src.dashboard.infra.dto.response.campaign_audience_stats_response import (
     CampaignAudienceStatsResponse,
 )
@@ -33,7 +33,7 @@ dashboard_router = APIRouter(
 async def get_campaign_stats_v2(
     start_date: str | None = (datetime.now() - timedelta(days=30)).strftime("%Y%m%d"),
     end_date: str | None = datetime.now().strftime("%Y%m%d"),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_campaign_stats_service: GetCampaignStatsService = Depends(
         Provide[Container.get_campaign_stats_service]
     ),
@@ -58,7 +58,7 @@ async def get_campaign_stats_v2(
 @dashboard_router.get("/campaign-group-stats/options")
 @inject
 async def get_campaign_group_stats_options(
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_campaign_group_stats_service: GetCampaignGroupStatsService = Depends(
         Provide[Container.get_campaign_group_stats_service]
     ),
@@ -77,7 +77,7 @@ async def get_campaign_group_stats_v2(
     end_date: str | None = datetime.now().strftime("%Y%m%d"),
     group_code_lv1: Optional[str] = None,
     group_code_lv2: Optional[str] = None,
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_campaign_group_stats_service: GetCampaignGroupStatsService = Depends(
         Provide[Container.get_campaign_group_stats_service]
     ),
@@ -118,7 +118,7 @@ async def get_campaign_group_stats_v2(
 async def get_audience_stats_data(
     start_date: str | None = (datetime.now() - timedelta(days=30)).strftime("%Y%m%d"),
     end_date: str | None = datetime.now().strftime("%Y%m%d"),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_audience_stats_service: GetAudienceStatsService = Depends(
         Provide[Container.get_audience_stats_service]
     ),
@@ -132,7 +132,7 @@ async def get_audience_stats(
     start_date: str | None = (datetime.now() - timedelta(days=30)).strftime("%Y%m%d"),
     end_date: str | None = datetime.now().strftime("%Y%m%d"),
     audience_id: str | None = None,
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_audience_stats_service: GetAudienceStatsService = Depends(
         Provide[Container.get_audience_stats_service]
     ),
@@ -152,7 +152,7 @@ async def get_audience_stats_item_purchase(
     audience_id: str,
     start_date: str | None = (datetime.now() - timedelta(days=30)).strftime("%Y%m%d"),
     end_date: str | None = datetime.now().strftime("%Y%m%d"),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_audience_stats_service: GetAudienceStatsService = Depends(
         Provide[Container.get_audience_stats_service]
     ),

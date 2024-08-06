@@ -2,10 +2,12 @@ from typing import Optional
 
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
+from sqlalchemy.orm import Session
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.common.enums.campaign_media import CampaignMedia
 from src.core.container import Container
+from src.core.db_dependency import get_db
 from src.message_template.domain.message_template import MessageTemplate
 from src.message_template.routes.dto.request.message_template_create import (
     TemplateCreate,
@@ -36,11 +38,12 @@ message_template_router = APIRouter(
 def create_message_template(
     template_create: TemplateCreate,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
     create_template_service: CreateMessageTemplateService = Depends(
         Provide[Container.create_template_service]
     ),
 ) -> MessageTemplate:
-    return create_template_service.exec(template_create, user)
+    return create_template_service.exec(template_create, user, db=db)
 
 
 @message_template_router.get("")
@@ -48,11 +51,12 @@ def create_message_template(
 def get_all_templates(
     media: Optional[CampaignMedia] = None,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
     get_template_service: GetMessageTemplateService = Depends(
         Provide[Container.get_template_service]
     ),
 ):
-    return get_template_service.get_all_templates(media=media.value if media else None)
+    return get_template_service.get_all_templates(media=media.value if media else None, db=db)
 
 
 @message_template_router.get("/{template_id}")
@@ -60,11 +64,12 @@ def get_all_templates(
 def get_template_detail(
     template_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
     get_template_service: GetMessageTemplateService = Depends(
         Provide[Container.get_template_service]
     ),
 ):
-    return get_template_service.get_template_detail(template_id)
+    return get_template_service.get_template_detail(template_id, db=db)
 
 
 @message_template_router.put("/{template_id}")
@@ -73,11 +78,12 @@ def update_template(
     template_id: str,
     template_update: TemplateUpdate,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
     update_template_service: UpdateMessageTemplateService = Depends(
         Provide[Container.update_template_service]
     ),
 ):
-    update_template_service.exec(template_id, template_update, user)
+    update_template_service.exec(template_id, template_update, user, db=db)
 
 
 @message_template_router.delete("/{template_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -85,8 +91,9 @@ def update_template(
 def delete_template(
     template_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
     delete_template_service: DeleteMessageTemplateService = Depends(
         Provide[Container.delete_template_service]
     ),
 ):
-    delete_template_service.exec(template_id)
+    delete_template_service.exec(template_id, db=db)

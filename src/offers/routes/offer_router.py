@@ -8,7 +8,7 @@ from src.auth.utils.permission_checker import get_permission_checker
 from src.common.pagination.pagination_base import PaginationBase
 from src.common.pagination.pagination_response import PaginationResponse
 from src.core.container import Container
-from src.core.database import get_db_session
+from src.core.db_dependency import get_db
 from src.offers.routes.dto.response.offer_detail_response import OfferDetailResponse
 from src.offers.routes.dto.response.offer_response import OfferResponse
 from src.offers.routes.port.get_offer_usecase import GetOfferUseCase
@@ -29,7 +29,7 @@ async def get_offer_object_list(
     start_date: Optional[str] = None,
     end_date: Optional[str] = None,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_offer_service: GetOfferUseCase = Depends(Provide[Container.get_offer_service]),
 ) -> PaginationResponse[OfferResponse] | None:
     items = await get_offer_service.get_offers(
@@ -52,7 +52,7 @@ async def get_offer_object_list(
 def get_offer_detail(
     coupon_no: str,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_offer_service: GetOfferUseCase = Depends(Provide[Container.get_offer_service]),
 ) -> OfferDetailResponse:
     """오퍼 세부 내용을 조회하는 API"""

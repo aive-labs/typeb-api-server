@@ -8,7 +8,7 @@ from src.auth.utils.permission_checker import get_permission_checker
 from src.common.pagination.pagination_base import PaginationBase
 from src.common.pagination.pagination_response import PaginationResponse
 from src.core.container import Container
-from src.core.database import get_db_session
+from src.core.db_dependency import get_db
 from src.products.infra.dto.product_search_condition import ProductSearchCondition
 from src.products.routes.dto.request.product_link_update import ProductLinkUpdate
 from src.products.routes.dto.request.product_update import ProductUpdate
@@ -30,7 +30,7 @@ def get_all_products(
     recommend_yn: str | None = None,
     sale_yn: str | None = None,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     product_service: BaseProductService = Depends(dependency=Provide[Container.product_service]),
 ):
     product_search_condition = ProductSearchCondition(
@@ -59,7 +59,7 @@ def get_all_products(
 def get_product_detail(
     product_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     product_service: BaseProductService = Depends(dependency=Provide[Container.product_service]),
 ) -> ProductResponse:
     product_response = product_service.get_product_detail(product_id, db=db)
@@ -72,7 +72,7 @@ def update_product_link(
     product_id: str,
     product_link_update: ProductLinkUpdate,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     product_service: BaseProductService = Depends(dependency=Provide[Container.product_service]),
 ):
     product_service.update_product_link(product_id, product_link_update, db=db)
@@ -84,7 +84,7 @@ def update_product(
     product_id: str,
     product_update: ProductUpdate,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     product_service: BaseProductService = Depends(dependency=Provide[Container.product_service]),
 ):
     product_service.update(product_id, product_update, db=db)

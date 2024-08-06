@@ -76,52 +76,51 @@ class OfferRepository(BaseOfferRepository):
         return f"({data.id}) {data.name}"
 
     def get_search_offers_of_sets(
-        self, strategy_id: str, keyword: str, user: User
+        self, strategy_id: str, keyword: str, user: User, db: Session
     ) -> list[IdWithLabel]:
-        with self.db() as db:
 
-            condition = self._add_search_offer_condition_by_user(user)
+        condition = self._add_search_offer_condition_by_user(user)
 
-            offer_ids = (
-                db.query(StrategyThemeOfferMappingEntity.coupon_no)
-                .join(
-                    StrategyThemesEntity,
-                    StrategyThemeOfferMappingEntity.strategy_theme_id
-                    == StrategyThemesEntity.strategy_theme_id,
-                )
-                .filter(StrategyThemesEntity.strategy_id == strategy_id)
-                .all()
+        offer_ids = (
+            db.query(StrategyThemeOfferMappingEntity.coupon_no)
+            .join(
+                StrategyThemesEntity,
+                StrategyThemeOfferMappingEntity.strategy_theme_id
+                == StrategyThemesEntity.strategy_theme_id,
             )
+            .filter(StrategyThemesEntity.strategy_id == strategy_id)
+            .all()
+        )
 
-            offer_ids = [offef[0] for offef in offer_ids]
+        offer_ids = [offef[0] for offef in offer_ids]
 
-            today = datetime.now(selected_timezone).strftime("%Y%m%d")
-            if keyword:
-                keyword = f"%{keyword}%"
-                if is_convertible_to_int(keyword):
-                    condition.append(OffersEntity.coupon_no.ilike(keyword))
-                else:
-                    condition.append(OffersEntity.coupon_name.ilike(keyword))  # offer_name
+        today = datetime.now(selected_timezone).strftime("%Y%m%d")
+        if keyword:
+            keyword = f"%{keyword}%"
+            if is_convertible_to_int(keyword):
+                condition.append(OffersEntity.coupon_no.ilike(keyword))
+            else:
+                condition.append(OffersEntity.coupon_name.ilike(keyword))  # offer_name
 
-            result = db.query(
-                OffersEntity.coupon_no.label("id"),
-                OffersEntity.coupon_name.label("name"),
-                OffersEntity.coupon_no.label("code"),
-            ).filter(
-                OffersEntity.coupon_no.in_(offer_ids),
-                OffersEntity.benefit_type.isnot(None),
-                OffersEntity.available_end_datetime >= today,  # 이벤트 기간 필터
-                *condition,
+        result = db.query(
+            OffersEntity.coupon_no.label("id"),
+            OffersEntity.coupon_name.label("name"),
+            OffersEntity.coupon_no.label("code"),
+        ).filter(
+            OffersEntity.coupon_no.in_(offer_ids),
+            OffersEntity.benefit_type.isnot(None),
+            OffersEntity.available_end_datetime >= today,  # 이벤트 기간 필터
+            *condition,
+        )
+
+        return [
+            IdWithLabel(
+                id=data.id,
+                name=data.name,
+                label=self._create_label(data),
             )
-
-            return [
-                IdWithLabel(
-                    id=data.id,
-                    name=data.name,
-                    label=self._create_label(data),
-                )
-                for data in result
-            ]
+            for data in result
+        ]
 
     def _add_search_offer_condition_by_user(self, user):
         if user.role_id in ("admin", "operator"):
@@ -133,74 +132,59 @@ class OfferRepository(BaseOfferRepository):
             ]
         return condition
 
-    def get_search_offers(self, keyword: str, user: User) -> list[IdWithLabel]:
-        with self.db() as db:
-            condition = self._add_search_offer_condition_by_user(user)
+    def get_search_offers(self, keyword: str, user: User, db: Session) -> list[IdWithLabel]:
 
-            today = datetime.now(selected_timezone).strftime("%Y%m%d")
-            if keyword:
-                keyword = f"%{keyword}%"
-                if is_convertible_to_int(keyword):
-                    condition.append(OffersEntity.coupon_no.ilike(keyword))  # coupon_no
-                else:
-                    condition.append(OffersEntity.coupon_name.ilike(keyword))  # offer_name
+        condition = self._add_search_offer_condition_by_user(user)
 
-            # result = (
-            #     db.query(
-            #         OffersEntity.coupon_no.label("id"),
-            #         OffersEntity.coupon_name.label("name"),
-            #         OffersEntity.coupon_no.label("code"),
-            #     )
-            #     .filter(
-            #         OffersEntity.benefit_type.isnot(None),
-            #         OffersEntity.available_end_datetime >= today,  # 이벤트 기간 필터
-            #         *condition,
-            #     )
-            #     .all()
-            # )
+        today = datetime.now(selected_timezone).strftime("%Y%m%d")
+        if keyword:
+            keyword = f"%{keyword}%"
+            if is_convertible_to_int(keyword):
+                condition.append(OffersEntity.coupon_no.ilike(keyword))  # coupon_no
+            else:
+                condition.append(OffersEntity.coupon_name.ilike(keyword))  # offer_name
 
-            # 기본 쿼리 생성
-            query = db.query(
-                OffersEntity.coupon_no.label("id"),
-                OffersEntity.coupon_name.label("name"),
-                OffersEntity.coupon_no.label("code"),
-            ).filter(
-                OffersEntity.benefit_type.isnot(None),
-                *condition,
+        # 기본 쿼리 생성
+        query = db.query(
+            OffersEntity.coupon_no.label("id"),
+            OffersEntity.coupon_name.label("name"),
+            OffersEntity.coupon_no.label("code"),
+        ).filter(
+            OffersEntity.benefit_type.isnot(None),
+            *condition,
+        )
+
+        # 조건에 따른 필터 추가
+        query = query.filter(
+            or_(
+                OffersEntity.available_period_type != "F",
+                OffersEntity.available_end_datetime >= today,
             )
+        )
 
-            # 조건에 따른 필터 추가
-            query = query.filter(
-                or_(
-                    OffersEntity.available_period_type != "F",
-                    OffersEntity.available_end_datetime >= today,
-                )
+        result = query.all()
+
+        return [
+            IdWithLabel(
+                id=data.id,
+                name=data.name,
+                label=self._create_label(data),
             )
+            for data in result
+        ]
 
-            result = query.all()
-
-            return [
-                IdWithLabel(
-                    id=data.id,
-                    name=data.name,
-                    label=self._create_label(data),
-                )
-                for data in result
-            ]
-
-    def get_offer_detail_for_msggen(self, offer_key: str) -> bool:
-        with self.db() as db:
-            entity = (
-                db.query(
-                    OfferDetailsEntity.offer_key,
-                    OfferDetailsEntity.apply_offer_amount,
-                    OfferDetailsEntity.apply_offer_rate,
-                )
-                .filter(OfferDetailsEntity.offer_key == offer_key)
-                .first()
+    def get_offer_detail_for_msggen(self, offer_key: str, db: Session):
+        entity = (
+            db.query(
+                OfferDetailsEntity.offer_key,
+                OfferDetailsEntity.apply_offer_amount,
+                OfferDetailsEntity.apply_offer_rate,
             )
-            # return OfferDetails.from_entity(entity)
-            return entity
+            .filter(OfferDetailsEntity.offer_key == offer_key)
+            .first()
+        )
+        # return OfferDetails.from_entity(entity)
+        return entity
 
     def get_offer_detail(self, coupon_no, db: Session) -> Offer:
         entity = db.query(OffersEntity).filter(OffersEntity.coupon_no == coupon_no).first()
@@ -212,23 +196,21 @@ class OfferRepository(BaseOfferRepository):
 
         return offer
 
-    def get_offer(self, coupon_no) -> Offer:
-        with self.db() as db:
-            entity = db.query(OffersEntity).filter(OffersEntity.coupon_no == coupon_no).first()
+    def get_offer(self, coupon_no, db: Session) -> Offer:
+        entity = db.query(OffersEntity).filter(OffersEntity.coupon_no == coupon_no).first()
 
-            if entity is None:
-                raise NotFoundException(detail={"message": "오퍼 정보를 찾지 못했습니다."})
+        if entity is None:
+            raise NotFoundException(detail={"message": "오퍼 정보를 찾지 못했습니다."})
 
-            return Offer.model_validate(entity)
+        return Offer.model_validate(entity)
 
-    def get_offer_by_id(self, coupon_no) -> Offer:
-        with self.db() as db:
-            entity = db.query(OffersEntity).filter(OffersEntity.coupon_no == coupon_no).first()
+    def get_offer_by_id(self, coupon_no, db: Session) -> Offer:
+        entity = db.query(OffersEntity).filter(OffersEntity.coupon_no == coupon_no).first()
 
-            if entity is None:
-                raise NotFoundException(detail={"message": "오퍼 정보를 찾지 못했습니다."})
+        if entity is None:
+            raise NotFoundException(detail={"message": "오퍼 정보를 찾지 못했습니다."})
 
-            return Offer.from_entity(entity)
+        return Offer.from_entity(entity)
 
     def save_new_coupon(self, cafe24_coupon_response: Cafe24CouponResponse, db: Session):
         for coupon in cafe24_coupon_response.coupons:

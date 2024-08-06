@@ -22,6 +22,9 @@ from src.contents.service.port.base_contents_repository import BaseContentsRepos
 from src.core.exceptions.exceptions import PolicyException
 from src.offers.service.port.base_offer_repository import BaseOfferRepository
 from src.strategy.routes.dto.request.preview_message_create import PreviewMessageCreate
+from src.strategy.routes.dto.response.preview_message_response import (
+    PreviewMessageResponse,
+)
 from src.users.domain.user import User
 
 
@@ -45,7 +48,7 @@ class GenerateMessageService(GenerateMessageUsecase):
 
     def generate_preview_message(
         self, preview_message_create: PreviewMessageCreate, user: User, db: Session
-    ):
+    ) -> PreviewMessageResponse:
 
         with open("src/campaign/core/preview_data.yaml", encoding="utf-8") as file:
             yaml_data = yaml.safe_load(file)
@@ -97,7 +100,7 @@ class GenerateMessageService(GenerateMessageUsecase):
             offer_info_dict = {}
         else:
             coupon_no = coupon_no_list_input[0]
-            offer_data = self.offer_repository.get_offer_by_id(coupon_no)
+            offer_data = self.offer_repository.get_offer_by_id(coupon_no, db)
             offer_info_dict = {
                 "coupon_no": offer_data.coupon_no,
                 "coupon_name": offer_data.coupon_name,
@@ -241,7 +244,7 @@ class GenerateMessageService(GenerateMessageUsecase):
 
         # # ### 데이터 인풋 메시지 생성 요청 형태와 동일하게 맞추기
         if set_data_obj.coupon_no:
-            offer_data = self.offer_repository.get_offer_by_id(set_data_obj.coupon_no)
+            offer_data = self.offer_repository.get_offer_by_id(set_data_obj.coupon_no, db)
             offer_info_dict = {
                 "coupon_no": offer_data.coupon_no,
                 "coupon_name": offer_data.coupon_name,

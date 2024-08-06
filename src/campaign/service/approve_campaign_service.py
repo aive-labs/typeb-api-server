@@ -982,6 +982,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
 
             logging.info(f"2. 테스트 고객: {str(test_cus_cd_lst)}")
             set_group_message_df = DataConverter.convert_query_to_df(set_group_message)
+            logging.info(set_group_message_df)
             set_group_messages_seqs = list(set(set_group_message_df["set_group_msg_seq"]))
             set_group_messages_seqs_str = [str(item) for item in set_group_messages_seqs]
 
@@ -1005,6 +1006,8 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 subquery.c.msg_resv_date
                 == current_date,  # 당일에 발송되어야하는 메세지 예약 저장하기
             ]
+
+            print(current_date)
 
             send_rsv_query_1 = (
                 db.query(

@@ -44,5 +44,5 @@ class UserService(BaseUserService):
         user_responses = [UserResponse(**user.model_dump()) for user in users]
         return user_responses
 
-    def get_send_users(self, permission, db: Session, keyword=None):
-        self.user_repository.get_send_users(permission, db, keyword)
+    def get_send_users(self, db: Session, keyword=None):
+        self.user_repository.get_send_users(db, keyword)

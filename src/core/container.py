@@ -493,9 +493,7 @@ class Container(containers.DeclarativeContainer):
     """
     template 의존성
     """
-    message_template_repository = providers.Singleton(
-        provides=MessageTemplateRepository, db=db.provided.session
-    )
+    message_template_repository = providers.Singleton(provides=MessageTemplateRepository)
 
     create_template_service = providers.Singleton(
         provides=CreateMessageTemplateService,
@@ -517,7 +515,7 @@ class Container(containers.DeclarativeContainer):
         message_template_repository=message_template_repository,
     )
 
-    admin_repository = providers.Singleton(provides=AdminRepository, db=db.provided.session)
+    admin_repository = providers.Singleton(provides=AdminRepository)
 
     get_personal_variables_service = providers.Singleton(
         provides=GetPersonalVariablesService, admin_repository=admin_repository

@@ -7,7 +7,7 @@ from src.campaign.routes.port.create_recurring_campaign_usecase import (
 )
 from src.campaign.routes.port.reserve_campaigns_usecase import ReserveCampaignsUseCase
 from src.core.container import Container
-from src.core.database import get_db_session
+from src.core.db_dependency import get_db
 
 campaign_dag_router = APIRouter(
     tags=["Campaign-Dag"],
@@ -19,7 +19,7 @@ campaign_dag_router = APIRouter(
 async def create_recurring_campaign(
     campaign_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     create_recurring_campaign_service: CreateRecurringCampaignUseCase = Depends(
         dependency=Provide[Container.create_recurring_campaign_service]
     ),
@@ -36,7 +36,7 @@ async def reserve_campaigns(
         dependency=Provide[Container.reserve_campaign_service]
     ),
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
 ):
     return await reserve_campaign_service.reserve_campaigns(
         campaign_id, execution_date, user, db=db

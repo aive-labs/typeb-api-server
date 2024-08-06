@@ -25,7 +25,7 @@ from src.contents.routes.port.usecase.update_contents_usecase import (
 )
 from src.contents.service.generate_contents_service import GenerateContentsService
 from src.core.container import Container
-from src.core.database import get_db_session
+from src.core.db_dependency import get_db
 
 contents_router = APIRouter(
     tags=["Contents"],
@@ -42,7 +42,7 @@ def get_img_creatives_list(
     img_tag_nm: Union[str, None] = "",
     limit: int = 30,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_creative_recommendation: GetCreativeRecommendationsForContentUseCase = Depends(
         Provide[Container.get_creative_recommendation]
     ),
@@ -63,7 +63,7 @@ def get_img_creatives_list(
 def create_contents(
     content_create: ContentsCreate,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     add_contents_service: AddContentsUseCase = Depends(
         dependency=Provide[Container.add_contents_service]
     ),
@@ -76,7 +76,7 @@ def create_contents(
 def get_contents_subject_list(
     style_yn: bool = True,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_contents_service: GetContentsUseCase = Depends(Provide[Container.get_contents_service]),
 ) -> list[ContentsMenuResponse]:
     return get_contents_service.get_subjects(style_yn, db=db)
@@ -87,7 +87,7 @@ def get_contents_subject_list(
 def get_contents_menu_list(
     code: str,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_contents_service: GetContentsUseCase = Depends(Provide[Container.get_contents_service]),
 ) -> dict:
     return get_contents_service.get_with_subject(code, db=db)
@@ -102,7 +102,7 @@ def get_contents_list(
     current_page: int = 1,
     per_page: int = 10,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_contents_service: GetContentsUseCase = Depends(Provide[Container.get_contents_service]),
 ):
     pagination_result = get_contents_service.get_contents_list(
@@ -122,7 +122,7 @@ def get_contents_list(
 def get_contents(
     contents_id: int,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_contents_service: GetContentsUseCase = Depends(Provide[Container.get_contents_service]),
 ) -> ContentsResponse:
     return get_contents_service.get_contents(contents_id, db=db)
@@ -134,7 +134,7 @@ def update_contents(
     contents_id: int,
     content_create: ContentsCreate,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     update_contents_service: UpdateContentsUseCase = Depends(
         Provide[Container.update_contents_service]
     ),
@@ -147,7 +147,7 @@ def update_contents(
 def delete_contents(
     contents_id: int,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     delete_contents_service: DeleteContentsUseCase = Depends(
         Provide[Container.delete_contents_service]
     ),
@@ -159,7 +159,7 @@ def delete_contents(
 @inject
 async def generate_contents(
     contents_generate_req: str = Body(...),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     user=Depends(get_permission_checker(required_permissions=[])),
     generate_contents_service: GenerateContentsService = Depends(
         Provide[Container.generate_contents_service]

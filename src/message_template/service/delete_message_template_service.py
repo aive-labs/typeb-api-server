@@ -1,3 +1,6 @@
+from sqlalchemy.orm import Session
+
+from src.core.transactional import transactional
 from src.message_template.infra.message_template_repository import (
     MessageTemplateRepository,
 )
@@ -11,5 +14,6 @@ class DeleteMessageTemplateService(DeleteMessageTemplateUseCase):
     def __init__(self, message_template_repository: MessageTemplateRepository):
         self.message_template_repository = message_template_repository
 
-    def exec(self, template_id: str):
-        self.message_template_repository.delete(template_id)
+    @transactional
+    def exec(self, template_id: str, db: Session):
+        self.message_template_repository.delete(template_id, db)

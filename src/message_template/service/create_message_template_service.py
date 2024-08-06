@@ -1,5 +1,8 @@
+from sqlalchemy.orm import Session
+
 from src.common.enums.campaign_media import CampaignMedia
 from src.core.exceptions.exceptions import ValidationException
+from src.core.transactional import transactional
 from src.message_template.domain.message_template import MessageTemplate
 from src.message_template.domain.message_template_button_detail import (
     MessageTemplateButtonDetail,
@@ -22,7 +25,8 @@ class CreateMessageTemplateService(CreateMessageTemplateUseCase):
     def __init__(self, message_template_repository: BaseMessageTemplateRepository):
         self.message_template_repository = message_template_repository
 
-    def exec(self, template_create: TemplateCreate, user: User) -> MessageTemplate:
+    @transactional
+    def exec(self, template_create: TemplateCreate, user: User, db: Session) -> MessageTemplate:
 
         selected_media = template_create.media
         message_title = template_create.message_title
@@ -74,4 +78,4 @@ class CreateMessageTemplateService(CreateMessageTemplateUseCase):
                 )
                 message_template.button.append(button_item)
 
-        return self.message_template_repository.save_message_template(message_template)
+        return self.message_template_repository.save_message_template(message_template, db)

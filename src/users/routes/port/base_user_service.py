@@ -29,5 +29,5 @@ class BaseUserService(ABC):
         pass
 
     @abstractmethod
-    def get_send_users(self, permission, db: Session, keyword=None):
+    def get_send_users(self, db: Session, keyword=None):
         pass

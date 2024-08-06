@@ -1,3 +1,5 @@
+from sqlalchemy.orm import Session
+
 from src.admin.routes.dto.response.personal_variable_response import (
     PersonalVariableResponse,
 )
@@ -13,5 +15,5 @@ class GetPersonalVariablesService(GetPersonalVariablesUseCase):
     def __init__(self, admin_repository: BaseAdminRepository):
         self.admin_repository = admin_repository
 
-    def get_personal_variable(self, user: User) -> list[PersonalVariableResponse]:
-        return self.admin_repository.get_personal_variables(user)
+    def get_personal_variable(self, user: User, db: Session) -> list[PersonalVariableResponse]:
+        return self.admin_repository.get_personal_variables(user, db)

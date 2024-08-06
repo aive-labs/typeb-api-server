@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from src.auth.utils.permission_checker import get_permission_checker
 from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase  ##
 from src.core.container import Container
-from src.core.database import get_db_session
+from src.core.db_dependency import get_db
 from src.strategy.routes.dto.request.preview_message_create import PreviewMessageCreate
 from src.strategy.routes.dto.request.strategy_create import StrategyCreate
 from src.strategy.routes.dto.response.preview_message_response import (
@@ -25,7 +25,7 @@ strategy_router = APIRouter(tags=["Strategy-management"])
 def get_strategies(
     start_date: str,
     end_date: str,
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_strategy_service: GetStrategyUseCase = Depends(
         dependency=Provide[Container.get_strategy_service]
     ),
@@ -38,7 +38,7 @@ def get_strategies(
 @inject
 def read_strategy_object(
     strategy_id: str,
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_strategy_service: GetStrategyUseCase = Depends(
         dependency=Provide[Container.get_strategy_service]
     ),
@@ -54,7 +54,7 @@ def create_strategies(
     create_strategy_service: CreateStrategyUseCase = Depends(
         dependency=Provide[Container.create_strategy_service]
     ),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     user=Depends(get_permission_checker(required_permissions=[])),
 ):
     result = create_strategy_service.create_strategy_object(strategy_create, user, db=db)
@@ -65,7 +65,7 @@ def create_strategies(
 @inject
 def delete_strategy(
     strategy_id: str,
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     delete_strategy_service: DeleteStrategyUseCase = Depends(
         Provide[Container.delete_strategy_service]
     ),
@@ -79,7 +79,7 @@ def delete_strategy(
 def update_strategy(
     strategy_id: str,
     strategy_update: StrategyCreate,
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     update_strategy_service: UpdateStrategyUseCase = Depends(
         Provide[Container.update_strategy_service]
     ),
@@ -93,10 +93,9 @@ def update_strategy(
 def get_preview(
     preview_message_create: PreviewMessageCreate,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     generate_message_service: GenerateMessageUsecase = Depends(
         dependency=Provide[Container.generate_message_service]
     ),
 ) -> PreviewMessageResponse:
-
-    return generate_message_service.generate_preview_message(preview_message_create, user, db)
+    return generate_message_service.generate_preview_message(preview_message_create, user, db=db)

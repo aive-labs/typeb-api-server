@@ -1,5 +1,8 @@
+from sqlalchemy.orm import Session
+
 from src.common.enums.access_level import AccessLevel
 from src.core.exceptions.exceptions import AuthorizationException
+from src.core.transactional import transactional
 from src.message_template.domain.message_template import MessageTemplate
 from src.message_template.domain.message_template_button_detail import (
     MessageTemplateButtonDetail,
@@ -21,13 +24,14 @@ class UpdateMessageTemplateService(UpdateMessageTemplateUseCase):
     def __init__(self, message_template_repository: MessageTemplateRepository):
         self.message_template_repository = message_template_repository
 
-    def exec(self, template_id: str, template_update: TemplateUpdate, user: User):
+    @transactional
+    def exec(self, template_id: str, template_update: TemplateUpdate, user: User, db: Session):
 
         template_update.template_id = int(template_id)
         # if admin -> 1
         access_level = [level.value for level in AccessLevel if level.name == user.role_id][0]
 
-        old_template = self.message_template_repository.get_template_detail(template_id)
+        old_template = self.message_template_repository.get_template_detail(template_id, db)
 
         if old_template.access_level < access_level:
             raise AuthorizationException(
@@ -63,4 +67,4 @@ class UpdateMessageTemplateService(UpdateMessageTemplateUseCase):
                 )
                 update_message_template.button.append(button_item)
 
-        self.message_template_repository.update(template_id, update_message_template)
+        self.message_template_repository.update(template_id, update_message_template, db)
