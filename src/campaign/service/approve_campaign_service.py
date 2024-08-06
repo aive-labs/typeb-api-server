@@ -797,9 +797,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         # insert to send_reservation
         res = self.save_campaign_reservation(db, user, campaign_id)
 
-        print("res")
-        print(res)
-
         if res:
             # airflow trigger api
             print("today airflow trigger api")
@@ -810,8 +807,11 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             }
             yyyymmddhh24mi = get_korean_current_datetime_yyyymmddhh24mims()
             dag_run_id = f"{campaign_id}_{str(yyyymmddhh24mi)}"
-            print(f"dag_run_id: {dag_run_id} / input_var: {input_var}")
+            print(send_date, send_time)
             logical_date = create_logical_date_for_airflow(send_date, send_time)
+            print(
+                f"dag_run_id: {dag_run_id} / input_var: {input_var} / logical_date: {logical_date}"
+            )
             await self.message_controller.execute_dag(
                 dag_name="send_messages",
                 input_vars=input_var,

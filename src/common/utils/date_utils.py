@@ -1,5 +1,5 @@
 import random
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 
 import pytz
 
@@ -108,20 +108,19 @@ def create_logical_date_for_airflow(date_str: str, time_str: str) -> str:
     datetime_obj = datetime.strptime(datetime_str, "%Y%m%d %H:%M")
 
     # UTC+9 시간대로 변환
-    utc_plus_9 = timezone(timedelta(hours=9))
-    datetime_obj = datetime_obj.replace(tzinfo=utc_plus_9)
+    # utc_plus_9 = timezone(timedelta(hours=9))
+    # datetime_obj = datetime_obj.replace(tzinfo=utc_plus_9)
 
     # 초와 밀리세컨드 랜덤 생성
     random_seconds = random.randint(0, 59)
     random_milliseconds = random.randint(0, 999)
-    #
     datetime_obj = datetime_obj.replace(
         second=random_seconds, microsecond=random_milliseconds * 1000
     )
-    formatted_date_str = datetime_obj.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
-    # ISO 8601 형식의 문자열로 변환
-    iso_format_str = datetime_obj.isoformat()
+    datetime_obj -= timedelta(hours=9)
+
+    formatted_date_str = datetime_obj.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
     return formatted_date_str
 
