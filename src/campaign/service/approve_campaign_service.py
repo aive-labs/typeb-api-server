@@ -813,7 +813,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 f"dag_run_id: {dag_run_id} / input_var: {input_var} / logical_date: {logical_date}"
             )
             await self.message_controller.execute_dag(
-                dag_name="send_messages",
+                dag_name=f"{user.mall_id}_send_messages",
                 input_vars=input_var,
                 dag_run_id=dag_run_id,
                 logical_date=logical_date,

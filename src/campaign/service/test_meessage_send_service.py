@@ -270,7 +270,7 @@ class TestMessageSendService(TestSendMessageUseCase):
         # airflow trigger api
         message_controller = MessageReserveController()
         input_variable = {"mallid": user.mall_id, "campaign_id": campaign_id, "test_send_yn": "y"}
-        await message_controller.execute_dag("send_messages", input_variable)
+        await message_controller.execute_dag(f"{user.mall_id}_send_messages", input_variable)
 
         return {
             "status": "success",

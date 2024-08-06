@@ -11,6 +11,7 @@ from src.users.domain.user import User
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+REFRESH_TOKEN_EXPIRE_MINUTES = 120
 
 
 class TokenService:
@@ -34,9 +35,10 @@ class TokenService:
 
         return TokenResponse(
             access_token=access_token,
+            access_token_expires_in=ACCESS_TOKEN_EXPIRE_MINUTES,
             refresh_token=refresh_token,
             token_type="Bearer",
-            expires_in=ACCESS_TOKEN_EXPIRE_MINUTES,
+            refresh_token_expires_in=REFRESH_TOKEN_EXPIRE_MINUTES,
         )
 
     def create_access_token(self, data: dict):
