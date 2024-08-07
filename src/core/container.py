@@ -164,9 +164,7 @@ class Container(containers.DeclarativeContainer):
     """
     온보딩 의존성 주입
     """
-    onboarding_sqlalchemy = providers.Factory(
-        provides=OnboardingSqlAlchemyRepository, db=db.provided.session
-    )
+    onboarding_sqlalchemy = providers.Factory(provides=OnboardingSqlAlchemyRepository)
     onboarding_repository = providers.Factory(
         provides=OnboardingRepository, onboarding_sqlalchemy=onboarding_sqlalchemy
     )
