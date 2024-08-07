@@ -33,9 +33,15 @@ def create_dict_list(group):
         ]
         btn_list_final = json.dumps(btn_list_final, ensure_ascii=False)
         return '{"button": ' + btn_list_final + "}"
-
     else:
         return None
+
+
+def json_to_list(json_str):
+    if json_str is not None:
+        return json.loads(json_str)["button"]
+    else:
+        return []
 
 
 def convert_to_button_format(db, set_group_msg_seqs, send_rsv_format):
@@ -60,9 +66,6 @@ def convert_to_button_format(db, set_group_msg_seqs, send_rsv_format):
     )
 
     button_df = DataConverter.convert_query_to_df(buttons)
-    print("button_df")
-    print(button_df.columns)
-    print(len(button_df))
 
     if len(button_df) == 0:
         cols = [

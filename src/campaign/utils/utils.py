@@ -131,3 +131,10 @@ def flat(pool):
         else:
             res.append(v)
     return res
+
+
+def add_brackets(json_str):
+    if json_str is not None:
+        return f"[{json_str}]"
+    else:
+        return "[]"

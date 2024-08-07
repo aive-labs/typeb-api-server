@@ -259,8 +259,9 @@ class TestMessageSendService(TestSendMessageUseCase):
         res_df["phone_callback"] = res_df["phone_callback"].str.replace("-", "")
         res_df["phone_send"] = res_df["phone_send"].str.replace("-", "")
 
-        # kko_button_json이 null인 경우, {"button": []} 를 넣어줘야 함
+        # kko_button_json이 null인 경우, {"button": []} 를 넣어줘야 함, 그리고 리스트 형태로 만들어야 함
         res_df["kko_button_json"] = res_df["kko_button_json"].fillna('{"button": []}')
+        # res_df["kko_button_json"] = res_df["kko_button_json"].apply(add_brackets)
 
         send_rsv_dict = res_df.to_dict("records")
 
