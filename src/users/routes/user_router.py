@@ -16,7 +16,7 @@ from src.core.container import Container
 from src.core.database import (
     get_mall_id_by_user,
 )
-from src.core.db_dependency import get_db, get_db_for_login
+from src.core.db_dependency import get_db, get_db_for_with_mall_id
 from src.users.domain.gnb_permission import GNBPermissions
 from src.users.domain.resource_permission import ResourcePermission
 from src.users.domain.user_role import UserPermissions
@@ -88,7 +88,7 @@ def sign_in(
     password = form_data.password
 
     mall_id = get_mall_id_by_user(login_id)
-    db = get_db_for_login(mall_id)
+    db = get_db_for_with_mall_id(mall_id)
 
     token_response = auth_service.login(login_id, password, mall_id, db=db)
 

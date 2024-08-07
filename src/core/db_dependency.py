@@ -48,12 +48,14 @@ def get_db(token: str = Depends(reuseable_oauth)):
     session_local = get_session(engine)
     db = session_local()
     try:
+        # print(f"SET search_path TO {mall_id}")
+        # session_local.execute(text(f"SET search_path TO {mall_id}"))
         yield db
     finally:
         db.close()
 
 
-def get_db_for_login(mall_id):
+def get_db_for_with_mall_id(mall_id):
     engine = get_engine(prefix_db_url(mall_id))
     Base.metadata.create_all(bind=engine)
     session_local = get_session(engine)
