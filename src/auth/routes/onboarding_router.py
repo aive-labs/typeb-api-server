@@ -11,7 +11,6 @@ from src.auth.routes.dto.response.onboarding_response import OnboardingResponse
 from src.auth.routes.port.base_onboarding_service import BaseOnboardingService
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
-from src.core.database import get_db_session
 from src.core.db_dependency import get_db
 
 onboarding_router = APIRouter(
@@ -108,7 +107,7 @@ def update_kakao_channel(
 def get_kakao_channel(
     mall_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     onboarding_service: BaseOnboardingService = Depends(Provide[Container.onboarding_service]),
 ) -> KakaoChannelResponse | None:
     return onboarding_service.get_kakao_channel(mall_id=mall_id, db=db)
