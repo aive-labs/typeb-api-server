@@ -137,9 +137,10 @@ def get_korean_current_datetime_yyyymmddhh24mims():
     return formatted_datetime
 
 
-def get_expired_at_to_iso_format(minutes: int):
+def get_expired_at_to_iso_format_kr_time(minutes: int):
     # 현재 시간
-    current_time = datetime.now()
+    local_timezone = pytz.timezone("Asia/Seoul")
+    current_time = datetime.now(local_timezone)
     # 입력 받은 minutes 후 시간 계산
     future_time = current_time + timedelta(minutes=minutes) - timedelta(seconds=10)
 

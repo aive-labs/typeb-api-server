@@ -6,7 +6,7 @@ from jose import jwt
 
 from src.auth.routes.dto.response.token_response import TokenResponse
 from src.auth.utils.jwt_settings import JwtSettings
-from src.common.utils.date_utils import get_expired_at_to_iso_format
+from src.common.utils.date_utils import get_expired_at_to_iso_format_kr_time
 from src.common.utils.get_env_variable import get_env_variable
 from src.users.domain.user import User
 
@@ -39,10 +39,12 @@ class TokenService:
 
         return TokenResponse(
             access_token=access_token,
-            access_token_expires_in=get_expired_at_to_iso_format(self.ACCESS_TOKEN_EXPIRE_MINUTES),
+            access_token_expires_in=get_expired_at_to_iso_format_kr_time(
+                self.ACCESS_TOKEN_EXPIRE_MINUTES
+            ),
             refresh_token=refresh_token,
             token_type="Bearer",
-            refresh_token_expires_in=get_expired_at_to_iso_format(
+            refresh_token_expires_in=get_expired_at_to_iso_format_kr_time(
                 self.REFRESH_TOKEN_EXPIRE_MINUTES
             ),
         )
