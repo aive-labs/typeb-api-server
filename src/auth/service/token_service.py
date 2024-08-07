@@ -33,6 +33,7 @@ class TokenService:
         refresh_token, _ = self.create_refresh_token(
             email=user.email,
             user_id=str(user.user_id),
+            mall_id=mall_id,
         )
 
         return TokenResponse(
@@ -51,9 +52,7 @@ class TokenService:
         return encoded_jwt
 
     def create_refresh_token(
-        self,
-        email: Union[str, Any],
-        user_id: Union[str, Any],
+        self, email: Union[str, Any], user_id: Union[str, Any], mall_id: str
     ) -> tuple[str, str]:
         # KST 기준 토큰 만료시간 계산. datetime.now()
         expires_in = datetime.now() + timedelta(minutes=self.jwt_setting.refresh_token_expired)
@@ -66,6 +65,7 @@ class TokenService:
         payload = {
             "email": email,
             "user_id": user_id,
+            "mall_id": mall_id,
             "expires": expires_in,
         }
         encoded_jwt = jwt.encode(claims=payload, key=self.jwt_setting.secret_key, algorithm="HS256")
