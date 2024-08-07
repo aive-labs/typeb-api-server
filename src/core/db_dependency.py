@@ -32,6 +32,7 @@ def get_db(token: str = Depends(reuseable_oauth)):
     if mall_id is None:
         raise AuthException(detail={"message": "계정에 해당하는 쇼핑몰 정보를 찾지 못하였습니다."})
 
+    mall_id = "aivelabsdb" if mall_id == "aivelabs" else mall_id
     print(f"[DB] Get DB Connection for {mall_id}")
     if mall_id in db_engine:
         # 기존 엔진 반환
