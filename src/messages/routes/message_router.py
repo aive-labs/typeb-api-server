@@ -54,3 +54,5 @@ def get_message_result_from_ppurio(
 
     print(f"Bizppurio result log from ip: {client_ip}")
     message_service.save_message_result(ppurio_message_result, db=db)
+
+    db.close()
