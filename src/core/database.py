@@ -104,10 +104,10 @@ def get_mall_id_by_user(user_id: str) -> str:
     with user_db_conn.cursor() as cursor:
         cursor.execute(
             """
-                    select *
-                    from public.clients
-                    where user_id = %s
-        """,
+            select *
+            from public.clients
+            where user_id = %s
+            """,
             (user_id,),
         )
 

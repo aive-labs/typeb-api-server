@@ -84,7 +84,7 @@ from src.campaign.routes.port.upload_image_for_message_usecase import (
     UploadImageForMessageUseCase,
 )
 from src.core.container import Container
-from src.core.database import get_db_session
+from src.core.db_dependency import get_db
 from src.search.routes.port.base_search_service import BaseSearchService
 
 campaign_router = APIRouter(tags=["Campaign-management"])
@@ -96,11 +96,12 @@ def get_campaigns(
     start_date: str,
     end_date: str,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
     get_campaign_service: GetCampaignUseCase = Depends(
         dependency=Provide[Container.get_campaign_service]
     ),
 ):
-    return get_campaign_service.get_campaigns(start_date, end_date, user)
+    return get_campaign_service.get_campaigns(start_date, end_date, user, db=db)
 
 
 @campaign_router.get("/timeline/{campaign_id}")
@@ -108,7 +109,7 @@ def get_campaigns(
 def get_campaign_timeline(
     campaign_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     get_campaign_service: GetCampaignUseCase = Depends(
         dependency=Provide[Container.get_campaign_service]
     ),
@@ -122,7 +123,7 @@ def update_campaign(
     campaign_id: str,
     campaign_update: CampaignCreate,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     update_campaign_service: UpdateCampaignUseCase = Depends(
         Provide[Container.update_campaign_service]
     ),
@@ -135,7 +136,7 @@ def update_campaign(
 def create_campaign(
     campaign_create: CampaignCreate,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     create_campaign_service: CreateCampaignUseCase = Depends(
         dependency=Provide[Container.create_campaign_service]
     ),
@@ -148,7 +149,7 @@ def create_campaign(
 def get_campaign_detail(
     campaign_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     get_campaign_service: GetCampaignUseCase = Depends(
         dependency=Provide[Container.get_campaign_service]
     ),
@@ -161,7 +162,7 @@ def get_campaign_detail(
 def generate_message(
     message_generate: MsgGenerationReq,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     generate_message_service: GenerateMessageUsecase = Depends(
         dependency=Provide[Container.generate_message_service]
     ),
@@ -174,7 +175,7 @@ def generate_message(
 def get_excluded_customer(
     campaign_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     get_campaign_service: GetCampaignUseCase = Depends(
         dependency=Provide[Container.get_campaign_service]
     ),
@@ -188,7 +189,7 @@ def create_or_update_campaign_set(
     campaign_id: str,
     campaign_set_update: CampaignSetUpdate,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     update_campaign_set_service: UpdateCampaignSetUseCase = Depends(
         dependency=Provide[Container.update_campaign_set_service]
     ),
@@ -205,7 +206,7 @@ def update_campaign_set_message_group(
     set_seq: int,
     set_group_updated: CampaignSetGroupUpdate,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     update_campaign_set_message_group_service: UpdateCampaignSetMessageGroupUseCase = Depends(
         dependency=Provide[Container.update_campaign_set_message_group_service]
     ),
@@ -221,7 +222,7 @@ def patch_campaign_progress(
     campaign_id: str,
     progress_req: CampaignProgressRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     update_campaign_progress_service: UpdateCampaignProgressUseCase = Depends(
         dependency=Provide[Container.update_campaign_progress_service]
     ),
@@ -238,7 +239,7 @@ def update_campaign_message(
     set_group_msg_seq: int,
     msg_input: CampaignSetGroupMessageRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     update_campaign_set_message_group_service: UpdateCampaignSetMessageGroupUseCase = Depends(
         dependency=Provide[Container.update_campaign_set_message_group_service]
     ),
@@ -255,7 +256,7 @@ def update_set_message_confirmed(
     set_seq: int,
     is_confirmed_obj: CampaignSetMessageConfirmReqeust,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     confirm_campaign_set_group_message: ConfirmCampaignSetGroupMessageUseCase = Depends(
         dependency=Provide[Container.confirm_campaign_set_group_message]
     ),
@@ -271,7 +272,7 @@ def update_campaign_message_use_status(
     set_group_msg_seq: int,
     is_used_obj: CampaignSetMessageUseRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     update_message_use_status_service: UpdateMessageUseStatusUseCase = Depends(
         dependency=Provide[Container.update_message_use_status_service]
     ),
@@ -286,7 +287,7 @@ def update_campaign_message_use_status(
 def get_campaign_set_description(
     campaign_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     get_campaign_set_description_service: GetCampaignSetDescriptionUseCase = Depends(
         dependency=Provide[Container.get_campaign_set_description_service]
     ),
@@ -300,7 +301,7 @@ def update_campaign_set_confirmed(
     campaign_id: str,
     set_seq: int,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     update_campaign_set_confirm_service: UpdateCampaignSetStatusToConfirmUseCase = Depends(
         dependency=Provide[Container.update_campaign_set_confirm_service]
     ),
@@ -314,7 +315,7 @@ def update_campaign_set_confirmed(
 def update_campaign_set_all_confirm(
     campaign_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     update_campaign_set_confirm_service: UpdateCampaignSetStatusToConfirmUseCase = Depends(
         dependency=Provide[Container.update_campaign_set_confirm_service]
     ),
@@ -328,7 +329,7 @@ def update_campaign_set_all_confirm(
 def get_campaign_summary(
     campaign_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     campaign_summary_service: CreateCampaignSummaryUseCase = Depends(
         dependency=Provide[Container.campaign_summary_service]
     ),
@@ -344,7 +345,7 @@ async def campaign_status_change(
     background_task: BackgroundTasks,
     reviewers: Optional[str] = None,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     approve_campaign_service: ApproveCampaignUseCase = Depends(
         dependency=Provide[Container.approve_campaign_service]
     ),
@@ -360,7 +361,7 @@ async def test_message_send(
     campaign_id: str,
     test_send_request: TestSendRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     test_send_service: TestSendMessageUseCase = Depends(
         dependency=Provide[Container.test_send_service]
     ),
@@ -373,7 +374,7 @@ async def test_message_send(
 def delete_campaign(
     campaign_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
-    db=Depends(get_db_session),
+    db=Depends(get_db),
     delete_campaign_service: DeleteCampaignUseCase = Depends(
         dependency=Provide[Container.delete_campaign_service]
     ),
@@ -388,7 +389,7 @@ def get_campaign_set_rep_items(
     strategy_theme_id: str,
     audience_id: str,
     coupon_no: Optional[str],
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     user=Depends(get_permission_checker(required_permissions=[])),
     search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
 ):
@@ -404,7 +405,7 @@ async def upload_message_resources(
     campaign_id: str,
     set_group_msg_seq: int,
     files: list[UploadFile] = File(...),
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     user=Depends(get_permission_checker(required_permissions=[])),
     upload_image_for_message: UploadImageForMessageUseCase = Depends(
         dependency=Provide[Container.upload_image_for_message]
@@ -419,7 +420,7 @@ async def upload_message_resources(
 async def delete_message_resources(
     campaign_id: str,
     set_group_msg_seq: int,
-    db: Session = Depends(get_db_session),
+    db: Session = Depends(get_db),
     user=Depends(get_permission_checker(required_permissions=[])),
     delete_image_for_message: DeleteImageForMessageUseCase = Depends(
         dependency=Provide[Container.delete_image_for_message]

@@ -1,5 +1,3 @@
-from collections.abc import Callable
-from contextlib import AbstractContextManager
 from datetime import datetime
 
 from sqlalchemy import String, and_, func, or_, update
@@ -72,17 +70,6 @@ from src.users.infra.entity.user_entity import UserEntity
 
 
 class AudienceSqlAlchemy:
-    def __init__(self, db: Callable[..., AbstractContextManager[Session]]):
-        """_summary_
-
-        Args:
-            db (Callable[..., AbstractContextManager[Session]]):
-            - Callable 호출 가능한 객체
-            - AbstractContextManager[Session]: 세션 객체를 반환하는 컨텍스트 관리자
-            - Session: SQLAlchemy의 세션 객체
-
-        """
-        self.db = db
 
     def get_audiences(
         self, user: User, db: Session, is_exclude: bool | None = None

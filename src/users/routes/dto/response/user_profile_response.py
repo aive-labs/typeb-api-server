@@ -38,9 +38,7 @@ class UserProfileResponse(BaseModel):
             department_name=user.department_name,
             parent_dept_cd=user.parent_dept_cd,
             language=user.language,
-            test_callback_number=(
-                user.test_callback_number if user.sys_id == "WP" else "02-2088-5502"
-            ),
+            test_callback_number=user.test_callback_number,
             mall_id=None if cafe24_integration is None else cafe24_integration.mall_id,
             onboarding_status=onboarding_status,
             cafe24=cafe24_integration,

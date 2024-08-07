@@ -1,5 +1,3 @@
-from collections.abc import Callable
-from contextlib import AbstractContextManager
 from typing import List
 
 from sqlalchemy import and_, case, distinct, func, literal, or_, update
@@ -26,20 +24,8 @@ from src.search.routes.dto.id_with_item_response import IdWithItem
 
 
 class ContentsSqlAlchemy:
-    def __init__(self, db: Callable[..., AbstractContextManager[Session]]):
-        """_summary_
-
-        Args:
-            db (Callable[..., AbstractContextManager[Session]]):
-            - Callable 호출 가능한 객체
-            - AbstractContextManager[Session]: 세션 객체를 반환하는 컨텍스트 관리자
-            - Session: SQLAlchemy의 세션 객체
-
-        """
-        self.db = db
 
     def add_contents(self, contents: ContentsEntity, db: Session) -> ContentsResponse:
-
         db.add(contents)
         db.flush()
 
@@ -85,14 +71,11 @@ class ContentsSqlAlchemy:
         contents_urls: list[str] = [str(entity.contents_url) for entity in entities]
         return contents_urls
 
-    def get_contents_id_url_dict(self) -> dict:
+    def get_contents_id_url_dict(self, db: Session) -> dict:
 
-        with self.db() as db:
-            entities = db.query(ContentsEntity.contents_id, ContentsEntity.contents_url).all()
-            contents_id_urls: dict = {
-                entity.contents_id: entity.contents_url for entity in entities
-            }
-            return contents_id_urls
+        entities = db.query(ContentsEntity.contents_id, ContentsEntity.contents_url).all()
+        contents_id_urls: dict = {entity.contents_id: entity.contents_url for entity in entities}
+        return contents_id_urls
 
     def get_contents_list(
         self, db: Session, based_on, sort_by, contents_status=None, query=None

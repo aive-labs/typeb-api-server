@@ -87,7 +87,7 @@ class GenerateMessageService(GenerateMessageUsecase):
             contents_name = contents_obj.contents_name
 
         if recsys_model_id:
-            recsys_model_obj = self.common_repository.get_recsys_model(recsys_model_id)
+            recsys_model_obj = self.common_repository.get_recsys_model(recsys_model_id, db)
             recsys_model_name = recsys_model_obj.recsys_model_name
             set_data.recsys_model_id = recsys_model_id
         else:
@@ -226,7 +226,7 @@ class GenerateMessageService(GenerateMessageUsecase):
         if campaign_base_obj.campaign_status_code == "r2":
 
             send_msg_first = self.campaign_repository.get_send_complete_campaign(
-                campaign_base_obj.campaign_id, req_set_group_seqs
+                campaign_base_obj.campaign_id, req_set_group_seqs, db
             )
 
             if send_msg_first:
@@ -261,13 +261,15 @@ class GenerateMessageService(GenerateMessageUsecase):
             offer_info_dict = {}
 
         if set_data_obj.recsys_model_id:
-            recsys_model_obj = self.common_repository.get_recsys_model(set_data_obj.recsys_model_id)
+            recsys_model_obj = self.common_repository.get_recsys_model(
+                set_data_obj.recsys_model_id, db
+            )
             recsys_model_name = recsys_model_obj.recsys_model_name
         else:
             recsys_model_name = None
 
         # contents
-        contents_dict = self.contents_repository.get_contents_id_url_dict()
+        contents_dict = self.contents_repository.get_contents_id_url_dict(db)
 
         set_data = {
             "set_seq": set_data_obj.set_seq,
@@ -295,15 +297,15 @@ class GenerateMessageService(GenerateMessageUsecase):
 
         # # handle data area
         get_group_item_nm_stats = self.campaign_repository.get_group_item_nm_stats(
-            campaign_base_obj.campaign_id, set_sort_num
+            campaign_base_obj.campaign_id, set_sort_num, db
         )
 
         get_it_gb_nm_stats = self.campaign_repository.get_it_gb_nm_stats(
-            campaign_base_obj.campaign_id, set_sort_num
+            campaign_base_obj.campaign_id, set_sort_num, db
         )
 
         get_age_stats = self.campaign_repository.get_age_stats(
-            campaign_base_obj.campaign_id, set_sort_num
+            campaign_base_obj.campaign_id, set_sort_num, db
         )
 
         item_stats = calculate_ratios(get_group_item_nm_stats)
@@ -328,7 +330,7 @@ class GenerateMessageService(GenerateMessageUsecase):
         }
 
         message_data = self.campaign_repository.get_campaign_messages(
-            campaign_base_obj.campaign_id, req_set_group_seqs
+            campaign_base_obj.campaign_id, req_set_group_seqs, db
         )
 
         phone_callback = "02-2088-5502"  # 매장 번호 또는 대표번호

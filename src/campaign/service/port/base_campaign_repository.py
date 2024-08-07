@@ -19,15 +19,17 @@ class BaseCampaignRepository(ABC):
         pass
 
     @abstractmethod
-    def get_campaigns(self, start_date: str, end_date: str, user: User) -> list[Campaign]:
+    def get_campaigns(
+        self, start_date: str, end_date: str, user: User, db: Session
+    ) -> list[Campaign]:
         pass
 
     @abstractmethod
-    def is_existing_campaign_by_name(self, name: str) -> bool:
+    def is_existing_campaign_by_name(self, name: str, db: Session) -> bool:
         pass
 
     @abstractmethod
-    def is_existing_campaign_by_offer_event_no(self, offer_event_no: str) -> bool:
+    def is_existing_campaign_by_offer_event_no(self, offer_event_no: str, db: Session) -> bool:
         pass
 
     @abstractmethod
@@ -39,7 +41,9 @@ class BaseCampaignRepository(ABC):
         pass
 
     @abstractmethod
-    def search_campaign(self, keyword, current_date, two_weeks_ago, db) -> list[IdWithItem]:
+    def search_campaign(
+        self, keyword, current_date, two_weeks_ago, db: Session
+    ) -> list[IdWithItem]:
         pass
 
     @abstractmethod
@@ -72,7 +76,7 @@ class BaseCampaignRepository(ABC):
 
     @abstractmethod
     def get_message_in_send_reservation(
-        self, campaign_id, set_group_msg_seq, db
+        self, campaign_id, set_group_msg_seq, db: Session
     ) -> SendReservation:
         pass
 
@@ -83,7 +87,7 @@ class BaseCampaignRepository(ABC):
         pass
 
     @abstractmethod
-    def delete_campaign(self, campaign, db):
+    def delete_campaign(self, campaign, db: Session):
         pass
 
     @abstractmethod

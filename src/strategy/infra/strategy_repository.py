@@ -49,8 +49,10 @@ class StrategyRepository(BaseStrategyRepository):
 
         return strategy, strategy_themes
 
-    def create_strategy(self, strategy: Strategy, campaign_themes: list[StrategyTheme], user: User):
-        self.strategy_sqlalchemy_repository.create_strategy(strategy, campaign_themes, user)
+    def create_strategy(
+        self, strategy: Strategy, campaign_themes: list[StrategyTheme], user: User, db: Session
+    ):
+        self.strategy_sqlalchemy_repository.create_strategy(strategy, campaign_themes, user, db)
 
     def is_strategy_name_exists(self, name: str, db: Session) -> int:
         return self.strategy_sqlalchemy_repository.is_strategy_name_exists(name, db)

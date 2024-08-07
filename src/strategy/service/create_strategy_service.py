@@ -73,7 +73,7 @@ class CreateStrategyService(CreateStrategyUseCase):
                 )
             )
 
-        self.strategy_repository.create_strategy(new_strategy, strategy_themes, user)
+        self.strategy_repository.create_strategy(new_strategy, strategy_themes, user, db)
 
     def is_duplicate_audience_selected(self, audience_ids):
         return len(audience_ids) != len(set(audience_ids))

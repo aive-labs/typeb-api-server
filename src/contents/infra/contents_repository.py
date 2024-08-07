@@ -25,8 +25,8 @@ class ContentsRepository(BaseContentsRepository):
     def get_contents_list(self, db: Session, based_on, sort_by, query) -> list[ContentsResponse]:
         return self.contents_sqlalchemy.get_contents_list(db, based_on, sort_by, query=query)
 
-    def get_contents_id_url_dict(self) -> dict:
-        return self.contents_sqlalchemy.get_contents_id_url_dict()
+    def get_contents_id_url_dict(self, db: Session) -> dict:
+        return self.contents_sqlalchemy.get_contents_id_url_dict(db)
 
     def get_subject_by_code(self, subject: str, db: Session) -> ContentsMenu:
         return self.contents_sqlalchemy.get_subject_by_code(subject, db)

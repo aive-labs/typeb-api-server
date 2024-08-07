@@ -1,5 +1,3 @@
-from collections.abc import Callable
-from contextlib import AbstractContextManager
 from typing import Type
 
 from sqlalchemy import func, or_, update
@@ -26,18 +24,6 @@ from src.users.infra.entity.user_entity import UserEntity
 
 
 class StrategySqlAlchemy:
-    def __init__(self, db: Callable[..., AbstractContextManager[Session]]):
-        """_summary_
-
-        Args:
-            db (Callable[..., AbstractContextManager[Session]]):
-            - Callable 호출 가능한 객체
-            - AbstractContextManager[Session]: 세션 객체를 반환하는 컨텍스트 관리자
-            - Session: SQLAlchemy의 세션 객체
-
-        """
-        self.db = db
-
     def get_all_strategies(self, start_date, end_date, user: User, db: Session) -> list[Strategy]:
 
         user_entity = db.query(UserEntity).filter(UserEntity.user_id == user.user_id).first()
@@ -76,53 +62,51 @@ class StrategySqlAlchemy:
         return Strategy.from_entity(entity)
 
     def create_strategy(
-        self, strategy: Strategy, strategy_themes: list[StrategyTheme], user: User
+        self, strategy: Strategy, strategy_themes: list[StrategyTheme], user: User, db: Session
     ) -> StrategyEntity:
-        with self.db() as db:
-            strategy_entity = StrategyEntity(
-                strategy_name=strategy.strategy_name,
-                strategy_tags=strategy.strategy_tags,
-                strategy_status_code=strategy.strategy_status_code,
-                strategy_status_name=strategy.strategy_status_name,
-                target_strategy=strategy.target_strategy,
-                created_by=user.username,
-                created_at=localtime_converter(),
-                updated_by=user.username,
-                updated_at=localtime_converter(),
-                owned_by_dept=user.department_id,
+
+        strategy_entity = StrategyEntity(
+            strategy_name=strategy.strategy_name,
+            strategy_tags=strategy.strategy_tags,
+            strategy_status_code=strategy.strategy_status_code,
+            strategy_status_name=strategy.strategy_status_name,
+            target_strategy=strategy.target_strategy,
+            created_by=user.username,
+            created_at=localtime_converter(),
+            updated_by=user.username,
+            updated_at=localtime_converter(),
+            owned_by_dept=user.department_id,
+        )
+
+        for theme in strategy_themes:
+            strategy_theme_entity = StrategyThemesEntity(
+                strategy_theme_name=theme.strategy_theme_name,
+                recsys_model_id=theme.recsys_model_id,
+                contents_tags=theme.contents_tags,
             )
 
-            for theme in strategy_themes:
-                strategy_theme_entity = StrategyThemesEntity(
-                    strategy_theme_name=theme.strategy_theme_name,
-                    recsys_model_id=theme.recsys_model_id,
-                    contents_tags=theme.contents_tags,
-                )
+            theme_audience_entities = [
+                StrategyThemeAudienceMappingEntity(audience_id=audience.audience_id)
+                for audience in theme.strategy_theme_audience_mapping
+            ]
 
-                theme_audience_entities = [
-                    StrategyThemeAudienceMappingEntity(audience_id=audience.audience_id)
-                    for audience in theme.strategy_theme_audience_mapping
-                ]
+            for theme_audience_entity in theme_audience_entities:
+                strategy_theme_entity.strategy_theme_audience_mapping.append(theme_audience_entity)
 
-                for theme_audience_entity in theme_audience_entities:
-                    strategy_theme_entity.strategy_theme_audience_mapping.append(
-                        theme_audience_entity
-                    )
+            theme_offer_entities = [
+                StrategyThemeOfferMappingEntity(coupon_no=coupon.coupon_no)
+                for coupon in theme.strategy_theme_offer_mapping
+            ]
 
-                theme_offer_entities = [
-                    StrategyThemeOfferMappingEntity(coupon_no=coupon.coupon_no)
-                    for coupon in theme.strategy_theme_offer_mapping
-                ]
+            for theme_offer_entity in theme_offer_entities:
+                strategy_theme_entity.strategy_theme_offer_mapping.append(theme_offer_entity)
 
-                for theme_offer_entity in theme_offer_entities:
-                    strategy_theme_entity.strategy_theme_offer_mapping.append(theme_offer_entity)
+            strategy_entity.strategy_themes.append(strategy_theme_entity)
 
-                strategy_entity.strategy_themes.append(strategy_theme_entity)
+        db.add(strategy_entity)
+        db.commit()
 
-            db.add(strategy_entity)
-            db.commit()
-
-            return strategy_entity
+        return strategy_entity
 
     def _object_access_condition(self, db: Session, user: UserEntity, model: Type[StrategyEntity]):
         """Checks if the user has the required permissions for Object access.

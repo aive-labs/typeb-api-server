@@ -55,81 +55,82 @@ class CampaignSqlAlchemy:
         """
         self.db = db
 
-    def get_campaign_by_name(self, name: str):
-        with self.db() as db:
-            return db.query(CampaignEntity).filter(CampaignEntity.campaign_name == name).first()
+    def get_campaign_by_name(self, name: str, db: Session):
+        return db.query(CampaignEntity).filter(CampaignEntity.campaign_name == name).first()
 
-    def get_all_campaigns(self, start_date: str, end_date: str, user: User) -> list[Campaign]:
-        with self.db() as db:
-            conditions = object_access_condition(db=db, user=user, model=CampaignEntity)
+    def get_all_campaigns(
+        self, start_date: str, end_date: str, user: User, db: Session
+    ) -> list[Campaign]:
 
-            campaign_entities = (
-                db.query(CampaignEntity)
-                .filter(
-                    or_(
-                        and_(
-                            CampaignEntity.send_type_code == SendType.onetime.value,
-                            not_(
-                                or_(
-                                    CampaignEntity.start_date > end_date,
-                                    CampaignEntity.end_date < start_date,
-                                )
-                            ),
-                        ),
-                        and_(  # 주기성(진행대기, 운영중 ..~) -> 캠페인기간이 날짜필터 기간에 겹치는 오브젝트만 리스트업
-                            CampaignEntity.send_type_code == SendType.recurring.value,
-                            ~CampaignEntity.campaign_status_code.in_(
-                                [
-                                    CampaignStatus.tempsave.value,
-                                    CampaignStatus.review.value,
-                                ]
-                            ),
-                            not_(
-                                or_(
-                                    CampaignEntity.start_date > end_date,
-                                    CampaignEntity.end_date < start_date,
-                                )
-                            ),
-                        ),
-                        and_(  # 주기성(임시저장,리뷰단계) -> 생성일이후 오브젝트만 리스트업
-                            CampaignEntity.send_type_code == SendType.recurring.value,
-                            CampaignEntity.campaign_status_code.in_(
-                                [
-                                    CampaignStatus.tempsave.value,
-                                    CampaignStatus.review.value,
-                                ]
-                            ),
-                            func.date(CampaignEntity.created_at) >= start_date,
+        conditions = object_access_condition(db=db, user=user, model=CampaignEntity)
+
+        campaign_entities = (
+            db.query(CampaignEntity)
+            .filter(
+                or_(
+                    and_(
+                        CampaignEntity.send_type_code == SendType.onetime.value,
+                        not_(
+                            or_(
+                                CampaignEntity.start_date > end_date,
+                                CampaignEntity.end_date < start_date,
+                            )
                         ),
                     ),
-                    *conditions,
-                )
-                .all()
+                    and_(  # 주기성(진행대기, 운영중 ..~) -> 캠페인기간이 날짜필터 기간에 겹치는 오브젝트만 리스트업
+                        CampaignEntity.send_type_code == SendType.recurring.value,
+                        ~CampaignEntity.campaign_status_code.in_(
+                            [
+                                CampaignStatus.tempsave.value,
+                                CampaignStatus.review.value,
+                            ]
+                        ),
+                        not_(
+                            or_(
+                                CampaignEntity.start_date > end_date,
+                                CampaignEntity.end_date < start_date,
+                            )
+                        ),
+                    ),
+                    and_(  # 주기성(임시저장,리뷰단계) -> 생성일이후 오브젝트만 리스트업
+                        CampaignEntity.send_type_code == SendType.recurring.value,
+                        CampaignEntity.campaign_status_code.in_(
+                            [
+                                CampaignStatus.tempsave.value,
+                                CampaignStatus.review.value,
+                            ]
+                        ),
+                        func.date(CampaignEntity.created_at) >= start_date,
+                    ),
+                ),
+                *conditions,
             )
+            .all()
+        )
 
-            campaigns = [Campaign.model_validate(entity) for entity in campaign_entities]
+        campaigns = [Campaign.model_validate(entity) for entity in campaign_entities]
 
-            return campaigns
+        return campaigns
 
-    def is_existing_campaign_by_offer_event_no(self, offer_event_no):
-        with self.db() as db:
-            used_event_no = (
-                db.query(CampaignSetsEntity)
-                .join(
-                    CampaignEntity,
-                    CampaignSetsEntity.campaign_id == CampaignEntity.campaign_id,
-                )
-                .filter(
-                    CampaignEntity.campaign_status_code.notin_(["o2", "s3"]),
-                    CampaignSetsEntity.coupon_no == offer_event_no,
-                )
-                .first()
+    def is_existing_campaign_by_offer_event_no(self, offer_event_no, db: Session):
+
+        used_event_no = (
+            db.query(CampaignSetsEntity)
+            .join(
+                CampaignEntity,
+                CampaignSetsEntity.campaign_id == CampaignEntity.campaign_id,
             )
+            .filter(
+                CampaignEntity.campaign_status_code.notin_(["o2", "s3"]),
+                CampaignSetsEntity.coupon_no == offer_event_no,
+            )
+            .first()
+        )
 
-            if used_event_no is None:
-                return False
+        if used_event_no is None:
+            return False
 
-            return True
+        return True
 
     def get_campaign_by_strategy_id(self, strategy_id: str, db: Session) -> list[Campaign]:
         entities = (
@@ -198,7 +199,9 @@ class CampaignSqlAlchemy:
 
         return [IdWithItem(id=entity.id, name=entity.name) for entity in entities]
 
-    def get_send_complete_campaign(self, campaign_id, req_set_group_seqs, db) -> SendReservation:
+    def get_send_complete_campaign(
+        self, campaign_id, req_set_group_seqs, db: Session
+    ) -> SendReservation:
         return (
             db.query(SendReservationEntity)
             .filter(
@@ -212,32 +215,32 @@ class CampaignSqlAlchemy:
             .first()
         )
 
-    def get_group_item_nm_stats(self, campaign_id, set_sort_num):
+    def get_group_item_nm_stats(self, campaign_id, set_sort_num, db: Session):
         """
         item -> product_name
         """
-        with self.db() as db:
-            subquery = db.query(
-                distinct(ProductMasterEntity.rep_nm).label("rep_nm"),
-                ProductMasterEntity.product_name,
-            ).subquery()
 
-            return (
-                db.query(
-                    CampaignSetRecipientsEntity.group_sort_num,
-                    subquery.c.product_name,
-                    func.count(CampaignSetRecipientsEntity.cus_cd).label("cus_count"),
-                )
-                .join(subquery, CampaignSetRecipientsEntity.rep_nm == subquery.c.rep_nm)
-                .filter(
-                    CampaignSetRecipientsEntity.campaign_id == campaign_id,
-                    CampaignSetRecipientsEntity.set_sort_num == set_sort_num,
-                )
-                .group_by(CampaignSetRecipientsEntity.group_sort_num, subquery.c.product_name)
-                .all()
+        subquery = db.query(
+            distinct(ProductMasterEntity.rep_nm).label("rep_nm"),
+            ProductMasterEntity.product_name,
+        ).subquery()
+
+        return (
+            db.query(
+                CampaignSetRecipientsEntity.group_sort_num,
+                subquery.c.product_name,
+                func.count(CampaignSetRecipientsEntity.cus_cd).label("cus_count"),
             )
+            .join(subquery, CampaignSetRecipientsEntity.rep_nm == subquery.c.rep_nm)
+            .filter(
+                CampaignSetRecipientsEntity.campaign_id == campaign_id,
+                CampaignSetRecipientsEntity.set_sort_num == set_sort_num,
+            )
+            .group_by(CampaignSetRecipientsEntity.group_sort_num, subquery.c.product_name)
+            .all()
+        )
 
-    def get_it_gb_nm_stats(self, campaign_id, set_sort_num):
+    def get_it_gb_nm_stats(self, campaign_id, set_sort_num, db: Session):
         """메시지 생성시, 그룹 내 아이템 구분(복종)별 고객수 통계 조회를 위한 쿼리
 
         it_gb -> brand_name
@@ -245,76 +248,78 @@ class CampaignSqlAlchemy:
         ALTOS  -> MOUNTAIN TEE(임시변경)
         PURO -> MOUNTAIN PANTS(임시변경)
         """
-        with self.db() as db:
-            subquery = db.query(
-                distinct(ProductMasterEntity.rep_nm).label("rep_nm"),
-                ProductMasterEntity.category_name,
-            ).subquery()
 
-            return (
-                db.query(
-                    CampaignSetRecipientsEntity.group_sort_num,
-                    subquery.c.category_name,
-                    func.count(CampaignSetRecipientsEntity.cus_cd).label("cus_count"),
-                )
-                .join(subquery, CampaignSetRecipientsEntity.rep_nm == subquery.c.rep_nm)
-                .filter(
-                    CampaignSetRecipientsEntity.campaign_id == campaign_id,
-                    CampaignSetRecipientsEntity.set_sort_num == set_sort_num,
-                )
-                .group_by(CampaignSetRecipientsEntity.group_sort_num, subquery.c.category_name)
-                .all()
+        subquery = db.query(
+            distinct(ProductMasterEntity.rep_nm).label("rep_nm"),
+            ProductMasterEntity.category_name,
+        ).subquery()
+
+        return (
+            db.query(
+                CampaignSetRecipientsEntity.group_sort_num,
+                subquery.c.category_name,
+                func.count(CampaignSetRecipientsEntity.cus_cd).label("cus_count"),
             )
+            .join(subquery, CampaignSetRecipientsEntity.rep_nm == subquery.c.rep_nm)
+            .filter(
+                CampaignSetRecipientsEntity.campaign_id == campaign_id,
+                CampaignSetRecipientsEntity.set_sort_num == set_sort_num,
+            )
+            .group_by(CampaignSetRecipientsEntity.group_sort_num, subquery.c.category_name)
+            .all()
+        )
 
-    def get_age_stats(self, campaign_id, set_sort_num):
+    def get_age_stats(self, campaign_id, set_sort_num, db: Session):
         """메시지 생성시, 그룹 내 연령별 고객수 통계 조회를 위한 쿼리"""
-        with self.db() as db:
-            subquery = db.query(
-                distinct(CustomerInfoStatusEntity.age_group_10).label("age_group_10"),
-                CustomerInfoStatusEntity.cus_cd,
-            ).subquery()
 
-            return (
-                db.query(
-                    CampaignSetRecipientsEntity.group_sort_num,
-                    subquery.c.age_group_10,
-                    func.count(CampaignSetRecipientsEntity.cus_cd).label("cus_count"),
-                )
-                .join(subquery, CampaignSetRecipientsEntity.cus_cd == subquery.c.cus_cd)
-                .filter(
-                    CampaignSetRecipientsEntity.campaign_id == campaign_id,
-                    CampaignSetRecipientsEntity.set_sort_num == set_sort_num,
-                )
-                .group_by(CampaignSetRecipientsEntity.group_sort_num, subquery.c.age_group_10)
-                .all()
+        subquery = db.query(
+            distinct(CustomerInfoStatusEntity.age_group_10).label("age_group_10"),
+            CustomerInfoStatusEntity.cus_cd,
+        ).subquery()
+
+        return (
+            db.query(
+                CampaignSetRecipientsEntity.group_sort_num,
+                subquery.c.age_group_10,
+                func.count(CampaignSetRecipientsEntity.cus_cd).label("cus_count"),
             )
+            .join(subquery, CampaignSetRecipientsEntity.cus_cd == subquery.c.cus_cd)
+            .filter(
+                CampaignSetRecipientsEntity.campaign_id == campaign_id,
+                CampaignSetRecipientsEntity.set_sort_num == set_sort_num,
+            )
+            .group_by(CampaignSetRecipientsEntity.group_sort_num, subquery.c.age_group_10)
+            .all()
+        )
 
-    def get_campaign_messages(self, campaign_id, req_set_group_seqs) -> list[CampaignMessages]:
+    def get_campaign_messages(
+        self, campaign_id, req_set_group_seqs, db: Session
+    ) -> list[CampaignMessages]:
         """캠페인의 메세지를 모두 조회하는 쿼리"""
-        with self.db() as db:
-            message_data = (
-                db.query(
-                    SetGroupMessagesEntity,
-                    CampaignRemindEntity.remind_date,
-                    CampaignRemindEntity.remind_duration,
-                )
-                .options(
-                    joinedload(SetGroupMessagesEntity.kakao_button_links),
-                    joinedload(SetGroupMessagesEntity.msg_resources),
-                )
-                .outerjoin(
-                    CampaignRemindEntity,
-                    and_(
-                        SetGroupMessagesEntity.campaign_id == CampaignRemindEntity.campaign_id,
-                        SetGroupMessagesEntity.remind_step == CampaignRemindEntity.remind_step,
-                    ),
-                )
-                .filter(
-                    SetGroupMessagesEntity.campaign_id == campaign_id,
-                    SetGroupMessagesEntity.set_group_msg_seq.in_(req_set_group_seqs),
-                )
-                .all()
+
+        message_data = (
+            db.query(
+                SetGroupMessagesEntity,
+                CampaignRemindEntity.remind_date,
+                CampaignRemindEntity.remind_duration,
             )
+            .options(
+                joinedload(SetGroupMessagesEntity.kakao_button_links),
+                joinedload(SetGroupMessagesEntity.msg_resources),
+            )
+            .outerjoin(
+                CampaignRemindEntity,
+                and_(
+                    SetGroupMessagesEntity.campaign_id == CampaignRemindEntity.campaign_id,
+                    SetGroupMessagesEntity.remind_step == CampaignRemindEntity.remind_step,
+                ),
+            )
+            .filter(
+                SetGroupMessagesEntity.campaign_id == campaign_id,
+                SetGroupMessagesEntity.set_group_msg_seq.in_(req_set_group_seqs),
+            )
+            .all()
+        )
 
         result = []
         for set_group_message, remind_date, remind_duration in message_data:
@@ -385,12 +390,6 @@ class CampaignSqlAlchemy:
 
         db.add(entity)
         db.flush()
-
-        print("entity")
-        print(entity.datetosend)
-        print(entity.strategy_theme_ids)
-        print(entity.created_at)
-        print(entity.updated_at)
 
         return Campaign.model_validate(entity)
 
@@ -545,7 +544,7 @@ class CampaignSqlAlchemy:
         )
         db.execute(update_statement)
 
-    def delete_campaign(self, campaign, db):
+    def delete_campaign(self, campaign, db: Session):
         campaign_id = campaign.campaign_id
         strategy_id = campaign.strategy_id
 
@@ -668,7 +667,7 @@ class CampaignSqlAlchemy:
 
         db.execute(delete_statement)
 
-    def update_send_reservation_status_to_success(self, refkey, db):
+    def update_send_reservation_status_to_success(self, refkey, db: Session):
         update_statement = (
             update(SendReservationEntity)
             .where(SendReservationEntity.send_resv_seq == refkey)
@@ -677,7 +676,7 @@ class CampaignSqlAlchemy:
 
         db.execute(update_statement)
 
-    def update_send_reservation_status_to_failure(self, refkey, db):
+    def update_send_reservation_status_to_failure(self, refkey, db: Session):
         update_statement = (
             update(SendReservationEntity)
             .where(SendReservationEntity.send_resv_seq == refkey)

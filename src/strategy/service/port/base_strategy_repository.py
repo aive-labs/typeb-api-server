@@ -25,10 +25,7 @@ class BaseStrategyRepository(ABC):
 
     @abstractmethod
     def create_strategy(
-        self,
-        strategy: Strategy,
-        campaign_themes: list[StrategyTheme],
-        user: User,
+        self, strategy: Strategy, campaign_themes: list[StrategyTheme], user: User, db: Session
     ):
         pass
 

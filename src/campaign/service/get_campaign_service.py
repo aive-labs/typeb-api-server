@@ -65,8 +65,10 @@ class GetCampaignService(GetCampaignUseCase):
         self.campaign_repository = campaign_repository
         self.campaign_set_repository = campaign_set_repository
 
-    def get_campaigns(self, start_date: str, end_date: str, user: User) -> list[Campaign]:
-        campaigns = self.campaign_repository.get_campaigns(start_date, end_date, user)
+    def get_campaigns(
+        self, start_date: str, end_date: str, user: User, db: Session
+    ) -> list[Campaign]:
+        campaigns = self.campaign_repository.get_campaigns(start_date, end_date, user, db)
         return campaigns
 
     def get_timeline(self, campaign_id: str, db: Session) -> list[CampaignTimelineResponse]:

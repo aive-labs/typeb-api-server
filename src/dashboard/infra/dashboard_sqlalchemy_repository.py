@@ -1,5 +1,3 @@
-from collections.abc import Callable
-from contextlib import AbstractContextManager
 from typing import List
 
 import pandas as pd
@@ -26,17 +24,6 @@ from src.search.routes.dto.id_with_item_response import IdWithItem
 
 
 class DashboardSqlAlchemy:
-    def __init__(self, db: Callable[..., AbstractContextManager[Session]]):
-        """_summary_
-
-        Args:
-            db (Callable[..., AbstractContextManager[Session]]):
-            - Callable 호출 가능한 객체
-            - AbstractContextManager[Session]: 세션 객체를 반환하는 컨텍스트 관리자
-            - Session: SQLAlchemy의 세션 객체
-
-        """
-        self.db = db
 
     def get_dashboard_campaign_ids(self, db: Session, start_date: str, end_date: str) -> List[str]:
         entity = (

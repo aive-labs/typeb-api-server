@@ -79,7 +79,6 @@ from src.contents.service.get_creative_recommendations_for_content import (
 from src.contents.service.get_creatives_service import GetCreativesService
 from src.contents.service.update_contents_service import UpdateContentsService
 from src.contents.service.update_creatives_service import UpdateCreativesService
-from src.core.database import Database, get_db_url
 from src.dashboard.infra.dashboard_repository import DashboardRepository
 from src.dashboard.infra.dashboard_sqlalchemy_repository import DashboardSqlAlchemy
 from src.dashboard.service.get_audience_stats_service import GetAudienceStatsService
@@ -157,11 +156,6 @@ class Container(containers.DeclarativeContainer):
     )
 
     """
-    config 파일에 따라 다른 데이터베이스 주입
-    """
-    db = providers.Singleton(Database, db_url=get_db_url())
-
-    """
     온보딩 의존성 주입
     """
     onboarding_sqlalchemy = providers.Factory(provides=OnboardingSqlAlchemyRepository)
@@ -181,7 +175,7 @@ class Container(containers.DeclarativeContainer):
     """
     사용자 의존성 주입
     """
-    user_sqlalchemy = providers.Singleton(UserSqlAlchemy, db=db.provided.session)
+    user_sqlalchemy = providers.Singleton(UserSqlAlchemy)
     user_repository = providers.Singleton(UserRepository, user_sqlalchemy=user_sqlalchemy)
     user_service = providers.Singleton(UserService, user_repository=user_repository)
 
@@ -191,7 +185,7 @@ class Container(containers.DeclarativeContainer):
     """
     token_service = providers.Singleton(provides=TokenService)
 
-    cafe24_sqlalchemy = providers.Singleton(Cafe24SqlAlchemyRepository, db=db.provided.session)
+    cafe24_sqlalchemy = providers.Singleton(Cafe24SqlAlchemyRepository)
     cafe24_repository = providers.Singleton(Cafe24Repository, cafe24_sqlalchemy=cafe24_sqlalchemy)
 
     cafe24_service = providers.Singleton(
@@ -211,7 +205,7 @@ class Container(containers.DeclarativeContainer):
     """
     Creatives 의존성 주입
     """
-    creatives_sqlalchemy = providers.Singleton(CreativesSqlAlchemy, db=db.provided.session)
+    creatives_sqlalchemy = providers.Singleton(CreativesSqlAlchemy)
 
     creatives_repository = providers.Singleton(
         CreativesRepository, creative_sqlalchemy=creatives_sqlalchemy
@@ -238,7 +232,7 @@ class Container(containers.DeclarativeContainer):
     """
     컨텐츠 의존성 주입
     """
-    contents_sqlalchemy = providers.Singleton(provides=ContentsSqlAlchemy, db=db.provided.session)
+    contents_sqlalchemy = providers.Singleton(provides=ContentsSqlAlchemy)
 
     contents_repository = providers.Singleton(
         ContentsRepository, contents_sqlalchemy=contents_sqlalchemy
@@ -285,7 +279,7 @@ class Container(containers.DeclarativeContainer):
     """
     타겟 오디언스 의존성 주입
     """
-    audience_sqlalchemy = providers.Singleton(provides=AudienceSqlAlchemy, db=db.provided.session)
+    audience_sqlalchemy = providers.Singleton(provides=AudienceSqlAlchemy)
 
     audience_repository = providers.Singleton(
         provides=AudienceRepository, audience_sqlalchemy=audience_sqlalchemy
@@ -332,13 +326,13 @@ class Container(containers.DeclarativeContainer):
     타겟 오디언스 백그라운드 태스크
     """
     target_audience_summary_sqlalchemy = providers.Singleton(
-        provides=TargetAudienceSummarySqlAlchemy, db=db.provided.session
+        provides=TargetAudienceSummarySqlAlchemy
     )
 
     """
     전략 의존성 주입
     """
-    strategy_sqlalchemy = providers.Singleton(provides=StrategySqlAlchemy, db=db.provided.session)
+    strategy_sqlalchemy = providers.Singleton(provides=StrategySqlAlchemy)
 
     strategy_repository = providers.Singleton(
         provides=StrategyRepository, strategy_sqlalchemy=strategy_sqlalchemy
@@ -356,7 +350,7 @@ class Container(containers.DeclarativeContainer):
     """
     offer 의존성
     """
-    offer_repository = providers.Singleton(provides=OfferRepository, db=db.provided.session)
+    offer_repository = providers.Singleton(provides=OfferRepository)
 
     get_offer_service = providers.Singleton(
         provides=GetOfferService,
@@ -372,17 +366,15 @@ class Container(containers.DeclarativeContainer):
     캠페인 의존성 주입
     """
 
-    campaign_sqlalchemy = providers.Singleton(provides=CampaignSqlAlchemy, db=db.provided.session)
-
-    offer_repository = providers.Singleton(provides=OfferRepository, db=db.provided.session)
+    campaign_sqlalchemy = providers.Singleton(provides=CampaignSqlAlchemy)
 
     campaign_repository = providers.Singleton(
         provides=CampaignRepository, campaign_sqlalchemy=campaign_sqlalchemy
     )
 
-    common_repository = providers.Singleton(provides=CommonRepository, db=db.provided.session)
+    common_repository = providers.Singleton(provides=CommonRepository)
 
-    contents_sqlalchemy = providers.Singleton(provides=ContentsSqlAlchemy, db=db.provided.session)
+    contents_sqlalchemy = providers.Singleton(provides=ContentsSqlAlchemy)
 
     contents_repository = providers.Singleton(
         ContentsRepository, contents_sqlalchemy=contents_sqlalchemy
@@ -547,9 +539,7 @@ class Container(containers.DeclarativeContainer):
     """
     search 의존성
     """
-    recommend_products_repository = providers.Singleton(
-        provides=RecommendProductsRepository, db=db.provided.session
-    )
+    recommend_products_repository = providers.Singleton(provides=RecommendProductsRepository)
 
     search_service = providers.Singleton(
         provides=SearchService,
@@ -566,7 +556,7 @@ class Container(containers.DeclarativeContainer):
     """
     Dashboard 의존성
     """
-    dashboard_sqlalchemy = providers.Singleton(provides=DashboardSqlAlchemy, db=db.provided.session)
+    dashboard_sqlalchemy = providers.Singleton(provides=DashboardSqlAlchemy)
 
     dashboard_repository = providers.Singleton(
         provides=DashboardRepository, dashboard_sqlalchemy=dashboard_sqlalchemy

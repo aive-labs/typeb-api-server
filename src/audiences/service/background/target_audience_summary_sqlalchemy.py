@@ -1,6 +1,3 @@
-from contextlib import AbstractContextManager
-from typing import Callable
-
 from sqlalchemy import and_, func, literal
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
@@ -25,17 +22,6 @@ from src.dashboard.infra.entity.dash_end_table_entity import DashEndTableEntity
 
 
 class TargetAudienceSummarySqlAlchemy:
-    def __init__(self, db: Callable[..., AbstractContextManager[Session]]):
-        """_summary_
-
-        Args:
-            db (Callable[..., AbstractContextManager[Session]]):
-            - Callable 호출 가능한 객체
-            - AbstractContextManager[Session]: 세션 객체를 반환하는 컨텍스트 관리자
-            - Session: SQLAlchemy의 세션 객체
-
-        """
-        self.db = db
 
     def get_audience_cust_with_audience_id(self, audience_id, db: Session):
         return db.query(AudienceCustomerMappingEntity.cus_cd).filter(
