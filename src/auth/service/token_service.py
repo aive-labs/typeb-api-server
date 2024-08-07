@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Union
 
 import pytz
@@ -49,7 +49,7 @@ class TokenService:
 
     def create_access_token(self, data: dict):
         to_encode = data.copy()
-        expire = get_expired_at_to_iso_format(self.ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=self.ACCESS_TOKEN_EXPIRE_MINUTES)
         to_encode.update({"exp": expire})
         encoded_jwt = jwt.encode(to_encode, self.SECRET_KEY, algorithm=self.ALGORITHM)
         return encoded_jwt
