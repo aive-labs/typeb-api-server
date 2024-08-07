@@ -105,7 +105,7 @@ def get_mall_id_by_user(user_id: str) -> str:
         cursor.execute(
             """
                     select *
-                    from public.users
+                    from public.clients
                     where user_id = %s
         """,
             (user_id,),
