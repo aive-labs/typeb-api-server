@@ -1,6 +1,3 @@
-from contextlib import AbstractContextManager
-from typing import Callable
-
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
@@ -19,18 +16,6 @@ from src.core.exceptions.exceptions import NotFoundException
 
 
 class OnboardingSqlAlchemyRepository:
-    def __init__(self, db: Callable[..., AbstractContextManager[Session]]):
-        """_summary_
-
-        Args:
-            db (Callable[..., AbstractContextManager[Session]]):
-            - Callable 호출 가능한 객체
-            - AbstractContextManager[Session]: 세션 객체를 반환하는 컨텍스트 관리자
-            - Session: SQLAlchemy의 세션 객체
-
-        """
-        self.db = db
-
     def get_onboarding_status(self, mall_id: str, db: Session) -> Onboarding | None:
 
         entity = db.query(OnboardingEntity).filter(OnboardingEntity.mall_id == mall_id).first()

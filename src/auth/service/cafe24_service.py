@@ -17,6 +17,7 @@ from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
 from src.auth.utils.hash_password import generate_hash
 from src.common.utils.get_env_variable import get_env_variable
+from src.core.transactional import transactional
 from src.users.service.port.base_user_repository import BaseUserRepository
 
 
@@ -59,6 +60,7 @@ class Cafe24Service(BaseOauthService):
             raise ValueError(f"{var_name} cannot be None")
         return value
 
+    @transactional
     def get_oauth_authentication_url(self, mall_id, user, db: Session):
         # 만들고 나서 DB에 저장해야함
         hashed_state = generate_hash(self.state + mall_id)
@@ -101,6 +103,8 @@ class Cafe24Service(BaseOauthService):
             # 슬랙 알림 -> 수동 마이그레이션 진행
             print("airflow error")
             print(result.text)
+
+        db.commit()
 
     def execute_cafe24_dag_run(self, mall_id):
 
