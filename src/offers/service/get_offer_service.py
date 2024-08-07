@@ -50,6 +50,7 @@ class GetOfferService(GetOfferUseCase):
             async with aiohttp.ClientSession() as session:
                 response = await self.renew_token(url, payload, headers, session)
                 cafe24_token_data = Cafe24TokenData(**response)
+                print(cafe24_token_data)
                 self.cafe24_repository.save_tokens(cafe24_token_data, db)
                 access_token = cafe24_token_data.access_token
 

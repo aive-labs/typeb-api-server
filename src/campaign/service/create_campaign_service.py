@@ -62,7 +62,7 @@ class CreateCampaignService(CreateCampaignUseCase):
     ) -> CampaignBasicResponse:
         # 캠페인명 중복 체크
         is_existing_campaign = self.campaign_repository.is_existing_campaign_by_name(
-            campaign_create.campaign_name
+            campaign_create.campaign_name, db
         )
         if is_existing_campaign:
             raise DuplicatedException(detail={"message": "동일한 캠페인 명이 존재합니다."})
