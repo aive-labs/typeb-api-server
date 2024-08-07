@@ -125,6 +125,7 @@ def refresh_access_token(
     access_token, access_token_expires = token_service.create_refresh_token(
         email=user.email,
         user_id=str(user.user_id),
+        mall_id=user.mall_id,
     )
 
     response = JSONResponse(
