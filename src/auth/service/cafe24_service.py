@@ -161,6 +161,7 @@ class Cafe24Service(BaseOauthService):
             ) as response:
                 response = await response.json()
 
+                print(response)
                 if response.status != 200:
                     raise HTTPException(
                         status_code=response.status_code,
