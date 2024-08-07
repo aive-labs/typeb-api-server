@@ -135,3 +135,15 @@ def get_korean_current_datetime_yyyymmddhh24mims():
     formatted_datetime = now.strftime("%Y%m%d%H%M%S%f")[:-3]
 
     return formatted_datetime
+
+
+def get_expired_at_to_iso_format(minutes: int):
+    # 현재 시간
+    current_time = datetime.now()
+    # 입력 받은 minutes 후 시간 계산
+    future_time = current_time + timedelta(minutes=minutes) - timedelta(seconds=10)
+
+    # ISO 8601 형식으로 출력
+    iso_format_time = future_time.isoformat()
+
+    return iso_format_time

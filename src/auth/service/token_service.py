@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from typing import Any, Union
 
 import pytz
@@ -6,6 +6,7 @@ from jose import jwt
 
 from src.auth.routes.dto.response.token_response import TokenResponse
 from src.auth.utils.jwt_settings import JwtSettings
+from src.common.utils.date_utils import get_expired_at_to_iso_format
 from src.common.utils.get_env_variable import get_env_variable
 from src.users.domain.user import User
 
@@ -38,15 +39,17 @@ class TokenService:
 
         return TokenResponse(
             access_token=access_token,
-            access_token_expires_in=self.ACCESS_TOKEN_EXPIRE_MINUTES,
+            access_token_expires_in=get_expired_at_to_iso_format(self.ACCESS_TOKEN_EXPIRE_MINUTES),
             refresh_token=refresh_token,
             token_type="Bearer",
-            refresh_token_expires_in=self.REFRESH_TOKEN_EXPIRE_MINUTES,
+            refresh_token_expires_in=get_expired_at_to_iso_format(
+                self.REFRESH_TOKEN_EXPIRE_MINUTES
+            ),
         )
 
     def create_access_token(self, data: dict):
         to_encode = data.copy()
-        expire = datetime.now(timezone.utc) + timedelta(minutes=self.ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = get_expired_at_to_iso_format(self.ACCESS_TOKEN_EXPIRE_MINUTES)
         to_encode.update({"exp": expire})
         encoded_jwt = jwt.encode(to_encode, self.SECRET_KEY, algorithm=self.ALGORITHM)
         return encoded_jwt
