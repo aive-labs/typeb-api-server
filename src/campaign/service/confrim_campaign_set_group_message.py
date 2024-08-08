@@ -62,9 +62,8 @@ class ConfirmCampaignSetGroupMessage(ConfirmCampaignSetGroupMessageUseCase):
                 },
             )
 
-        if (
-            msg_obj.msg_type.value in ("mms", "kakao_image_general", "kakao_image_wide")
-            and msg_obj.msg_photo_uri is None
+        if msg_obj.msg_type.value in ("mms", "kakao_image_general", "kakao_image_wide") and (
+            msg_obj.msg_photo_uri is None or len(msg_obj.msg_photo_uri) == 0
         ):
             raise PolicyException(
                 detail={

@@ -24,7 +24,7 @@ from src.campaign.infra.sqlalchemy_query.recurring_campaign.get_campaign_set_gro
 from src.campaign.infra.sqlalchemy_query.recurring_campaign.get_set_portion import (
     get_set_portion,
 )
-from src.campaign.utils.utils import set_summary_sententce
+from src.campaign.utils.utils import set_summary_sentence
 from src.core.exceptions.exceptions import NotFoundException
 
 
@@ -62,7 +62,7 @@ def get_campaigns_api_logic(db, campaign_id):
     set_df = pd.DataFrame(sets)
 
     if len(set_df) > 0:
-        recipient_descriptions = set_summary_sententce(set_cus_count, set_df)
+        recipient_descriptions = set_summary_sentence(set_cus_count, set_df)
     else:
         recipient_descriptions = None
 

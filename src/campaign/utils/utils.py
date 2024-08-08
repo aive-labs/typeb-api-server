@@ -21,7 +21,7 @@ def get_resv_date(msg_send_type, start_date, send_date, remind_date):
     return resv_date
 
 
-def set_summary_sententce(set_cus_count, set_df):
+def set_summary_sentence(set_cus_count, set_df):
     audience_cnt = len(set(set_df["audience_id"]))
     audience_names = ",".join(set(set_df["audience_name"]))
     avg_response_rate = round(set_df["response_rate"].mean(), 1)

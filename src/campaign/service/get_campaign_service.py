@@ -47,7 +47,7 @@ from src.campaign.service.port.base_campaign_repository import BaseCampaignRepos
 from src.campaign.service.port.base_campaign_set_repository import (
     BaseCampaignSetRepository,
 )
-from src.campaign.utils.utils import set_summary_sententce
+from src.campaign.utils.utils import set_summary_sentence
 from src.common.enums.campaign_media import CampaignMedia
 from src.common.utils.data_converter import DataConverter
 from src.core.exceptions.exceptions import PolicyException
@@ -152,7 +152,7 @@ class GetCampaignService(GetCampaignUseCase):
         set_df = pd.DataFrame(sets)
 
         if len(set_df) > 0:
-            recipient_descriptions = set_summary_sententce(set_cus_count, set_df)
+            recipient_descriptions = set_summary_sentence(set_cus_count, set_df)
         else:
             recipient_descriptions = None
 

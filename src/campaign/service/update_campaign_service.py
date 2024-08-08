@@ -40,7 +40,7 @@ from src.campaign.service.authorization_checker import AuthorizationChecker
 from src.campaign.service.campaign_dependency_manager import CampaignDependencyManager
 from src.campaign.service.campaign_manager import CampaignManager
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
-from src.campaign.utils.utils import set_summary_sententce
+from src.campaign.utils.utils import set_summary_sentence
 from src.common.enums.campaign_media import CampaignMedia
 from src.common.timezone_setting import selected_timezone
 from src.common.utils import repeat_date
@@ -130,7 +130,7 @@ class UpdateCampaignService(UpdateCampaignUseCase):
             set_group_message_list = convert_to_set_group_message_list(set_group_messages)
             recipient_portion, _, set_cus_count = get_set_portion(campaign_id, db)
             set_df = pd.DataFrame(sets)
-            recipient_descriptions = set_summary_sententce(set_cus_count, set_df)
+            recipient_descriptions = set_summary_sentence(set_cus_count, set_df)
 
         else:  # 기본 캠페인
             recipient_portion = 0

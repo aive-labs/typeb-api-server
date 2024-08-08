@@ -763,7 +763,7 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
                 )
 
     def validate_tms(self, message, message_body, message_bottom_text):
-        if message.msg_photo_uri is not None:
+        if message.msg_photo_uri:
             message.msg_type = MessageType.MMS
         elif len(message_body + message_bottom_text) < 45:
             message.msg_type = MessageType.SMS

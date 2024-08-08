@@ -67,7 +67,7 @@ class MessageGroupController:
             media = choice(medias)
             msg_type = choice(msg_type_dict[media])
 
-        if msg_data.msg_photo_uri is not None:
+        if msg_data.msg_photo_uri:
             msg_type_photo = {
                 "kakao_image_general": "kakao_image_general",
                 "kakao_image_wide": "kakao_image_wide",
@@ -89,7 +89,7 @@ class MessageGroupController:
             msg_announcement="",
             template_id=None,
             msg_gen_key=(msg_data.msg_gen_key if msg_data.msg_gen_key is not None else None),
-            msg_photo_uri=(msg_data.msg_photo_uri if msg_data.msg_photo_uri is not None else None),
+            msg_photo_uri=(msg_data.msg_photo_uri if msg_data.msg_photo_uri else None),
             msg_send_type=msg_data.msg_send_type,
             media=media,
             msg_type=msg_type,
@@ -107,9 +107,8 @@ def message_image_validator(msg_obj: Message):
         "kakao_image_wide": "카카오 와이드형",
     }
 
-    if (
-        msg_obj.msg_type.value in ("mms", "kakao_image_general", "kakao_image_wide")
-        and msg_obj.msg_photo_uri is None
+    if msg_obj.msg_type.value in ("mms", "kakao_image_general", "kakao_image_wide") and (
+        msg_obj.msg_photo_uri is None or len(msg_obj.msg_photo_uri) == 0
     ):
         raise HTTPException(
             status_code=400,
@@ -163,7 +162,7 @@ def message_modify_validator(msg_delivery_vendor: str, msg_obj: Message):
 
     # 메시지 타입별 validation checker
     if msg_obj.media.value == "tms":
-        if msg_obj.msg_photo_uri is not None:
+        if msg_obj.msg_photo_uri:
             msg_obj.msg_type = MessageType.MMS
         elif len(msg_obj.msg_body + msg_obj.bottom_text) < 45:
             msg_obj.msg_type = MessageType.SMS
@@ -243,7 +242,7 @@ def message_validator(msg_delivery_vendor: str, msg_obj: Message):
 
     # 메시지 타입별 validation checker
     if msg_obj.media.value == "tms":
-        if (msg_obj.msg_type == MessageType.MMS.value) & (msg_obj.msg_photo_uri is None):
+        if (msg_obj.msg_type == MessageType.MMS.value) & (not msg_obj.msg_photo_uri):
             raise HTTPException(
                 status_code=400,
                 detail={
