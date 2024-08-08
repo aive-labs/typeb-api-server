@@ -189,9 +189,12 @@ class TestMessageSendService(TestSendMessageUseCase):
                 "phone_callback": "phone_callback_fm",
             }
         )
+        personal_processing_fm = personal_processing_fm.drop_duplicates()
+
         send_rsv_format = test_send_rsv_format.merge(
             personal_processing_fm, on=["set_group_msg_seq", "cus_cd"], how="left"
         )
+        send_rsv_format = send_rsv_format.drop_duplicates()
 
         # Todo: replace cus_cd to '0000000' for test
         del send_rsv_format["send_msg_body"]
@@ -208,6 +211,7 @@ class TestMessageSendService(TestSendMessageUseCase):
         send_rsv_format = send_rsv_format[
             ~send_rsv_format["send_msg_body"].str.contains("{{")
         ]  # 포매팅이 안되어 있는 메세지는 제외한다.
+
         print()
         print("send_msg_body 개인화 적용 후 row수 :" + str(len(send_rsv_format)))
         logging.info("4.[Test] send_msg_body 개인화 적용 후 row수 :" + str(len(send_rsv_format)))
