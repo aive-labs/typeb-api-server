@@ -56,6 +56,7 @@ def get_db(token: str = Depends(reuseable_oauth)):
 
 
 def get_db_for_with_mall_id(mall_id):
+    mall_id = "aivelabsdb" if mall_id == "aivelabs" else mall_id
     engine = get_engine(prefix_db_url(mall_id))
     Base.metadata.create_all(bind=engine)
     session_local = get_session(engine)
