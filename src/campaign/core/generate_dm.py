@@ -204,7 +204,7 @@ class CreateDataDict:
 class generate_message:
     def __init__(self) -> None:
         self.file_path = "src/core/data/"
-        self.msg_data = pd.read_csv(self.file_path + "msg_data.csv", encoding="euc-kr")
+        self.msg_data = pd.read_csv(self.file_path + "msg_data.csv", encoding="utf-8")
         self.msg_data["age"] = self.msg_data["age"].fillna(0)
         self.msg_data["age"] = self.msg_data["age"].astype(int).astype(str)
 
