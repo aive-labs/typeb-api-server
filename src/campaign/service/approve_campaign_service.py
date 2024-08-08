@@ -1007,8 +1007,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 == current_date,  # 당일에 발송되어야하는 메세지 예약 저장하기
             ]
 
-            print(current_date)
-
             send_rsv_query_1 = (
                 db.query(
                     CampaignSetRecipientsEntity.campaign_id,
@@ -1284,4 +1282,5 @@ class ApproveCampaignService(ApproveCampaignUseCase):
 
         except Exception as e:
             db.rollback()
+            print(e)
             raise ConsistencyException(detail={"message": "승인 완료 처리 중 문제가 발생했습니다."})
