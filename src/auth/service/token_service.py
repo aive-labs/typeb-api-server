@@ -65,13 +65,13 @@ class TokenService:
         local_timezone = pytz.timezone("UTC")
 
         # astimezone: UTC 시간으로 변환 & replace:초단위까지 표시 & isoformat:aware datetime으로 변경
-        expires_in = expires_in.astimezone(local_timezone).replace(microsecond=0).isoformat()
+        expires_at = expires_in.astimezone(local_timezone).replace(microsecond=0).isoformat()
 
         payload = {
             "email": email,
             "user_id": user_id,
             "mall_id": mall_id,
-            "expires": expires_in,
+            "expires": expires_at,
         }
         encoded_jwt = jwt.encode(claims=payload, key=self.jwt_setting.secret_key, algorithm="HS256")
-        return encoded_jwt, expires_in
+        return encoded_jwt, expires_at

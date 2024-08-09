@@ -122,7 +122,7 @@ def refresh_access_token(
     user=Depends(get_permission_checker(required_permissions=[])),
     token_service: TokenService = Depends(dependency=Provide[Container.token_service]),
 ):
-    access_token, access_token_expires = token_service.create_refresh_token(
+    access_token, access_token_expires_at = token_service.create_refresh_token(
         email=user.email,
         user_id=str(user.user_id),
         mall_id=user.mall_id,
@@ -132,7 +132,7 @@ def refresh_access_token(
         content={
             "access_token": access_token,
             "token_type": "Bearer",
-            "access_token_expires_in": access_token_expires,
+            "access_token_expires_at": access_token_expires_at,
         }
     )
     response.set_cookie(key="access_token", value=access_token, httponly=True, secure=True)
