@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Optional
 
 from sqlalchemy.orm import Session
 
@@ -39,7 +40,12 @@ class BaseSearchService(ABC):
 
     @abstractmethod
     def search_offers_search_of_sets(
-        self, strategy_id, keyword, user, db: Session
+        self,
+        strategy_id,
+        keyword,
+        user,
+        db: Session,
+        strategy_theme_id: Optional[str] = None,
     ) -> list[IdWithLabel]:
         pass
 

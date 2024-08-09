@@ -51,6 +51,7 @@ def get_strategies(
 def get_search_offers(
     strategy_id: Optional[str] = None,
     keyword: Optional[str] = None,
+    strategy_theme_id: Optional[str] = None,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db),
     search_service: BaseSearchService = Depends(dependency=Provide[Container.search_service]),
@@ -58,7 +59,9 @@ def get_search_offers(
     """드롭다운 오퍼 목록을 조회하는 API"""
 
     if strategy_id:
-        return search_service.search_offers_search_of_sets(strategy_id, keyword, user, db=db)
+        return search_service.search_offers_search_of_sets(
+            strategy_id, keyword, user, db=db, strategy_theme_id=strategy_theme_id
+        )
     else:
         return search_service.search_offers(keyword, user, db=db)
 

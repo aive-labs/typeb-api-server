@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from typing import Optional
 
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import Session
@@ -83,9 +84,16 @@ class SearchService(BaseSearchService):
         )
 
     def search_offers_search_of_sets(
-        self, strategy_id, keyword, user: User, db: Session
+        self,
+        strategy_id,
+        keyword,
+        user: User,
+        db: Session,
+        strategy_theme_id: Optional[str] = None,
     ) -> list[IdWithLabel]:
-        return self.offer_repository.get_search_offers_of_sets(strategy_id, keyword, user, db)
+        return self.offer_repository.get_search_offers_of_sets(
+            strategy_id, keyword, user, db, strategy_theme_id
+        )
 
     def search_offers(self, keyword, user: User, db: Session) -> list[IdWithLabel]:
         return self.offer_repository.get_search_offers(keyword, user, db)

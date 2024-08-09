@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
@@ -63,12 +64,17 @@ class OfferRepository(BaseOfferRepository):
         return f"({data.id}) {data.name}"
 
     def get_search_offers_of_sets(
-        self, strategy_id: str, keyword: str, user: User, db: Session
+        self,
+        strategy_id: str,
+        keyword: str,
+        user: User,
+        db: Session,
+        strategy_theme_id: Optional[str] = None,
     ) -> list[IdWithLabel]:
 
         condition = self._add_search_offer_condition_by_user(user)
 
-        offer_ids = (
+        base_query = (
             db.query(StrategyThemeOfferMappingEntity.coupon_no)
             .join(
                 StrategyThemesEntity,
@@ -76,9 +82,14 @@ class OfferRepository(BaseOfferRepository):
                 == StrategyThemesEntity.strategy_theme_id,
             )
             .filter(StrategyThemesEntity.strategy_id == strategy_id)
-            .all()
         )
 
+        if strategy_theme_id:
+            base_query = base_query.filter(
+                StrategyThemesEntity.strategy_theme_id == strategy_theme_id
+            )
+
+        offer_ids = base_query.all()
         offer_ids = [offef[0] for offef in offer_ids]
 
         today = datetime.now(selected_timezone).strftime("%Y%m%d")
