@@ -14,10 +14,20 @@ down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
+import sqlalchemy as sa
+from alembic import op
+
 
 def upgrade() -> None:
-    pass
+    # 테이블 생성
+    op.create_table(
+        "send_dag_log",
+        sa.Column("campaign_id", sa.String(length=20), nullable=False),
+        sa.Column("send_resv_date", sa.DateTime(timezone=True), nullable=False),
+        sa.Column("dag_run_id", sa.String, nullable=False),
+    )
 
 
 def downgrade() -> None:
-    pass
+    # 테이블 삭제
+    op.drop_table("send_dag_log")

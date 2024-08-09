@@ -2,9 +2,10 @@ from logging.config import fileConfig
 
 import psycopg2
 from alembic import context
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import create_engine, pool
 
 from src.common.utils.get_env_variable import get_env_variable
+from src.core.database import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -17,9 +18,7 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
-target_metadata = None
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -35,40 +34,12 @@ user_db_conn = psycopg2.connect(
 )
 
 
-def get_db_list() -> list:
+def get_db_list_for_migration() -> list:
     with user_db_conn.cursor() as cursor:
-        cursor.execute(
-            """
-                    select distinct mall_id
-                    from public.clients
-                    where user_id = %s
-            """,
-            (user_id,),
-        )
-
-
-def run_migrations_offline() -> None:
-    """Run migrations in 'offline' mode.
-
-    This configures the context with just a URL
-    and not an Engine, though an Engine is acceptable
-    here as well.  By skipping the Engine creation
-    we don't even need a DBAPI to be available.
-
-    Calls to context.execute() here emit the given string to the
-    script output.
-
-    """
-    url = config.get_main_option("sqlalchemy.url")
-    context.configure(
-        url=url,
-        target_metadata=target_metadata,
-        literal_binds=True,
-        dialect_opts={"paramstyle": "named"},
-    )
-
-    with context.begin_transaction():
-        context.run_migrations()
+        cursor.execute("select distinct mall_id from public.clients")
+        result = cursor.fetchall()
+        mall_ids = [row[0] for row in result]
+    return [f"{get_env_variable('prefix_db_url')}/{mall_id}" for mall_id in mall_ids]
 
 
 def run_migrations_online() -> None:
@@ -78,20 +49,24 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-    )
 
-    with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+    db_urls = get_db_list_for_migration()
+    print("🔅DB MIGRATION TARGET")
+    for db_url in db_urls:
+        connectable = create_engine(db_url, poolclass=pool.NullPool)
+        with connectable.connect() as connection:
+            context.configure(
+                connection=connection,
+                target_metadata=target_metadata,
+                version_table_schema=target_metadata.schema,
+                include_schemas=True,
+            )
 
-        with context.begin_transaction():
-            context.run_migrations()
+            with context.begin_transaction():
+                context.execute(f"SET search_path TO {target_metadata.schema}")
+                context.run_migrations()
+
+        print(f"✅ {db_url}")
 
 
-if context.is_offline_mode():
-    run_migrations_offline()
-else:
-    run_migrations_online()
+run_migrations_online()
