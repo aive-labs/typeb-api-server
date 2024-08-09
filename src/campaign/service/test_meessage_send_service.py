@@ -72,7 +72,6 @@ class TestMessageSendService(TestSendMessageUseCase):
         msg_seq_list = test_send_request.test_send_msg_list
         send_rsv_df, _ = self.get_group_message_with_offers(db, campaign_id, msg_seq_list)
 
-        test_send_df = pd.DataFrame()
         test_send_user_cnt = len(test_send_request.recipient_list)
         test_send_no = [
             item.test_callback_number.replace("-", "") for item in test_send_request.recipient_list
@@ -84,6 +83,7 @@ class TestMessageSendService(TestSendMessageUseCase):
         print("send_rsv_df")
         print(send_rsv_df)
 
+        test_send_df = pd.DataFrame()
         for msg in msg_seq_list:
             sample_df = send_rsv_df[send_rsv_df.set_group_msg_seq == msg].sample(
                 test_send_user_cnt, replace=True
@@ -240,7 +240,7 @@ class TestMessageSendService(TestSendMessageUseCase):
 
         # 저장
         print("send_rsv_format.columns")
-        print(send_rsv_format.columns)
+        print(send_rsv_format)
 
         # 컬럼 추출 추후 수정
         send_reserv_columns = [
