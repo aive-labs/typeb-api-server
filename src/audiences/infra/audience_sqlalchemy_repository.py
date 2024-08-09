@@ -812,9 +812,11 @@ class AudienceSqlAlchemy:
 
         db.flush()
 
-    def get_audiences_ids_by_strategy_id(self, strategy_id: str, db: Session) -> list[str]:
+    def get_audiences_ids_by_strategy_id(
+        self, strategy_id: str, db: Session, strategy_theme_id: str | None = None
+    ) -> list[str]:
 
-        audience_ids = (
+        base_query = (
             db.query(StrategyThemeAudienceMappingEntity.audience_id)
             .join(
                 StrategyThemesEntity,
@@ -822,8 +824,15 @@ class AudienceSqlAlchemy:
                 == StrategyThemesEntity.strategy_theme_id,
             )
             .filter(StrategyThemesEntity.strategy_id == strategy_id)
-            .all()
         )
+
+        if strategy_theme_id:
+            base_query = base_query.filter(
+                StrategyThemesEntity.strategy_theme_id == strategy_theme_id
+            )
+
+        audience_ids = base_query.all()
+
         audience_ids = [aud[0] for aud in audience_ids]
         return audience_ids
 

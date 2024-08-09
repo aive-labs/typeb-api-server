@@ -145,7 +145,9 @@ class BaseAudienceRepository(ABC):
         pass
 
     @abstractmethod
-    def get_audiences_ids_by_strategy_id(self, strategy_id: str, db: Session) -> list[str]:
+    def get_audiences_ids_by_strategy_id(
+        self, strategy_id: str, db: Session, strategy_theme_id: str | None = None
+    ) -> list[str]:
         pass
 
     @abstractmethod

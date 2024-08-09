@@ -188,8 +188,12 @@ class AudienceRepository(BaseAudienceRepository):
             db,
         )
 
-    def get_audiences_ids_by_strategy_id(self, strategy_id: str, db: Session) -> list[str]:
-        return self.audience_sqlalchemy.get_audiences_ids_by_strategy_id(strategy_id, db)
+    def get_audiences_ids_by_strategy_id(
+        self, strategy_id: str, db: Session, strategy_theme_id: str | None = None
+    ) -> list[str]:
+        return self.audience_sqlalchemy.get_audiences_ids_by_strategy_id(
+            strategy_id, db, strategy_theme_id
+        )
 
     def get_audiences_by_condition(
         self,

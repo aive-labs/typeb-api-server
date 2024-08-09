@@ -23,6 +23,7 @@ class BaseSearchService(ABC):
         user: User,
         db: Session,
         is_exclude=False,
+        strategy_theme_id: str | None = None,
     ) -> list[IdWithLabel]:
         pass
 

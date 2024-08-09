@@ -62,8 +62,11 @@ class SearchService(BaseSearchService):
         user: User,
         db: Session,
         is_exclude=False,
+        strategy_theme_id: str | None = None,
     ) -> list[IdWithLabel]:
-        audience_ids = self.audience_repository.get_audiences_ids_by_strategy_id(strategy_id, db)
+        audience_ids = self.audience_repository.get_audiences_ids_by_strategy_id(
+            strategy_id, db, strategy_theme_id
+        )
         return self.audience_repository.get_audiences_by_condition(
             audience_ids, search_keyword, is_exclude, db
         )

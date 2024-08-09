@@ -26,6 +26,7 @@ search_router = APIRouter(tags=["Search"])
 def get_strategies(
     target_strategy: Optional[TargetStrategy] = None,
     strategy_id: Optional[str] = None,
+    strategy_theme_id: Optional[str] = None,
     keyword: Optional[str] = None,
     is_exclude: Optional[bool] = False,
     user=Depends(get_permission_checker(required_permissions=[])),
@@ -37,7 +38,7 @@ def get_strategies(
 
     if strategy_id:
         return search_service.search_audience_with_strategy_id(
-            strategy_id, keyword, user, db, is_exclude
+            strategy_id, keyword, user, db, is_exclude, strategy_theme_id
         )
     else:
         return search_service.search_audience_without_strategy_id(
