@@ -90,9 +90,8 @@ class OfferRepository(BaseOfferRepository):
             )
 
         offer_ids = base_query.all()
-        offer_ids = [offef[0] for offef in offer_ids]
+        offer_ids = [offer[0] for offer in offer_ids]
 
-        today = datetime.now(selected_timezone).strftime("%Y%m%d")
         if keyword:
             keyword = f"%{keyword}%"
             if is_convertible_to_int(keyword):
@@ -100,16 +99,28 @@ class OfferRepository(BaseOfferRepository):
             else:
                 condition.append(OffersEntity.coupon_name.ilike(keyword))  # offer_name
 
-        result = db.query(
+        today = datetime.now(selected_timezone).strftime("%Y%m%d")
+
+        # 오늘 날짜 기준 사용 가능한 쿠폰 조회
+        query = db.query(
             OffersEntity.coupon_no.label("id"),
             OffersEntity.coupon_name.label("name"),
             OffersEntity.coupon_no.label("code"),
         ).filter(
-            OffersEntity.coupon_no.in_(offer_ids),
             OffersEntity.benefit_type.isnot(None),
-            OffersEntity.available_end_datetime >= today,  # 이벤트 기간 필터
+            OffersEntity.coupon_no.in_(offer_ids),
             *condition,
         )
+
+        # 쿠폰 타입에 따른 필터 추가
+        query = query.filter(
+            or_(
+                OffersEntity.available_period_type != "F",
+                OffersEntity.available_end_datetime >= today,
+            )
+        )
+
+        result = query.all()
 
         return [
             IdWithLabel(
