@@ -39,12 +39,12 @@ class TokenService:
 
         return TokenResponse(
             access_token=access_token,
-            access_token_expires_in=get_expired_at_to_iso_format_kr_time(
+            access_token_expires_at=get_expired_at_to_iso_format_kr_time(
                 self.ACCESS_TOKEN_EXPIRE_MINUTES
             ),
             refresh_token=refresh_token,
             token_type="Bearer",
-            refresh_token_expires_in=get_expired_at_to_iso_format_kr_time(
+            refresh_token_expires_at=get_expired_at_to_iso_format_kr_time(
                 self.REFRESH_TOKEN_EXPIRE_MINUTES
             ),
         )
