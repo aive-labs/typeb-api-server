@@ -16,6 +16,12 @@ class KakaoButtonLink(BaseModel):
     @field_validator("web_link", "app_link")
     @classmethod
     def validate_link(cls, value):
+        print("value", value)
+
+        if value == "{{contents_url}}":
+            # 링크가 개인화 변수인 경우엔 패스
+            return value
+
         if value and not value.startswith("https://"):
             raise PolicyException(detail={"message": "링크는 https://로 시작해야 합니다."})
         return value
