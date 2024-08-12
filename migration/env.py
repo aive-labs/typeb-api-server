@@ -20,25 +20,28 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 target_metadata = Base.metadata
 
+
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-user_db_conn = psycopg2.connect(
-    dbname=get_env_variable("user_db_name"),
-    user=get_env_variable("user_db_user"),
-    password=get_env_variable("user_db_password"),
-    host=get_env_variable("user_db_host"),
-    port=get_env_variable("user_db_port"),
-)
-
 
 def get_db_list_for_migration() -> list:
+    user_db_conn = psycopg2.connect(
+        dbname=get_env_variable("user_db_name"),
+        user=get_env_variable("user_db_user"),
+        password=get_env_variable("user_db_password"),
+        host=get_env_variable("user_db_host"),
+        port=get_env_variable("user_db_port"),
+    )
+
     with user_db_conn.cursor() as cursor:
         cursor.execute("select distinct mall_id from public.clients")
         result = cursor.fetchall()
         mall_ids = [row[0] for row in result]
+
+    user_db_conn.close()
     return [f"{get_env_variable('prefix_db_url')}/{mall_id}" for mall_id in mall_ids]
 
 

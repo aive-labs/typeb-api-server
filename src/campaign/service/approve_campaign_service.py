@@ -52,6 +52,7 @@ from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import (
     create_logical_date_for_airflow,
     get_korean_current_datetime_yyyymmddhh24mims,
+    get_unix_timestamp,
     localtime_converter,
 )
 from src.contents.infra.entity.contents_entity import ContentsEntity
@@ -806,12 +807,10 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 "test_send_yn": "n",
             }
             yyyymmddhh24mi = get_korean_current_datetime_yyyymmddhh24mims()
-            dag_run_id = f"{campaign_id}_{str(yyyymmddhh24mi)}"
-            print(send_date, send_time)
+            unix_timestamp_now = get_unix_timestamp()
+            dag_run_id = f"{campaign_id}_{str(yyyymmddhh24mi)}_{str(unix_timestamp_now)}"
             logical_date = create_logical_date_for_airflow(send_date, send_time)
-            print(
-                f"dag_run_id: {dag_run_id} / input_var: {input_var} / logical_date: {logical_date}"
-            )
+
             await self.message_controller.execute_dag(
                 dag_name=f"{user.mall_id}_send_messages",
                 input_vars=input_var,

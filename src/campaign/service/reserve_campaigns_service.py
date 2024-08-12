@@ -16,10 +16,6 @@ from src.campaign.routes.port.approve_campaign_usecase import ApproveCampaignUse
 from src.campaign.routes.port.reserve_campaigns_usecase import ReserveCampaignsUseCase
 from src.campaign.service.campaign_manager import CampaignManager
 from src.common.utils.data_converter import DataConverter
-from src.common.utils.date_utils import (
-    create_logical_date_for_airflow,
-    get_korean_current_datetime_yyyymmddhh24mims,
-)
 from src.core.exceptions.exceptions import NotFoundException
 from src.messages.service.message_reserve_controller import MessageReserveController
 from src.users.domain.user import User
@@ -141,36 +137,36 @@ class ReserveCampaignsService(ReserveCampaignsUseCase):
 
         db.commit()
 
-        if res:
-            # airflow trigger api
-            print("today airflow trigger api")
-            input_var = {
-                "mallid": user.mall_id,
-                "campaign_id": campaign_id,
-                "test_send_yn": "n",
-            }
-            yyyymmddhh24mi = get_korean_current_datetime_yyyymmddhh24mims()
-            dag_run_id = f"{campaign_id}_{str(yyyymmddhh24mi)}"
-            logical_date = create_logical_date_for_airflow(send_date, send_time)
-            print(
-                f"dag_run_id: {dag_run_id} / input_var: {input_var} / logical_date: {logical_date}"
-            )
+        # if res:
+        #     # airflow trigger api
+        #     print("today airflow trigger api")
+        #     input_var = {
+        #         "mallid": user.mall_id,
+        #         "campaign_id": campaign_id,
+        #         "test_send_yn": "n",
+        #     }
+        #     yyyymmddhh24mi = get_korean_current_datetime_yyyymmddhh24mims()
+        #     dag_run_id = f"{campaign_id}_{str(yyyymmddhh24mi)}"
+        #     logical_date = create_logical_date_for_airflow(send_date, send_time)
+        #     print(
+        #         f"dag_run_id: {dag_run_id} / input_var: {input_var} / logical_date: {logical_date}"
+        #     )
+        #
+        #     await self.message_controller.execute_dag(
+        #         dag_name=f"{user.mall_id}_send_messages",
+        #         input_vars=input_var,
+        #         dag_run_id=dag_run_id,
+        #         logical_date=logical_date,
+        #     )
+        #
+        #     await self.message_controller.execute_dag(
+        #         dag_name=f"{user.mall_id}_issue_coupon",
+        #         input_vars=input_var,
+        #         dag_run_id=dag_run_id,
+        #         logical_date=logical_date,
+        #     )
 
-            await self.message_controller.execute_dag(
-                dag_name=f"{user.mall_id}_send_messages",
-                input_vars=input_var,
-                dag_run_id=dag_run_id,
-                logical_date=logical_date,
-            )
-
-            await self.message_controller.execute_dag(
-                dag_name=f"{user.mall_id}_issue_coupon",
-                input_vars=input_var,
-                dag_run_id=dag_run_id,
-                logical_date=logical_date,
-            )
-
-        else:
+        if not res:
             txt = f"{campaign_id} : 당일({execution_date}) 정상 예약 메세지가 존재하지 않습니다."
             return {"result": txt}
 
