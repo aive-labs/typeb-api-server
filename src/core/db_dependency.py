@@ -27,10 +27,10 @@ def prefix_db_url(db_name: str):
 def get_db(token: str = Depends(reuseable_oauth)):
     secret_key = get_env_variable("secret_key")
     algorithm = get_env_variable("hash_algorithm")
-    payload = jwt.decode(token, secret_key, algorithms=[algorithm])
-    mall_id = payload.get("mall_id")
 
     try:
+        payload = jwt.decode(token, secret_key, algorithms=[algorithm])
+        mall_id = payload.get("mall_id")
         if mall_id is None:
             raise AuthException(
                 detail={"message": "계정에 해당하는 쇼핑몰 정보를 찾지 못하였습니다."}
