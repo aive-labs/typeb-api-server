@@ -1,12 +1,12 @@
 from fastapi import Depends
-from jose import jwt
+from jose import JWTError, jwt
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from src.auth.service.auth_service import reuseable_oauth
 from src.common.utils.get_env_variable import get_env_variable
 from src.core.database import Base
-from src.core.exceptions.exceptions import AuthException
+from src.core.exceptions.exceptions import AuthException, CredentialException
 
 db_engine = {}
 
@@ -29,8 +29,14 @@ def get_db(token: str = Depends(reuseable_oauth)):
     algorithm = get_env_variable("hash_algorithm")
     payload = jwt.decode(token, secret_key, algorithms=[algorithm])
     mall_id = payload.get("mall_id")
-    if mall_id is None:
-        raise AuthException(detail={"message": "계정에 해당하는 쇼핑몰 정보를 찾지 못하였습니다."})
+
+    try:
+        if mall_id is None:
+            raise AuthException(
+                detail={"message": "계정에 해당하는 쇼핑몰 정보를 찾지 못하였습니다."}
+            )
+    except JWTError as e:
+        raise CredentialException(detail={"message": "유효하지 않은 토큰입니다."}) from e
 
     mall_id = "aivelabsdb" if mall_id == "aivelabs" else mall_id
     print(f"[DB] Get DB Connection for {mall_id}")
