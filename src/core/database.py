@@ -91,16 +91,15 @@ def get_db_session():
         yield session
 
 
-user_db_conn = psycopg2.connect(
-    dbname=get_env_variable("user_db_name"),
-    user=get_env_variable("user_db_user"),
-    password=get_env_variable("user_db_password"),
-    host=get_env_variable("user_db_host"),
-    port=get_env_variable("user_db_port"),
-)
-
-
 def get_mall_id_by_user(user_id: str) -> str:
+    user_db_conn = psycopg2.connect(
+        dbname=get_env_variable("user_db_name"),
+        user=get_env_variable("user_db_user"),
+        password=get_env_variable("user_db_password"),
+        host=get_env_variable("user_db_host"),
+        port=get_env_variable("user_db_port"),
+    )
+
     with user_db_conn.cursor() as cursor:
         cursor.execute(
             """
@@ -119,3 +118,5 @@ def get_mall_id_by_user(user_id: str) -> str:
         if mall_id is None:
             raise NotFoundException(detail={"message": "사용자 정보를 찾을 수 없습니다."})
         return mall_id
+
+    user_db_conn.close()
