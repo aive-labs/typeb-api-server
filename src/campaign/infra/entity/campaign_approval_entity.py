@@ -17,8 +17,8 @@ class CampaignApprovalEntity(Base):
     approval_status = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False)
-    updated_at = Column(DateTime(timezone=True))
-    updated_by = Column(DateTime(timezone=True), default=func.now())
+    updated_at = Column(DateTime(timezone=True), default=func.now())
+    updated_by = Column(String, nullable=False)
 
     # 1:n relationship
     approvers = relationship(ApproverEntity, backref="campaign_approvals")

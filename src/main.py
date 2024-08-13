@@ -15,6 +15,7 @@ from src.dashboard.routes.dashboard_router import dashboard_router
 from src.message_template.routes.message_template_router import message_template_router
 from src.messages.routes.message_router import message_router
 from src.offers.routes.offer_router import offer_router
+from src.payment.routes.payment_router import payment_router
 from src.products.routes.product_router import product_router
 from src.search.routes.search_router import search_router
 from src.strategy.routes.strategy_router import strategy_router
@@ -50,6 +51,7 @@ app.include_router(router=message_template_router, prefix="/settings/templates")
 app.include_router(router=admin_router, prefix="/settings/admin")
 app.include_router(router=product_router, prefix="/products")
 app.include_router(router=dashboard_router, prefix="/dashboard")
+app.include_router(router=payment_router, prefix="/payment")
 
 origins = ["*"]
 

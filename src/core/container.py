@@ -107,9 +107,11 @@ from src.offers.infra.offer_repository import OfferRepository
 from src.offers.service.get_offer_service import GetOfferService
 from src.offers.service.update_offer_service import UpdateOfferService
 from src.payment.infra.payment_repository import PaymentRepository
+from src.payment.service.one_time_payment_service import OneTimePaymentService
 from src.payment.service.save_pre_data_for_validation_service import (
     SavePreDataForValidationService,
 )
+from src.payment.service.toss_payment_gateway import TossPaymentGateway
 from src.products.infra.product_repository import ProductRepository
 from src.products.service.product_service import ProductService
 from src.search.service.search_service import SearchService
@@ -156,6 +158,7 @@ class Container(containers.DeclarativeContainer):
             "src.admin.routes.admin_router",
             "src.products.routes.product_router",
             "src.dashboard.routes.dashboard_router",
+            "src.payment.routes.payment_router",
         ]
     )
 
@@ -612,4 +615,12 @@ class Container(containers.DeclarativeContainer):
 
     save_pre_data_for_validation_service = providers.Singleton(
         provides=SavePreDataForValidationService, payment_repository=payment_repository
+    )
+
+    toss_payment_gateway = providers.Singleton(provides=TossPaymentGateway)
+
+    one_time_payment_service = providers.Singleton(
+        provides=OneTimePaymentService,
+        payment_repository=payment_repository,
+        payment_gateway=toss_payment_gateway,
     )
