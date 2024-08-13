@@ -5,9 +5,10 @@ from sqlalchemy import (
     DateTime,
     ForeignKey,
     Integer,
+    Sequence,
     String,
+    event,
     func,
-    text,
 )
 from sqlalchemy.orm import relationship
 
@@ -23,15 +24,11 @@ class CampaignEntity(Base):
         String,
         primary_key=True,
         index=True,
-        server_default=text("'cam-' || LPAD(nextval('aivelabs_sv.campaign_seq')::TEXT, 6, '0')"),
     )
     campaign_name = Column(String, nullable=False)
     campaign_group_id = Column(
         String,
         nullable=False,
-        server_default=text(
-            "'grp-' || LPAD(nextval('aivelabs_sv.campaign_grp_seq')::TEXT, 6, '0')"
-        ),
     )
     budget = Column(Integer, nullable=True)
     campaign_type_code = Column(String, nullable=False)
@@ -92,3 +89,16 @@ class CampaignEntity(Base):
 
     def as_dict(self):
         return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+
+
+campaign_id_seq = Sequence("campaign_seq", schema="aivelabs_sv")
+campaign_group_id_seq = Sequence("campaign_grp_seq", schema="aivelabs_sv")
+
+
+@event.listens_for(CampaignEntity, "before_insert")
+def generate_custom_campaign_id(mapper, connection, target):
+    next_id = connection.execute(campaign_id_seq)
+    target.campaign_id = f"cam-{str(next_id).zfill(6)}"
+
+    next_grp_id = connection.execute(campaign_group_id_seq)
+    target.campaign_group_id = f"grp-{str(next_grp_id).zfill(6)}"

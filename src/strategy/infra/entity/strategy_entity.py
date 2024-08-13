@@ -1,4 +1,14 @@
-from sqlalchemy import ARRAY, Boolean, Column, DateTime, String, func, text
+from sqlalchemy import (
+    ARRAY,
+    Boolean,
+    Column,
+    DateTime,
+    Sequence,
+    String,
+    event,
+    func,
+    text,
+)
 from sqlalchemy.orm import relationship
 
 from src.core.database import Base
@@ -11,7 +21,6 @@ class StrategyEntity(Base):
         String,
         primary_key=True,
         index=True,
-        server_default=text("'stt-' || LPAD(nextval('aivelabs_sv.strategy_id_seq')::TEXT, 6, '0')"),
     )
     strategy_name = Column(String, nullable=False)
     strategy_tags = Column(ARRAY(String), nullable=False)
@@ -35,3 +44,12 @@ class StrategyEntity(Base):
         lazy=True,
         cascade="all, delete-orphan",
     )
+
+
+strategy_id_seq = Sequence("strategy_id_seq", schema="aivelabs_sv")
+
+
+@event.listens_for(StrategyEntity, "before_insert")
+def generate_custom_strategy_id(mapper, connection, target):
+    next_id = connection.execute(strategy_id_seq)
+    target.strategy_id = f"stt-{str(next_id).zfill(6)}"

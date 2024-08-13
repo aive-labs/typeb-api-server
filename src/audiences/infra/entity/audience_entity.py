@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, DateTime, String, func, text
+from sqlalchemy import Boolean, Column, DateTime, Sequence, String, event, func, text
 from sqlalchemy.orm import relationship
 
 from src.core.database import Base as Base
@@ -11,7 +11,6 @@ class AudienceEntity(Base):
         String,
         primary_key=True,
         index=True,
-        server_default=text("'aud-' || LPAD(nextval('aivelabs_sv.audience_seq')::TEXT, 6, '0')"),
     )
     audience_name = Column(String, nullable=False)
     main_mix_lv1 = Column(String)
@@ -31,3 +30,12 @@ class AudienceEntity(Base):
     user_exc_deletable = Column(Boolean, nullable=True)
 
     mapping = relationship("StrategyThemeAudienceMappingEntity", backref="audiences")
+
+
+audience_id_seq = Sequence("audience_seq", schema="aivelabs_sv")
+
+
+@event.listens_for(AudienceEntity, "before_insert")
+def generate_custom_audience_id(mapper, connection, target):
+    next_id = connection.execute(audience_id_seq)
+    target.audience_id = f"aud-{str(next_id).zfill(6)}"
