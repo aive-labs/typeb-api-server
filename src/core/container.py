@@ -106,6 +106,10 @@ from src.messages.service.message_service import MessageService
 from src.offers.infra.offer_repository import OfferRepository
 from src.offers.service.get_offer_service import GetOfferService
 from src.offers.service.update_offer_service import UpdateOfferService
+from src.payment.infra.payment_repository import PaymentRepository
+from src.payment.service.save_pre_data_for_validation_service import (
+    SavePreDataForValidationService,
+)
 from src.products.infra.product_repository import ProductRepository
 from src.products.service.product_service import ProductService
 from src.search.service.search_service import SearchService
@@ -599,4 +603,13 @@ class Container(containers.DeclarativeContainer):
         provides=DeleteImageForMessage,
         campaign_set_repository=campaign_set_repository,
         s3_service=s3_asset_service,
+    )
+
+    """
+    결제
+    """
+    payment_repository = providers.Singleton(provides=PaymentRepository)
+
+    save_pre_data_for_validation_service = providers.Singleton(
+        provides=SavePreDataForValidationService, payment_repository=payment_repository
     )

@@ -64,10 +64,9 @@ class Database:
         base_db_name = str(default_url).split("/")[-1]
 
         if base_db_name == "common":
-            print(f"in {base_db_name}")
-            print(f"schema: {Base.metadata.schema}")
+            print(f"DATABASE: {base_db_name} SCHEMA: {Base.metadata.schema}")
         else:
-            print(f"in {base_db_name}")
+            print(f"DATABASE: {base_db_name}")
             Base.metadata.create_all(bind=self._engine)
 
     @contextmanager  # type: ignore

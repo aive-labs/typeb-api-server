@@ -16,15 +16,7 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
-# for 'autogenerate' support
 target_metadata = Base.metadata
-
-
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
 
 
 def get_db_list_for_migration() -> list:
@@ -56,20 +48,18 @@ def run_migrations_online() -> None:
     db_urls = get_db_list_for_migration()
     print("🔅DB MIGRATION TARGET")
     for db_url in db_urls:
+        print(f"✅ {db_url}")
         connectable = create_engine(db_url, poolclass=pool.NullPool)
         with connectable.connect() as connection:
             context.configure(
                 connection=connection,
                 target_metadata=target_metadata,
                 version_table_schema=target_metadata.schema,
-                include_schemas=True,
             )
-
             with context.begin_transaction():
+                print(f"🔅 SET search_path TO {target_metadata.schema}")
                 context.execute(f"SET search_path TO {target_metadata.schema}")
                 context.run_migrations()
-
-        print(f"✅ {db_url}")
 
 
 run_migrations_online()
