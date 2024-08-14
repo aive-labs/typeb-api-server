@@ -10,11 +10,15 @@ from src.payment.routes.dto.request.payment_request import (
     PaymentAuthorizationRequestData,
 )
 from src.payment.routes.dto.request.pre_data_for_validation import PreDataForValidation
+from src.payment.routes.dto.response.remaining_credit import (
+    RemainingCreditResponse,
+)
 from src.payment.routes.use_case.change_card_to_primary_usecase import (
     ChangeCardToPrimaryUseCase,
 )
 from src.payment.routes.use_case.delete_card import DeleteCardUseCase
 from src.payment.routes.use_case.get_card_usecase import GetCardUseCase
+from src.payment.routes.use_case.get_credit import GetCreditUseCase
 from src.payment.routes.use_case.payment import PaymentUseCase
 from src.payment.routes.use_case.save_pre_data_for_validation import (
     SavePreDataForValidation,
@@ -72,7 +76,7 @@ def get_cards(
     return get_card_service.exec(user, db)
 
 
-@payment_router.patch("/cards/{card_id}/is_primary", status_code=status.HTTP_204_NO_CONTENT)
+@payment_router.patch("/cards/{card_id}/primary", status_code=status.HTTP_204_NO_CONTENT)
 @inject
 def change_card_status_to_primary(
     card_id: int,
@@ -94,3 +98,14 @@ def delete_card(
     delete_card_service: DeleteCardUseCase = Depends(Provide[Container.delete_card_service]),
 ):
     delete_card_service.exec(card_id, user, db=db)
+
+
+@payment_router.get("/credit")
+@inject
+def get_remind_credit(
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
+    get_credit_service: GetCreditUseCase = Depends(Provide[Container.get_credit_service]),
+) -> RemainingCreditResponse:
+    credit = get_credit_service.get_credit(user, db)
+    return RemainingCreditResponse(remaining_credit_amount=credit)

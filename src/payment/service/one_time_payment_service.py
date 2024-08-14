@@ -1,20 +1,29 @@
 from sqlalchemy.orm import Session
 
 from src.core.exceptions.exceptions import ConsistencyException
-from src.payment.infra.payment_repository import PaymentRepository
+from src.payment.domain.credit_history import CreditHistory
+from src.payment.enum.credit_status import CreditStatus
 from src.payment.routes.dto.request.payment_request import (
     PaymentAuthorizationRequestData,
 )
 from src.payment.routes.use_case.payment import PaymentUseCase
 from src.payment.routes.use_case.payment_gateway import PaymentGateway
+from src.payment.service.port.base_credit_repository import BaseCreditRepository
+from src.payment.service.port.base_payment_repository import BasePaymentRepository
 from src.users.domain.user import User
 
 
 class OneTimePaymentService(PaymentUseCase):
 
-    def __init__(self, payment_repository: PaymentRepository, payment_gateway: PaymentGateway):
+    def __init__(
+        self,
+        payment_repository: BasePaymentRepository,
+        payment_gateway: PaymentGateway,
+        credit_repository: BaseCreditRepository,
+    ):
         self.payment_repository = payment_repository
         self.payment_gateway = payment_gateway
+        self.credit_repository = credit_repository
 
     async def exec(self, payment_request: PaymentAuthorizationRequestData, user: User, db: Session):
         # order_id와 금액이 동일한지 체크
@@ -25,6 +34,20 @@ class OneTimePaymentService(PaymentUseCase):
 
         # 성공인 경우 결제 내역 테이블에 저장
         self.payment_repository.save_history(payment, user, db)
+
+        # 잔여 크레딧 업데이트
+        self.credit_repository.update_credit(payment.total_amount, db)
+
+        # 크레딧 히스토리에 내역 추가
+        credit_history = CreditHistory(
+            user_name=user.username,
+            description=payment.order_name,
+            status=CreditStatus.CHARGE_COMPLETE.value,
+            charge_amount=payment.total_amount,
+            created_by=str(user.user_id),
+            updated_by=str(user.user_id),
+        )
+        self.credit_repository.add_history(credit_history, db)
 
         # 검증 테이블에 해당 order_id 데이터 삭제
         self.payment_repository.delete_pre_validation_data(payment_request.order_id, db)
