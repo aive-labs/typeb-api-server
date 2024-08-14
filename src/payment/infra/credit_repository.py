@@ -1,7 +1,9 @@
+from sqlalchemy import desc
 from sqlalchemy.orm import Session
 
 from src.core.exceptions.exceptions import ConsistencyException
 from src.payment.domain.credit_history import CreditHistory
+from src.payment.infra.entity.credit_history_entity import CreditHistoryEntity
 from src.payment.infra.entity.remaining_credit_entity import RemainingCreditEntity
 from src.payment.service.port.base_credit_repository import BaseCreditRepository
 
@@ -29,4 +31,12 @@ class CreditRepository(BaseCreditRepository):
         db.flush()
 
     def add_history(self, credit_history: CreditHistory, db: Session):
-        pass
+        entity = credit_history.to_entity()
+        db.add(entity)
+        db.flush()
+
+    def get_all(self, db) -> list[CreditHistory]:
+        entities = (
+            db.query(CreditHistoryEntity).order_by(desc(CreditHistoryEntity.created_at)).all()
+        )
+        return [CreditHistory.model_validate(entity) for entity in entities]

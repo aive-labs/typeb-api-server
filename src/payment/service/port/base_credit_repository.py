@@ -18,3 +18,7 @@ class BaseCreditRepository(ABC):
     @abstractmethod
     def add_history(self, credit_history: CreditHistory, db: Session):
         pass
+
+    @abstractmethod
+    def get_all(self, db) -> list[CreditHistory]:
+        pass

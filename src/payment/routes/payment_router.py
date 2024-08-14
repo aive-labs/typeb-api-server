@@ -10,6 +10,9 @@ from src.payment.routes.dto.request.payment_request import (
     PaymentAuthorizationRequestData,
 )
 from src.payment.routes.dto.request.pre_data_for_validation import PreDataForValidation
+from src.payment.routes.dto.response.credit_history_response import (
+    CreditHistoryResponse,
+)
 from src.payment.routes.dto.response.remaining_credit import (
     RemainingCreditResponse,
 )
@@ -107,5 +110,15 @@ def get_remind_credit(
     db: Session = Depends(get_db),
     get_credit_service: GetCreditUseCase = Depends(Provide[Container.get_credit_service]),
 ) -> RemainingCreditResponse:
-    credit = get_credit_service.get_credit(user, db)
+    credit = get_credit_service.get_credit(db)
     return RemainingCreditResponse(remaining_credit_amount=credit)
+
+
+@payment_router.get("/credit/history")
+@inject
+def get_credit_history(
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
+    get_credit_service: GetCreditUseCase = Depends(Provide[Container.get_credit_service]),
+) -> list[CreditHistoryResponse]:
+    return get_credit_service.get_credit_history(db)
