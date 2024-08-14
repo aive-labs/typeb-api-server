@@ -107,6 +107,9 @@ from src.offers.infra.offer_repository import OfferRepository
 from src.offers.service.get_offer_service import GetOfferService
 from src.offers.service.update_offer_service import UpdateOfferService
 from src.payment.infra.payment_repository import PaymentRepository
+from src.payment.service.billing_service import IssueBillingService
+from src.payment.service.change_card_to_primary import ChangeCardToPrimaryService
+from src.payment.service.get_card_service import GetCardService
 from src.payment.service.one_time_payment_service import OneTimePaymentService
 from src.payment.service.save_pre_data_for_validation_service import (
     SavePreDataForValidationService,
@@ -623,4 +626,20 @@ class Container(containers.DeclarativeContainer):
         provides=OneTimePaymentService,
         payment_repository=payment_repository,
         payment_gateway=toss_payment_gateway,
+    )
+
+    issue_billing_service = providers.Singleton(
+        provides=IssueBillingService,
+        payment_repository=payment_repository,
+        payment_gateway=toss_payment_gateway,
+    )
+
+    change_card_to_primary_service = providers.Singleton(
+        provides=ChangeCardToPrimaryService,
+        payment_repository=payment_repository,
+    )
+
+    get_card_service = providers.Singleton(
+        provides=GetCardService,
+        payment_repository=payment_repository,
     )

@@ -6,4 +6,5 @@ class PaymentAuthorizationRequestData(BaseModel):
     amount: int
     payment_key: str | None = None
     customer_key: str | None = None
+    auth_key: str | None = None
     order_name: str | None = None
