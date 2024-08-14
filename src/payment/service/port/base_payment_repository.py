@@ -45,3 +45,15 @@ class BasePaymentRepository(ABC):
     @abstractmethod
     def get_cards(self, db) -> list[Card]:
         pass
+
+    @abstractmethod
+    def delete_card(self, card_id, db):
+        pass
+
+    @abstractmethod
+    def get_card_order_by_created_at(self, db) -> Card:
+        pass
+
+    @abstractmethod
+    def update_card_to_primary(self, card_id, user, db):
+        pass

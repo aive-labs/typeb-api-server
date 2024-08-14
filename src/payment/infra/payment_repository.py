@@ -1,3 +1,4 @@
+from sqlalchemy import asc
 from sqlalchemy.orm import Session
 
 from src.core.exceptions.exceptions import NotFoundException
@@ -75,7 +76,16 @@ class PaymentRepository(BasePaymentRepository):
         db.query(CardEntity).filter(CardEntity.card_id == card_id).update(
             {CardEntity.is_primary: True, CardEntity.updated_by: str(user.user_id)}
         )
+        db.flush()
 
     def get_cards(self, db) -> list[Card]:
         entities = db.query(CardEntity).all()
         return [Card.model_validate(entity) for entity in entities]
+
+    def delete_card(self, card_id, db):
+        db.query(CardEntity).filter(CardEntity.card_id == card_id).delete()
+        db.flush()
+
+    def get_card_order_by_created_at(self, db) -> Card:
+        oldest_card = db.query(CardEntity).order_by(asc(CardEntity.created_at)).first()
+        return Card.model_validate(oldest_card)

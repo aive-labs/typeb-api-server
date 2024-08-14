@@ -11,6 +11,7 @@ from src.users.domain.user import User
 
 
 class Card(BaseModel):
+    card_id: int | None = None
     billing_key: str
     customer_key: str
     card_number: str
@@ -26,6 +27,9 @@ class Card(BaseModel):
     class Config:
         from_attributes = True
 
+    def change_primary_card(self):
+        self.is_primary = True
+
     @staticmethod
     def from_toss_payment_response(response: TossPaymentBillingResponse, user: User):
         return Card(
@@ -38,9 +42,6 @@ class Card(BaseModel):
             created_by=str(user.user_id),
             updated_by=str(user.user_id),
         )
-
-    def change_primary_card(self):
-        self.is_primary = True
 
     def to_entity(self) -> "CardEntity":
         return CardEntity(

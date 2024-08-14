@@ -13,6 +13,7 @@ from src.payment.routes.dto.request.pre_data_for_validation import PreDataForVal
 from src.payment.routes.use_case.change_card_to_primary_usecase import (
     ChangeCardToPrimaryUseCase,
 )
+from src.payment.routes.use_case.delete_card import DeleteCardUseCase
 from src.payment.routes.use_case.get_card_usecase import GetCardUseCase
 from src.payment.routes.use_case.payment import PaymentUseCase
 from src.payment.routes.use_case.save_pre_data_for_validation import (
@@ -61,7 +62,8 @@ async def billing_payment_authorization_request(
     await issue_billing_service.exec(payment_authorization_data, user, db)
 
 
-@payment_router.patch("/cards")
+@payment_router.get("/cards")
+@inject
 def get_cards(
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db),
@@ -71,6 +73,7 @@ def get_cards(
 
 
 @payment_router.patch("/cards/{card_id}/is_primary", status_code=status.HTTP_204_NO_CONTENT)
+@inject
 def change_card_status_to_primary(
     card_id: int,
     user=Depends(get_permission_checker(required_permissions=[])),
@@ -80,3 +83,14 @@ def change_card_status_to_primary(
     ),
 ):
     change_card_to_primary_service.exec(card_id, user, db=db)
+
+
+@payment_router.delete("/cards/{card_id}", status_code=status.HTTP_204_NO_CONTENT)
+@inject
+def delete_card(
+    card_id: int,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
+    delete_card_service: DeleteCardUseCase = Depends(Provide[Container.delete_card_service]),
+):
+    delete_card_service.exec(card_id, user, db=db)
