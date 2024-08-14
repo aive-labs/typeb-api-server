@@ -5,11 +5,11 @@ from sqlalchemy.orm import Session
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
 from src.core.db_dependency import get_db
-from src.payment.domain.card import Card
 from src.payment.routes.dto.request.payment_request import (
     PaymentAuthorizationRequestData,
 )
 from src.payment.routes.dto.request.pre_data_for_validation import PreDataForValidation
+from src.payment.routes.dto.response.card_response import CardResponse
 from src.payment.routes.dto.response.credit_history_response import (
     CreditHistoryResponse,
 )
@@ -75,8 +75,8 @@ def get_cards(
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db),
     get_card_service: GetCardUseCase = Depends(Provide[Container.get_card_service]),
-) -> list[Card]:
-    return get_card_service.exec(user, db)
+) -> list[CardResponse]:
+    return get_card_service.exec(db)
 
 
 @payment_router.patch("/cards/{card_id}/primary", status_code=status.HTTP_204_NO_CONTENT)
