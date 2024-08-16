@@ -112,7 +112,7 @@ class StreamingConversationChain:
             replace_dict["[img_uri]"] = kwargs["img_uri"]  # list
         find_words = replace_dict.keys()
         try:
-            for chunk in chain.stream(message):
+            for chunk in chain.astream(message):
                 if self.generation_mode == "gpt":
                     chunk = chunk.content  # pyright: ignore [reportAttributeAccessIssue]
                 buffer += chunk  # pyright: ignore [reportOperatorIssue]
