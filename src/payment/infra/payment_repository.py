@@ -49,6 +49,7 @@ class PaymentRepository(BasePaymentRepository):
     def save_history(self, payment: Payment, user: User, db: Session):
         entity = payment.to_entity(user)
         db.add(entity)
+        db.flush()
 
     def save_billing_key(self, card: Card, db: Session):
         entity = card.to_entity()
@@ -89,3 +90,7 @@ class PaymentRepository(BasePaymentRepository):
     def get_card_order_by_created_at(self, db) -> Card:
         oldest_card = db.query(CardEntity).order_by(asc(CardEntity.created_at)).first()
         return Card.model_validate(oldest_card)
+
+    def get_primary_card(self, db) -> Card:
+        primary_card = db.query(CardEntity).filter(CardEntity.is_primary.is_(True)).first()
+        return Card.model_validate(primary_card)

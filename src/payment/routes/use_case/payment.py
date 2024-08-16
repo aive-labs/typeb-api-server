@@ -11,5 +11,10 @@ from src.users.domain.user import User
 class PaymentUseCase(ABC):
 
     @abstractmethod
-    async def exec(self, payment_request: PaymentAuthorizationRequestData, user: User, db: Session):
+    async def exec(
+        self,
+        user: User,
+        db: Session,
+        payment_request: PaymentAuthorizationRequestData | None = None,
+    ):
         pass

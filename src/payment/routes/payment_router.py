@@ -26,6 +26,7 @@ from src.payment.routes.use_case.payment import PaymentUseCase
 from src.payment.routes.use_case.save_pre_data_for_validation import (
     SavePreDataForValidation,
 )
+from src.payment.service.toss_uuid_key_generator import TossUUIDKeyGenerator
 
 payment_router = APIRouter(
     tags=["Payment"],
@@ -122,3 +123,21 @@ def get_credit_history(
     get_credit_service: GetCreditUseCase = Depends(Provide[Container.get_credit_service]),
 ) -> list[CreditHistoryResponse]:
     return get_credit_service.get_credit_history(db)
+
+
+@payment_router.get("/key")
+@inject
+def get_key(
+    prefix: str | None = None,
+    user=Depends(get_permission_checker(required_permissions=[])),
+) -> str:
+    key_generator = TossUUIDKeyGenerator()
+
+    if prefix == "order":
+        key = key_generator.exec(prefix)
+    elif prefix == "customer":
+        key = key_generator.exec(user.mall_id)
+    else:
+        key = key_generator.exec()
+
+    return key

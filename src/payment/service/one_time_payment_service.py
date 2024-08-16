@@ -24,12 +24,21 @@ class OneTimePaymentService(PaymentUseCase):
         self.payment_gateway = payment_gateway
         self.credit_repository = credit_repository
 
-    async def exec(self, payment_request: PaymentAuthorizationRequestData, user: User, db: Session):
+    async def exec(
+        self,
+        user: User,
+        db: Session,
+        payment_request: PaymentAuthorizationRequestData | None = None,
+    ):
+
+        if payment_request is None:
+            raise ConsistencyException(detail={"message": "결제 정보 데이터가 존재하지 않습니다."})
+
         # order_id와 금액이 동일한지 체크
         self.check_is_order_mismatch(payment_request, db)
 
         # 결제 승인 요청 후 성공하면 결과 객체 반환
-        payment = await self.payment_gateway.request_payment_approval(payment_request)
+        payment = await self.payment_gateway.request_general_payment_approval(payment_request)
 
         # 성공인 경우 결제 내역 테이블에 저장
         self.payment_repository.save_history(payment, user, db)

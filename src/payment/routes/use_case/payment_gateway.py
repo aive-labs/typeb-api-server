@@ -12,7 +12,7 @@ from src.payment.routes.dto.request.payment_request import (
 class PaymentGateway(ABC):
 
     @abstractmethod
-    async def request_payment_approval(
+    async def request_general_payment_approval(
         self, payment_data: PaymentAuthorizationRequestData
     ) -> Payment:
         pass
@@ -21,4 +21,10 @@ class PaymentGateway(ABC):
     async def request_billing_key(
         self, payment_data: PaymentAuthorizationRequestData
     ) -> TossPaymentBillingResponse:
+        pass
+
+    @abstractmethod
+    async def request_billing_payment(
+        self, payment_data: PaymentAuthorizationRequestData, billing_key: str
+    ) -> Payment:
         pass

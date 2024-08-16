@@ -57,3 +57,7 @@ class BasePaymentRepository(ABC):
     @abstractmethod
     def update_card_to_primary(self, card_id, user, db):
         pass
+
+    @abstractmethod
+    def get_primary_card(self, db) -> Card:
+        pass

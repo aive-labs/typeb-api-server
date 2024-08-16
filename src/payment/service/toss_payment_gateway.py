@@ -5,10 +5,11 @@ from fastapi import HTTPException
 
 from src.common.utils.get_env_variable import get_env_variable
 from src.payment.domain.payment import Payment
+from src.payment.enum.product import ProductType
 from src.payment.infra.dto.response.toss_payment_billing_response import (
     TossPaymentBillingResponse,
 )
-from src.payment.infra.dto.response.toss_payment_response import PaymentResponse
+from src.payment.infra.dto.response.toss_payment_response import TossPaymentResponse
 from src.payment.routes.dto.request.payment_request import (
     PaymentAuthorizationRequestData,
 )
@@ -20,16 +21,17 @@ class TossPaymentGateway(PaymentGateway):
     def __init__(self):
         self.secret_key = get_env_variable("toss_secretkey")
         self.payment_authorization_url = get_env_variable("payment_authorization_url")
-        self.billing_url = get_env_variable("billing_url")
+        self.billing_payment_url = get_env_variable("payment_bulling_url")
+        self.request_billing_key_url = get_env_variable("billing_url")
 
-    async def request_payment_approval(self, payment_data) -> Payment:
+    async def request_general_payment_approval(self, payment_data) -> Payment:
         headers = self.get_header()
         payload = self.get_payment_approval_payload(payment_data)
 
         res = await self.request_payment_approval_to_pg(headers, payload)
-        payment_response = PaymentResponse(**res)
+        payment_response = TossPaymentResponse(**res)
 
-        return Payment.from_toss_response(payment_response)
+        return Payment.from_toss_response(payment_response, ProductType.CREDIT)
 
     async def request_payment_approval_to_pg(self, headers, payload):
         async with aiohttp.ClientSession() as session:
@@ -84,7 +86,42 @@ class TossPaymentGateway(PaymentGateway):
     async def request_billing_key_to_pg(self, headers, payload):
         async with aiohttp.ClientSession() as session:
             async with session.post(
-                url=self.billing_url,
+                url=self.request_billing_key_url,
+                data=payload,
+                headers=headers,
+                ssl=False,
+            ) as response:
+                res = await response.json()
+
+                if response.status != 200:
+                    raise HTTPException(
+                        status_code=response.status,
+                        detail={"code": res["code"], "message": res["message"]},
+                    )
+
+                return res
+
+    async def request_billing_payment(
+        self, payment_data: PaymentAuthorizationRequestData, billing_key: str
+    ) -> Payment:
+        headers = self.get_header()
+        payload = self.get_billing_payment_payload(payment_data)
+
+        res = await self.request_billing_payment_to_pg(headers, payload, billing_key)
+        return Payment.from_toss_response(TossPaymentResponse(**res), ProductType.SUBSCRIPTION)
+
+    def get_billing_payment_payload(self, payment_data):
+        return {
+            "customerKey": payment_data.customer_key,
+            "amount": payment_data.amount,
+            "orderId": payment_data.order_id,
+            "orderName": payment_data.order_name,
+        }
+
+    async def request_billing_payment_to_pg(self, headers, payload, billing_key):
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                url=f"{self.billing_payment_url}/{billing_key}",
                 data=payload,
                 headers=headers,
                 ssl=False,

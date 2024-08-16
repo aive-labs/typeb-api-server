@@ -37,7 +37,7 @@ class Checkout(BaseModel):
     url: str
 
 
-class PaymentResponse(BaseModel):
+class TossPaymentResponse(BaseModel):
     payment_key: str
     order_id: str
     order_name: str

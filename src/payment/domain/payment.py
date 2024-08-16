@@ -3,7 +3,8 @@ from pydantic import BaseModel
 from src.payment.enum.payment_method import PaymentMethod
 from src.payment.enum.payment_status import PaymentStatus
 from src.payment.enum.payment_type import PaymentType
-from src.payment.infra.dto.response.toss_payment_response import PaymentResponse
+from src.payment.enum.product import ProductType
+from src.payment.infra.dto.response.toss_payment_response import TossPaymentResponse
 from src.payment.infra.entity.payment_entity import PaymentEntity
 from src.users.domain.user import User
 
@@ -28,6 +29,7 @@ class Payment(BaseModel):
     tax_free_amount: int
     method: PaymentMethod
     version: str
+    product_name: str
 
     def to_entity(self, user: User) -> "PaymentEntity":
         return PaymentEntity(
@@ -55,7 +57,7 @@ class Payment(BaseModel):
         )
 
     @staticmethod
-    def from_toss_response(response: PaymentResponse):
+    def from_toss_response(response: TossPaymentResponse, product_type: ProductType):
         return Payment(
             payment_key=response.payment_key,
             order_id=response.order_id,
@@ -76,4 +78,5 @@ class Payment(BaseModel):
             tax_free_amount=response.tax_free_amount,
             method=response.method,
             version=response.version,
+            product_name=product_type.value,
         )
