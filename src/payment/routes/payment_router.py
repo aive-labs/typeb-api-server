@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
 from src.core.db_dependency import get_db
+from src.payment.domain.subscription import SubscriptionPlan
 from src.payment.routes.dto.request.payment_request import (
     PaymentAuthorizationRequestData,
 )
@@ -166,3 +167,15 @@ def get_key(
         key = TossUUIDKeyGenerator.generate()
 
     return key
+
+
+@payment_router.get("/subscription-plans")
+@inject
+def get_subscription_plans(
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
+    get_subscription_service: GetSubscriptionUseCase = Depends(
+        Provide[Container.get_subscription_service]
+    ),
+) -> list[SubscriptionPlan]:
+    return get_subscription_service.get_plans(db)

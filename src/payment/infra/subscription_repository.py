@@ -12,6 +12,7 @@ from src.payment.service.port.base_subscription_repository import (
 
 
 class SubscriptionRepository(BaseSubscriptionRepository):
+
     def get_my_subscription(self, db: Session) -> Subscription | None:
         entity = db.query(SubscriptionEntity).first()
 
@@ -60,3 +61,7 @@ class SubscriptionRepository(BaseSubscriptionRepository):
             {SubscriptionEntity.status: new_status}
         )
         db.flush()
+
+    def get_plans(self, db) -> list[SubscriptionPlan]:
+        entities = db.query(SubscriptionPlanEntity).all()
+        return [SubscriptionPlan.model_validate(entity) for entity in entities]

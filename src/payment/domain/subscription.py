@@ -12,6 +12,10 @@ class SubscriptionPlan(BaseModel):
     id: int
     name: str
     price: int
+    description: str
+
+    class Config:
+        from_attributes = True
 
 
 class Subscription(BaseModel):
@@ -25,6 +29,9 @@ class Subscription(BaseModel):
     created_by: str
     created_at: datetime
     plan: SubscriptionPlan
+
+    class Config:
+        from_attributes = True
 
     @staticmethod
     def from_model(model: SubscriptionEntity) -> "Subscription":

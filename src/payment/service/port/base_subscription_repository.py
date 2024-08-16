@@ -18,3 +18,7 @@ class BaseSubscriptionRepository(ABC):
     @abstractmethod
     def register_subscription(self, new_subscription, db: Session) -> Subscription:
         pass
+
+    @abstractmethod
+    def get_plans(self, db) -> list[SubscriptionPlan]:
+        pass

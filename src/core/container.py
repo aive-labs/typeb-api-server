@@ -675,4 +675,5 @@ class Container(containers.DeclarativeContainer):
     get_subscription_service = providers.Singleton(
         provides=GetSubscriptionService,
         payment_repository=payment_repository,
+        subscription_repository=subscription_repository,
     )
