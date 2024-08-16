@@ -16,6 +16,7 @@ class PaymentEntity(Base):
 
     card_number = Column(String, nullable=True)
     card_type = Column(String, nullable=True)
+    card_company = Column(String, nullable=True)
 
     receipt_url = Column(String, nullable=True)
     checkout_url = Column(String, nullable=True)

@@ -114,6 +114,7 @@ from src.payment.service.change_card_to_primary import ChangeCardToPrimaryServic
 from src.payment.service.delete_card_service import DeleteCardService
 from src.payment.service.get_card_service import GetCardService
 from src.payment.service.get_credit_service import GetCreditService
+from src.payment.service.get_subscription_service import GetSubscriptionService
 from src.payment.service.issue_billing_service import IssueBillingService
 from src.payment.service.one_time_payment_service import OneTimePaymentService
 from src.payment.service.save_pre_data_for_validation_service import (
@@ -669,4 +670,9 @@ class Container(containers.DeclarativeContainer):
         provides=GetCreditService,
         payment_repository=payment_repository,
         credit_repository=credit_repository,
+    )
+
+    get_subscription_service = providers.Singleton(
+        provides=GetSubscriptionService,
+        payment_repository=payment_repository,
     )

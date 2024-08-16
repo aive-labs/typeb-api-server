@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+from src.payment.enum.card_company import CardCompany
 from src.payment.enum.payment_method import PaymentMethod
 from src.payment.enum.payment_status import PaymentStatus
 from src.payment.enum.payment_type import PaymentType
@@ -19,6 +20,7 @@ class Payment(BaseModel):
     type: PaymentType
     card_number: str | None = None
     card_type: str | None = None
+    card_company: str | None = None
     receipt_url: str | None = None
     checkout_url: str | None = None
     currency: str
@@ -42,6 +44,7 @@ class Payment(BaseModel):
             type=self.type.value,
             card_number=self.card_number,
             card_type=self.card_type,
+            card_company=self.card_company,
             receipt_url=self.receipt_url,
             checkout_url=self.checkout_url,
             currency=self.currency,
@@ -58,6 +61,9 @@ class Payment(BaseModel):
 
     @staticmethod
     def from_toss_response(response: TossPaymentResponse, product_type: ProductType):
+        issuer_code = response.card.issuer_code if response.card else None
+        company_name = CardCompany.get_company_by_code(issuer_code)
+
         return Payment(
             payment_key=response.payment_key,
             order_id=response.order_id,
@@ -68,6 +74,7 @@ class Payment(BaseModel):
             type=response.type,
             card_number=response.card.number if response.card else None,
             card_type=response.card.card_type if response.card else None,
+            card_company=company_name if company_name else None,
             receipt_url=response.receipt.url if response.receipt else None,
             checkout_url=response.checkout.url if response.checkout else None,
             currency=response.currency,

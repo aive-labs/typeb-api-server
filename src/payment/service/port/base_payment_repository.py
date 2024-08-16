@@ -61,3 +61,7 @@ class BasePaymentRepository(ABC):
     @abstractmethod
     def get_primary_card(self, db) -> Card:
         pass
+
+    @abstractmethod
+    def get_subscription_payment_history(self, db) -> list[Payment]:
+        pass

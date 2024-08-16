@@ -4,7 +4,9 @@ from sqlalchemy.orm import Session
 from src.core.exceptions.exceptions import NotFoundException
 from src.payment.domain.card import Card
 from src.payment.domain.payment import Payment
+from src.payment.enum.product import ProductType
 from src.payment.infra.entity.card_entity import CardEntity
+from src.payment.infra.entity.payment_entity import PaymentEntity
 from src.payment.infra.entity.pre_data_for_validation import PreDataForValidationEntity
 from src.payment.routes.dto.request.pre_data_for_validation import PreDataForValidation
 from src.payment.service.port.base_payment_repository import BasePaymentRepository
@@ -94,3 +96,11 @@ class PaymentRepository(BasePaymentRepository):
     def get_primary_card(self, db) -> Card:
         primary_card = db.query(CardEntity).filter(CardEntity.is_primary.is_(True)).first()
         return Card.model_validate(primary_card)
+
+    def get_subscription_payment_history(self, db) -> list[Payment]:
+        entites = (
+            db.query(PaymentEntity)
+            .filter(PaymentEntity.product_name == ProductType.SUBSCRIPTION.value)
+            .all()
+        )
+        return [Payment.model_validate(entity) for entity in entites]

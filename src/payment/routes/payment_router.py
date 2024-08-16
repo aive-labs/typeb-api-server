@@ -16,12 +16,16 @@ from src.payment.routes.dto.response.credit_history_response import (
 from src.payment.routes.dto.response.remaining_credit import (
     RemainingCreditResponse,
 )
+from src.payment.routes.dto.response.subscription_history_response import (
+    SubscriptionHistoryResponse,
+)
 from src.payment.routes.use_case.change_card_to_primary_usecase import (
     ChangeCardToPrimaryUseCase,
 )
 from src.payment.routes.use_case.delete_card import DeleteCardUseCase
 from src.payment.routes.use_case.get_card_usecase import GetCardUseCase
 from src.payment.routes.use_case.get_credit import GetCreditUseCase
+from src.payment.routes.use_case.get_subscription import GetSubscriptionUseCase
 from src.payment.routes.use_case.payment import PaymentUseCase
 from src.payment.routes.use_case.save_pre_data_for_validation import (
     SavePreDataForValidation,
@@ -134,6 +138,18 @@ def get_credit_history(
     get_credit_service: GetCreditUseCase = Depends(Provide[Container.get_credit_service]),
 ) -> list[CreditHistoryResponse]:
     return get_credit_service.get_credit_history(db)
+
+
+@payment_router.get("/subscription/history")
+@inject
+def get_subscription_history(
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
+    get_subscription_service: GetSubscriptionUseCase = Depends(
+        Provide[Container.get_subscription_service]
+    ),
+) -> list[SubscriptionHistoryResponse]:
+    return get_subscription_service.get_subscription_payment_history(db)
 
 
 @payment_router.get("/key")
