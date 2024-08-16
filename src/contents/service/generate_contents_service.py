@@ -188,5 +188,5 @@ class GenerateContentsService(GenerateContentsUseCase):
         selected_template, query, kwargs_dict = await self._prepare_contents_resource(
             contents_generate, db
         )
-        async for i in self.chain.generate_response(selected_template, query, **kwargs_dict):
+        async for i in await self.chain.generate_response(selected_template, query, **kwargs_dict):
             yield i

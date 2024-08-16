@@ -31,7 +31,9 @@ class SubscriptionRepository(BaseSubscriptionRepository):
         if not entity:
             raise NotFoundException(detail={"message": "해당 요금제는 존재하지 않습니다."})
 
-        return SubscriptionPlan(id=entity.id, name=entity.name, price=entity.price)
+        return SubscriptionPlan(
+            id=entity.id, name=entity.name, price=entity.price, description=entity.description
+        )
 
     def register_subscription(self, new_subscription: Subscription, db: Session) -> Subscription:
         subscription_plan_entity = SubscriptionPlanEntity(

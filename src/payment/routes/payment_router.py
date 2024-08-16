@@ -14,6 +14,7 @@ from src.payment.routes.dto.response.card_response import CardResponse
 from src.payment.routes.dto.response.credit_history_response import (
     CreditHistoryResponse,
 )
+from src.payment.routes.dto.response.key_response import KeyResponse
 from src.payment.routes.dto.response.remaining_credit import (
     RemainingCreditResponse,
 )
@@ -156,17 +157,17 @@ def get_subscription_history(
 @payment_router.get("/key")
 @inject
 def get_key(
-    prefix: str | None = None,
+    type: str | None = None,
     user=Depends(get_permission_checker(required_permissions=[])),
-) -> str:
-    if prefix == "order":
-        key = TossUUIDKeyGenerator.generate(prefix)
-    elif prefix == "customer":
+) -> KeyResponse:
+    if type == "order":
+        key = TossUUIDKeyGenerator.generate(type)
+    elif type == "customer":
         key = TossUUIDKeyGenerator.generate(user.mall_id)
     else:
         key = TossUUIDKeyGenerator.generate()
 
-    return key
+    return KeyResponse(key=key)
 
 
 @payment_router.get("/subscription-plans")
