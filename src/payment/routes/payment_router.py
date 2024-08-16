@@ -56,10 +56,21 @@ async def one_time_payment_authorization_request(
     db: Session = Depends(get_db),
     one_time_payment_service: PaymentUseCase = Depends(Provide[Container.one_time_payment_service]),
 ):
-    await one_time_payment_service.exec(payment_authorization_data, user, db)
+    await one_time_payment_service.exec(user, db, payment_authorization_data)
 
 
 @payment_router.post("/billing", status_code=status.HTTP_204_NO_CONTENT)
+@inject
+async def billing_payment(
+    payment_authorization_data: PaymentAuthorizationRequestData,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
+    billing_payment_service: PaymentUseCase = Depends(Provide[Container.billing_payment_service]),
+):
+    await billing_payment_service.exec(user, db, payment_authorization_data)
+
+
+@payment_router.post("/billing/issue", status_code=status.HTTP_204_NO_CONTENT)
 @inject
 async def billing_payment_authorization_request(
     payment_authorization_data: PaymentAuthorizationRequestData,
@@ -67,7 +78,7 @@ async def billing_payment_authorization_request(
     db: Session = Depends(get_db),
     issue_billing_service: PaymentUseCase = Depends(Provide[Container.issue_billing_service]),
 ):
-    await issue_billing_service.exec(payment_authorization_data, user, db)
+    await issue_billing_service.exec(user, db, payment_authorization_data)
 
 
 @payment_router.get("/cards")
@@ -131,13 +142,11 @@ def get_key(
     prefix: str | None = None,
     user=Depends(get_permission_checker(required_permissions=[])),
 ) -> str:
-    key_generator = TossUUIDKeyGenerator()
-
     if prefix == "order":
-        key = key_generator.exec(prefix)
+        key = TossUUIDKeyGenerator.generate(prefix)
     elif prefix == "customer":
-        key = key_generator.exec(user.mall_id)
+        key = TossUUIDKeyGenerator.generate(user.mall_id)
     else:
-        key = key_generator.exec()
+        key = TossUUIDKeyGenerator.generate()
 
     return key

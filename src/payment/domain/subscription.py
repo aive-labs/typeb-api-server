@@ -1,8 +1,11 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
+from dateutil.relativedelta import relativedelta
 from pydantic import BaseModel
 
+from src.payment.enum.subscription_status import SubscriptionStatus
 from src.payment.infra.entity.subscription_entity import SubscriptionEntity
+from src.users.domain.user import User
 
 
 class SubscriptionPlan(BaseModel):
@@ -43,3 +46,17 @@ class Subscription(BaseModel):
         )
 
         return subscription
+
+    @staticmethod
+    def with_pending_status(plan: SubscriptionPlan, user: User) -> "Subscription":
+        return Subscription(
+            plan_id=plan.id,
+            status=SubscriptionStatus.PENDING.value,
+            start_date=datetime.now(timezone.utc),
+            end_date=datetime.now(timezone.utc) + relativedelta(months=1),
+            auto_renewal=True,
+            last_payment_date=datetime.now(timezone.utc),
+            created_by=str(user.user_id),
+            created_at=datetime.now(timezone.utc),
+            plan=plan,
+        )

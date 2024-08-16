@@ -108,6 +108,7 @@ from src.offers.service.get_offer_service import GetOfferService
 from src.offers.service.update_offer_service import UpdateOfferService
 from src.payment.infra.credit_repository import CreditRepository
 from src.payment.infra.payment_repository import PaymentRepository
+from src.payment.infra.subscription_repository import SubscriptionRepository
 from src.payment.service.billing_payment_service import BillingPaymentService
 from src.payment.service.change_card_to_primary import ChangeCardToPrimaryService
 from src.payment.service.delete_card_service import DeleteCardService
@@ -638,10 +639,13 @@ class Container(containers.DeclarativeContainer):
         payment_gateway=toss_payment_gateway,
     )
 
+    subscription_repository = providers.Singleton(provides=SubscriptionRepository)
+
     billing_payment_service = providers.Singleton(
         provides=BillingPaymentService,
         payment_repository=payment_repository,
         payment_gateway=toss_payment_gateway,
+        subscription_repository=subscription_repository,
     )
 
     change_card_to_primary_service = providers.Singleton(
