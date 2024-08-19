@@ -2,6 +2,6 @@ from enum import Enum
 
 
 class PaymentType(Enum):
-    NORMAL = "NOMRAL"
+    NORMAL = "NORMAL"
     BILLING = "BILLING"
     BRANDPAY = "BRANDPAY"
