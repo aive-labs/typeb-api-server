@@ -29,8 +29,6 @@ class TossPaymentGateway(PaymentGateway):
         payload = self.get_payment_approval_payload(payment_data)
 
         res = await self.request_payment_approval_to_pg(headers, payload)
-        print("res")
-        print(res)
         payment_response = TossPaymentResponse.from_response(res)
 
         return Payment.from_toss_response(payment_response, ProductType.CREDIT)
@@ -75,7 +73,7 @@ class TossPaymentGateway(PaymentGateway):
         payload = self.get_billing_payload(payment_data)
 
         res = await self.request_billing_key_to_pg(headers, payload)
-        billing_response = TossPaymentBillingResponse(**res)
+        billing_response = TossPaymentBillingResponse.from_response(res)
 
         return billing_response
 
@@ -110,7 +108,8 @@ class TossPaymentGateway(PaymentGateway):
         payload = self.get_billing_payment_payload(payment_data)
 
         res = await self.request_billing_payment_to_pg(headers, payload, billing_key)
-        return Payment.from_toss_response(TossPaymentResponse(**res), ProductType.SUBSCRIPTION)
+        payment_response = TossPaymentResponse.from_response(res)
+        return Payment.from_toss_response(payment_response, ProductType.SUBSCRIPTION)
 
     def get_billing_payment_payload(self, payment_data):
         return {
