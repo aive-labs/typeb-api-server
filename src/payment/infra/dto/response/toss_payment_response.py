@@ -104,11 +104,11 @@ class TossPaymentResponse(BaseModel):
 
         receipt = None
         if model["receipt"]:
-            receipt = Receipt(url=model["receipt"])
+            receipt = Receipt(url=model["receipt"]["url"])
 
         checkout = None
         if model["checkout"]:
-            checkout = Checkout(url=model["checkout"])
+            checkout = Checkout(url=model["checkout"]["url"])
 
         return TossPaymentResponse(
             payment_key=model["paymentKey"],
@@ -116,7 +116,7 @@ class TossPaymentResponse(BaseModel):
             order_name=model["orderName"],
             status=model["status"],
             requested_at=model["requestedAt"],
-            approved_at=model["approved_at"],
+            approved_at=model["approvedAt"],
             type=model["type"],
             card=card,
             virtual_account=model["virtualAccount"],
