@@ -29,7 +29,9 @@ class TossPaymentGateway(PaymentGateway):
         payload = self.get_payment_approval_payload(payment_data)
 
         res = await self.request_payment_approval_to_pg(headers, payload)
-        payment_response = TossPaymentResponse(**res)
+        print("res")
+        print(res)
+        payment_response = TossPaymentResponse.from_response(res)
 
         return Payment.from_toss_response(payment_response, ProductType.CREDIT)
 
@@ -37,7 +39,7 @@ class TossPaymentGateway(PaymentGateway):
         async with aiohttp.ClientSession() as session:
             async with session.post(
                 url=self.payment_authorization_url,
-                data=payload,
+                json=payload,
                 headers=headers,
                 ssl=False,
             ) as response:
@@ -87,7 +89,7 @@ class TossPaymentGateway(PaymentGateway):
         async with aiohttp.ClientSession() as session:
             async with session.post(
                 url=self.request_billing_key_url,
-                data=payload,
+                json=payload,
                 headers=headers,
                 ssl=False,
             ) as response:
@@ -122,7 +124,7 @@ class TossPaymentGateway(PaymentGateway):
         async with aiohttp.ClientSession() as session:
             async with session.post(
                 url=f"{self.billing_payment_url}/{billing_key}",
-                data=payload,
+                json=payload,
                 headers=headers,
                 ssl=False,
             ) as response:

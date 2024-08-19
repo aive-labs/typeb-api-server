@@ -13,7 +13,7 @@ class CardDetails(BaseModel):
     number: str
     installment_plan_months: int
     is_interest_free: bool
-    interest_player: Optional[str]
+    interest_payer: Optional[str]
     approve_no: str
     use_card_point: bool
     card_type: str
@@ -45,7 +45,9 @@ class TossPaymentResponse(BaseModel):
     requested_at: str
     approved_at: str
     type: PaymentType
+
     card: Optional[CardDetails]
+
     virtual_account: Optional[str]
     transfer: Optional[str]
     mobile_phone: Optional[str]
@@ -54,16 +56,90 @@ class TossPaymentResponse(BaseModel):
     discount: Optional[str]
     cancels: Optional[str]
     secret: Optional[str]
+
     easy_pay: Optional[EasyPayDetails]
+
     country: str
     is_partial_cancelable: bool
+
     receipt: Optional[Receipt]
     checkout: Optional[Checkout]
+
     currency: str
     total_amount: int
     balance_amount: int
     supplied_amount: int
     vat: int
     tax_free_amount: int
+
     method: PaymentMethod
     version: str
+
+    @staticmethod
+    def from_response(model) -> "TossPaymentResponse":
+
+        card = None
+        if model["card"]:
+            card = CardDetails(
+                issuer_code=model["card"]["issuerCode"],
+                acquirer_code=model["card"]["acquirerCode"],
+                number=model["card"]["number"],
+                installment_plan_months=model["card"]["installmentPlanMonths"],
+                is_interest_free=model["card"]["isInterestFree"],
+                interest_payer=model["card"]["interestPayer"],
+                approve_no=model["card"]["approveNo"],
+                use_card_point=model["card"]["useCardPoint"],
+                card_type=model["card"]["type"],
+                owner_type=model["card"]["ownerType"],
+                acquire_status=model["card"]["acquireStatus"],
+                receipt_url=model["card"]["receiptUrl"],
+                amount=model["card"]["amount"],
+            )
+
+        easy_pay = None
+        if model["easyPay"]:
+            easy_pay = EasyPayDetails(
+                provider=model["easyPay"]["provider"],
+                amount=model["easyPay"]["amount"],
+                discount_amount=model["easyPay"]["discountAmount"],
+            )
+
+        receipt = None
+        if model["receipt"]:
+            receipt = Receipt(url=model["receipt"])
+
+        checkout = None
+        if model["checkout"]:
+            checkout = Checkout(url=model["checkout"])
+
+        return TossPaymentResponse(
+            payment_key=model["paymentKey"],
+            order_id=model["orderId"],
+            order_name=model["orderName"],
+            status=model["status"],
+            requested_at=model["requestedAt"],
+            approved_at=model["approved_at"],
+            type=model["type"],
+            card=card,
+            virtual_account=model["virtualAccount"],
+            transfer=model["transfer"],
+            mobile_phone=model["mobilePhone"],
+            gift_certificate=model["giftCertificate"],
+            cash_receipt=model["cashReceipt"],
+            discount=model["discount"],
+            cancels=model["cancels"],
+            secret=model["secret"],
+            easy_pay=easy_pay,
+            country=model["country"],
+            is_partial_cancelable=model["isPartialCancelable"],
+            receipt=receipt,
+            checkout=checkout,
+            currency=model["currency"],
+            total_amount=model["totalAmount"],
+            balance_amount=model["balanceAmount"],
+            supplied_amount=model["suppliedAmount"],
+            vat=model["vat"],
+            tax_free_amount=model["taxFreeAmount"],
+            method=model["method"],
+            version=model["version"],
+        )
