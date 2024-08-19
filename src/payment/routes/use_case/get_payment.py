@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.core.transactional import transactional
+from src.users.domain.user import User
 
 
 class CustomerKeyUseCase(ABC):
@@ -13,5 +14,5 @@ class CustomerKeyUseCase(ABC):
 
     @transactional
     @abstractmethod
-    def save_customer_key(self, mall_id, customer_key, db: Session):
+    def save_customer_key(self, user: User, customer_key, db: Session):
         pass

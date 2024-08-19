@@ -71,5 +71,5 @@ class BasePaymentRepository(ABC):
         pass
 
     @abstractmethod
-    def save_customer_key(self, mall_id, customer_key, db: Session):
+    def save_customer_key(self, user: User, customer_key, db: Session):
         pass

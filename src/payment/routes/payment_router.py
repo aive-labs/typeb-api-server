@@ -169,7 +169,7 @@ def get_key(
         key = customer_key_service.get_customer_key(user.mall_id, db)
         if key is None:
             key = TossUUIDKeyGenerator.generate(user.mall_id)
-            customer_key_service.save_customer_key(user.mall_id, key, db=db)
+            customer_key_service.save_customer_key(user, key, db=db)
     else:
         key = TossUUIDKeyGenerator.generate()
 

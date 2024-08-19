@@ -118,7 +118,12 @@ class PaymentRepository(BasePaymentRepository):
 
         return entity.customer_key
 
-    def save_customer_key(self, mall_id, customer_key, db: Session):
-        entity = MallCustomerKeyMappingEntity(mall_id=mall_id, customer_key=customer_key)
+    def save_customer_key(self, user: User, customer_key, db: Session):
+        entity = MallCustomerKeyMappingEntity(
+            mall_id=user.mall_id,
+            customer_key=customer_key,
+            created_by=str(user.user_id),
+            updated_by=str(user.user_id),
+        )
         db.add(entity)
         db.flush()

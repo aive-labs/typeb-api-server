@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from src.core.transactional import transactional
 from src.payment.routes.use_case.get_payment import CustomerKeyUseCase
 from src.payment.service.port.base_payment_repository import BasePaymentRepository
+from src.users.domain.user import User
 
 
 class CustomerKeyService(CustomerKeyUseCase):
@@ -14,5 +15,5 @@ class CustomerKeyService(CustomerKeyUseCase):
         return self.payment_repository.get_customer_key(mall_id, db)
 
     @transactional
-    def save_customer_key(self, mall_id, customer_key, db: Session):
-        self.payment_repository.save_customer_key(mall_id, customer_key, db)
+    def save_customer_key(self, user: User, customer_key, db: Session):
+        self.payment_repository.save_customer_key(user, customer_key, db)
