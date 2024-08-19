@@ -631,10 +631,13 @@ class Container(containers.DeclarativeContainer):
 
     toss_payment_gateway = providers.Singleton(provides=TossPaymentGateway)
 
+    credit_repository = providers.Singleton(provides=CreditRepository)
+
     one_time_payment_service = providers.Singleton(
         provides=OneTimePaymentService,
         payment_repository=payment_repository,
         payment_gateway=toss_payment_gateway,
+        credit_repository=credit_repository,
     )
 
     issue_billing_service = providers.Singleton(
@@ -666,8 +669,6 @@ class Container(containers.DeclarativeContainer):
         provides=DeleteCardService,
         payment_repository=payment_repository,
     )
-
-    credit_repository = providers.Singleton(provides=CreditRepository)
 
     get_credit_service = providers.Singleton(
         provides=GetCreditService,
