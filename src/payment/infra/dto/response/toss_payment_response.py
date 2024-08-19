@@ -19,22 +19,21 @@ class CardDetails(BaseModel):
     card_type: str
     owner_type: str
     acquire_status: str
-    receipt_url: str
     amount: int
 
 
 class EasyPayDetails(BaseModel):
-    provider: str
-    amount: int
-    discount_amount: int
+    provider: str | None = None
+    amount: int | None = None
+    discount_amount: int | None = None
 
 
 class Receipt(BaseModel):
-    url: str
+    url: str | None = None
 
 
 class Checkout(BaseModel):
-    url: str
+    url: str | None = None
 
 
 class TossPaymentResponse(BaseModel):
@@ -89,10 +88,9 @@ class TossPaymentResponse(BaseModel):
                 interest_payer=model["card"]["interestPayer"],
                 approve_no=model["card"]["approveNo"],
                 use_card_point=model["card"]["useCardPoint"],
-                card_type=model["card"]["type"],
+                card_type=model["card"]["cardType"],
                 owner_type=model["card"]["ownerType"],
                 acquire_status=model["card"]["acquireStatus"],
-                receipt_url=model["card"]["receiptUrl"],
                 amount=model["card"]["amount"],
             )
 
