@@ -27,6 +27,7 @@ from src.payment.routes.use_case.change_card_to_primary_usecase import (
 from src.payment.routes.use_case.delete_card import DeleteCardUseCase
 from src.payment.routes.use_case.get_card_usecase import GetCardUseCase
 from src.payment.routes.use_case.get_credit import GetCreditUseCase
+from src.payment.routes.use_case.get_payment import CustomerKeyUseCase
 from src.payment.routes.use_case.get_subscription import GetSubscriptionUseCase
 from src.payment.routes.use_case.payment import PaymentUseCase
 from src.payment.routes.use_case.save_pre_data_for_validation import (
@@ -159,11 +160,16 @@ def get_subscription_history(
 def get_key(
     type: str | None = None,
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
+    customer_key_service: CustomerKeyUseCase = Depends(Provide[Container.customer_key_service]),
 ) -> KeyResponse:
     if type == "order":
         key = TossUUIDKeyGenerator.generate(type)
     elif type == "customer":
-        key = TossUUIDKeyGenerator.generate(user.mall_id)
+        key = customer_key_service.get_customer_key(user.mall_id, db)
+        if key is None:
+            key = TossUUIDKeyGenerator.generate(user.mall_id)
+            customer_key_service.save_customer_key(user.mall_id, key, db=db)
     else:
         key = TossUUIDKeyGenerator.generate()
 

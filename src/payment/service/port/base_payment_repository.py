@@ -65,3 +65,11 @@ class BasePaymentRepository(ABC):
     @abstractmethod
     def get_subscription_payment_history(self, db) -> list[Payment]:
         pass
+
+    @abstractmethod
+    def get_customer_key(self, mall_id, db) -> str | None:
+        pass
+
+    @abstractmethod
+    def save_customer_key(self, mall_id, customer_key, db: Session):
+        pass

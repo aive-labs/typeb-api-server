@@ -6,6 +6,7 @@ from src.payment.domain.card import Card
 from src.payment.domain.payment import Payment
 from src.payment.enum.product import ProductType
 from src.payment.infra.entity.card_entity import CardEntity
+from src.payment.infra.entity.customer_key_entity import MallCustomerKeyMappingEntity
 from src.payment.infra.entity.payment_entity import PaymentEntity
 from src.payment.infra.entity.pre_data_for_validation import PreDataForValidationEntity
 from src.payment.routes.dto.request.pre_data_for_validation import PreDataForValidation
@@ -104,3 +105,20 @@ class PaymentRepository(BasePaymentRepository):
             .all()
         )
         return [Payment.model_validate(entity) for entity in entites]
+
+    def get_customer_key(self, mall_id, db) -> str | None:
+        entity = (
+            db.query(MallCustomerKeyMappingEntity)
+            .filter(MallCustomerKeyMappingEntity.mall_id == mall_id)
+            .first()
+        )
+
+        if entity is None:
+            return None
+
+        return entity.customer_key
+
+    def save_customer_key(self, mall_id, customer_key, db: Session):
+        entity = MallCustomerKeyMappingEntity(mall_id=mall_id, customer_key=customer_key)
+        db.add(entity)
+        db.flush()
