@@ -32,11 +32,6 @@ class DepositService(DepositWithoutAccountUseCase):
         if deposit_request.depositor is None:
             raise BadRequestException(detail={"message": "예금주 명은 필수 입력입니다."})
 
-        # 새로운 엔티티에 저장 expired_at, # 입금 상태
-        expired_at = datetime.now(timezone.utc) + timedelta(hours=24)
-        pending_deposit = PendingDeposit.from_request(deposit_request, expired_at, user)
-        self.deposit_repository.save_pending_depository(pending_deposit, db)
-
         # credit_history에 저장
         credit_history = CreditHistory(
             user_name=user.username,
@@ -46,4 +41,12 @@ class DepositService(DepositWithoutAccountUseCase):
             created_by=str(user.user_id),
             updated_by=str(user.user_id),
         )
-        self.credit_repository.add_history(credit_history, db)
+        credit_history = self.credit_repository.add_history(credit_history, db)
+        print(credit_history)
+
+        # 새로운 엔티티에 저장 expired_at, # 입금 상태
+        expired_at = datetime.now(timezone.utc) + timedelta(hours=24)
+        pending_deposit = PendingDeposit.from_request(
+            deposit_request, expired_at, credit_history.id, user
+        )
+        self.deposit_repository.save_pending_depository(pending_deposit, db)

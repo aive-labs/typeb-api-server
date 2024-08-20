@@ -16,7 +16,7 @@ class BaseCreditRepository(ABC):
         pass
 
     @abstractmethod
-    def add_history(self, credit_history: CreditHistory, db: Session):
+    def add_history(self, credit_history: CreditHistory, db: Session) -> CreditHistory:
         pass
 
     @abstractmethod

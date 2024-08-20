@@ -30,10 +30,11 @@ class CreditRepository(BaseCreditRepository):
 
         db.flush()
 
-    def add_history(self, credit_history: CreditHistory, db: Session):
+    def add_history(self, credit_history: CreditHistory, db: Session) -> CreditHistory:
         entity = credit_history.to_entity()
         db.add(entity)
         db.flush()
+        return CreditHistory.model_validate(entity)
 
     def get_history_with_pagination(self, db, current_page, per_page) -> list[CreditHistory]:
         entities = (

@@ -12,6 +12,7 @@ class DepositRepository(BaseDepositRepository):
             price=pending_deposit.price,
             depositor=pending_deposit.depositor,
             expired_at=pending_deposit.expired_at,
+            credit_history_id=pending_deposit.credit_history_id,
             has_deposit_made=pending_deposit.has_deposit_made,
             created_by=pending_deposit.created_by,
             updated_by=pending_deposit.updated_by,
