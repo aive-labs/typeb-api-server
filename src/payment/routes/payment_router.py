@@ -217,7 +217,7 @@ def get_subscription_plans(
     return get_subscription_service.get_plans(db)
 
 
-@payment_router.post("/account", status_code=status.HTTP_201_CREATED)
+@payment_router.post("/deposit", status_code=status.HTTP_201_CREATED)
 @inject
 def deposit_without_bank_account(
     deposit_request: DepositWithoutAccount,
@@ -229,7 +229,7 @@ def deposit_without_bank_account(
 
 
 @payment_router.post(
-    "/account/{pending_deposit_id}/complete", status_code=status.HTTP_204_NO_CONTENT
+    "/deposit/{pending_deposit_id}/complete", status_code=status.HTTP_204_NO_CONTENT
 )
 @inject
 def deposit_complete(
