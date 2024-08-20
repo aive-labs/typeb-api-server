@@ -9,6 +9,7 @@ from src.common.pagination.pagination_response import PaginationResponse
 from src.core.container import Container
 from src.core.db_dependency import get_db
 from src.payment.domain.subscription import SubscriptionPlan
+from src.payment.routes.dto.request.deposit_without_account import DepositWithoutAccount
 from src.payment.routes.dto.request.payment_request import (
     PaymentAuthorizationRequestData,
 )
@@ -28,6 +29,9 @@ from src.payment.routes.use_case.change_card_to_primary_usecase import (
     ChangeCardToPrimaryUseCase,
 )
 from src.payment.routes.use_case.delete_card import DeleteCardUseCase
+from src.payment.routes.use_case.deposit_without_account_usecase import (
+    DepositWithoutAccountUseCase,
+)
 from src.payment.routes.use_case.get_card_usecase import GetCardUseCase
 from src.payment.routes.use_case.get_credit import GetCreditUseCase
 from src.payment.routes.use_case.get_payment import CustomerKeyUseCase
@@ -211,3 +215,14 @@ def get_subscription_plans(
     ),
 ) -> list[SubscriptionPlan]:
     return get_subscription_service.get_plans(db)
+
+
+@payment_router.post("/account", status_code=status.HTTP_201_CREATED)
+@inject
+def deposit_without_bank_account(
+    deposit_request: DepositWithoutAccount,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
+    deposit_service: DepositWithoutAccountUseCase = Depends(Provide[Container.deposit_service]),
+):
+    deposit_service.exec(deposit_request, user, db=db)

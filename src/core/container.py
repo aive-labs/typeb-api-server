@@ -107,11 +107,13 @@ from src.offers.infra.offer_repository import OfferRepository
 from src.offers.service.get_offer_service import GetOfferService
 from src.offers.service.update_offer_service import UpdateOfferService
 from src.payment.infra.credit_repository import CreditRepository
+from src.payment.infra.deposit_repository import DepositRepository
 from src.payment.infra.payment_repository import PaymentRepository
 from src.payment.infra.subscription_repository import SubscriptionRepository
 from src.payment.service.billing_payment_service import BillingPaymentService
 from src.payment.service.change_card_to_primary import ChangeCardToPrimaryService
 from src.payment.service.delete_card_service import DeleteCardService
+from src.payment.service.deposit_service import DepositService
 from src.payment.service.get_card_service import GetCardService
 from src.payment.service.get_credit_service import GetCreditService
 from src.payment.service.get_payment_service import (
@@ -684,4 +686,12 @@ class Container(containers.DeclarativeContainer):
 
     customer_key_service = providers.Singleton(
         provides=CustomerKeyService, payment_repository=payment_repository
+    )
+
+    deposit_repository = providers.Singleton(provides=DepositRepository)
+
+    deposit_service = providers.Singleton(
+        provides=DepositService,
+        credit_repository=credit_repository,
+        deposit_repository=deposit_repository,
     )
