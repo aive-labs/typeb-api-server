@@ -1,10 +1,10 @@
-from sqlalchemy import asc
+from sqlalchemy import asc, desc, func
 from sqlalchemy.orm import Session
 
 from src.core.exceptions.exceptions import NotFoundException
 from src.payment.domain.card import Card
 from src.payment.domain.payment import Payment
-from src.payment.enum.product import ProductType
+from src.payment.enum.product_type import ProductType
 from src.payment.infra.entity.card_entity import CardEntity
 from src.payment.infra.entity.customer_key_entity import MallCustomerKeyMappingEntity
 from src.payment.infra.entity.payment_entity import PaymentEntity
@@ -98,13 +98,23 @@ class PaymentRepository(BasePaymentRepository):
         primary_card = db.query(CardEntity).filter(CardEntity.is_primary.is_(True)).first()
         return Card.model_validate(primary_card)
 
-    def get_subscription_payment_history(self, db) -> list[Payment]:
-        entites = (
+    def get_subscription_payment_history(self, db, current_page, per_page) -> list[Payment]:
+        entities = (
             db.query(PaymentEntity)
-            .filter(PaymentEntity.product_name == ProductType.SUBSCRIPTION.value)
+            .filter(PaymentEntity.product_type == ProductType.SUBSCRIPTION.value)
+            .order_by(desc(PaymentEntity.created_at))
+            .offset((current_page - 1) * per_page)
+            .limit(per_page)
             .all()
         )
-        return [Payment.model_validate(entity) for entity in entites]
+        return [Payment.model_validate(entity) for entity in entities]
+
+    def get_all_subscription_count(self, db) -> int:
+        return (
+            db.query(func.count(PaymentEntity.order_id))
+            .filter(PaymentEntity.product_type == ProductType.SUBSCRIPTION.value)
+            .count()
+        )
 
     def get_customer_key(self, mall_id, db) -> str | None:
         entity = (

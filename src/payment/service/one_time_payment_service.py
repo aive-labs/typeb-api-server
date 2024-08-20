@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 
 from src.core.exceptions.exceptions import ConsistencyException
 from src.payment.domain.credit_history import CreditHistory
+from src.payment.enum.product_type import ProductType
 from src.payment.routes.dto.request.payment_request import (
     PaymentAuthorizationRequestData,
 )
@@ -47,8 +48,11 @@ class OneTimePaymentService(PaymentUseCase):
         self.credit_repository.update_credit(payment.total_amount, db)
 
         # 크레딧 히스토리에 내역 추가
-        credit_history = CreditHistory.after_charge(payment.order_name, payment.total_amount, user)
-        self.credit_repository.add_history(credit_history, db)
+        if payment_request.product_type == ProductType.CREDIT:
+            credit_history = CreditHistory.after_charge(
+                payment.order_name, payment.total_amount, user
+            )
+            self.credit_repository.add_history(credit_history, db)
 
         # 검증 테이블에 해당 order_id 데이터 삭제
         self.payment_repository.delete_pre_validation_data(payment_request.order_id, db)

@@ -4,7 +4,7 @@ from src.payment.enum.card_company import CardCompany
 from src.payment.enum.payment_method import PaymentMethod
 from src.payment.enum.payment_status import PaymentStatus
 from src.payment.enum.payment_type import PaymentType
-from src.payment.enum.product import ProductType
+from src.payment.enum.product_type import ProductType
 from src.payment.infra.dto.response.toss_payment_response import TossPaymentResponse
 from src.payment.infra.entity.payment_entity import PaymentEntity
 from src.users.domain.user import User
@@ -31,7 +31,7 @@ class Payment(BaseModel):
     tax_free_amount: int
     method: PaymentMethod
     version: str
-    product_name: str
+    product_type: str
 
     def to_entity(self, user: User) -> "PaymentEntity":
         return PaymentEntity(
@@ -55,6 +55,7 @@ class Payment(BaseModel):
             tax_free_amount=self.tax_free_amount,
             method=self.method.value,
             version=self.version,
+            product_type=self.product_type,
             created_by=str(user.user_id),
             updated_by=str(user.user_id),
         )
@@ -85,5 +86,5 @@ class Payment(BaseModel):
             tax_free_amount=response.tax_free_amount,
             method=response.method,
             version=response.version,
-            product_name=product_type.value,
+            product_type=product_type.value,
         )

@@ -1,5 +1,8 @@
 from abc import ABC, abstractmethod
 
+from sqlalchemy.orm import Session
+
+from src.common.pagination.pagination_response import PaginationResponse
 from src.payment.domain.subscription import SubscriptionPlan
 from src.payment.routes.dto.response.subscription_history_response import (
     SubscriptionHistoryResponse,
@@ -9,7 +12,9 @@ from src.payment.routes.dto.response.subscription_history_response import (
 class GetSubscriptionUseCase(ABC):
 
     @abstractmethod
-    def get_subscription_payment_history(self, db) -> list[SubscriptionHistoryResponse]:
+    def get_subscription_payment_history(
+        self, db: Session, based_on, sort_by, current_page, per_page
+    ) -> PaginationResponse[SubscriptionHistoryResponse]:
         pass
 
     @abstractmethod

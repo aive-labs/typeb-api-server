@@ -63,7 +63,7 @@ class BasePaymentRepository(ABC):
         pass
 
     @abstractmethod
-    def get_subscription_payment_history(self, db) -> list[Payment]:
+    def get_subscription_payment_history(self, db, current_page, per_page) -> list[Payment]:
         pass
 
     @abstractmethod
@@ -72,4 +72,8 @@ class BasePaymentRepository(ABC):
 
     @abstractmethod
     def save_customer_key(self, user: User, customer_key, db: Session):
+        pass
+
+    @abstractmethod
+    def get_all_subscription_count(self, db) -> int:
         pass

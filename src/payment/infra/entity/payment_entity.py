@@ -29,6 +29,8 @@ class PaymentEntity(Base):
     method = Column(String, nullable=False)
     version = Column(String, nullable=False)
 
+    product_type = Column(String, nullable=False)
+
     created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False)
     updated_at = Column(DateTime(timezone=True), default=func.now())

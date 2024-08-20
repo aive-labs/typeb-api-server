@@ -160,13 +160,24 @@ def get_credit_history(
 @payment_router.get("/subscription/history")
 @inject
 def get_subscription_history(
+    based_on="created_at",
+    sort_by="desc",
+    query: Optional[str] = None,
+    current_page: int = 1,
+    per_page: int = 10,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db),
     get_subscription_service: GetSubscriptionUseCase = Depends(
         Provide[Container.get_subscription_service]
     ),
-) -> list[SubscriptionHistoryResponse]:
-    return get_subscription_service.get_subscription_payment_history(db)
+) -> PaginationResponse[SubscriptionHistoryResponse]:
+    return get_subscription_service.get_subscription_payment_history(
+        db=db,
+        based_on=based_on,
+        sort_by=sort_by,
+        current_page=current_page,
+        per_page=per_page,
+    )
 
 
 @payment_router.get("/key")

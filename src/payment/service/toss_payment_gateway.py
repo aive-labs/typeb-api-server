@@ -5,7 +5,7 @@ from fastapi import HTTPException
 
 from src.common.utils.get_env_variable import get_env_variable
 from src.payment.domain.payment import Payment
-from src.payment.enum.product import ProductType
+from src.payment.enum.product_type import ProductType
 from src.payment.infra.dto.response.toss_payment_billing_response import (
     TossPaymentBillingResponse,
 )
