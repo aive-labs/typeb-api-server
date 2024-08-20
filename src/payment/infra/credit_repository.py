@@ -1,4 +1,4 @@
-from sqlalchemy import desc
+from sqlalchemy import desc, func
 from sqlalchemy.orm import Session
 
 from src.core.exceptions.exceptions import ConsistencyException
@@ -35,8 +35,15 @@ class CreditRepository(BaseCreditRepository):
         db.add(entity)
         db.flush()
 
-    def get_all(self, db) -> list[CreditHistory]:
+    def get_history_with_pagination(self, db, current_page, per_page) -> list[CreditHistory]:
         entities = (
-            db.query(CreditHistoryEntity).order_by(desc(CreditHistoryEntity.created_at)).all()
+            db.query(CreditHistoryEntity)
+            .order_by(desc(CreditHistoryEntity.created_at))
+            .offset((current_page - 1) * per_page)
+            .limit(per_page)
+            .all()
         )
         return [CreditHistory.model_validate(entity) for entity in entities]
+
+    def get_all_history_count(self, db: Session) -> int:
+        return db.query(func.count(CreditHistoryEntity.id)).count()

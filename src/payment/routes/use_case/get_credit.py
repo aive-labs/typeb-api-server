@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
+from src.common.pagination.pagination_response import PaginationResponse
 from src.payment.routes.dto.response.credit_history_response import (
     CreditHistoryResponse,
 )
@@ -14,5 +15,7 @@ class GetCreditUseCase(ABC):
         pass
 
     @abstractmethod
-    def get_credit_history(self, db) -> list[CreditHistoryResponse]:
+    def get_credit_history(
+        self, db: Session, based_on, sort_by, current_page, per_page
+    ) -> PaginationResponse[CreditHistoryResponse]:
         pass

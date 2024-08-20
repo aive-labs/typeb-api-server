@@ -20,5 +20,9 @@ class BaseCreditRepository(ABC):
         pass
 
     @abstractmethod
-    def get_all(self, db) -> list[CreditHistory]:
+    def get_history_with_pagination(self, db, current_page, per_page) -> list[CreditHistory]:
+        pass
+
+    @abstractmethod
+    def get_all_history_count(self, db: Session) -> int:
         pass

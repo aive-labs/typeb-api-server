@@ -1,8 +1,11 @@
+from typing import Optional
+
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from src.auth.utils.permission_checker import get_permission_checker
+from src.common.pagination.pagination_response import PaginationResponse
 from src.core.container import Container
 from src.core.db_dependency import get_db
 from src.payment.domain.subscription import SubscriptionPlan
@@ -136,11 +139,22 @@ def get_remind_credit(
 @payment_router.get("/credit/history")
 @inject
 def get_credit_history(
+    based_on="created_at",
+    sort_by="desc",
+    query: Optional[str] = None,
+    current_page: int = 1,
+    per_page: int = 10,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db),
     get_credit_service: GetCreditUseCase = Depends(Provide[Container.get_credit_service]),
-) -> list[CreditHistoryResponse]:
-    return get_credit_service.get_credit_history(db)
+) -> PaginationResponse[CreditHistoryResponse]:
+    return get_credit_service.get_credit_history(
+        db=db,
+        based_on=based_on,
+        sort_by=sort_by,
+        current_page=current_page,
+        per_page=per_page,
+    )
 
 
 @payment_router.get("/subscription/history")
