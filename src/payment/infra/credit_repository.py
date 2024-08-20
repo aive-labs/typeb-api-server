@@ -46,4 +46,4 @@ class CreditRepository(BaseCreditRepository):
         return [CreditHistory.model_validate(entity) for entity in entities]
 
     def get_all_history_count(self, db: Session) -> int:
-        return db.query(func.count(CreditHistoryEntity.id)).count()
+        return db.query(func.count(CreditHistoryEntity.id)).scalar()

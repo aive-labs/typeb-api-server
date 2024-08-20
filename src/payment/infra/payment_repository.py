@@ -113,7 +113,7 @@ class PaymentRepository(BasePaymentRepository):
         return (
             db.query(func.count(PaymentEntity.order_id))
             .filter(PaymentEntity.product_type == ProductType.SUBSCRIPTION.value)
-            .count()
+            .scalar()
         )
 
     def get_customer_key(self, mall_id, db) -> str | None:
