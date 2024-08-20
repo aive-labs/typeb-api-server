@@ -6,6 +6,7 @@ from src.core.exceptions.exceptions import BadRequestException
 from src.core.transactional import transactional
 from src.payment.domain.credit_history import CreditHistory
 from src.payment.domain.pending_deposit import PendingDeposit
+from src.payment.enum.credit_status import CreditStatus
 from src.payment.enum.deposit_without_account_status import DepositWithoutAccountStatus
 from src.payment.routes.dto.request.deposit_without_account import DepositWithoutAccount
 from src.payment.routes.use_case.deposit_without_account_usecase import (
@@ -42,7 +43,6 @@ class DepositService(DepositWithoutAccountUseCase):
             updated_by=str(user.user_id),
         )
         credit_history = self.credit_repository.add_history(credit_history, db)
-        print(credit_history)
 
         # 새로운 엔티티에 저장 expired_at, # 입금 상태
         expired_at = datetime.now(timezone.utc) + timedelta(hours=24)
@@ -50,3 +50,12 @@ class DepositService(DepositWithoutAccountUseCase):
             deposit_request, expired_at, credit_history.id, user
         )
         self.deposit_repository.save_pending_depository(pending_deposit, db)
+
+    @transactional
+    def complete(self, pending_deposit_id, user, db):
+        pending_deposit = self.deposit_repository.complete(pending_deposit_id, user, db)
+        new_status = CreditStatus.CHARGE_COMPLETE.value
+        self.credit_repository.update_credit_history_status(
+            pending_deposit.credit_history_id, new_status, user, db
+        )
+        self.credit_repository.update_credit(pending_deposit.price, db)

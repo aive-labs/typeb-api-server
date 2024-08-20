@@ -6,6 +6,7 @@ from src.payment.domain.credit_history import CreditHistory
 from src.payment.infra.entity.credit_history_entity import CreditHistoryEntity
 from src.payment.infra.entity.remaining_credit_entity import RemainingCreditEntity
 from src.payment.service.port.base_credit_repository import BaseCreditRepository
+from src.users.domain.user import User
 
 
 class CreditRepository(BaseCreditRepository):
@@ -48,3 +49,12 @@ class CreditRepository(BaseCreditRepository):
 
     def get_all_history_count(self, db: Session) -> int:
         return db.query(func.count(CreditHistoryEntity.id)).scalar()
+
+    def update_credit_history_status(self, credit_history_id, new_status, user: User, db: Session):
+        db.query(CreditHistoryEntity).filter(CreditHistoryEntity.id == credit_history_id).update(
+            {
+                CreditHistoryEntity.status: new_status,
+                CreditHistoryEntity.updated_by: str(user.user_id),
+                CreditHistoryEntity.updated_at: func.now(),
+            }
+        )

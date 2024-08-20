@@ -226,3 +226,16 @@ def deposit_without_bank_account(
     deposit_service: DepositWithoutAccountUseCase = Depends(Provide[Container.deposit_service]),
 ):
     deposit_service.exec(deposit_request, user, db=db)
+
+
+@payment_router.post(
+    "/account/{pending_deposit_id}/complete", status_code=status.HTTP_204_NO_CONTENT
+)
+@inject
+def deposit_complete(
+    pending_deposit_id: int,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
+    deposit_service: DepositWithoutAccountUseCase = Depends(Provide[Container.deposit_service]),
+):
+    deposit_service.complete(pending_deposit_id, user, db=db)

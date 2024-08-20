@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.payment.domain.credit_history import CreditHistory
+from src.users.domain.user import User
 
 
 class BaseCreditRepository(ABC):
@@ -25,4 +26,8 @@ class BaseCreditRepository(ABC):
 
     @abstractmethod
     def get_all_history_count(self, db: Session) -> int:
+        pass
+
+    @abstractmethod
+    def update_credit_history_status(self, credit_history_id, new_status, user: User, db: Session):
         pass

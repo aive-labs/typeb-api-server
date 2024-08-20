@@ -10,3 +10,7 @@ class BaseDepositRepository(ABC):
     @abstractmethod
     def save_pending_depository(self, pending_deposit: PendingDeposit, db: Session):
         pass
+
+    @abstractmethod
+    def complete(self, pending_deposit_id, user, db) -> PendingDeposit:
+        pass

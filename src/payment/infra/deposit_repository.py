@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 
+from src.core.exceptions.exceptions import NotFoundException
 from src.payment.domain.pending_deposit import PendingDeposit
 from src.payment.infra.entity.pending_deposit_entity import PendingDepositEntity
 from src.payment.service.port.base_deposit_repository import BaseDepositRepository
@@ -20,3 +21,21 @@ class DepositRepository(BaseDepositRepository):
 
         db.add(entity)
         db.flush()
+
+    def complete(self, pending_deposit_id, user, db) -> PendingDeposit:
+        entity = (
+            db.query(PendingDepositEntity)
+            .filter(PendingDepositEntity.id == pending_deposit_id)
+            .first()
+        )
+        if entity is None:
+            raise NotFoundException(detail={"무통장 입금 정보를 찾지 못했습니다."})
+
+        db.query(PendingDepositEntity).filter(PendingDepositEntity.id == pending_deposit_id).update(
+            {
+                PendingDepositEntity.has_deposit_made: True,
+                PendingDepositEntity.updated_by: str(user.user_id),
+            }
+        )
+
+        return PendingDeposit.model_validate(entity)

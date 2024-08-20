@@ -13,3 +13,8 @@ class DepositWithoutAccountUseCase(ABC):
     @abstractmethod
     def exec(self, deposit_request: DepositWithoutAccount, user: User, db: Session):
         pass
+
+    @transactional
+    @abstractmethod
+    def complete(self, pending_deposit_id, user, db):
+        pass
