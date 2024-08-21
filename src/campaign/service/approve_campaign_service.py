@@ -225,9 +225,9 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             # 1. credit_history에 저장
             new_credit_history = CreditHistory(
                 user_name=user.username,
-                description=f"캠페인({campaign_id}) 집행",
+                description=f"캠페인 집행({campaign_id})",
                 status=CreditStatus.USE.value,
-                charge_amount=campaign_cost,
+                use_amount=campaign_cost,
                 created_by=str(user.user_id),
                 updated_by=str(user.user_id),
             )
