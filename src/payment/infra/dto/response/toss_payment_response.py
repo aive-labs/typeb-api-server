@@ -36,6 +36,20 @@ class Checkout(BaseModel):
     url: str | None = None
 
 
+class Transfer(BaseModel):
+    bank_code: str | None = None
+    settlement_status: str | None = None
+
+
+class CashReceipt(BaseModel):
+    type: str | None = None
+    receipt_key: str | None = None
+    issue_number: str | None = None
+    receipt_url: str | None = None
+    amount: int | None = None
+    tax_free_amount: int | None = None
+
+
 class TossPaymentResponse(BaseModel):
     payment_key: str
     order_id: str
@@ -48,10 +62,13 @@ class TossPaymentResponse(BaseModel):
     card: Optional[CardDetails]
 
     virtual_account: Optional[str]
-    transfer: Optional[str]
+
+    # 퀵 계좌이체인 경우, 값이 들어옴
+    transfer: Optional[Transfer]
+    cash_receipt: Optional[CashReceipt]
+
     mobile_phone: Optional[str]
     gift_certificate: Optional[str]
-    cash_receipt: Optional[str]
     discount: Optional[str]
     cancels: Optional[str]
     secret: Optional[str]
@@ -110,6 +127,24 @@ class TossPaymentResponse(BaseModel):
         if model["checkout"]:
             checkout = Checkout(url=model["checkout"]["url"])
 
+        transfer = None
+        if model["transfer"]:
+            transfer = Transfer(
+                bank_code=model["transfer"]["bankCode"],
+                settlement_status=model["transfer"]["settlementStatus"],
+            )
+
+        cash_receipt = None
+        if model["cashReceipt"]:
+            cash_receipt = CashReceipt(
+                type=model["cashReceipt"]["type"],
+                receipt_key=model["cashReceipt"]["receiptKey"],
+                issue_number=model["cashReceipt"]["issueNumber"],
+                receipt_url=model["cashReceipt"]["receiptUrl"],
+                amount=model["cashReceipt"]["amount"],
+                tax_free_amount=model["cashReceipt"]["taxFreeAmount"],
+            )
+
         return TossPaymentResponse(
             payment_key=model["paymentKey"],
             order_id=model["orderId"],
@@ -120,10 +155,10 @@ class TossPaymentResponse(BaseModel):
             type=model["type"],
             card=card,
             virtual_account=model["virtualAccount"],
-            transfer=model["transfer"],
+            transfer=transfer,
             mobile_phone=model["mobilePhone"],
             gift_certificate=model["giftCertificate"],
-            cash_receipt=model["cashReceipt"],
+            cash_receipt=cash_receipt,
             discount=model["discount"],
             cancels=model["cancels"],
             secret=model["secret"],
