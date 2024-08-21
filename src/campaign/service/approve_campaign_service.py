@@ -23,6 +23,7 @@ from src.campaign.infra.entity.campaign_status_history_entity import (
     CampaignStatusHistoryEntity,
 )
 from src.campaign.infra.entity.campaign_timeline_entity import CampaignTimelineEntity
+from src.campaign.infra.entity.send_dag_log_entity import SendDagLogEntity
 from src.campaign.infra.entity.send_reservation_entity import SendReservationEntity
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.campaign.infra.sqlalchemy_query.convert_to_button_format import (
@@ -614,6 +615,26 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             )
             db.execute(delete_statement)
 
+            # 1. send_dag_log -> dag_run_id 조회
+            # 2. 해당 dag_run_id 삭제 요청
+            send_reservation_entity = (
+                db.query(SendReservationEntity)
+                .filter(SendReservationEntity.campaign_id == campaign_id)
+                .first()
+            )
+
+            send_dag_log = (
+                db.query(SendDagLogEntity)
+                .filter(
+                    SendDagLogEntity.campaign_id == campaign_id,
+                    SendDagLogEntity.send_resv_date == send_reservation_entity.send_resv_date,
+                )
+                .first()
+            )
+            await self.message_controller.delete_dag_run(
+                dag_name=f"{user.mall_id}_send_messages", dag_run_id=send_dag_log.dag_run_id
+            )
+
         elif is_status_haltbefore_to_pending(from_status, to_status):
             # 일시중지(s1) -> 진행대기(w2)
 
@@ -817,6 +838,19 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 dag_run_id=dag_run_id,
                 logical_date=logical_date,
             )
+
+            send_reservation_entity = (
+                db.query(SendReservationEntity)
+                .filter(SendReservationEntity.campaign_id == campaign_id)
+                .first()
+            )
+            send_dag_log_entity = SendDagLogEntity(
+                campaign_id=campaign_id,
+                send_resv_date=send_reservation_entity.send_resv_date,
+                dag_run_id=dag_run_id,
+            )
+            db.add(send_dag_log_entity)
+            db.flush()
 
             await self.message_controller.execute_dag(
                 dag_name=f"{user.mall_id}_issue_coupon",
