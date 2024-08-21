@@ -13,6 +13,9 @@ from src.campaign.enums.campaign_approval_status import CampaignApprovalStatus
 from src.campaign.enums.campaign_timeline_type import CampaignTimelineType
 from src.campaign.infra.entity.approver_entity import ApproverEntity
 from src.campaign.infra.entity.campaign_approval_entity import CampaignApprovalEntity
+from src.campaign.infra.entity.campaign_credit_payment_entity import (
+    CampaignCreditPaymentEntity,
+)
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
 from src.campaign.infra.entity.campaign_set_recipients_entity import (
@@ -69,6 +72,10 @@ from src.message_template.infra.entity.message_template_entity import (
 )
 from src.messages.service.message_reserve_controller import MessageReserveController
 from src.offers.infra.entity.offers_entity import OffersEntity
+from src.payment.domain.credit_history import CreditHistory
+from src.payment.enum.credit_status import CreditStatus
+from src.payment.infra.entity.remaining_credit_entity import RemainingCreditEntity
+from src.payment.service.port.base_credit_repository import BaseCreditRepository
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
 
@@ -79,9 +86,11 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         self,
         campaign_repository: BaseCampaignRepository,
         campaign_set_repository: BaseCampaignSetRepository,
+        credit_repository: BaseCreditRepository,
     ):
         self.campaign_repository = campaign_repository
         self.campaign_set_repository = campaign_set_repository
+        self.credit_repository = credit_repository
         self.message_controller = MessageReserveController()
 
     @transactional
@@ -110,6 +119,9 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         today = datetime_obj.strftime("%Y%m%d")
 
         old_campaign = self.check_permission_to_change_status(campaign_id, db, user)
+        campaign_cost = self.campaign_set_repository.get_campaign_cost_by_campaign_id(
+            campaign_id, db
+        )
 
         # 변경전 캠페인 상태
         from_status = old_campaign.campaign_status_code
@@ -173,6 +185,66 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         # 리뷰중 -> 진행대기 : "승인"
         elif is_status_review_to_pending(from_status, to_status):
 
+            # 1. 일단 기존에 결제 기록이 있으면 환불 진행(무조건 0건 또는 1건 존재)
+            campaign_credit_entity = (
+                db.query(CampaignCreditPaymentEntity)
+                .filter(CampaignCreditPaymentEntity.campaign_id == campaign_id)
+                .first()
+            )
+
+            if campaign_credit_entity:
+                refund_cost = campaign_credit_entity.cost
+                # 2. 크레딧 히스토리에 환불 기록
+                refund_credit_history = CreditHistory(
+                    user_name=user.username,
+                    description=f"캠페인({campaign_id}) 수정으로 인한 크레딧 환불",
+                    status=CreditStatus.REFUND.value,
+                    charge_amount=refund_cost,
+                    created_by=str(user.user_id),
+                    updated_by=str(user.user_id),
+                )
+                self.credit_repository.add_history(refund_credit_history, db)
+
+                # 3. 잔여 크레딧 테이블에 환불 크레딧 합산
+                self.credit_repository.update_credit(refund_cost, db)
+
+            # 잔여 크레딧이 충분한지 확인
+            credit_entity = db.query(RemainingCreditEntity).first()
+            if credit_entity is None:
+                raise ConsistencyException(detail={"message": "크레딧 정보가 존재하지 않습니다."})
+
+            remaining_credit = credit_entity.remaining_credit
+
+            if remaining_credit < campaign_cost:
+                raise PolicyException(
+                    detail={"message": "크레딧이 부족합니다. 크레딧을 충전해주세요."}
+                )
+
+            # 결제 진행
+            # 1. credit_history에 저장
+            new_credit_history = CreditHistory(
+                user_name=user.username,
+                description=f"캠페인({campaign_id}) 집행",
+                status=CreditStatus.USE.value,
+                charge_amount=campaign_cost,
+                created_by=str(user.user_id),
+                updated_by=str(user.user_id),
+            )
+            self.credit_repository.add_history(new_credit_history, db)
+
+            # 2. remaining_credit 차감
+            self.credit_repository.update_credit(-campaign_cost, db)
+
+            # 3. campaign_credit_payment 테이블 저장
+            db.add(
+                CampaignCreditPaymentEntity(
+                    campaign_id=campaign_id,
+                    cost=campaign_cost,
+                    created_by=str(user.user_id),
+                    updated_by=str(user.user_id),
+                )
+            )
+
             # 현재 승인이 가능한 유효힌 approval_no의 reviewer 가져오기
             reviewer_ids = self.get_reviewer_ids(campaign_id, db)
 
@@ -219,7 +291,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                     status_no=None,
                     approval_excute=approval_excute,
                 )
-
             else:
                 # 모든 리뷰어가 승인 완료되지 않아 캠페인 상태를 review로 유지
                 # to-do: timeline_description
@@ -240,6 +311,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                     to_status=to_status,  # 분기처리에 필요한 값. 타임로그에는 저장 x
                     status_no=None,
                 )
+
         else:
             # 승인 처리 외 상태변경
             approval_no = await self.status_general_change(

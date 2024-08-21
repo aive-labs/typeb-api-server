@@ -84,3 +84,7 @@ class BaseCampaignSetRepository(ABC):
         self, campaign_id, set_group_message, msg_type_update, db: Session
     ):
         pass
+
+    @abstractmethod
+    def get_campaign_cost_by_campaign_id(self, campaign_id, db) -> int:
+        pass

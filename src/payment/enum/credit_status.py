@@ -6,3 +6,4 @@ class CreditStatus(Enum):
     USE = "사용"
     CANCEL_REQUEST = "취소 요청"
     CANCEL = "취소 완료"
+    REFUND = "환불 완료"

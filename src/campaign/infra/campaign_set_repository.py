@@ -785,3 +785,10 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         db.execute(set_group_update_statement)
 
         db.flush()
+
+    def get_campaign_cost_by_campaign_id(self, campaign_id, db) -> int:
+        entities = (
+            db.query(CampaignSetsEntity).filter(CampaignSetsEntity.campaign_id == campaign_id).all()
+        )
+        media_costs = [int(entity.media_cost) for entity in entities]
+        return sum(media_costs)

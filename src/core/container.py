@@ -474,10 +474,13 @@ class Container(containers.DeclarativeContainer):
         contents_repository=contents_repository,
     )
 
+    credit_repository = providers.Singleton(provides=CreditRepository)
+
     approve_campaign_service = providers.Singleton(
         provides=ApproveCampaignService,
         campaign_repository=campaign_repository,
         campaign_set_repository=campaign_set_repository,
+        credit_repository=credit_repository,
     )
 
     test_send_service = providers.Singleton(provides=TestMessageSendService)
@@ -632,8 +635,6 @@ class Container(containers.DeclarativeContainer):
     )
 
     toss_payment_gateway = providers.Singleton(provides=TossPaymentGateway)
-
-    credit_repository = providers.Singleton(provides=CreditRepository)
 
     one_time_payment_service = providers.Singleton(
         provides=OneTimePaymentService,
