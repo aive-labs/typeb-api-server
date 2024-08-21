@@ -120,18 +120,14 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         today = datetime_obj.strftime("%Y%m%d")
 
         old_campaign = self.check_permission_to_change_status(campaign_id, db, user)
+        remind_list = old_campaign.remind_list
 
         # 캠페인 셋에서 media_cost를 통해 매체 비용을 계산한다.
         campaign_cost = self.campaign_set_repository.get_campaign_cost_by_campaign_id(
             campaign_id, db
         )
 
-        # 리마인드가 존재하면 리마인드 + 캠페인 수만큼 비용을 곱한다.
-        remind_list = old_campaign.remind_list
-        if len(remind_list) > 0:
-            campaign_cost = campaign_cost * (1 + len(remind_list))
-
-            # 변경전 캠페인 상태
+        # 변경전 캠페인 상태
         from_status = old_campaign.campaign_status_code
         send_date = old_campaign.send_date if old_campaign.send_date else old_campaign.start_date
 
