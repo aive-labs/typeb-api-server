@@ -230,11 +230,13 @@ class ApproveCampaignService(ApproveCampaignUseCase):
 
             # 결제 진행
             # 1. credit_history에 저장
+
             new_credit_history = CreditHistory(
                 user_name=user.username,
                 description=f"캠페인 집행({campaign_id})",
                 status=CreditStatus.USE.value,
                 use_amount=campaign_cost,
+                note=f"캠페인 리마인드 {len(remind_list)}건 포함" if len(remind_list) > 0 else None,
                 created_by=str(user.user_id),
                 updated_by=str(user.user_id),
             )
