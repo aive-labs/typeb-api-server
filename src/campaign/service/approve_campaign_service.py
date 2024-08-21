@@ -6,6 +6,7 @@ import pandas as pd
 import pytz
 from fastapi import HTTPException
 from sqlalchemy import and_, delete, desc, func, update
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import coalesce
 
@@ -236,14 +237,20 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             self.credit_repository.update_credit(-campaign_cost, db)
 
             # 3. campaign_credit_payment 테이블 저장
-            db.add(
-                CampaignCreditPaymentEntity(
-                    campaign_id=campaign_id,
-                    cost=campaign_cost,
-                    created_by=str(user.user_id),
-                    updated_by=str(user.user_id),
-                )
+            # 기존 레코드가 있으면 업데이트하고, 없으면 삽입하는 쿼리
+            insert_stmt = insert(CampaignCreditPaymentEntity).values(
+                campaign_id=campaign_id,
+                cost=campaign_cost,
+                created_by=str(user.user_id),
+                updated_by=str(user.user_id),
             )
+
+            # campaign_id가 이미 존재하면 cost와 updated_by를 업데이트
+            update_stmt = insert_stmt.on_conflict_do_update(
+                index_elements=["campaign_id"],
+                set_={"cost": campaign_cost, "updated_by": str(user.user_id)},
+            )
+            db.execute(update_stmt)
 
             # 현재 승인이 가능한 유효힌 approval_no의 reviewer 가져오기
             reviewer_ids = self.get_reviewer_ids(campaign_id, db)
