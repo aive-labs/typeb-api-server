@@ -127,8 +127,8 @@ class SearchService(BaseSearchService):
         return self.user_repository.get_send_users(db, keyword)
 
     def search_reviewer(self, user, db: Session, keyword) -> list[ReviewerResponse]:
-        # 임시로 본인 넣어둠
 
+        # 임시로 본인 넣어둠
         user_info = self.user_repository.get_user_by_id(user.user_id, db)
 
         if user_info.user_id is None:

@@ -18,6 +18,7 @@ from src.users.domain.user import User
 
 
 class DepositService(DepositWithoutAccountUseCase):
+    account_number = "기업은행 1234567890123"
 
     def __init__(
         self, credit_repository: BaseCreditRepository, deposit_repository: BaseDepositRepository
@@ -39,6 +40,7 @@ class DepositService(DepositWithoutAccountUseCase):
             description="크레딧 충전(무통장 입금)",
             status=DepositWithoutAccountStatus.WAITING.value,
             charge_amount=deposit_request.price,
+            note=self.account_number,
             created_by=str(user.user_id),
             updated_by=str(user.user_id),
         )

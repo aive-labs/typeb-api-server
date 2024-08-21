@@ -54,6 +54,7 @@ class CreditRepository(BaseCreditRepository):
         db.query(CreditHistoryEntity).filter(CreditHistoryEntity.id == credit_history_id).update(
             {
                 CreditHistoryEntity.status: new_status,
+                CreditHistoryEntity.note: "입금 완료",
                 CreditHistoryEntity.updated_by: str(user.user_id),
                 CreditHistoryEntity.updated_at: func.now(),
             }
