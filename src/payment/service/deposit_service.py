@@ -2,6 +2,7 @@ from datetime import datetime, timedelta, timezone
 
 from sqlalchemy.orm import Session
 
+from src.common.slack.slack_message import send_slack_message
 from src.core.exceptions.exceptions import BadRequestException
 from src.core.transactional import transactional
 from src.payment.domain.credit_history import CreditHistory
@@ -53,6 +54,11 @@ class DepositService(DepositWithoutAccountUseCase):
         )
         self.deposit_repository.save_pending_depository(pending_deposit, db)
 
+        send_slack_message(
+            title="무통장 입금 확인 요청 🔅",
+            body=f"""• 고객사 MALL ID: {user.mall_id} \n • 무통장 입금 신청자: {user.username} \n • 예금주명: {deposit_request.depositor} \n • 금액: {deposit_request.price}  \n """,
+        )
+
     @transactional
     def complete(self, pending_deposit_id, user, db):
         pending_deposit = self.deposit_repository.complete(pending_deposit_id, user, db)
@@ -61,3 +67,8 @@ class DepositService(DepositWithoutAccountUseCase):
             pending_deposit.credit_history_id, new_status, user, db
         )
         self.credit_repository.update_credit(pending_deposit.price, db)
+
+        send_slack_message(
+            title="무통장 입금 확인 완료 ✅",
+            body=f"""• 고객사 MALL ID: {user.mall_id} \n • 무통장 입금 신청자: {user.username} \n • 예금주명: {pending_deposit.depositor} \n • 금액: {pending_deposit.price}  \n """,
+        )
