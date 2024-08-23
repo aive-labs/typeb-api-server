@@ -197,13 +197,18 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             )
 
             if campaign_credit_entity:
+                remaining_amount = self.credit_repository.get_remain_credit(db)
+
+                # 환불 금액
                 refund_cost = campaign_credit_entity.cost
+
                 # 2. 크레딧 히스토리에 환불 기록
                 refund_credit_history = CreditHistory(
                     user_name=user.username,
                     description=f"캠페인({campaign_id}) 수정으로 인한 크레딧 환불",
                     status=CreditStatus.REFUND.value,
                     charge_amount=refund_cost,
+                    remaining_amount=remaining_amount + refund_cost,
                     created_by=str(user.user_id),
                     updated_by=str(user.user_id),
                 )
@@ -234,6 +239,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 description=f"캠페인 집행({campaign_id})",
                 status=CreditStatus.USE.value,
                 use_amount=campaign_cost,
+                remaining_amount=remaining_credit - campaign_cost,
                 note=f"캠페인 리마인드 {len(remind_list)}건 포함" if len(remind_list) > 0 else None,
                 created_by=str(user.user_id),
                 updated_by=str(user.user_id),

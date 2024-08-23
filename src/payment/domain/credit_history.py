@@ -19,6 +19,7 @@ class CreditHistory(BaseModel):
     use_amount: int | None = None
     note: str | None = None
     charging_type: str | None = None
+    remaining_amount: int | None = None
     created_by: str
     created_at: Optional[datetime] = None
     updated_by: str
@@ -28,19 +29,20 @@ class CreditHistory(BaseModel):
         from_attributes = True
 
     @staticmethod
-    def after_charge(order_name: str, charge_amount: int, user: User):
+    def after_charge(order_name: str, charge_amount: int, remaining_amount, user: User):
         return CreditHistory(
             user_name=user.username,
             description=order_name,
             status=CreditStatus.CHARGE_COMPLETE.value,
             charge_amount=charge_amount,
             charging_type=ChargingType.PAYMENT.value,
+            remaining_amount=remaining_amount,
             created_by=str(user.user_id),
             updated_by=str(user.user_id),
         )
 
     @staticmethod
-    def from_deposit(deposit_request, account_number, user: User):
+    def from_deposit(deposit_request, account_number, remaining_amount, user: User):
         return CreditHistory(
             user_name=user.username,
             description="크레딧 충전(무통장 입금)",
@@ -48,6 +50,7 @@ class CreditHistory(BaseModel):
             charge_amount=deposit_request.price,
             note=account_number,
             charging_type=ChargingType.DEPOSIT.value,
+            remaining_amount=remaining_amount,
             created_by=str(user.user_id),
             updated_by=str(user.user_id),
         )
@@ -61,6 +64,7 @@ class CreditHistory(BaseModel):
             use_amount=self.use_amount,
             note=self.note,
             charging_type=self.charging_type,
+            remaining_amount=self.remaining_amount,
             created_by=self.created_by,
             updated_by=self.updated_by,
         )

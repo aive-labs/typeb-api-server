@@ -47,6 +47,8 @@ class OneTimePaymentService(PaymentUseCase):
         # 토스페이먼츠에 결제 승인 요청 후 성공하면 결과 객체 반환
         payment = await self.payment_gateway.request_general_payment_approval(payment_request)
 
+        remaining_amount = self.credit_repository.get_remain_credit(db)
+
         retry_count = 0
         while retry_count < self.max_retries:
             try:
@@ -57,7 +59,7 @@ class OneTimePaymentService(PaymentUseCase):
                 saved_credit_history_id = None
                 if payment_request.product_type == ProductType.CREDIT:
                     credit_history = CreditHistory.after_charge(
-                        payment.order_name, payment.total_amount, user
+                        payment.order_name, payment.total_amount, remaining_amount, user
                     )
                     saved_history = self.credit_repository.add_history(credit_history, db)
                     saved_credit_history_id = saved_history.id
