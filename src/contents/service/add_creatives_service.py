@@ -38,16 +38,19 @@ class AddCreativesService(AddCreativesUseCase):
             raise NotFoundException(detail={"message": "연동된 cafe24 계정이 없습니다."})
 
         files = s3_presigned_url_request.files
-        image_use_type = s3_presigned_url_request.use_type.value
+        save_path = s3_presigned_url_request.use_type.value
 
-        if image_use_type == "contents_thumbnail":
-            image_use_type = "contents/thumbnail"
+        if save_path == "contents_thumbnail":
+            save_path = "contents/thumbnail"
+
+        if s3_presigned_url_request.additional_path:
+            save_path = f"{save_path}/{s3_presigned_url_request.additional_path}"
 
         s3_presigned_url_list = [
             S3PresignedResponse(
                 original_file_name=file_name,
                 s3_presigned_url=self.s3_service.generate_presigned_url_for_put(
-                    f"{cafe24_info.mall_id}/{image_use_type}/{get_unix_timestamp()}_{file_name}"
+                    f"{cafe24_info.mall_id}/{save_path}/{get_unix_timestamp()}_{file_name}"
                 ),
             )
             for file_name in files
