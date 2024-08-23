@@ -221,7 +221,10 @@ class ApproveCampaignService(ApproveCampaignUseCase):
 
             if remaining_credit < campaign_cost:
                 raise PolicyException(
-                    detail={"message": "크레딧이 부족합니다. 크레딧을 충전해주세요."}
+                    detail={
+                        "code": "campaign/credit/insufficient",
+                        "message": "크레딧이 부족합니다. 크레딧을 충전해주세요.",
+                    }
                 )
 
             # 결제 진행
