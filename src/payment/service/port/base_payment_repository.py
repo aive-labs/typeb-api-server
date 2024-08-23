@@ -77,3 +77,7 @@ class BasePaymentRepository(ABC):
     @abstractmethod
     def get_all_subscription_count(self, db) -> int:
         pass
+
+    @abstractmethod
+    def get_payment_by_order_id(self, order_id, db: Session) -> Payment:
+        pass

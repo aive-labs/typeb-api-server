@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from src.core.exceptions.exceptions import ConvertValueException
+from src.core.exceptions.exceptions import ConvertException
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.routes.dto.response.strategy_response import StrategyResponse
 from src.strategy.routes.dto.response.strategy_with_campaign_theme_response import (
@@ -29,9 +29,7 @@ class GetStrategyService(GetStrategyUseCase):
         strategy, strategy_themes = self.strategy_repository.get_strategy_detail(strategy_id, db)
 
         if strategy.created_at is None or strategy.updated_at is None:
-            raise ConvertValueException(
-                detail={"message": "created_at and updated_at cannot be None"}
-            )
+            raise ConvertException(detail={"message": "created_at and updated_at cannot be None"})
 
         response = StrategyWithStrategyThemeResponse(
             strategy_name=strategy.strategy_name,

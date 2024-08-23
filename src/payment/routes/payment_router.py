@@ -1,7 +1,8 @@
+from datetime import datetime
 from typing import Optional
 
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.orm import Session
 
 from src.auth.utils.permission_checker import get_permission_checker
@@ -36,6 +37,7 @@ from src.payment.routes.use_case.get_card_usecase import GetCardUseCase
 from src.payment.routes.use_case.get_credit import GetCreditUseCase
 from src.payment.routes.use_case.get_payment import CustomerKeyUseCase
 from src.payment.routes.use_case.get_subscription import GetSubscriptionUseCase
+from src.payment.routes.use_case.invoice_download_usecase import InvoiceDownloadUseCase
 from src.payment.routes.use_case.payment import PaymentUseCase
 from src.payment.routes.use_case.save_pre_data_for_validation import (
     SavePreDataForValidation,
@@ -239,3 +241,23 @@ def deposit_complete(
     deposit_service: DepositWithoutAccountUseCase = Depends(Provide[Container.deposit_service]),
 ):
     deposit_service.complete(pending_deposit_id, user, db=db)
+
+
+@payment_router.get("/invoice/{order_id}")
+@inject
+def donwload_invoice(
+    order_id: str,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
+    invoice_download_service: InvoiceDownloadUseCase = Depends(
+        Provide[Container.invoice_download_service]
+    ),
+):
+    pdf_file = invoice_download_service.exec(order_id, user, db)
+    download_date = datetime.today().strftime("%Y%m%d")
+
+    return Response(
+        pdf_file,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename=invoice_{download_date}.pdf"},
+    )

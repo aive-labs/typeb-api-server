@@ -6,6 +6,7 @@ from src.core.database import Base
 class PaymentEntity(Base):
     __tablename__ = "payments"
 
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     payment_key = Column(String, primary_key=True)
     order_id = Column(String, nullable=False)
     order_name = Column(String, nullable=False)

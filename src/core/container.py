@@ -120,6 +120,7 @@ from src.payment.service.get_payment_service import (
     CustomerKeyService,
 )
 from src.payment.service.get_subscription_service import GetSubscriptionService
+from src.payment.service.invoice_download_service import InvoiceDownloadService
 from src.payment.service.issue_billing_service import IssueBillingService
 from src.payment.service.one_time_payment_service import OneTimePaymentService
 from src.payment.service.save_pre_data_for_validation_service import (
@@ -505,7 +506,7 @@ class Container(containers.DeclarativeContainer):
     )
 
     """
-    template 의존성
+    templates 의존성
     """
     message_template_repository = providers.Singleton(provides=MessageTemplateRepository)
 
@@ -695,4 +696,8 @@ class Container(containers.DeclarativeContainer):
         provides=DepositService,
         credit_repository=credit_repository,
         deposit_repository=deposit_repository,
+    )
+
+    invoice_download_service = providers.Singleton(
+        provides=InvoiceDownloadService, payment_repository=payment_repository
     )

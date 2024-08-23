@@ -137,3 +137,11 @@ class PaymentRepository(BasePaymentRepository):
         )
         db.add(entity)
         db.flush()
+
+    def get_payment_by_order_id(self, order_id, db: Session) -> Payment:
+        entity = db.query(PaymentEntity).filter(PaymentEntity.order_id == order_id).first()
+
+        if entity is None:
+            raise NotFoundException(detail={"message": "주문 및 결제 정보를 찾지 못했습니다."})
+
+        return Payment.model_validate(entity)

@@ -29,7 +29,7 @@ from src.message_template.service.update_message_template_service import (
 )
 
 message_template_router = APIRouter(
-    tags=["Settings-message-template"],
+    tags=["Settings-message-templates"],
 )
 
 
