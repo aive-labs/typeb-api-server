@@ -31,6 +31,7 @@ class PaymentEntity(Base):
     version = Column(String, nullable=False)
 
     product_type = Column(String, nullable=False)
+    credit_history_id = Column(Integer, nullable=True)
 
     created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False)

@@ -49,10 +49,13 @@ class PaymentRepository(BasePaymentRepository):
             PreDataForValidationEntity.order_id == order_id
         ).delete()
 
-    def save_history(self, payment: Payment, user: User, db: Session):
-        entity = payment.to_entity(user)
+    def save_history(
+        self, payment: Payment, user: User, db: Session, saved_credit_history_id: int | None = None
+    ) -> int:
+        entity = payment.to_entity(user, saved_credit_history_id)
         db.add(entity)
         db.flush()
+        return payment.id
 
     def save_billing_key(self, card: Card, db: Session):
         entity = card.to_entity()

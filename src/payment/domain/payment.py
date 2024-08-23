@@ -32,8 +32,9 @@ class Payment(BaseModel):
     method: PaymentMethod
     version: str
     product_type: str
+    credit_history_id: int | None = None
 
-    def to_entity(self, user: User) -> "PaymentEntity":
+    def to_entity(self, user: User, saved_credit_history_id: int | None = None) -> "PaymentEntity":
         return PaymentEntity(
             payment_key=self.payment_key,
             order_id=self.order_id,
@@ -56,6 +57,7 @@ class Payment(BaseModel):
             method=self.method.value,
             version=self.version,
             product_type=self.product_type,
+            credit_history_id=saved_credit_history_id,
             created_by=str(user.user_id),
             updated_by=str(user.user_id),
         )

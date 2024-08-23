@@ -226,7 +226,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
 
             # 결제 진행
             # 1. credit_history에 저장
-
             new_credit_history = CreditHistory(
                 user_name=user.username,
                 description=f"캠페인 집행({campaign_id})",

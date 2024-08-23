@@ -27,7 +27,9 @@ class BasePaymentRepository(ABC):
         pass
 
     @abstractmethod
-    def save_history(self, payment: Payment, user: User, db: Session):
+    def save_history(
+        self, payment: Payment, user: User, db: Session, saved_credit_history_id: int | None = None
+    ) -> int:
         pass
 
     @abstractmethod

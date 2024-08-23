@@ -53,18 +53,20 @@ class OneTimePaymentService(PaymentUseCase):
                 # 실 결제 성공 이후 결제 금액에 대한 크로스 체크(임시 저장한 데이터와 실 결제 데이터 비교)
                 self.check_is_order_mismatch(payment.order_id, payment.total_amount, db)
 
-                # 성공인 경우 결제 내역 테이블에 저장
-                self.payment_repository.save_history(payment, user, db)
-
-                # 잔여 크레딧 업데이트
-                self.credit_repository.update_credit(payment.total_amount, db)
-
                 # 크레딧 히스토리에 내역 추가
+                saved_credit_history_id = None
                 if payment_request.product_type == ProductType.CREDIT:
                     credit_history = CreditHistory.after_charge(
                         payment.order_name, payment.total_amount, user
                     )
-                    self.credit_repository.add_history(credit_history, db)
+                    saved_history = self.credit_repository.add_history(credit_history, db)
+                    saved_credit_history_id = saved_history.id
+
+                # 잔여 크레딧 업데이트
+                self.credit_repository.update_credit(payment.total_amount, db)
+
+                # 성공인 경우 결제 내역 테이블에 저장
+                self.payment_repository.save_history(payment, user, db, saved_credit_history_id)
 
                 # 검증 테이블에 해당 order_id 데이터 삭제
                 self.payment_repository.delete_pre_validation_data(payment_request.order_id, db)

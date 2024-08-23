@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 
 from src.core.exceptions.exceptions import ConsistencyException, NotFoundException
 from src.payment.domain.subscription import Subscription
+from src.payment.enum.product_type import ProductType
 from src.payment.enum.subscription_status import SubscriptionStatus
 from src.payment.infra.payment_repository import PaymentRepository
 from src.payment.infra.subscription_repository import SubscriptionRepository
@@ -75,6 +76,7 @@ class BillingPaymentService(PaymentUseCase):
                 order_name=order_name,
                 customer_key=primary_card.customer_key,
                 amount=subscription_price,
+                product_type=ProductType.SUBSCRIPTION,
             )
         else:
             payment_request.order_name = order_name
