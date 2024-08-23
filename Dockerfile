@@ -5,12 +5,11 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# AWS CLI 설치
+# aws-cli 설치
+# weasyprint 라이브러리를 위한 설치
 RUN apt-get update && \
-    apt-get install -y awscli && \
-    rm -rf /var/lib/apt/lists/* \
-
-RUN apt-get update && apt-get install -y \
+    apt-get install -y \
+    awscli \
     libcairo2-dev \
     libpango1.0-dev \
     libgdk-pixbuf2.0-dev \
