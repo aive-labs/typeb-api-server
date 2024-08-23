@@ -10,6 +10,14 @@ RUN apt-get update && \
     apt-get install -y awscli && \
     rm -rf /var/lib/apt/lists/* \
 
+RUN apt-get update && apt-get install -y \
+    libcairo2-dev \
+    libpango1.0-dev \
+    libgdk-pixbuf2.0-dev \
+    libffi-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+
 # AWS CLI
 RUN pip install awscli
 
