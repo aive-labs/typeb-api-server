@@ -17,6 +17,9 @@ class SubscriptionPlan(BaseModel):
     class Config:
         from_attributes = True
 
+    def set_price(self, customer_count):
+        self.price = self.price * customer_count
+
 
 class Subscription(BaseModel):
     id: int | None = None
@@ -36,7 +39,10 @@ class Subscription(BaseModel):
     @staticmethod
     def from_model(model: SubscriptionEntity) -> "Subscription":
         subscription_plan = SubscriptionPlan(
-            id=model.plan.id, name=model.plan.name, price=model.plan.price
+            id=model.plan.id,
+            name=model.plan.name,
+            price=model.plan.price,
+            description=model.plan.description,
         )
 
         subscription = Subscription(

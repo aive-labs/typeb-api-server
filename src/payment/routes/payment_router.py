@@ -9,7 +9,6 @@ from src.auth.utils.permission_checker import get_permission_checker
 from src.common.pagination.pagination_response import PaginationResponse
 from src.core.container import Container
 from src.core.db_dependency import get_db
-from src.payment.domain.subscription import SubscriptionPlan
 from src.payment.routes.dto.request.deposit_without_account import DepositWithoutAccount
 from src.payment.routes.dto.request.payment_request import (
     PaymentAuthorizationRequestData,
@@ -18,6 +17,9 @@ from src.payment.routes.dto.request.pre_data_for_validation import PreDataForVal
 from src.payment.routes.dto.response.card_response import CardResponse
 from src.payment.routes.dto.response.credit_history_response import (
     CreditHistoryResponse,
+)
+from src.payment.routes.dto.response.dynamic_subscription_plans import (
+    DynamicSubscriptionPlans,
 )
 from src.payment.routes.dto.response.key_response import KeyResponse
 from src.payment.routes.dto.response.remaining_credit import (
@@ -215,7 +217,7 @@ def get_subscription_plans(
     get_subscription_service: GetSubscriptionUseCase = Depends(
         Provide[Container.get_subscription_service]
     ),
-) -> list[SubscriptionPlan]:
+) -> DynamicSubscriptionPlans:
     return get_subscription_service.get_plans(db)
 
 
