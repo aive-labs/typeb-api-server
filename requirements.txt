@@ -214,4 +214,4 @@ alembic==1.13.2
 slack_sdk==3.31.0
 
 # html to pdf
-weasyprint==62.3
+# weasyprint==62.3
