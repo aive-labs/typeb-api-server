@@ -31,7 +31,7 @@ class GetCreditService(GetCreditUseCase):
         credit_histories = self.credit_repository.get_history_with_pagination(
             db, current_page, per_page
         )
-        responses = [CreditHistoryResponse(**history.model_dump()) for history in credit_histories]
+        responses = [CreditHistoryResponse.from_model(history) for history in credit_histories]
 
         all_count = self.credit_repository.get_all_history_count(db)
 
