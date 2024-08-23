@@ -11,6 +11,7 @@ from src.users.domain.user import User
 
 
 class Payment(BaseModel):
+    id: int | None = None
     payment_key: str
     order_id: str
     order_name: str
@@ -18,9 +19,11 @@ class Payment(BaseModel):
     requested_at: str
     approved_at: str
     type: PaymentType
+
     card_number: str | None = None
     card_type: str | None = None
     card_company: str | None = None
+
     receipt_url: str | None = None
     checkout_url: str | None = None
     currency: str
@@ -31,8 +34,12 @@ class Payment(BaseModel):
     tax_free_amount: int
     method: PaymentMethod
     version: str
+
     product_type: str
     credit_history_id: int | None = None
+
+    class Config:
+        from_attributes = True
 
     def to_entity(self, user: User, saved_credit_history_id: int | None = None) -> "PaymentEntity":
         return PaymentEntity(

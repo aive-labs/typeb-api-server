@@ -29,7 +29,7 @@ class BasePaymentRepository(ABC):
     @abstractmethod
     def save_history(
         self, payment: Payment, user: User, db: Session, saved_credit_history_id: int | None = None
-    ) -> int:
+    ):
         pass
 
     @abstractmethod
@@ -81,5 +81,5 @@ class BasePaymentRepository(ABC):
         pass
 
     @abstractmethod
-    def get_payment_by_order_id(self, order_id, db: Session) -> Payment:
+    def get_payment_by_credit_history_id(self, credit_history_id, db: Session) -> Payment:
         pass

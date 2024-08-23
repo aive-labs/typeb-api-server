@@ -51,11 +51,10 @@ class PaymentRepository(BasePaymentRepository):
 
     def save_history(
         self, payment: Payment, user: User, db: Session, saved_credit_history_id: int | None = None
-    ) -> int:
+    ):
         entity = payment.to_entity(user, saved_credit_history_id)
         db.add(entity)
         db.flush()
-        return payment.id
 
     def save_billing_key(self, card: Card, db: Session):
         entity = card.to_entity()
@@ -141,10 +140,15 @@ class PaymentRepository(BasePaymentRepository):
         db.add(entity)
         db.flush()
 
-    def get_payment_by_order_id(self, order_id, db: Session) -> Payment:
-        entity = db.query(PaymentEntity).filter(PaymentEntity.order_id == order_id).first()
+    def get_payment_by_credit_history_id(self, credit_history_id, db: Session) -> Payment:
+        entity = (
+            db.query(PaymentEntity)
+            .filter(PaymentEntity.credit_history_id == credit_history_id)
+            .first()
+        )
 
         if entity is None:
             raise NotFoundException(detail={"message": "주문 및 결제 정보를 찾지 못했습니다."})
 
+        print(entity)
         return Payment.model_validate(entity)

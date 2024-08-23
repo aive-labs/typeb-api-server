@@ -699,5 +699,8 @@ class Container(containers.DeclarativeContainer):
     )
 
     invoice_download_service = providers.Singleton(
-        provides=InvoiceDownloadService, payment_repository=payment_repository
+        provides=InvoiceDownloadService,
+        payment_repository=payment_repository,
+        credit_repository=credit_repository,
+        deposit_repository=deposit_repository,
     )

@@ -31,3 +31,7 @@ class BaseCreditRepository(ABC):
     @abstractmethod
     def update_credit_history_status(self, credit_history_id, new_status, user: User, db: Session):
         pass
+
+    @abstractmethod
+    def get_credit_history_by_id(self, credit_history_id, db) -> CreditHistory:
+        pass

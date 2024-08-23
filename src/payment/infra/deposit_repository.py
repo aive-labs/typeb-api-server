@@ -39,3 +39,18 @@ class DepositRepository(BaseDepositRepository):
         )
 
         return PendingDeposit.model_validate(entity)
+
+    def get_deposit_by_credit_history_id(self, credit_history_id, db: Session) -> PendingDeposit:
+        entity = (
+            db.query(PendingDepositEntity)
+            .filter(
+                PendingDepositEntity.credit_history_id == credit_history_id,
+                PendingDepositEntity.has_deposit_made.is_(True),
+            )
+            .first()
+        )
+
+        if entity is None:
+            raise NotFoundException(detail={"무통장 입금 정보를 찾지 못했습니다."})
+
+        return PendingDeposit.model_validate(entity)

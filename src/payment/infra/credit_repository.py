@@ -1,7 +1,7 @@
 from sqlalchemy import desc, func
 from sqlalchemy.orm import Session
 
-from src.core.exceptions.exceptions import ConsistencyException
+from src.core.exceptions.exceptions import ConsistencyException, NotFoundException
 from src.payment.domain.credit_history import CreditHistory
 from src.payment.infra.entity.credit_history_entity import CreditHistoryEntity
 from src.payment.infra.entity.remaining_credit_entity import RemainingCreditEntity
@@ -16,7 +16,7 @@ class CreditRepository(BaseCreditRepository):
 
         if not entity:
             raise ConsistencyException(
-                "잔여 크레딧 데이터가 존재하지 않습니다. 관리자에게 문의하세요."
+                detail={"message": "잔여 크레딧 데이터가 존재하지 않습니다. 관리자에게 문의하세요."}
             )
 
         return entity.remaining_credit
@@ -59,3 +59,16 @@ class CreditRepository(BaseCreditRepository):
                 CreditHistoryEntity.updated_at: func.now(),
             }
         )
+
+    def get_credit_history_by_id(self, credit_history_id, db) -> CreditHistory:
+        entity = (
+            db.query(CreditHistoryEntity)
+            .filter(CreditHistoryEntity.id == credit_history_id)
+            .first()
+        )
+        if not entity:
+            raise NotFoundException(
+                detail={"message": "결제 정보가 존재하지 않습니다. 관리자에게 문의하세요."}
+            )
+
+        return CreditHistory.model_validate(entity)
