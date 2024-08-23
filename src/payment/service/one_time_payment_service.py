@@ -71,6 +71,7 @@ class OneTimePaymentService(PaymentUseCase):
                 # 검증 테이블에 해당 order_id 데이터 삭제
                 self.payment_repository.delete_pre_validation_data(payment_request.order_id, db)
 
+                # 결제 성공 후 종료
                 break
             except Exception as e:
                 retry_count += 1

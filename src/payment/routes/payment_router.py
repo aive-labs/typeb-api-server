@@ -243,17 +243,17 @@ def deposit_complete(
     deposit_service.complete(pending_deposit_id, user, db=db)
 
 
-@payment_router.get("/invoice/{order_id}")
+@payment_router.get("/invoice/{credit_history_id}")
 @inject
 def donwload_invoice(
-    order_id: str,
+    credit_history_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db),
     invoice_download_service: InvoiceDownloadUseCase = Depends(
         Provide[Container.invoice_download_service]
     ),
 ):
-    pdf_file = invoice_download_service.exec(order_id, user, db)
+    pdf_file = invoice_download_service.exec(credit_history_id, user, db)
     download_date = datetime.today().strftime("%Y%m%d")
 
     return Response(

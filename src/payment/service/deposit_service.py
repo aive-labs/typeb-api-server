@@ -8,7 +8,6 @@ from src.core.transactional import transactional
 from src.payment.domain.credit_history import CreditHistory
 from src.payment.domain.pending_deposit import PendingDeposit
 from src.payment.enum.credit_status import CreditStatus
-from src.payment.enum.deposit_without_account_status import DepositWithoutAccountStatus
 from src.payment.routes.dto.request.deposit_without_account import DepositWithoutAccount
 from src.payment.routes.use_case.deposit_without_account_usecase import (
     DepositWithoutAccountUseCase,
@@ -36,15 +35,7 @@ class DepositService(DepositWithoutAccountUseCase):
             raise BadRequestException(detail={"message": "예금주 명은 필수 입력입니다."})
 
         # credit_history에 저장
-        credit_history = CreditHistory(
-            user_name=user.username,
-            description="크레딧 충전(무통장 입금)",
-            status=DepositWithoutAccountStatus.WAITING.value,
-            charge_amount=deposit_request.price,
-            note=self.account_number,
-            created_by=str(user.user_id),
-            updated_by=str(user.user_id),
-        )
+        credit_history = CreditHistory.from_deposit(deposit_request, self.account_number, user)
         credit_history = self.credit_repository.add_history(credit_history, db)
 
         # 새로운 엔티티에 저장 expired_at, # 입금 상태

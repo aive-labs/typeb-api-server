@@ -13,6 +13,7 @@ class CreditHistoryEntity(Base):
     charge_amount = Column(BigInteger, nullable=True)
     use_amount = Column(BigInteger, nullable=True)
     note = Column(String, nullable=True)
+    charging_type = Column(String, nullable=True)
     created_by = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), default=func.now())
     updated_by = Column(String, nullable=False)
