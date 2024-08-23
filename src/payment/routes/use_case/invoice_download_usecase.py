@@ -8,5 +8,5 @@ from src.users.domain.user import User
 class InvoiceDownloadUseCase(ABC):
 
     @abstractmethod
-    def exec(self, credit_history_id, user: User, db: Session) -> bytes:
+    def exec(self, credit_history_id, user: User, db: Session) -> bytes | None:
         pass
