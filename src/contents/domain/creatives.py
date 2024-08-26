@@ -3,8 +3,6 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from src.contents.enums.image_source import ImageSource
-
 
 class Creatives(BaseModel):
     creative_id: Optional[int] = None
@@ -21,6 +19,5 @@ class Creatives(BaseModel):
     updated_by: str
 
     def set_image_url(self, s3_url):
-        if self.image_source == ImageSource.UPLOAD.value:
-            self.image_uri = s3_url
-            self.image_path = s3_url
+        self.image_uri = s3_url
+        self.image_path = s3_url

@@ -1,7 +1,5 @@
 from pydantic import BaseModel
 
-from src.contents.enums.image_source import ImageSource
-
 
 class CreativeRecommend(BaseModel):
     """Creative 추천 API Object"""
@@ -12,5 +10,4 @@ class CreativeRecommend(BaseModel):
     creative_tags: str
 
     def set_image_url(self, s3_url):
-        if self.image_source == ImageSource.UPLOAD.value:
-            self.image_uri = s3_url
+        self.image_uri = s3_url
