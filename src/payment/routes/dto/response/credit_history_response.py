@@ -12,6 +12,7 @@ class CreditHistoryResponse(BaseModel):
     description: str
     status: str
     amount: int | None = None
+    remaining_amount: int | None = None
     note: str | None = None
     created_at: Optional[datetime] = None
 
@@ -25,6 +26,7 @@ class CreditHistoryResponse(BaseModel):
             description=model.description,
             status=model.status,
             amount=amount,
+            remaining_amount=model.remaining_amount,
             note=model.note,
             created_at=model.created_at,
         )

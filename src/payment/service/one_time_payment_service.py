@@ -77,8 +77,6 @@ class OneTimePaymentService(PaymentUseCase):
                 break
             except Exception as e:
                 retry_count += 1
-                print(f"Retry {retry_count} failed: {e}")
-
                 if retry_count == self.max_retries:
                     send_slack_message(
                         title="결제 실패 알림",
