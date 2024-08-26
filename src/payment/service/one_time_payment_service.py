@@ -5,9 +5,12 @@ from src.common.utils.get_env_variable import get_env_variable
 from src.core.exceptions.exceptions import (
     ConsistencyException,
     PaymentException,
+    PolicyException,
 )
 from src.payment.domain.credit_history import CreditHistory
+from src.payment.domain.subscription import Subscription
 from src.payment.enum.product_type import ProductType
+from src.payment.enum.subscription_status import SubscriptionStatus
 from src.payment.routes.dto.request.payment_request import (
     PaymentAuthorizationRequestData,
 )
@@ -15,6 +18,9 @@ from src.payment.routes.use_case.payment import PaymentUseCase
 from src.payment.routes.use_case.payment_gateway import PaymentGateway
 from src.payment.service.port.base_credit_repository import BaseCreditRepository
 from src.payment.service.port.base_payment_repository import BasePaymentRepository
+from src.payment.service.port.base_subscription_repository import (
+    BaseSubscriptionRepository,
+)
 from src.users.domain.user import User
 
 
@@ -26,10 +32,12 @@ class OneTimePaymentService(PaymentUseCase):
         payment_repository: BasePaymentRepository,
         payment_gateway: PaymentGateway,
         credit_repository: BaseCreditRepository,
+        subscription_repository: BaseSubscriptionRepository,
     ):
         self.payment_repository = payment_repository
         self.payment_gateway = payment_gateway
         self.credit_repository = credit_repository
+        self.subscription_repository = subscription_repository
 
     async def exec(
         self,
@@ -66,6 +74,24 @@ class OneTimePaymentService(PaymentUseCase):
 
                     # 잔여 크레딧 업데이트
                     self.credit_repository.update_credit(payment.total_amount, db)
+                elif payment_request.product_type == ProductType.SUBSCRIPTION:
+                    # subscription 정보 insert
+                    subscription = self.subscription_repository.get_my_subscription(db)
+                    new_subscription = self.create_new_subscription(db, user)
+                    if subscription is None:
+                        # 첫 구독인 경우
+                        self.subscription_repository.register_subscription(new_subscription, db)
+                    else:
+                        # 기존 구독 존재
+                        if subscription.is_expired():
+                            new_subscription.set_id(subscription.get_id())
+                            self.subscription_repository.update_subscription(new_subscription, db)
+                        else:
+                            # end_date가 종료가 안되었으면 종료일 연장 (end_date + 1month)
+                            subscription.extend_end_date()
+                            self.subscription_repository.update_subscription(subscription, db)
+                else:
+                    raise PolicyException(detail={"message": "존재하지 않는 결제 상품입니다."})
 
                 # 성공인 경우 결제 내역 테이블에 저장
                 self.payment_repository.save_history(payment, user, db, saved_credit_history_id)
@@ -89,6 +115,11 @@ class OneTimePaymentService(PaymentUseCase):
                     )
 
         db.commit()
+
+    def create_new_subscription(self, db, user):
+        plans = self.subscription_repository.get_plans(db)  # 구독 요금제 1개 뿐임
+        new_subscription = Subscription.with_status(plans[0], SubscriptionStatus.ACTIVE.value, user)
+        return new_subscription
 
     def check_is_order_mismatch(self, order_id, amount, db: Session):
         is_mismatch = not self.payment_repository.check_pre_validation_data_for_payment(

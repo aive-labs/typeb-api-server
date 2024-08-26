@@ -53,7 +53,7 @@ class SubscriptionRepository(BaseSubscriptionRepository):
             updated_by=new_subscription.created_by,
             plans=subscription_plan_entity,
         )
-        db.add(entity)
+        db.merge(entity)
         db.flush()
 
         return Subscription.model_validate(entity)
@@ -67,3 +67,27 @@ class SubscriptionRepository(BaseSubscriptionRepository):
     def get_plans(self, db) -> list[SubscriptionPlan]:
         entities = db.query(SubscriptionPlanEntity).all()
         return [SubscriptionPlan.model_validate(entity) for entity in entities]
+
+    def update_subscription(self, update_subscription, db: Session) -> Subscription:
+        subscription_plan_entity = SubscriptionPlanEntity(
+            id=update_subscription.plan.id,
+            name=update_subscription.plan.name,
+            price=update_subscription.plan.price,
+        )
+
+        entity = SubscriptionEntity(
+            id=update_subscription.id,
+            plan_id=update_subscription.plan_id,
+            status=update_subscription.status,
+            start_date=update_subscription.start_date,
+            end_date=update_subscription.end_date,
+            auto_renewal=update_subscription.auto_renewal,
+            last_payment_date=update_subscription.last_payment_date,
+            created_by=update_subscription.created_by,
+            updated_by=update_subscription.created_by,
+            plans=subscription_plan_entity,
+        )
+        db.merge(entity)
+        db.flush()
+
+        return Subscription.model_validate(entity)

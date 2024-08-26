@@ -60,7 +60,9 @@ class BillingPaymentService(PaymentUseCase):
                 subscription_price = plan.price
 
                 # 최초 구독을 결제하려는 경우, Pending 상태로 DB에 저장
-                new_subscription = Subscription.with_pending_status(plan, user)
+                new_subscription = Subscription.with_status(
+                    plan, SubscriptionStatus.PENDING.value, user
+                )
                 my_subscription = self.subscription_repository.register_subscription(
                     new_subscription, db
                 )

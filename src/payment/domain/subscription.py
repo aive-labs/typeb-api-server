@@ -3,7 +3,6 @@ from datetime import datetime, timezone
 from dateutil.relativedelta import relativedelta
 from pydantic import BaseModel
 
-from src.payment.enum.subscription_status import SubscriptionStatus
 from src.payment.infra.entity.subscription_entity import SubscriptionEntity
 from src.users.domain.user import User
 
@@ -61,10 +60,10 @@ class Subscription(BaseModel):
         return subscription
 
     @staticmethod
-    def with_pending_status(plan: SubscriptionPlan, user: User) -> "Subscription":
+    def with_status(plan: SubscriptionPlan, status: str, user: User) -> "Subscription":
         return Subscription(
             plan_id=plan.id,
-            status=SubscriptionStatus.PENDING.value,
+            status=status,
             start_date=datetime.now(timezone.utc),
             end_date=datetime.now(timezone.utc) + relativedelta(months=1),
             auto_renewal=True,
@@ -73,3 +72,17 @@ class Subscription(BaseModel):
             created_at=datetime.now(timezone.utc),
             plan=plan,
         )
+
+    def extend_end_date(self):
+        self.end_date = datetime.now(timezone.utc) + relativedelta(months=1)
+
+    def is_expired(self):
+        if datetime.today().date() > self.end_date.date():
+            return True
+        return False
+
+    def get_id(self):
+        return self.id
+
+    def set_id(self, id):
+        self.id = id
