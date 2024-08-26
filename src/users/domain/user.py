@@ -3,6 +3,7 @@ from datetime import datetime
 from passlib.context import CryptContext
 from pydantic import BaseModel
 
+from src.payment.routes.dto.response.my_subscription import MySubscription
 from src.users.infra.entity.user_entity import UserEntity
 from src.users.infra.entity.user_password import UserPasswordEntity
 
@@ -26,6 +27,7 @@ class User(BaseModel):
     test_callback_number: str | None = None
     last_login: datetime | None = None
     mall_id: str | None = None
+    subscription: MySubscription | None = None
 
     def to_entity(self) -> UserEntity:
         return UserEntity(

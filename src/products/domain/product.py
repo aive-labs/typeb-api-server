@@ -32,7 +32,7 @@ class Product(BaseModel):
     is_bundle: Optional[str]
     made_date: Optional[str]
     release_date: Optional[str]
-    created_date: Optional[str]
+    created_date: Optional[datetime]
     detail_image: Optional[str]
     list_image: Optional[str]
     tiny_image: Optional[str]

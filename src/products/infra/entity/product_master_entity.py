@@ -42,7 +42,7 @@ class ProductMasterEntity(Base):
     is_bundle = Column(String)
     made_date = Column(String)
     release_date = Column(String)
-    created_date = Column(String)
+    created_date = Column(DateTime)
     detail_image = Column(String)
     list_image = Column(String)
     tiny_image = Column(String)

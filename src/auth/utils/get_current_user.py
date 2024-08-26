@@ -9,6 +9,7 @@ from src.common.utils.get_env_variable import get_env_variable
 from src.core.container import Container
 from src.core.db_dependency import get_db
 from src.core.exceptions.exceptions import AuthException, CredentialException
+from src.payment.routes.dto.response.my_subscription import MySubscription
 from src.users.infra.user_repository import UserRepository
 
 
@@ -43,4 +44,11 @@ def get_current_user(
         mall_id = cafe24_info.mall_id if cafe24_info.mall_id else None
         user.mall_id = mall_id
 
+    my_subscription = payload.get("subscription")
+    if my_subscription:
+        user.subscription = MySubscription(
+            id=my_subscription["id"],
+            name=my_subscription["name"],
+            end_date=my_subscription["end_date"],
+        )
     return user
