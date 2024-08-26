@@ -87,7 +87,6 @@ class OneTimePaymentService(PaymentUseCase):
                             new_subscription.set_id(subscription.get_id())
                             self.subscription_repository.update_subscription(new_subscription, db)
                         else:
-                            # end_date가 종료가 안되었으면 종료일 연장 (end_date + 1month)
                             subscription.extend_end_date()
                             self.subscription_repository.update_subscription(subscription, db)
                 else:
@@ -109,7 +108,6 @@ class OneTimePaymentService(PaymentUseCase):
                         body=f"주문번호(order_id): {payment.order_id} \n 에러메시지 \n {repr(e)}",
                         member_id=get_env_variable("slack_wally"),
                     )
-
                     raise PaymentException(
                         detail={"message": "결제를 처리하는 도중 문제가 발생했습니다."}
                     )

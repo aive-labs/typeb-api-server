@@ -8,6 +8,9 @@ from src.core.exceptions.exceptions import (
     AuthException,
     NotFoundException,
 )
+from src.payment.service.port.base_subscription_repository import (
+    BaseSubscriptionRepository,
+)
 from src.users.service.port.base_user_repository import BaseUserRepository
 
 reuseable_oauth = OAuth2PasswordBearer(tokenUrl="/users/signin", scheme_name="JWT")
@@ -16,9 +19,15 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class AuthService:
-    def __init__(self, token_service: TokenService, user_repository: BaseUserRepository):
+    def __init__(
+        self,
+        token_service: TokenService,
+        user_repository: BaseUserRepository,
+        subscription_repository: BaseSubscriptionRepository,
+    ):
         self.token_service = token_service
         self.user_repository = user_repository
+        self.subscription_repository = subscription_repository
 
     def login(self, login_id: str, password: str, mall_id: str, db: Session) -> TokenResponse:
         # 사용자 존재 유무 확인
@@ -30,8 +39,10 @@ class AuthService:
         if not self.verify_password(password, user.password):
             raise AuthException(detail={"message": "패스워드가 일치하지 않습니다."})
 
+        subscription = self.subscription_repository.get_my_subscription(db)
+
         # 토큰 발급
-        token_response = self.token_service.create_token(user, mall_id)
+        token_response = self.token_service.create_token(user, mall_id, subscription)
 
         # TODO: refresh_token save
 

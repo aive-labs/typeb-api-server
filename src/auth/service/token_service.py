@@ -8,6 +8,7 @@ from src.auth.routes.dto.response.token_response import TokenResponse
 from src.auth.utils.jwt_settings import JwtSettings
 from src.common.utils.date_utils import get_expired_at_to_iso_format_kr_time
 from src.common.utils.get_env_variable import get_env_variable
+from src.payment.domain.subscription import Subscription
 from src.users.domain.user import User
 
 
@@ -20,7 +21,15 @@ class TokenService:
     def __init__(self):
         self.jwt_setting = JwtSettings()
 
-    def create_token(self, user: User, mall_id):
+    def create_token(self, user: User, mall_id, subscription: Subscription | None = None):
+        subscription_dict = None
+        if subscription:
+            subscription_dict = {
+                "id": subscription.id,
+                "name": subscription.plan.name,
+                "end_date": (subscription.end_date + timedelta(hours=9)).date(),
+            }
+
         payload = {
             "email": user.email,
             "department": user.department_name,
@@ -28,6 +37,7 @@ class TokenService:
             "language": user.language,
             "permissions": user.permissions,
             "role": user.role_id,
+            "subscription": subscription_dict,
         }
 
         access_token = self.create_access_token(payload)

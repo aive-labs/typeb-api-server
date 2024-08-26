@@ -50,7 +50,7 @@ class Subscription(BaseModel):
             status=model.status,
             start_date=model.start_date,
             end_date=model.end_date,
-            auto_renewal=model.auto_renewal,
+            auto_renewal=False,
             last_payment_date=model.last_payment_date,
             created_by=model.created_by,
             created_at=model.created_at,
@@ -66,7 +66,7 @@ class Subscription(BaseModel):
             status=status,
             start_date=datetime.now(timezone.utc),
             end_date=datetime.now(timezone.utc) + relativedelta(months=1),
-            auto_renewal=True,
+            auto_renewal=False,
             last_payment_date=datetime.now(timezone.utc),
             created_by=str(user.user_id),
             created_at=datetime.now(timezone.utc),
@@ -74,7 +74,7 @@ class Subscription(BaseModel):
         )
 
     def extend_end_date(self):
-        self.end_date = datetime.now(timezone.utc) + relativedelta(months=1)
+        self.end_date = self.end_date + relativedelta(months=1)
 
     def is_expired(self):
         if datetime.today().date() > self.end_date.date():
