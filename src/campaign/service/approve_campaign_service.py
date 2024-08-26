@@ -723,8 +723,13 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 )
                 .first()
             )
+
+            # await self.message_controller.delete_dag_run(
+            #     dag_name=f"{user.mall_id}_send_messages", dag_run_id=send_dag_log.dag_run_id
+            # )
+
             await self.message_controller.delete_dag_run(
-                dag_name=f"{user.mall_id}_send_messages", dag_run_id=send_dag_log.dag_run_id
+                dag_name=f"{user.mall_id}_issue_coupon", dag_run_id=send_dag_log.dag_run_id
             )
 
         elif is_status_haltbefore_to_pending(from_status, to_status):
@@ -924,12 +929,12 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             dag_run_id = f"{campaign_id}_{str(yyyymmddhh24mi)}_{str(unix_timestamp_now)}"
             logical_date = create_logical_date_for_airflow(send_date, send_time)
 
-            await self.message_controller.execute_dag(
-                dag_name=f"{user.mall_id}_send_messages",
-                input_vars=input_var,
-                dag_run_id=dag_run_id,
-                logical_date=logical_date,
-            )
+            # await self.message_controller.execute_dag(
+            #     dag_name=f"{user.mall_id}_send_messages",
+            #     input_vars=input_var,
+            #     dag_run_id=dag_run_id,
+            #     logical_date=logical_date,
+            # )
 
             send_reservation_entity = (
                 db.query(SendReservationEntity)
