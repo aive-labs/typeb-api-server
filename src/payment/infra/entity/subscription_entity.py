@@ -18,7 +18,7 @@ class SubscriptionPlanEntity(Base):
 
     subscriptions = relationship(
         "SubscriptionEntity",
-        back_populates="plans",
+        back_populates="plan",
     )
 
 
@@ -37,4 +37,4 @@ class SubscriptionEntity(Base):
     updated_by = Column(String, nullable=False)
     updated_at = Column(DateTime(timezone=True), default=func.now())
 
-    plans = relationship("SubscriptionPlanEntity", back_populates="subscriptions")
+    plan = relationship("SubscriptionPlanEntity", back_populates="subscriptions")
