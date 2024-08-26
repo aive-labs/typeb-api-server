@@ -127,13 +127,15 @@ def update_user_profile(
 @inject
 def refresh_access_token(
     user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
     token_service: TokenService = Depends(dependency=Provide[Container.token_service]),
+    subscription_service: GetSubscriptionUseCase = Depends(
+        Provide[Container.get_subscription_service]
+    ),
 ):
-    access_token, access_token_expires_at = token_service.create_refresh_token(
-        email=user.email,
-        user_id=str(user.user_id),
-        mall_id=user.mall_id,
-    )
+    subscription = subscription_service.get_my_subscription(db)
+
+    access_token, access_token_expires_at = token_service.create_refresh_token(user, subscription)
 
     response = JSONResponse(
         content={

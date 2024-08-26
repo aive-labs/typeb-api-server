@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta, timezone
-from typing import Any, Union
 
 import pytz
 from jose import jwt
@@ -40,14 +39,8 @@ class TokenService:
             "subscription": subscription_dict,
         }
 
-        print(payload)
-
         access_token = self.create_access_token(payload)
-        refresh_token, _ = self.create_refresh_token(
-            email=user.email,
-            user_id=str(user.user_id),
-            mall_id=mall_id,
-        )
+        refresh_token, _ = self.create_refresh_token(user, subscription)
 
         return TokenResponse(
             access_token=access_token,
@@ -69,7 +62,7 @@ class TokenService:
         return encoded_jwt
 
     def create_refresh_token(
-        self, email: Union[str, Any], user_id: Union[str, Any], mall_id: str
+        self, user: User, subscription: Subscription | None = None
     ) -> tuple[str, str]:
         # KST 기준 토큰 만료시간 계산. datetime.now()
         expires_in = datetime.now() + timedelta(minutes=self.jwt_setting.refresh_token_expired)
@@ -79,11 +72,24 @@ class TokenService:
         # astimezone: UTC 시간으로 변환 & replace:초단위까지 표시 & isoformat:aware datetime으로 변경
         expires_at = expires_in.astimezone(local_timezone).replace(microsecond=0).isoformat()
 
+        subscription_dict = None
+        if subscription:
+            subscription_dict = {
+                "id": subscription.id,
+                "name": subscription.plan.name,
+                "end_date": (subscription.end_date + timedelta(hours=9)).date().isoformat(),
+            }
+
         payload = {
-            "email": email,
-            "user_id": user_id,
-            "mall_id": mall_id,
+            "email": user.email,
+            "department": user.department_name,
+            "mall_id": user.mall_id,
+            "language": user.language,
+            "permissions": user.permissions,
+            "role": user.role_id,
+            "subscription": subscription_dict,
             "expires": expires_at,
         }
+
         encoded_jwt = jwt.encode(claims=payload, key=self.jwt_setting.secret_key, algorithm="HS256")
         return encoded_jwt, expires_at
