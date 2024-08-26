@@ -12,7 +12,7 @@ from src.payment.domain.subscription import Subscription
 from src.payment.enum.product_type import ProductType
 from src.payment.enum.subscription_status import SubscriptionStatus
 from src.payment.routes.dto.request.payment_request import (
-    PaymentAuthorizationRequestData,
+    PaymentRequest,
 )
 from src.payment.routes.use_case.payment import PaymentUseCase
 from src.payment.routes.use_case.payment_gateway import PaymentGateway
@@ -43,7 +43,7 @@ class OneTimePaymentService(PaymentUseCase):
         self,
         user: User,
         db: Session,
-        payment_request: PaymentAuthorizationRequestData | None = None,
+        payment_request: PaymentRequest | None = None,
     ):
 
         if payment_request is None:
@@ -66,29 +66,11 @@ class OneTimePaymentService(PaymentUseCase):
                 # 크레딧 히스토리에 내역 추가
                 saved_credit_history_id = None
                 if payment_request.product_type == ProductType.CREDIT:
-                    credit_history = CreditHistory.after_charge(
-                        payment.order_name, payment.total_amount, remaining_amount, user
+                    saved_credit_history_id = self.charge_credit(
+                        payment, remaining_amount, user, db
                     )
-                    saved_history = self.credit_repository.add_history(credit_history, db)
-                    saved_credit_history_id = saved_history.id
-
-                    # 잔여 크레딧 업데이트
-                    self.credit_repository.update_credit(payment.total_amount, db)
                 elif payment_request.product_type == ProductType.SUBSCRIPTION:
-                    # subscription 정보 insert
-                    subscription = self.subscription_repository.get_my_subscription(db)
-                    new_subscription = self.create_new_subscription(db, user)
-                    if subscription is None:
-                        # 첫 구독인 경우
-                        self.subscription_repository.register_subscription(new_subscription, db)
-                    else:
-                        # 기존 구독 존재
-                        if subscription.is_expired():
-                            new_subscription.set_id(subscription.get_id())
-                            self.subscription_repository.update_subscription(new_subscription, db)
-                        else:
-                            subscription.extend_end_date()
-                            self.subscription_repository.update_subscription(subscription, db)
+                    self.pay_for_subscription(user, db)
                 else:
                     raise PolicyException(detail={"message": "존재하지 않는 결제 상품입니다."})
 
@@ -113,6 +95,32 @@ class OneTimePaymentService(PaymentUseCase):
                     )
 
         db.commit()
+
+    def pay_for_subscription(self, user, db: Session):
+        # subscription 정보 insert
+        subscription = self.subscription_repository.get_my_subscription(db)
+        new_subscription = self.create_new_subscription(db, user)
+        if subscription is None:
+            # 첫 구독인 경우
+            self.subscription_repository.register_subscription(new_subscription, db)
+        else:
+            # 기존 구독 존재
+            if subscription.is_expired():
+                new_subscription.set_id(subscription.get_id())
+                self.subscription_repository.update_subscription(new_subscription, db)
+            else:
+                subscription.extend_end_date()
+                self.subscription_repository.update_subscription(subscription, db)
+
+    def charge_credit(self, payment, remaining_amount, user, db: Session) -> int | None:
+        credit_history = CreditHistory.after_charge(
+            payment.order_name, payment.total_amount, remaining_amount, user
+        )
+        saved_history = self.credit_repository.add_history(credit_history, db)
+        saved_credit_history_id = saved_history.id
+        # 잔여 크레딧 업데이트
+        self.credit_repository.update_credit(payment.total_amount, db)
+        return saved_credit_history_id
 
     def create_new_subscription(self, db, user):
         plans = self.subscription_repository.get_plans(db)  # 구독 요금제 1개 뿐임

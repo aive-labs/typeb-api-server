@@ -5,26 +5,22 @@ from src.payment.infra.dto.response.toss_payment_billing_response import (
     TossPaymentBillingResponse,
 )
 from src.payment.routes.dto.request.payment_request import (
-    PaymentAuthorizationRequestData,
+    PaymentRequest,
 )
 
 
 class PaymentGateway(ABC):
 
     @abstractmethod
-    async def request_general_payment_approval(
-        self, payment_data: PaymentAuthorizationRequestData
-    ) -> Payment:
+    async def request_general_payment_approval(self, payment_data: PaymentRequest) -> Payment:
         pass
 
     @abstractmethod
-    async def request_billing_key(
-        self, payment_data: PaymentAuthorizationRequestData
-    ) -> TossPaymentBillingResponse:
+    async def request_billing_key(self, payment_data: PaymentRequest) -> TossPaymentBillingResponse:
         pass
 
     @abstractmethod
     async def request_billing_payment(
-        self, payment_data: PaymentAuthorizationRequestData, billing_key: str
+        self, payment_data: PaymentRequest, billing_key: str
     ) -> Payment:
         pass

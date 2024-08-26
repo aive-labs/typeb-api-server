@@ -17,6 +17,7 @@ from src.core.database import (
     get_mall_id_by_user,
 )
 from src.core.db_dependency import get_db, get_db_for_with_mall_id
+from src.payment.routes.use_case.get_subscription import GetSubscriptionUseCase
 from src.users.domain.gnb_permission import GNBPermissions
 from src.users.domain.resource_permission import ResourcePermission
 from src.users.domain.user_role import UserPermissions
@@ -53,6 +54,9 @@ def get_me(
     db: Session = Depends(get_db),
     cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
     onboarding_service: BaseOnboardingService = Depends(Provide[Container.onboarding_service]),
+    subscription_service: GetSubscriptionUseCase = Depends(
+        Provide[Container.get_subscription_service]
+    ),
 ):
     permissions = UserPermissions(
         gnb_permissions=GNBPermissions.with_admin(),
@@ -75,7 +79,10 @@ def get_me(
         else:
             onboarding_status = onboarding.onboarding_status.value
 
-    return UserProfileResponse.from_user(user, permissions, cafe24_integration, onboarding_status)
+    subscription = subscription_service.get_my_subscription(db)
+    return UserProfileResponse.from_user(
+        user, permissions, cafe24_integration, onboarding_status, subscription
+    )
 
 
 @user_router.post("/signin")

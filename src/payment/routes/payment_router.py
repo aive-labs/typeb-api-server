@@ -11,7 +11,7 @@ from src.core.container import Container
 from src.core.db_dependency import get_db
 from src.payment.routes.dto.request.deposit_without_account import DepositWithoutAccount
 from src.payment.routes.dto.request.payment_request import (
-    PaymentAuthorizationRequestData,
+    PaymentRequest,
 )
 from src.payment.routes.dto.request.pre_data_for_validation import PreDataForValidation
 from src.payment.routes.dto.response.card_response import CardResponse
@@ -69,7 +69,7 @@ def save_pre_data_for_validation(
 @payment_router.post("/one-time", status_code=status.HTTP_204_NO_CONTENT)
 @inject
 async def one_time_payment_authorization_request(
-    payment_authorization_data: PaymentAuthorizationRequestData,
+    payment_authorization_data: PaymentRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db),
     one_time_payment_service: PaymentUseCase = Depends(Provide[Container.one_time_payment_service]),
@@ -80,7 +80,7 @@ async def one_time_payment_authorization_request(
 @payment_router.post("/billing", status_code=status.HTTP_204_NO_CONTENT)
 @inject
 async def billing_payment(
-    payment_authorization_data: PaymentAuthorizationRequestData,
+    payment_authorization_data: PaymentRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db),
     billing_payment_service: PaymentUseCase = Depends(Provide[Container.billing_payment_service]),
@@ -91,7 +91,7 @@ async def billing_payment(
 @payment_router.post("/billing/issue", status_code=status.HTTP_204_NO_CONTENT)
 @inject
 async def billing_payment_authorization_request(
-    payment_authorization_data: PaymentAuthorizationRequestData,
+    payment_authorization_data: PaymentRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db),
     issue_billing_service: PaymentUseCase = Depends(Provide[Container.issue_billing_service]),

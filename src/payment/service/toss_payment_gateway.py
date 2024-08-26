@@ -11,7 +11,7 @@ from src.payment.infra.dto.response.toss_payment_billing_response import (
 )
 from src.payment.infra.dto.response.toss_payment_response import TossPaymentResponse
 from src.payment.routes.dto.request.payment_request import (
-    PaymentAuthorizationRequestData,
+    PaymentRequest,
 )
 from src.payment.routes.use_case.payment_gateway import PaymentGateway
 
@@ -66,9 +66,7 @@ class TossPaymentGateway(PaymentGateway):
             "Content-Type": "application/json",
         }
 
-    async def request_billing_key(
-        self, payment_data: PaymentAuthorizationRequestData
-    ) -> TossPaymentBillingResponse:
+    async def request_billing_key(self, payment_data: PaymentRequest) -> TossPaymentBillingResponse:
         headers = self.get_header()
         payload = self.get_billing_payload(payment_data)
 
@@ -102,7 +100,7 @@ class TossPaymentGateway(PaymentGateway):
                 return res
 
     async def request_billing_payment(
-        self, payment_data: PaymentAuthorizationRequestData, billing_key: str
+        self, payment_data: PaymentRequest, billing_key: str
     ) -> Payment:
         headers = self.get_header()
         payload = self.get_billing_payment_payload(payment_data)

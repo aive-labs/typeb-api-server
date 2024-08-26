@@ -7,7 +7,7 @@ from src.payment.enum.subscription_status import SubscriptionStatus
 from src.payment.infra.payment_repository import PaymentRepository
 from src.payment.infra.subscription_repository import SubscriptionRepository
 from src.payment.routes.dto.request.payment_request import (
-    PaymentAuthorizationRequestData,
+    PaymentRequest,
 )
 from src.payment.routes.use_case.payment import PaymentUseCase
 from src.payment.routes.use_case.payment_gateway import PaymentGateway
@@ -31,7 +31,7 @@ class BillingPaymentService(PaymentUseCase):
         self,
         user: User,
         db: Session,
-        payment_request: PaymentAuthorizationRequestData | None = None,
+        payment_request: PaymentRequest | None = None,
     ):
 
         # 대표 카드 조회
@@ -73,7 +73,7 @@ class BillingPaymentService(PaymentUseCase):
 
         # 자동결제로 실행되는 경우 payment_request 값이 필요하기 때문에 조회된 데이터에서 추가
         if payment_request is None:
-            payment_request = PaymentAuthorizationRequestData(
+            payment_request = PaymentRequest(
                 order_id=TossUUIDKeyGenerator.generate("order"),
                 order_name=order_name,
                 customer_key=primary_card.customer_key,

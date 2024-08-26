@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from src.payment.enum.product_type import ProductType
 
 
-class PaymentAuthorizationRequestData(BaseModel):
+class PaymentRequest(BaseModel):
     order_id: str
     amount: int
     payment_key: str | None = None

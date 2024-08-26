@@ -1,8 +1,11 @@
+from datetime import timedelta
 from typing import Optional
 
 from pydantic import BaseModel
 
 from src.auth.infra.dto.external_integration import ExternalIntegration
+from src.payment.domain.subscription import Subscription
+from src.payment.routes.dto.response.my_subscription import MySubscription
 from src.users.domain.user_role import UserPermissions
 
 
@@ -20,6 +23,7 @@ class UserProfileResponse(BaseModel):
     mall_id: Optional[str] = None
     onboarding_status: str
     cafe24: Optional[ExternalIntegration] | None = None
+    subscription: MySubscription | None = None
 
     @staticmethod
     def from_user(
@@ -27,7 +31,16 @@ class UserProfileResponse(BaseModel):
         permissions: UserPermissions,
         cafe24_integration: Optional[ExternalIntegration] | None,
         onboarding_status: str,
+        subscription: Subscription,
     ):
+        my_subscription = None
+        if subscription and subscription.id:
+            my_subscription = MySubscription(
+                id=subscription.id,
+                name=subscription.plan.name,
+                end_date=(subscription.end_date + timedelta(hours=9)).date(),
+            )
+
         return UserProfileResponse(
             user_id=user.user_id,
             username=user.username,
@@ -42,4 +55,5 @@ class UserProfileResponse(BaseModel):
             mall_id=None if cafe24_integration is None else cafe24_integration.mall_id,
             onboarding_status=onboarding_status,
             cafe24=cafe24_integration,
+            subscription=my_subscription,
         )

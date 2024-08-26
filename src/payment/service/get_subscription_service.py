@@ -8,6 +8,7 @@ from src.common.service.port.base_common_repository import BaseCommonRepository
 from src.common.utils.get_round_up_to_then_thousand import (
     round_up_to_nearest_ten_thousand,
 )
+from src.payment.domain.subscription import Subscription
 from src.payment.routes.dto.response.dynamic_subscription_plans import (
     DynamicSubscriptionPlans,
 )
@@ -67,3 +68,6 @@ class GetSubscriptionService(GetSubscriptionUseCase):
             plan.set_price(estimated_customer_count_for_pricing)
 
         return DynamicSubscriptionPlans(customer_count=all_customer_count, subscription_plans=plans)
+
+    def get_my_subscription(self, db) -> Subscription | None:
+        return self.subscription_repository.get_my_subscription(db)

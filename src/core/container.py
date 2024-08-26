@@ -218,10 +218,13 @@ class Container(containers.DeclarativeContainer):
     )
 
     token_service = providers.Singleton(provides=TokenService)
+
+    subscription_repository = providers.Singleton(provides=SubscriptionRepository)
     auth_service = providers.Singleton(
         provides=AuthService,
         token_service=token_service,
         user_repository=user_repository,
+        subscription_repository=subscription_repository,
     )
 
     """
@@ -649,8 +652,6 @@ class Container(containers.DeclarativeContainer):
         payment_repository=payment_repository,
         payment_gateway=toss_payment_gateway,
     )
-
-    subscription_repository = providers.Singleton(provides=SubscriptionRepository)
 
     billing_payment_service = providers.Singleton(
         provides=BillingPaymentService,

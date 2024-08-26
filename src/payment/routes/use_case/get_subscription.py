@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.common.pagination.pagination_response import PaginationResponse
+from src.payment.domain.subscription import Subscription
 from src.payment.routes.dto.response.dynamic_subscription_plans import (
     DynamicSubscriptionPlans,
 )
@@ -21,4 +22,8 @@ class GetSubscriptionUseCase(ABC):
 
     @abstractmethod
     def get_plans(self, db) -> DynamicSubscriptionPlans:
+        pass
+
+    @abstractmethod
+    def get_my_subscription(self, db) -> Subscription | None:
         pass
