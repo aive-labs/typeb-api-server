@@ -62,7 +62,7 @@ def get_img_creatives_list(
 @inject
 def create_contents(
     content_create: ContentsCreate,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db: Session = Depends(get_db),
     add_contents_service: AddContentsUseCase = Depends(
         dependency=Provide[Container.add_contents_service]
@@ -133,7 +133,7 @@ def get_contents(
 def update_contents(
     contents_id: int,
     content_create: ContentsCreate,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db: Session = Depends(get_db),
     update_contents_service: UpdateContentsUseCase = Depends(
         Provide[Container.update_contents_service]
@@ -146,7 +146,7 @@ def update_contents(
 @inject
 def delete_contents(
     contents_id: int,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db: Session = Depends(get_db),
     delete_contents_service: DeleteContentsUseCase = Depends(
         Provide[Container.delete_contents_service]
@@ -160,7 +160,7 @@ def delete_contents(
 async def generate_contents(
     contents_generate_req: str = Body(...),
     db: Session = Depends(get_db),
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     generate_contents_service: GenerateContentsService = Depends(
         Provide[Container.generate_contents_service]
     ),

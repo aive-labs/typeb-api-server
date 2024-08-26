@@ -98,7 +98,7 @@ def create_audience(
         Provide[Container.create_audience_service]
     ),
     db: Session = Depends(get_db),
-    user=Depends(get_permission_checker([])),
+    user=Depends(get_permission_checker(["subscription"])),
 ):
     audience_id = create_audience_service.create_audience(
         audience_create=audience_create, user=user, db=db
@@ -168,7 +168,7 @@ def update_audience_creation_options(
     audience_id: str,
     audience_update: AudienceUpdate,
     background_task: BackgroundTasks,
-    user=Depends(get_permission_checker([])),
+    user=Depends(get_permission_checker(["subscription"])),
     db: Session = Depends(get_db),
     update_audience_service: UpdateAudienceUseCase = Depends(
         Provide[Container.update_audience_service]
@@ -206,7 +206,7 @@ def update_audience_creation_options(
 @inject
 def delete_audience(
     audience_id: str,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db: Session = Depends(get_db),
     delete_audience_service: DeleteAudienceUseCase = Depends(
         Provide[Container.delete_audience_service]
@@ -271,7 +271,7 @@ def get_csv_template(user=Depends(get_permission_checker(required_permissions=[]
 @inject
 async def check_csv_template(
     csv_file: UploadFile,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     csv_upload_service: CSVUploadUseCase = Depends(Provide[Container.csv_upload_service]),
 ):
     """타겟 오디언스 csv 파일 업로드 체크:  오디언스 생성 대상 csv 업로드 후 결과를 체크하는 API"""
@@ -308,7 +308,7 @@ async def check_csv_template(
 def audience_update_cycles(
     audience_id: str,
     cycle: TargetAudienceUpdateCycle,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db: Session = Depends(get_db),
     audience_update_cycle_service: AudienceUpdateCycleUseCase = Depends(
         Provide[Container.audience_update_cycle_service]
@@ -339,7 +339,7 @@ def get_audience_default_exclude(
 def update_audience_exclude_status(
     audience_id: str,
     is_exclude: bool = False,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db: Session = Depends(get_db),
     update_audience_exclude_service: UpdateAudienceExcludeStatusUseCase = Depends(
         Provide[Container.update_audience_exclude_service]

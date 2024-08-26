@@ -31,7 +31,7 @@ class UserProfileResponse(BaseModel):
         permissions: UserPermissions,
         cafe24_integration: Optional[ExternalIntegration] | None,
         onboarding_status: str,
-        subscription: Subscription,
+        subscription: Subscription | None = None,
     ):
         my_subscription = None
         if subscription and subscription.id:

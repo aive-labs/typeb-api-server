@@ -37,7 +37,7 @@ message_template_router = APIRouter(
 @inject
 def create_message_template(
     template_create: TemplateCreate,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db: Session = Depends(get_db),
     create_template_service: CreateMessageTemplateService = Depends(
         Provide[Container.create_template_service]
@@ -77,7 +77,7 @@ def get_template_detail(
 def update_template(
     template_id: str,
     template_update: TemplateUpdate,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db: Session = Depends(get_db),
     update_template_service: UpdateMessageTemplateService = Depends(
         Provide[Container.update_template_service]
@@ -90,7 +90,7 @@ def update_template(
 @inject
 def delete_template(
     template_id: str,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db: Session = Depends(get_db),
     delete_template_service: DeleteMessageTemplateService = Depends(
         Provide[Container.delete_template_service]

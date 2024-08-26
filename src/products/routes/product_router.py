@@ -71,7 +71,7 @@ def get_product_detail(
 def update_product_link(
     product_id: str,
     product_link_update: ProductLinkUpdate,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db: Session = Depends(get_db),
     product_service: BaseProductService = Depends(dependency=Provide[Container.product_service]),
 ):
@@ -83,7 +83,7 @@ def update_product_link(
 def update_product(
     product_id: str,
     product_update: ProductUpdate,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db: Session = Depends(get_db),
     product_service: BaseProductService = Depends(dependency=Provide[Container.product_service]),
 ):

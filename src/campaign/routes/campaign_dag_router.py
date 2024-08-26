@@ -18,7 +18,7 @@ campaign_dag_router = APIRouter(
 @inject
 async def create_recurring_campaign(
     campaign_id: str,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db=Depends(get_db),
     create_recurring_campaign_service: CreateRecurringCampaignUseCase = Depends(
         dependency=Provide[Container.create_recurring_campaign_service]
@@ -35,7 +35,7 @@ async def reserve_campaigns(
     reserve_campaign_service: ReserveCampaignsUseCase = Depends(
         dependency=Provide[Container.reserve_campaign_service]
     ),
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db=Depends(get_db),
 ):
     return await reserve_campaign_service.reserve_campaigns(

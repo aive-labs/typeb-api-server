@@ -122,7 +122,7 @@ def get_campaign_timeline(
 def update_campaign(
     campaign_id: str,
     campaign_update: CampaignCreate,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db=Depends(get_db),
     update_campaign_service: UpdateCampaignUseCase = Depends(
         Provide[Container.update_campaign_service]
@@ -135,7 +135,7 @@ def update_campaign(
 @inject
 def create_campaign(
     campaign_create: CampaignCreate,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db=Depends(get_db),
     create_campaign_service: CreateCampaignUseCase = Depends(
         dependency=Provide[Container.create_campaign_service]
@@ -161,7 +161,7 @@ def get_campaign_detail(
 @inject
 def generate_message(
     message_generate: MsgGenerationReq,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db=Depends(get_db),
     generate_message_service: GenerateMessageUsecase = Depends(
         dependency=Provide[Container.generate_message_service]
@@ -188,7 +188,7 @@ def get_excluded_customer(
 def create_or_update_campaign_set(
     campaign_id: str,
     campaign_set_update: CampaignSetUpdate,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db=Depends(get_db),
     update_campaign_set_service: UpdateCampaignSetUseCase = Depends(
         dependency=Provide[Container.update_campaign_set_service]
@@ -205,7 +205,7 @@ def update_campaign_set_message_group(
     campaign_id: str,
     set_seq: int,
     set_group_updated: CampaignSetGroupUpdate,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db=Depends(get_db),
     update_campaign_set_message_group_service: UpdateCampaignSetMessageGroupUseCase = Depends(
         dependency=Provide[Container.update_campaign_set_message_group_service]
@@ -221,7 +221,7 @@ def update_campaign_set_message_group(
 def patch_campaign_progress(
     campaign_id: str,
     progress_req: CampaignProgressRequest,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db=Depends(get_db),
     update_campaign_progress_service: UpdateCampaignProgressUseCase = Depends(
         dependency=Provide[Container.update_campaign_progress_service]
@@ -238,7 +238,7 @@ def update_campaign_message(
     campaign_id: str,
     set_group_msg_seq: int,
     msg_input: CampaignSetGroupMessageRequest,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db=Depends(get_db),
     update_campaign_set_message_group_service: UpdateCampaignSetMessageGroupUseCase = Depends(
         dependency=Provide[Container.update_campaign_set_message_group_service]
@@ -255,7 +255,7 @@ def update_set_message_confirmed(
     campaign_id: str,
     set_seq: int,
     is_confirmed_obj: CampaignSetMessageConfirmReqeust,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db=Depends(get_db),
     confirm_campaign_set_group_message: ConfirmCampaignSetGroupMessageUseCase = Depends(
         dependency=Provide[Container.confirm_campaign_set_group_message]
@@ -271,7 +271,7 @@ def update_campaign_message_use_status(
     campaign_id: str,
     set_group_msg_seq: int,
     is_used_obj: CampaignSetMessageUseRequest,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db=Depends(get_db),
     update_message_use_status_service: UpdateMessageUseStatusUseCase = Depends(
         dependency=Provide[Container.update_message_use_status_service]
@@ -300,7 +300,7 @@ def get_campaign_set_description(
 def update_campaign_set_confirmed(
     campaign_id: str,
     set_seq: int,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db=Depends(get_db),
     update_campaign_set_confirm_service: UpdateCampaignSetStatusToConfirmUseCase = Depends(
         dependency=Provide[Container.update_campaign_set_confirm_service]
@@ -344,7 +344,7 @@ async def campaign_status_change(
     to_status: str,
     background_task: BackgroundTasks,
     reviewers: Optional[str] = None,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db=Depends(get_db),
     approve_campaign_service: ApproveCampaignUseCase = Depends(
         dependency=Provide[Container.approve_campaign_service]
@@ -360,7 +360,7 @@ async def campaign_status_change(
 async def test_message_send(
     campaign_id: str,
     test_send_request: TestSendRequest,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db=Depends(get_db),
     test_send_service: TestSendMessageUseCase = Depends(
         dependency=Provide[Container.test_send_service]
@@ -373,7 +373,7 @@ async def test_message_send(
 @inject
 def delete_campaign(
     campaign_id: str,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db=Depends(get_db),
     delete_campaign_service: DeleteCampaignUseCase = Depends(
         dependency=Provide[Container.delete_campaign_service]
@@ -406,7 +406,7 @@ async def upload_message_resources(
     set_group_msg_seq: int,
     files: list[UploadFile] = File(...),
     db: Session = Depends(get_db),
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     upload_image_for_message: UploadImageForMessageUseCase = Depends(
         dependency=Provide[Container.upload_image_for_message]
     ),
@@ -421,7 +421,7 @@ async def delete_message_resources(
     campaign_id: str,
     set_group_msg_seq: int,
     db: Session = Depends(get_db),
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     delete_image_for_message: DeleteImageForMessageUseCase = Depends(
         dependency=Provide[Container.delete_image_for_message]
     ),

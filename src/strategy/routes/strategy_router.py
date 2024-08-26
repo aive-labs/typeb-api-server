@@ -55,7 +55,7 @@ def create_strategies(
         dependency=Provide[Container.create_strategy_service]
     ),
     db: Session = Depends(get_db),
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
 ):
     result = create_strategy_service.create_strategy_object(strategy_create, user, db=db)
     return result
@@ -69,7 +69,7 @@ def delete_strategy(
     delete_strategy_service: DeleteStrategyUseCase = Depends(
         Provide[Container.delete_strategy_service]
     ),
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
 ):
     delete_strategy_service.exec(strategy_id, db=db)
 
@@ -83,7 +83,7 @@ def update_strategy(
     update_strategy_service: UpdateStrategyUseCase = Depends(
         Provide[Container.update_strategy_service]
     ),
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
 ):
     update_strategy_service.exec(strategy_id, strategy_update, user, db=db)
 
@@ -92,7 +92,7 @@ def update_strategy(
 @inject
 def get_preview(
     preview_message_create: PreviewMessageCreate,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db: Session = Depends(get_db),
     generate_message_service: GenerateMessageUsecase = Depends(
         dependency=Provide[Container.generate_message_service]

@@ -62,7 +62,7 @@ def get_img_creatives_list(
 @inject
 def generate_s3_presigned_url(
     asset_data: S3PresignedUrlRequest,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db: Session = Depends(get_db),
     add_creatives_service: AddCreativesUseCase = Depends(
         dependency=Provide[Container.add_creatives_service]
@@ -75,7 +75,7 @@ def generate_s3_presigned_url(
 @inject
 def create_img_creatives(
     asset_data: CreativeCreate,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db: Session = Depends(get_db),
     add_creatives_service: AddCreativesUseCase = Depends(
         dependency=Provide[Container.add_creatives_service]
@@ -88,7 +88,7 @@ def create_img_creatives(
 @inject
 def delete_img_creatives(
     creative_id: int,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db: Session = Depends(get_db),
     delete_creatives_service: DeleteCreativesUseCase = Depends(
         Provide[Container.delete_creatives_service]
@@ -102,7 +102,7 @@ def delete_img_creatives(
 def update_img_creatives(
     creative_id: int,
     creative_update: CreativeCreate,
-    user=Depends(get_permission_checker(required_permissions=[])),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
     db: Session = Depends(get_db),
     update_creatives_service: UpdateCreativesUseCase = Depends(
         dependency=Provide[Container.update_creatives_service]
