@@ -43,13 +43,9 @@ class GetContentsService(GetContentsUseCase):
             ],
         }
 
-        print("menu_response")
-        print(menu_response)
         unique_material_code = list(
             {item.code[:2] for item in menu_map if item.menu_type == "material"}
         )
-        print("unique_material_code")
-        print(unique_material_code)
 
         for idx, material_code in enumerate(unique_material_code):
             menu_response[f"material{idx + 1}"] = [

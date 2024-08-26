@@ -64,8 +64,8 @@ class OneTimePaymentService(PaymentUseCase):
                     saved_history = self.credit_repository.add_history(credit_history, db)
                     saved_credit_history_id = saved_history.id
 
-                # 잔여 크레딧 업데이트
-                self.credit_repository.update_credit(payment.total_amount, db)
+                    # 잔여 크레딧 업데이트
+                    self.credit_repository.update_credit(payment.total_amount, db)
 
                 # 성공인 경우 결제 내역 테이블에 저장
                 self.payment_repository.save_history(payment, user, db, saved_credit_history_id)
