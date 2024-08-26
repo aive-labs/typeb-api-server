@@ -645,6 +645,7 @@ class Container(containers.DeclarativeContainer):
         payment_repository=payment_repository,
         payment_gateway=toss_payment_gateway,
         credit_repository=credit_repository,
+        subscription_repository=subscription_repository,
     )
 
     issue_billing_service = providers.Singleton(

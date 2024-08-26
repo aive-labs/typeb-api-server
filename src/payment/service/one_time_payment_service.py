@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from src.common.slack.slack_message import send_slack_message
@@ -82,6 +83,8 @@ class OneTimePaymentService(PaymentUseCase):
 
                 # 결제 성공 후 종료
                 break
+            except HTTPException as http_exception:
+                raise http_exception
             except Exception as e:
                 retry_count += 1
                 if retry_count == self.max_retries:
