@@ -38,7 +38,7 @@ class UserProfileResponse(BaseModel):
             my_subscription = MySubscription(
                 id=subscription.id,
                 name=subscription.plan.name,
-                end_date=(subscription.end_date + timedelta(hours=9)).date(),
+                end_date=(subscription.end_date + timedelta(hours=9)).date().isoformat(),
             )
 
         return UserProfileResponse(
