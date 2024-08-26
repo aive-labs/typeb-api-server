@@ -36,16 +36,20 @@ class GetContentsService(GetContentsUseCase):
     def get_with_subject(self, code: str, db: Session):
         menu_map = self.contents_repository.get_menu_map(code, db)
         menu_response = {
-            "templates": [
+            "template": [
                 ContentsMenuResponse(code=item.code, name=item.name)
                 for item in menu_map
-                if item.menu_type == "templates"
+                if item.menu_type == "template"
             ],
         }
 
+        print("menu_response")
+        print(menu_response)
         unique_material_code = list(
             {item.code[:2] for item in menu_map if item.menu_type == "material"}
         )
+        print("unique_material_code")
+        print(unique_material_code)
 
         for idx, material_code in enumerate(unique_material_code):
             menu_response[f"material{idx + 1}"] = [
