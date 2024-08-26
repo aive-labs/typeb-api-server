@@ -27,7 +27,7 @@ class TokenService:
             subscription_dict = {
                 "id": subscription.id,
                 "name": subscription.plan.name,
-                "end_date": (subscription.end_date + timedelta(hours=9)).date(),
+                "end_date": (subscription.end_date + timedelta(hours=9)).date().isoformat(),
             }
 
         payload = {
@@ -39,6 +39,8 @@ class TokenService:
             "role": user.role_id,
             "subscription": subscription_dict,
         }
+
+        print(payload)
 
         access_token = self.create_access_token(payload)
         refresh_token, _ = self.create_refresh_token(
