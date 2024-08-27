@@ -229,6 +229,8 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                     detail={
                         "code": "campaign/credit/insufficient",
                         "message": "크레딧이 부족합니다. 크레딧을 충전해주세요.",
+                        "remaining_credit": remaining_credit,
+                        "campaign_cost": campaign_cost,
                     }
                 )
 
@@ -1248,7 +1250,9 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             notnullbtn = notnullbtn[
                 ~notnullbtn["kko_button_json"].str.contains("{{")
             ]  # 포매팅이 안되어 있는 메세지는 제외한다.
-            send_rsv_format = pd.concat([notnullbtn, isnullbtn])
+            send_rsv_format = pd.concat(
+                [notnullbtn, isnullbtn]
+            )  # pyright: ignore [reportArgumentType, reportCallIssue]
             logging.info("9. button 개인화 적용 후 row수 :" + str(len(send_rsv_format)))
 
             send_rsv_format = send_rsv.merge(send_rsv_format, on=group_keys, how="left")
@@ -1288,7 +1292,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             ]
 
             personal_processing_fm = personal_variable_formatting(
-                db, personal_processing
+                db, personal_processing  # pyright: ignore [reportArgumentType]
             )  # pyright: ignore [reportArgumentType]
 
             personal_processing_fm = personal_processing_fm[  # pyright: ignore [reportCallIssue]

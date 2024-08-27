@@ -152,24 +152,9 @@ class CreativesSqlAlchemy:
         if given_tag:
             query = self._add_tag_order(given_tag, query)
 
-        # query = self._add_file_order(query)
-
         result = query.limit(limit).all()
 
         return [ModelConverter.entity_to_model(entity, CreativeRecommend) for entity in result]
-
-    # def _add_file_order(self, query):
-    #
-    #     # TODO
-    #     file_order = case(
-    #         (or_(
-    #             func.lower(CreativesEntity.image_uri).endswith("1.jpg"),
-    #             func.lower(CreativesEntity.image_uri).endswith("1.png")),
-    #          0),
-    #         else_=1,
-    #     )
-    #     query = query.order_by(file_order)
-    #     return query
 
     def _add_tag_order(self, given_tag, query):
         tag_order = (
@@ -183,8 +168,10 @@ class CreativesSqlAlchemy:
     def _add_style_order(self, query, style_cd_list):
         code_order = case(
             {code: index for index, code in enumerate(style_cd_list)},
-            value=CreativesEntity.style_cd,
-            else_=len(style_cd_list),
+            value=CreativesEntity.style_cd,  # style_cd가 style_cd_list에 있는지 확인하고 그에 해당하는 index 값을 리턴
+            else_=len(
+                style_cd_list
+            ),  # style_cd_list에 없다면 가장 큰 값(style_cd_list의 길이)으로 리턴
         )
         query = query.order_by(code_order)
         return query

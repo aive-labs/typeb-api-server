@@ -107,10 +107,6 @@ def create_logical_date_for_airflow(date_str: str, time_str: str) -> str:
     datetime_str = date_str + " " + time_str
     datetime_obj = datetime.strptime(datetime_str, "%Y%m%d %H:%M")
 
-    # UTC+9 시간대로 변환
-    # utc_plus_9 = timezone(timedelta(hours=9))
-    # datetime_obj = datetime_obj.replace(tzinfo=utc_plus_9)
-
     # 초와 밀리세컨드 랜덤 생성
     random_seconds = random.randint(0, 59)
     random_milliseconds = random.randint(0, 999)
