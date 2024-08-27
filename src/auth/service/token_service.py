@@ -40,7 +40,7 @@ class TokenService:
         }
 
         access_token = self.create_access_token(payload)
-        refresh_token, _ = self.create_refresh_token(user, subscription)
+        refresh_token, _ = self.create_refresh_token(user, mall_id, subscription)
 
         return TokenResponse(
             access_token=access_token,
@@ -62,7 +62,7 @@ class TokenService:
         return encoded_jwt
 
     def create_refresh_token(
-        self, user: User, subscription: Subscription | None = None
+        self, user: User, mall_id: str | None = None, subscription: Subscription | None = None
     ) -> tuple[str, str]:
         # KST 기준 토큰 만료시간 계산. datetime.now()
         expires_in = datetime.now() + timedelta(minutes=self.jwt_setting.refresh_token_expired)
@@ -83,7 +83,7 @@ class TokenService:
         payload = {
             "email": user.email,
             "department": user.department_name,
-            "mall_id": user.mall_id,
+            "mall_id": mall_id,
             "language": user.language,
             "permissions": user.permissions,
             "role": user.role_id,

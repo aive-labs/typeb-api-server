@@ -700,15 +700,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                     },
                 )
 
-            # 예약 삭제
-            delete_statement = delete(SendReservationEntity).where(
-                and_(
-                    SendReservationEntity.campaign_id == campaign_id,
-                    SendReservationEntity.test_send_yn == "n",
-                )
-            )
-            db.execute(delete_statement)
-
             # 1. send_dag_log -> dag_run_id 조회
             # 2. 해당 dag_run_id 삭제 요청
             send_reservation_entity = (
@@ -726,13 +717,25 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 .first()
             )
 
+            # 예약 삭제
+            delete_statement = delete(SendReservationEntity).where(
+                and_(
+                    SendReservationEntity.campaign_id == campaign_id,
+                    SendReservationEntity.test_send_yn == "n",
+                )
+            )
+            db.execute(delete_statement)
+
             # await self.message_controller.delete_dag_run(
             #     dag_name=f"{user.mall_id}_send_messages", dag_run_id=send_dag_log.dag_run_id
             # )
 
-            await self.message_controller.delete_dag_run(
-                dag_name=f"{user.mall_id}_issue_coupon", dag_run_id=send_dag_log.dag_run_id
-            )
+            try:
+                await self.message_controller.delete_dag_run(
+                    dag_name=f"{user.mall_id}_issue_coupon", dag_run_id=send_dag_log.dag_run_id
+                )
+            except HTTPException as e:
+                print(f"이미 삭제된 dag_run 입니다.: {send_dag_log.dag_run_id}")
 
         elif is_status_haltbefore_to_pending(from_status, to_status):
             # 일시중지(s1) -> 진행대기(w2)

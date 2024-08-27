@@ -135,7 +135,9 @@ def refresh_access_token(
 ):
     subscription = subscription_service.get_my_subscription(db)
 
-    access_token, access_token_expires_at = token_service.create_refresh_token(user, subscription)
+    access_token, access_token_expires_at = token_service.create_refresh_token(
+        user, user.mall_id, subscription
+    )
 
     response = JSONResponse(
         content={
