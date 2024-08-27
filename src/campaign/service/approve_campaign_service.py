@@ -1253,9 +1253,9 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             notnullbtn = notnullbtn[
                 ~notnullbtn["kko_button_json"].str.contains("{{")
             ]  # 포매팅이 안되어 있는 메세지는 제외한다.
-            send_rsv_format = pd.concat(
-                [notnullbtn, isnullbtn]
-            )  # pyright: ignore [reportArgumentType, reportCallIssue]
+            send_rsv_format = pd.concat(  # pyright: ignore [reportCallIssue]
+                [notnullbtn, isnullbtn]  # pyright: ignore [reportArgumentType]
+            )
             logging.info("9. button 개인화 적용 후 row수 :" + str(len(send_rsv_format)))
 
             send_rsv_format = send_rsv.merge(send_rsv_format, on=group_keys, how="left")
@@ -1277,6 +1277,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             # 개인화변수 formatting (발송번호)
             # contents_name
             logging.info("10. send_msg_body 개인화 적용 전 row수 :" + str(len(send_rsv_format)))
+
             personal_processing = send_rsv_format[
                 [
                     "set_group_msg_seq",

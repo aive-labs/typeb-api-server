@@ -89,7 +89,6 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
             )
 
         if self.is_campaign_end(org_campaign):
-            print("campaign_end")
             return {"campaign_id": "has ended"}
 
         # 직전 캠페인의 종료일

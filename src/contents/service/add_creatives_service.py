@@ -43,8 +43,10 @@ class AddCreativesService(AddCreativesUseCase):
         if save_path == "contents_thumbnail":
             save_path = "contents/thumbnail"
 
-        if s3_presigned_url_request.additional_path:
+        if s3_presigned_url_request.additional_path is not None:
             save_path = f"{save_path}/{s3_presigned_url_request.additional_path}"
+
+        print(save_path)
 
         s3_presigned_url_list = [
             S3PresignedResponse(
