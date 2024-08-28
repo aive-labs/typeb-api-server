@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import numpy as np
 import pandas as pd
@@ -205,7 +205,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 # 2. 크레딧 히스토리에 환불 기록
                 refund_credit_history = CreditHistory(
                     user_name=user.username,
-                    description=f"캠페인({campaign_id}) 수정으로 인한 크레딧 환불",
+                    description=f"캠페인({campaign_id}) 수정으로 인한 크레딧 사용 취소",
                     status=CreditStatus.REFUND.value,
                     charge_amount=refund_cost,
                     remaining_amount=remaining_amount + refund_cost,
@@ -603,6 +603,11 @@ class ApproveCampaignService(ApproveCampaignUseCase):
 
     async def status_general_change(self, db, user, from_status, to_status, campaign_id):
         print(f"status_general_change: {from_status} {to_status}")
+        tz = "Asia/Seoul"
+        korea_timezone = pytz.timezone(tz)
+        current_korea_timestamp = datetime.now(korea_timezone)
+        current_korea_date = current_korea_timestamp.strftime("%Y%m%d")
+        current_korea_timestamp_plus_5_minutes = current_korea_timestamp + timedelta(minutes=5)
 
         if is_status_pending_to_haltbefore(from_status, to_status):
             # w2(캠페인 진행대기) -> s1(
@@ -659,14 +664,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             # 운영중(o1) -> 진행중지(s2)
 
             approval_no = self.get_campaign_approval_no(campaign_id, db)
-
-            tz = "Asia/Seoul"
-            korea_timezone = pytz.timezone(tz)
-            current_korea_timestamp = datetime.now(korea_timezone)
-            current_korea_date = current_korea_timestamp.strftime("%Y%m%d")
-            current_korea_timestamp_plus_5_minutes = current_korea_timestamp + timedelta(
-                minutes=5
-            )  # 발송 5분 전부터 취소 불가능
+            # 발송 5분 전부터 취소 불가능
             query = db.query(SendReservationEntity.set_group_msg_seq).filter(
                 SendReservationEntity.campaign_id == campaign_id,
                 SendReservationEntity.test_send_yn == "n",
@@ -700,42 +698,21 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                     },
                 )
 
-            # 1. send_dag_log -> dag_run_id 조회
-            # 2. 해당 dag_run_id 삭제 요청
-            send_reservation_entity = (
-                db.query(SendReservationEntity)
-                .filter(SendReservationEntity.campaign_id == campaign_id)
-                .first()
-            )
-
-            send_dag_log = (
-                db.query(SendDagLogEntity)
-                .filter(
-                    SendDagLogEntity.campaign_id == campaign_id,
-                    SendDagLogEntity.send_resv_date == send_reservation_entity.send_resv_date,
-                )
-                .first()
-            )
+            # 관련 dag_run 삭제
+            await self.delete_dag_run(campaign_id, db, user)
 
             # 예약 삭제
             delete_statement = delete(SendReservationEntity).where(
                 and_(
                     SendReservationEntity.campaign_id == campaign_id,
                     SendReservationEntity.test_send_yn == "n",
+                    SendReservationEntity.send_resv_state == "00",
                 )
             )
             db.execute(delete_statement)
 
-            # await self.message_controller.delete_dag_run(
-            #     dag_name=f"{user.mall_id}_send_messages", dag_run_id=send_dag_log.dag_run_id
-            # )
-
-            try:
-                await self.message_controller.delete_dag_run(
-                    dag_name=f"{user.mall_id}_issue_coupon", dag_run_id=send_dag_log.dag_run_id
-                )
-            except HTTPException as e:
-                print(f"이미 삭제된 dag_run 입니다.: {send_dag_log.dag_run_id}")
+            # 사용중지로 인한 크레딧 사용 취소
+            self.cancel_credit_use(campaign_id, db, user)
 
         elif is_status_haltbefore_to_pending(from_status, to_status):
             # 일시중지(s1) -> 진행대기(w2)
@@ -825,15 +802,65 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             if not send_msg_types:
                 res = self.save_campaign_reservation(db, user, campaign_id)
                 if res is False:
-                    # to-do: 진행대기 (발송일을 내일 이후로 변경하는 경우)
-                    # error
                     raise HTTPException(
                         status_code=400,
                         detail={
                             "code": "send_resv/insert/fail",
-                            "message": "당일({current_korea_date}) 정상 예약 메세지가 존재하지 않습니다.",
+                            "message": f"당일({current_korea_date}) 정상 예약 메세지가 존재하지 않습니다.",
                         },
                     )
+
+            # 크레딧 사용 취소 로직 추가
+            # 0. 본 캠페인 조회
+            campaign = self.campaign_repository.get_campaign_detail(campaign_id, user, db)
+            time_to_send = campaign.timetosend
+
+            # 1. 해당 캠페인 비용 확인 -> 본 캠페인 + 리마인드만큼 결제
+            campaign_cost = self.campaign_set_repository.get_campaign_cost_by_campaign_id(
+                campaign_id, db
+            )
+
+            # 2. 발송당 캠페인 비용 계산
+            campaign_reminds = self.campaign_repository.get_campaign_remind(campaign_id, db)
+            remind_count = len(campaign_reminds)
+            all_campaign_count = remind_count + 1
+            campaign_cost_per_send = campaign_cost / all_campaign_count
+
+            # 3. 잔여 발송 캠페인(리마인드) 수 확인
+            unsent_remind_count = 0
+            for campaign_remind in campaign_reminds:
+                # 한국 시간 현재 시간
+                kst = timezone(timedelta(hours=9))
+                current_time_kst = datetime.now(tz=kst)
+
+                # 리마인드 발송 예약 시간
+                remind_date_with_time = datetime.strptime(
+                    f"{campaign_remind.remind_date} {time_to_send}", "%Y%m%d %H:%M"
+                )
+                remind_date_with_time = remind_date_with_time.replace(tzinfo=kst)
+
+                if current_time_kst > remind_date_with_time:
+                    # 리마인드 발송 시간이 아직 도래하지 않음. 해당 리마인드는 결제 필요
+                    unsent_remind_count += 1
+
+            # 4. 재결제 크레딧 계산
+            charge_cost = int(campaign_cost_per_send * unsent_remind_count)
+
+            # 5. 결제 진행
+            if charge_cost > 0:
+                remaining_credit = self.credit_repository.get_remain_credit(db)
+                new_credit_history = CreditHistory(
+                    user_name=user.username,
+                    description=f"캠페인 집행({campaign_id})",
+                    status=CreditStatus.USE.value,
+                    use_amount=charge_cost,
+                    remaining_amount=remaining_credit - charge_cost,
+                    note=f"캠페인 리마인드 {unsent_remind_count}건 결제",
+                    created_by=str(user.user_id),
+                    updated_by=str(user.user_id),
+                )
+                self.credit_repository.add_history(new_credit_history, db)
+                self.credit_repository.update_credit(-charge_cost, db)
 
         # 진행중지, 운영중 -> 완료, 기간만료 **campaign-dag**
         elif is_status_to_complete_or_expired(from_status, to_status):
@@ -856,6 +883,76 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             raise PolicyException(detail={"message": "캠페인 상태가 유효하지 않습니다."})
 
         return approval_no
+
+    def cancel_credit_use(self, campaign_id, db, user):
+        # 크레딧 사용 취소 로직 추가
+        # 1. 해당 캠페인 비용 확인 -> 본 캠페인 + 리마인드만큼 결제
+        campaign_cost = self.campaign_set_repository.get_campaign_cost_by_campaign_id(
+            campaign_id, db
+        )
+
+        # 2. 리마인드 캠페인 확인
+        campaign_reminds = self.campaign_repository.get_campaign_remind(campaign_id, db)
+        remind_count = len(campaign_reminds)
+        all_campaign_count = remind_count + 1
+
+        # 3. 발송처리된 캠페인 확인
+        already_sent_campaigns = self.campaign_repository.get_already_sent_campaigns(
+            campaign_id, db
+        )
+        already_sent_campaigns_count = len(already_sent_campaigns)
+
+        # 4. 잔여 발송 캠페인(리마인드) 확인
+        unsent_campaign = all_campaign_count - already_sent_campaigns_count
+
+        # 5. 잔여 리마인드만큼 사용취소
+        campaign_cost_per_send = campaign_cost / all_campaign_count
+
+        # 사용취소 금액 계산
+        refund_cost = int(campaign_cost_per_send * unsent_campaign)
+
+        # 크레딧 이력 테이블 저장
+        remaining_amount = self.credit_repository.get_remain_credit(db)
+        refund_credit_history = CreditHistory(
+            user_name=user.username,
+            description=f"캠페인({campaign_id}) 중지로 인한 크레딧 사용 취소",
+            status=CreditStatus.REFUND.value,
+            charge_amount=refund_cost,
+            remaining_amount=remaining_amount + refund_cost,
+            created_by=str(user.user_id),
+            updated_by=str(user.user_id),
+        )
+        self.credit_repository.add_history(refund_credit_history, db)
+
+        # 3. 잔여 크레딧 테이블에 사용취소 크레딧 합산
+        self.credit_repository.update_credit(refund_cost, db)
+
+    async def delete_dag_run(self, campaign_id, db, user):
+        # 1. send_dag_log -> dag_run_id 조회
+        # 2. 해당 dag_run_id 삭제 요청
+        send_reservation_entity = (
+            db.query(SendReservationEntity)
+            .filter(SendReservationEntity.campaign_id == campaign_id)
+            .first()
+        )
+        send_dag_log = (
+            db.query(SendDagLogEntity)
+            .filter(
+                SendDagLogEntity.campaign_id == campaign_id,
+                SendDagLogEntity.send_resv_date == send_reservation_entity.send_resv_date,
+            )
+            .first()
+        )
+        try:
+            await self.message_controller.delete_dag_run(
+                dag_name=f"{user.mall_id}_issue_coupon", dag_run_id=send_dag_log.dag_run_id
+            )
+
+            await self.message_controller.delete_dag_run(
+                dag_name=f"{user.mall_id}_send_messages", dag_run_id=send_dag_log.dag_run_id
+            )
+        except HTTPException as e:
+            print(f"이미 삭제된 dag_run 입니다.: {send_dag_log.dag_run_id}")
 
     def get_campaign_approval_no(self, campaign_id, db):
         approval_status = CampaignApprovalStatus.APPROVED.value

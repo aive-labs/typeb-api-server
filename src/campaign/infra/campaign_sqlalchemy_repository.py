@@ -671,3 +671,26 @@ class CampaignSqlAlchemy:
         )
 
         db.execute(update_statement)
+
+    def get_already_sent_campaigns(self, campaign_id, db) -> list:
+        already_sent_campaigns = (
+            db.query(
+                SendReservationEntity.campaign_id,
+                SendReservationEntity.msg_category,
+                SendReservationEntity.remind_step,
+            )
+            .distinct(
+                SendReservationEntity.campaign_id,
+                SendReservationEntity.msg_category,
+                SendReservationEntity.remind_step,
+            )
+            .where(
+                and_(
+                    SendReservationEntity.campaign_id == campaign_id,
+                    SendReservationEntity.test_send_yn == "n",
+                    SendReservationEntity.send_resv_state != "00",
+                )
+            )
+            .all()
+        )
+        return already_sent_campaigns
