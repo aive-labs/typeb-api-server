@@ -398,6 +398,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             campaign.campaign_status_group_code = "o"
             campaign.campaign_status_group_name = "운영단계"
 
+            print("1111")
             # 발송 예약
             send_reservation_result = await self.today_approval_campaign_execute(
                 db,
@@ -1345,6 +1346,8 @@ class ApproveCampaignService(ApproveCampaignUseCase):
 
             send_rsv_query = send_rsv_query_1.filter(and_(*rsv_msg_filter_2))
             send_rsv = DataConverter.convert_query_to_df(send_rsv_query)
+            print("send_rsv")
+            print(send_rsv)
             initial_rsv_count = len(send_rsv)
             logging.info(f"6. 당일 발송 수(고객마스터에 존재하는 고객만 필터): {initial_rsv_count}")
 
@@ -1551,7 +1554,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 created_at=curr_date,
                 created_by=user_obj.user_id,
                 created_by_name=user_obj.username,
-                description=f"{initial_rsv_count:,}건 중 {final_rsv:,} 건 발송 예약",  # to-do: campagin/remind 발송 구분
+                description=f"{initial_rsv_count:,}건 중 {final_rsv:,}건 발송 예약",  # to-do: campagin/remind 발송 구분
             )
 
             db.flush()

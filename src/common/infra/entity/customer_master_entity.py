@@ -29,7 +29,7 @@ class CustomerMasterEntity(Base):
     join_path = Column(String)
     sms = Column(String)
     news_mail = Column(String)
-    member_authentification = Column(String)
+    member_authentication = Column(String)
     use_mobile_app = Column(String)
     use_blacklist = Column(String)
     blacklist_type = Column(String)
