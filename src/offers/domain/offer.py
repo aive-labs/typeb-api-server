@@ -20,7 +20,7 @@ class Offer(BaseModel):
     available_scope: Optional[str] = None
     available_product_list: Optional[List] = []
     available_category_list: Optional[List] = []
-    issue_max_count_by_user: Optional[int] = None
+    issue_max_count_by_user: Optional[str] = None
     available_begin_datetime: Optional[str] = None
     available_end_datetime: Optional[str] = None
     campaign_id: Optional[str] = None
@@ -32,7 +32,7 @@ class Offer(BaseModel):
     issue_reserved: Optional[str] = None
     issue_reserved_date: Optional[str] = None
     available_period_type: Optional[str] = None
-    available_day_from_issued: Optional[int] = None
+    available_day_from_issued: Optional[str] = None
     available_site: Optional[str] = None
     available_price_type: Optional[str] = None
     is_stopped_issued_coupon: Optional[str] = None

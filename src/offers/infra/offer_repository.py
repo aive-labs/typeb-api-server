@@ -243,7 +243,7 @@ class OfferRepository(BaseOfferRepository):
                 available_product_list=coupon.available_product_list,
                 available_category_list=coupon.available_category_list,
                 issue_max_count_by_user=(
-                    int(coupon.issue_max_count_by_user) if coupon.issue_max_count_by_user else None
+                    coupon.issue_max_count_by_user if coupon.issue_max_count_by_user else None
                 ),
                 available_begin_datetime=coupon.available_begin_datetime,
                 available_end_datetime=coupon.available_end_datetime,

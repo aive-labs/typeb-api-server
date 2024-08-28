@@ -1,4 +1,4 @@
-from sqlalchemy import ARRAY, Boolean, Column, DateTime, Integer, String, func, text
+from sqlalchemy import ARRAY, Boolean, Column, DateTime, String, func, text
 
 from src.core.database import Base
 
@@ -19,7 +19,7 @@ class OffersEntity(Base):
     available_scope = Column(String)
     available_product_list = Column(ARRAY(String), nullable=True)
     available_category_list = Column(ARRAY(String), nullable=True)
-    issue_max_count_by_user = Column(Integer)
+    issue_max_count_by_user = Column(String)
     available_begin_datetime = Column(String)
     available_end_datetime = Column(String)
     campaign_id = Column(String)
@@ -31,7 +31,7 @@ class OffersEntity(Base):
     issue_reserved = Column(String)
     issue_reserved_date = Column(String)
     available_period_type = Column(String)
-    available_day_from_issued = Column(Integer)
+    available_day_from_issued = Column(String)
     available_site = Column(String)
     available_price_type = Column(String)
     is_stopped_issued_coupon = Column(String)

@@ -22,7 +22,7 @@ class OfferDetailResponse(BaseModel):
 
     available_period_type: Optional[str] = None
     available_period_type_name: Optional[str] = None
-    available_day_from_issued: Optional[int] = None
+    available_day_from_issued: Optional[str] = None
 
     benefit_type: Optional[str] = None
     benefit_type_name: Optional[str] = None
