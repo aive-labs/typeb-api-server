@@ -26,18 +26,19 @@ class MessageService:
 
     @transactional
     def save_message_result(self, ppurio_message_result: PpurioMessageResult, db: Session):
+
+        if ppurio_message_result.REFKEY is None:
+            raise PolicyException(detail={"message": "refkey가 존재하지 않습니다."})
+
+        send_resv_seq = ppurio_message_result.REFKEY.split("==")[1]
+
+        ppurio_message_result.send_resv_seq = send_resv_seq
         self.message_repository.save_message_result(ppurio_message_result, db)
 
-        if ppurio_message_result.REFKEY:
-            send_resv_seq = ppurio_message_result.REFKEY.split("==")[1]
-            if self.is_message_success(ppurio_message_result):
-                self.campaign_repository.update_send_reservation_status_to_success(
-                    send_resv_seq, db
-                )
-            else:
-                self.campaign_repository.update_send_reservation_status_to_failure(
-                    send_resv_seq, db
-                )
+        if self.is_message_success(ppurio_message_result):
+            self.campaign_repository.update_send_reservation_status_to_success(send_resv_seq, db)
+        else:
+            self.campaign_repository.update_send_reservation_status_to_failure(send_resv_seq, db)
 
     def is_message_success(self, ppurio_message_result):
         if ppurio_message_result.MEDIA == "LMS":

@@ -610,8 +610,8 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         current_korea_timestamp_plus_5_minutes = current_korea_timestamp + timedelta(minutes=5)
 
         if is_status_pending_to_haltbefore(from_status, to_status):
-            # w2(캠페인 진행대기) -> s1(
-            # --진행대기 -> 일시중지 (00상태의 row 예약 상태 변경 "21")
+            # w2(캠페인 진행대기) -> s1(일시중지)
+            # 진행대기 -> 일시중지 (00상태의 row 예약 상태 변경 "21")
             approval_no = self.get_campaign_approval_no(campaign_id, db)
 
             # 발송 취소 로깅

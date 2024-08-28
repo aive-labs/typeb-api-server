@@ -23,3 +23,4 @@ class PpurioMessageResult(BaseModel):
     RETRY_FLAG: Optional[str] = Field(None, description="대체 발송 정보")
     RESEND_FLAG: Optional[str] = Field(None, description="대체 발송 메시지 유형")
     REFKEY: Optional[str] = Field(None, description="고객사에서 부여한 키")
+    send_resv_seq: int | None = None
