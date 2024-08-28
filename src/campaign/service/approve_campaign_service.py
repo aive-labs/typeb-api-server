@@ -646,6 +646,28 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             )
             db.execute(update_pending_to_haltbefore)
 
+            # 잔여 크레딧
+            remaining_amount = self.credit_repository.get_remain_credit(db)
+            # 환불 금액
+            campaign_cost = self.campaign_set_repository.get_campaign_cost_by_campaign_id(
+                campaign_id, db
+            )
+
+            # 크레딧 히스토리에 환불 기록
+            refund_credit_history = CreditHistory(
+                user_name=user.username,
+                description=f"캠페인({campaign_id}) 일시중지로 인한 크레딧 사용 취소",
+                status=CreditStatus.REFUND.value,
+                charge_amount=campaign_cost,
+                remaining_amount=remaining_amount + campaign_cost,
+                created_by=str(user.user_id),
+                updated_by=str(user.user_id),
+            )
+            self.credit_repository.add_history(refund_credit_history, db)
+
+            # 잔여 크레딧 테이블에 환불 크레딧 합산
+            self.credit_repository.update_credit(campaign_cost, db)
+
         elif is_status_pending_to_ongoing(from_status, to_status):
             # 진행대기(PENDING) -> 운영(ONGOING)
             approval_no = self.get_campaign_approval_no(campaign_id, db)
@@ -739,6 +761,28 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 )
             )
             db.execute(update_haltbefore_to_pending)
+
+            # 결제 진행
+            remind_list = self.campaign_repository.get_campaign_remind(campaign_id, db)
+            remaining_credit = self.credit_repository.get_remain_credit(db)
+            campaign_cost = self.campaign_set_repository.get_campaign_cost_by_campaign_id(
+                campaign_id, db
+            )
+
+            new_credit_history = CreditHistory(
+                user_name=user.username,
+                description=f"캠페인 집행({campaign_id})",
+                status=CreditStatus.USE.value,
+                use_amount=campaign_cost,
+                remaining_amount=remaining_credit - campaign_cost,
+                note=f"캠페인 리마인드 {len(remind_list)}건 포함" if len(remind_list) > 0 else None,
+                created_by=str(user.user_id),
+                updated_by=str(user.user_id),
+            )
+            self.credit_repository.add_history(new_credit_history, db)
+
+            # 2. remaining_credit 차감
+            self.credit_repository.update_credit(-campaign_cost, db)
 
         elif is_status_haltbefore_to_tempsave(from_status, to_status):
             # 일시중지(s1) -> 임시저장(r1)
