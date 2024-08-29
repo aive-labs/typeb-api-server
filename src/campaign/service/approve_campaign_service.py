@@ -1558,6 +1558,8 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             send_rsv_dict = res_df.to_dict("records")  # pyright: ignore [reportArgumentType]
             db.bulk_insert_mappings(SendReservationEntity, send_rsv_dict)
 
+            remind_step = int(res_df["remind_step"].fillna(0).iloc[0])
+
             self.save_campaign_logs(
                 db=db,
                 campaign_id=campaign_id,
@@ -1566,7 +1568,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 created_by=user_obj.user_id,
                 created_by_name=user_obj.username,
                 description=f"{initial_rsv_count:,}건 중 {final_rsv:,}건 발송 요청 예약",  # to-do: campagin/remind 발송 구분
-                remind_step=0,
+                remind_step=remind_step,
             )
 
             db.flush()
