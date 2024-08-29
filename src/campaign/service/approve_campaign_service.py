@@ -506,6 +506,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         status_no=None,
         description=None,
         approval_excute=False,
+        remind_step: int | None = None,
     ) -> bool:
 
         if timeline_type == CampaignTimelineType.APPROVAL.value:
@@ -1565,6 +1566,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 created_by=user_obj.user_id,
                 created_by_name=user_obj.username,
                 description=f"{initial_rsv_count:,}건 중 {final_rsv:,}건 발송 요청 예약",  # to-do: campagin/remind 발송 구분
+                remind_step=0,
             )
 
             db.flush()
