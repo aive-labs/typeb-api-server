@@ -840,7 +840,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 .filter(
                     SendReservationEntity.campaign_id == campaign_id,
                     SendReservationEntity.test_send_yn == "n",
-                    SendReservationEntity.send_resv_state == "00",
+                    SendReservationEntity.remind_step == 0,
                 )
                 .first()
             )
