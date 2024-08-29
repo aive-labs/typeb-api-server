@@ -603,11 +603,11 @@ class UpdateCampaignService(UpdateCampaignUseCase):
 
             # insert step & duration
             remind_step_dict.update(remind_elem)
-
-            remind_step_dict["remind_media"] = remind_step_dict["remind_media"].value
+            print("remind_step_dict")
+            print(remind_step_dict)
 
             # 리마인드 발송일 계산
-            remind_duration = remind_elem.remind_duration
+            remind_duration = remind_elem["remind_duration"]
             remind_date = calculate_remind_date(end_date, remind_duration)
 
             if int(remind_date) == int(send_date):
