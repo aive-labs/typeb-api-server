@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from src.campaign.enums.campaign_type import CampaignType
 from src.campaign.enums.repeat_type import RepeatTypeEnum
-from src.campaign.enums.send_type import SendType
+from src.campaign.enums.send_type import SendTypeEnum
 from src.campaign.routes.dto.request.campaign_remind_create import CampaignRemindCreate
 from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
 from src.common.utils.date_utils import localtime_converter
@@ -16,7 +16,7 @@ class CampaignCreate(BaseModel):
     budget: int | None = None
     campaign_type_code: CampaignType
     medias: str
-    send_type_code: SendType
+    send_type_code: SendTypeEnum
     repeat_type: RepeatTypeEnum | None = None
     week_days: str | None = None
     send_date: str | None = None

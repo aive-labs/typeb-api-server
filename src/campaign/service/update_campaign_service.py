@@ -123,8 +123,6 @@ class UpdateCampaignService(UpdateCampaignUseCase):
                 row._asdict() for row in get_campaign_set_groups(db=db, campaign_id=campaign_id)
             ]
 
-            print("sets sets")
-            print(sets)
             sets = add_set_rep_contents(sets, set_groups, campaign_id, db)
             set_group_messages = get_campaign_set_group_messages(db=db, campaign_id=campaign_id)
             set_group_message_list = convert_to_set_group_message_list(set_group_messages)
@@ -157,7 +155,7 @@ class UpdateCampaignService(UpdateCampaignUseCase):
 
         object_role_access = authorization_checker.object_role_access()
         object_department_access = authorization_checker.object_department_access(campaign)
-        is_object_deletable = campaign_dependency_manager.is_object_deletable(campaign)
+        is_object_updatable = campaign_dependency_manager.is_object_updatable(campaign)
         if object_department_access + object_role_access == 0:
             raise PolicyException(
                 detail={
@@ -167,7 +165,7 @@ class UpdateCampaignService(UpdateCampaignUseCase):
             )
         else:
             # 권한이 있는 경우
-            if not is_object_deletable:
+            if not is_object_updatable:
                 raise PolicyException(
                     detail={
                         "code": "campaign/update/denied/status",
@@ -389,6 +387,8 @@ class UpdateCampaignService(UpdateCampaignUseCase):
         # pydantic모델 ->dictionary
         campaign_req_json = campaign_update_obj.json()
         campaign_req_json = json.loads(campaign_req_json)
+        print("campaign_req_json")
+        print(campaign_req_json)
 
         # 캠페인 Validation
         if campaign_base.campaign_type_code != campaign_update_obj.campaign_type_code.value:
@@ -528,6 +528,9 @@ class UpdateCampaignService(UpdateCampaignUseCase):
         # 캠페인 리마인드 체크
         req_remind_update = campaign_req_json.get("remind_list")
         send_type_code = campaign_req_json.get("send_type_code")
+
+        print("send_type_code")
+        print(send_type_code)
 
         remind_dict_list = None
         # remind 정보가 있다면 반드시 End_date가 존재해야함
