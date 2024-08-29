@@ -868,6 +868,8 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             # 2. 발송당 캠페인 비용 계산
             campaign_reminds = self.campaign_repository.get_campaign_remind(campaign_id, db)
             remind_count = len(campaign_reminds)
+            print("remind_count")
+            print(remind_count)
             all_campaign_count = remind_count + 1
             campaign_cost_per_send = campaign_cost / all_campaign_count
 
@@ -884,10 +886,18 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 )
                 remind_date_with_time = remind_date_with_time.replace(tzinfo=kst)
 
-                if current_time_kst > remind_date_with_time:
+                print("remind_date_with_time")
+                print(remind_date_with_time)
+
+                print("current_time_kst")
+                print(current_time_kst)
+
+                if current_time_kst < remind_date_with_time:
                     # 리마인드 발송 시간이 아직 도래하지 않음. 해당 리마인드는 결제 필요
                     unsent_remind_count += 1
 
+            print("unsent_remind_count")
+            print(unsent_remind_count)
             # 4. 재결제 크레딧 계산
             charge_cost = int(campaign_cost_per_send * unsent_remind_count)
 
