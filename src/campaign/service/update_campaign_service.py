@@ -214,7 +214,7 @@ class UpdateCampaignService(UpdateCampaignUseCase):
             # 캠페인 시작, 캠페인 종료, ...
             description = description
 
-        elif timeline_type == CampaignTimelineType.SEND_MSG.value:
+        elif timeline_type == CampaignTimelineType.SEND_REQUEST.value:
             description = description
 
         elif timeline_type == CampaignTimelineType.HALT_MSG.value:
