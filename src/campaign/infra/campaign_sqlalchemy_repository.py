@@ -13,6 +13,7 @@ from src.campaign.domain.send_reservation import SendReservation
 from src.campaign.enums.campagin_status import CampaignStatus
 from src.campaign.enums.campaign_approval_status import CampaignApprovalStatus
 from src.campaign.enums.send_type import SendType
+from src.campaign.infra.dto.already_sent_campaign import AlreadySentCampaign
 from src.campaign.infra.dto.campaign_reviewer_info import CampaignReviewerInfo
 from src.campaign.infra.entity.approver_entity import ApproverEntity
 from src.campaign.infra.entity.campaign_approval_entity import (
@@ -672,7 +673,7 @@ class CampaignSqlAlchemy:
 
         db.execute(update_statement)
 
-    def get_already_sent_campaigns(self, campaign_id, db) -> list:
+    def get_already_sent_campaigns(self, campaign_id, db) -> list[AlreadySentCampaign]:
         already_sent_campaigns = (
             db.query(
                 SendReservationEntity.campaign_id,
@@ -693,4 +694,12 @@ class CampaignSqlAlchemy:
             )
             .all()
         )
-        return already_sent_campaigns
+
+        return [
+            AlreadySentCampaign(
+                campaign_id=campaign.campaign_id,
+                msg_category=campaign.msg_category,
+                remind_step=campaign.remind_step,
+            )
+            for campaign in already_sent_campaigns
+        ]

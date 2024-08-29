@@ -8,6 +8,7 @@ from src.campaign.domain.campaign_remind import CampaignRemind
 from src.campaign.domain.campaign_timeline import CampaignTimeline
 from src.campaign.domain.send_reservation import SendReservation
 from src.campaign.enums.campaign_progress import CampaignProgress
+from src.campaign.infra.dto.already_sent_campaign import AlreadySentCampaign
 from src.campaign.infra.dto.campaign_reviewer_info import CampaignReviewerInfo
 from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.users.domain.user import User
@@ -99,5 +100,5 @@ class BaseCampaignRepository(ABC):
         pass
 
     @abstractmethod
-    def get_already_sent_campaigns(self, campaign_id, db: Session) -> list:
+    def get_already_sent_campaigns(self, campaign_id, db: Session) -> list[AlreadySentCampaign]:
         pass

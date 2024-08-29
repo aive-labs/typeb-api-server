@@ -969,16 +969,45 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         already_sent_campaigns = self.campaign_repository.get_already_sent_campaigns(
             campaign_id, db
         )
-        already_sent_campaigns_count = len(already_sent_campaigns)
+        # 4. 발송 처리되지 않은 부분 조회
+        all_remind_step = [campaign_remind.remind_step for campaign_remind in campaign_reminds]
+        already_sent_remind_step = [
+            already_sent_campaign.remind_step for already_sent_campaign in already_sent_campaigns
+        ]
 
-        # 4. 잔여 발송 캠페인(리마인드) 확인
-        unsent_campaign = all_campaign_count - already_sent_campaigns_count
+        # 5. 잔여 발송 캠페인(리마인드) 확인
+        unsent_remind_steps = list(set(all_remind_step) - set(already_sent_remind_step))
 
-        # 5. 잔여 리마인드만큼 사용취소
-        campaign_cost_per_send = campaign_cost / all_campaign_count
+        # 6. 사용취소 금액 계산
+        refund_cost = 0
+        for remind_step in unsent_remind_steps:
+            # 1. campaign_sets를 조회한다.(복수개 가능)
+            campaign_sets = self.campaign_set_repository.get_campaign_set_by_campaign_id(
+                campaign_id, db
+            )
+            for campaign_set in campaign_sets:
+                # 2. campaign_set_groups를 조회한다.(복수개 가능) -> recipient_count
+                campaign_set_groups = campaign_set.set_group_list
+                for campaign_set_group in campaign_set_groups:
+                    set_group_messages = self.campaign_set_repository.get_campaign_set_group_messages_by_set_group_seq(
+                        campaign_set_group.set_group_seq, db
+                    )
+                    for set_group_message in set_group_messages:
+                        # 3. set_group_message에서 set_group_seq와 remind_step으로 메시지를 찾는다. -> msg_type
+                        if set_group_message.remind_step == remind_step:
+                            msg_type = set_group_message.msg_type
+                            recipient_count = campaign_set_group.recipient_count
 
-        # 사용취소 금액 계산
-        refund_cost = int(campaign_cost_per_send * unsent_campaign)
+                            # 4. delivery_cost_by_vender에서 발송 금액을 조회하고 recipient_count를 곱한다.
+                            cost_per_send = (
+                                self.campaign_set_repository.get_delivery_cost_by_msg_type(
+                                    msg_type, db
+                                )
+                            )
+                            cost_per_set_group = cost_per_send * recipient_count
+
+                            # 5. charge_remind_cost 계산된 값을 더한다.
+                            refund_cost += cost_per_set_group
 
         # 크레딧 이력 테이블 저장
         remaining_amount = self.credit_repository.get_remain_credit(db)
