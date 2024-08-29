@@ -27,7 +27,7 @@ class CustomerInfoStatusEntity(Base):
 
     sms = Column(String, nullable=True)
     news_mail = Column(String, nullable=True)
-    member_authentification = Column(String, nullable=True)
+    member_authentication = Column(String, nullable=True)
 
     available_points = Column(Float, nullable=True)
     used_points = Column(Float, nullable=True)
