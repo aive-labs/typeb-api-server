@@ -11,7 +11,7 @@ class SubscriptionPlan(BaseModel):
     id: int
     name: str
     price: int
-    description: str
+    description: str | None = None
 
     class Config:
         from_attributes = True

@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from sqlalchemy.orm import Session
 
 from src.core.exceptions.exceptions import NotFoundException
@@ -73,6 +75,7 @@ class SubscriptionRepository(BaseSubscriptionRepository):
             id=update_subscription.plan.id,
             name=update_subscription.plan.name,
             price=update_subscription.plan.price,
+            description=update_subscription.description,
         )
 
         entity = SubscriptionEntity(
@@ -83,7 +86,9 @@ class SubscriptionRepository(BaseSubscriptionRepository):
             end_date=update_subscription.end_date,
             auto_renewal=update_subscription.auto_renewal,
             last_payment_date=update_subscription.last_payment_date,
+            created_at=update_subscription.created_at,
             created_by=update_subscription.created_by,
+            updated_at=datetime.now(timezone.utc),
             updated_by=update_subscription.created_by,
             plan=subscription_plan_entity,
         )
