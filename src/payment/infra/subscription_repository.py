@@ -51,7 +51,7 @@ class SubscriptionRepository(BaseSubscriptionRepository):
             last_payment_date=new_subscription.last_payment_date,
             created_by=new_subscription.created_by,
             updated_by=new_subscription.created_by,
-            plans=subscription_plan_entity,
+            plan=subscription_plan_entity,
         )
         db.merge(entity)
         db.flush()
@@ -85,7 +85,7 @@ class SubscriptionRepository(BaseSubscriptionRepository):
             last_payment_date=update_subscription.last_payment_date,
             created_by=update_subscription.created_by,
             updated_by=update_subscription.created_by,
-            plans=subscription_plan_entity,
+            plan=subscription_plan_entity,
         )
         db.merge(entity)
         db.flush()
