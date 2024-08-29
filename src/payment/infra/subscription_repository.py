@@ -75,7 +75,7 @@ class SubscriptionRepository(BaseSubscriptionRepository):
             id=update_subscription.plan.id,
             name=update_subscription.plan.name,
             price=update_subscription.plan.price,
-            description=update_subscription.description,
+            description=update_subscription.plan.description,
         )
 
         entity = SubscriptionEntity(
