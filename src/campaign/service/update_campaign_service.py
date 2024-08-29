@@ -65,6 +65,9 @@ class UpdateCampaignService(UpdateCampaignUseCase):
             db.query(CampaignEntity).filter(CampaignEntity.campaign_id == campaign_id).first()
         )
 
+        print("campaign.remind_list")
+        print(campaign.remind_list)
+
         if campaign.campaign_status_code == "r1":
             campaign_schema_obj, remind_dict_list = self.update_campaign_with_remind(
                 db, user, campaign_update, campaign
@@ -540,7 +543,7 @@ class UpdateCampaignService(UpdateCampaignUseCase):
             )
             campaign_base = self.update_remind_obj(db, campaign_base, remind_dict_list)
 
-        db.add(campaign_base)
+        db.merge(campaign_base)
         db.flush()
 
         # 주기성 정보 동기화
