@@ -1567,6 +1567,8 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             # kko_button_json이 null인 경우, {"button": []} 를 넣어줘야 함, 그리고 리스트 형태로 만들어야 함
             res_df["kko_button_json"] = res_df["kko_button_json"].fillna('{"button": []}')
 
+            res_df["remind_step"] = res_df["remind_step"].fillna(0)
+
             send_rsv_dict = res_df.to_dict("records")  # pyright: ignore [reportArgumentType]
             db.bulk_insert_mappings(SendReservationEntity, send_rsv_dict)
 
