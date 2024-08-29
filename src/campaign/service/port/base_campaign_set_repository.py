@@ -88,3 +88,15 @@ class BaseCampaignSetRepository(ABC):
     @abstractmethod
     def get_campaign_cost_by_campaign_id(self, campaign_id, db) -> int:
         pass
+
+    @abstractmethod
+    def get_campaign_set_by_campaign_id(self, campaign_id, db):
+        pass
+
+    @abstractmethod
+    def get_delivery_cost_by_msg_type(self, msg_type, db):
+        pass
+
+    @abstractmethod
+    def get_campaign_set_group_messages_by_set_group_seq(self, set_group_seq, db):
+        pass

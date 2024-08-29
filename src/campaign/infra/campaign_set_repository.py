@@ -13,6 +13,9 @@ from src.campaign.infra.entity.campaign_set_recipients_entity import (
     CampaignSetRecipientsEntity,
 )
 from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
+from src.campaign.infra.entity.delivery_cost_vendor_entity import (
+    DeliveryCostVendorEntity,
+)
 from src.campaign.infra.entity.message_resource_entity import MessageResourceEntity
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.campaign.infra.sqlalchemy_query.campaign_set.apply_personalized_option import (
@@ -792,3 +795,29 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         )
         media_costs = [int(entity.media_cost) for entity in entities]
         return sum(media_costs)
+
+    def get_campaign_set_by_campaign_id(self, campaign_id, db):
+        return (
+            db.query(CampaignSetsEntity).filter(CampaignSetsEntity.campaign_id == campaign_id).all()
+        )
+
+    def get_delivery_cost_by_msg_type(self, msg_type, db):
+        entity = (
+            db.query(DeliveryCostVendorEntity)
+            .filter(DeliveryCostVendorEntity.msg_type == msg_type)
+            .first()
+        )
+
+        if entity is None:
+            raise NotFoundException(
+                detail={"message": f"해당 메시지 타입은 지원되지 않습니다.{msg_type}"}
+            )
+
+        return entity.cost_per_send
+
+    def get_campaign_set_group_messages_by_set_group_seq(self, set_group_seq, db):
+        return (
+            db.query(SetGroupMessagesEntity)
+            .filter(SetGroupMessagesEntity.set_group_seq == set_group_seq)
+            .all()
+        )

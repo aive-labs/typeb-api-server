@@ -857,25 +857,16 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                     )
 
             # 크레딧 사용 취소 로직 추가
-            # 0. 본 캠페인 조회
+            # 1. 본 캠페인 조회
             campaign = self.campaign_repository.get_campaign_detail(campaign_id, user, db)
             time_to_send = campaign.timetosend
 
-            # 1. 해당 캠페인 비용 확인 -> 본 캠페인 + 리마인드만큼 결제
-            campaign_cost = self.campaign_set_repository.get_campaign_cost_by_campaign_id(
-                campaign_id, db
-            )
-
             # 2. 발송당 캠페인 비용 계산
             campaign_reminds = self.campaign_repository.get_campaign_remind(campaign_id, db)
-            remind_count = len(campaign_reminds)
-            print("remind_count")
-            print(remind_count)
-            all_campaign_count = remind_count + 1
-            campaign_cost_per_send = campaign_cost / all_campaign_count
 
             # 3. 잔여 발송 캠페인(리마인드) 수 확인
             unsent_remind_count = 0
+            charge_remind_cost = 0
             for campaign_remind in campaign_reminds:
                 # 한국 시간 현재 시간
                 kst = timezone(timedelta(hours=9))
@@ -893,30 +884,52 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 print("current_time_kst")
                 print(current_time_kst)
 
+                # 리마인드 발송 시간이 아직 도래하지 않음. 해당 리마인드는 결제 필요
                 if current_time_kst < remind_date_with_time:
-                    # 리마인드 발송 시간이 아직 도래하지 않음. 해당 리마인드는 결제 필요
                     unsent_remind_count += 1
+                    # 1. campaign_sets를 조회한다.(복수개 가능)
+                    campaign_sets = self.campaign_set_repository.get_campaign_set_by_campaign_id(
+                        campaign_id, db
+                    )
+                    for campaign_set in campaign_sets:
+                        # 2. campaign_set_groups를 조회한다.(복수개 가능) -> recipient_count
+                        campaign_set_groups = campaign_set.set_group_list
+                        for campaign_set_group in campaign_set_groups:
+                            set_group_messages = self.campaign_set_repository.get_campaign_set_group_messages_by_set_group_seq(
+                                campaign_set_group.set_group_seq, db
+                            )
+                            for set_group_message in set_group_messages:
+                                # 3. set_group_message에서 set_group_seq와 remind_step으로 메시지를 찾는다. -> msg_type
+                                if set_group_message.remind_step == campaign_remind.remind_step:
+                                    msg_type = set_group_message.msg_type
+                                    recipient_count = campaign_set_group.recipient_count
 
-            print("unsent_remind_count")
-            print(unsent_remind_count)
-            # 4. 재결제 크레딧 계산
-            charge_cost = int(campaign_cost_per_send * unsent_remind_count)
+                                    # 4. delivery_cost_by_vender에서 발송 금액을 조회하고 recipient_count를 곱한다.
+                                    cost_per_send = (
+                                        self.campaign_set_repository.get_delivery_cost_by_msg_type(
+                                            msg_type, db
+                                        )
+                                    )
+                                    cost_per_set_group = cost_per_send * recipient_count
+
+                                    # 5. charge_remind_cost 계산된 값을 더한다.
+                                    charge_remind_cost += cost_per_set_group
 
             # 5. 결제 진행
-            if charge_cost > 0:
+            if charge_remind_cost > 0:
                 remaining_credit = self.credit_repository.get_remain_credit(db)
                 new_credit_history = CreditHistory(
                     user_name=user.username,
                     description=f"캠페인 집행({campaign_id})",
                     status=CreditStatus.USE.value,
-                    use_amount=charge_cost,
-                    remaining_amount=remaining_credit - charge_cost,
+                    use_amount=charge_remind_cost,
+                    remaining_amount=remaining_credit - charge_remind_cost,
                     note=f"캠페인 리마인드 {unsent_remind_count}건 결제",
                     created_by=str(user.user_id),
                     updated_by=str(user.user_id),
                 )
                 self.credit_repository.add_history(new_credit_history, db)
-                self.credit_repository.update_credit(-charge_cost, db)
+                self.credit_repository.update_credit(-charge_remind_cost, db)
 
         # 진행중지, 운영중 -> 완료, 기간만료 **campaign-dag**
         elif is_status_to_complete_or_expired(from_status, to_status):
@@ -1357,8 +1370,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
 
             send_rsv_query = send_rsv_query_1.filter(and_(*rsv_msg_filter_2))
             send_rsv = DataConverter.convert_query_to_df(send_rsv_query)
-            print("send_rsv")
-            print(send_rsv)
+
             initial_rsv_count = len(send_rsv)
             logging.info(f"6. 당일 발송 수(고객마스터에 존재하는 고객만 필터): {initial_rsv_count}")
 
