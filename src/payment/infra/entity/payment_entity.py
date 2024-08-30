@@ -33,6 +33,10 @@ class PaymentEntity(Base):
     product_type = Column(String, nullable=False)
     credit_history_id = Column(Integer, nullable=True)
 
+    cancel_amount = Column(Integer, nullable=True)
+    cancel_reason = Column(String, nullable=True)
+    cancel_at = Column(String, nullable=True)
+
     created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False)
     updated_at = Column(DateTime(timezone=True), default=func.now())

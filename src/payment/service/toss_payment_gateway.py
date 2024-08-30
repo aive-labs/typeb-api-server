@@ -23,6 +23,7 @@ class TossPaymentGateway(PaymentGateway):
         self.payment_authorization_url = get_env_variable("payment_authorization_url")
         self.billing_payment_url = get_env_variable("payment_bulling_url")
         self.request_billing_key_url = get_env_variable("billing_url")
+        self.payment_cancel_url = get_env_variable("payment_cancel_url")
 
     async def request_general_payment_approval(self, payment_data) -> Payment:
         headers = self.get_header()
@@ -121,6 +122,31 @@ class TossPaymentGateway(PaymentGateway):
         async with aiohttp.ClientSession() as session:
             async with session.post(
                 url=f"{self.billing_payment_url}/{billing_key}",
+                json=payload,
+                headers=headers,
+                ssl=False,
+            ) as response:
+                res = await response.json()
+
+                if response.status != 200:
+                    raise HTTPException(
+                        status_code=response.status,
+                        detail={"code": res["code"], "message": res["message"]},
+                    )
+
+                return res
+
+    async def cancel_payment(self, payment_key: str, reason: str) -> Payment:
+        headers = self.get_header()
+        payload = {"cancelReason": reason}
+        response = await self.cancel_payment_to_pg(headers, payload, payment_key)
+        payment_response = TossPaymentResponse.from_response(response)
+        return Payment.from_toss_response(payment_response, ProductType.SUBSCRIPTION)
+
+    async def cancel_payment_to_pg(self, headers, payload, payment_key: str):
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                url=self.payment_cancel_url.replace("{paymentKey}", payment_key),
                 json=payload,
                 headers=headers,
                 ssl=False,

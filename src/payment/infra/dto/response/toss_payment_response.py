@@ -50,6 +50,20 @@ class CashReceipt(BaseModel):
     tax_free_amount: int | None = None
 
 
+class Cancel(BaseModel):
+    transaction_key: str | None = None
+    cancel_reason: str | None = None
+    tax_exception_amount: int | None = None
+    cancel_at: str | None = None
+    easy_pay_discount_amount: int | None = None
+    receipt_key: str | None = None
+    cancel_amount: int | None = None
+    tax_free_amount: int | None = None
+    refundable_amount: int | None = None
+    cancel_status: str | None = None
+    cancel_request_id: str | None = None
+
+
 class TossPaymentResponse(BaseModel):
     payment_key: str
     order_id: str
@@ -70,7 +84,9 @@ class TossPaymentResponse(BaseModel):
     mobile_phone: Optional[str]
     gift_certificate: Optional[str]
     discount: Optional[str]
-    cancels: Optional[str]
+
+    # 주문취소인 경우
+    cancels: Optional[list[Cancel]] | None = None
     secret: Optional[str]
 
     easy_pay: Optional[EasyPayDetails]
@@ -93,7 +109,6 @@ class TossPaymentResponse(BaseModel):
 
     @staticmethod
     def from_response(model) -> "TossPaymentResponse":
-
         card = None
         if model["card"]:
             card = CardDetails(
@@ -145,6 +160,25 @@ class TossPaymentResponse(BaseModel):
                 tax_free_amount=model["cashReceipt"]["taxFreeAmount"],
             )
 
+        cancels = None
+        if model["cancels"]:
+            cancels = [
+                Cancel(
+                    transaction_key=cancel["transactionKey"],
+                    cancel_reason=cancel["cancelReason"],
+                    tax_exception_amount=cancel["taxExceptionAmount"],
+                    cancel_at=cancel["canceledAt"],
+                    easy_pay_discount_amount=cancel["easyPayDiscountAmount"],
+                    receipt_key=cancel["receiptKey"],
+                    cancel_amount=cancel["cancelAmount"],
+                    tax_free_amount=cancel["taxFreeAmount"],
+                    refundable_amount=cancel["refundableAmount"],
+                    cancel_status=cancel["cancelStatus"],
+                    cancel_request_id=cancel["cancelRequestId"],
+                )
+                for cancel in model["cancels"]
+            ]
+
         return TossPaymentResponse(
             payment_key=model["paymentKey"],
             order_id=model["orderId"],
@@ -160,7 +194,7 @@ class TossPaymentResponse(BaseModel):
             gift_certificate=model["giftCertificate"],
             cash_receipt=cash_receipt,
             discount=model["discount"],
-            cancels=model["cancels"],
+            cancels=cancels,
             secret=model["secret"],
             easy_pay=easy_pay,
             country=model["country"],

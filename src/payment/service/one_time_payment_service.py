@@ -88,14 +88,26 @@ class OneTimePaymentService(PaymentUseCase):
             except Exception as e:
                 retry_count += 1
                 if retry_count == self.max_retries:
+                    cancel_payment = await self.payment_gateway.cancel_payment(
+                        payment.payment_key, "결제 데이터 정합성을 위한 취소 요청"
+                    )
+
                     send_slack_message(
-                        title="결제 실패 알림",
-                        body=f"주문번호(order_id): {payment.order_id} \n 에러메시지 \n {repr(e)}",
+                        title="❗️결제 실패 알림",
+                        body=f"*주문번호*\n "
+                        f"{payment.order_id} \n\n"
+                        f"*설명* \n "
+                        f"PaymentKey: {cancel_payment.payment_key} \n"
+                        f"{cancel_payment.cancel_amount}원 결제 취소 요청 성공 \n\n"
+                        f"*에러메시지*  \n {repr(e)} \n",
                         member_id=get_env_variable("slack_wally"),
                     )
+
                     raise PaymentException(
                         detail={"message": "결제를 처리하는 도중 문제가 발생했습니다."}
                     )
+
+                    # 취소
 
         db.commit()
 

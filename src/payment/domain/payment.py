@@ -38,6 +38,10 @@ class Payment(BaseModel):
     product_type: str
     credit_history_id: int | None = None
 
+    cancel_amount: int | None = None
+    cancel_reason: str | None = None
+    cancel_at: str | None = None
+
     class Config:
         from_attributes = True
 
@@ -65,6 +69,9 @@ class Payment(BaseModel):
             version=self.version,
             product_type=self.product_type,
             credit_history_id=saved_credit_history_id,
+            cancel_amount=self.cancel_amount,
+            cancel_reason=self.cancel_reason,
+            cancel_at=self.cancel_at,
             created_by=str(user.user_id),
             updated_by=str(user.user_id),
         )
@@ -73,6 +80,10 @@ class Payment(BaseModel):
     def from_toss_response(response: TossPaymentResponse, product_type: ProductType):
         issuer_code = response.card.issuer_code if response.card else None
         company_name = CardCompany.get_company_by_code(issuer_code)
+
+        cancel_reason = response.cancels[0].cancel_reason if response.cancels else None
+        cancel_amount = response.cancels[0].cancel_amount if response.cancels else None
+        cancel_at = response.cancels[0].cancel_at if response.cancels else None
 
         return Payment(
             payment_key=response.payment_key,
@@ -96,4 +107,7 @@ class Payment(BaseModel):
             method=response.method,
             version=response.version,
             product_type=product_type.value,
+            cancel_amount=cancel_amount,
+            cancel_reason=cancel_reason,
+            cancel_at=cancel_at,
         )

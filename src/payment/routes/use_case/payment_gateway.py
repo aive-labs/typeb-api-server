@@ -24,3 +24,7 @@ class PaymentGateway(ABC):
         self, payment_data: PaymentRequest, billing_key: str
     ) -> Payment:
         pass
+
+    @abstractmethod
+    async def cancel_payment(self, payment_key: str, reason: str) -> Payment:
+        pass
