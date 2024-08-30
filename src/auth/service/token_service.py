@@ -27,6 +27,7 @@ class TokenService:
                 "id": subscription.id,
                 "name": subscription.plan.name,
                 "end_date": (subscription.end_date + timedelta(hours=9)).date().isoformat(),
+                "status": subscription.status,
             }
 
         payload = {
@@ -78,6 +79,7 @@ class TokenService:
                 "id": subscription.id,
                 "name": subscription.plan.name,
                 "end_date": (subscription.end_date + timedelta(hours=9)).date().isoformat(),
+                "status": subscription.status,
             }
 
         payload = {

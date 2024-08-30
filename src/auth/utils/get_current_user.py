@@ -50,5 +50,6 @@ def get_current_user(
             id=my_subscription["id"],
             name=my_subscription["name"],
             end_date=my_subscription["end_date"],
+            status=my_subscription["status"],
         )
     return user

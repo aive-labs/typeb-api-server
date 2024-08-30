@@ -2,6 +2,7 @@ from fastapi import Depends
 
 from src.auth.utils.get_current_user import get_current_user
 from src.core.exceptions.exceptions import AuthorizationException
+from src.payment.enum.subscription_status import SubscriptionStatus
 from src.users.domain.gnb_permission import ContentsManager, GNBPermissions
 from src.users.domain.resource_permission import ResourcePermission
 from src.users.domain.user_role import UserPermissions, UserRole
@@ -98,10 +99,17 @@ class PermissionChecker:
         """
         get_user_role_from_mapping(user.role_id)
 
-        if "subscription" in self.required_permissions and user.subscription is None:
-            raise AuthorizationException(
-                detail={"message": "해당 기능은 플랜 결제 후 사용 가능합니다."}
-            )
+        if "subscription" in self.required_permissions:
+
+            if user.subscription is None:
+                raise AuthorizationException(
+                    detail={"message": "해당 기능은 플랜 결제 후 사용 가능합니다."}
+                )
+            else:
+                if user.subscription.status != SubscriptionStatus.ACTIVE.value:
+                    raise AuthorizationException(
+                        detail={"message": "해당 기능은 플랜 결제 후 사용 가능합니다."}
+                    )
 
         return user
 
