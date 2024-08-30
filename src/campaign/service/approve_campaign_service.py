@@ -53,6 +53,7 @@ from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
 from src.common.infra.entity.customer_master_entity import CustomerMasterEntity
 from src.common.sqlalchemy.object_access_condition import object_access_condition
 from src.common.timezone_setting import selected_timezone
+from src.common.utils.add_vat_to_price import add_vat_to
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import (
     create_logical_date_for_airflow,
@@ -122,11 +123,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         old_campaign = self.check_permission_to_change_status(campaign_id, db, user)
         remind_list = old_campaign.remind_list
 
-        # 캠페인 셋에서 media_cost를 통해 매체 비용을 계산한다.
-        campaign_cost = self.campaign_set_repository.get_campaign_cost_by_campaign_id(
-            campaign_id, db
-        )
-
         # 변경전 캠페인 상태
         from_status = old_campaign.campaign_status_code
         send_date = old_campaign.send_date if old_campaign.send_date else old_campaign.start_date
@@ -189,7 +185,13 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         # 리뷰중 -> 진행대기 : "승인"
         elif is_status_review_to_pending(from_status, to_status):
 
+            campaign_cost = self.campaign_set_repository.get_campaign_cost_by_campaign_id(
+                campaign_id, db
+            )
+            campaign_cost = add_vat_to(campaign_cost)
+
             # 1. 일단 기존에 결제 기록이 있으면 환불 진행(무조건 0건 또는 1건 존재)
+            # 여기 있는 금액은 부가세 포함된 금액
             campaign_credit_entity = (
                 db.query(CampaignCreditPaymentEntity)
                 .filter(CampaignCreditPaymentEntity.campaign_id == campaign_id)
@@ -654,6 +656,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             campaign_cost = self.campaign_set_repository.get_campaign_cost_by_campaign_id(
                 campaign_id, db
             )
+            campaign_cost = add_vat_to(campaign_cost)
 
             # 크레딧 히스토리에 환불 기록
             refund_credit_history = CreditHistory(
@@ -770,6 +773,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             campaign_cost = self.campaign_set_repository.get_campaign_cost_by_campaign_id(
                 campaign_id, db
             )
+            campaign_cost = add_vat_to(campaign_cost)
 
             new_credit_history = CreditHistory(
                 user_name=user.username,
@@ -917,6 +921,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
 
             # 5. 결제 진행
             if charge_remind_cost > 0:
+                charge_remind_cost = add_vat_to(charge_remind_cost)
                 remaining_credit = self.credit_repository.get_remain_credit(db)
                 new_credit_history = CreditHistory(
                     user_name=user.username,
@@ -1011,6 +1016,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
 
         # 크레딧 이력 테이블 저장
         remaining_amount = self.credit_repository.get_remain_credit(db)
+        refund_cost = add_vat_to(refund_cost)
         refund_credit_history = CreditHistory(
             user_name=user.username,
             description=f"캠페인({campaign_id}) 중지로 인한 크레딧 사용 취소",
