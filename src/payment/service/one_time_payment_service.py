@@ -94,10 +94,11 @@ class OneTimePaymentService(PaymentUseCase):
 
                     send_slack_message(
                         title="❗️결제 실패 알림",
-                        body=f"*주문번호*\n "
+                        body=f"*mall id*: {user.mall_id}*\n "
+                        f"*주문번호*\n "
                         f"{payment.order_id} \n\n"
                         f"*설명* \n "
-                        f"PaymentKey: {cancel_payment.payment_key} \n"
+                        f"payment_key: {cancel_payment.payment_key} \n"
                         f"{cancel_payment.cancel_amount}원 결제 취소 요청 성공 \n\n"
                         f"*에러메시지*  \n {repr(e)} \n",
                         member_id=get_env_variable("slack_wally"),
@@ -106,8 +107,6 @@ class OneTimePaymentService(PaymentUseCase):
                     raise PaymentException(
                         detail={"message": "결제를 처리하는 도중 문제가 발생했습니다."}
                     )
-
-                    # 취소
 
         db.commit()
 
