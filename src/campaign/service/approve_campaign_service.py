@@ -1609,6 +1609,12 @@ class ApproveCampaignService(ApproveCampaignUseCase):
 
             remind_step = int(res_df["remind_step"].fillna(0).iloc[0])
 
+            timeline_description = (
+                f"{initial_rsv_count:,}건 중 {final_rsv:,}건 발송 요청 예약"
+                if remind_step == 0
+                else f"리마인드 {remind_step}회차 {initial_rsv_count:,}건 중 {final_rsv:,}건 발송 요청 예약"
+            )
+
             self.save_campaign_logs(
                 db=db,
                 campaign_id=campaign_id,
@@ -1616,7 +1622,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 created_at=curr_date,
                 created_by=user_obj.user_id,
                 created_by_name=user_obj.username,
-                description=f"{initial_rsv_count:,}건 중 {final_rsv:,}건 발송 요청 예약",  # to-do: campagin/remind 발송 구분
+                description=timeline_description,
                 remind_step=remind_step,
             )
 
