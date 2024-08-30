@@ -47,10 +47,12 @@ from src.campaign.service.port.base_campaign_set_repository import (
 from src.campaign.utils.utils import get_resv_date
 from src.common.timezone_setting import selected_timezone
 from src.common.utils import repeat_date
+from src.common.utils.add_vat_to_price import add_vat_to
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import calculate_remind_date, localtime_converter
 from src.core.exceptions.exceptions import NotFoundException
 from src.core.transactional import transactional
+from src.payment.service.port.base_credit_repository import BaseCreditRepository
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
 
@@ -63,20 +65,18 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
         campaign_set_repository: BaseCampaignSetRepository,
         approve_campaign_service: ApproveCampaignUseCase,
         generate_message_service: GenerateMessageUsecase,
+        credit_repository: BaseCreditRepository,
     ):
         self.campaign_repository = campaign_repository
         self.campaign_set_repository = campaign_set_repository
         self.approve_campaign_service = approve_campaign_service
         self.generate_message_service = generate_message_service
+        self.credit_repository = credit_repository
 
     @transactional
     def exec(self, campaign_id, user: User, db: Session) -> dict:
-        # user_id, username
         user_id = str(user.user_id)
         user_name = str(user.username)
-
-        print("recurring")
-        print(user_id, user_name)
 
         # 생성해야될 주기성 캠페인 조회
         org_campaign = (
@@ -289,11 +289,30 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
                     CampaignSetsEntity.set_seq == set_seq[0],
                 ).update({CampaignSetsEntity.is_confirmed: True})
 
+            # 잔여 크레딧 부족 여부 확인
+            remaining_credit = self.credit_repository.get_remain_credit(db)
+            # 캠페인 비용 계산
+            campaign_cost = self.campaign_set_repository.get_campaign_cost_by_campaign_id(
+                campaign_id, db
+            )
+            campaign_cost = add_vat_to(campaign_cost)
+
+            # 크레딧이 부족하다면
+            is_enough_credit = remaining_credit >= campaign_cost
+            if is_enough_credit:
+                approval_status = CampaignApprovalStatus.APPROVED.value
+                is_approved = True
+                to_status = "w2"
+            else:
+                approval_status = CampaignApprovalStatus.REVIEW.value
+                is_approved = False
+                to_status = "w1"
+
             # 캠페인 승인 테이블 저장
             new_approver = CampaignApprovalEntity(
                 campaign_id=new_campaign_id,
                 requester=user.user_id,
-                approval_status=CampaignApprovalStatus.APPROVED.value,  # APPROVED
+                approval_status=approval_status,  # APPROVED
                 created_at=created_at,
                 created_by=str(user.user_id),
                 updated_at=created_at,  # 생성 시점에 updated_at도 설정
@@ -313,7 +332,7 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
                 department_id=owned_by_dept,  # 생성부서
                 department_name=department_name,  # 생성부서
                 department_abb_name=department_abb_name,  # 생성부서
-                is_approved=True,  # 기초값 False
+                is_approved=is_approved,  # 기초값 False
                 created_at=created_at,
                 created_by=str(user.user_id),
                 updated_at=created_at,
@@ -321,20 +340,17 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
             )
             db.add(approvers)
 
-            # 진행대기
-            to_status = "w2"
-
-            # 타임라인: 승인처리
-            self.approve_campaign_service.save_campaign_logs(
-                db=db,
-                campaign_id=new_campaign_id,
-                timeline_type="approval",
-                created_at=created_at,
-                created_by=str(user.user_id),
-                created_by_name=user.username,
-                to_status=to_status,
-                status_no=status_no,
-            )
+            if is_enough_credit:
+                self.approve_campaign_service.save_campaign_logs(
+                    db=db,
+                    campaign_id=new_campaign_id,
+                    timeline_type="approval",
+                    created_at=created_at,
+                    created_by=str(user.user_id),
+                    created_by_name=user.username,
+                    to_status=to_status,
+                    status_no=status_no,
+                )
 
             # 캠페인 상태 변경
             campaign_status = CampaignStatus.get_eums()
@@ -349,7 +365,7 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
             cloned_campaign.campaign_status_group_code = campaign_status_input[2]
             cloned_campaign.campaign_status_group_name = campaign_status_input[3]
 
-            # #상태 변경 이력
+            # 상태 변경 이력
             status_hist = CampaignStatusHistoryEntity(
                 campaign_id=new_campaign_id,
                 from_status=campaign_base_dict["campaign_status_code"],
