@@ -148,7 +148,7 @@ class OneTimePaymentService(PaymentUseCase):
         return new_subscription
 
     def check_is_order_mismatch(self, order_id, amount, db: Session):
-        is_match = not self.payment_repository.check_pre_validation_data_for_payment(
+        is_match = self.payment_repository.check_pre_validation_data_for_payment(
             order_id, amount, db
         )
         if not is_match:

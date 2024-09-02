@@ -79,8 +79,6 @@ class InvoiceDownloadService(InvoiceDownloadUseCase):
         env = Environment(loader=FileSystemLoader(template_dir))
         template = env.get_template("invoice_template.html")
 
-        print(items)
-
         # 템플릿 렌더링
         rendered = template.render(
             date=today,

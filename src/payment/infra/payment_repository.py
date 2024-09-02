@@ -42,6 +42,10 @@ class PaymentRepository(BasePaymentRepository):
             )
             .count()
         )
+
+        print("count")
+        print(count)
+
         return True if count == 1 else False
 
     def delete_pre_validation_data(self, order_id: str, db: Session):
