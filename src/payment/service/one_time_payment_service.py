@@ -50,9 +50,6 @@ class OneTimePaymentService(PaymentUseCase):
             raise ConsistencyException(detail={"message": "결제 정보 데이터가 존재하지 않습니다."})
 
         # order_id와 금액이 동일한지 체크(임시 저장한 데이터와 결제 요청 데이터 비교)
-        print("payment_request.order_id")
-        print(payment_request.order_id)
-        print(payment_request.amount)
         self.check_is_order_mismatch(payment_request.order_id, payment_request.amount, db)
 
         # 토스페이먼츠에 결제 승인 요청 후 성공하면 결과 객체 반환
@@ -69,12 +66,15 @@ class OneTimePaymentService(PaymentUseCase):
                 # 크레딧 히스토리에 내역 추가
                 saved_credit_history_id = None
                 if payment_request.product_type == ProductType.CREDIT:
+                    print("pay for credit")
                     saved_credit_history_id = self.charge_credit(
                         payment, remaining_amount, user, db
                     )
                 elif payment_request.product_type == ProductType.SUBSCRIPTION:
+                    print("pay for subscription")
                     self.pay_for_subscription(user, db)
                 else:
+                    print("raise error")
                     raise PolicyException(detail={"message": "존재하지 않는 결제 상품입니다."})
 
                 # 성공인 경우 결제 내역 테이블에 저장
@@ -116,13 +116,17 @@ class OneTimePaymentService(PaymentUseCase):
         new_subscription = self.create_new_subscription(db, user)
         if subscription is None:
             # 첫 구독인 경우
+            print("first subscription")
             self.subscription_repository.register_subscription(new_subscription, db)
         else:
             # 기존 구독 존재
+            print("already subscription")
             if subscription.is_expired():
+                print("expired subscription")
                 new_subscription.set_id(subscription.get_id())
                 self.subscription_repository.update_subscription(new_subscription, db)
             else:
+                print("renew subscription")
                 subscription.extend_end_date()
                 self.subscription_repository.update_subscription(subscription, db)
 
