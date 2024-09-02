@@ -148,8 +148,8 @@ class OneTimePaymentService(PaymentUseCase):
         return new_subscription
 
     def check_is_order_mismatch(self, order_id, amount, db: Session):
-        is_mismatch = not self.payment_repository.check_pre_validation_data_for_payment(
+        is_match = not self.payment_repository.check_pre_validation_data_for_payment(
             order_id, amount, db
         )
-        if is_mismatch:
+        if not is_match:
             raise ConsistencyException(detail={"message": "주문 정보가 일치하지 않습니다."})
