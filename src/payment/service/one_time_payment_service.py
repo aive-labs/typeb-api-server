@@ -60,13 +60,13 @@ class OneTimePaymentService(PaymentUseCase):
 
         remaining_amount = self.credit_repository.get_remain_credit(db)
 
+        # 실 결제 성공 이후 결제 금액에 대한 크로스 체크(임시 저장한 데이터와 실 결제 데이터 비교)
+        self.check_is_order_mismatch(payment.order_id, payment.total_amount, db)
+
         retry_count = 0
         while retry_count < self.max_retries:
             try:
                 raise ValueError("데이터가 이상해요")
-
-                # 실 결제 성공 이후 결제 금액에 대한 크로스 체크(임시 저장한 데이터와 실 결제 데이터 비교)
-                self.check_is_order_mismatch(payment.order_id, payment.total_amount, db)
 
                 # 크레딧 히스토리에 내역 추가
                 saved_credit_history_id = None
