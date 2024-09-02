@@ -3,7 +3,7 @@ from datetime import datetime
 import pytz
 from jinja2 import Environment, FileSystemLoader
 from sqlalchemy.orm import Session
-from weasyprint import HTML
+from weasyprint import CSS, HTML
 
 from src.core.exceptions.exceptions import ConsistencyException, ConvertException
 from src.payment.enum.charging_type import ChargingType
@@ -90,7 +90,21 @@ class InvoiceDownloadService(InvoiceDownloadUseCase):
         )
 
         html = HTML(string=rendered)
-        pdf_file = html.write_pdf()
+
+        # CSS 파일 지정 (optional, 필요한 경우)
+        css = CSS(
+            string="""
+            @page {
+                size: A4;
+                margin: 1cm;
+            }
+            body {
+                font-family: 'Noto Sans CJK KR', sans-serif;
+            }
+        """
+        )
+
+        pdf_file = html.write_pdf(stylesheets=[css])
 
         if pdf_file is None:
             raise ConvertException(detail={"messsage": "인보이스 처리 중 문제가 발생했습니다."})

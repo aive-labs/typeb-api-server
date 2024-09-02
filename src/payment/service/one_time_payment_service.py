@@ -66,8 +66,6 @@ class OneTimePaymentService(PaymentUseCase):
         retry_count = 0
         while retry_count < self.max_retries:
             try:
-                raise ValueError("데이터가 이상해요")
-
                 # 크레딧 히스토리에 내역 추가
                 saved_credit_history_id = None
                 if payment_request.product_type == ProductType.CREDIT:
@@ -95,14 +93,14 @@ class OneTimePaymentService(PaymentUseCase):
                     )
 
                     send_slack_message(
-                        title="❗️결제 실패 알림",
-                        body=f"*mall id*: {user.mall_id}*\n "
-                        f"*주문번호*\n "
-                        f"{payment.order_id} \n\n"
-                        f"*설명* \n "
-                        f"payment_key: {cancel_payment.payment_key} \n"
-                        f"{cancel_payment.cancel_amount}원 결제 취소 요청 성공 \n\n"
-                        f"*에러메시지*  \n {repr(e)} \n",
+                        title="❗️결제 실패 알림(*mall id*: {user.mall_id}*) ❗",
+                        body=f"*주문번호*\n"
+                        f"• {payment.order_id} \n\n"
+                        f"*설명* \n"
+                        f"• payment_key: {cancel_payment.payment_key} \n"
+                        f"• {cancel_payment.cancel_amount}원 결제 취소 요청 성공 \n\n"
+                        f"*에러메시지*  \n"
+                        f"• {repr(e)} \n",
                         member_id=get_env_variable("slack_wally"),
                     )
 

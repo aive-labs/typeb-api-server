@@ -14,6 +14,7 @@ RUN apt-get update && \
     libpango1.0-dev \
     libgdk-pixbuf2.0-dev \
     libffi-dev \
+    fonts-noto-cjk \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
