@@ -44,8 +44,6 @@ class AuthService:
         # 토큰 발급
         token_response = self.token_service.create_token(user, mall_id, subscription)
 
-        # TODO: refresh_token save
-
         return token_response
 
     def get_password_hash(self, password: str) -> str:

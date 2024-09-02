@@ -229,8 +229,6 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
             description="주기성 캠페인 생성",
         )
 
-        print("save_log")
-
         db.flush()
 
         campaign_base_dict = DataConverter.convert_model_to_dict(cloned_campaign)
@@ -396,17 +394,11 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
 
     def is_campaign_end(self, org_campaign):
 
-        print("org_campaign.group_end_date")
-        print(org_campaign.group_end_date)
-
         if org_campaign.group_end_date:
             # 주기성 캠페인 생성 종료
             group_end_date = datetime.strptime(org_campaign.group_end_date, "%Y%m%d")
             current_korea_date = datetime.now(selected_timezone).strftime("%Y%m%d")
             current_korea_date = datetime.strptime(current_korea_date, "%Y%m%d")
-
-            print("current_korea_date")
-            print(current_korea_date)
 
             return group_end_date <= current_korea_date
 

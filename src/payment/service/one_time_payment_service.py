@@ -82,6 +82,9 @@ class OneTimePaymentService(PaymentUseCase):
                 self.payment_repository.delete_pre_validation_data(payment_request.order_id, db)
 
                 # 결제 성공 후 종료
+
+                raise ValueError("데이터가 이상해요")
+
                 break
             except HTTPException as http_exception:
                 raise http_exception
