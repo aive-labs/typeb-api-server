@@ -51,6 +51,9 @@ class OneTimePaymentService(PaymentUseCase):
             raise ConsistencyException(detail={"message": "결제 정보 데이터가 존재하지 않습니다."})
 
         # order_id와 금액이 동일한지 체크(임시 저장한 데이터와 결제 요청 데이터 비교)
+        print("payment_request.order_id")
+        print(payment_request.order_id)
+        print(payment_request.amount)
         self.check_is_order_mismatch(payment_request.order_id, payment_request.amount, db)
 
         # 토스페이먼츠에 결제 승인 요청 후 성공하면 결과 객체 반환
