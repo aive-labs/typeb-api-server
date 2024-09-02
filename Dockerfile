@@ -14,7 +14,10 @@ RUN apt-get update && \
     libpango1.0-dev \
     libgdk-pixbuf2.0-dev \
     libffi-dev \
+    wget \
+    fontconfig \
     fonts-noto-cjk \
+    && fc-cache -f -v \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
