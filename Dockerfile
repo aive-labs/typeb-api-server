@@ -16,10 +16,13 @@ RUN apt-get update && \
     libffi-dev \
     wget \
     fontconfig \
-    fonts-noto-cjk \
-    && fc-cache -f -v \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update \
+    && apt-get install -y \
+    fonts-noto-cjk \
+    && fc-cache -f -v
 
 # AWS CLI
 RUN pip install awscli
