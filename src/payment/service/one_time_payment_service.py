@@ -64,6 +64,8 @@ class OneTimePaymentService(PaymentUseCase):
         retry_count = 0
         while retry_count < self.max_retries:
             try:
+                raise ValueError("데이터가 이상해요")
+
                 # 실 결제 성공 이후 결제 금액에 대한 크로스 체크(임시 저장한 데이터와 실 결제 데이터 비교)
                 self.check_is_order_mismatch(payment.order_id, payment.total_amount, db)
 
@@ -85,9 +87,6 @@ class OneTimePaymentService(PaymentUseCase):
                 self.payment_repository.delete_pre_validation_data(payment_request.order_id, db)
 
                 # 결제 성공 후 종료
-
-                raise ValueError("데이터가 이상해요")
-
                 break
             except HTTPException as http_exception:
                 raise http_exception
