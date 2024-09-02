@@ -58,7 +58,11 @@ class SubscriptionRepository(BaseSubscriptionRepository):
         db.merge(entity)
         db.flush()
 
-        return Subscription.model_validate(entity)
+        print("created_at")
+        print(entity.created_at)
+        print(entity.updated_at)
+
+        return Subscription.from_model(entity)
 
     def update_status(self, my_subscription: Subscription, new_status: str, db: Session):
         db.query(SubscriptionEntity).filter(SubscriptionEntity.id == my_subscription.id).update(
