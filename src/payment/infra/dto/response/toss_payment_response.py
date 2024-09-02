@@ -53,7 +53,7 @@ class CashReceipt(BaseModel):
 class Cancel(BaseModel):
     transaction_key: str | None = None
     cancel_reason: str | None = None
-    tax_exception_amount: int | None = None
+    tax_exemption_amount: int | None = None
     cancel_at: str | None = None
     easy_pay_discount_amount: int | None = None
     receipt_key: str | None = None
@@ -166,7 +166,7 @@ class TossPaymentResponse(BaseModel):
                 Cancel(
                     transaction_key=cancel["transactionKey"],
                     cancel_reason=cancel["cancelReason"],
-                    tax_exception_amount=cancel["taxExceptionAmount"],
+                    tax_exemption_amount=cancel["taxExemptionAmount"],
                     cancel_at=cancel["canceledAt"],
                     easy_pay_discount_amount=cancel["easyPayDiscountAmount"],
                     receipt_key=cancel["receiptKey"],
