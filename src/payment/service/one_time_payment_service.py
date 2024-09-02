@@ -86,6 +86,9 @@ class OneTimePaymentService(PaymentUseCase):
                 # 결제 성공 후 종료
                 break
             except Exception as e:
+                print("retry error")
+                print(str(e))
+
                 retry_count += 1
                 if retry_count == self.max_retries:
                     cancel_payment = await self.payment_gateway.cancel_payment(
