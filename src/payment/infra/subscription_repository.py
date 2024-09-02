@@ -51,7 +51,9 @@ class SubscriptionRepository(BaseSubscriptionRepository):
             end_date=new_subscription.end_date,
             auto_renewal=new_subscription.auto_renewal,
             last_payment_date=new_subscription.last_payment_date,
+            created_at=datetime.now(timezone.utc),
             created_by=new_subscription.created_by,
+            updated_at=datetime.now(timezone.utc),
             updated_by=new_subscription.created_by,
             plan=subscription_plan_entity,
         )
