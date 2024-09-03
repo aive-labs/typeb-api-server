@@ -5,8 +5,10 @@ from jinja2 import Environment, FileSystemLoader
 from sqlalchemy.orm import Session
 from weasyprint import HTML
 
+from src.common.utils.date_utils import format_datetime
 from src.core.exceptions.exceptions import ConsistencyException, ConvertException
 from src.payment.enum.charging_type import ChargingType
+from src.payment.enum.credit_status import CreditStatus
 
 # from weasyprint import HTML
 from src.payment.routes.use_case.invoice_download_usecase import InvoiceDownloadUseCase
@@ -29,9 +31,18 @@ class InvoiceDownloadService(InvoiceDownloadUseCase):
         self.deposit_repository = deposit_repository
 
     def exec(self, credit_history_id, user: User, db: Session) -> bytes | None:
-        tz = "Asia/Seoul"
-        today = datetime.now(pytz.timezone(tz)).strftime("%B %-d, %Y")
+        korea_tz = pytz.timezone("Asia/Seoul")
+        today = datetime.now(korea_tz).strftime("%Y-%m-%d %H:%M:%S")
         credit_history = self.credit_repository.get_credit_history_by_id(credit_history_id, db)
+
+        if credit_history.status == CreditStatus.REFUND.value:
+            purchase_or_cancel = "취소"
+        elif credit_history.status == CreditStatus.CHARGE_COMPLETE.value:
+            purchase_or_cancel = "구매"
+        else:
+            raise ConsistencyException(
+                detail={"messages": "구매, 환불에 대해서만 영수증 다운로드가 가능합니다."}
+            )
 
         items = []
         total = 0
@@ -39,20 +50,19 @@ class InvoiceDownloadService(InvoiceDownloadUseCase):
             payment = self.payment_repository.get_payment_by_credit_history_id(
                 credit_history_id, db
             )
-            item = {
-                "charge": format(payment.total_amount, ","),
-                "title": credit_history.description,
-            }
+            item = self.extract_receipt_info_from_payment(
+                credit_history, payment, purchase_or_cancel
+            )
             total += payment.total_amount
             items.append(item)
         elif credit_history.charging_type == ChargingType.DEPOSIT.value:
             pending_deposit = self.deposit_repository.get_deposit_by_credit_history_id(
                 credit_history_id, db
             )
-            item = {
-                "charge": format(pending_deposit.price, ","),
-                "title": credit_history.description,
-            }
+
+            item = self.extract_receipt_info_from_deposit(
+                credit_history, korea_tz, pending_deposit, purchase_or_cancel
+            )
             total += pending_deposit.price
             items.append(item)
         else:
@@ -60,30 +70,17 @@ class InvoiceDownloadService(InvoiceDownloadUseCase):
                 detail={"message": "인보이스 다운로드 중 문제가 발생했습니다."}
             )
 
-        # 데이터 추출
-        from_addr = {
-            "addr1": "서울특별시 용산구 서빙고로 17",
-            "addr2": "23층 2309호",
-            "company_name": "에이브랩스",
-        }
-        to_addr = {
-            "company_name": "안다르",
-            "person_email": "client@example.com",
-            "person_name": "김철수",
-        }
-        invoice_number = f"INVOICE_{credit_history_id}"
+        invoice_number = f"RCPT-{str(credit_history_id).zfill(7)}"
         total = format(total, ",")
 
         # Jinja2 환경 설정
         template_dir = "src/payment/resources/templates"  # 템플릿 디렉토리
         env = Environment(loader=FileSystemLoader(template_dir))
-        template = env.get_template("invoice_template.html")
+        template = env.get_template("receipt_template.html")
 
         # 템플릿 렌더링
         rendered = template.render(
             date=today,
-            from_addr=from_addr,
-            to_addr=to_addr,
             items=items,
             total=total,
             invoice_number=invoice_number,
@@ -97,3 +94,37 @@ class InvoiceDownloadService(InvoiceDownloadUseCase):
             raise ConvertException(detail={"messsage": "인보이스 처리 중 문제가 발생했습니다."})
 
         return pdf_file
+
+    def extract_receipt_info_from_deposit(
+        self, credit_history, korea_tz, pending_deposit, purchase_or_cancel
+    ):
+        item = {
+            "charge": format(pending_deposit.price, ","),
+            "title": credit_history.description,
+            "payment_type": "무통장 입금",
+            "depositor": pending_deposit.depositor,
+            "purchase_or_cancel": purchase_or_cancel,
+            "approved_at": (
+                pending_deposit.updated_at.astimezone(korea_tz).strftime("%Y-%m-%d %H:%M:%S")
+                if pending_deposit.updated_at
+                else None
+            ),
+        }
+        return item
+
+    def extract_receipt_info_from_payment(self, credit_history, payment, purchase_or_cancel):
+        item = {
+            "method": payment.method.value,
+            "card_company": payment.card_company,
+            "card_number": payment.card_number,
+            "approved_at": (
+                format_datetime(payment.approved_at)
+                if payment.cancel_at is None
+                else payment.cancel_at
+            ),
+            "purchase_or_cancel": purchase_or_cancel,
+            "charge": format(payment.total_amount, ","),
+            "title": credit_history.description,
+            "payment_type": "간편결제",
+        }
+        return item

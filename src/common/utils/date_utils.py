@@ -144,3 +144,19 @@ def get_expired_at_to_iso_format_kr_time(minutes: int):
     iso_format_time = future_time.isoformat()
 
     return iso_format_time
+
+
+def format_datetime(date_str):
+    """
+    주어진 날짜 문자열을 'YYYY-MM-DD HH:MM:SS' 형식으로 변환합니다.
+
+    :param date_str: 변환할 날짜 문자열
+    :return: 변환된 날짜 문자열
+    """
+    # 문자열을 datetime 객체로 변환
+    date_obj = datetime.fromisoformat(date_str)
+
+    # 원하는 포맷으로 변환
+    formatted_date = date_obj.strftime("%Y-%m-%d %H:%M:%S")
+
+    return formatted_date
