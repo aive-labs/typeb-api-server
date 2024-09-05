@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 from fastapi import HTTPException
 from sqlalchemy import literal_column
+from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
 from src.campaign.enums.campagin_status import CampaignStatus
@@ -12,6 +13,9 @@ from src.campaign.enums.campaign_type import CampaignType
 from src.campaign.enums.repeat_type import RepeatTypeEnum
 from src.campaign.infra.entity.approver_entity import ApproverEntity
 from src.campaign.infra.entity.campaign_approval_entity import CampaignApprovalEntity
+from src.campaign.infra.entity.campaign_credit_payment_entity import (
+    CampaignCreditPaymentEntity,
+)
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.campaign.infra.entity.campaign_remind_entity import CampaignRemindEntity
 from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
@@ -52,6 +56,8 @@ from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import calculate_remind_date, localtime_converter
 from src.core.exceptions.exceptions import NotFoundException
 from src.core.transactional import transactional
+from src.payment.domain.credit_history import CreditHistory
+from src.payment.enum.credit_status import CreditStatus
 from src.payment.service.port.base_credit_repository import BaseCreditRepository
 from src.users.domain.user import User
 from src.users.infra.entity.user_entity import UserEntity
@@ -122,9 +128,6 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
         end_date = end_date_f + timedelta(days=int(retention_day))
         end_date = end_date.strftime("%Y%m%d")
 
-        print("start_date, end_date")
-        print(start_date, end_date)
-
         current_datetime = localtime_converter()
 
         base_org_campaign_obj: CampaignEntity = (
@@ -189,6 +192,7 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
         )
 
         # remind
+        remind_dict_list = None
         if org_campaign.has_remind:
             remind_list = [
                 {
@@ -211,9 +215,6 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
             cloned_campaign.remind_list = [
                 CampaignRemindEntity(**remind_dict) for remind_dict in remind_dict_list
             ]
-
-        else:
-            remind_dict_list = None
 
         db.add(cloned_campaign)
         db.flush()
@@ -301,6 +302,44 @@ class CreateRecurringCampaign(CreateRecurringCampaignUseCase):
                 approval_status = CampaignApprovalStatus.APPROVED.value
                 is_approved = True
                 to_status = "w2"
+
+                # 크레딧 차감 로직 추가
+                # 1. credit_history에 저장
+                remind_dict_list = remind_dict_list if remind_dict_list else []
+                new_credit_history = CreditHistory(
+                    user_name=user.username,
+                    description=f"캠페인 집행({campaign_id})",
+                    status=CreditStatus.USE.value,
+                    use_amount=campaign_cost,
+                    remaining_amount=remaining_credit - campaign_cost,
+                    note=(
+                        f"캠페인 리마인드 {len(remind_dict_list)}건 포함"
+                        if len(remind_dict_list) > 0
+                        else None
+                    ),
+                    created_by=str(user.user_id),
+                    updated_by=str(user.user_id),
+                )
+                self.credit_repository.add_history(new_credit_history, db)
+
+                # 2. remaining_credit 차감
+                self.credit_repository.update_credit(-campaign_cost, db)
+
+                # 3. campaign_credit_payment 테이블 저장
+                # 기존 레코드가 있으면 업데이트하고, 없으면 삽입하는 쿼리
+                insert_stmt = insert(CampaignCreditPaymentEntity).values(
+                    campaign_id=campaign_id,
+                    cost=campaign_cost,
+                    created_by=str(user.user_id),
+                    updated_by=str(user.user_id),
+                )
+
+                # campaign_id가 이미 존재하면 cost와 updated_by를 업데이트
+                update_stmt = insert_stmt.on_conflict_do_update(
+                    index_elements=["campaign_id"],
+                    set_={"cost": campaign_cost, "updated_by": str(user.user_id)},
+                )
+                db.execute(update_stmt)
             else:
                 approval_status = CampaignApprovalStatus.REVIEW.value
                 is_approved = False
