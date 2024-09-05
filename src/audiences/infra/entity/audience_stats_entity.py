@@ -7,7 +7,6 @@ class AudienceStatsEntity(Base):
     __tablename__ = "audience_stats"
 
     audience_id = Column(String, primary_key=True, index=True)
-    audience_type_code = Column(String, nullable=False)
     audience_count = Column(Integer, nullable=False)
     audience_count_gap = Column(Integer, nullable=True)
     net_audience_count = Column(Integer)
@@ -25,3 +24,6 @@ class AudienceStatsEntity(Base):
     retention_rate_3m = Column(Float, nullable=True)
     response_rate = Column(Float, nullable=True)
     stat_updated_at = Column(String, nullable=True)
+
+    def as_dict(self):
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}

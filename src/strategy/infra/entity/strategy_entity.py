@@ -1,9 +1,17 @@
-from datetime import datetime
-
-from sqlalchemy import ARRAY, Column, DateTime, String, text
+from sqlalchemy import (
+    ARRAY,
+    Boolean,
+    Column,
+    DateTime,
+    Sequence,
+    String,
+    event,
+    func,
+    text,
+)
 from sqlalchemy.orm import relationship
 
-from src.core.database import Base as Base
+from src.core.database import Base
 
 
 class StrategyEntity(Base):
@@ -13,35 +21,35 @@ class StrategyEntity(Base):
         String,
         primary_key=True,
         index=True,
-        server_default=text(
-            "'stt-' || LPAD(nextval('aivelabs_sv.strategy_test_seq')::TEXT, 6, '0')"
-        ),
     )
     strategy_name = Column(String, nullable=False)
     strategy_tags = Column(ARRAY(String), nullable=False)
-    strategy_metric_code = Column(String, unique=False, nullable=True)
-    strategy_metric_name = Column(String, unique=False, nullable=True)
     strategy_status_code = Column(String, unique=False, nullable=False)
     strategy_status_name = Column(String, unique=False, nullable=False)
-    audience_type_code = Column(String, unique=False, nullable=False)
-    audience_type_name = Column(String, unique=False, nullable=False)
-    target_group_code = Column(String, unique=False, nullable=False)
-    target_group_name = Column(String, unique=False, nullable=False)
+    target_strategy = Column(String, unique=False, nullable=False)
     owned_by_dept = Column(String, nullable=False)
-    created_at = Column(DateTime(timezone=True), default=datetime.now())
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False, default=text("(user)"))
-    updated_at = Column(
-        DateTime(timezone=True), default=datetime.now(), onupdate=datetime.now()
-    )
+    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
     updated_by = Column(String, nullable=False, default=text("(user)"))
+    is_deleted = Column(Boolean, nullable=False, default=False)
 
     # 1:1 relationship
-    camp_mapping = relationship("CampaignsEntity", backref="strategies")
+    camp_mapping = relationship("CampaignEntity", backref="strategies")
 
     # 1:n relationship
-    campaign_themes = relationship(
-        "CampaignThemeEntity",
+    strategy_themes = relationship(
+        "StrategyThemesEntity",
         backref="strategies",
         lazy=True,
         cascade="all, delete-orphan",
     )
+
+
+strategy_id_seq = Sequence("strategy_id_seq", schema="aivelabs_sv")
+
+
+@event.listens_for(StrategyEntity, "before_insert")
+def generate_custom_strategy_id(mapper, connection, target):
+    next_id = connection.execute(strategy_id_seq)
+    target.strategy_id = f"stt-{str(next_id).zfill(6)}"

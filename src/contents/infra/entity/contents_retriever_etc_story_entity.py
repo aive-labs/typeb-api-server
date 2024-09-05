@@ -1,12 +1,13 @@
-from core.database import BaseModel as Base
 from sqlalchemy import (
     Column,
     Integer,
     String,
 )
 
+from src.core.database import Base
 
-class ContentsRetrieverEtcStory(Base):
+
+class ContentsRetrieverEtcStoryEntity(Base):
     __tablename__ = "contents_retriever_etc_story"
 
     id = Column(Integer, primary_key=True, index=True)

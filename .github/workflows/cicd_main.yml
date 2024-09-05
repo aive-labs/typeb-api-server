@@ -1,0 +1,94 @@
+name: CI/CD-develop
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint_and_formatting:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+
+      #      - name: Test code (pytest)
+      #        run: |
+      #          pip install -r requirements.txt
+      #          pytest
+
+      - name: Run code formatting(Black)
+        run: |
+          pip install black
+          black --check .
+
+      - name: Run linting (Ruff)
+        run: |
+          pip install ruff==0.4.8
+          ruff check .
+
+  #      - name: Run static type checking (mypy)
+  #        run: |
+  #          pip install mypy
+  #          mypy .
+
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    needs: lint_and_formatting
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH agent
+        run: |
+          # GitHub Secrets에 저장된 SSH_PRIVATE_KEY 값을 파일로 저장
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/pem.key
+          # 파일 권한 설정
+          chmod 600 /tmp/pem.key
+
+      - name: Copy files to Bastion Host
+        run: |
+          ssh -o StrictHostKeyChecking=no -i /tmp/pem.key ubuntu@${{ secrets.PROD_BASTION_HOST }} 'mkdir -p /home/ubuntu/typeb-api'
+          scp -o StrictHostKeyChecking=no -i /tmp/pem.key -r ./* ubuntu@${{ secrets.PROD_BASTION_HOST }}:/home/ubuntu/typeb-api
+
+      - name: Copy files from Bastion Host to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i /tmp/pem.key ubuntu@${{ secrets.PROD_BASTION_HOST }} 'scp -o StrictHostKeyChecking=no -i ~/.ssh/aice-backend.pem -r /home/ubuntu/typeb-api/* ubuntu@${{ secrets.PROD_API_SERVER }}:/home/ubuntu/typeb-api'
+
+      - name: Clean up Bastion Host
+        run: |
+          ssh -o StrictHostKeyChecking=no -i /tmp/pem.key ubuntu@${{ secrets.PROD_BASTION_HOST }} 'rm -rf /home/ubuntu/typeb-api'
+
+      - name: Deploy Container on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.PROD_BASTION_HOST }}
+          username: ubuntu
+          script: |
+            ssh -i ~/.ssh/aice-backend.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.PROD_API_SERVER }} '
+              cd /home/ubuntu/typeb-api && \
+              docker build -t aice-app-image . && \
+              docker stop aice-container || true && \
+              docker rm aice-container || true && \
+              docker run -d --name aice-container \
+                -e AWS_ACCESS_KEY_ID=${{ secrets.PROD_AWS_ACCESS_KEY_ID }} \
+                -e AWS_SECRET_ACCESS_KEY=${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }} \
+                -e AWS_REGION=${{ secrets.PROD_AWS_REGION }} \
+                -p 8000:8000 aice-app-image
+            '

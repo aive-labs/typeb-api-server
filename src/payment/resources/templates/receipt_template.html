@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>크레딧 영수증</title>
+    <style>
+        body {
+            font-family: 'Noto Sans CJK KR', sans-serif;
+            line-height: 1.4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .receipt {
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .company-info {
+            text-align: left;
+            margin-bottom: 40px;
+        }
+
+        .company-info p {
+            margin: 5px 0;
+        }
+
+        .details {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .total {
+            font-weight: bold;
+            margin-bottom: 40px;
+            text-align: end;
+        }
+
+        .payment-info p {
+            margin: 5px 0;
+        }
+
+        .inquiry-info {
+            margin-top: 50px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="receipt">
+    <div class="header">
+        <h1>영수증</h1>
+    </div>
+
+    <div class="company-info">
+        <p>[번호] {{ invoice_number }}</p>
+        <p>[사업체명] 에이브랩스</p>
+        <p>[사업자 번호] 327-87-01131</p>
+        <p>[주소] 서울특별시 용산구 서빙고로 17, 23층 2309호 (한강로3가)</p>
+        <p>[대표자] 이동훈</p>
+        <p>[발급일시] {{ date }}</p>
+    </div>
+
+    <div class="details">
+        <h2>구매 내역</h2>
+        <table>
+            <tr>
+                <th>구분</th>
+                <th>내역</th>
+                <th>결제 방식</th>
+                <th>금액</th>
+                <th>일시</th>
+            </tr>
+            <tr>
+                <td>{{ items[0]["purchase_or_cancel"] }}</td>
+                <td>{{ items[0]['title'] }}</td>
+                <td>{{ items[0]['payment_type'] }}</td>
+                <td>{{ items[0]['charge'] }} 원</td>
+                <td>{{ items[0]["approved_at"] }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="total">
+        <p>총 구매 금액: {{ total }} 원</p>
+    </div>
+
+    {% if items[0]["purchase_or_cancel"] == "구매" %}
+        <div class="payment-info">
+            <h2>구매 정보</h2>
+
+            {% if items[0]['payment_type'] == "무통장 입금" %}
+                <!-- 무통장 입금 시 -->
+                <div id="bank-transfer">
+                    <p>[결제 방식] 무통장 입금</p>
+                    <p>[입금자] {{ items[0]["depositor"] }}</p>
+                    <p>[입금 확인 일시] {{ items[0]["approved_at"] }}</p>
+                </div>
+            {% elif items[0]['payment_type'] == "간편결제" %}
+                <!-- 간편결제 이용 시 -->
+                <div id="easy-payment">
+                    <p>[결제 수단] {{ items[0]["method"] }} </p>
+                    <p>[카드사] {{ items[0]["card_company"] }} </p>
+                    <p>[카드 번호] {{ items[0]["card_number"] }}</p>
+                    <p>[승인 금액] {{ items[0]["charge"] }} 원</p>
+                    <p>[승인 일시] {{ items[0]["approved_at"] }}</p>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="inquiry-info">
+        <p>크레딧 관련 문의사항은 지원팀(hq@aivelabs.com)을 통해 연락부탁드립니다.</p>
+    </div>
+
+    <div class="footer">
+        <p>감사합니다.</p>
+    </div>
+</div>
+
+</body>
+</html>

@@ -5,12 +5,16 @@ from sqlalchemy import (
     DateTime,
     ForeignKey,
     Integer,
+    Sequence,
     String,
-    text,
+    event,
+    func,
 )
 from sqlalchemy.orm import relationship
 
-from src.core.database import Base as Base
+from src.campaign.infra.entity.campaign_remind_entity import CampaignRemindEntity
+from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
+from src.core.database import Base
 
 
 class CampaignEntity(Base):
@@ -20,22 +24,15 @@ class CampaignEntity(Base):
         String,
         primary_key=True,
         index=True,
-        server_default=text(
-            "'cam-' || LPAD(nextval('aivelabs_sv.campaign_seq')::TEXT, 6, '0')"
-        ),
     )
     campaign_name = Column(String, nullable=False)
     campaign_group_id = Column(
         String,
         nullable=False,
-        server_default=text(
-            "'grp-' || LPAD(nextval('aivelabs_sv.campaign_grp_seq')::TEXT, 6, '0')"
-        ),
     )
     budget = Column(Integer, nullable=True)
     campaign_type_code = Column(String, nullable=False)
     campaign_type_name = Column(String, nullable=False)
-    audience_type_code = Column(String, nullable=True)
     medias = Column(String, nullable=False)
     campaign_status_group_code = Column(String, nullable=False)
     campaign_status_group_name = Column(String, nullable=False)
@@ -56,33 +53,52 @@ class CampaignEntity(Base):
     has_remind = Column(Boolean, nullable=False)
     campaigns_exc = Column(ARRAY(String), nullable=True)
     audiences_exc = Column(ARRAY(String), nullable=True)
-    strategy_id = Column(String, ForeignKey("aivelabs_sv.strategies.strategy_id"))
-    campaign_theme_ids = Column(ARRAY(Integer), nullable=True)
+    strategy_id = Column(String, ForeignKey("strategies.strategy_id"))
+    strategy_theme_ids = Column(ARRAY(Integer), nullable=True)
     is_personalized = Column(Boolean, nullable=False)
     progress = Column(String, nullable=False)
     msg_delivery_vendor = Column(String, nullable=False)
     shop_send_yn = Column(String, nullable=False)
-    retention_day = Column(String, nullable=True)
+    retention_day = Column(Integer, nullable=True)
     owned_by_dept = Column(String, nullable=False)
     owned_by_dept_name = Column(String, nullable=False)  # 생성 부서명
     owned_by_dept_abb_name = Column(String, nullable=False)  # 생성 부서명2
-    created_at = Column(DateTime(timezone=True))
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False)
     created_by_name = Column(String, nullable=False)  # 생성 유저명
-    updated_at = Column(DateTime(timezone=True))
+    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
     updated_by = Column(String, nullable=False)
 
     # 1:n relationship
+
+    # 1:n relationship
     remind_list = relationship(
-        "CampaignRemindEntity", backref="campaigns", lazy=True, cascade="all, delete-orphan"
+        CampaignRemindEntity,
+        back_populates="campaigns",
+        lazy=True,
+        cascade="all, delete-orphan",
     )
 
     # 1:n relationship
     camp_sets = relationship(
-        "CampaignSetsEntity", backref="campaigns", lazy=True, cascade="all, delete-orphan"
+        CampaignSetsEntity,
+        backref="campaigns",
+        lazy=True,
+        cascade="all, delete-orphan",
     )
 
     def as_dict(self):
-        return {
-            column.name: getattr(self, column.name) for column in self.__table__.columns
-        }
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+
+
+campaign_id_seq = Sequence("campaign_seq", schema="aivelabs_sv")
+campaign_group_id_seq = Sequence("campaign_grp_seq", schema="aivelabs_sv")
+
+
+@event.listens_for(CampaignEntity, "before_insert")
+def generate_custom_campaign_id(mapper, connection, target):
+    next_id = connection.execute(campaign_id_seq)
+    target.campaign_id = f"cam-{str(next_id).zfill(6)}"
+
+    next_grp_id = connection.execute(campaign_group_id_seq)
+    target.campaign_group_id = f"grp-{str(next_grp_id).zfill(6)}"

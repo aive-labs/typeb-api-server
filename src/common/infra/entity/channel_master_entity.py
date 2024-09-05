@@ -1,8 +1,6 @@
-from datetime import datetime
+from sqlalchemy import Column, DateTime, String, func
 
-from sqlalchemy import Column, DateTime, String
-
-from src.core.database import Base as Base
+from src.core.database import Base
 
 
 class ChannelMasterEntity(Base):
@@ -37,4 +35,4 @@ class ChannelMasterEntity(Base):
     tel_no3 = Column(String(5))
     zip_cd = Column(String(7))
     addr2 = Column(String(80))
-    etl_time = Column(DateTime(timezone=True), default=datetime.now())
+    etl_time = Column(DateTime(timezone=True), default=func.now())

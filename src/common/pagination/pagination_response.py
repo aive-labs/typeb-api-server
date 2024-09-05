@@ -8,6 +8,5 @@ T = TypeVar("T")
 
 
 class PaginationResponse(BaseModel, Generic[T]):
-    status: str
     items: list[T]
     pagination: PaginationBase

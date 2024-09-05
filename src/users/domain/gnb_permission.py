@@ -1,4 +1,3 @@
-
 from pydantic import BaseModel
 
 
@@ -27,3 +26,23 @@ class GNBPermissions(BaseModel):
     dashboard: Dashboard = Dashboard()
     settings: UserSettings = UserSettings()
     contents_manager: ContentsManager | None = None
+
+    @staticmethod
+    def with_admin() -> "GNBPermissions":
+        contents_manager = ContentsManager(contents_library=["create", "read", "update", "delete"])
+        user_settings = UserSettings(
+            templates=["create", "read", "update", "delete"],
+            offer=["read", "update"],
+            admin=["create", "read", "update", "delete"],
+        )
+
+        dashboard = Dashboard(
+            campaigns=["read"], trend_analysis=["read"], audience_analysis=["read"]
+        )
+
+        return GNBPermissions(
+            strategy_manager=["create", "read", "update", "delete"],
+            contents_manager=contents_manager,
+            settings=user_settings,
+            dashboard=dashboard,
+        )

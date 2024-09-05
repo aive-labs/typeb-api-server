@@ -21,6 +21,6 @@ class SendType(StrEnum):
         raise Exception("지원되지 않는 타입입니다.")
 
 
-class SendtypeEnum(Enum):
+class SendTypeEnum(Enum):
     ONETIME = "onetime"
     RECURRING = "recurring"

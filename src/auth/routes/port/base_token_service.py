@@ -4,7 +4,6 @@ from src.users.domain.user import User
 
 
 class BaseTokenService(ABC):
-
     @abstractmethod
     def create_token(self, user: User):
         pass

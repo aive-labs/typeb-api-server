@@ -1,11 +1,10 @@
-from datetime import datetime
-
 from sqlalchemy import (
     Column,
     DateTime,
     ForeignKey,
     Integer,
     String,
+    func,
     text,
 )
 
@@ -16,9 +15,7 @@ class SendReservationEntity(Base):
     __tablename__ = "send_reservation"
 
     send_resv_seq = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    set_group_msg_seq = Column(
-        Integer, ForeignKey("aivelabs_sv.set_group_messages.set_group_msg_seq")
-    )
+    set_group_msg_seq = Column(Integer, ForeignKey("set_group_messages.set_group_msg_seq"))
     campaign_id = Column(String(10), nullable=False)
     campaign_name = Column(String(100))
     send_resv_date = Column(DateTime(timezone=True), nullable=False)
@@ -32,7 +29,7 @@ class SendReservationEntity(Base):
     send_msg_subject = Column(String(40))
     send_msg_body = Column(String(3072))
     send_filecount = Column(Integer)
-    send_filepath = Column(String(255))
+    send_filepath = Column(String)
     kko_yellowid = Column(String(100))
     kko_template_key = Column(String(50))
     kko_button_json = Column(String(3000))
@@ -56,15 +53,16 @@ class SendReservationEntity(Base):
     shop_send_yn = Column(String, nullable=False)  # shop_send_yn
     test_send_yn = Column(String(5))
     audience_id = Column(String)
-    event_no = Column(String)
-    create_resv_date = Column(
-        DateTime(timezone=True), nullable=False, default=datetime.now()
-    )
+    coupon_no = Column(String)
+    create_resv_date = Column(DateTime(timezone=True), nullable=False, default=func.now())
     create_resv_user = Column(String(20), nullable=False, default=text("(user)"))
     update_resv_date = Column(
         DateTime(timezone=True),
         nullable=False,
-        default=datetime.now(),
-        onupdate=datetime.now(),
+        default=func.now(),
+        onupdate=func.now(),
     )
     update_resv_user = Column(String(20), nullable=False, default=text("(user)"))
+
+    log_comment = Column(String)
+    log_date = Column(DateTime(timezone=True), nullable=False, default=func.now())

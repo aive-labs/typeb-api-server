@@ -1,6 +1,9 @@
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
+
+from src.campaign.domain.campaign_remind import CampaignRemind
 
 
 class Campaign(BaseModel):
@@ -10,7 +13,6 @@ class Campaign(BaseModel):
     budget: int | None
     campaign_type_code: str
     campaign_type_name: str
-    audience_type_code: str | None
     medias: str
     campaign_status_group_code: str
     campaign_status_group_name: str
@@ -23,28 +25,29 @@ class Campaign(BaseModel):
     send_date: str | None
     is_msg_creation_recurred: bool
     is_approval_recurred: bool
-    datetosend: str | None
+    datetosend: Literal["end_of_month"] | int | str | None = None
     timetosend: str
     start_date: str | None
     end_date: str | None
     group_end_date: str | None
     has_remind: bool
+    remind_list: list[CampaignRemind] = []
     campaigns_exc: list[str] | None
     audiences_exc: list[str] | None
     strategy_id: str | None
-    campaign_theme_ids: list[int] | None
+    strategy_theme_ids: list[int] | None
     is_personalized: bool
     progress: str
     msg_delivery_vendor: str
     shop_send_yn: str
-    retention_day: str | None = None
+    retention_day: int | None = None
     owned_by_dept: str
     owned_by_dept_name: str
     owned_by_dept_abb_name: str
-    created_at: datetime | None
+    created_at: datetime | None = None
     created_by: str
     created_by_name: str
-    updated_at: datetime | None
+    updated_at: datetime | None = None
     updated_by: str
 
     model_config = ConfigDict(from_attributes=True)

@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
+from src.strategy.enums.target_strategy import TargetStrategy
+
 
 class Condition(BaseModel):
     cell_type: str
@@ -27,6 +29,7 @@ class FilterObj(BaseModel):
 class AudienceCreate(BaseModel):
     audience_name: str
     create_type_code: str
+    target_strategy: TargetStrategy
     filters: list[FilterObj] | None = None
     exclusions: list[FilterObj] | None = None
     upload: dict | None = None

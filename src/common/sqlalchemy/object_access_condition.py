@@ -13,9 +13,7 @@ def object_access_condition(db, user, model):
         model: Object Model
     """
     admin_access = (
-        True
-        if user.role_id in [RoleEnum.ADMIN.value, RoleEnum.OPERATOR.value]
-        else False
+        True if user.role_id in [RoleEnum.ADMIN.value, RoleEnum.OPERATOR.value] else False
     )
 
     if admin_access:
@@ -26,15 +24,12 @@ def object_access_condition(db, user, model):
 
         # 일반 이용자
         if user.sys_id == "HO":
-
             if user.parent_dept_cd:
                 ##본부 하위 팀 부서 리소스
                 parent_teams_query = db.query(UserEntity).filter(
                     UserEntity.parent_dept_cd == user.parent_dept_cd
                 )
-                department_ids = list(
-                    {i.department_id for i in parent_teams_query}
-                )
+                department_ids = list({i.department_id for i in parent_teams_query})
                 team_conditions = [model.owned_by_dept.in_(department_ids)]
                 conditions.extend(team_conditions)
                 erp_ids = [i.erp_id for i in parent_teams_query]

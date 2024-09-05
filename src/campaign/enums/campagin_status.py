@@ -1,3 +1,5 @@
+from enum import Enum
+
 from src.common.enums.str_enum import StrEnum
 
 
@@ -23,3 +25,22 @@ class CampaignStatus(StrEnum):
         obj.group = group
         obj.group_description = group_description
         return obj
+
+
+class CampaignStatusGroupEnum(Enum):
+    READY = "r"
+    WAIT = "w"
+    OPERATE = "o"
+    STOP = "s"
+
+
+class CampaignStatusEnum(Enum):
+    TEMPSAVE = "r1"
+    MODIFY = "r2"
+    REVIEW = "w1"
+    PENDING = "w2"
+    ONGOING = "o1"
+    COMPLETE = "o2"
+    HALTBEFORE = "s1"
+    HALTAFTER = "s2"
+    EXPIRED = "s3"

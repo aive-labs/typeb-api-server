@@ -1,6 +1,6 @@
 [tool.black]
 # black이 형식화할 파일을 지정. 정규 표현식으로 .py와 .pyi 파일을 포함하도록 설정
-line-length = 88
+line-length = 100
 include = '\.pyi?$'
 exclude = '''
 /(
@@ -13,11 +13,25 @@ exclude = '''
   | buck-out
   | build
   | dist
+  | src/offers/enums/
 )/
 '''
 
 
 [tool.ruff]
+exclude = [
+    "src/offers/enums/*", # 카페24 enum 값으로 인해 E741 Ambiguous variable name 발생
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".tox",
+    ".venv",
+    "_build",
+    "buck-out",
+    "build",
+    "dist"
+]
+
 # ref: https://beta.ruff.rs/docs/rules/
 # 설명: ruff가 선택적으로 적용할 규칙들을 지정. 각 문자와 숫자는 특정 규칙을 의미
 # 기능:
@@ -29,7 +43,7 @@ exclude = '''
 #   I: Import 관련 규칙
 #   W: 경고 규칙 (Warnings)
 #   UP: 언패킹 관련 규칙 (Unpacking)
-select = ["B", "C4", "E", "F", "N", "I", "W", "UP"]
+lint.select = ["B", "C4", "E", "F", "N", "I", "W", "UP"]
 
 # 무시할 규칙 지정
 #  F403: from module import * 허용
@@ -37,24 +51,39 @@ select = ["B", "C4", "E", "F", "N", "I", "W", "UP"]
 #  E501: 라인 길이 초과 에러 무시
 #  E402: 모듈 수준의 import는 맨 위에 있어야 한다는 규칙 무시
 #  B008: 기본 인수로 함수 호출을 사용하는 것은 바람직하지 않다. Depends에서 자꾸 통과하지 못해서 일단 제외
-ignore = ["F403", "F405", "E501", "E402", "B008"]
+#  N801: 프로퍼티 값이 True인 경우
+#  E712: 프로퍼티 값이 True인 경우
+#  F821: 메세지 생성시 초기 딕셔너리가 없는 문제. 복잡한 로직으로 추후 개선 필요
+lint.ignore = ["F403", "F405", "E501", "E402", "B008", "N801", "E722", "E712", "F821", "E711", "C403", "B006", "F841", "N999", "B904"]
+
 
 # ruff가 자동으로 고칠 수 있는 규칙 지정
-fixable = ["A", "B", "C", "D", "E", "F", "I", "UP"]
-unfixable = []
+lint.fixable = ["A", "B", "C", "D", "E", "F", "I", "UP"]
+lint.unfixable = []
 
 # 사용되지 않는 변수 이름을 지정하는 정규 표현식
 # dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
-[tool.ruff.mccabe]
+[tool.ruff.lint.per-file-ignores]
+"src/test/*" = ["ALL"]
+
+
+[tool.ruff.lint.mccabe]
 # 맥케이브 복잡도 (McCabe complexity) 기준 지정
 # 함수나 메서드의 복잡도 수준을 10으로 설정. 즉, 복잡도가 10을 초과하면 경고를 발생시킴.
 max-complexity = 10
 
-[tool.ruff.flake8-bugbear]
+[tool.ruff.lint.flake8-bugbear]
 extend-immutable-calls = [
-  "fastapi.Depends",
-  "fastapi.params.Depends",
-  "fastapi.Query",
-  "fastapi.params.Query",
+    "fastapi.Depends",
+    "fastapi.params.Depends",
+    "fastapi.Query",
+    "fastapi.params.Query",
 ]
+
+
+# https://github.com/microsoft/pyright/blob/main/docs/configuration.md
+[tool.pyright]
+reportGeneralTypeIssues = false
+reportAttributeAccessIssue = false
+reportUnhashable = false

@@ -2,16 +2,17 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
+from src.common.utils.date_utils import localtime_from_str
 from src.contents.infra.entity.contents_entity import ContentsEntity
 
 
 class Contents(BaseModel):
-    id: int | None = None
-    name: str
-    status: str
-    body: str
+    contents_id: int | None = None
+    contents_name: str
+    contents_status: str
+    contents_body: str
     plain_text: str
-    style_code: list[str]
+    sty_cd: list[str]
     subject: str | None = None
     material1: str | None
     material2: str | None
@@ -26,35 +27,18 @@ class Contents(BaseModel):
     coverage_score: float | None = None
     contents_type: str | None = None
     created_by: str | None = None
-    created_at: str | None = None
+    created_at: datetime | None = None
     updated_by: str | None = None
-    updated_at: str | None = None
+    updated_at: datetime | None = None
 
     def to_entity(self) -> ContentsEntity:
-        publication_start_dt = (
-            datetime.fromisoformat(self.publication_start)
-            if self.publication_start
-            else None
-        )
-        publication_end_dt = (
-            datetime.fromisoformat(self.publication_end)
-            if self.publication_end
-            else None
-        )
-        created_at_dt = (
-            datetime.fromisoformat(self.created_at) if self.created_at else None
-        )
-        updated_at_dt = (
-            datetime.fromisoformat(self.updated_at) if self.updated_at else None
-        )
-
         return ContentsEntity(
-            contents_id=self.id,
-            contents_name=self.name,
-            contents_status=self.status,
-            contents_body=self.body,
+            contents_id=self.contents_id,
+            contents_name=self.contents_name,
+            contents_status=self.contents_status,
+            contents_body=self.contents_body,
             plain_text=self.plain_text,
-            sty_cd=self.style_code,
+            sty_cd=self.sty_cd,
             subject=self.subject,
             material1=self.material1,
             material2=self.material2,
@@ -63,13 +47,23 @@ class Contents(BaseModel):
             emphasis_context=self.emphasis_context,
             thumbnail_uri=self.thumbnail_uri,
             contents_url=self.contents_url,
-            publication_start=publication_start_dt,
-            publication_end=publication_end_dt,
+            publication_start=(
+                localtime_from_str(self.publication_start) if self.publication_start else None
+            ),
+            publication_end=(
+                localtime_from_str(self.publication_end) if self.publication_end else None
+            ),
             contents_tags=self.contents_tags,
             coverage_score=self.coverage_score,
             contents_type=self.contents_type,
             created_by=self.created_by,
-            created_at=created_at_dt,
+            created_at=self.created_at,
             updated_by=self.updated_by,
-            updated_at=updated_at_dt,
+            updated_at=self.updated_at,
         )
+
+    def set_contents_url(self, url):
+        self.contents_url = url
+
+    def set_thumbnail_url(self, url):
+        self.thumbnail_uri = url

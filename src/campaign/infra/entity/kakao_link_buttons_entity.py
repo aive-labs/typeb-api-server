@@ -4,6 +4,7 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     String,
+    func,
 )
 
 from src.core.database import Base as Base
@@ -20,12 +21,12 @@ class KakaoLinkButtonsEntity(Base):
     kakao_app_link -> app_link
     """
     kakao_link_buttons_seq = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    set_group_msg_seq = Column(Integer, ForeignKey('aivelabs_sv.set_group_messages.set_group_msg_seq'))
+    set_group_msg_seq = Column(Integer, ForeignKey("set_group_messages.set_group_msg_seq"))
     button_name = Column(String, nullable=False)
     button_type = Column(String, nullable=False)
     web_link = Column(String, nullable=True)
     app_link = Column(String, nullable=True)
-    created_at = Column(DateTime(timezone=True))
+    created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False)
-    updated_at = Column(DateTime(timezone=True))
+    updated_at = Column(DateTime(timezone=True), default=func.now())
     updated_by = Column(String, nullable=False)

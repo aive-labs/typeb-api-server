@@ -3,6 +3,7 @@ from datetime import datetime
 from passlib.context import CryptContext
 from pydantic import BaseModel
 
+from src.payment.routes.dto.response.my_subscription import MySubscription
 from src.users.infra.entity.user_entity import UserEntity
 from src.users.infra.entity.user_password import UserPasswordEntity
 
@@ -22,10 +23,11 @@ class User(BaseModel):
     department_id: str | None = None
     department_name: str | None = None
     parent_dept_cd: str | None = None
-    parent_dept_cd: str | None = None
     language: str
     test_callback_number: str | None = None
     last_login: datetime | None = None
+    mall_id: str | None = None
+    subscription: MySubscription | None = None
 
     def to_entity(self) -> UserEntity:
         return UserEntity(
@@ -42,9 +44,10 @@ class User(BaseModel):
         )
 
     def to_password_entity(self) -> UserPasswordEntity:
+        if not self.password:
+            raise ValueError("Password is required")
+
         hashed_password = pwd_context.hash(self.password)
-        print('to entity')
-        print(hashed_password)
         return UserPasswordEntity(
             login_id=self.email,
             login_pw=hashed_password,
@@ -68,3 +71,6 @@ class User(BaseModel):
             test_callback_number=user_entity.test_callback_number,
             last_login=user_entity.last_login,
         )
+
+    def is_admin(self):
+        return self.role_id == "admin"
