@@ -11,7 +11,7 @@ class CustomerMasterEntity(Base):
     gender = Column(String)
     age = Column(String)
     group_no = Column(BigInteger)
-    cust_grade1 = Column(String)
+    group_name = Column(String)
     cust_name = Column(String)
     nick_name = Column(String)
     hp_no = Column(String)
