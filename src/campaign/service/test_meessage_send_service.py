@@ -8,6 +8,7 @@ from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import coalesce
 
+from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
 from src.campaign.infra.entity.campaign_set_recipients_entity import (
@@ -30,7 +31,6 @@ from src.campaign.routes.port.test_message_send_usecase import TestSendMessageUs
 from src.common.infra.entity.customer_master_entity import CustomerMasterEntity
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import localtime_converter
-from src.common.utils.get_env_variable import get_env_variable
 from src.contents.infra.entity.contents_entity import ContentsEntity
 from src.core.exceptions.exceptions import ConsistencyException, NotFoundException
 from src.message_template.enums.message_type import MessageType
@@ -45,6 +45,10 @@ pd.set_option("display.max_columns", None)
 
 
 class TestMessageSendService(TestSendMessageUseCase):
+
+    def __init__(self, onboarding_repository: BaseOnboardingRepository):
+        self.onboarding_repository = onboarding_repository
+
     async def exec(
         self, campaign_id, test_send_request: TestSendRequest, user: User, db: Session
     ) -> dict:
@@ -222,7 +226,15 @@ class TestMessageSendService(TestSendMessageUseCase):
         print("phone_callback 개인화 적용 후 row수 :" + str(len(send_rsv_format)))
         logging.info("5.[Test] phone_callback 개인화 적용 후 row수 :" + str(len(send_rsv_format)))
 
-        send_rsv_format = self.convert_by_message_format(send_rsv_format)
+        kakao_sender_key = self.onboarding_repository.get_kakao_sender_key(
+            mall_id=user.mall_id, db=db
+        )
+        if not kakao_sender_key:
+            raise NotFoundException(
+                detail={"messsage": "등록된 kakao sender key가 존재하지 않습니다."}
+            )
+
+        send_rsv_format = self.convert_by_message_format(send_rsv_format, kakao_sender_key)
         send_rsv_format = self.add_send_formatting(send_rsv_format, user_obj, is_test_send=True)
         # 테스트 발송
 
@@ -456,7 +468,7 @@ class TestMessageSendService(TestSendMessageUseCase):
 
         return df
 
-    def convert_by_message_format(self, df: pd.DataFrame):
+    def convert_by_message_format(self, df: pd.DataFrame, kakao_sender_key: str):
 
         # 발송사, 메세지 타입에 따른 기타 변수 생성
 
@@ -469,23 +481,12 @@ class TestMessageSendService(TestSendMessageUseCase):
             MessageType.KAKAO_IMAGE_WIDE.value,  # 친구톡 와이드 이미지형
         ]
 
-        cond_kakao = [
-            (df["send_msg_type"].isin(kakao_msg_type)),
-            ~(df["send_msg_type"].isin(kakao_msg_type)),
-        ]
-
-        choice_kakao = [get_env_variable("kakao_sender_key"), None]
-
-        df["kko_yellowid"] = np.select(cond_kakao, choice_kakao)
-
-        choice_kakao_timeout = [60, None]
-
-        df["kko_send_timeout"] = np.select(cond_kakao, choice_kakao_timeout)
+        df["kko_yellowid"] = kakao_sender_key
+        df["kko_send_timeout"] = 60
 
         # 대체 발송
         # kat -> lms
         # kft -> (광고) + lms
-
         ##kakao friend
         kakao_friend_msg = [
             MessageType.KAKAO_TEXT.value,  # 친구톡 이미지형에 이미지가 없는경우

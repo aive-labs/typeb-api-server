@@ -10,6 +10,8 @@ from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import coalesce
 
+from src.auth.infra.entity.cafe24_integration_entity import Cafe24IntegrationEntity
+from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
 from src.campaign.enums.campaign_approval_status import CampaignApprovalStatus
 from src.campaign.enums.campaign_timeline_type import CampaignTimelineType
 from src.campaign.infra.entity.approver_entity import ApproverEntity
@@ -89,10 +91,12 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         campaign_repository: BaseCampaignRepository,
         campaign_set_repository: BaseCampaignSetRepository,
         credit_repository: BaseCreditRepository,
+        onboarding_repository: BaseOnboardingRepository,
     ):
         self.campaign_repository = campaign_repository
         self.campaign_set_repository = campaign_set_repository
         self.credit_repository = credit_repository
+        self.onboarding_repository = onboarding_repository
         self.message_controller = MessageReserveController()
 
     @transactional
@@ -1532,11 +1536,25 @@ class ApproveCampaignService(ApproveCampaignUseCase):
 
             logging.info("11. send_msg_body 개인화 적용 후 row수 :" + str(len(send_rsv_format)))
 
+            entity = (
+                db.query(Cafe24IntegrationEntity)
+                .filter(Cafe24IntegrationEntity.user_id == user_obj.user_id)
+                .first()
+            )
+            if not entity:
+                raise NotFoundException(detail={"messsage": "연동된 카페24 계정이 없습니다."})
+
+            kakao_sender_key = self.onboarding_repository.get_kakao_sender_key(entity.mall_id, db)
+            if not kakao_sender_key:
+                raise NotFoundException(
+                    detail={"messsage": "등록된 kakao sender key가 존재하지 않습니다."}
+                )
+
             # 발송사, 메세지 타입에 따른 기타 변수 생성
             ##카카오발신프로필, 카카오템플릿키, 카카오친구톡광고표시, 카카오친구톡와이드이미지사용, 카카오알림톡 유형
             ##SSG 재발송 시도 여부, kko_send_timeout, kakao_send_profile_key
             send_rsv_format = convert_by_message_format(  # pyright: ignore [reportAssignmentType]
-                send_rsv_format
+                send_rsv_format, kakao_sender_key
             )  # pyright: ignore [reportAssignmentType]
 
             # 고객 중복 여부 체크

@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 
-from src.common.utils.get_env_variable import get_env_variable
 from src.message_template.enums.message_type import MessageType
 
 
@@ -19,7 +18,7 @@ def convert_send_msg_type(row):
         return row["send_msg_type"]
 
 
-def convert_by_message_format(df: pd.DataFrame):
+def convert_by_message_format(df: pd.DataFrame, kakao_sender_key: str):
     # 발송사, 메세지 타입에 따른 기타 변수 생성
 
     ## kakao
@@ -31,18 +30,8 @@ def convert_by_message_format(df: pd.DataFrame):
         MessageType.KAKAO_IMAGE_WIDE.value,  # 친구톡 와이드 이미지형
     ]
 
-    cond_kakao = [
-        (df["send_msg_type"].isin(kakao_msg_type)),
-        ~(df["send_msg_type"].isin(kakao_msg_type)),
-    ]
-
-    choice_kakao = [get_env_variable("kakao_sender_key"), None]
-
-    df["kko_yellowid"] = np.select(cond_kakao, choice_kakao)
-
-    choice_kakao_timeout = [60, None]
-
-    df["kko_send_timeout"] = np.select(cond_kakao, choice_kakao_timeout)
+    df["kko_yellowid"] = kakao_sender_key
+    df["kko_send_timeout"] = 60
 
     # 대체 발송
     # kat -> lms

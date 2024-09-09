@@ -88,7 +88,12 @@ class MessageService:
         return response["filekey"]
 
     async def upload_file_for_kakao(
-        self, new_file_name: str, file_read, content_type: str | None, message_type: str
+        self,
+        new_file_name: str,
+        file_read,
+        content_type: str | None,
+        message_type: str,
+        kakao_sender_key: str,
     ) -> str:
         if message_type in (MessageType.KAKAO_IMAGE_GENERAL.value, MessageType.KAKAO_TEXT.value):
             # 친구톡 이미지, 텍스트(?)
@@ -106,7 +111,7 @@ class MessageService:
             data.add_field("imageType", image_type)
             data.add_field("title", new_file_name)
             data.add_field("link", "www.aivelabs.com")
-            data.add_field("senderKey", get_env_variable("kakao_sender_key"))
+            data.add_field("senderKey", kakao_sender_key)
 
             data.add_field(
                 "image",

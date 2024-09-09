@@ -6,6 +6,7 @@ from fastapi import HTTPException, UploadFile
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
 
+from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
 from src.campaign.domain.campaign_messages import Message
 from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
 from src.campaign.infra.entity.message_resource_entity import MessageResourceEntity
@@ -22,6 +23,7 @@ from src.common.utils.file.s3_service import S3Service
 from src.common.utils.get_env_variable import get_env_variable
 from src.core.exceptions.exceptions import (
     ConsistencyException,
+    NotFoundException,
     PolicyException,
 )
 from src.core.transactional import transactional
@@ -36,11 +38,13 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
         campaign_repository: BaseCampaignRepository,
         campaign_set_repository: BaseCampaignSetRepository,
         message_service: MessageService,
+        onboarding_repository: BaseOnboardingRepository,
         s3_service: S3Service,
     ):
         self.campaign_repository = campaign_repository
         self.campaign_set_repository = campaign_set_repository
         self.message_service = message_service
+        self.onboarding_repository = onboarding_repository
         self.s3_service = s3_service
         self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
@@ -87,10 +91,18 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                     )
 
                 # 카카오 이미지 업로드
+                kakao_sender_key = self.onboarding_repository.get_kakao_sender_key(
+                    mall_id=user.mall_id, db=db
+                )
+                if not kakao_sender_key:
+                    raise NotFoundException(
+                        detail={"messsage": "등록된 kakao sender key가 존재하지 않습니다."}
+                    )
+
                 kakao_landing_url = None
                 if self.is_message_type_kakao(message_type):
                     kakao_landing_url = await self.message_service.upload_file_for_kakao(
-                        new_file_name, file_read, file.content_type, message_type
+                        new_file_name, file_read, file.content_type, message_type, kakao_sender_key
                     )
 
                 # s3에 이미지 저장

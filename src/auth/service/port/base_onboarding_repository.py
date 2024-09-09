@@ -44,3 +44,7 @@ class BaseOnboardingRepository(ABC):
     @abstractmethod
     def get_kakao_channel(self, mall_id, db: Session) -> KakaoChannelResponse | None:
         pass
+
+    @abstractmethod
+    def get_kakao_sender_key(self, mall_id, db: Session) -> str | None:
+        pass

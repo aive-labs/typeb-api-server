@@ -133,3 +133,15 @@ class OnboardingSqlAlchemyRepository:
             search_id=entity.search_id,
             sender_phone_number=entity.sender_phone_number,
         )
+
+    def get_kakao_sender_key(self, mall_id, db) -> str | None:
+        entity = (
+            db.query(KakaoIntegrationEntity)
+            .filter(KakaoIntegrationEntity.mall_id == mall_id)
+            .first()
+        )
+
+        if not entity:
+            return None
+
+        return entity.kakao_sender_key

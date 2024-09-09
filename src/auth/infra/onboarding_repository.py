@@ -16,10 +16,6 @@ class OnboardingRepository(BaseOnboardingRepository):
         self.onboarding_sqlalchemy = onboarding_sqlalchemy
 
     def get_onboarding_status(self, mall_id, db: Session) -> Onboarding | None:
-        # print(f"repository_db_session: {db}")
-        # result = db.execute(text("SHOW search_path")).fetchone()
-        # print(f"Current search_path: {result}")
-
         return self.onboarding_sqlalchemy.get_onboarding_status(mall_id, db)
 
     def update_onboarding_status(
@@ -47,3 +43,6 @@ class OnboardingRepository(BaseOnboardingRepository):
 
     def get_kakao_channel(self, mall_id, db: Session) -> KakaoChannelResponse | None:
         return self.onboarding_sqlalchemy.get_kakao_channel(mall_id, db)
+
+    def get_kakao_sender_key(self, mall_id, db: Session) -> str | None:
+        return self.onboarding_sqlalchemy.get_kakao_sender_key(mall_id, db)
