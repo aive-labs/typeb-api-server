@@ -62,6 +62,7 @@ class GetSubscriptionService(GetSubscriptionUseCase):
 
         all_customer_count = self.common_repository.get_all_customer_count(db)
 
+        all_customer_count = all_customer_count if all_customer_count > 0 else 1
         estimated_customer_count_for_pricing = round_up_to_nearest_ten_thousand(all_customer_count)
 
         for plan in plans:
