@@ -1,7 +1,7 @@
 from fastapi import Depends
 
 from src.auth.utils.get_current_user import get_current_user
-from src.core.exceptions.exceptions import AuthorizationException, SubscriptionException
+from src.core.exceptions.exceptions import AuthorizationException
 from src.payment.enum.subscription_status import SubscriptionStatus
 from src.users.domain.gnb_permission import ContentsManager, GNBPermissions
 from src.users.domain.resource_permission import ResourcePermission
@@ -102,7 +102,7 @@ class PermissionChecker:
         if "subscription" in self.required_permissions:
 
             if user.subscription is None:
-                raise SubscriptionException(
+                raise AuthorizationException(
                     detail={"message": "해당 기능은 플랜 결제 후 사용 가능합니다."}
                 )
             else:
