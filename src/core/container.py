@@ -487,6 +487,7 @@ class Container(containers.DeclarativeContainer):
         campaign_repository=campaign_repository,
         campaign_set_repository=campaign_set_repository,
         credit_repository=credit_repository,
+        onboarding_repository=onboarding_repository,
     )
 
     test_send_service = providers.Singleton(provides=TestMessageSendService)
