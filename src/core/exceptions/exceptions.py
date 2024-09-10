@@ -18,6 +18,11 @@ class AuthorizationException(HTTPException):
         super().__init__(status.HTTP_403_FORBIDDEN, detail, headers)
 
 
+class SubscriptionException(HTTPException):
+    def __init__(self, detail: Any = None, headers: dict[str, Any] | None = None) -> None:
+        super().__init__(status.HTTP_401_UNAUTHORIZED, detail, headers)
+
+
 class AuthException(HTTPException):
     def __init__(self, detail: Any = None, headers: dict[str, Any] | None = None) -> None:
         super().__init__(status.HTTP_403_FORBIDDEN, detail, headers)
