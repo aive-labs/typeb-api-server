@@ -223,6 +223,10 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 # 3. 잔여 크레딧 테이블에 환불 크레딧 합산
                 self.credit_repository.update_credit(refund_cost, db)
 
+                # 환불이 된 경우, 최근 결제 내역 삭제
+                # 해당 데이터가 남아 있으면 추후 재결제 시 한 번 더 승인하게 됨
+                self.credit_repository.delete_recently_credit_payment(campaign_id, db)
+
             # 잔여 크레딧이 충분한지 확인
             credit_entity = db.query(RemainingCreditEntity).first()
             if credit_entity is None:
@@ -677,6 +681,10 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             # 잔여 크레딧 테이블에 환불 크레딧 합산
             self.credit_repository.update_credit(campaign_cost, db)
 
+            # 환불이 된 경우, 최근 결제 내역 삭제
+            # 해당 데이터가 남아 있으면 추후 재결제 시 한 번 더 승인하게 됨
+            self.credit_repository.delete_recently_credit_payment(campaign_id, db)
+
         elif is_status_pending_to_ongoing(from_status, to_status):
             # 진행대기(PENDING) -> 운영(ONGOING)
             approval_no = self.get_campaign_approval_no(campaign_id, db)
@@ -1034,6 +1042,10 @@ class ApproveCampaignService(ApproveCampaignUseCase):
 
         # 3. 잔여 크레딧 테이블에 사용취소 크레딧 합산
         self.credit_repository.update_credit(refund_cost, db)
+
+        # 환불이 된 경우, 최근 결제 내역 삭제
+        # 해당 데이터가 남아 있으면 추후 재결제 시 한 번 더 승인하게 됨
+        self.credit_repository.delete_recently_credit_payment(campaign_id, db)
 
     async def delete_dag_run(self, campaign_id, db, user):
         # 1. send_dag_log -> dag_run_id 조회
@@ -1545,7 +1557,9 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 raise NotFoundException(detail={"messsage": "연동된 카페24 계정이 없습니다."})
 
             kakao_sender_key = self.onboarding_repository.get_kakao_sender_key(entity.mall_id, db)
-            if not kakao_sender_key:
+
+            print(kakao_sender_key)
+            if kakao_sender_key is None:
                 raise NotFoundException(
                     detail={"messsage": "등록된 kakao sender key가 존재하지 않습니다."}
                 )
@@ -1599,12 +1613,15 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             send_rsv_format["update_resv_user"] = user_obj.user_id
 
             # 저장
+            print("0000")
             send_reserv_columns = [
                 column.name
                 for column in SendReservationEntity.__table__.columns
                 if column.name
                 not in ["send_resv_seq", "shop_cd", "coupon_no", "log_date", "log_comment"]
             ]
+
+            print("111")
 
             res_df = send_rsv_format[send_reserv_columns]
 

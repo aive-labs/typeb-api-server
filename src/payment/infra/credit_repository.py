@@ -1,6 +1,9 @@
 from sqlalchemy import desc, func
 from sqlalchemy.orm import Session
 
+from src.campaign.infra.entity.campaign_credit_payment_entity import (
+    CampaignCreditPaymentEntity,
+)
 from src.core.exceptions.exceptions import ConsistencyException, NotFoundException
 from src.payment.domain.credit_history import CreditHistory
 from src.payment.infra.entity.credit_history_entity import CreditHistoryEntity
@@ -72,3 +75,9 @@ class CreditRepository(BaseCreditRepository):
             )
 
         return CreditHistory.model_validate(entity)
+
+    def delete_recently_credit_payment(self, campaign_id, db):
+        db.query(CampaignCreditPaymentEntity).filter(
+            CampaignCreditPaymentEntity.campaign_id == campaign_id
+        ).delete()
+        db.flush()

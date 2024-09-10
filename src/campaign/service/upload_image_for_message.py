@@ -94,7 +94,7 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                 kakao_sender_key = self.onboarding_repository.get_kakao_sender_key(
                     mall_id=user.mall_id, db=db
                 )
-                if not kakao_sender_key:
+                if kakao_sender_key is None:
                     raise NotFoundException(
                         detail={"messsage": "등록된 kakao sender key가 존재하지 않습니다."}
                     )

@@ -9,6 +9,9 @@ from src.common.utils.string_utils import replace_multiple
 
 def personal_variable_formatting(db, df: pd.DataFrame, test_send_list: list | None = None):
     personal_variable_query = db.query(PersonalVariablesEntity)
+
+    print(df)
+
     df["body_extracted"] = df["send_msg_body"].apply(
         lambda x: re.findall(r"\{\{(.*?)\}\}", x) if x is not None else []
     )

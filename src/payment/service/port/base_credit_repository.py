@@ -35,3 +35,7 @@ class BaseCreditRepository(ABC):
     @abstractmethod
     def get_credit_history_by_id(self, credit_history_id, db) -> CreditHistory:
         pass
+
+    @abstractmethod
+    def delete_recently_credit_payment(self, campaign_id, db):
+        pass
