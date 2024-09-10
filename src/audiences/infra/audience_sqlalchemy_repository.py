@@ -259,11 +259,8 @@ class AudienceSqlAlchemy:
 
         db.bulk_save_objects(obj)
 
-    def get_all_customer(self, erp_id: str, sys_id: str, db: Session):
-
-        return db.query(func.distinct(CustomerInfoStatusEntity.cus_cd).label("cus_cd")).filter(
-            *([CustomerInfoStatusEntity.main_shop == erp_id] if sys_id == "WP" else [])
-        )
+    def get_all_customer(self, db: Session):
+        return db.query(func.distinct(CustomerInfoStatusEntity.cus_cd).label("cus_cd"))
 
     def get_tablename_by_variable_id(self, variable_id: str, db: Session) -> VariableTableMapping:
 

@@ -120,10 +120,7 @@ class AudienceRepository(BaseAudienceRepository):
         self.audience_sqlalchemy.save_audience_list(audience_id, query, db)
 
     def get_all_customer_by_audience(self, user: User, db: Session) -> object:
-        if user.erp_id is not None and user.sys_id is not None:
-            return self.audience_sqlalchemy.get_all_customer(user.erp_id, user.sys_id, db)
-
-        raise Exception("erp_id와 sys_id가 존재하지 않습니다.")
+        return self.audience_sqlalchemy.get_all_customer(db)
 
     def get_tablename_by_variable_id(self, variable_id: str, db: Session) -> VariableTableMapping:
         return self.audience_sqlalchemy.get_tablename_by_variable_id(variable_id, db)
