@@ -63,6 +63,7 @@ from src.campaign.service.upload_image_for_message import UploadImageForMessage
 from src.common.infra.common_repository import CommonRepository
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
 from src.common.utils.file.s3_service import S3Service
+from src.common.utils.get_env_variable import get_env_variable
 from src.contents.infra.contents_repository import ContentsRepository
 from src.contents.infra.contents_sqlalchemy_repository import ContentsSqlAlchemy
 from src.contents.infra.creatives_repository import CreativesRepository
@@ -192,7 +193,8 @@ class Container(containers.DeclarativeContainer):
     s3 객체
     """
     # todo 환경에 따라 버킷명 변경 필요
-    s3_asset_service = providers.Singleton(provides=S3Service, bucket_name="aice-asset-dev")
+    bucket_name = get_env_variable("s3_asset_bucket")
+    s3_asset_service = providers.Singleton(provides=S3Service, bucket_name=bucket_name)
 
     """
     사용자 의존성 주입

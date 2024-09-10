@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.common.utils.date_utils import get_unix_timestamp
 from src.common.utils.file.s3_service import S3Service
+from src.common.utils.get_env_variable import get_env_variable
 from src.contents.domain.creatives import Creatives
 from src.contents.enums.image_source import ImageSource
 from src.contents.infra.dto.response.s3_presigned_response import S3PresignedResponse
@@ -26,7 +27,8 @@ class AddCreativesService(AddCreativesUseCase):
         self.cafe24_repository = cafe24_repository
 
         # todo dot env service
-        self.s3_service = S3Service("aice-asset-dev")
+        self.bucket_name = get_env_variable("s3_asset_bucket")
+        self.s3_service = S3Service(self.bucket_name)
 
     @transactional
     def generate_s3_url(

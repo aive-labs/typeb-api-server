@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
 from src.common.utils.file.s3_service import S3Service
+from src.common.utils.get_env_variable import get_env_variable
 from src.contents.domain.creatives import Creatives
 from src.contents.infra.creatives_repository import CreativesRepository
 from src.contents.routes.dto.request.creatives_create import CreativeCreate
@@ -35,7 +36,8 @@ class UpdateCreativesService(UpdateCreativesUseCase):
 
             # s3에 기존에 저장된 파일 삭제
             creatives = self.creatives_repository.find_by_id(id=creative_id, db=db)
-            s3_service = S3Service("aice-asset-dev")
+            bucket_name = get_env_variable("s3_asset_bucket")
+            s3_service = S3Service(bucket_name)
             s3_service.delete_object(creatives.image_path)
 
         return self.creatives_repository.update_creatives(creative_id, creatives_update_dict, db)

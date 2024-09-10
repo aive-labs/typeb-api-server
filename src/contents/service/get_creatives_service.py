@@ -15,7 +15,8 @@ class GetCreativesService(GetCreativesUseCase):
 
     def __init__(self, creatives_repository: BaseCreativesRepository):
         self.creatives_repository = creatives_repository
-        self.s3_service = S3Service("aice-asset-dev")
+        self.bucket_name = get_env_variable("s3_asset_bucket")
+        self.s3_service = S3Service(self.bucket_name)
         self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
     def get_creatives_detail(self, creative_id: int, db: Session) -> Creatives:
