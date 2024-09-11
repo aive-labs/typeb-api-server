@@ -66,7 +66,11 @@ from src.core.exceptions.exceptions import (
 )
 from src.message_template.enums.message_type import MessageType
 from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
+from src.messages.domain.kakao_carousel_more_link import KakaoCarouselMoreLink
 from src.messages.infra.entity.kakao_carousel_card_entity import KakaoCarouselCardEntity
+from src.messages.infra.entity.kakao_carousel_more_link_entity import (
+    KakaoCarouselMoreLinkEntity,
+)
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
 
 
@@ -845,3 +849,15 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             )
 
         return entity.campaign_id
+
+    def get_carousel_more_link(self, set_group_message_seq, db) -> KakaoCarouselMoreLink | None:
+        carousel_more_link_entity = (
+            db.query(KakaoCarouselMoreLinkEntity)
+            .filter(KakaoCarouselMoreLinkEntity.set_group_msg_seq == int(set_group_message_seq))
+            .first()
+        )
+
+        if carousel_more_link_entity is None:
+            return None
+
+        return KakaoCarouselMoreLink.model_validate(carousel_more_link_entity)

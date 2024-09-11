@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from src.campaign.domain.campaign import Campaign
 from src.campaign.domain.campaign_messages import MessageResource, SetGroupMessage
 from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
+from src.messages.domain.kakao_carousel_more_link import KakaoCarouselMoreLink
 
 
 class BaseCampaignSetRepository(ABC):
@@ -108,4 +109,8 @@ class BaseCampaignSetRepository(ABC):
 
     @abstractmethod
     def get_campaign_by_set_group_message_by_msg_seq(self, set_group_msg_seq, db) -> str:
+        pass
+
+    @abstractmethod
+    def get_carousel_more_link(self, set_group_message_seq, db) -> KakaoCarouselMoreLink | None:
         pass

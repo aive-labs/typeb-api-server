@@ -55,6 +55,9 @@ from src.message_template.enums.message_type import MessageType
 from src.messages.routes.dto.response.kakao_carousel_card_response import (
     KakaoCarouselCardResponse,
 )
+from src.messages.routes.dto.response.kakao_carousel_more_link_response import (
+    KakaoCarouselMoreLinkResponse,
+)
 from src.users.domain.user import User
 
 
@@ -163,8 +166,19 @@ class GetCampaignService(GetCampaignUseCase):
                         KakaoCarouselCardResponse(**card.model_dump()) for card in carousel_cards
                     ]
                     set_group_message["campaign_msg"]["kakao_carousel"] = carousel_cards_response
+
+                    carousel_more_link = self.campaign_set_repository.get_carousel_more_link(
+                        set_group_message_seq, db
+                    )
+                    if carousel_more_link:
+                        set_group_message["campaign_msg"]["kakao_carousel_more_link"] = (
+                            KakaoCarouselMoreLinkResponse(**carousel_more_link.model_dump())
+                        )
+                    else:
+                        set_group_message["campaign_msg"]["kakao_carousel_more_link"] = None
                 else:
                     set_group_message["campaign_msg"]["kakao_carousel"] = None
+                    set_group_message["campaign_msg"]["kakao_carousel_more_link"] = None
 
         recipient_portion, total_cus, set_cus_count = self.campaign_set_repository.get_set_portion(
             campaign_id, db
