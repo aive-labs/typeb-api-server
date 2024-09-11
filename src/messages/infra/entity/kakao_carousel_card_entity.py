@@ -22,5 +22,7 @@ class KakaoCarouselCardEntity(Base):
     updated_by = Column(String, nullable=False)
 
     carousel_button_links = relationship(
-        "KakaoCarouselLinkButtonsEntity", back_populates="carousel_card"
+        "KakaoCarouselLinkButtonsEntity",
+        back_populates="carousel_card",
+        cascade="all, delete",
     )

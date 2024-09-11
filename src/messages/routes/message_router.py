@@ -19,6 +19,9 @@ from src.messages.routes.dto.response.kakao_carousel_card_response import (
 from src.messages.routes.port.create_carousel_card_usecase import (
     CreateCarouselCardUseCase,
 )
+from src.messages.routes.port.delete_carousel_card_usecase import (
+    DeleteCarouselCardUseCase,
+)
 from src.messages.service.message_service import MessageService
 
 message_router = APIRouter(
@@ -99,3 +102,16 @@ def add_kakao_carousel_card(
     ),
 ) -> KakaoCarouselCardResponse:
     return create_carousel_card.create_carousel_card(file, carousel_card, user, db=db)
+
+
+@message_router.delete("/kakao-carousel/{carousel_card_id}")
+@inject
+def delete_kakao_carousel_card(
+    carousel_card_id: int,
+    db: Session = Depends(get_db),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
+    delete_carousel_card: DeleteCarouselCardUseCase = Depends(
+        Provide[Container.delete_carousel_card]
+    ),
+):
+    delete_carousel_card.exec(carousel_card_id, db=db)

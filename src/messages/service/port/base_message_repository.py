@@ -21,3 +21,7 @@ class BaseMessageRepository(ABC):
         self, carousel_card: KakaoCarouselCardRequest, user: User, db: Session
     ) -> KakaoCarouselCard:
         pass
+
+    @abstractmethod
+    def delete_carousel_card(self, carousel_card_id: int, db: Session):
+        pass

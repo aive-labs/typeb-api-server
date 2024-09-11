@@ -57,3 +57,8 @@ class MessageRepository(BaseMessageRepository):
         db.flush()
 
         return KakaoCarouselCard.model_validate(carousel_card_entity)
+
+    def delete_carousel_card(self, carousel_card_id: int, db: Session):
+        db.query(KakaoCarouselCardEntity).filter_by(
+            KakaoCarouselCardEntity.id == carousel_card_id
+        ).delete()

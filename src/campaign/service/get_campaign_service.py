@@ -146,6 +146,20 @@ class GetCampaignService(GetCampaignUseCase):
 
         set_group_message_list = self.convert_to_set_group_message_list(set_group_messages)
 
+        # 카카오 캐러셀인 경우 필드 추가
+        for _, set_group_messages in set_group_message_list.items():
+            for set_group_message in set_group_messages:
+                set_group_message_seq = set_group_message["campaign_msg"]["set_group_msg_seq"]
+                msg_type = set_group_message["campaign_msg"]["msg_type"]
+
+                if msg_type == MessageType.KAKAO_CAROUSEL.value:
+                    carousel_cards = self.campaign_set_repository.get_carousel(
+                        set_group_message_seq, db
+                    )
+                    set_group_message["campaign_msg"]["kakao_carousel"] = carousel_cards
+                else:
+                    set_group_message["campaign_msg"]["kakao_carousel"] = None
+
         recipient_portion, total_cus, set_cus_count = self.campaign_set_repository.get_set_portion(
             campaign_id, db
         )

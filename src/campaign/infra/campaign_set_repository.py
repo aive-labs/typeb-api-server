@@ -65,6 +65,8 @@ from src.core.exceptions.exceptions import (
     ValidationException,
 )
 from src.message_template.enums.message_type import MessageType
+from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
+from src.messages.infra.entity.kakao_carousel_card_entity import KakaoCarouselCardEntity
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
 
 
@@ -821,3 +823,11 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             .filter(SetGroupMessagesEntity.set_group_seq == set_group_seq)
             .all()
         )
+
+    def get_carousel(self, set_group_message_seq, db) -> list[KakaoCarouselCard]:
+        carousel_entities = (
+            db.query(KakaoCarouselCardEntity)
+            .filter(KakaoCarouselCardEntity.set_group_msg_seq == int(set_group_message_seq))
+            .all()
+        )
+        return [KakaoCarouselCard.model_validate(entity) for entity in carousel_entities]
