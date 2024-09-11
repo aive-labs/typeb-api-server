@@ -110,7 +110,7 @@ class MessageService:
             data.add_field("apiKey", get_env_variable("kakao_api_key"))
             data.add_field("imageType", image_type)
             data.add_field("title", new_file_name)
-            data.add_field("link", "www.aivelabs.com")
+            data.add_field("link", "www.aivelabs.com")  # TODO 쇼핑몰 링크 넣도록 수정
             data.add_field("senderKey", kakao_sender_key)
 
             data.add_field(
@@ -142,3 +142,8 @@ class MessageService:
                     raise PolicyException(detail={"message": extracted_message})
 
         return response["image"]
+
+    async def upload_file_for_kakao_carousel(
+        self, new_file_name, file_read, content_type, message_type, kakao_sender_key
+    ):
+        pass

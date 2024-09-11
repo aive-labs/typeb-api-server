@@ -29,6 +29,7 @@ from src.core.exceptions.exceptions import (
 from src.core.transactional import transactional
 from src.message_template.enums.message_type import MessageType
 from src.messages.service.message_service import MessageService
+from src.users.domain.user import User
 
 
 class UploadImageForMessage(UploadImageForMessageUseCase):
@@ -69,11 +70,8 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
         message_resources = []
         for file in files:
 
-            print(file.filename)
-
             # 파일 이름 변경(unix timestamp)
             new_file_name = self.generate_timestamp_file_name(file.filename)
-
             s3_file_key = f"{user.mall_id}/messages_resource/{campaign_id}/{set_group_msg_seq}/images/{new_file_name}"
 
             try:
@@ -99,11 +97,9 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                         detail={"messsage": "등록된 kakao sender key가 존재하지 않습니다."}
                     )
 
-                kakao_landing_url = None
-                if self.is_message_type_kakao(message_type):
-                    kakao_landing_url = await self.message_service.upload_file_for_kakao(
-                        new_file_name, file_read, file.content_type, message_type, kakao_sender_key
-                    )
+                kakao_landing_url = await self.message_service.upload_file_for_kakao_carousel(
+                    new_file_name, file_read, file.content_type, message_type, kakao_sender_key
+                )
 
                 # s3에 이미지 저장
                 await self.s3_service.put_object_async(s3_file_key, file_read)
@@ -129,9 +125,6 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                     MessageResourceEntity.set_group_msg_seq == set_group_msg_seq
                 )
                 db.execute(delete_statement)
-
-            print("ppurio_filekey")
-            print(ppurio_filekey)
 
             # db에 new_image_resource 추가
             message_entity = MessageResourceEntity(
@@ -263,3 +256,99 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                 return {"status": "success", "message": "file uploaded to s3"}
             except NoCredentialsError:
                 return {"status": "error", "message": "credentials not available"}
+
+    @transactional
+    async def upload_for_carousel(
+        self, file: UploadFile, set_group_msg_seq, user: User, db: Session
+    ) -> str:
+        # 1. s3 업로드
+        # 2. 뿌리오 업로드 요청
+
+        # 파일 이름 변경(unix timestamp)
+        campaign_id = self.campaign_set_repository.get_campaign_by_set_group_message_by_msg_seq(
+            set_group_msg_seq, db
+        )
+        new_file_name = self.generate_timestamp_file_name(file.filename)
+        s3_file_key = f"{user.mall_id}/messages_resource/{campaign_id}/{set_group_msg_seq}/images/{new_file_name}"
+
+        try:
+            file_read = await file.read()
+
+            # 카카오 이미지 업로드
+            kakao_sender_key = self.onboarding_repository.get_kakao_sender_key(
+                mall_id=user.mall_id, db=db
+            )
+            if kakao_sender_key is None:
+                raise NotFoundException(
+                    detail={"messsage": "등록된 kakao sender key가 존재하지 않습니다."}
+                )
+
+            kakao_landing_url = None
+            if self.is_message_type_kakao(message_type):
+                kakao_landing_url = await self.message_service.upload_file_for_kakao_carousel(
+                    new_file_name, file_read, file.content_type, message_type, kakao_sender_key
+                )
+
+            # s3에 이미지 저장
+            await self.s3_service.put_object_async(s3_file_key, file_read)
+
+        except HTTPException as e:
+            await self.s3_service.delete_object_async(s3_file_key)
+            raise e
+        except Exception as e2:
+            await self.s3_service.delete_object_async(s3_file_key)
+            print(repr(e2))
+            raise HTTPException(
+                status_code=500,
+                detail={"message": "이미지 업로드에 실패하였습니다. 잠시 후 다시 시도해주세요."},
+            ) from e2
+        finally:
+            await file.close()
+
+        # 기존 이미지 삭제
+        if original_message_photo_uri is not None and len(original_message_photo_uri) > 0:
+            delete_statement = delete(MessageResourceEntity).where(
+                MessageResourceEntity.set_group_msg_seq == set_group_msg_seq
+            )
+            db.execute(delete_statement)
+
+        # db에 new_image_resource 추가
+        message_entity = MessageResourceEntity(
+            set_group_msg_seq=set_group_msg_seq,
+            resource_name=s3_file_key,
+            resource_path=s3_file_key,
+            img_uri=s3_file_key,
+            link_url=ppurio_filekey,
+            landing_url=kakao_landing_url,
+        )
+        message_photo_uri.append(s3_file_key)
+
+        db.add(message_entity)
+        db.flush()
+
+        selected_data = {
+            "resource_id": message_entity.resource_id,
+            "img_uri": f"{self.cloud_front_url}/{message_entity.img_uri}",
+            "link_url": message_entity.link_url,
+        }
+
+        # set_group_messages에 img_uri 저장
+        # 누적 등록 기능 없음
+        if message_photo_uri:
+            self.campaign_set_repository.update_message_image(
+                campaign_id, set_group_msg_seq, message_photo_uri, db
+            )
+
+        # 메세지 타입 업데이트(ex) sms-> mms)
+        new_message_type = self.adjust_message_type_on_image_upload(message_type)
+        self.update_message_type(
+            campaign_id, db, new_message_type, set_group_message, set_group_msg_seq
+        )
+
+        # 이미지 등록 후 메세지 검증
+        set_group_message = self.campaign_set_repository.get_campaign_set_group_message_by_msg_seq(
+            campaign_id, set_group_msg_seq, db
+        )
+        message = Message.from_set_group_message(set_group_message)
+
+        db.commit()

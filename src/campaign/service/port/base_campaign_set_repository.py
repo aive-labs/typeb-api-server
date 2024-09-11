@@ -105,3 +105,7 @@ class BaseCampaignSetRepository(ABC):
     @abstractmethod
     def get_carousel(self, set_group_message_seq, db) -> list[KakaoCarouselCard]:
         pass
+
+    @abstractmethod
+    def get_campaign_by_set_group_message_by_msg_seq(self, set_group_msg_seq, db) -> str:
+        pass

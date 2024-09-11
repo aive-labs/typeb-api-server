@@ -831,3 +831,17 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             .all()
         )
         return [KakaoCarouselCard.model_validate(entity) for entity in carousel_entities]
+
+    def get_campaign_by_set_group_message_by_msg_seq(self, set_group_msg_seq, db) -> str:
+        entity = (
+            db.query(SetGroupMessagesEntity)
+            .filter(SetGroupMessagesEntity.set_group_msg_seq == int(set_group_msg_seq))
+            .first()
+        )
+
+        if entity is None:
+            raise NotFoundException(
+                detail={"message": f"{set_group_msg_seq}에 해당하는 캠페인이 없습니다."}
+            )
+
+        return entity.campaign_id

@@ -15,3 +15,7 @@ class UploadImageForMessageUseCase(ABC):
         self, campaign_id, set_group_msg_seq, files: list[UploadFile], user: User, db: Session
     ) -> dict:
         pass
+
+    @abstractmethod
+    async def upload_for_carousel(self, file: UploadFile, user: User, db: Session) -> str:
+        pass
