@@ -4,6 +4,7 @@ from sqlalchemy import (
     DateTime,
     Integer,
     String,
+    UniqueConstraint,
     func,
     text,
 )
@@ -28,6 +29,12 @@ class CreativesEntity(Base):
     updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
     updated_by = Column(String, nullable=False, default=text("(user)"))
     is_deleted = Column(Boolean, nullable=False, default=False)  # New field
+
+    __table_args__ = (
+        UniqueConstraint(
+            "style_cd", "image_uri", name="uq_style_cd_image_uri"
+        ),  # 유니크 제약 조건 추가
+    )
 
     @staticmethod
     def from_model(creatives: Creatives):
