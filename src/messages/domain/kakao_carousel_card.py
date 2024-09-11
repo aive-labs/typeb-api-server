@@ -40,3 +40,6 @@ class KakaoCarouselCard(BaseModel):
 
     class Config:
         from_attributes = True
+
+    def set_image_link(self, image_link):
+        self.image_link = image_link

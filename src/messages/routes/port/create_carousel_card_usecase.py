@@ -18,6 +18,10 @@ class CreateCarouselCardUseCase(ABC):
     @transactional
     @abstractmethod
     def create_carousel_card(
-        self, file: UploadFile, carousel_card: KakaoCarouselCardRequest, user: User, db: Session
+        self,
+        file: UploadFile,
+        carousel_card_request: KakaoCarouselCardRequest,
+        user: User,
+        db: Session,
     ) -> KakaoCarouselCardResponse:
         pass

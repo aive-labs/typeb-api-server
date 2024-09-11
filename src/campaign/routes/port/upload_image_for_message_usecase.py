@@ -17,5 +17,7 @@ class UploadImageForMessageUseCase(ABC):
         pass
 
     @abstractmethod
-    async def upload_for_carousel(self, file: UploadFile, user: User, db: Session) -> str:
+    async def upload_for_carousel(
+        self, file: UploadFile, set_group_msg_seq, user: User, db: Session
+    ) -> str:
         pass

@@ -144,6 +144,6 @@ class MessageService:
         return response["image"]
 
     async def upload_file_for_kakao_carousel(
-        self, new_file_name, file_read, content_type, message_type, kakao_sender_key
-    ):
+        self, new_file_name, file_read, content_type, kakao_sender_key
+    ) -> str:
         pass

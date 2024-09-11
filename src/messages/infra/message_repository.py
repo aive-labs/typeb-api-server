@@ -14,9 +14,6 @@ from src.messages.infra.entity.ppurio_message_result_entity import (
     PpurioMessageResultEntity,
 )
 from src.messages.routes.dto.ppurio_message_result import PpurioMessageResult
-from src.messages.routes.dto.request.kakao_carousel_card_request import (
-    KakaoCarouselCardRequest,
-)
 from src.messages.service.port.base_message_repository import BaseMessageRepository
 from src.users.domain.user import User
 
@@ -28,7 +25,7 @@ class MessageRepository(BaseMessageRepository):
         db.add(new_entity)
 
     def save_carousel_card(
-        self, carousel_card: KakaoCarouselCardRequest, user: User, db: Session
+        self, carousel_card: KakaoCarouselCard, user: User, db: Session
     ) -> KakaoCarouselCard:
         # 버튼 링크 엔티티 리스트를 생성
         button_entities = [
