@@ -133,4 +133,4 @@ def create_kakao_carousel_more_link(
         Provide[Container.create_carousel_more_link]
     ),
 ):
-    create_carousel_more_link.exec(carousel_more_link_request, user, db=db)
+    create_carousel_more_link.exec(set_group_msg_seq, carousel_more_link_request, user, db=db)

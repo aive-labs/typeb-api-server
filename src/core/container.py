@@ -104,6 +104,7 @@ from src.message_template.service.update_message_template_service import (
 )
 from src.messages.infra.message_repository import MessageRepository
 from src.messages.service.create_carousel_card import CreateCarouselCard
+from src.messages.service.create_carousel_more_link import CreateCarouselMoreLink
 from src.messages.service.delete_carousel_card import DeleteCarouselCard
 from src.messages.service.message_service import MessageService
 from src.offers.infra.offer_repository import OfferRepository
@@ -719,4 +720,9 @@ class Container(containers.DeclarativeContainer):
 
     delete_carousel_card = providers.Singleton(
         provides=DeleteCarouselCard, message_repository=message_repository
+    )
+
+    create_carousel_more_link = providers.Singleton(
+        provides=CreateCarouselMoreLink,
+        message_repository=message_repository,
     )

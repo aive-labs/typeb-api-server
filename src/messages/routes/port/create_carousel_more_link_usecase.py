@@ -14,6 +14,10 @@ class CreateCarouselMoreLinkUseCase(ABC):
     @transactional
     @abstractmethod
     def exec(
-        self, carousel_more_link_request: KakaoCarouselMoreLinkRequest, user: User, db: Session
+        self,
+        set_group_msg_seq: int,
+        carousel_more_link_request: KakaoCarouselMoreLinkRequest,
+        user: User,
+        db: Session,
     ):
         pass
