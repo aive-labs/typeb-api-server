@@ -8,7 +8,7 @@ from src.common.utils.get_env_variable import get_env_variable
 from src.core.exceptions.exceptions import PolicyException, PpurioException
 from src.core.transactional import transactional
 from src.message_template.enums.message_type import MessageType
-from src.messages.infra.ppurio_message_repository import PpurioMessageRepository
+from src.messages.infra.message_repository import MessageRepository
 from src.messages.routes.dto.ppurio_message_result import PpurioMessageResult
 
 
@@ -16,7 +16,7 @@ class MessageService:
 
     def __init__(
         self,
-        message_repository: PpurioMessageRepository,
+        message_repository: MessageRepository,
         campaign_repository: BaseCampaignRepository,
     ):
         self.message_repository = message_repository

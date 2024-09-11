@@ -1,9 +1,24 @@
-from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, HTTPException, Request
+import json
 
+from dependency_injector.wiring import Provide, inject
+from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile
+from fastapi.params import File, Form
+from sqlalchemy.orm import Session
+
+from src.auth.utils.permission_checker import get_permission_checker
 from src.core.container import Container
-from src.core.db_dependency import get_db_for_with_mall_id
+from src.core.db_dependency import get_db, get_db_for_with_mall_id
 from src.messages.routes.dto.ppurio_message_result import PpurioMessageResult
+from src.messages.routes.dto.request.kakao_carousel_card_request import (
+    KakaoCarouselCardRequest,
+    KakaoCarouselLinkButtonsRequest,
+)
+from src.messages.routes.dto.response.kakao_carousel_card_response import (
+    KakaoCarouselCardResponse,
+)
+from src.messages.routes.port.create_carousel_card_usecase import (
+    CreateCarouselCardUseCase,
+)
 from src.messages.service.message_service import MessageService
 
 message_router = APIRouter(
@@ -57,3 +72,30 @@ def get_message_result_from_ppurio(
     message_service.save_message_result(ppurio_message_result, db=db)
 
     db.close()
+
+
+def parse_carousel_card(
+    carousel_card: str = Form(...), carousel_button_links: str = Form(...)
+) -> KakaoCarouselCardRequest:
+    card_data = json.loads(carousel_card)
+    button_links_data = json.loads(carousel_button_links)
+
+    card_data["carousel_button_links"] = [
+        KakaoCarouselLinkButtonsRequest(**link) for link in button_links_data
+    ]
+
+    return KakaoCarouselCardRequest(**card_data)
+
+
+@message_router.post("/kakao-carousel")
+@inject
+def add_kakao_carousel_card(
+    file: UploadFile = File(...),
+    carousel_card: KakaoCarouselCardRequest = Depends(parse_carousel_card),
+    db: Session = Depends(get_db),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
+    create_carousel_card: CreateCarouselCardUseCase = Depends(
+        Provide[Container.create_carousel_card]
+    ),
+) -> KakaoCarouselCardResponse:
+    return create_carousel_card.create_carousel_card(file, carousel_card, user, db=db)

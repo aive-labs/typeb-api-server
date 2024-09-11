@@ -1,0 +1,31 @@
+from typing import List, Optional
+
+from pydantic import BaseModel
+
+
+class KakaoCarouselLinkButtonsRequest(BaseModel):
+    id: Optional[int] = None
+    name: str
+    type: str
+    url_pc: str | None = None
+    url_mobile: str | None = None
+
+    carousel_card_id: int | None = None
+
+    class Config:
+        from_attributes = True
+
+
+class KakaoCarouselCardRequest(BaseModel):
+    id: Optional[int] = None
+    carousel_sort_num: int
+    message_title: str | None = None
+    message_body: str | None = None
+    image_url: str | None = None
+    image_title: str | None = None
+    image_link: str | None = None
+
+    carousel_button_links: List[KakaoCarouselLinkButtonsRequest] = []
+
+    class Config:
+        from_attributes = True

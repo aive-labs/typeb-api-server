@@ -102,7 +102,8 @@ from src.message_template.service.get_message_template_service import (
 from src.message_template.service.update_message_template_service import (
     UpdateMessageTemplateService,
 )
-from src.messages.infra.ppurio_message_repository import PpurioMessageRepository
+from src.messages.infra.message_repository import MessageRepository
+from src.messages.service.create_carousel_card import CreateCarouselCard
 from src.messages.service.message_service import MessageService
 from src.offers.infra.offer_repository import OfferRepository
 from src.offers.service.get_offer_service import GetOfferService
@@ -608,7 +609,7 @@ class Container(containers.DeclarativeContainer):
     """
     message 객체
     """
-    message_repository = providers.Singleton(provides=PpurioMessageRepository)
+    message_repository = providers.Singleton(provides=MessageRepository)
     message_service = providers.Singleton(
         provides=MessageService,
         message_repository=message_repository,
@@ -709,4 +710,8 @@ class Container(containers.DeclarativeContainer):
         payment_repository=payment_repository,
         credit_repository=credit_repository,
         deposit_repository=deposit_repository,
+    )
+
+    create_carousel_card = providers.Singleton(
+        provides=CreateCarouselCard, message_repository=message_repository
     )
