@@ -2,9 +2,13 @@ from sqlalchemy.orm import Session
 
 from src.common.utils.model_converter import ModelConverter
 from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
+from src.messages.domain.kakao_carousel_more_link import KakaoCarouselMoreLink
 from src.messages.infra.entity.kakao_carousel_card_entity import KakaoCarouselCardEntity
 from src.messages.infra.entity.kakao_carousel_link_button_entity import (
     KakaoCarouselLinkButtonsEntity,
+)
+from src.messages.infra.entity.kakao_carousel_more_link_entity import (
+    KakaoCarouselMoreLinkEntity,
 )
 from src.messages.infra.entity.ppurio_message_result_entity import (
     PpurioMessageResultEntity,
@@ -59,6 +63,17 @@ class MessageRepository(BaseMessageRepository):
         return KakaoCarouselCard.model_validate(carousel_card_entity)
 
     def delete_carousel_card(self, carousel_card_id: int, db: Session):
-        db.query(KakaoCarouselCardEntity).filter_by(
+        db.query(KakaoCarouselCardEntity).filter(
             KakaoCarouselCardEntity.id == carousel_card_id
         ).delete()
+
+    def save_carousel_more_link(self, carousel_more_link: KakaoCarouselMoreLink, db: Session):
+        entity = KakaoCarouselMoreLinkEntity(
+            set_group_msg_seq=carousel_more_link.set_group_msg_seq,
+            url_pc=carousel_more_link.url_pc,
+            url_mobile=carousel_more_link.url_mobile,
+            created_by=carousel_more_link.created_by,
+            updated_by=carousel_more_link.updated_by,
+        )
+
+        db.add(entity)

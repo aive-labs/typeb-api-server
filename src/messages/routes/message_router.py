@@ -1,7 +1,7 @@
 import json
 
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile, status
 from fastapi.params import File, Form
 from sqlalchemy.orm import Session
 
@@ -13,11 +13,17 @@ from src.messages.routes.dto.request.kakao_carousel_card_request import (
     KakaoCarouselCardRequest,
     KakaoCarouselLinkButtonsRequest,
 )
+from src.messages.routes.dto.request.kakao_carousel_more_link_request import (
+    KakaoCarouselMoreLinkRequest,
+)
 from src.messages.routes.dto.response.kakao_carousel_card_response import (
     KakaoCarouselCardResponse,
 )
 from src.messages.routes.port.create_carousel_card_usecase import (
     CreateCarouselCardUseCase,
+)
+from src.messages.routes.port.create_carousel_more_link_usecase import (
+    CreateCarouselMoreLinkUseCase,
 )
 from src.messages.routes.port.delete_carousel_card_usecase import (
     DeleteCarouselCardUseCase,
@@ -115,3 +121,16 @@ def delete_kakao_carousel_card(
     ),
 ):
     delete_carousel_card.exec(carousel_card_id, db=db)
+
+
+@message_router.post("/{set_group_msg_seq}/kakao-carousel", status_code=status.HTTP_201_CREATED)
+def create_kakao_carousel_more_link(
+    set_group_msg_seq: int,
+    carousel_more_link_request: KakaoCarouselMoreLinkRequest,
+    db: Session = Depends(get_db),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
+    create_carousel_more_link: CreateCarouselMoreLinkUseCase = Depends(
+        Provide[Container.create_carousel_more_link]
+    ),
+):
+    create_carousel_more_link.exec(carousel_more_link_request, user, db=db)

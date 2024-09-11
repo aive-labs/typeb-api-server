@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
+from src.messages.domain.kakao_carousel_more_link import KakaoCarouselMoreLink
 from src.messages.routes.dto.ppurio_message_result import PpurioMessageResult
 from src.messages.routes.dto.request.kakao_carousel_card_request import (
     KakaoCarouselCardRequest,
@@ -24,4 +25,8 @@ class BaseMessageRepository(ABC):
 
     @abstractmethod
     def delete_carousel_card(self, carousel_card_id: int, db: Session):
+        pass
+
+    @abstractmethod
+    def save_carousel_more_link(self, carousel_more_link: KakaoCarouselMoreLink, db: Session):
         pass
