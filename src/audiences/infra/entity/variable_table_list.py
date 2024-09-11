@@ -6,9 +6,8 @@ from src.core.database import Base
 class CustomerInfoStatusEntity(Base):
     __tablename__ = "cus_info_status"
 
-    cus_info_id = Column(Integer, primary_key=True)
     shop_no = Column(BigInteger, nullable=False)
-    cus_cd = Column(String, nullable=True)
+    cus_cd = Column(String, nullable=False, primary_key=True)
     sex = Column(String, nullable=True)
     sex_nm = Column(String, nullable=True)
     this_year_birthday = Column(String, nullable=True)
