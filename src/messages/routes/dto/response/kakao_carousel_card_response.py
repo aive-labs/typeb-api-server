@@ -16,6 +16,7 @@ class KakaoCarouselLinkButtonResponse(BaseModel):
 
 class KakaoCarouselCardResponse(BaseModel):
     id: Optional[int] = None
+    set_group_msg_seq: int
     carousel_sort_num: int
     message_title: str | None = None
     message_body: str | None = None

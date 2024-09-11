@@ -8,6 +8,7 @@ class KakaoCarouselCardEntity(Base):
     __tablename__ = "kakao_carousel_card"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    set_group_msg_seq = Column(Integer, nullable=False)
     carousel_sort_num = Column(Integer, nullable=False)
     message_title = Column(String, nullable=False)
     message_body = Column(String, nullable=False)
