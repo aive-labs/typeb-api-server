@@ -39,4 +39,4 @@ class CustomerMasterEntity(Base):
     last_login_date = Column(Date)
     track_id = Column(String)
     created_date = Column(TIMESTAMP(timezone=True))
-    etl_time = Column(DateTime(timezone=True), default=func.now())
+    etltime = Column(DateTime(timezone=True), default=func.now())
