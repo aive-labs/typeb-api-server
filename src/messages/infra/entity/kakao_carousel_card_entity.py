@@ -15,6 +15,7 @@ class KakaoCarouselCardEntity(Base):
     image_url = Column(String, nullable=False)
     image_title = Column(String, nullable=False)
     image_link = Column(String, nullable=False)
+    s3_image_path = Column(String, nullable=True)
 
     created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False)

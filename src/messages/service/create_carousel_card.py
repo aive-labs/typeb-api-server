@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 from src.campaign.routes.port.upload_image_for_message_usecase import (
     UploadImageForMessageUseCase,
 )
-from src.core.transactional import transactional
 from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
 from src.messages.routes.dto.request.kakao_carousel_card_request import (
     KakaoCarouselCardRequest,
@@ -29,8 +28,7 @@ class CreateCarouselCard(CreateCarouselCardUseCase):
         self.message_repository = message_repository
         self.upload_image_for_message = upload_image_for_message
 
-    @transactional
-    def create_carousel_card(
+    async def create_carousel_card(
         self,
         file: UploadFile,
         carousel_card_request: KakaoCarouselCardRequest,
@@ -38,11 +36,13 @@ class CreateCarouselCard(CreateCarouselCardUseCase):
         db: Session,
     ) -> KakaoCarouselCardResponse:
         carousel_card = KakaoCarouselCard(**carousel_card_request.model_dump())
-
-        image_link = self.upload_image_for_message.upload_for_carousel(
-            file, carousel_card.set_group_msg_seq, user, db
+        carousel_image_links = await self.upload_image_for_message.upload_for_carousel(
+            file, carousel_card, user, db
         )
-        carousel_card.set_image_link(image_link)
-
+        carousel_card.set_image_url(
+            carousel_image_links.kakao_image_link, carousel_image_links.s3_image_path
+        )
         saved_carousel_card = self.message_repository.save_carousel_card(carousel_card, user, db)
+
+        db.commit()
         return KakaoCarouselCardResponse(**saved_carousel_card.model_dump())

@@ -627,6 +627,7 @@ class Container(containers.DeclarativeContainer):
         campaign_set_repository=campaign_set_repository,
         message_service=message_service,
         s3_service=s3_asset_service,
+        onboarding_repository=onboarding_repository,
     )
 
     delete_image_for_message = providers.Singleton(
@@ -715,7 +716,9 @@ class Container(containers.DeclarativeContainer):
     )
 
     create_carousel_card = providers.Singleton(
-        provides=CreateCarouselCard, message_repository=message_repository
+        provides=CreateCarouselCard,
+        message_repository=message_repository,
+        upload_image_for_message=upload_image_for_message,
     )
 
     delete_carousel_card = providers.Singleton(

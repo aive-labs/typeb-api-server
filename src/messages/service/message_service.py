@@ -144,6 +144,49 @@ class MessageService:
         return response["image"]
 
     async def upload_file_for_kakao_carousel(
-        self, new_file_name, file_read, content_type, kakao_sender_key
+        self, new_file_name, file_read, content_type, kakao_sender_key, image_title, image_link
     ) -> str:
-        pass
+        async with aiohttp.ClientSession() as session:
+            url = get_env_variable("ppurio_kakao_carousel_image_upload_url")
+            print(url)
+
+            data = aiohttp.FormData()
+            data.add_field("bizId", get_env_variable("ppurio_account"))
+            data.add_field("apiKey", get_env_variable("kakao_api_key"))
+            data.add_field("senderKey", kakao_sender_key)
+
+            data.add_field(
+                "imageList[0][image]", file_read, filename=new_file_name, content_type=content_type
+            )
+            data.add_field("imageList[0][title]", image_title)
+            data.add_field("imageList[0][link]", image_link)  # 링크를 실제 값으로 대체하세요
+
+            print("FormData fields:")
+            for field in data._fields:
+                print(field)
+
+            headers = {"Content-Type": "multipart/form-data"}
+            async with session.post(url, headers=headers, data=data, ssl=False) as response:
+                print(response.status)
+                print(await response.json())
+                if response.status != 200:
+                    raise PpurioException(
+                        detail={
+                            "message": "이미지 업로드에 실패하였습니다. 잠시 후에 다시 시도해주세요."
+                        }
+                    )
+
+                response = await response.json()
+
+                if response["code"] not in ["200", "0000"]:
+                    print("code", response["code"])
+                    print(response)
+                    match = re.search(r"Exception\((.*?)\)$", response["message"])
+                    if match:
+                        extracted_message = match.group(1)
+                    else:
+                        extracted_message = response["message"]
+
+                    raise PolicyException(detail={"message": extracted_message})
+
+        return response["image"]

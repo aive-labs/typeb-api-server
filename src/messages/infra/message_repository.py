@@ -42,6 +42,7 @@ class MessageRepository(BaseMessageRepository):
 
         # KakaoCarouselCardEntity 생성 시 버튼 엔티티들을 함께 설정
         carousel_card_entity = KakaoCarouselCardEntity(
+            set_group_msg_seq=carousel_card.set_group_msg_seq,
             carousel_sort_num=carousel_card.carousel_sort_num,
             message_title=carousel_card.message_title,
             message_body=carousel_card.message_body,

@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 
 from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
 from src.campaign.domain.campaign_messages import Message
+from src.campaign.domain.vo.carousel_upload_link import CarouselUploadLinks
 from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
 from src.campaign.infra.entity.message_resource_entity import MessageResourceEntity
 from src.campaign.infra.entity.send_reservation_entity import SendReservationEntity
@@ -26,8 +27,8 @@ from src.core.exceptions.exceptions import (
     NotFoundException,
     PolicyException,
 )
-from src.core.transactional import transactional
 from src.message_template.enums.message_type import MessageType
+from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
 from src.messages.service.message_service import MessageService
 from src.users.domain.user import User
 
@@ -49,7 +50,6 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
         self.s3_service = s3_service
         self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
-    @transactional
     async def exec(
         self, campaign_id, set_group_msg_seq, files: list[UploadFile], user, db: Session
     ) -> dict:
@@ -97,25 +97,24 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                         detail={"messsage": "등록된 kakao sender key가 존재하지 않습니다."}
                     )
 
-                kakao_landing_url = await self.message_service.upload_file_for_kakao_carousel(
+                kakao_landing_url = await self.message_service.upload_file_for_kakao(
                     new_file_name, file_read, file.content_type, message_type, kakao_sender_key
                 )
 
                 # s3에 이미지 저장
                 await self.s3_service.put_object_async(s3_file_key, file_read)
 
-            except HTTPException as e:
+            except Exception as e:
                 await self.s3_service.delete_object_async(s3_file_key)
-                raise e
-            except Exception as e2:
-                await self.s3_service.delete_object_async(s3_file_key)
-                print(repr(e2))
-                raise HTTPException(
-                    status_code=500,
-                    detail={
-                        "message": "이미지 업로드에 실패하였습니다. 잠시 후 다시 시도해주세요."
-                    },
-                ) from e2
+                if isinstance(e, HTTPException):
+                    raise e
+                else:
+                    raise HTTPException(
+                        status_code=500,
+                        detail={
+                            "message": "이미지 업로드에 실패하였습니다. 잠시 후 다시 시도해주세요."
+                        },
+                    ) from e
             finally:
                 await file.close()
 
@@ -257,14 +256,12 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
             except NoCredentialsError:
                 return {"status": "error", "message": "credentials not available"}
 
-    @transactional
     async def upload_for_carousel(
-        self, file: UploadFile, set_group_msg_seq, user: User, db: Session
-    ) -> str:
-        # 1. s3 업로드
-        # 2. 뿌리오 업로드 요청
+        self, file: UploadFile, carousel_card: KakaoCarouselCard, user: User, db: Session
+    ) -> CarouselUploadLinks:
 
         # 파일 이름 변경(unix timestamp)
+        set_group_msg_seq = carousel_card.set_group_msg_seq
         campaign_id = self.campaign_set_repository.get_campaign_by_set_group_message_by_msg_seq(
             set_group_msg_seq, db
         )
@@ -284,23 +281,33 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                 )
 
             kakao_landing_url = await self.message_service.upload_file_for_kakao_carousel(
-                new_file_name, file_read, file.content_type, kakao_sender_key
+                new_file_name,
+                file_read,
+                file.content_type,
+                kakao_sender_key,
+                carousel_card.image_title,
+                carousel_card.image_link,
             )
+            print("kakao_landing_url")
+            print(kakao_landing_url)
 
             # s3에 이미지 저장
             await self.s3_service.put_object_async(s3_file_key, file_read)
 
-            return kakao_landing_url
+            return CarouselUploadLinks(
+                kakao_image_link=kakao_landing_url, s3_image_path=s3_file_key
+            )
 
-        except HTTPException as e:
+        except Exception as e:
             await self.s3_service.delete_object_async(s3_file_key)
-            raise e
-        except Exception as e2:
-            await self.s3_service.delete_object_async(s3_file_key)
-            print(repr(e2))
-            raise HTTPException(
-                status_code=500,
-                detail={"message": "이미지 업로드에 실패하였습니다. 잠시 후 다시 시도해주세요."},
-            ) from e2
+            if isinstance(e, HTTPException):
+                raise e
+            else:
+                raise HTTPException(
+                    status_code=500,
+                    detail={
+                        "message": "이미지 업로드에 실패하였습니다. 잠시 후 다시 시도해주세요."
+                    },
+                ) from e
         finally:
             await file.close()
