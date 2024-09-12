@@ -5,6 +5,7 @@ from src.campaign.routes.port.upload_image_for_message_usecase import (
     UploadImageForMessageUseCase,
 )
 from src.common.utils.get_env_variable import get_env_variable
+from src.core.exceptions.exceptions import PolicyException
 from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
 from src.messages.routes.dto.request.kakao_carousel_card_request import (
     KakaoCarouselCardRequest,
@@ -20,6 +21,7 @@ from src.users.domain.user import User
 
 
 class CreateCarouselCard(CreateCarouselCardUseCase):
+    max_card_count = 6
 
     def __init__(
         self,
@@ -37,6 +39,27 @@ class CreateCarouselCard(CreateCarouselCardUseCase):
         user: User,
         db: Session,
     ) -> KakaoCarouselCardResponse:
+
+        self.validate_carousel_card_count(carousel_card_request, db)
+        self.validate_carousel_button_count(carousel_card_request)
+
+        carousel_card = await self.create_carousel_card_with_image_link(
+            carousel_card_request, db, file, user
+        )
+        saved_carousel_card = self.message_repository.save_carousel_card(carousel_card, user, db)
+
+        response = await self.carousel_card_to_response(saved_carousel_card)
+
+        db.commit()
+
+        return response
+
+    async def carousel_card_to_response(self, saved_carousel_card):
+        response = KakaoCarouselCardResponse(**saved_carousel_card.model_dump())
+        response.set_image_url(f"{self.cloud_front_url}/{response.s3_image_path}")
+        return response
+
+    async def create_carousel_card_with_image_link(self, carousel_card_request, db, file, user):
         carousel_card = KakaoCarouselCard(**carousel_card_request.model_dump())
         carousel_image_links = await self.upload_image_for_message.upload_for_carousel(
             file, carousel_card, user, db
@@ -44,11 +67,20 @@ class CreateCarouselCard(CreateCarouselCardUseCase):
         carousel_card.set_image_url(
             carousel_image_links.kakao_image_link, carousel_image_links.s3_image_path
         )
-        saved_carousel_card = self.message_repository.save_carousel_card(carousel_card, user, db)
+        return carousel_card
 
-        response = KakaoCarouselCardResponse(**saved_carousel_card.model_dump())
-        response.set_image_url(f"{self.cloud_front_url}/{response.s3_image_path}")
+    def validate_carousel_button_count(self, carousel_card_request):
+        if len(carousel_card_request.carousel_button_links) > 2:
+            raise PolicyException(
+                detail={"message": "캐러셀 아이템의 버튼은 최대 2개까지 등록이 가능합니다."}
+            )
 
-        db.commit()
-
-        return response
+    def validate_carousel_card_count(self, carousel_card_request, db: Session):
+        registered_card_count = self.message_repository.get_carousel_card_count(
+            carousel_card_request.set_group_msg_seq, db
+        )
+        if carousel_card_request.id is None:
+            if registered_card_count == 6:
+                raise PolicyException(
+                    detail={"message": "캐러셀 아이템은 최대 6장까지 등록이 가능합니다."}
+                )

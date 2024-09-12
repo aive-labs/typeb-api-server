@@ -1,3 +1,4 @@
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from src.common.utils.model_converter import ModelConverter
@@ -78,3 +79,10 @@ class MessageRepository(BaseMessageRepository):
         )
 
         db.add(entity)
+
+    def get_carousel_card_count(self, set_group_msg_seq, db: Session) -> int:
+        return (
+            db.query(func.count(KakaoCarouselCardEntity.id))
+            .filter(KakaoCarouselCardEntity.set_group_msg_seq == set_group_msg_seq)
+            .scalar()
+        )

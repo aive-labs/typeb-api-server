@@ -27,3 +27,7 @@ class BaseMessageRepository(ABC):
     @abstractmethod
     def save_carousel_more_link(self, carousel_more_link: KakaoCarouselMoreLink, db: Session):
         pass
+
+    @abstractmethod
+    def get_carousel_card_count(self, set_group_msg_seq, db: Session) -> int:
+        pass
