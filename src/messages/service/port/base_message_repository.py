@@ -31,3 +31,9 @@ class BaseMessageRepository(ABC):
     @abstractmethod
     def get_carousel_card_count(self, set_group_msg_seq, db: Session) -> int:
         pass
+
+    @abstractmethod
+    def get_carousel_more_link_id_by_set_group_msg_seq(
+        self, set_group_msg_seq, db: Session
+    ) -> int | None:
+        pass

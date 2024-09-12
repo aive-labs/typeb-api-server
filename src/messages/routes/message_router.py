@@ -123,7 +123,10 @@ def delete_kakao_carousel_card(
     delete_carousel_card.exec(carousel_card_id, db=db)
 
 
-@message_router.post("/{set_group_msg_seq}/kakao-carousel", status_code=status.HTTP_201_CREATED)
+@message_router.post(
+    "/{set_group_msg_seq}/kakao-carousel-more-link", status_code=status.HTTP_201_CREATED
+)
+@inject
 def create_kakao_carousel_more_link(
     set_group_msg_seq: int,
     carousel_more_link_request: KakaoCarouselMoreLinkRequest,

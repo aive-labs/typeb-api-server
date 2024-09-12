@@ -25,7 +25,11 @@ class CreateCarouselMoreLink(CreateCarouselMoreLinkUseCase):
         user: User,
         db: Session,
     ):
+        more_link_id = self.message_repository.get_carousel_more_link_id_by_set_group_msg_seq(
+            set_group_msg_seq, db
+        )
         carousel_more_link = KakaoCarouselMoreLink(
+            id=more_link_id,
             set_group_msg_seq=set_group_msg_seq,
             url_pc=carousel_more_link_request.url_pc,
             url_mobile=carousel_more_link_request.url_mobile,
@@ -33,4 +37,4 @@ class CreateCarouselMoreLink(CreateCarouselMoreLinkUseCase):
             updated_by=str(user.user_id),
         )
 
-        self.message_repository.save_carousel_more_link(carousel_more_link, user, db)
+        self.message_repository.save_carousel_more_link(carousel_more_link, db)

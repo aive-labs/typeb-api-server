@@ -71,6 +71,7 @@ class MessageRepository(BaseMessageRepository):
 
     def save_carousel_more_link(self, carousel_more_link: KakaoCarouselMoreLink, db: Session):
         entity = KakaoCarouselMoreLinkEntity(
+            id=carousel_more_link.id,
             set_group_msg_seq=carousel_more_link.set_group_msg_seq,
             url_pc=carousel_more_link.url_pc,
             url_mobile=carousel_more_link.url_mobile,
@@ -78,7 +79,7 @@ class MessageRepository(BaseMessageRepository):
             updated_by=carousel_more_link.updated_by,
         )
 
-        db.add(entity)
+        db.merge(entity)
 
     def get_carousel_card_count(self, set_group_msg_seq, db: Session) -> int:
         return (
@@ -86,3 +87,16 @@ class MessageRepository(BaseMessageRepository):
             .filter(KakaoCarouselCardEntity.set_group_msg_seq == set_group_msg_seq)
             .scalar()
         )
+
+    def get_carousel_more_link_id_by_set_group_msg_seq(
+        self, set_group_msg_seq, db: Session
+    ) -> int | None:
+        entity = (
+            db.query(KakaoCarouselMoreLinkEntity)
+            .filter(KakaoCarouselMoreLinkEntity.set_group_msg_seq == set_group_msg_seq)
+            .first()
+        )
+        if entity is None:
+            return None
+
+        return entity.id
