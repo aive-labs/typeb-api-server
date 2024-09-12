@@ -148,7 +148,6 @@ class MessageService:
     ) -> str:
         async with aiohttp.ClientSession() as session:
             url = get_env_variable("ppurio_kakao_carousel_image_upload_url")
-            print(url)
 
             data = aiohttp.FormData()
             data.add_field("bizId", get_env_variable("ppurio_account"))
@@ -156,19 +155,13 @@ class MessageService:
             data.add_field("senderKey", kakao_sender_key)
 
             data.add_field(
-                "imageList[0][image]", file_read, filename=new_file_name, content_type=content_type
+                "imageList[0].image", file_read, filename=new_file_name, content_type=content_type
             )
-            data.add_field("imageList[0][title]", image_title)
-            data.add_field("imageList[0][link]", image_link)  # 링크를 실제 값으로 대체하세요
+            data.add_field("imageList[0].title", image_title)
+            data.add_field("imageList[0].link", image_link)  # 링크를 실제 값으로 대체하세요
 
-            print("FormData fields:")
-            for field in data._fields:
-                print(field)
-
-            headers = {"Content-Type": "multipart/form-data"}
-            async with session.post(url, headers=headers, data=data, ssl=False) as response:
+            async with session.post(url, data=data, ssl=False) as response:
                 print(response.status)
-                print(await response.json())
                 if response.status != 200:
                     raise PpurioException(
                         detail={
@@ -189,4 +182,4 @@ class MessageService:
 
                     raise PolicyException(detail={"message": extracted_message})
 
-        return response["image"]
+        return response["data"]["success"][0]["url"]

@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from src.campaign.routes.port.upload_image_for_message_usecase import (
     UploadImageForMessageUseCase,
 )
+from src.common.utils.get_env_variable import get_env_variable
 from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
 from src.messages.routes.dto.request.kakao_carousel_card_request import (
     KakaoCarouselCardRequest,
@@ -27,6 +28,7 @@ class CreateCarouselCard(CreateCarouselCardUseCase):
     ):
         self.message_repository = message_repository
         self.upload_image_for_message = upload_image_for_message
+        self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
     async def create_carousel_card(
         self,
@@ -44,5 +46,9 @@ class CreateCarouselCard(CreateCarouselCardUseCase):
         )
         saved_carousel_card = self.message_repository.save_carousel_card(carousel_card, user, db)
 
+        response = KakaoCarouselCardResponse(**saved_carousel_card.model_dump())
+        response.set_image_url(f"{self.cloud_front_url}/{response.s3_image_path}")
+
         db.commit()
-        return KakaoCarouselCardResponse(**saved_carousel_card.model_dump())
+
+        return response

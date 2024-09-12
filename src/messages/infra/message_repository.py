@@ -30,6 +30,7 @@ class MessageRepository(BaseMessageRepository):
         # 버튼 링크 엔티티 리스트를 생성
         button_entities = [
             KakaoCarouselLinkButtonsEntity(
+                id=button.id,
                 name=button.name,
                 type=button.type,
                 url_pc=button.url_pc,
@@ -42,6 +43,7 @@ class MessageRepository(BaseMessageRepository):
 
         # KakaoCarouselCardEntity 생성 시 버튼 엔티티들을 함께 설정
         carousel_card_entity = KakaoCarouselCardEntity(
+            id=carousel_card.id,
             set_group_msg_seq=carousel_card.set_group_msg_seq,
             carousel_sort_num=carousel_card.carousel_sort_num,
             message_title=carousel_card.message_title,
@@ -49,16 +51,17 @@ class MessageRepository(BaseMessageRepository):
             image_url=carousel_card.image_url,
             image_title=carousel_card.image_title,
             image_link=carousel_card.image_link,
+            s3_image_path=carousel_card.s3_image_path,
             created_by=str(user.user_id),
             updated_by=str(user.user_id),
             carousel_button_links=button_entities,
         )
 
         # 부모 엔티티와 자식 엔티티를 동시에 세션에 추가
-        db.add(carousel_card_entity)
+        saved_carousel_card_entity = db.merge(carousel_card_entity)
         db.flush()
 
-        return KakaoCarouselCard.model_validate(carousel_card_entity)
+        return KakaoCarouselCard.model_validate(saved_carousel_card_entity)
 
     def delete_carousel_card(self, carousel_card_id: int, db: Session):
         db.query(KakaoCarouselCardEntity).filter(

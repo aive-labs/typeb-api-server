@@ -1,4 +1,4 @@
-from sqlalchemy import ARRAY, BigInteger, Column, Date, Float, Integer, String
+from sqlalchemy import ARRAY, BigInteger, Column, Date, DateTime, Float, Integer, String
 
 from src.core.database import Base
 
@@ -52,6 +52,8 @@ class CustomerInfoStatusEntity(Base):
     rfm_score_1y = Column(String, nullable=True)
 
     coupon_expired = Column(String, nullable=True)
+    coupon_list = Column(String, nullable=True)
+
     is_cart = Column(String, nullable=True)
     cart_product_no = Column(String, nullable=True)
     is_wishlist = Column(String, nullable=True)
@@ -59,6 +61,7 @@ class CustomerInfoStatusEntity(Base):
     near_promotion_amount = Column(String, nullable=True)
     near_promotion_cnt = Column(String, nullable=True)
     promoted_customer = Column(String, nullable=True)
+    promoted_date = Column(DateTime(timezone=True))
 
     purchase_cnt = Column(Integer, nullable=True)
     birthday_7_left = Column(String, nullable=True)
