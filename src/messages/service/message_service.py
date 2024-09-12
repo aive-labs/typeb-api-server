@@ -146,6 +146,11 @@ class MessageService:
     async def upload_file_for_kakao_carousel(
         self, new_file_name, file_read, content_type, kakao_sender_key, image_title, image_link
     ) -> str:
+
+        max_size = 2 * 1024 * 1024
+        if len(file_read) > max_size:
+            raise PolicyException(detail={"message": "이미지 파일의 크기는 2MB 이하여야 합니다."})
+
         async with aiohttp.ClientSession() as session:
             url = get_env_variable("ppurio_kakao_carousel_image_upload_url")
 
