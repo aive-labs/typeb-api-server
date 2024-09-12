@@ -288,8 +288,6 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                 carousel_card.image_title,
                 carousel_card.image_link,
             )
-            print("kakao_landing_url")
-            print(kakao_landing_url)
 
             # s3에 이미지 저장
             await self.s3_service.put_object_async(s3_file_key, file_read)

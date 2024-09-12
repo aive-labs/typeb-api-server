@@ -58,6 +58,11 @@ class PolicyException(HTTPException):
         super().__init__(status.HTTP_400_BAD_REQUEST, detail, headers)
 
 
+class ImageFormatException(HTTPException):
+    def __init__(self, detail: Any = None, headers: dict[str, Any] | None = None) -> None:
+        super().__init__(status.HTTP_400_BAD_REQUEST, detail, headers)
+
+
 class Cafe24Exception(HTTPException):
     def __init__(self, detail: Any = None, headers: dict[str, Any] | None = None) -> None:
         super().__init__(status.HTTP_503_SERVICE_UNAVAILABLE, detail, headers)

@@ -174,12 +174,18 @@ class MessageService:
                 if response["code"] not in ["200", "0000"]:
                     print("code", response["code"])
                     print(response)
-                    match = re.search(r"Exception\((.*?)\)$", response["message"])
-                    if match:
-                        extracted_message = match.group(1)
-                    else:
-                        extracted_message = response["message"]
 
-                    raise PolicyException(detail={"message": extracted_message})
+                    error_message = "이미지 업로드에 실패하였습니다. 잠시 후에 다시 시도해주세요."
+                    if response["code"] == "6000":
+                        match = re.search(
+                            r"Exception\((.*?)\)$",
+                            response["data"]["failure"][0]["error"]["message"],
+                        )
+                        if match:
+                            error_message = match.group(1)
+                    if response["code"] == "405":
+                        error_message = response["message"]
+
+                    raise PolicyException(detail={"message": error_message})
 
         return response["data"]["success"][0]["url"]

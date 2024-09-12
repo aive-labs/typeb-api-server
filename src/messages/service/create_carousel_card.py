@@ -84,6 +84,7 @@ class CreateCarouselCard(CreateCarouselCardUseCase):
 
     async def create_carousel_card_with_image_link(self, carousel_card_request, db, file, user):
         carousel_card = KakaoCarouselCard(**carousel_card_request.model_dump())
+
         carousel_image_links = await self.upload_image_for_message.upload_for_carousel(
             file, carousel_card, user, db
         )
