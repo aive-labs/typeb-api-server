@@ -20,11 +20,11 @@ class KakaoCarouselCardRequest(BaseModel):
     id: Optional[int] = None
     set_group_msg_seq: int
     carousel_sort_num: int
-    message_title: str | None = None
+    message_title: str
     message_body: str | None = None
     image_url: str | None = None
-    image_title: str | None = None
-    image_link: str | None = None
+    image_title: str
+    image_link: str
 
     carousel_button_links: List[KakaoCarouselLinkButtonsRequest] = []
 

@@ -40,19 +40,42 @@ class CreateCarouselCard(CreateCarouselCardUseCase):
         db: Session,
     ) -> KakaoCarouselCardResponse:
 
+        self.validate_carousel_message(carousel_card_request)
+        self.validate_carousel_button_message(carousel_card_request)
         self.validate_carousel_card_count(carousel_card_request, db)
         self.validate_carousel_button_count(carousel_card_request)
 
         carousel_card = await self.create_carousel_card_with_image_link(
             carousel_card_request, db, file, user
         )
-        saved_carousel_card = self.message_repository.save_carousel_card(carousel_card, user, db)
 
+        saved_carousel_card = self.message_repository.save_carousel_card(carousel_card, user, db)
         response = await self.carousel_card_to_response(saved_carousel_card)
 
         db.commit()
 
         return response
+
+    def validate_carousel_button_message(self, carousel_card_request):
+        if carousel_card_request.carousel_button_links:
+            for button in carousel_card_request.carousel_button_links:
+                if len(button.name) > 28:
+                    raise PolicyException(
+                        detail={"message": "버튼 제목은 최대 28자까지 입력할 수 있습니다."}
+                    )
+
+    def validate_carousel_message(self, carousel_card_request):
+        if len(carousel_card_request.message_title) > 20:
+            raise PolicyException(
+                detail={"message": "캐러셀 아이템 제목은 최대 20자까지 입력할 수 있습니다."}
+            )
+        if (
+            carousel_card_request.message_body is not None
+            and len(carousel_card_request.message_body) > 180
+        ):
+            raise PolicyException(
+                detail={"message": "캐러셀 아이템 메시지는 최대 180자까지 입력할 수 있습니다."}
+            )
 
     async def carousel_card_to_response(self, saved_carousel_card):
         response = KakaoCarouselCardResponse(**saved_carousel_card.model_dump())

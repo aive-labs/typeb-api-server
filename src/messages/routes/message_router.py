@@ -34,6 +34,9 @@ message_router = APIRouter(
     tags=["Message"],
 )
 
+# TODO: 허용할 IP 목록
+ALLOWED_IPS = {"123.123.123.123", "124.124.124.124"}
+
 
 # 요청 IP를 프린트하는 의존성
 def get_client_ip(request: Request):
@@ -41,10 +44,6 @@ def get_client_ip(request: Request):
     if client is None:
         return "unknown ip"
     return client.host
-
-
-# TODO: 허용할 IP 목록
-ALLOWED_IPS = {"123.123.123.123", "124.124.124.124"}
 
 
 # IP 검증 의존성 정의
