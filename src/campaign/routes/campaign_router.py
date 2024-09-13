@@ -428,3 +428,18 @@ async def delete_message_resources(
 ) -> SetGroupSeqWithMessageResponse:
     """이미지 업로드 API"""
     return await delete_image_for_message.exec(campaign_id, set_group_msg_seq, user, db=db)
+
+
+@campaign_router.post("/campaigns/{campaign_id}/test-carousel")
+@inject
+def carousel_test(
+    campaign_id: str,
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
+    db=Depends(get_db),
+    approve_campaign_service: ApproveCampaignUseCase = Depends(
+        dependency=Provide[Container.approve_campaign_service]
+    ),
+):
+    result = approve_campaign_service.save_campaign_reservation(db, user, campaign_id, None)
+    db.commit()
+    return result

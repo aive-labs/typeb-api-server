@@ -25,7 +25,7 @@ class Button(BaseModel):
 
 
 class Attachment(BaseModel):
-    buttons: List[Button]
+    button: List[Button]
     image: Image
 
 

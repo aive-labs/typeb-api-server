@@ -82,6 +82,7 @@ from src.messages.domain.send_kakao_carousel import (
     CarouselItem,
     Image,
     MoreLink,
+    SendKakaoCarousel,
 )
 from src.messages.service.message_reserve_controller import MessageReserveController
 from src.offers.infra.entity.offers_entity import OffersEntity
@@ -1353,6 +1354,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             subquery = set_group_message.subquery()
 
             # recipients & messages
+            print(f"current_date: {current_date}")
             rsv_msg_filter = [
                 subquery.c.msg_body.isnot(None),  # 메세지 본문이 Null인 메세지 제외
                 subquery.c.msg_body != "",  # 메세지 본문이 공백인 메세지 제외
@@ -1454,18 +1456,15 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 button_df_with_kko_json = convert_to_button_format(
                     db, set_group_msg_seqs, send_rsv_format
                 )
-
                 # 캐러셀인 set_group_msg_seqs 데이터만 존재
                 # dataframe cols => ["campaign_id", "set_sort_num", "group_sort_num", "cus_cd", "set_group_msg_seq", "kko_button_json"]
                 carousel_df_with_kko_json = self.generate_kakao_carousel_json(
                     set_group_msg_seqs, send_rsv_format, db
                 )
-
                 # 두 개의 데이터프레임 통합
                 kakao_button_df = pd.concat(
                     [button_df_with_kko_json, carousel_df_with_kko_json], ignore_index=True
                 )
-
             except Exception as e:
                 raise Exception(e)
 
@@ -1478,6 +1477,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 "set_group_msg_seq",
             ]
             send_rsv_format = send_rsv_format.merge(kakao_button_df, on=group_keys, how="left")
+
             del send_rsv_format["contents_name"]
             del send_rsv_format["contents_url"]
 
@@ -1584,7 +1584,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             ##SSG 재발송 시도 여부, kko_send_timeout, kakao_send_profile_key
             send_rsv_format = convert_by_message_format(  # pyright: ignore [reportAssignmentType]
                 send_rsv_format, kakao_sender_key
-            )  # pyright: ignore [reportAssignmentType]
+            )  # pyright: ignore [reportAssignmentTydpe]
 
             # 고객 중복 여부 체크
             keys = ["campaign_id", "remind_step", "cus_cd"]
@@ -1628,15 +1628,12 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             send_rsv_format["update_resv_user"] = user_obj.user_id
 
             # 저장
-            print("0000")
             send_reserv_columns = [
                 column.name
                 for column in SendReservationEntity.__table__.columns
                 if column.name
                 not in ["send_resv_seq", "shop_cd", "coupon_no", "log_date", "log_comment"]
             ]
-
-            print("111")
 
             res_df = send_rsv_format[send_reserv_columns]
 
@@ -1717,13 +1714,13 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         kko_json_df = pd.DataFrame(
             {
                 "set_group_msg_seq": list(kko_json_buttons.keys()),
-                "kko_json_button": list(kko_json_buttons.values()),
+                "kko_button_json": list(kko_json_buttons.values()),
             }
         )
 
         # 3. send_rsv_format과 조인
         # 2에서 만든 테이블과 send_rsv_format 테이블을 조인한다.
-        carousel_json_df = send_rsv_format.merge(kko_json_df, on="set_group_msg_seq", how="left")
+        carousel_json_df = send_rsv_format.merge(kko_json_df, on="set_group_msg_seq", how="inner")
 
         return carousel_json_df[selected_column]
 
@@ -1744,7 +1741,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 header=header,
                 message=message,
                 attachment=Attachment(
-                    buttons=buttons, image=Image(img_url=img_url, img_link=img_link)
+                    button=buttons, image=Image(img_url=img_url, img_link=img_link)
                 ),
             )
 
@@ -1755,7 +1752,11 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         if more_link:
             carousel.set_more_link(more_link)
 
-        return json.dumps(carousel.model_dump())
+        send_kakao_carousel = SendKakaoCarousel(carousel=carousel)
+
+        print("json.dumps(carousel.model_dump())")
+        print(json.dumps(send_kakao_carousel.model_dump()))
+        return json.dumps(send_kakao_carousel.model_dump())
 
     def extract_carousel_more_link(self, group) -> MoreLink | None:
         # Tail 정보 추출 (None일 경우 기본값 설정 또는 생략)

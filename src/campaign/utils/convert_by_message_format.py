@@ -28,21 +28,23 @@ def convert_by_message_format(df: pd.DataFrame, kakao_sender_key: str):
         MessageType.KAKAO_TEXT.value,  # 친구톡 이미지형에 이미지가 없는경우
         MessageType.KAKAO_IMAGE_GENERAL.value,  # 친구톡 이미지형
         MessageType.KAKAO_IMAGE_WIDE.value,  # 친구톡 와이드 이미지형
+        MessageType.KAKAO_CAROUSEL.value,
     ]
 
     df["kko_yellowid"] = kakao_sender_key
-    df["kko_send_timeout"] = 60
+    df["kko_send_timeout"] = 40
 
     # 대체 발송
     # kat -> lms
     # kft -> (광고) + lms
-
     ##kakao friend
     kakao_friend_msg = [
         MessageType.KAKAO_TEXT.value,  # 친구톡 이미지형에 이미지가 없는경우
         MessageType.KAKAO_IMAGE_GENERAL.value,  # 친구톡 이미지형
         MessageType.KAKAO_IMAGE_WIDE.value,  # 친구톡 와이드 이미지형
+        MessageType.KAKAO_CAROUSEL.value,
     ]
+
     cond_resend = [
         (df["send_msg_type"] == MessageType.KAKAO_ALIM_TEXT.value),  # lms
         (df["send_msg_type"].isin(kakao_friend_msg)),  # lms
@@ -102,6 +104,7 @@ def convert_by_message_format(df: pd.DataFrame, kakao_sender_key: str):
         (df["send_msg_type"] == "kakao_text"),  # 친구톡 텍스트
         (df["send_msg_type"] == "kakao_image_general")
         & (df["send_filecount"] == 0),  # 친구톡 & 이미지 X
+        df["send_msg_type"] == "kakao_carousel",  # 친구톡 캐러셀
         (df["send_msg_type"].isin(["sms", "lms", "mms"])),  # 문자메세지
     ]
 
@@ -112,6 +115,7 @@ def convert_by_message_format(df: pd.DataFrame, kakao_sender_key: str):
         "ft",  # 친구톡와이드 & 이미지 X,
         "ft",  # 카카오 텍스트
         "ft",  # 친구톡 & 이미지 X
+        "fc",  # 친구톡 캐러셀
         df["send_msg_type"],
     ]
     df["send_msg_type"] = np.select(cond_msg_tp, choice_msg_tp)
