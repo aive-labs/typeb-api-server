@@ -9,6 +9,7 @@ from src.campaign.infra.entity.kakao_link_buttons_entity import KakaoLinkButtons
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.string_utils import replace_multiple
+from src.message_template.enums.message_type import MessageType
 
 
 def create_dict_list(group):
@@ -61,7 +62,10 @@ def convert_to_button_format(db, set_group_msg_seqs, send_rsv_format):
             KakaoLinkButtonsEntity,
             SetGroupMessagesEntity.set_group_msg_seq == KakaoLinkButtonsEntity.set_group_msg_seq,
         )
-        .filter(KakaoLinkButtonsEntity.set_group_msg_seq.in_(set_group_msg_seqs))
+        .filter(
+            KakaoLinkButtonsEntity.set_group_msg_seq.in_(set_group_msg_seqs),
+            SetGroupMessagesEntity.msg_type != MessageType.KAKAO_CAROUSEL.value,
+        )
         .distinct()
     )
 
@@ -108,6 +112,7 @@ def convert_to_button_format(db, set_group_msg_seqs, send_rsv_format):
 
     keys = ["campaign_id", "set_sort_num", "group_sort_num", "set_group_msg_seq"]
     # contents_id, contents_link, contents_name
+
     send_rsv_btn = send_rsv_format.merge(button_df, on=keys, how="left")
     send_rsv_btn = send_rsv_btn.replace({np.nan: None})
 
@@ -169,6 +174,8 @@ def convert_to_button_format(db, set_group_msg_seqs, send_rsv_format):
 
     group_keys = ["campaign_id", "set_sort_num", "group_sort_num", "cus_cd", "set_group_msg_seq"]
 
+    # button_df columns
+    # ["campaign_id", "set_sort_num", "group_sort_num", "cus_cd", "set_group_msg_seq", "kko_button_json"]
     button_df = (
         send_rsv_btn.groupby(group_keys).apply(create_dict_list).reset_index(name="kko_button_json")
     )

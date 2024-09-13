@@ -114,3 +114,7 @@ class BaseCampaignSetRepository(ABC):
     @abstractmethod
     def get_carousel_more_link(self, set_group_message_seq, db) -> KakaoCarouselMoreLink | None:
         pass
+
+    @abstractmethod
+    def get_carousel_info(self, set_group_msg_seqs, db: Session):
+        pass

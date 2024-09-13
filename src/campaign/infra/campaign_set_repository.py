@@ -68,6 +68,9 @@ from src.message_template.enums.message_type import MessageType
 from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
 from src.messages.domain.kakao_carousel_more_link import KakaoCarouselMoreLink
 from src.messages.infra.entity.kakao_carousel_card_entity import KakaoCarouselCardEntity
+from src.messages.infra.entity.kakao_carousel_link_button_entity import (
+    KakaoCarouselLinkButtonsEntity,
+)
 from src.messages.infra.entity.kakao_carousel_more_link_entity import (
     KakaoCarouselMoreLinkEntity,
 )
@@ -861,3 +864,46 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             return None
 
         return KakaoCarouselMoreLink.model_validate(carousel_more_link_entity)
+
+    def get_carousel_info(self, set_group_msg_seqs, db: Session):
+        return (
+            db.query(
+                SetGroupMessagesEntity.set_group_msg_seq,
+                CampaignSetGroupsEntity.campaign_id,
+                CampaignSetGroupsEntity.set_sort_num,
+                CampaignSetGroupsEntity.group_sort_num,
+                KakaoCarouselMoreLinkEntity.url_mobile.label("tail_url_mobile"),
+                KakaoCarouselMoreLinkEntity.url_pc.label("tail_url_pc"),
+                KakaoCarouselCardEntity.message_body.label("header"),
+                KakaoCarouselCardEntity.message_title.label("message"),
+                KakaoCarouselCardEntity.image_link.label("img_url"),
+                KakaoCarouselCardEntity.image_url.label("img_link"),
+                KakaoCarouselLinkButtonsEntity.name,
+                KakaoCarouselLinkButtonsEntity.type,
+                KakaoCarouselLinkButtonsEntity.url_mobile,
+                KakaoCarouselLinkButtonsEntity.url_pc,
+            )
+            .join(
+                SetGroupMessagesEntity,
+                CampaignSetGroupsEntity.set_group_seq == SetGroupMessagesEntity.set_group_seq,
+            )
+            .join(
+                KakaoCarouselCardEntity,
+                SetGroupMessagesEntity.set_group_msg_seq
+                == KakaoCarouselCardEntity.set_group_msg_seq,
+            )
+            .join(
+                KakaoCarouselLinkButtonsEntity,
+                KakaoCarouselCardEntity.id == KakaoCarouselLinkButtonsEntity.carousel_card_id,
+            )
+            .outerjoin(
+                KakaoCarouselMoreLinkEntity,
+                SetGroupMessagesEntity.set_group_msg_seq
+                == KakaoCarouselMoreLinkEntity.set_group_msg_seq,
+            )
+            .filter(
+                SetGroupMessagesEntity.set_group_msg_seq.in_(set_group_msg_seqs),
+                SetGroupMessagesEntity.msg_type == MessageType.KAKAO_CAROUSEL.value,
+            )
+            .distinct()
+        )
