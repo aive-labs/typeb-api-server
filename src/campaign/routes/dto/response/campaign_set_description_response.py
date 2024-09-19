@@ -25,4 +25,3 @@ class CampaignSetDescription(BaseModel):
 
 class CampaignSetDescriptionResponse(BaseModel):
     campaign_set: list[CampaignSetDescription]
-    set_group_message_list: Optional[dict] = None  # key(int), value(List[SetGroupMessage])

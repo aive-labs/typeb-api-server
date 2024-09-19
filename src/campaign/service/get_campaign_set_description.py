@@ -18,6 +18,7 @@ from src.campaign.infra.sqlalchemy_query.get_campaign_set_groups import (
 )
 from src.campaign.infra.sqlalchemy_query.get_campaign_sets import get_campaign_sets
 from src.campaign.routes.dto.response.campaign_set_description_response import (
+    CampaignSetDescription,
     CampaignSetDescriptionResponse,
 )
 from src.campaign.routes.port.get_campaign_set_description_usecase import (
@@ -46,10 +47,9 @@ class GetCampaignSetDescription(GetCampaignSetDescriptionUseCase):
             CampaignSetsEntity.campaign_id == campaign_id,
         ).update({CampaignSetsEntity.media_cost: None})
 
-        sets = [row._asdict() for row in get_campaign_sets(campaign_id, db)]
+        campaign_sets = [row._asdict() for row in get_campaign_sets(campaign_id, db)]
 
-        #
-        for set_elem in sets:
+        for set_elem in campaign_sets:
             medias = set_elem["medias"]  # tms,kft
             rep_medias = (
                 medias.replace("kft", "카카오 친구톡")
@@ -57,21 +57,10 @@ class GetCampaignSetDescription(GetCampaignSetDescriptionUseCase):
                 .replace("tms", "문자 메세지")
             )
             set_elem["medias"] = rep_medias
-        #
+
         set_groups = [row._asdict() for row in get_campaign_set_groups(campaign_id, db)]
 
-        sets = add_set_rep_contents(sets, set_groups, campaign_id, db)
-
-        set_group_messages = self.campaign_set_repository.get_campaign_set_group_messages(
-            campaign_id, db
-        )
-
-        # 사용체크된 메세지만 필터
-        set_group_messages = [
-            group_msg for group_msg in set_group_messages if group_msg["is_used"] is True
-        ]
-
-        set_group_message_list = self.convert_to_set_group_message_list(set_group_messages)
+        campaign_sets = add_set_rep_contents(campaign_sets, set_groups, campaign_id, db)
 
         # 매체비용, 발송수, 콘텐츠
         ##발송사, 건당 비용
@@ -94,13 +83,17 @@ class GetCampaignSetDescription(GetCampaignSetDescriptionUseCase):
                 db,
             )
         ]
-        sets = DataConverter.merge_dict_by_key(sets, set_media_cost, key_field="set_seq")
+        campaign_sets = DataConverter.merge_dict_by_key(
+            campaign_sets, set_media_cost, key_field="set_seq"
+        )
 
-        # # 사용체크된 세트 그룹만 필터
-        sets = [set_dict for set_dict in sets if set_dict["media_cost"] is not None]
+        # 사용체크된 세트 그룹만 필터
+        use_campaign_sets = [
+            set_dict for set_dict in campaign_sets if set_dict["media_cost"] is not None
+        ]
 
         # 해당 세트의 매체비용 업데이트
-        for set_elem in sets:
+        for set_elem in use_campaign_sets:
             db.query(CampaignSetsEntity).filter(
                 CampaignSetsEntity.campaign_id == campaign_id,
                 CampaignSetsEntity.set_seq == set_elem["set_seq"],
@@ -108,9 +101,11 @@ class GetCampaignSetDescription(GetCampaignSetDescriptionUseCase):
 
         db.commit()
 
-        res = {"campaign_set": sets, "set_group_message_list": set_group_message_list}
-
-        return CampaignSetDescriptionResponse(**res)
+        return CampaignSetDescriptionResponse(
+            campaign_set=[
+                CampaignSetDescription(**campaign_set) for campaign_set in use_campaign_sets
+            ]
+        )
 
     def convert_to_set_group_message_list(self, set_group_messages):
 
