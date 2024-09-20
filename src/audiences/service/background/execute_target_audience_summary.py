@@ -46,13 +46,10 @@ def execute_target_audience_summary(
     response_data_df = response_data_df.groupby(["cus_cd"])["response_count"].max().reset_index()
 
     all_cus_cnt = target_audience_summary_sqlalchemy.get_all_customer_count(db)
-    audience_cnt = len(cust_ids)
     sale_audience_cnt = purchase_records_df["cus_cd"].unique().shape[0]
-    print(sale_audience_cnt)
-    print(type(sale_audience_cnt))
+
     audience_sale_amt = purchase_records_df["sale_amt"].sum()
-    print(audience_sale_amt)
-    print(type(audience_sale_amt))
+
     audience_freq = purchase_records_df[["cus_cd", "sale_dt"]].drop_duplicates().shape[0]
     avg_pur_item_count = (
         purchase_records_df[["cus_cd", "sale_dt", "product_code"]]

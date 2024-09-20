@@ -98,7 +98,7 @@ def parse_carousel_card(
 @message_router.post("/kakao-carousel")
 @inject
 async def add_kakao_carousel_card(
-    file: UploadFile = File(...),
+    file: UploadFile = File(None),
     carousel_card: KakaoCarouselCardRequest = Depends(parse_carousel_card),
     db: Session = Depends(get_db),
     user=Depends(get_permission_checker(required_permissions=["subscription"])),
