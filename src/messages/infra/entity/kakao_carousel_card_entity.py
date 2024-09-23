@@ -25,5 +25,5 @@ class KakaoCarouselCardEntity(Base):
     carousel_button_links = relationship(
         "KakaoCarouselLinkButtonsEntity",
         back_populates="carousel_card",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )

@@ -2,6 +2,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from src.common.utils.model_converter import ModelConverter
+from src.core.exceptions.exceptions import NotFoundException
 from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
 from src.messages.domain.kakao_carousel_more_link import KakaoCarouselMoreLink
 from src.messages.infra.entity.kakao_carousel_card_entity import KakaoCarouselCardEntity
@@ -65,6 +66,10 @@ class MessageRepository(BaseMessageRepository):
         return KakaoCarouselCard.model_validate(saved_carousel_card_entity)
 
     def delete_carousel_card(self, carousel_card_id: int, db: Session):
+        db.query(KakaoCarouselLinkButtonsEntity).filter(
+            KakaoCarouselLinkButtonsEntity.carousel_card_id == carousel_card_id
+        ).delete()
+
         db.query(KakaoCarouselCardEntity).filter(
             KakaoCarouselCardEntity.id == carousel_card_id
         ).delete()
@@ -108,3 +113,10 @@ class MessageRepository(BaseMessageRepository):
             return None
 
         return entity.id
+
+    def get_carousel_card_by_id(self, id, db) -> KakaoCarouselCard:
+        entity = db.query(KakaoCarouselCardEntity).filter(KakaoCarouselCardEntity.id == id).first()
+        if entity is None:
+            raise NotFoundException(detail={"message": "캐러셀이 존재하지 않습니다."})
+
+        return KakaoCarouselCard.model_validate(entity)

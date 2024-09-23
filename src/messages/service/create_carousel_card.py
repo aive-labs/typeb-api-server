@@ -45,12 +45,24 @@ class CreateCarouselCard(CreateCarouselCardUseCase):
         self.validate_carousel_card_count(carousel_card_request, db)
         self.validate_carousel_button_count(carousel_card_request)
 
-        carousel_card = await self.create_carousel_card_with_image_link(
-            carousel_card_request, db, file, user
-        )
+        if file:
+            # 신규 캐러셀 카드 등록 또는 캐러셀 이미지 업데이트
+            carousel_card = await self.create_carousel_card_with_image_link(
+                carousel_card_request, db, file, user
+            )
+        else:
+            # 캐러셀 문구만 업데이트(이미지는 업데이트 하지 않음)
+            # id가 반드시 있어야 하는 단계
+            if carousel_card_request.id is None:
+                raise PolicyException(detail={"message": "업데이트 요청 중 문제가 발생했습니다."})
+            prev_carousel = self.message_repository.get_carousel_card_by_id(
+                carousel_card_request.id, db
+            )
+            carousel_card = KakaoCarouselCard(**carousel_card_request.model_dump())
+            carousel_card.set_image_url(carousel_card.image_url, prev_carousel.s3_image_path)
 
         saved_carousel_card = self.message_repository.save_carousel_card(carousel_card, user, db)
-        response = await self.carousel_card_to_response(saved_carousel_card)
+        response = self.carousel_card_to_response(saved_carousel_card)
 
         db.commit()
 
@@ -77,7 +89,7 @@ class CreateCarouselCard(CreateCarouselCardUseCase):
                 detail={"message": "캐러셀 아이템 메시지는 최대 180자까지 입력할 수 있습니다."}
             )
 
-    async def carousel_card_to_response(self, saved_carousel_card):
+    def carousel_card_to_response(self, saved_carousel_card):
         response = KakaoCarouselCardResponse(**saved_carousel_card.model_dump())
         response.set_image_url(f"{self.cloud_front_url}/{response.s3_image_path}")
         return response

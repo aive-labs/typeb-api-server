@@ -37,3 +37,7 @@ class BaseMessageRepository(ABC):
         self, set_group_msg_seq, db: Session
     ) -> int | None:
         pass
+
+    @abstractmethod
+    def get_carousel_card_by_id(self, id, db) -> KakaoCarouselCard:
+        pass
