@@ -179,17 +179,17 @@ def get_summary_dict(head_product):
     }
     word_mapper = {"F": "여성", "M": "남성", "U": "남녀공용"}
     product_info = head_product[0]
-    if int(product_info.price) > 0 and (
+    if int(float(product_info.price)) > 0 and (
         product_info.discountprice is None or product_info.discountprice == 0
     ):
         find_keys["price"] = "현재가"
-        adj_price_str = f"{product_info.price}원"
+        adj_price_str = f"{product_info.price:,}원"
     else:
         find_keys["price"] = "혜택 적용가"
         adj_price_str = (
-            f"{int(product_info.price) - int(product_info.discountprice)}원 ({product_info.discount_value} off)"
+            f"{int(float(product_info.price)) - int(product_info.discountprice):,}원 ({int(float(product_info.discount_value))}% off)"
             if product_info.discount_value_unit == "P"
-            else f"{int(product_info.price) - int(product_info.discountprice)}원 ({product_info.discountprice}원 할인)"
+            else f"{int(float(product_info.price)) - int(product_info.discountprice):,}원 ({product_info.discountprice:,}원 할인)"
         )
 
     head_product = [head_product._mapping for head_product in head_product]
@@ -198,9 +198,9 @@ def get_summary_dict(head_product):
     for k, v in find_keys.items():
         product_dict[v] = []
         for product_tuple in head_product:
-            if product_tuple.get(k) is True and k == "price":
+            if product_tuple.get(k) and k == "price":
                 product_dict[v].append(adj_price_str)
-            elif product_tuple.get(k):
+            elif product_tuple.get(k) and k != "price":
                 product_dict[v].append(word_mapper.get(product_tuple[k], product_tuple[k]))
     res_list = [[k, ",".join(set(v))] for k, v in product_dict.items() if len(v) > 0]
 
