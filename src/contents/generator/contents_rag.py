@@ -25,7 +25,7 @@ class StreamingConversationChain:
         self,
         openai_api_key: str,
         temperature: float = 0.7,
-        model_name="gpt-4-1106-preview",
+        model_name="gpt-4-0613",
     ):
         self.memories = {}
         self.model_name = model_name

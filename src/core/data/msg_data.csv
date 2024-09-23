@@ -392,7 +392,6 @@ title,title-sssd01,sssd,개강,개강이니까~ 더 특별하게!,,
 title,title-sssd02,sssd,개강,새로운 시작에 딱 맞는!,,
 title,title-sssd03,sssd,개강,"새로운 도전의 시작, 응원!",,
 title,title-sssd04,sssd,개강,"새학기, 새 옷으로!",,
-title,title-sssd05,sssd,개강,패션으로 너의 꿈을 펼쳐봐!,,
 title,title-sssd06,sssd,개강,"새로운 출발, 응원해요!",,
 title,title-sssf01,sssf,초가을,"선선해지는 날씨, 가을이야!",,
 title,title-sssf02,sssf,초가을,외출을 장려하는 요즘 날씨!,,
@@ -402,48 +401,47 @@ title,title-sssp02,sssp,봄,"설레는 봄, {mall_id}와 함께",,
 title,title-sssp03,sssp,봄,봄에도 역시 아웃도어는?,,
 title,title-sssp04,sssp,봄,봄 기운 가득한 {mall_id}와~,,
 title,title-sssp05,sssp,봄,새 옷 입고 봄 나들이 가자!,,
-title,title-sssp06,sssp,봄,"신선한 봄, 새로운 패션!",,
+title,title-sssp06,sssp,봄,"신선한 봄, 나만의 감성으로!",,
 title,title-sssp07,sssp,봄,"꽃피는 봄, {mall_id}와 함께~",,
 title,title-sssp08,sssp,봄,봄에 어올리는 {mall_id} 스타일!,,
-title,title-sssp09,sssp,봄,"꽃피는 계절, 새로운 패션!",,
+title,title-sssp09,sssp,봄,"꽃피는 계절, 새로운 색감으로!",,
 title,title-sssp10,sssp,봄,봄에는 스타일 업그레이드!,,
 title,title-sssp11,sssp,봄,{mall_id}는 따스한 햇살과 함께!,,
-title,title-sssp12,sssp,봄,"봄, 패션의 새로운 시작!",,
+title,title-sssp12,sssp,봄,"봄, 스타일링을 새롭게!",,
 title,title-sssp13,sssp,봄,{mall_id}와 함께 새봄맞이,,
-title,title-sssp14,sssp,봄,봄의 스타일은 {mall_id}와 함께!,,
-title,title-sssp15,sssp,봄,"봄, 활기찬 스타일로 변신!",,
+title,title-sssp14,sssp,봄,봄 메이크업은 {mall_id}와 함께!,,
+title,title-sssp15,sssp,봄,"봄, 활기찬 컬러로 변신!",,
 title,title-sssp16,sssp,봄,올 봄에는 트렌디하게!,,
 title,title-sssp17,sssp,봄,{mall_id}와 준비하는 봄 나들이,,
-title,title-sssp18,sssp,봄,봄에는 상큼한 스타일로~,,
+title,title-sssp18,sssp,봄,봄에는 상큼한 컬러로~,,
 title,title-sssp19,sssp,봄,화사한 패션으로 새롭게!,,
-title,title-sssp20,sssp,봄,세련된 스타일로 변신!,,
+title,title-sssp20,sssp,봄,세련된 컬러로 변신!,,
 title,title-ssss01,ssss,초여름,더워지는 날씨 대비해요!,,
-title,title-ssss02,ssss,초여름,이번 여름에 어올리는 패션!,,
-title,title-ssss03,ssss,초여름,시원한 옷도 {mall_id}!,,
+title,title-ssss02,ssss,초여름,여름에 어올리는 나만의 컬러는?,,
+title,title-ssss03,ssss,초여름,여름 메이크업도 {mall_id}!,,
 title,title-ssss04,ssss,초여름,여름옷도 역시 {mall_id}에서~,,
 title,title-ssss05,ssss,초여름,"여름의 시작, {mall_id}와 함께",,
 title,title-ssss06,ssss,초여름,{mall_id}와 함께 시원한 여름을!,,
-title,title-ssss07,ssss,초여름,여름 옷 쇼핑도 {mall_id}에서!,,
+title,title-ssss07,ssss,초여름,여름 메이크업도 {mall_id}에서!,,
 title,title-ssss08,ssss,초여름,올여름 {mall_id} 필수템,,
-title,title-ssss09,ssss,초여름,여름에 어올리는 코디,,
+title,title-ssss09,ssss,초여름,여름에 어올리는 나만의 메이크업,,
 title,title-ssss10,ssss,초여름,더운 여름을 위한 준비!,,
-title,title-ssss11,ssss,초여름,올여름 옷은 지금부터 준비~,,
+title,title-ssss11,ssss,초여름,올여름 메이크업 지금부터 준비~,,
 title,title-ssss12,ssss,초여름,"올 여름, {mall_id}와 함께하세요",,
 title,title-ssss13,ssss,초여름,여름휴가도 {mall_id}와 함께!,,
-title,title-ssss14,ssss,초여름,여름 옷도 {mall_id}와 준비완료!,,
-title,title-ssss15,ssss,초여름,여름 티셔츠도 트렌디하게~,,
-title,title-ssss16,ssss,초여름,"여름의 새로운 향기, {mall_id}!",,
+title,title-ssss14,ssss,초여름,여름 스타일링도 {mall_id}와 준비완료!,,
+title,title-ssss15,ssss,초여름,여름 뷰티 감성도 트렌디하게~,,
+title,title-ssss16,ssss,초여름,"여름의 새로운 색감, {mall_id}!",,
 title,title-ssss17,ssss,초여름,여름에 잘 어올리는 {mall_id}!,,
-title,title-ssss18,ssss,초여름,"요즘 날씨, 입기 좋은 {mall_id}!",,
-title,title-ssss19,ssss,초여름,여름에도 {mall_id} 입는다~,,
+title,title-ssss18,ssss,초여름,"요즘 날씨, 사용감 좋은 아이템!",,
 title,title-ssss20,ssss,초여름,여름엔 {mall_id}!,,
 title,title-sssu01,sssu,여름,Summer Festa 도착!,,
 title,title-sssu02,sssu,여름,무더운 여름 {mall_id}와 함께~,,
 title,title-sssu03,sssu,여름,"뜨거운 여름, 쿨하게 쇼핑!",,
 title,title-sssu04,sssu,여름,"올 여름, {mall_id}와 떠나보자!",,
-title,title-sssu05,sssu,여름,Summer 바캉스룩도 {mall_id}!,,
+title,title-sssu05,sssu,여름,Summer 메이크업도 {mall_id}!,,
 title,title-sssu06,sssu,여름,더워지는 날씨 타파!,,
-title,title-sssu07,sssu,여름,"여름 휴가룩, 완벽 연출!",,
+title,title-sssu07,sssu,여름,"여름 메이크업, 완벽 연출!",,
 title,title-sssu08,sssu,여름,"더워진 날씨, 시원하게!",,
 title,title-sssu09,sssu,여름,함께 쿨하게 떠나는 여름!,,
 title,title-sssu10,sssu,여름,이번 휴가는 {mall_id}와 함께,,
@@ -482,7 +480,7 @@ title,title-ssws15,ssws,초봄,봄의 상쾌함을 {mall_id}와 함께!,,
 title,title-ssws16,ssws,초봄,봄의 소중한 순간을 함께.,,
 title,title-ssws17,ssws,초봄,"일교차 큰 요즘, {mall_id}와",,
 title,title-ssws18,ssws,초봄,봄바람 따라 즐거운 쇼핑!,,
-title,title-ssws19,ssws,초봄,봄맞이 옷 쇼핑은 {mall_id}에서!,,
+title,title-ssws19,ssws,초봄,봄맞이 메이크업은 {mall_id}에서!,,
 title,title-ssws20,ssws,초봄,"봄의 따스함, {mall_id}에서 계속",,
 title,title-sta01,sta,연령대별 Best 상품 추천,연령대별 베스트 상품!,연령대별 Best 상품 추천,
 title,title-sta02,sta,연령대별 Best 상품 추천,연령대별 추천 상품,연령대별 Best 상품 추천,
@@ -711,7 +709,7 @@ main,main-sofa01-2,sofa,가을,커지는 일교차 만큼이나 큰 {mall_id}의
 main,main-sofa02-1,sofa,가을,가을 특별 혜택으로 나들이 준비를 더욱 즐겁게 해보세요!,2030,2030
 main,main-sofa02-2,sofa,가을,가을 나들이도 {mall_id} 혜택과 함께 준비하세요~,5060,5060
 main,main-sofa03-1,sofa,가을,{mall_id}의 혜택으로 가을의 매력을 담은 스타일링을 즐겨보세요!,2030,2030
-main,main-sofa03-2,sofa,가을,{mall_id}에서 준비한 한정 혜택으로 가을 옷 장만하세요.,5060,5060
+main,main-sofa03-2,sofa,가을,{mall_id}에서 준비한 한정 혜택으로 나만의 감성을 표현하세요.,5060,5060
 main,main-sofa04-1,sofa,가을,가을의 멋을 완성하는 데 도움이 될 혜택이 기다리고 있어요.,2030,2030
 main,main-sofa04-2,sofa,가을,이번 가을 패션은 {mall_id} 혜택과 함께 준비해보세요.,5060,5060
 main,main-sofa05-1,sofa,가을,환절기 스타일링을 더욱 특별하게 만들어줄 혜택을 준비했어요~,2030,2030
@@ -1186,10 +1184,10 @@ main,main-k_ss02-1,k_ss,S/S,"SS시즌 컴백!
 활기찬 봄 스타일을 완성하세요!","S/S,2030",2030
 main,main-k_ss02-2,k_ss,S/S,"SS시즌이 돌아왔습니다!
 따스한 봄날에 어울리는 스타일을 완성해보세요!","S/S,5060",5060
-main,main-k_fw01-1,k_fw,F/W,"가을 옷장 리뉴얼 시즌이 왔어요!
-진행중인 FW 이벤트와 함께 옷장을 채워보세요!","F/W,2030",2030
-main,main-k_fw01-2,k_fw,F/W,"가을 옷장 리뉴얼 시즌이 다가왔어요!
-지금 진행중인 FW 이벤트와 함께 나만의 옷장을 채워보세요!","F/W,5060",5060
+main,main-k_fw01-1,k_fw,F/W,"가을 메이크업 리뉴얼 시즌이 왔어요!
+진행중인 FW 이벤트와 함께 나만의 컬러로 채워보세요!","F/W,2030",2030
+main,main-k_fw01-2,k_fw,F/W,"가을 메이크업 리뉴얼 시즌이 다가왔어요!
+지금 진행중인 FW 이벤트와 함께 나만의 컬러로 채워보세요!","F/W,5060",5060
 main,main-k_fw02-1,k_fw,F/W,"F/W 컬렉션 오픈!
 FW시즌 최신 트렌드를 만나보세요!","F/W,2030",2030
 main,main-k_fw02-2,k_fw,F/W,"F/W 컬렉션을 선보입니다!
