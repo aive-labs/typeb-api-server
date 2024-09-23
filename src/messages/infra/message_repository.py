@@ -93,14 +93,6 @@ class MessageRepository(BaseMessageRepository):
             .scalar()
         )
 
-    def get_carousel_card_by_id(self, carousel_id: int, db: Session) -> KakaoCarouselCard:
-        entity = (
-            db.query(KakaoCarouselCardEntity)
-            .filter(KakaoCarouselCardEntity.id == carousel_id)
-            .first()
-        )
-        return entity
-
     def get_carousel_more_link_id_by_set_group_msg_seq(
         self, set_group_msg_seq, db: Session
     ) -> int | None:
