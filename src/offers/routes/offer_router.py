@@ -37,8 +37,10 @@ async def get_offer_object_list(
     )
     items = items[(current_page - 1) * per_page : current_page * per_page]
 
+    total_count = get_offer_service.get_offer_count(db)
+
     pagination = PaginationBase(
-        total=len(items),
+        total=total_count,
         per_page=per_page,
         current_page=current_page,
         total_page=len(items) // per_page + 1,

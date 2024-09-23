@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import or_
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
 from src.common.timezone_setting import selected_timezone
@@ -289,3 +289,6 @@ class OfferRepository(BaseOfferRepository):
         else:
             is_available = False
         return is_available
+
+    def get_offer_count(self, db) -> int:
+        return db.query(func.count(OffersEntity.coupon_no)).scalar()
