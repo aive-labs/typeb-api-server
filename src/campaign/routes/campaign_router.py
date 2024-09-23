@@ -23,7 +23,10 @@ from src.campaign.routes.dto.request.campaign_set_message_use_request import (
     CampaignSetMessageUseRequest,
 )
 from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdate
-from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
+from src.campaign.routes.dto.request.message_generate import (
+    CarouselMsgGenerationReq,
+    MsgGenerationReq,
+)
 from src.campaign.routes.dto.request.test_send_request import TestSendRequest
 from src.campaign.routes.dto.response.campaign_set_description_response import (
     CampaignSetDescriptionResponse,
@@ -168,6 +171,21 @@ def generate_message(
     ),
 ):
     return generate_message_service.generate_message(message_generate, user, db=db)
+
+
+@campaign_router.post("/campaigns/generate-carousel-message")
+@inject
+def generate_carousel_message_request(
+    carousel_message_generate: CarouselMsgGenerationReq,
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
+    db=Depends(get_db),
+    generate_message_service: GenerateMessageUsecase = Depends(
+        dependency=Provide[Container.generate_message_service]
+    ),
+):
+    return generate_message_service.generate_carousel_message(
+        carousel_message_generate, user, db=db
+    )
 
 
 @campaign_router.get("/campaigns/excluded-custs/{campaign_id}")

@@ -247,7 +247,7 @@ class generate_message:
             self.msg_title = title
             self.msg_body = contents_text
             self.msg_gen_key.append(contents_df["gen_key"].values[0])
-        elif data_dict.get("msg_type") in ["kakao_image_wide"]:
+        elif data_dict.get("msg_type") in ["kakao_image_wide", "kakao_carousel"]:
             self.msg_body = title
             self.msg_gen_key.append(contents_df["gen_key"].values[0])
 
@@ -265,7 +265,7 @@ class generate_message:
             self.msg_title = title
             self.msg_body = contents_text
             self.msg_gen_key.append(contents_df["gen_key"].values[0])
-        elif data_dict.get("msg_type") in ["kakao_image_wide"]:
+        elif data_dict.get("msg_type") in ["kakao_image_wide", "kakao_carousel"]:
             self.msg_body = title
             self.msg_gen_key.append(contents_df["gen_key"].values[0])
 
@@ -340,9 +340,9 @@ class generate_message:
         basic = sample_df.sample(n=1)
         self.msg_gen_key.append(basic["gen_key"].values[0])
         self.msg_title = basic["text"].values[0]
-        if (
-            data_dict["msg_type"] not in ("lms", "mms")
-            and data_dict["msg_type"] != "kakao_image_wide"
+        if data_dict["msg_type"] not in ("lms", "mms") and data_dict["msg_type"] not in (
+            "kakao_image_wide",
+            "kakao_carousel",
         ):
             self.msg_body = basic["text"].values[0] + "\n\n"
 
@@ -663,7 +663,7 @@ class generate_message:
         self.msg_body = self.msg_body + "\n"
 
         ## 적용/미적용 상품
-        if data_dict["msg_type"] != "kakao_image_wide":
+        if data_dict["msg_type"] not in ("kakao_image_wide", "kakao_carousel"):
             if (
                 data_dict["offer_info"].get("offer_style_conditions") == "전 상품"
                 and data_dict["offer_info"].get("offer_style_exclusion_conditions") is None
@@ -696,7 +696,7 @@ class generate_message:
                 )
 
         ## 적용/미적용 채널
-        if data_dict["msg_type"] != "kakao_image_wide":
+        if data_dict["msg_type"] not in ("kakao_image_wide", "kakao_carousel"):
             if (
                 data_dict["offer_info"].get("offer_channel_conditions") is not None
                 and data_dict["offer_info"].get("offer_channel_exclusion_conditions") is None
@@ -868,6 +868,7 @@ def generate_dm(grp_idx, input_data, send_date, msg_type, remind_duration):
             "kakao_text",
             "kakao_image_general",
             "kakao_image_wide",
+            "kakao_carousel",
         ]:
             output = {}
             output["msg_gen_key"] = ""

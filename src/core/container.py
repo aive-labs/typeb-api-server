@@ -398,6 +398,7 @@ class Container(containers.DeclarativeContainer):
 
     campaign_sqlalchemy = providers.Singleton(provides=CampaignSqlAlchemy)
 
+    message_repository = providers.Singleton(provides=MessageRepository)
     campaign_repository = providers.Singleton(
         provides=CampaignRepository, campaign_sqlalchemy=campaign_sqlalchemy
     )
@@ -435,6 +436,8 @@ class Container(containers.DeclarativeContainer):
         offer_repository=offer_repository,
         common_repository=common_repository,
         contents_repository=contents_repository,
+        onboarding_repository=onboarding_repository,
+        message_repository=message_repository,
     )
 
     update_campaign_set_service = providers.Singleton(

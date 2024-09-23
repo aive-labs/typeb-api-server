@@ -35,7 +35,7 @@ class GenerateContentsService(GenerateContentsUseCase):
 
         self.chain = StreamingConversationChain(
             openai_api_key=self.openai_api_key,
-            model_name="gpt-4o-mini",
+            model_name="gpt-4-0613",
         )
 
     def _product_resource_handler(
