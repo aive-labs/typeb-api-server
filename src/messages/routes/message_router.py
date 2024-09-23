@@ -109,7 +109,7 @@ async def add_kakao_carousel_card(
     return await create_carousel_card.create_carousel_card(file, carousel_card, user, db)
 
 
-@message_router.delete("/kakao-carousel/{carousel_card_id}", status_code=status.HTTP_204_NO_CONTENT)
+@message_router.delete("/kakao-carousel/{carousel_card_id}")
 @inject
 def delete_kakao_carousel_card(
     carousel_card_id: int,

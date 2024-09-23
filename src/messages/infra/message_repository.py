@@ -91,7 +91,7 @@ class MessageRepository(BaseMessageRepository):
         cards = (
             db.query(KakaoCarouselCardEntity)
             .filter(KakaoCarouselCardEntity.set_group_msg_seq == set_group_msg_seq)
-            .order_by(KakaoCarouselCardEntity.sort_num)
+            .order_by(KakaoCarouselCardEntity.carousel_sort_num)
             .all()
         )
 
