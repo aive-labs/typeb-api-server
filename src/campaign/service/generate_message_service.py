@@ -667,5 +667,6 @@ class GenerateMessageService(GenerateMessageUsecase):
         carousel_card.message_title = msg_rtn[0].msg_title
         carousel_card.message_body = msg_rtn[0].msg_body
         self.message_repository.save_carousel_card(carousel_card, user, db)
+        db.commit()
 
         return carousel_card
