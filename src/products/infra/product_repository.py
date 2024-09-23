@@ -73,7 +73,7 @@ class ProductRepository(BaseProductRepository):
             query = query.filter(ProductMasterEntity.recommend_yn == search_condition.recommend_yn)
         if search_condition.sale_yn:
             sale_yn_mapping = "T" if search_condition.sale_yn == "Y" else "F"
-            query = query.filter(ProductMasterEntity.display == sale_yn_mapping)
+            query = query.filter(ProductMasterEntity.selling == sale_yn_mapping)
 
         return query
 
