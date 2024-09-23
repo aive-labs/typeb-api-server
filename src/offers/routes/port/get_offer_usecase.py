@@ -20,3 +20,7 @@ class GetOfferUseCase(ABC):
     @abstractmethod
     def get_offer_detail(self, coupon_no, db: Session) -> OfferDetailResponse:
         pass
+
+    @abstractmethod
+    def get_offer_count(self, db: Session) -> int:
+        pass

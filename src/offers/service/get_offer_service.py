@@ -96,3 +96,6 @@ class GetOfferService(GetOfferUseCase):
     def get_offer_detail(self, coupon_no: str, db: Session) -> OfferDetailResponse:
         offer = self.offer_repository.get_offer_detail(coupon_no, db)
         return OfferDetailResponse.from_model(offer)
+
+    def get_offer_count(self, db: Session) -> int:
+        return self.offer_repository.get_offer_count(db)
