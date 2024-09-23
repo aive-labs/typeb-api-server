@@ -21,7 +21,7 @@ template_dict = {
 
         아래의 형식에 맞춰 출력하세요. 단, [] 안에 있는 내용은 절대 변경하지말고 그대로 출력하세요. 고정값입니다.
         __title__제목은 여기에 작성하세요.
-        제목 뒤에는 __divider__, __summary__[summary_template], __youtube__[youtube_uri], __dashed_divider__를 각각 한 줄씩 추가하세요.
+        제목 뒤에는 __divider__, __summary__[summary_template], __youtube__[youtube_uri], __dashed_divider__를 각각 한 줄씩 추가하세요. [] 안에 있는 내용은 절대 변경하지말고 그대로 출력하세요. 고정값입니다.
         각 문단이 시작할때 항상 __text__를 앞에 포함해서 작성해주세요.
         서론 뒤, 결론 앞에 각각 __image__[img_uri] 를 한 줄씩 추가하세요.
         결론이 끝나면 __divider__, __instagram__[instagram_uri]을 각각 한 줄씩 출력하세요.
@@ -45,7 +45,7 @@ template_dict = {
         아래의 형식에 맞춰 출력하세요. 단, [] 안에 있는 내용은 절대 변경하지말고 그대로 출력하세요. 고정값입니다.
         __title__제목은 여기에 작성하세요.
         __subhead__소제목은 여기에 작성하고 문단 시작 전에 추가하세요.
-        제목 뒤에는 __divider__, __summary__[summary_template], __image__[img_uri], __dashed_divider__를 각각 한 줄씩 추가하세요.
+        제목 뒤에는 __divider__, __summary__[summary_template], __image__[img_uri], __dashed_divider__를 각각 한 줄씩 추가하세요. [] 안에 있는 내용은 절대 변경하지말고 그대로 출력하세요. 고정값입니다.
         각 문단이 시작할때 항상 __text__를 앞에 포함해서 작성해주세요.
         본문 단락 사이사이에 __image__[img_uri] 를 한 줄씩 추가하세요.
         모든 글이 끝나면 마지막에 __divider__, __review__[reviews]를 각각 한 줄씩 출력하세요.
@@ -66,7 +66,7 @@ template_dict = {
         아래의 형식에 맞춰 출력하세요. 단, [] 안에 있는 내용은 절대 변경하지말고 그대로 출력하세요. 고정값입니다.
         __title__제목은 여기에 작성하세요.
         각 문단이 시작할때 항상 __text__를 앞에 포함해서 작성해주세요.
-        제목 뒤에는 __divider__, __image__[img_uri]를 각각 한 줄씩 추가하세요.
+        제목 뒤에는 __divider__, __image__[img_uri]를 각각 한 줄씩 추가하세요. [] 안에 있는 내용은 절대 변경하지말고 그대로 출력하세요. 고정값입니다.
 
         주제 : {question}
         정보 : {context}
@@ -83,7 +83,7 @@ template_dict = {
         __title__제목은 여기에 작성하세요.
         각 문단이 시작할때 항상 __text__를 앞에 포함해서 작성해주세요.
         제목 뒤에는 __divider__를 한 줄 추가하세요.
-        모든 문장 앞에는 __image__[img_uri]를 한 줄씩 추가하세요.
+        모든 문장 앞에는 __image__[img_uri]를 한 줄씩 추가하세요. [] 안에 있는 내용은 절대 변경하지말고 그대로 출력하세요. 고정값입니다.
 
         주제 : {question}
         정보 : {context}
