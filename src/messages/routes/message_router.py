@@ -118,8 +118,8 @@ def delete_kakao_carousel_card(
     delete_carousel_card: DeleteCarouselCardUseCase = Depends(
         Provide[Container.delete_carousel_card]
     ),
-):
-    delete_carousel_card.exec(carousel_card_id, db=db)
+) -> list[KakaoCarouselCardResponse]:
+    return delete_carousel_card.exec(carousel_card_id, db=db)
 
 
 @message_router.post(

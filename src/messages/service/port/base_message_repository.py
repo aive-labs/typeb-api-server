@@ -21,7 +21,7 @@ class BaseMessageRepository(ABC):
         pass
 
     @abstractmethod
-    def delete_carousel_card(self, carousel_card_id: int, db: Session):
+    def delete_carousel_card(self, carousel_card_id: int, db: Session) -> int:
         pass
 
     @abstractmethod
@@ -40,4 +40,10 @@ class BaseMessageRepository(ABC):
 
     @abstractmethod
     def get_carousel_card_by_id(self, id, db) -> KakaoCarouselCard:
+        pass
+
+    @abstractmethod
+    def get_carousel_cards_by_set_group_msg_seq(
+        self, set_group_msg_seq, db
+    ) -> list[KakaoCarouselCard]:
         pass

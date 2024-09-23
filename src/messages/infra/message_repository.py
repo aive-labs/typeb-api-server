@@ -65,14 +65,43 @@ class MessageRepository(BaseMessageRepository):
 
         return KakaoCarouselCard.model_validate(saved_carousel_card_entity)
 
-    def delete_carousel_card(self, carousel_card_id: int, db: Session):
+    def delete_carousel_card(self, carousel_card_id: int, db: Session) -> int:
         db.query(KakaoCarouselLinkButtonsEntity).filter(
             KakaoCarouselLinkButtonsEntity.carousel_card_id == carousel_card_id
         ).delete()
 
+        entity = (
+            db.query(KakaoCarouselCardEntity)
+            .filter(KakaoCarouselCardEntity.id == carousel_card_id)
+            .first()
+        )
+
+        if entity is None:
+            raise NotFoundException(detail={"message": "캐러셀이 존재하지 않습니다."})
+
+        set_group_msg_seq = entity.set_group_msg_seq
+
         db.query(KakaoCarouselCardEntity).filter(
             KakaoCarouselCardEntity.id == carousel_card_id
         ).delete()
+
+        db.flush()
+
+        # 1. sort_num을 기준으로 모든 레코드를 오름차순으로 가져오기
+        cards = (
+            db.query(KakaoCarouselCardEntity)
+            .filter(KakaoCarouselCardEntity.set_group_msg_seq == set_group_msg_seq)
+            .order_by(KakaoCarouselCardEntity.sort_num)
+            .all()
+        )
+
+        # 2. 각 레코드의 carousel_sort_num을 1부터 차례대로 업데이트
+        for idx, card in enumerate(cards, start=1):
+            card.carousel_sort_num = idx
+
+        db.flush()
+
+        return set_group_msg_seq
 
     def save_carousel_more_link(self, carousel_more_link: KakaoCarouselMoreLink, db: Session):
         entity = KakaoCarouselMoreLinkEntity(
@@ -112,3 +141,13 @@ class MessageRepository(BaseMessageRepository):
             raise NotFoundException(detail={"message": "캐러셀이 존재하지 않습니다."})
 
         return KakaoCarouselCard.model_validate(entity)
+
+    def get_carousel_cards_by_set_group_msg_seq(
+        self, set_group_msg_seq, db
+    ) -> list[KakaoCarouselCard]:
+        entities = (
+            db.query(KakaoCarouselCardEntity)
+            .filter(KakaoCarouselCardEntity.set_group_msg_seq == set_group_msg_seq)
+            .all()
+        )
+        return [KakaoCarouselCard.model_validate(entity) for entity in entities]
