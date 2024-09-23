@@ -280,6 +280,8 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                     detail={"messsage": "등록된 kakao sender key가 존재하지 않습니다."}
                 )
 
+            print("before kakao_landing_url")
+
             kakao_landing_url = await self.message_service.upload_file_for_kakao_carousel(
                 new_file_name,
                 file_read,
