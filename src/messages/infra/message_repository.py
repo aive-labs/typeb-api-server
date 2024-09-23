@@ -66,6 +66,10 @@ class MessageRepository(BaseMessageRepository):
         return KakaoCarouselCard.model_validate(saved_carousel_card_entity)
 
     def delete_carousel_card(self, carousel_card_id: int, db: Session):
+        db.query(KakaoCarouselLinkButtonsEntity).filter(
+            KakaoCarouselLinkButtonsEntity.carousel_card_id == carousel_card_id
+        ).delete()
+
         db.query(KakaoCarouselCardEntity).filter(
             KakaoCarouselCardEntity.id == carousel_card_id
         ).delete()
