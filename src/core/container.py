@@ -436,6 +436,8 @@ class Container(containers.DeclarativeContainer):
         offer_repository=offer_repository,
         common_repository=common_repository,
         contents_repository=contents_repository,
+        onboarding_repository=onboarding_repository,
+        message_repository=message_repository,
     )
 
     update_campaign_set_service = providers.Singleton(
