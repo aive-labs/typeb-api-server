@@ -167,6 +167,8 @@ class MessageService:
 
             async with session.post(url, data=data, ssl=False) as response:
                 print(response.status)
+                upload_response = await response.json()
+                print(upload_response)
                 if response.status != 200:
                     raise PpurioException(
                         detail={
@@ -174,7 +176,7 @@ class MessageService:
                         }
                     )
 
-                response = await response.json()
+                response = upload_response
 
                 if response["code"] not in ["200", "0000"]:
                     print("code", response["code"])

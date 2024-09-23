@@ -151,3 +151,20 @@ class MessageRepository(BaseMessageRepository):
             .all()
         )
         return [KakaoCarouselCard.model_validate(entity) for entity in entities]
+
+    def get_max_carousel_sort_num(self, set_group_msg_seq, db) -> int:
+        entity = (
+            db.query(KakaoCarouselCardEntity)
+            .filter(KakaoCarouselCardEntity.set_group_msg_seq == set_group_msg_seq)
+            .first()
+        )
+        if entity is None:
+            return 1
+
+        max_sort_num = (
+            db.query(func.max(KakaoCarouselCardEntity.carousel_sort_num))
+            .filter(KakaoCarouselCardEntity.set_group_msg_seq == set_group_msg_seq)
+            .scalar()
+        )
+
+        return max_sort_num + 1

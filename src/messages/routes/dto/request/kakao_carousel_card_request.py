@@ -19,7 +19,7 @@ class KakaoCarouselLinkButtonsRequest(BaseModel):
 class KakaoCarouselCardRequest(BaseModel):
     id: Optional[int] = None
     set_group_msg_seq: int
-    carousel_sort_num: int
+    carousel_sort_num: int | None = None
     message_title: str
     message_body: str | None = None
     image_url: str | None = None
@@ -30,3 +30,6 @@ class KakaoCarouselCardRequest(BaseModel):
 
     class Config:
         from_attributes = True
+
+    def set_carousel_sort_num(self, max_sort_num):
+        self.carousel_sort_num = max_sort_num

@@ -47,3 +47,7 @@ class BaseMessageRepository(ABC):
         self, set_group_msg_seq, db
     ) -> list[KakaoCarouselCard]:
         pass
+
+    @abstractmethod
+    def get_max_carousel_sort_num(self, set_group_msg_seq, db) -> int:
+        pass

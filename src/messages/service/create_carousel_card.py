@@ -45,6 +45,12 @@ class CreateCarouselCard(CreateCarouselCardUseCase):
         self.validate_carousel_card_count(carousel_card_request, db)
         self.validate_carousel_button_count(carousel_card_request)
 
+        if carousel_card_request.carousel_sort_num is None:
+            max_sort_num = self.message_repository.get_max_carousel_sort_num(
+                carousel_card_request.set_group_msg_seq, db
+            )
+            carousel_card_request.set_carousel_sort_num(max_sort_num)
+
         if file:
             # 신규 캐러셀 카드 등록 또는 캐러셀 이미지 업데이트
             carousel_card = await self.create_carousel_card_with_image_link(
