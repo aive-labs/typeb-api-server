@@ -1317,14 +1317,18 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             )
 
             # 중복제거
-            cus_info_all = db.query(
-                CustomerMasterEntity.cus_cd,
-                CustomerMasterEntity.hp_no,
-                CustomerMasterEntity.track_id,
-            ).distinct(
-                CustomerMasterEntity.cus_cd,
-                CustomerMasterEntity.hp_no,
-                CustomerMasterEntity.track_id,
+            cus_info_all = (
+                db.query(
+                    CustomerMasterEntity.cus_cd,
+                    CustomerMasterEntity.hp_no,
+                    CustomerMasterEntity.track_id,
+                )
+                .filter(CustomerMasterEntity.sms == "T")
+                .distinct(
+                    CustomerMasterEntity.cus_cd,
+                    CustomerMasterEntity.hp_no,
+                    CustomerMasterEntity.track_id,
+                )
             )
 
             # TODO [테스트 고객]이 고객마스터에 있는지 확인
@@ -1412,7 +1416,12 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             logging.info(f"5. 당일 발송 수: {initial_rsv_1_count}")
 
             # left join 고객마스터에 존재하는(휴대폰 번호가 존재하는) 고객만 필터하기
-            rsv_msg_filter_2 = [cus_info.c.hp_no.isnot(None), cus_info.c.hp_no != ""]
+            rsv_msg_filter_2 = [
+                cus_info.c.hp_no.isnot(None),
+                cus_info.c.hp_no != "",
+                cus_info.c.cus_cd.isnot(None),
+                cus_info.c.cus_cd != "",
+            ]
 
             # 지정된 메세지만 발송예약하기
             if msg_seqs_to_save:
