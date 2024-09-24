@@ -782,7 +782,10 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
         # 현재 아이템이 적은 경우에는 높은 번호의 인덱스 삭제
         if len(msg_obj.kakao_button_links) > len(msg_input.kakao_button_links):
             for idx in range(len(msg_input.kakao_button_links), len(msg_obj.kakao_button_links)):
-                db.delete(msg_obj.kakao_button_links[idx])
+                db.query(KakaoLinkButtonsEntity).filter(
+                    KakaoLinkButtonsEntity.kakao_link_buttons_seq
+                    == msg_obj.kakao_button_links[idx].kakao_link_buttons_seq
+                ).delete()
 
         for idx, data in enumerate(msg_input.kakao_button_links):
 
@@ -793,7 +796,7 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
                 button_item = KakaoLinkButtons(
                     set_group_msg_seq=data.set_group_msg_seq,
                     button_name=data.button_name,
-                    button_type=data.button_type.value,  # data.button_type -> Enum
+                    button_type=data.button_type,  # data.button_type -> Enum
                     web_link=data.web_link,
                     app_link=data.app_link,
                     created_at=created_at,
