@@ -796,7 +796,7 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
                 button_item = KakaoLinkButtons(
                     set_group_msg_seq=data.set_group_msg_seq,
                     button_name=data.button_name,
-                    button_type=data.button_type,  # data.button_type -> Enum
+                    button_type=data.button_type.value,  # data.button_type -> Enum
                     web_link=data.web_link,
                     app_link=data.app_link,
                     created_at=created_at,
