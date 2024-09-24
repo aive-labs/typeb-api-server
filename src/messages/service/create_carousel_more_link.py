@@ -42,15 +42,10 @@ class CreateCarouselMoreLink(CreateCarouselMoreLinkUseCase):
 
         self.message_repository.save_carousel_more_link(carousel_more_link, db)
 
-    def validate_button_url(self, carousel_card_request: KakaoCarouselMoreLinkRequest):
-        for button in carousel_card_request.carousel_button_links:
-            if not validate_url(button.url_mobile):
-                raise PolicyException(
-                    detail={"message": "버튼 링크(모바일) 형식이 올바르지 않습니다."}
-                )
+    def validate_button_url(self, carousel_more_link_request: KakaoCarouselMoreLinkRequest):
+        if not validate_url(carousel_more_link_request.url_mobile):
+            raise PolicyException(detail={"message": "버튼 링크(모바일) 형식이 올바르지 않습니다."})
 
-            if button.url_pc:
-                if not validate_url(button.url_pc):
-                    raise PolicyException(
-                        detail={"message": "버튼 링크(웹) 형식이 올바르지 않습니다."}
-                    )
+        if carousel_more_link_request.url_pc:
+            if not validate_url(carousel_more_link_request.url_pc):
+                raise PolicyException(detail={"message": "버튼 링크(웹) 형식이 올바르지 않습니다."})
