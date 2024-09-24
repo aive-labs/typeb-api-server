@@ -8,13 +8,10 @@ from src.message_template.enums.message_type import MessageType
 
 
 class MessageGroupController:
-    def __init__(self, phone_callback, campaign_base, set_group_msg_info) -> None:
+    def __init__(self, phone_callback, campaign_base, set_group_msg_info, bottom_text) -> None:
         self.campaign_base = campaign_base
         self.set_group_msg_info = set_group_msg_info
-        self.vender_bottom_txt = {
-            "dau": "무료수신거부 080-801-7860",
-            "ssg": "무료수신거부 080-801-7860",
-        }
+        self.bottom_text = bottom_text
         self.phone_callback = phone_callback  # 매장번호 또는 본사 대표번호
 
     def pre_define_campaign_msg_seq(self):
@@ -83,9 +80,7 @@ class MessageGroupController:
             msg_resv_date=msg_data.msg_resv_date,
             msg_title=msg_data.msg_title if msg_data.msg_title is not None else "",
             msg_body=msg_data.msg_body if msg_data.msg_body is not None else "",
-            bottom_text=self.vender_bottom_txt[
-                self.campaign_base.msg_delivery_vendor.value
-            ],  # 매장 번호 또는 대표번호
+            bottom_text=self.bottom_text,
             msg_announcement="",
             template_id=None,
             msg_gen_key=(msg_data.msg_gen_key if msg_data.msg_gen_key is not None else None),

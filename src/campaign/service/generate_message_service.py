@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import yaml
 from sqlalchemy.orm import Session
 
+from src.auth.infra.entity.message_integration_entity import MessageIntegrationEntity
 from src.campaign.core import generate_dm
 from src.campaign.core.message_group_controller import MessageGroupController
 from src.campaign.domain.campaign_messages import CampaignMessages, SetGroupMessage
@@ -156,7 +157,15 @@ class GenerateMessageService(GenerateMessageUsecase):
             message_md = CampaignMessages(set_group_message=set_group_message)
             message_data.append(message_md)
 
-        msg_controller = MessageGroupController(phone_callback, campaign_base_obj, message_data)
+        message_sender_info_entity = db.query(MessageIntegrationEntity).first()
+        if message_sender_info_entity is None:
+            raise PolicyException(detail={"message": "입력된 발신자 정보가 없습니다."})
+        bottom_text = f"무료수신거부: {message_sender_info_entity.opt_out_phone_number}"
+        phone_callback = message_sender_info_entity.sender_phone_number
+
+        msg_controller = MessageGroupController(
+            phone_callback, campaign_base_obj, message_data, bottom_text
+        )
 
         # defaultdict 생성
         message_data_dict = defaultdict(list)
@@ -333,8 +342,15 @@ class GenerateMessageService(GenerateMessageUsecase):
             campaign_base_obj.campaign_id, req_set_group_seqs, db
         )
 
-        phone_callback = "02-2088-5502"  # 매장 번호 또는 대표번호
-        msg_controller = MessageGroupController(phone_callback, campaign_base_obj, message_data)
+        message_sender_info_entity = db.query(MessageIntegrationEntity).first()
+        if message_sender_info_entity is None:
+            raise PolicyException(detail={"message": "입력된 발신자 정보가 없습니다."})
+        bottom_text = f"무료수신거부: {message_sender_info_entity.opt_out_phone_number}"
+        phone_callback = message_sender_info_entity.sender_phone_number
+
+        msg_controller = MessageGroupController(
+            phone_callback, campaign_base_obj, message_data, bottom_text
+        )
 
         ## message send type campaing / remind
         ## handle generate data

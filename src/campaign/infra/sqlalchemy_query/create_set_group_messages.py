@@ -4,7 +4,6 @@ from src.auth.infra.entity.message_integration_entity import MessageIntegrationE
 from src.campaign.enums.campaign_type import CampaignType
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.campaign.infra.sqlalchemy_query.get_campaign_remind import get_campaign_remind
-from src.campaign.infra.sqlalchemy_query.get_phone_callback import get_phone_callback
 from src.common.enums.campaign_media import CampaignMedia
 from src.common.utils.date_utils import get_reservation_date
 from src.core.exceptions.exceptions import PolicyException
@@ -43,13 +42,11 @@ def create_set_group_messages(
     print("set_group_seqs")
     print(set_group_seqs)
 
-    # phone_callback, vender_bottom_txt 초기값 추후 send_reservation 시 변환됨
-    phone_callback = get_phone_callback(user_id, db)  # 매장 번호 또는 대표번호
-
-    message_sender_info_entity = db.query(MessageIntegrationEntity.opt_out_phone_number).first()
+    message_sender_info_entity = db.query(MessageIntegrationEntity).first()
     if message_sender_info_entity is None:
         raise PolicyException(detail={"message": "입력된 발신자 정보가 없습니다."})
     bottom_text = f"무료수신거부: {message_sender_info_entity.opt_out_phone_number}"
+    phone_callback = message_sender_info_entity.sender_phone_number
 
     # 기본 캠페인 -> (광고)[네파]
     # expert 캠페인 -> None
