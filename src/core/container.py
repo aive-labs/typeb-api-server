@@ -496,7 +496,9 @@ class Container(containers.DeclarativeContainer):
         onboarding_repository=onboarding_repository,
     )
 
-    test_send_service = providers.Singleton(provides=TestMessageSendService)
+    test_send_service = providers.Singleton(
+        provides=TestMessageSendService, onboarding_repository=onboarding_repository
+    )
 
     delete_campaign_service = providers.Singleton(
         provides=DeleteCampaignService,

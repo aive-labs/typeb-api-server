@@ -1,5 +1,7 @@
 from sqlalchemy.orm import Session
 
+from src.common.utils.validate_url import validate_url
+from src.core.exceptions.exceptions import PolicyException
 from src.core.transactional import transactional
 from src.messages.domain.kakao_carousel_more_link import KakaoCarouselMoreLink
 from src.messages.routes.dto.request.kakao_carousel_more_link_request import (
@@ -25,6 +27,7 @@ class CreateCarouselMoreLink(CreateCarouselMoreLinkUseCase):
         user: User,
         db: Session,
     ):
+
         more_link_id = self.message_repository.get_carousel_more_link_id_by_set_group_msg_seq(
             set_group_msg_seq, db
         )
@@ -38,3 +41,16 @@ class CreateCarouselMoreLink(CreateCarouselMoreLinkUseCase):
         )
 
         self.message_repository.save_carousel_more_link(carousel_more_link, db)
+
+    def validate_button_url(self, carousel_card_request: KakaoCarouselMoreLinkRequest):
+        for button in carousel_card_request.carousel_button_links:
+            if not validate_url(button.url_mobile):
+                raise PolicyException(
+                    detail={"message": "버튼 링크(모바일) 형식이 올바르지 않습니다."}
+                )
+
+            if button.url_pc:
+                if not validate_url(button.url_pc):
+                    raise PolicyException(
+                        detail={"message": "버튼 링크(웹) 형식이 올바르지 않습니다."}
+                    )
