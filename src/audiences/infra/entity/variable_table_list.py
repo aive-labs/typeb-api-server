@@ -73,6 +73,20 @@ class CustomerInfoStatusEntity(Base):
     steady_items = Column(String, nullable=True)
     best_cross_items = Column(String, nullable=True)
 
+    is_first_best_items = Column(String, nullable=True)
+    is_steady_items = Column(String, nullable=True)
+    is_best_new_items = Column(String, nullable=True)
+    is_best_category_items = Column(String, nullable=True)
+    is_best_promo_items = Column(String, nullable=True)
+    is_best_cross_items = Column(String, nullable=True)
+
+    is_first_best_items_link = Column(String, nullable=True)
+    is_steady_items_link = Column(String, nullable=True)
+    is_best_new_items_link = Column(String, nullable=True)
+    is_best_category_items_link = Column(String, nullable=True)
+    is_best_promo_items_link = Column(String, nullable=True)
+    is_best_cross_items_link = Column(String, nullable=True)
+
     etltime = Column(Date, nullable=True)
 
 
