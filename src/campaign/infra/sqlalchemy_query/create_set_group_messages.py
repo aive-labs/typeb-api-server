@@ -1,11 +1,13 @@
 from sqlalchemy.orm import Session
 
+from src.auth.infra.entity.message_integration_entity import MessageIntegrationEntity
 from src.campaign.enums.campaign_type import CampaignType
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.campaign.infra.sqlalchemy_query.get_campaign_remind import get_campaign_remind
 from src.campaign.infra.sqlalchemy_query.get_phone_callback import get_phone_callback
 from src.common.enums.campaign_media import CampaignMedia
 from src.common.utils.date_utils import get_reservation_date
+from src.core.exceptions.exceptions import PolicyException
 from src.message_template.enums.message_type import MessageType
 
 
@@ -43,13 +45,16 @@ def create_set_group_messages(
 
     # phone_callback, vender_bottom_txt 초기값 추후 send_reservation 시 변환됨
     phone_callback = get_phone_callback(user_id, db)  # 매장 번호 또는 대표번호
-    vender_bottom_txt = {"dau": "무료수신거부 080-801-7860", "ssg": "무료수신거부 080-801-7860"}
-    bottom_text = vender_bottom_txt[msg_delivery_vendor]
+
+    message_sender_info_entity = db.query(MessageIntegrationEntity.opt_out_phone_number).first()
+    if message_sender_info_entity is None:
+        raise PolicyException(detail={"message": "입력된 발신자 정보가 없습니다."})
+    bottom_text = message_sender_info_entity.opt_out_phone_number
 
     # 기본 캠페인 -> (광고)[네파]
     # expert 캠페인 -> None
     if campaign_type_code == CampaignType.BASIC.value:
-        msg_body = "타입비 테스트"
+        msg_body = "메시지를 입력해주세요."
     else:
         msg_body = None
 
