@@ -28,6 +28,7 @@ from src.campaign.service.port.base_campaign_set_repository import (
 )
 from src.core.exceptions.exceptions import PolicyException, ValidationException
 from src.core.transactional import transactional
+from src.strategy.service.port.base_strategy_repository import BaseStrategyRepository
 from src.users.domain.user import User
 
 
@@ -37,9 +38,11 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
         self,
         campaign_repository: BaseCampaignRepository,
         campaign_set_repository: BaseCampaignSetRepository,
+        strategy_repository: BaseStrategyRepository,
     ):
         self.campaign_repository = campaign_repository
         self.campaign_set_repository = campaign_set_repository
+        self.strategy_repository = strategy_repository
 
     @transactional
     def update_campaign_set(
@@ -50,6 +53,13 @@ class UpdateCampaignSetService(UpdateCampaignSetUseCase):
             raise ValidationException(
                 detail={"code": "400", "message": "입력된 캠페인 세트가 없습니다."},
             )
+
+        # set_list를 돌면서 strategy_theme_id로 recsys_model_id 값을 채운다.
+        for set_update_detail in campaign_set_update.set_list:
+            recsys_model_id = self.strategy_repository.get_recsys_id_by_strategy_theme_by_id(
+                set_update_detail.strategy_theme_id, db
+            )
+            set_update_detail.set_recommend_model_id(recsys_model_id)
 
         campaign = self.campaign_repository.get_campaign_detail(campaign_id, user, db)
         response = self.update_campaign_set_and_group(

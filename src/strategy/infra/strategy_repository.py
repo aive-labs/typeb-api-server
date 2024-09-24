@@ -14,6 +14,7 @@ from src.users.domain.user import User
 
 
 class StrategyRepository(BaseStrategyRepository):
+
     def __init__(self, strategy_sqlalchemy: StrategySqlAlchemy):
         self.strategy_sqlalchemy_repository = strategy_sqlalchemy
 
@@ -96,3 +97,8 @@ class StrategyRepository(BaseStrategyRepository):
 
     def get_tags_search(self, strategy_theme_id, db: Session) -> tuple:
         return self.strategy_sqlalchemy_repository.get_tags(strategy_theme_id, db)
+
+    def get_recsys_id_by_strategy_theme_by_id(self, strategy_theme_id, db: Session) -> int | None:
+        return self.strategy_sqlalchemy_repository.get_recsys_id_by_strategy_theme_by_id(
+            strategy_theme_id, db
+        )
