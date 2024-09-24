@@ -5,6 +5,7 @@ from src.campaign.routes.port.upload_image_for_message_usecase import (
     UploadImageForMessageUseCase,
 )
 from src.common.utils.get_env_variable import get_env_variable
+from src.common.utils.validate_url import validate_url
 from src.core.exceptions.exceptions import PolicyException
 from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
 from src.messages.routes.dto.request.kakao_carousel_card_request import (
@@ -43,6 +44,8 @@ class CreateCarouselCard(CreateCarouselCardUseCase):
         print("carousel_card_request")
         print(carousel_card_request)
 
+        self.validate_image_url(carousel_card_request)
+        self.validate_button_url(carousel_card_request)
         self.validate_carousel_message(carousel_card_request)
         self.validate_carousel_button_message(carousel_card_request)
         self.validate_carousel_card_count(carousel_card_request, db)
@@ -71,6 +74,20 @@ class CreateCarouselCard(CreateCarouselCardUseCase):
         db.commit()
 
         return response
+
+    def validate_image_url(self, carousel_card_request: KakaoCarouselCardRequest):
+        if not validate_url(carousel_card_request.image_link):
+            raise PolicyException(detail={"message": "이미지 링크 형식이 올바르지 않습니다."})
+
+    def validate_button_url(self, carousel_card_request: KakaoCarouselCardRequest):
+        for button in carousel_card_request.carousel_button_links:
+            if not validate_url(button.url_mobile):
+                raise PolicyException(
+                    detail={"message": "버튼 링크(모바일) 형식이 올바르지 않습니다."}
+                )
+
+            if not validate_url(button.url_pc):
+                raise PolicyException(detail={"message": "버튼 링크(웹) 형식이 올바르지 않습니다."})
 
     def add_carousel_sort_num(self, carousel_card_request, db):
         if carousel_card_request.carousel_sort_num is None:
