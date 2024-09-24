@@ -279,6 +279,7 @@ class TestMessageSendService(TestSendMessageUseCase):
         res_df["kko_button_json"] = res_df["kko_button_json"].fillna('{"button": []}')
         # res_df["kko_button_json"] = res_df["kko_button_json"].apply(add_brackets)
 
+        res_df["remind_step"] = 0
         send_rsv_dict = res_df.to_dict("records")
 
         db.bulk_insert_mappings(SendReservationEntity, send_rsv_dict)
