@@ -279,6 +279,7 @@ class TestMessageSendService(TestSendMessageUseCase):
         res_df["kko_button_json"] = res_df["kko_button_json"].fillna('{"button": []}')
         # res_df["kko_button_json"] = res_df["kko_button_json"].apply(add_brackets)
 
+        res_df["remind_step"] = 0
         send_rsv_dict = res_df.to_dict("records")
 
         db.bulk_insert_mappings(SendReservationEntity, send_rsv_dict)
@@ -286,7 +287,12 @@ class TestMessageSendService(TestSendMessageUseCase):
 
         # airflow trigger api
         message_controller = MessageReserveController()
-        input_variable = {"mallid": user.mall_id, "campaign_id": campaign_id, "test_send_yn": "y"}
+        input_variable = {
+            "mallid": user.mall_id,
+            "campaign_id": campaign_id,
+            "test_send_yn": "y",
+            "remind_step": 0,
+        }
         await message_controller.execute_dag(f"{user.mall_id}_send_messages", input_variable)
 
         return {

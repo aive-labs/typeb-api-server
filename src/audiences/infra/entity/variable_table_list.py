@@ -73,6 +73,20 @@ class CustomerInfoStatusEntity(Base):
     steady_items = Column(String, nullable=True)
     best_cross_items = Column(String, nullable=True)
 
+    is_first_best_items = Column(String, nullable=True)
+    is_steady_items = Column(String, nullable=True)
+    is_best_new_items = Column(String, nullable=True)
+    is_best_category_items = Column(String, nullable=True)
+    is_best_promo_items = Column(String, nullable=True)
+    is_best_cross_items = Column(String, nullable=True)
+
+    first_best_items_link = Column(String, nullable=True)
+    steady_items_link = Column(String, nullable=True)
+    best_new_items_link = Column(String, nullable=True)
+    best_category_items_link = Column(String, nullable=True)
+    best_promo_items_link = Column(String, nullable=True)
+    best_cross_items_link = Column(String, nullable=True)
+
     etltime = Column(Date, nullable=True)
 
 
@@ -169,6 +183,10 @@ class CustomerProductPurchaseSummaryEntity(Base):
     it_gb_nm = Column(String, nullable=True)
     item_nm = Column(String, nullable=True)
     item_sb_nm = Column(String, nullable=True)
+    product_name = Column(String, nullable=True)
+    option_value = Column(String, nullable=True)
+    option_value_1 = Column(String, nullable=True)
+    option_value_2 = Column(String, nullable=True)
     rep_nm = Column(String, nullable=True)
     purpose1 = Column(String, nullable=True)
     oldnew_yn = Column(String, nullable=True)

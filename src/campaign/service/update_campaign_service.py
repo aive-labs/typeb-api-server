@@ -5,6 +5,7 @@ import pandas as pd
 from sqlalchemy import and_, delete, func, update
 from sqlalchemy.orm import Session
 
+from src.auth.infra.entity.message_integration_entity import MessageIntegrationEntity
 from src.campaign.enums.campagin_status import CampaignStatus
 from src.campaign.enums.campaign_timeline_type import CampaignTimelineType
 from src.campaign.enums.campaign_type import CampaignType
@@ -784,8 +785,11 @@ class UpdateCampaignService(UpdateCampaignUseCase):
         phone_callback = get_phone_callback(
             added_remind_dict["updated_by"], db
         )  # 매장 번호 또는 대표번호
-        vender_bottom_txt = {"dau": "무료수신거부 080-801-7860", "ssg": "무료수신거부 080-801-7860"}
-        bottom_text = vender_bottom_txt[msg_delivery_vendor]
+
+        message_sender_info_entity = db.query(MessageIntegrationEntity.opt_out_phone_number).first()
+        if message_sender_info_entity is None:
+            raise PolicyException(detail={"message": "입력된 발신자 정보가 없습니다."})
+        bottom_text = message_sender_info_entity.opt_out_phone_number
 
         initial_msg_type = {
             CampaignMedia.KAKAO_ALIM_TALK.value: MessageType.KAKAO_ALIM_TEXT.value,
