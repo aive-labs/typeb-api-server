@@ -789,7 +789,7 @@ class UpdateCampaignService(UpdateCampaignUseCase):
         message_sender_info_entity = db.query(MessageIntegrationEntity.opt_out_phone_number).first()
         if message_sender_info_entity is None:
             raise PolicyException(detail={"message": "입력된 발신자 정보가 없습니다."})
-        bottom_text = message_sender_info_entity.opt_out_phone_number
+        bottom_text = f"무료수신거부: {message_sender_info_entity.opt_out_phone_number}"
 
         initial_msg_type = {
             CampaignMedia.KAKAO_ALIM_TALK.value: MessageType.KAKAO_ALIM_TEXT.value,

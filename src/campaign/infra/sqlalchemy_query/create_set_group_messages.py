@@ -49,7 +49,7 @@ def create_set_group_messages(
     message_sender_info_entity = db.query(MessageIntegrationEntity.opt_out_phone_number).first()
     if message_sender_info_entity is None:
         raise PolicyException(detail={"message": "입력된 발신자 정보가 없습니다."})
-    bottom_text = message_sender_info_entity.opt_out_phone_number
+    bottom_text = f"무료수신거부: {message_sender_info_entity.opt_out_phone_number}"
 
     # 기본 캠페인 -> (광고)[네파]
     # expert 캠페인 -> None

@@ -40,7 +40,7 @@ class CreateDataDict:
         data_dict["mall_id"] = input_data.get("mall_id")
 
         # 캠페인 테마 (세그먼트/커스텀)
-        data_dict["recsys_model_name"] = config["recsys_model_name"][
+        data_dict["recsys_model_name"] = config["recsys_mode_name"][
             input_data["set_data"].get("recsys_model_id")
         ]
 
