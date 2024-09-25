@@ -1317,18 +1317,14 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             )
 
             # 중복제거
-            cus_info_all = (
-                db.query(
-                    CustomerMasterEntity.cus_cd,
-                    CustomerMasterEntity.hp_no,
-                    CustomerMasterEntity.track_id,
-                )
-                .filter(CustomerMasterEntity.sms == "T")
-                .distinct(
-                    CustomerMasterEntity.cus_cd,
-                    CustomerMasterEntity.hp_no,
-                    CustomerMasterEntity.track_id,
-                )
+            cus_info_all = db.query(
+                CustomerMasterEntity.cus_cd,
+                CustomerMasterEntity.hp_no,
+                CustomerMasterEntity.track_id,
+            ).distinct(
+                CustomerMasterEntity.cus_cd,
+                CustomerMasterEntity.hp_no,
+                CustomerMasterEntity.track_id,
             )
 
             # TODO [테스트 고객]이 고객마스터에 있는지 확인

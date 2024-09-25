@@ -345,4 +345,4 @@ def update_audience_exclude_status(
         Provide[Container.update_audience_exclude_service]
     ),
 ):
-    update_audience_exclude_service.exec(audience_id, is_exclude, user, db)
+    update_audience_exclude_service.exec(audience_id, is_exclude, user, db=db)
