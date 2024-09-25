@@ -8,6 +8,7 @@ from src.auth.infra.onboarding_sqlalchemy_repository import (
 from src.auth.routes.dto.response.kakao_channel_response import KakaoChannelResponse
 from src.auth.routes.dto.response.message_sender_response import MessageSenderResponse
 from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
+from src.users.domain.user import User
 
 
 class OnboardingRepository(BaseOnboardingRepository):
@@ -46,3 +47,6 @@ class OnboardingRepository(BaseOnboardingRepository):
 
     def get_kakao_sender_key(self, mall_id, db: Session) -> str | None:
         return self.onboarding_sqlalchemy.get_kakao_sender_key(mall_id, db)
+
+    def get_opt_out_phone_number(self, user: User, db: Session) -> str | None:
+        return self.onboarding_sqlalchemy.get_opt_out_phone_number(user, db)

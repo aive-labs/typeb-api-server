@@ -4,6 +4,7 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
+from src.auth.routes.port.base_onboarding_service import BaseOnboardingService
 from src.auth.utils.permission_checker import get_permission_checker
 from src.common.enums.campaign_media import CampaignMedia
 from src.core.container import Container
@@ -14,6 +15,9 @@ from src.message_template.routes.dto.request.message_template_create import (
 )
 from src.message_template.routes.dto.request.message_template_update import (
     TemplateUpdate,
+)
+from src.message_template.routes.dto.response.opt_out_phone_number_response import (
+    OptOutPhoneNumberResponse,
 )
 from src.message_template.service.create_message_template_service import (
     CreateMessageTemplateService,
@@ -97,3 +101,13 @@ def delete_template(
     ),
 ):
     delete_template_service.exec(template_id, db=db)
+
+
+@message_template_router.get("/message/opt-out-number")
+@inject
+def get_opt_out_number(
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
+    db: Session = Depends(get_db),
+    onboarding_service: BaseOnboardingService = Depends(Provide[Container.onboarding_service]),
+) -> OptOutPhoneNumberResponse:
+    return onboarding_service.get_opt_out_phone_number(user, db)
