@@ -329,7 +329,7 @@ class CampaignManager:
             )
 
         if audiences_exc:
-            exc_aud_query = get_customers_by_audience_id(self.db, audiences_exc)
+            exc_aud_query = get_customers_by_audience_id(audiences_exc, self.db)
             exc_aud_df = DataConverter.convert_query_to_df(exc_aud_query)
             exc_aud_df = exc_aud_df.drop(columns=["audience_id", "age_group_10"])
             exc_aud_df = exc_aud_df.drop_duplicates("cus_cd")
