@@ -1,77 +1,78 @@
 campaign_keyword:
-  얼리버드 : 얼리버드,earlybird,early-bird
-  S/S : ss,s/s
-  F/W : fw,f/w
-  블랙프라이데이 : black-friday,blackfriday,블랙프라이데이
-  Season Off : seasonoff,season-off,시즌오프
+  얼리버드: 얼리버드,earlybird,early-bird
+  S/S: ss,s/s
+  F/W: fw,f/w
+  블랙프라이데이: black-friday,blackfriday,블랙프라이데이
+  Season Off: seasonoff,season-off,시즌오프
 
 season_keyword:
-  봄 : 봄,spring
-  여름 : 여름,summer
-  가을 : 가을,fall,autumn
-  겨울 : 겨울,winter
-  새해 : 새해,신정,신년,new year,new-year
-  설날 : 설,설날
-  추석 : 추석,한가위
-  어버이날 : 어버이
-  가정의달 : 5월,가정의달
-  크리스마스 : 크리스마스,christmas,x-mas
-  연말 : 연말,12월
-  신학기 : 개강,개학,새학기,신학기
-  졸업 : 졸업
+  봄: 봄,spring
+  여름: 여름,summer
+  가을: 가을,fall,autumn
+  겨울: 겨울,winter
+  새해: 새해,신정,신년,new year,new-year
+  설날: 설,설날
+  추석: 추석,한가위
+  어버이날: 어버이
+  가정의달: 5월,가정의달
+  크리스마스: 크리스마스,christmas,x-mas
+  연말: 연말,12월
+  신학기: 개강,개학,새학기,신학기
+  졸업: 졸업
 
 season_date:
-  봄 : [3/1,5/31]
-  여름 : [6/1,8/31]
-  가을 : [9/1,11/30]
-  겨울 : [12/1,2/28]
-  초봄 : [2/1,3/1]
-  초여름 : [5/1,6/1]
-  초가을 : [8/1,9/1]
-  초겨울 : [11/1,12/1]
+  봄: [ 3/1,5/31 ]
+  여름: [ 6/1,8/31 ]
+  가을: [ 9/1,11/30 ]
+  겨울: [ 12/1,2/28 ]
+  초봄: [ 2/1,3/1 ]
+  초여름: [ 5/1,6/1 ]
+  초가을: [ 8/1,9/1 ]
+  초겨울: [ 11/1,12/1 ]
 
 cus_purpose:
-  C : lifestyle_casual
-  E : easy_trekking&athleisure
-  L : lifestyle_casual&easy_trekking
-  M : mountaineering
-  S : nepa_starter
+  C: lifestyle_casual
+  E: easy_trekking&athleisure
+  L: lifestyle_casual&easy_trekking
+  M: mountaineering
+  S: nepa_starter
 
 style_seg:
-  lifestyle_casual : lifestyle_casual
-  easy_trekking&athlesure : easy_trekking&athleisure
-  lifestyle_causual&easy_trekking : lifestyle_casual&easy_trekking
-  mountaineering : mountaineering
-  nepa_starter : nepa_starter
+  lifestyle_casual: lifestyle_casual
+  easy_trekking&athlesure: easy_trekking&athleisure
+  lifestyle_causual&easy_trekking: lifestyle_casual&easy_trekking
+  mountaineering: mountaineering
+  nepa_starter: nepa_starter
 
 item_nm:
-  다운 : 다운자켓
-  다운조끼 : 다운자켓
-  패딩 : 다운자켓
-  방수자켓 : 방수/일반 자켓
-  일반자켓 : 방수/일반 자켓
-  저지자켓 : 방수/일반 자켓
-  반바지 : 바지
-  신발 : 신발
-  후드티셔츠 : 티셔츠
-  라운드에리 : 티셔츠
-  목크에리 : 티셔츠
-  바지 : 바지
-  저지반바지 : 바지
-  폴로에리 : 티셔츠
-  저지바지 : 바지
+  다운: 다운자켓
+  다운조끼: 다운자켓
+  패딩: 다운자켓
+  방수자켓: 방수/일반 자켓
+  일반자켓: 방수/일반 자켓
+  저지자켓: 방수/일반 자켓
+  반바지: 바지
+  신발: 신발
+  후드티셔츠: 티셔츠
+  라운드에리: 티셔츠
+  목크에리: 티셔츠
+  바지: 바지
+  저지반바지: 바지
+  폴로에리: 티셔츠
+  저지바지: 바지
 
 rep_purpose:
-  easy_trekking : easy_trekking
-  mountaineering : mountaineering
-  hard_trekking : hard_trekking
-  lifestyle_causual : lifestyle_causual
-  athleisure : athleisure
-  fishing : fishing
-  camping : camping
-  travel : travel
+  easy_trekking: easy_trekking
+  mountaineering: mountaineering
+  hard_trekking: hard_trekking
+  lifestyle_causual: lifestyle_causual
+  athleisure: athleisure
+  fishing: fishing
+  camping: camping
+  travel: travel
 
 recsys_mode_name:
+  0: 추천없음
   1: 생일자 할인 쿠폰 제공
   2: 쿠폰 소멸 임박 알림
   3: 장바구니 리마인드
@@ -108,10 +109,10 @@ button_msg:
   ]
 
 preview_msg_params:
-  campaign_keyword: []
-  age: []
-  season: []
-  msg_type: ['lms', 'kakao_image_general']
+  campaign_keyword: [ ]
+  age: [ ]
+  season: [ ]
+  msg_type: [ 'lms', 'kakao_image_general' ]
   is_personalized: True
   group_stats: {
     'item_ratio': '',
