@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from sqlalchemy.orm import Session
 
 from src.common.enums.campaign_media import CampaignMedia
@@ -64,8 +66,10 @@ class CreateMessageTemplateService(CreateMessageTemplateUseCase):
             access_level=template_create.access_level,
             owned_by_dept=user.department_id if user.department_id else "",
             owned_by_dept_name=user.department_name if user.department_name else "",
-            created_by=user.username,
-            updated_by=user.username,
+            created_by=str(user.user_id),
+            created_at=datetime.now(timezone.utc),
+            updated_by=str(user.user_id),
+            updated_at=datetime.now(timezone.utc),
         )
 
         if template_create.button:
