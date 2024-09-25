@@ -356,6 +356,20 @@ class CampaignManager:
                 },
             )
 
+        print("campaign_manger > validate_campaign_set_df")
+        print(len(cust_audiences_df["cus_cd"].unique()))
+        print(len(cust_audiences_df))
+        # cus_cd로 그룹화하고 각 그룹의 개수를 계산한 후, 카운트 기준으로 내림차순 정렬
+        grouped_count = (
+            cust_audiences_df.groupby("cus_cd")
+            .size()
+            .reset_index(name="count")
+            .sort_values(by="count", ascending=False)
+        )
+
+        # 결과 출력
+        print(grouped_count)
+
         # 한개의 cus_cd가 두개이상의 set_sort_num을 가지는 경우를 확인하고 에러 표시
         if len(cust_audiences_df["cus_cd"].unique()) != len(cust_audiences_df):
             raise PolicyException(
