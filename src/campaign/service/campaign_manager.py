@@ -306,9 +306,13 @@ class CampaignManager:
 
         # audience 추출
         audience_ids = self.campaign_set_df["audience_id"].unique().tolist()
+        print("audience_ids")
+        print(audience_ids)
 
         # 고객 목록 호출
         recommend_models = self.campaign_set_df["recsys_model_id"].unique().tolist()
+        print("recommend_models")
+        print(recommend_models)
         cust_audiences = get_customers_for_expert_campaign(audience_ids, recommend_models, self.db)
         cust_audiences_df = DataConverter.convert_query_to_df(cust_audiences)
 
@@ -354,26 +358,6 @@ class CampaignManager:
                     "code": "campaign/set/create",
                     "message": "대상 고객이 존재하지 않습니다.",
                 },
-            )
-
-        print("campaign_manger > validate_campaign_set_df")
-        print(len(cust_audiences_df["cus_cd"].unique()))
-        print(len(cust_audiences_df))
-        # cus_cd로 그룹화하고 각 그룹의 개수를 계산한 후, 카운트 기준으로 내림차순 정렬
-        grouped_count = (
-            cust_audiences_df.groupby("cus_cd")
-            .size()
-            .reset_index(name="count")
-            .sort_values(by="count", ascending=False)
-        )
-
-        # 결과 출력
-        print(grouped_count)
-
-        # 한개의 cus_cd가 두개이상의 set_sort_num을 가지는 경우를 확인하고 에러 표시
-        if len(cust_audiences_df["cus_cd"].unique()) != len(cust_audiences_df):
-            raise PolicyException(
-                detail={"code": "campaign/set/create", "message": "중복된 고객이 존재합니다."},
             )
 
         ## 기본 캠페인 및 그룹별 분배 (케이스 1)
