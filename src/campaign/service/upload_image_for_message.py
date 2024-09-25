@@ -63,6 +63,18 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
         if message_type is None:
             raise ConsistencyException(detail={"message": "메시지 타입이 존재하지 않습니다."})
 
+        for file in files:
+            if file.filename is None:
+                raise PolicyException(
+                    detail={"message": "파일명이 존재하지 않습니다. 파일명을 확인해주세요."}
+                )
+            if message_type in ["sms", "lms", "mms"]:
+                extension = file.filename.split(".")[-1]
+                if extension not in ["jpg", "jpeg"]:
+                    raise PolicyException(
+                        detail={"message": "문자메시지에는 jpg, jpeg 이미지만 업로드가 가능합니다."}
+                    )
+
         original_message_photo_uri = set_group_message.msg_photo_uri
 
         message_photo_uri = []
