@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from src.auth.domain.onboarding import Onboarding
 from src.auth.routes.dto.response.kakao_channel_response import KakaoChannelResponse
 from src.auth.routes.dto.response.message_sender_response import MessageSenderResponse
+from src.users.domain.user import User
 
 
 class BaseOnboardingRepository(ABC):
@@ -47,4 +48,8 @@ class BaseOnboardingRepository(ABC):
 
     @abstractmethod
     def get_kakao_sender_key(self, mall_id, db: Session) -> str | None:
+        pass
+
+    @abstractmethod
+    def get_opt_out_phone_number(self, user: User, db: Session) -> str | None:
         pass
