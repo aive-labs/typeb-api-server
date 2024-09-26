@@ -349,6 +349,7 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
             MessageType.KAKAO_TEXT.value: CampaignMedia.KAKAO_FRIEND_TALK.value,
             MessageType.KAKAO_IMAGE_GENERAL.value: CampaignMedia.KAKAO_FRIEND_TALK.value,
             MessageType.KAKAO_IMAGE_WIDE.value: CampaignMedia.KAKAO_FRIEND_TALK.value,
+            MessageType.KAKAO_CAROUSEL.value: CampaignMedia.KAKAO_FRIEND_TALK.value,
             MessageType.LMS.value: CampaignMedia.TEXT_MESSAGE.value,
             MessageType.SMS.value: CampaignMedia.TEXT_MESSAGE.value,
             MessageType.MMS.value: CampaignMedia.TEXT_MESSAGE.value,
