@@ -1,4 +1,3 @@
-import json
 import logging
 from datetime import datetime, timedelta, timezone
 
@@ -35,6 +34,7 @@ from src.campaign.infra.entity.send_reservation_entity import SendReservationEnt
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.campaign.infra.sqlalchemy_query.convert_to_button_format import (
     convert_to_button_format,
+    generate_kakao_carousel_json,
 )
 from src.campaign.infra.sqlalchemy_query.get_message_resources import (
     get_message_resources,
@@ -74,15 +74,6 @@ from src.core.exceptions.exceptions import (
 from src.core.transactional import transactional
 from src.message_template.infra.entity.message_template_entity import (
     MessageTemplateEntity,
-)
-from src.messages.domain.send_kakao_carousel import (
-    Attachment,
-    Button,
-    Carousel,
-    CarouselItem,
-    Image,
-    MoreLink,
-    SendKakaoCarousel,
 )
 from src.messages.service.message_reserve_controller import MessageReserveController
 from src.offers.infra.entity.offers_entity import OffersEntity
@@ -1463,8 +1454,13 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 )
                 # 캐러셀인 set_group_msg_seqs 데이터만 존재
                 # dataframe cols => ["campaign_id", "set_sort_num", "group_sort_num", "cus_cd", "set_group_msg_seq", "kko_button_json"]
-                carousel_df_with_kko_json = self.generate_kakao_carousel_json(
-                    set_group_msg_seqs, send_rsv_format, db
+                # keys = ["campaign_id", "set_sort_num", "group_sort_num", "set_group_msg_seq"]
+                carousel_query = self.campaign_set_repository.get_carousel_info(
+                    set_group_msg_seqs, db
+                )
+                carousel_df = DataConverter.convert_query_to_df(carousel_query)
+                carousel_df_with_kko_json = generate_kakao_carousel_json(
+                    send_rsv_format, carousel_df
                 )
                 # 두 개의 데이터프레임 통합
                 kakao_button_df = pd.concat(
@@ -1686,93 +1682,3 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             db.rollback()
             print(e)
             raise ConsistencyException(detail={"message": "승인 완료 처리 중 문제가 발생했습니다."})
-
-    def generate_kakao_carousel_json(self, set_group_msg_seqs, send_rsv_format, db: Session):
-        # 1. set_group_msg_seqs이면서 msg_type이 캐러셀인 데이터를 조회한다.
-        # keys = ["campaign_id", "set_sort_num", "group_sort_num", "set_group_msg_seq"]
-        carousel_query = self.campaign_set_repository.get_carousel_info(set_group_msg_seqs, db)
-        carousel_df = DataConverter.convert_query_to_df(carousel_query)
-
-        selected_column = [
-            "campaign_id",
-            "set_sort_num",
-            "group_sort_num",
-            "cus_cd",
-            "set_group_msg_seq",
-            "kko_button_json",
-        ]
-        if len(carousel_df) == 0:
-            empty_df = pd.DataFrame(columns=selected_column)
-            return empty_df
-
-        # 그룹화: set_group_msg_seq 기준
-        grouped = carousel_df.groupby("set_group_msg_seq")
-
-        # kko_json_button 컬럼을 위한 딕셔너리 생성
-        kko_json_buttons = {}
-        for group_seq, group in grouped:
-            kko_json = self.create_carousel_json(group)
-            kko_json_buttons[group_seq] = kko_json
-
-        # 2. 캐러셀 발송용 객체를 만들고 json으로 변환한다. 그리고 조인을 하면 될 것 같음.
-        kko_json_df = pd.DataFrame(
-            {
-                "set_group_msg_seq": list(kko_json_buttons.keys()),
-                "kko_button_json": list(kko_json_buttons.values()),
-            }
-        )
-
-        # 3. send_rsv_format과 조인
-        # 2에서 만든 테이블과 send_rsv_format 테이블을 조인한다.
-        carousel_json_df = send_rsv_format.merge(kko_json_df, on="set_group_msg_seq", how="inner")
-
-        return carousel_json_df[selected_column]
-
-    def create_carousel_json(self, group):
-        carousel_items = []
-
-        # 카드별로 그룹화 (header, message, img_url, img_link로 그룹화)
-        grouped_cards = group.groupby(["header", "message", "img_url", "img_link"])
-
-        for (header, message, img_link, img_url), card_group in grouped_cards:
-            buttons = []
-            for _, row in card_group.iterrows():
-                # 버튼이 없으면 넣지 않는다.
-                if row["name"] and row["type"]:
-                    buttons.append(Button.from_button_data(row))
-
-            carousel_item = CarouselItem(
-                header=header,
-                message=message,
-                attachment=Attachment(
-                    button=buttons, image=Image(img_url=img_url, img_link=img_link)
-                ),
-            )
-
-            carousel_items.append(carousel_item)
-
-        carousel = Carousel(list=carousel_items)
-        more_link = self.extract_carousel_more_link(group)
-        if more_link:
-            carousel.set_more_link(more_link)
-
-        send_kakao_carousel = SendKakaoCarousel(carousel=carousel)
-
-        print("json.dumps(carousel.model_dump())")
-        print(json.dumps(send_kakao_carousel.model_dump()))
-        return json.dumps(send_kakao_carousel.model_dump())
-
-    def extract_carousel_more_link(self, group) -> MoreLink | None:
-        # Tail 정보 추출 (None일 경우 기본값 설정 또는 생략)
-        url_mobile = (
-            group["tail_url_mobile"].iloc[0] if pd.notna(group["tail_url_mobile"].iloc[0]) else None
-        )
-        url_pc = group["tail_url_pc"].iloc[0] if pd.notna(group["tail_url_pc"].iloc[0]) else None
-
-        if url_mobile is None and url_pc is None:
-            return None
-
-        if url_mobile is None:
-            raise PolicyException(detail={"message": "더 보기를 위한 모바일 링크 값은 필수입니다."})
-
-        return MoreLink(url_mobile=url_mobile, url_pc=url_pc)

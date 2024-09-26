@@ -19,6 +19,7 @@ from src.campaign.infra.entity.send_reservation_entity import SendReservationEnt
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.campaign.infra.sqlalchemy_query.convert_to_button_format import (
     convert_to_button_format,
+    generate_kakao_carousel_json,
 )
 from src.campaign.infra.sqlalchemy_query.get_message_resources import (
     get_message_resources,
@@ -28,6 +29,9 @@ from src.campaign.infra.sqlalchemy_query.personal_variable_formatting import (
 )
 from src.campaign.routes.dto.request.test_send_request import TestSendRequest
 from src.campaign.routes.port.test_message_send_usecase import TestSendMessageUseCase
+from src.campaign.service.port.base_campaign_set_repository import (
+    BaseCampaignSetRepository,
+)
 from src.common.infra.entity.customer_master_entity import CustomerMasterEntity
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import localtime_converter
@@ -46,8 +50,13 @@ pd.set_option("display.max_columns", None)
 
 class TestMessageSendService(TestSendMessageUseCase):
 
-    def __init__(self, onboarding_repository: BaseOnboardingRepository):
+    def __init__(
+        self,
+        campaign_set_repository: BaseCampaignSetRepository,
+        onboarding_repository: BaseOnboardingRepository,
+    ):
         self.onboarding_repository = onboarding_repository
+        self.campaign_set_repository = campaign_set_repository
 
     async def exec(
         self, campaign_id, test_send_request: TestSendRequest, user: User, db: Session
@@ -128,12 +137,24 @@ class TestMessageSendService(TestSendMessageUseCase):
         del test_send_rsv_format["contents_name"]
         del test_send_rsv_format["contents_url"]
 
-        button_df_convert = convert_to_button_format(db, msg_seq_list, test_send_rsv_format)
-        print("button_df_convert")
-        print(button_df_convert)
+        # 카카오 버튼을 가진 set_group_msg_seqs 데이터만 존재 (캐러셀은 제외)
+        # dataframe cols => ["campaign_id", "set_sort_num", "group_sort_num", "cus_cd", "set_group_msg_seq", "kko_button_json"]
+        button_df_with_kko_json = convert_to_button_format(db, msg_seq_list, test_send_rsv_format)
+        # 캐러셀인 set_group_msg_seqs 데이터만 존재
+        # dataframe cols => ["campaign_id", "set_sort_num", "group_sort_num", "cus_cd", "set_group_msg_seq", "kko_button_json"]
+
+        # 1. set_group_msg_seqs이면서 msg_type이 캐러셀인 데이터를 조회한다.
+        # keys = ["campaign_id", "set_sort_num", "group_sort_num", "set_group_msg_seq"]
+        carousel_query = self.campaign_set_repository.get_carousel_info(msg_seq_list, db)
+        carousel_df = DataConverter.convert_query_to_df(carousel_query)
+        carousel_df_with_kko_json = generate_kakao_carousel_json(test_send_rsv_format, carousel_df)
+        # 두 개의 데이터프레임 통합
+        kakao_button_df = pd.concat(
+            [button_df_with_kko_json, carousel_df_with_kko_json], ignore_index=True
+        )
 
         test_send_rsv_format = test_send_rsv_format.merge(
-            button_df_convert, on=group_keys, how="left"  # pyright: ignore [reportArgumentType]
+            kakao_button_df, on=group_keys, how="left"  # pyright: ignore [reportArgumentType]
         )
 
         print("test_send_rsv_format.columns")
