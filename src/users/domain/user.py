@@ -22,6 +22,8 @@ class User(BaseModel):
     permissions: dict | None = None
     department_id: str | None = None
     department_name: str | None = None
+    brand_name_ko: str | None = None
+    brand_name_en: str | None = None
     parent_dept_cd: str | None = None
     language: str
     test_callback_number: str | None = None
@@ -39,8 +41,11 @@ class User(BaseModel):
             erp_id=self.erp_id,
             photo_uri=self.photo_uri,
             department_id=self.department_id,
+            brand_name_ko=self.brand_name_ko,
+            brand_name_en=self.brand_name_en,
             language=self.language,
             test_callback_number=self.test_callback_number,
+            is_aivelabs_admin=False,
         )
 
     def to_password_entity(self) -> UserPasswordEntity:
@@ -66,6 +71,8 @@ class User(BaseModel):
             erp_id=user_entity.sys_id,
             department_id=user_entity.department_id,
             department_name=user_entity.department_name,
+            brand_name_ko=user_entity.brand_name_ko,
+            brand_name_en=user_entity.brand_name_en,
             parent_dept_cd=user_entity.parent_dept_cd,
             language=user_entity.language,
             test_callback_number=user_entity.test_callback_number,

@@ -27,7 +27,7 @@ class UserSqlAlchemy:
         return User.from_entity(user_entity=user_entity)
 
     def find_user_by_email(self, email: str, db: Session):
-
+        # jwt 토큰 발급을 위해 is_aivelabs_admin false 조건 확인 안함
         user = (
             db.query(UserEntity, UserPasswordEntity.login_pw)
             .join(
@@ -39,27 +39,18 @@ class UserSqlAlchemy:
         )
         return user
 
-    def get_user_signin(self, login_id: str, db: Session):
-
-        return (
-            db.query(UserEntity.user_id, UserEntity.login_id, UserPasswordEntity.login_pw)
-            .join(
-                UserPasswordEntity,
-                UserEntity.login_id == UserPasswordEntity.login_id,
-            )
-            .filter(UserEntity.login_id == login_id)
+    def get_user_by_id(self, user_id: int, db: Session):
+        entity = (
+            db.query(UserEntity)
+            .filter(UserEntity.user_id == user_id, UserEntity.is_aivelabs_admin.is_(False))
             .first()
         )
-
-    def get_user_by_id(self, user_id: int, db: Session):
-        entity = db.query(UserEntity).filter(UserEntity.user_id == user_id).first()
         if entity is None:
             raise NotFoundException(detail={"message": "사용자를 찾지 못했습니다."})
         return entity
 
     def get_all_users(self, db: Session):
-
-        return db.query(UserEntity).all()
+        return db.query(UserEntity, UserEntity.is_aivelabs_admin.is_(False)).all()
 
     def get_me(self, login_id: str, db: Session):
 
@@ -81,13 +72,17 @@ class UserSqlAlchemy:
                 UserEntity.test_callback_number,
                 UserEntity.parent_dept_cd,
             )
-            .filter(UserEntity.login_id == login_id)
+            .filter(UserEntity.login_id == login_id, UserEntity.is_aivelabs_admin.is_(False))
             .first()
         )
 
     def delete_user(self, user_id: int, db: Session):
 
-        user = db.query(UserEntity).filter(UserEntity.user_id == user_id).first()
+        user = (
+            db.query(UserEntity)
+            .filter(UserEntity.user_id == user_id, UserEntity.is_aivelabs_admin.is_(False))
+            .first()
+        )
         if user:
             db.delete(user)
             db.commit()
@@ -108,9 +103,9 @@ class UserSqlAlchemy:
             if (key != "user_id") and (value is not None)
         }
 
-        db.query(UserEntity).filter(UserEntity.user_id == user_modify.user_id).update(
-            modified_user_dict
-        )
+        db.query(UserEntity).filter(
+            UserEntity.user_id == user_modify.user_id, UserEntity.is_aivelabs_admin.is_(False)
+        ).update(modified_user_dict)
         db.commit()
 
     def get_send_user(self, db: Session, keyword=None) -> list[SendUserResponse]:
@@ -121,7 +116,7 @@ class UserSqlAlchemy:
             UserEntity.test_callback_number,
             UserEntity.cell_phone_number,
             UserEntity.sys_id,
-        )
+        ).filter(UserEntity.is_aivelabs_admin.is_(False))
 
         if keyword:
             keyword = f"%{keyword}%"

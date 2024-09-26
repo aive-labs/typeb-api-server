@@ -1,4 +1,5 @@
 from sqlalchemy import (
+    Boolean,
     Column,
     DateTime,
     Integer,
@@ -29,6 +30,8 @@ class UserEntity(Base):
     boan_admin = Column(String(1))
     gw_position_cd = Column(String(10))
     gw_position_nm = Column(String(20))
+    brand_name_ko = Column(String(100))
+    brand_name_en = Column(String(100))
     department_name = Column(String(150))
     department_abb_name = Column(String(150))
     test_callback_number = Column(String(20))
@@ -36,6 +39,7 @@ class UserEntity(Base):
     messenger_comment = Column(String(300))
     branch_manager = Column(String(20))
     parent_dept_cd = Column(String(20))
+    is_aivelabs_admin = Column(Boolean, nullable=False, default=False)
 
     # 1:n relationship
     # approvers = relationship('Approvers', backref='users')
