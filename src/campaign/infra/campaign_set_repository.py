@@ -907,7 +907,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
                 SetGroupMessagesEntity.set_group_msg_seq
                 == KakaoCarouselCardEntity.set_group_msg_seq,
             )
-            .join(
+            .outerjoin(
                 KakaoCarouselLinkButtonsEntity,
                 KakaoCarouselCardEntity.id == KakaoCarouselLinkButtonsEntity.carousel_card_id,
             )

@@ -16,6 +16,7 @@ class Button(BaseModel):
 
     @staticmethod
     def from_button_data(data):
+        print(data)
         return Button(
             name=data["name"],
             type=data["type"],

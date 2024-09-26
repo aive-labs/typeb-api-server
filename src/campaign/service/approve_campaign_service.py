@@ -1690,7 +1690,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
     def generate_kakao_carousel_json(self, set_group_msg_seqs, send_rsv_format, db: Session):
         # 1. set_group_msg_seqs이면서 msg_type이 캐러셀인 데이터를 조회한다.
         # keys = ["campaign_id", "set_sort_num", "group_sort_num", "set_group_msg_seq"]
-
         carousel_query = self.campaign_set_repository.get_carousel_info(set_group_msg_seqs, db)
         carousel_df = DataConverter.convert_query_to_df(carousel_query)
 
@@ -1730,7 +1729,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         return carousel_json_df[selected_column]
 
     def create_carousel_json(self, group):
-
         carousel_items = []
 
         # 카드별로 그룹화 (header, message, img_url, img_link로 그룹화)
@@ -1738,9 +1736,10 @@ class ApproveCampaignService(ApproveCampaignUseCase):
 
         for (header, message, img_url, img_link), card_group in grouped_cards:
             buttons = []
-
             for _, row in card_group.iterrows():
-                buttons.append(Button.from_button_data(row))
+                # 버튼이 없으면 넣지 않는다.
+                if row["name"] and row["type"]:
+                    buttons.append(Button.from_button_data(row))
 
             carousel_item = CarouselItem(
                 header=header,
