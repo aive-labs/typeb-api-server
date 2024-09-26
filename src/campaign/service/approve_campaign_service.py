@@ -1453,11 +1453,10 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                     db, set_group_msg_seqs, send_rsv_format
                 )
                 # 캐러셀인 set_group_msg_seqs 데이터만 존재
-                # dataframe cols => ["campaign_id", "set_sort_num", "group_sort_num", "cus_cd", "set_group_msg_seq", "kko_button_json"]
-                # keys = ["campaign_id", "set_sort_num", "group_sort_num", "set_group_msg_seq"]
                 carousel_query = self.campaign_set_repository.get_carousel_info(
                     set_group_msg_seqs, db
                 )
+                # keys = ["campaign_id", "set_sort_num", "group_sort_num", "set_group_msg_seq"]
                 carousel_df = DataConverter.convert_query_to_df(carousel_query)
                 carousel_df_with_kko_json = generate_kakao_carousel_json(
                     send_rsv_format, carousel_df
