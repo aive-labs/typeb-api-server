@@ -32,7 +32,7 @@ def convert_by_message_format(df: pd.DataFrame, kakao_sender_key: str):
     ]
 
     df["kko_yellowid"] = kakao_sender_key
-    df["kko_send_timeout"] = 40
+    df["kko_send_timeout"] = 60
 
     # 대체 발송
     # kat -> lms

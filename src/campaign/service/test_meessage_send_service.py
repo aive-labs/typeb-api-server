@@ -485,6 +485,7 @@ class TestMessageSendService(TestSendMessageUseCase):
             MessageType.KAKAO_TEXT.value,  # 친구톡 이미지형에 이미지가 없는경우
             MessageType.KAKAO_IMAGE_GENERAL.value,  # 친구톡 이미지형
             MessageType.KAKAO_IMAGE_WIDE.value,  # 친구톡 와이드 이미지형
+            MessageType.KAKAO_CAROUSEL.value,  # 친구톡 캐러셀
         ]
 
         df["kko_yellowid"] = kakao_sender_key
@@ -498,6 +499,7 @@ class TestMessageSendService(TestSendMessageUseCase):
             MessageType.KAKAO_TEXT.value,  # 친구톡 이미지형에 이미지가 없는경우
             MessageType.KAKAO_IMAGE_GENERAL.value,  # 친구톡 이미지형
             MessageType.KAKAO_IMAGE_WIDE.value,  # 친구톡 와이드 이미지형
+            MessageType.KAKAO_CAROUSEL.value,  # 친구톡 캐러셀
         ]
         cond_resend = [
             (df["send_msg_type"] == MessageType.KAKAO_ALIM_TEXT.value),  # lms
@@ -558,6 +560,7 @@ class TestMessageSendService(TestSendMessageUseCase):
             (df["send_msg_type"] == "kakao_text"),  # 친구톡 텍스트
             (df["send_msg_type"] == "kakao_image_general")
             & (df["send_filecount"] == 0),  # 친구톡 & 이미지 X
+            df["send_msg_type"] == "kakao_carousel",
             (df["send_msg_type"].isin(["sms", "lms", "mms"])),  # 문자메세지
         ]
 
@@ -568,6 +571,7 @@ class TestMessageSendService(TestSendMessageUseCase):
             "ft",  # 친구톡와이드 & 이미지 X,
             "ft",  # 카카오 텍스트
             "ft",  # 친구톡 & 이미지 X
+            "fc",  # 친구톡 캐러셀
             df["send_msg_type"],
         ]
         df["send_msg_type"] = np.select(cond_msg_tp, choice_msg_tp)
