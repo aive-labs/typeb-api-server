@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import String, and_, func, or_, update
+from sqlalchemy import String, and_, desc, func, or_, update
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import Alias
 
@@ -146,12 +146,10 @@ class AudienceSqlAlchemy:
                 AudienceEntity.audience_status_code != AudienceStatus.notdisplay.value,
                 *conditions,
             )
+            .order_by(desc(AudienceEntity.created_at))
         )
 
         result = audience_filtered.all()
-        print("result")
-        print(len(result))
-        print(result)
 
         # 결과를 Pydantic 모델로 변환
         audiences = AudienceInfo.from_query(result)

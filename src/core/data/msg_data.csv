@@ -1,14 +1,14 @@
 location,gen_key,index,detail,text,rec_exp,age
 title,title-csc01,csc,lifestyle_casual,일상을 스타일리쉬하게,lifestyle_casual,
 title,title-csc02,csc,lifestyle_casual,{mall_id}의 나들이 패션,lifestyle_casual,
-title,title-csc03,csc,lifestyle_casual,편안한 패션 스타일,lifestyle_casual,
+title,title-csc03,csc,lifestyle_casual,편안한 스타일링,lifestyle_casual,
 title,title-csc04,csc,lifestyle_casual,캐주얼한 코디가 여기에!,lifestyle_casual,
 title,title-csc05,csc,lifestyle_casual,일상 스타일로 안성맞춤,lifestyle_casual,
 title,title-csc06,csc,lifestyle_casual,단순 심플 BUT 트렌디함,lifestyle_casual,
-title,title-csc07,csc,lifestyle_casual,"편안함과 스타일, 일거양득!",lifestyle_casual,
-title,title-csc08,csc,lifestyle_casual,{mall_id}의 깔끔한 캐주얼 패션,lifestyle_casual,
+title,title-csc07,csc,lifestyle_casual,"자연스러움과 스타일, 일거양득!",lifestyle_casual,
+title,title-csc08,csc,lifestyle_casual,{mall_id}의 깔끔한 캐주얼 메이크업,lifestyle_casual,
 title,title-csc09,csc,lifestyle_casual,{mall_id}룩으로 편안한 일상,lifestyle_casual,
-title,title-csc10,csc,lifestyle_casual,{mall_id}와 함께 패션 리드하기,lifestyle_casual,
+title,title-csc10,csc,lifestyle_casual,{mall_id}와 함께 스타일링 리드하기,lifestyle_casual,
 title,title-cse01,cse,easy_trekking&athleisure,트레킹 패션은 {mall_id}에서!,easy_trekking&athleisure,
 title,title-cse02,cse,easy_trekking&athleisure,{mall_id}와 함께 편안한 트레킹,easy_trekking&athleisure,
 title,title-cse03,cse,easy_trekking&athleisure,{mall_id} 룩으로 야외 정복!,easy_trekking&athleisure,
@@ -144,7 +144,7 @@ title,title-soal10,soal,공통,"최대 혜택, 여기서만",,
 title,title-soal11,soal,공통,초특가 혜택 시작~,,
 title,title-soal12,soal,공통,고객님께만 드리는 혜택♡,,
 title,title-soal13,soal,공통,"놓치지 마세요, 최대 혜택!",,
-title,title-soal14,soal,공통,고객님만을 위한 혜택??,,
+title,title-soal14,soal,공통,고객님만을 위한 혜택!!,,
 title,title-soal15,soal,공통,{mall_id}에서 준비한 혜택은 현재진행형~,,
 title,title-soal16,soal,공통,"다양한 혜택, 놓치지 마세요",,
 title,title-soal17,soal,공통,{mall_id}가 드리는 혜택 선물,,
@@ -156,7 +156,7 @@ title,title-soey01,soey,연말,연말을 더 특별하게!,,
 title,title-soey02,soey,연말,소소한 연말 이벤트♥,,
 title,title-sofa03,sofa,가을,붉게 물든 단풍과 같은 혜택,,
 title,title-sofa01,sofa,가을,"포근한 가을, 이벤트 시작!",,
-title,title-sofa02,sofa,가을,혜택받고 가을 나들이 가자!,,
+title,title-sofa02,sofa,가을,혜택받고 가을 메이크업 준비하기!,,
 title,title-sofm01,sofm,크리스마스,크리스마스 기념 혜택!,,
 title,title-sofm02,sofm,가정의달,가정의 달 맞이 혜택!,,
 title,title-sofm03,sofm,크리스마스,크리스마스에는 혜택도 더!,,
@@ -175,7 +175,7 @@ title,title-sogr04,sogr,졸업,"졸업 시즌, 최대 혜택!",,
 title,title-sogr05,sogr,졸업,졸업 축하 이벤트 시작!,,
 title,title-sogr06,sogr,졸업,졸업 혜택 받으세요,,
 title,title-soln01,soln,설날,풍성한 혜택으로 새해 시작,,
-title,title-soln02,soln,설날,"설날, 따뜻하게 혜택 가득",,
+title,title-soln02,soln,설날,"설날, 따뜻한 혜택 가득",,
 title,title-soln03,soln,설날,"설레는 혜택, 새해 복 많이!",,
 title,title-soln04,soln,설날,"설 선물 추천, 혜택도 가득!",,
 title,title-soln05,soln,설날,"설레는 설날, 특가 시작!",,
@@ -190,7 +190,7 @@ title,title-sopd02,sopd,어버이날,어버이날 맞이 혜택 방출!,,
 title,title-sopd03,sopd,어버이날,어버이날 혜택♥,,
 title,title-sopd04,sopd,어버이날,"부모님 선물, 도와드릴게요",,
 title,title-sopd05,sopd,어버이날,"어버이날 선물, 혜택 시작!",,
-title,title-sosd01,sosd,개강,"새학기, 새 옷! 혜택 받자!",,
+title,title-sosd01,sosd,개강,"새학기, 새로운 기분으로 혜택 받자!",,
 title,title-sosd02,sosd,개강,"개학 시즌, 특별 혜택!",,
 title,title-sosd03,sosd,개강,새학기에는 혜택도 추가!,,
 title,title-sosf01,sosf,초가을,"선선한 날씨, 시원한 혜택!",,
@@ -199,7 +199,7 @@ title,title-sosf03,sosf,초가을,가을 맞이 {mall_id}의 이벤트!,,
 title,title-sosp01,sosp,봄,봄날의 상큼한 특가 이벤트!,,
 title,title-sosp02,sosp,봄,봄맞이 혜택 방출!,,
 title,title-sosp03,sosp,봄,봄바람에 실려온 혜택,,
-title,title-sosp04,sosp,봄,혜택 받고 봄 옷 쇼핑 시작!,,
+title,title-sosp04,sosp,봄,혜택 받고 봄 메이크업 준비!,,
 title,title-sosp05,sosp,봄,봄맞이 싱그러운 혜택!,,
 title,title-sosp06,sosp,봄,봄바람 휘날리며 찾아왔다!,,
 title,title-sosp07,sosp,봄,벚꽃과 함께 날아온 혜택,,
@@ -268,10 +268,10 @@ title,title-spch01,spch,크리스마스,크리스마스 선물 추천받기▶,,
 title,title-spch02,spch,크리스마스,크리스마스 아이템 추천,,
 title,title-spch03,spch,크리스마스,크리스마스에 딱인 아이템!,,
 title,title-spey01,spey,연말,연말연시 {mall_id} 상품 추천!,,
-title,title-spey02,spey,연말,"연말, 따뜻한 아이템 장만?",,
-title,title-spey03,spey,연말,{mall_id}가 추천하는 연말 패션!,,
-title,title-spfa01,spfa,가을,올해의 가을 상품 추천!,,
-title,title-spfa02,spfa,가을,"쌀쌀해진 날씨, 새 옷 사자!",,
+title,title-spey02,spey,연말,"연말, 나만의 스타일 찾기!",,
+title,title-spey03,spey,연말,{mall_id}가 추천하는 연말 스타일링!,,
+title,title-spfa01,spfa,가을,올해의 가을 아이템 추천!,,
+title,title-spfa02,spfa,가을,"쌀쌀해진 날씨, 내 피부를 보호하세요!",,
 title,title-spfa03,spfa,가을,가을에 어올리는 아이템!,,
 title,title-spfm01,spfm,가정의달,가정의 달에 꼭 맞는 옷은?,,
 title,title-spfm02,spfm,가정의달,가족 선물 아이템 추천,,
@@ -280,8 +280,8 @@ title,title-spfw06,spfw,초겨울,"겨울 아이템, 빠르게!",,
 title,title-spfw07,spfw,초겨울,{mall_id}가 추천하는 겨울 상품,,
 title,title-spfw08,spfw,초겨울,겨울 맞이 추천 아이템!,,
 title,title-spgr01,spgr,졸업,"졸업 시즌, 아이템 추천!",,
-title,title-spgr02,spgr,졸업,졸업 기념 LOOK 추천!,,
-title,title-spgr03,spgr,졸업,"졸업 시즌, {mall_id}의 추천 룩!",,
+title,title-spgr02,spgr,졸업,메이크업 스타일링 추천!,,
+title,title-spgr03,spgr,졸업,"졸업 시즌, 메이크업 꿀템 추천!",,
 title,title-spln01,spln,설날,설에 어울리는 아이템 추천,,
 title,title-spln02,spln,설날,설에도 {mall_id} 추천 받으세요!,,
 title,title-spln03,spln,설날,설특집 패션 제안!,,
@@ -292,7 +292,7 @@ title,title-sppd01,sppd,어버이날,어버이날 선물 추천??,,
 title,title-sppd02,sppd,어버이날,어버이날 {mall_id} 선물하세요!,,
 title,title-sppd03,sppd,어버이날,제안하는 부모님 선물,,
 title,title-spsd04,spsd,개강,새학기 맞이 응원 이벤트!,,
-title,title-spsd05,spsd,개강,올해 새학기 코디는 {mall_id}로!,,
+title,title-spsd05,spsd,개강,올해 새학기 메이크업은 {mall_id}과 함께!,,
 title,title-spsd06,spsd,개강,"개강 첫 날, 코디 추천!",,
 title,title-spsf01,spsf,초가을,"선선해지는 가을, 뭐 입지?",,
 title,title-spsf02,spsf,초가을,추천하는 가을 맞이 상품,,
@@ -302,46 +302,40 @@ title,title-spsp02,spsp,봄,"봄 햇살, 눈부신 아이템☆",,
 title,title-spsp03,spsp,봄,올해의 봄 상품 추천!,,
 title,title-spsp04,spsp,봄,꽃피는 봄에 어올리는 상품!,,
 title,title-spsp05,spsp,봄,{mall_id}의 봄 스타일 추천!,,
-title,title-spsp06,spsp,봄,봄 패션 정복!,,
-title,title-spsp07,spsp,봄,봄 스타일 제안,,
-title,title-spsp08,spsp,봄,봄 패션을 제안드려요,,
-title,title-spsp09,spsp,봄,올 봄에는 이렇게 입자!,,
-title,title-spsp10,spsp,봄,추천하는 봄 패션!,,
+title,title-spsp06,spsp,봄,봄 메이크업 정복!,,
+title,title-spsp09,spsp,봄,올 봄 메이크업 꿀템 추천!,,
 title,title-spss01,spss,초여름,"여름의 시작, 이건 어때요?",,
-title,title-spss02,spss,초여름,추천하는 여름 상품,,
-title,title-spss03,spss,초여름,올여름에 입기 좋은 패션!,,
+title,title-spss02,spss,초여름,추천하는 여름 아이템,,
 title,title-spss04,spss,초여름,"여름의 시작, {mall_id}와 함께",,
 title,title-spss05,spss,초여름,올 여름을 대비하자!,,
-title,title-spss06,spss,초여름,여름휴가를 위한 추천 상품!,,
-title,title-spss07,spss,초여름,여름에 어올리는 패션모음,,
+title,title-spss06,spss,초여름,여름휴가를 위한 추천 아이템!,,
+title,title-spss07,spss,초여름,여름에 맞는 메이크업 꿀템 모음,,
 title,title-spss08,spss,초여름,여름 아이템 추천드려요!,,
-title,title-spss09,spss,초여름,여름에 입을 옷 추천!,,
 title,title-spss10,spss,초여름,여름에 어올리는 {mall_id} 추천,,
 title,title-spsu08,spsu,여름,무더운 여름의 스타일 제안!,,
 title,title-spsu09,spsu,여름,"여름, 빛나는 아이템을 GET!",,
 title,title-spsu10,spsu,여름,여름 휴가 아이템 추천!,,
-title,title-spsu01,spsu,여름,{mall_id}가 추천하는 여름 패션!,,
+title,title-spsu01,spsu,여름,{mall_id}가 추천하는 여름 꿀템!,,
 title,title-spsu02,spsu,여름,여름에 어울리는 아이템,,
 title,title-spsu03,spsu,여름,시원한 여름을 위한 상품!,,
 title,title-spsu04,spsu,여름,올해의 여름 상품 추천!,,
-title,title-spsu05,spsu,여름,{mall_id}의 여름 스타일 추천!,,
+title,title-spsu05,spsu,여름,{mall_id}의 여름 아이템 추천!,,
 title,title-spsu06,spsu,여름,추천 상품으로 무더위 극복!,,
-title,title-spsu07,spsu,여름,더위를 날릴 추천 스타일!,,
-title,title-spth08,spth,추석,"특별한 추석, {mall_id} 스타일",,
+title,title-spsu07,spsu,여름,더위를 날릴 추천 아이템!,,
+title,title-spth08,spth,추석,"특별한 추석, {mall_id} 아이템",,
 title,title-spth09,spth,추석,"추석 선물, 추천해드릴게요!",,
 title,title-spth10,spth,추석,한가위 맞이 아이템 추천,,
 title,title-spth01,spth,추석,새 옷 입고 가족들 만나러~,,
 title,title-spwi02,spwi,겨울,겨울 아이템 추천,,
 title,title-spwi03,spwi,겨울,올해의 겨울 상품 추천!,,
-title,title-spwi04,spwi,겨울,겨울에 입을 추천 아이템!,,
+title,title-spwi04,spwi,겨울,겨울 메이크업 추천 아이템!,,
 title,title-spws05,spws,초봄,"봄의 시작, {mall_id}가 책임져요",,
 title,title-spws06,spws,초봄,{mall_id}가 추천하는 새봄 상품!,,
 title,title-spws07,spws,초봄,{mall_id}의 추천 상품과 새출발!,,
 title,title-spws08,spws,초봄,"봄 산책, 추천 상품!",,
 title,title-spws09,spws,초봄,봄바람에 어올리는 아이템!,,
 title,title-spws10,spws,초봄,봄의 시작을 위한 추천!,,
-title,title-spws01,spws,초봄,봄에 입을 옷 추천드려요!,,
-title,title-spws02,spws,초봄,환절기를 위한 패션 제안!,,
+title,title-spws02,spws,초봄,환절기를 위한 스타일링 꿀템!,,
 title,title-spws03,spws,초봄,"일교차 클 때, {mall_id}!",,
 title,title-spws04,spws,초봄,따스한 햇살과 {mall_id}의 추천!,,
 title,title-ssch01,ssch,크리스마스,X-mas를 더 특별하게!,,
@@ -373,7 +367,6 @@ title,title-ssgr02,ssgr,졸업,모두 졸업 축하해요!,,
 title,title-ssgr03,ssgr,졸업,"기존의 스타일, 졸업하세요!",,
 title,title-ssln01,ssln,설날,"설날 기운 가득, {mall_id}!",,
 title,title-ssln02,ssln,설날,"풍성한 설 연휴, {mall_id}와!",,
-title,title-ssln03,ssln,설날,설날을 더 따뜻하게,,
 title,title-ssln04,ssln,설날,"설날, 선물은 {mall_id}로",,
 title,title-ssln05,ssln,설날,올 설에도 함께해요♡,,
 title,title-ssny01,ssny,새해,"새해, 새로운 나!",,
@@ -398,7 +391,6 @@ title,title-sssf02,sssf,초가을,외출을 장려하는 요즘 날씨!,,
 title,title-sssf03,sssf,초가을,"청명한 하늘, 시원한 공기",,
 title,title-sssp01,sssp,봄,"따뜻한 봄, 따뜻한 {mall_id}",,
 title,title-sssp02,sssp,봄,"설레는 봄, {mall_id}와 함께",,
-title,title-sssp03,sssp,봄,봄에도 역시 아웃도어는?,,
 title,title-sssp04,sssp,봄,봄 기운 가득한 {mall_id}와~,,
 title,title-sssp05,sssp,봄,새 옷 입고 봄 나들이 가자!,,
 title,title-sssp06,sssp,봄,"신선한 봄, 나만의 감성으로!",,
@@ -493,14 +485,16 @@ title,title-sta08,sta,연령대별 Best 상품 추천,연령대에 맞춘 추천
 title,title-ste01,ste,성별 Best 상품 추천,성별 맞춤 베스트 상품,성별 Best 상품 추천,
 title,title-ste02,ste,성별 Best 상품 추천,남녀 인기 상품 추천,성별 Best 상품 추천,
 title,title-ste03,ste,성별 Best 상품 추천,성별 추천 아이템,성별 Best 상품 추천,
-title,title-stf01,stf,첫 구매 Best 상품 추천,첫 구매 추천 상품,첫 구매 Best 상품 추천,
-title,title-stf02,stf,첫 구매 Best 상품 추천,첫 구매 인기 상품,첫 구매 Best 상품 추천,
-title,title-stf03,stf,첫 구매 Best 상품 추천,첫 구매 베스트 아이템,첫 구매 Best 상품 추천,
+title,title-stf01,stf,첫 구매 Best 상품 추천,자신있게 추천하는 베스트셀러!,첫 구매 Best 상품 추천,
+title,title-stf02,stf,첫 구매 Best 상품 추천,지금 가장 인기 아이템은?,첫 구매 Best 상품 추천,
+title,title-stf03,stf,첫 구매 Best 상품 추천,첫 구매 베스트 아이템 추천!,첫 구매 Best 상품 추천,
+title,title-stf04,stf,첫 구매 Best 상품 추천,처음이시라면? 이 상품 추천!,첫 구매 Best 상품 추천,
+title,title-stf05,stf,첫 구매 Best 상품 추천,지금 가장 핫한 아이템 만나봐요,첫 구매 Best 상품 추천,
 title,title-stst01,stst,스테디셀러 상품 추천,스테디셀러 상품 모음,스테디셀러 상품 추천,
 title,title-stst02,stst,스테디셀러 상품 추천,꾸준히 사랑받는 상품,스테디셀러 상품 추천,
-title,title-stcr01,stcr,Next구매 확률 높은 상품 추천,다음 구매 추천 상품,Next구매 확률 높은 상품 추천,
-title,title-stcr02,stcr,Next구매 확률 높은 상품 추천,다음 구매 유망 상품,Next구매 확률 높은 상품 추천,
-title,title-stcr03,stcr,Next구매 확률 높은 상품 추천,다음에 살만한 상품,Next구매 확률 높은 상품 추천,
+title,title-stcr01,stcr,Next구매 확률 높은 상품 추천,어울릴만한 아이템 추천,Next구매 확률 높은 상품 추천,
+title,title-stcr02,stcr,Next구매 확률 높은 상품 추천,지금 가장 핫한 아이템은?,Next구매 확률 높은 상품 추천,
+title,title-stcr03,stcr,Next구매 확률 높은 상품 추천,혜택가로 만나보는 추천아이템!,Next구매 확률 높은 상품 추천,
 title,title-stn02,stn,신상품 추천,새로운 상품 소개,신상품 추천,
 title,title-stn03,stn,신상품 추천,신상품 추천,신상품 추천,
 title,title-stn04,stn,신상품 추천,새로운 상품을 만나보세요,신상품 추천,
@@ -579,10 +573,8 @@ main,main-pat14,pat,T,많은 사랑을 주신 {고객명}님,구매력 상,
 main,main-pat16,pat,T,특별한 {고객명} 고객님,구매력 상,
 main,main-pam01,pam,M,감사한 {고객명} 고객님,구매력 중,
 main,main-pam02,pam,M,소중한 {고객명} 고객님,구매력 중,
-main,main-pam03,pam,M,관심 가득한 {고객명} 고객님,구매력 중,
-main,main-pam04,pam,M,프렌즈 {고객명}님,구매력 중,
 main,main-pam05,pam,M,{고객명} 고객님♥,구매력 중,
-main,main-pam06,pam,M,"아웃도어 러버, {고객명}님",구매력 중,
+main,main-pam06,pam,M,"가볍지만 생기있어 보이게!, {고객명}님",구매력 중,
 main,main-pam08,pam,M,애정 가득 {고객명}님,구매력 중,
 main,main-pam09,pam,M,친근한 {고객명}님,구매력 중,
 main,main-pab11,pab,B,늘 함께하고 싶은 {고객명}님,구매력 하,
@@ -593,84 +585,72 @@ main,main-pab13,pab,B,{고객명} 고객님♥,구매력 하,
 main,main-pab14,pab,B,{고객명} 고객님,구매력 하,
 main,main-pab04,pab,B,반가운 {고객명}님,구매력 하,
 main,main-spsp01-1,spsp,봄,따스한 봄바람에 솔솔~ 어울리는 핫템들 소개해줄게요!,2030,2030
-main,main-spsp01-2,spsp,봄,"따뜻한 봄날, 마음까지 따스해지는 특별한 상품들을 추천해 드립니다.",5060,5060
+main,main-spsp01-2,spsp,봄,"따뜻한 봄날, 내 기분을 바꿔줄 아이템을 추천해 드려요!",5060,5060
 main,main-spsp02-1,spsp,봄,봄날 피크닉 꿀팁! 이거 하나면 완벽!,2030,2030
-main,main-spsp02-2,spsp,봄,꽃구경이나 나들이에 딱인 이런 상품은 어떠세요?,5060,5060
+main,main-spsp02-2,spsp,봄,꽃구경이나 나들이에 딱인 상품을 추천해드려요!,5060,5060
 main,main-spsp03-1,spsp,봄,"따스한 봄날의 햇살, 나들이에 딱인 아이템!",2030,2030
-main,main-spsp03-2,spsp,봄,봄을 맞아 바깥활동이 많아진 분들에게 이런 상품 추천드려요!,5060,5060
+main,main-spsp03-2,spsp,봄,봄을 맞아 바깥활동이 많아진 분들을 위해 준비한 꿀템!,5060,5060
 main,main-spsp04-1,spsp,봄,{mall_id}가 엄선한 봄맞이 꿀템! 지금 바로 겟하자!,2030,2030
-main,main-spsp04-2,spsp,봄,{mall_id}가 추천해드리는 상품과 함께 봄을 맞이해보세요.,5060,5060
-main,main-spsp05-1,spsp,봄,봄바람 살랑살랑! {mall_id} 옷 입고 나들이 떠나자!,2030,2030
-main,main-spsp05-2,spsp,봄,{mall_id}의 추천 의류와 함께 봄바람을 느껴보세요.,5060,5060
+main,main-spsp04-2,spsp,봄,{mall_id}가 추천해드리는 아이템과 함께 봄을 맞이해보세요.,5060,5060
+main,main-spsp05-1,spsp,봄,봄바람 살랑살랑! 부드러운 메이크업으로 봄을 만끽 해보세요!,2030,2030
+main,main-spsp05-2,spsp,봄,{mall_id}의 추천 컬러와 함께 봄바람을 느껴보세요.,5060,5060
 main,main-spsu01-1,spsu,여름,무더위 싹 날려줄 꿀템 등장!,2030,2030
 main,main-spsu01-2,spsu,여름,여름의 습한 무더위를 날려줄 거 같은 아이템을 가져왔어요.,5060,5060
 main,main-spsu02-1,spsu,여름,무더위 날려버릴 시원한 아이템 등장!,2030,2030
-main,main-spsu02-2,spsu,여름,시원한 여름을 나기 위한 이런 상품은 어떠세요?,5060,5060
-main,main-spsu03-1,spsu,여름,무더위도 덤벼! {mall_id} 옷 입고 핫하게 여름 보내자!,2030,2030
-main,main-spsu03-2,spsu,여름,여름 날씨에 입기 좋은 {mall_id} 추천 상품들을 만나보세요.,5060,5060
+main,main-spsu02-2,spsu,여름,시원한 여름을 나기 위한 이런 컬러는 어떠세요?,5060,5060
+main,main-spsu03-1,spsu,여름,무더위도 덤벼! 여름에 꼭 필요한 아이템 추천해드려요!,2030,2030
+main,main-spsu03-2,spsu,여름,여름 날씨에 사용하기 좋은 추천 상품들을 만나보세요.,5060,5060
 main,main-spsu04-1,spsu,여름,{mall_id}가 엄선한 여름 필수템 지금 바로 겟하자!,2030,2030
 main,main-spsu04-2,spsu,여름,고객님의 쾌적한 여름을 위한 아이템을 추천드립니다.,5060,5060
 main,main-spsu05-1,spsu,여름,무더위는 이제 그만! {mall_id} 꿀템과 함께 시원한 여름 만끽해봐!,2030,2030
 main,main-spsu05-2,spsu,여름,{mall_id}가 추천하는 여름 상품과 함께 무더위를 이겨내보세요!,5060,5060
 main,main-spfa01-1,spfa,가을,가을 감성 폭발! {mall_id} 옷 입고 나들이 떠나자!,2030,2030
-main,main-spfa01-2,spfa,가을,{mall_id}에서 가을의 캔버스를 담은 아이템을 추천해드립니다.,5060,5060
+main,main-spfa01-2,spfa,가을,{mall_id}에서 가을의 캔버스를 내 메이크업에 담아보아요.,5060,5060
 main,main-spfa02-1,spfa,가을,친구들보다 먼저 가을 패피 되고 싶다면? {mall_id} 옷만 있으면 딱!,2030,2030
-main,main-spfa02-2,spfa,가을,형형색색의 단풍처럼 다양한 {mall_id}의 상품을 추천드려요.,5060,5060
-main,main-spfa03-1,spfa,가을,"쌀쌀한 가을, {mall_id} 옷 입고 따뜻하게 핫하게!",2030,2030
+main,main-spfa02-2,spfa,가을,형형색색의 단풍 놀이 가기전에 한번 보고가셔요!,5060,5060
+main,main-spfa03-1,spfa,가을,"쌀쌀한 가을, 내 피부를 보호해 줄 아이템!",2030,2030
 main,main-spfa03-2,spfa,가을,쌀쌀한 가을에 입기 좋은 {mall_id} 상품들을 소개합니다.,5060,5060
-main,main-spfa04-1,spfa,가을,가을 감성 팡팡! {mall_id} 옷 입고 핫플레이스 탐방 떠나자!,2030,2030
-main,main-spfa04-2,spfa,가을,가을 감성에 어울리는 {mall_id}의 추천 상품을 확인해보세요.,5060,5060
-main,main-spfa05-1,spfa,가을,쌀쌀한 가을도 끄떡없다! {mall_id} 따뜻템으로 무장 완료!,2030,2030
-main,main-spfa05-2,spfa,가을,{mall_id}가 가을 분위기에 맞는 상품들을 추천해드려요!,5060,5060
-main,main-spwi01-1,spwi,겨울,지금 바로 {mall_id} 옷 입고 #겨울패피 도전!,2030,2030
+main,main-spfa04-1,spfa,가을,가을 감성 팡팡! 핫플레이스 가기전에 챙겨가세요!,2030,2030
+main,main-spfa04-2,spfa,가을,가을 감성에 어울리는 추천 아이템을 확인해보세요.,5060,5060
+main,main-spfa05-2,spfa,가을,가을 분위기에 맞는 메이크업을 연출하세요!,5060,5060
+main,main-spwi01-1,spwi,겨울,지금 바로 {mall_id}과 함께 #겨울메이크업 도전!,2030,2030
 main,main-spwi01-2,spwi,겨울,따뜻함과 스타일을 동시에 담은 {mall_id}의 상품을 소개합니다.,5060,5060
-main,main-spwi02-1,spwi,겨울,"따뜻한 겨울 카페, {mall_id} 옷 입고 여유로운 시간!",2030,2030
+main,main-spwi02-1,spwi,겨울,"따뜻한 겨울 카페, 여유로운 분위기를 연출해보세요!",2030,2030
 main,main-spwi02-2,spwi,겨울,추운 겨울에 없어서는 안될 {mall_id}의 제품들을 확인해보세요.,5060,5060
-main,main-spwi03-1,spwi,겨울,겨울 한파에 떨지 마요! {mall_id} 따뜻템 하나면 문제 해결!,2030,2030
-main,main-spwi03-2,spwi,겨울,겨울 한파를 물리칠 {mall_id} 추천 상품들을 만나보세요.,5060,5060
-main,main-spwi04-1,spwi,겨울,눈사람도 녹아버릴 {mall_id} 겨울 추천템! 지금 만나봐요!,2030,2030
-main,main-spwi04-2,spwi,겨울,{mall_id}가 겨울 추위를 이겨낼 상품들을 추천해드려요.,5060,5060
 main,main-spwi05-1,spwi,겨울,{mall_id} 겨울템 입고 힙한 겨울 사진을 찍어보세요!,2030,2030
 main,main-spwi05-2,spwi,겨울,{mall_id}의 추천 상품과 함께 겨울을 대비하세요!,5060,5060
-main,main-spws01-1,spws,초봄,꽃보다 더 예쁜 {mall_id} 봄 옷 입고 꽃길만 걷자!,2030,2030
+main,main-spws01-1,spws,초봄,꽃보다 더 예쁜 {mall_id} 봄 메이크업으로 꽃길만 걷자!,2030,2030
 main,main-spws01-2,spws,초봄,따뜻하고 편안한 봄맞춤 상품 추천을 확인하세요!,5060,5060
-main,main-spws02-1,spws,초봄,"따스한 햇살, {mall_id} 봄 옷 입고 맘껏 즐겨봐!",2030,2030
-main,main-spws02-2,spws,초봄,다가오는 봄에 어울리는 상품을 추천해드려요.,5060,5060
-main,main-spss01-1,spss,초여름,{mall_id} 썸머룩 입고 힙한 여름 사진 남겨봐!,2030,2030
+main,main-spws02-1,spws,초봄,"따스한 햇살, {mall_id} 봄 메이크업으로 맘껏 즐겨봐!",2030,2030
+main,main-spws02-2,spws,초봄,다가오는 봄에 어울리는 아이템을 추천해드려요.,5060,5060
+main,main-spss01-1,spss,초여름,텍스처가 살아있는 메이크업으로 힙한 여름 사진 남겨보세요!,2030,2030
 main,main-spss01-2,spss,초여름,다가오는 여름 맞이 아이템을 추천해드릴게요,5060,5060
-main,main-spss02-1,spss,초여름,여름에는 {mall_id} 옷 입고 시원하게 핫하게 즐기자!,2030,2030
+main,main-spss02-1,spss,초여름,여름에 맞는 메이크업으로 시원하고 핫하게 즐기자!,2030,2030
 main,main-spss02-2,spss,초여름,{mall_id}의 추천 상품으로 무더운 여름을 준비해보세요.,5060,5060
-main,main-spsf01-1,spsf,초가을,가을 단풍 핫플레이스는 {mall_id} 옷 입고 가자!,2030,2030
-main,main-spsf01-2,spsf,초가을,가을 나들이를 함께할 상품들을 확인해보세요.,5060,5060
-main,main-spsf02-1,spsf,초가을,{mall_id} 입고 떠나는 설렘 가득한 가을 드라이브!,2030,2030
+main,main-spsf01-1,spsf,초가을,가을 단풍 핫플레이스는 나만의 텍스처 연출로 준비해보세요!,2030,2030
+main,main-spsf01-2,spsf,초가을,가을 나들이를 함께할 아이템을 확인해보세요.,5060,5060
+main,main-spsf02-1,spsf,초가을,떠나는 설렘 가득한 가을 드라이브!,2030,2030
 main,main-spsf02-2,spsf,초가을,가을 야외활동을 위한 추천 상품들을 만나보세요.,5060,5060
-main,main-spfw01-1,spfw,초겨울,강추위는 {mall_id} 의류로 따뜻하게 녹여버리자!,2030,2030
-main,main-spfw01-2,spfw,초겨울,추위에 대비할 수 있는 상품들을 추천합니다.,5060,5060
-main,main-spfw02-1,spfw,초겨울,한파에 대비해서 {mall_id} 추천 상품을 미리 챙겨보세요!,2030,2030
-main,main-spfw02-2,spfw,초겨울,{mall_id} 추천 아이템으로 한파를 미리 대비하세요.,5060,5060
-main,main-spny01-1,spny,새해,올해는 스타일을 새롭게 시작해보는 건 어떨까요?,2030,2030
-main,main-spny01-2,spny,새해,새해를 맞아 {mall_id}의 신상품들을 확인해보세요!,5060,5060
-main,main-spny02-1,spny,새해,새해에는 {mall_id}의 신상품으로 새로운 스타일을 연출해보세요.,2030,2030
-main,main-spny02-2,spny,새해,{mall_id}의 신년맞이 추천 신상품을 만나보세요.,5060,5060
+main,main-spfw02-1,spfw,초겨울,건조한 날씨에 어울릴만한 아이템을 미리 챙겨보세요!,2030,2030
+main,main-spfw02-2,spfw,초겨울,추천 아이템으로 갑작스런 날씨 변화로 부터 피부를 보호하세요.,5060,5060
+main,main-spny01-1,spny,새해,올해는 새로운 스타일의 메이크업을 시작해보는 건 어떨까요?,2030,2030
+main,main-spny01-2,spny,새해,새해를 맞아 신상품들을 확인해보세요!,5060,5060
+main,main-spny02-1,spny,새해,새해에는 신상품으로 새로운 스타일을 연출해보세요.,2030,2030
+main,main-spny02-2,spny,새해,신년맞이 추천 신상품을 만나보세요.,5060,5060
 main,main-spln01-1,spln,설날,새해의 시작을 따뜻하고 스타일리시하게 준비하세요.,2030,2030
 main,main-spln01-2,spln,설날,설을 맞아 가족과 함께 입을만한 신상품을 추천합니다.,5060,5060
 main,main-spln02-1,spln,설날,새로운 해를 맞아 트렌디한 아이템으로 스타일을 업그레이드 해보세요.,2030,2030
-main,main-spln02-2,spln,설날,설선물로 딱 좋은 {mall_id} 상품을 추천받으세요.,5060,5060
-main,main-spth01-1,spth,추석,보름달처럼 빛나는 {mall_id} 상품들을 놓치지 마세요!,2030,2030
-main,main-spth01-2,spth,추석,한가위처럼 풍성한 {mall_id} 상품들을 확인해보세요!,5060,5060
-main,main-spth02-1,spth,추석,부모님 명절 선물로 {mall_id} 상품 어떠세요?,2030,2030
-main,main-spth02-2,spth,추석,명절에 선물하기 좋은 {mall_id} 상품을 추천드려요.,5060,5060
-main,main-sppd01-1,sppd,어버이날,부모님께 감사의 마음을 전해드릴 선물로 {mall_id} 상품을 추천해요!,2030,2030
-main,main-sppd01-2,sppd,어버이날,추천해드리는 상품으로 부모님께 감사의 마음을 전해보세요.,5060,5060
-main,main-sppd02-1,sppd,어버이날,{mall_id}가 준비한 추천 상품으로 감사의 마음을 전해봐요!,2030,2030
-main,main-sppd02-2,sppd,어버이날,감사의 마음을 담아 {mall_id}가 준비한 추천 상품이에요.,5060,5060
+main,main-spln02-2,spln,설날,소중한 분에게 잊지못할 경험을 선물하세요. 설선물로 딱 좋은 아이템을 추천해드려요.,5060,5060
+main,main-spth01-1,spth,추석,보름달처럼 빛나는 아이템들을 놓치지 마세요!,2030,2030
+main,main-spth01-2,spth,추석,한가위처럼 풍성한 아이템들을 확인해보세요!,5060,5060
+main,main-spth02-2,spth,추석,선물하기 좋은 아이템을 추천드려요.,5060,5060
 main,main-spfm01-1,spfm,가정의달,{mall_id}가 준비한 가족 맞춤형 상품으로 가정의 달을 축하해보세요!,2030,2030
 main,main-spfm01-2,spfm,가정의달,가정의 달을 맞아 {mall_id}가 가족 맞춤형 상품을 추천해드립니다!,5060,5060
 main,main-spfm02-1,spfm,가정의달,{mall_id} 추천 아이템으로 가정의달 선물 고민 해결!,2030,2030
 main,main-spfm02-2,spfm,가정의달,{mall_id}의 추천 상품으로 가족 선물 고민을 해결하세요!,5060,5060
 main,main-spch01-1,spch,크리스마스,{mall_id}가 준비한 올해 크리스마스 선물을 확인해보세요!,2030,2030
 main,main-spch01-2,spch,크리스마스,올해 크리스마스 선물을 {mall_id}가 추천해드릴게요!,5060,5060
-main,main-spch02-1,spch,크리스마스,{mall_id}와 함게 힙한 크리스마스룩 완성!,2030,2030
+main,main-spch02-1,spch,크리스마스,{mall_id}와 함께 힙한 크리스마스룩 완성!,2030,2030
 main,main-spch02-2,spch,크리스마스,{mall_id} 산타의 크리스마스 상품 추천을 확인하세요!,5060,5060
 main,main-spey01-1,spey,연말,나 자신을 위한 특별한 선물로 힐링타임을 가져보세요!,2030,2030
 main,main-spey01-2,spey,연말,한 해동안 정말 고생한 나에게 주는 선물 추천!,5060,5060
@@ -678,18 +658,12 @@ main,main-spey02-1,spey,연말,{mall_id}의 추천 상품과 함께 올해를 �
 main,main-spey02-2,spey,연말,올해 마무리는 {mall_id}의 추천 상품과 함께 해보세요.,5060,5060
 main,main-spsd01-1,spsd,개강,새로운 학기를 맞아 {mall_id}의 추천 신상품을 확인해보세요!,2030,2030
 main,main-spsd01-2,spsd,개강,새학기 맞이 신상품을 추천드려요!,5060,5060
-main,main-spsd02-1,spsd,개강,아이들을 위한 신학기 선물을 찾고 계신가요?,2030,2030
-main,main-spsd02-2,spsd,개강,우리 아이 신학기 선물로 딱인 상품을 추천합니다.,5060,5060
-main,main-spgr01-1,spgr,졸업,{mall_id}가 제안하는 졸업 선물!,2030,2030
-main,main-spgr01-2,spgr,졸업,우리 아이의 졸업을 축하하는 선물로 {mall_id}가 추천합니다!,5060,5060
-main,main-spgr02-1,spgr,졸업,졸업 시즌을 맞아 {mall_id}가 추천하는 상품을 확인하세요!,2030,2030
-main,main-spgr02-2,spgr,졸업,졸업 시즌 맞이 {mall_id}의 상품 추천을 확인하세요.,5060,5060
 main,main-sosp01-1,sosp,봄,봄바람과 함께 특별한 혜택을 경험해보세요!,2030,2030
 main,main-sosp01-2,sosp,봄,봄바람과 함께 날아온 {mall_id}의 한정 혜택을 확인해보세요.,5060,5060
 main,main-sosp02-1,sosp,봄,봄의 햇살과 어울리는 따스한 혜택을 {mall_id}에서 만나보세요!,2030,2030
 main,main-sosp02-2,sosp,봄,햇살 가득한 봄에 어울리는 따스한 혜택을 만나보세요.,5060,5060
-main,main-sosp03-1,sosp,봄,{mall_id}의 혜택으로 봄 스타일을 즐겨보세요!,2030,2030
-main,main-sosp03-2,sosp,봄,{mall_id}에서 혜택받고 봄 나들이 패션을 완성하세요.,5060,5060
+main,main-sosp03-1,sosp,봄,{mall_id}의 혜택으로 봄 스타일링을 즐겨보세요!,2030,2030
+main,main-sosp03-2,sosp,봄,{mall_id}에서 혜택받고 봄 나들이 스타일링을 완성하세요.,5060,5060
 main,main-sosp04-1,sosp,봄,새로운 봄을 맞이하는 특별한 혜택을 확인해보세요!,2030,2030
 main,main-sosp04-2,sosp,봄,{mall_id}가 준비한 봄 혜택으로 다양한 상품들을 만나보세요.,5060,5060
 main,main-sosp05-1,sosp,봄,봄을 맞아 {mall_id}가 제공하는 혜택으로 설레는 계절을 함께하세요!,2030,2030
@@ -711,16 +685,16 @@ main,main-sofa02-2,sofa,가을,가을 나들이도 {mall_id} 혜택과 함께 �
 main,main-sofa03-1,sofa,가을,{mall_id}의 혜택으로 가을의 매력을 담은 스타일링을 즐겨보세요!,2030,2030
 main,main-sofa03-2,sofa,가을,{mall_id}에서 준비한 한정 혜택으로 나만의 감성을 표현하세요.,5060,5060
 main,main-sofa04-1,sofa,가을,가을의 멋을 완성하는 데 도움이 될 혜택이 기다리고 있어요.,2030,2030
-main,main-sofa04-2,sofa,가을,이번 가을 패션은 {mall_id} 혜택과 함께 준비해보세요.,5060,5060
+main,main-sofa04-2,sofa,가을,이번 가을 나들이는 {mall_id}와 함께! 혜택과 함께 준비해보세요.,5060,5060
 main,main-sofa05-1,sofa,가을,환절기 스타일링을 더욱 특별하게 만들어줄 혜택을 준비했어요~,2030,2030
-main,main-sofa05-2,sofa,가을,환절기 옷차림도 {mall_id} 혜택으로 완성해보세요.,5060,5060
+main,main-sofa05-2,sofa,가을,환절기 스타일링도 {mall_id} 혜택으로 완성해보세요.,5060,5060
 main,main-sowi01-1,sowi,겨울,겨울철 특별한 혜택으로 따뜻한 아이템을 찾아보세요!,2030,2030
 main,main-sowi01-2,sowi,겨울,{mall_id}가 드리는 한정 혜택으로 추운 겨울을 이겨내세요!,5060,5060
-main,main-sowi02-1,sowi,겨울,겨울철 필수템부터 센스있는 패션템까지 {mall_id} 혜택과 함께하세요!,2030,2030
+main,main-sowi02-1,sowi,겨울,겨울철 필수템부터 센스있는 메이크업까지 {mall_id} 혜택과 함께하세요!,2030,2030
 main,main-sowi02-2,sowi,겨울,{mall_id}가 어울리는 겨울에도 많은 혜택 받아가세요.,5060,5060
 main,main-sowi03-1,sowi,겨울,"{mall_id}와 함께하는 겨울, 따뜻한 혜택을 만나보세요!",2030,2030
 main,main-sowi03-2,sowi,겨울,추운 겨울에도 따뜻하시라고 {mall_id}가 혜택을 챙겨드려요.,5060,5060
-main,main-sowi04-1,sowi,겨울,{mall_id} 혜택으로 포근하고 트렌디한 아이템들을 만나보세요!,2030,2030
+main,main-sowi04-1,sowi,겨울,마음을 담아 전해드리는 혜택으로 트렌디한 아이템들을 만나보세요!,2030,2030
 main,main-sowi04-2,sowi,겨울,겨울 바람을 뚫고 도착한 {mall_id}의 혜택을 확인하세요.,5060,5060
 main,main-sowi05-1,sowi,겨울,겨울철 특별한 선물과 혜택으로 포근한 시간을 보내보세요!,2030,2030
 main,main-sowi05-2,sowi,겨울,{mall_id}가 준비한 한정 혜택 받으시고 따뜻한 겨울 되세요!,5060,5060
@@ -752,10 +726,6 @@ main,main-soth01-1,soth,추석,{mall_id}와 함께 특별한 명절을 즐겨보
 main,main-soth01-2,soth,추석,{mall_id}의 혜택과 함께 즐거운 명절 보내세요.,5060,5060
 main,main-soth02-1,soth,추석,한가위를 맞아 {mall_id}의 혜택을 누려보세요!,2030,2030
 main,main-soth02-2,soth,추석,한가위를 맞아 {mall_id}가 준비한 혜택을 살펴보세요.,5060,5060
-main,main-sopd01-1,sopd,어버이날,"{mall_id} 혜택 확인하고, 부모님에게 감사를 표현해보세요!",2030,2030
-main,main-sopd01-2,sopd,어버이날,"{mall_id} 혜택 확인하시고, 부모님께 감사한 마음을 전해보세요.",5060,5060
-main,main-sopd02-1,sopd,어버이날,{mall_id} 혜택으로 부모님 감사 선물을 준비하시는건 어때요?,2030,2030
-main,main-sopd02-2,sopd,어버이날,{mall_id} 혜택을 활용하여 부모님을 위한 감사 선물을 준비해보세요!,5060,5060
 main,main-sofm01-1,sofm,가정의달,{mall_id}가 제공하는 혜택으로 가족과 특별한 시간을 함께하세요!,2030,2030
 main,main-sofm01-2,sofm,가정의달,{mall_id}가 드리는 혜택을 소중한 가족과 함께 사용해보세요.,5060,5060
 main,main-sofm02-1,sofm,가정의달,가족과 함께 {mall_id}의 혜택을 활용하여 행복한 시간을 보내보세요!,2030,2030
@@ -770,10 +740,9 @@ main,main-soey02-1,soey,연말,연말까지 이어지는 {mall_id}의 혜택을 
 main,main-soey02-2,soey,연말,연말까지 계속되는 {mall_id}의 혜택을 만나보세요.,5060,5060
 main,main-sosd01-1,sosd,개강,신학기 맞이 {mall_id}의 혜택을 즐겨보세요!,2030,2030
 main,main-sosd01-2,sosd,개강,신학기를 위한 {mall_id}의 혜택을 누려보세요.,5060,5060
-main,main-sosd02-1,sosd,개강,{mall_id} 혜택으로 힙한 새학기룩 완성!,2030,2030
-main,main-sosd02-2,sosd,개강,{mall_id}가 준비한 혜택으로 새학기를 준비해보세요.,5060,5060
+main,main-sosd02-1,sosd,개강,{mall_id} 혜택으로 힙한 메이크업 완성!,2030,2030
+main,main-sosd02-2,sosd,개강,{mall_id}가 준비한 혜택으로 나만의 메이크업을 준비해보세요.,5060,5060
 main,main-sogr01-1,sogr,졸업,{mall_id} 혜택으로 졸업 선물 고민 끝! 핵꿀템만 쏙쏙!,2030,2030
-main,main-sogr01-2,sogr,졸업,아이들 졸업 선물도 {mall_id} 혜택받고 준비해요!,5060,5060
 main,main-sogr02-1,sogr,졸업,졸업식에 빛나고 싶다면? {mall_id} 한정 혜택!,2030,2030
 main,main-sogr02-2,sogr,졸업,{mall_id}의 졸업식 기간 한정 혜택을 확인해보세요.,5060,5060
 main,main-sssp01-1,sssp,봄,봄빛과 함께 행복 가득한 날들이 되길 바라요!,2030,2030
@@ -786,18 +755,12 @@ main,main-sssp04-1,sssp,봄,"봄의 싱그러움과 함께, 진짜 행복을 느
 main,main-sssp04-2,sssp,봄,봄날의 싱그러운 풍경과 함께 행복한 시간을 보내보세요.,5060,5060
 main,main-sssp05-1,sssp,봄,"따스한 봄, 새 출발은 {mall_id}와 함께해요~!",2030,2030
 main,main-sssp05-2,sssp,봄,새로운 시작을 함께하는 따뜻한 봄날을 느껴보세요,5060,5060
-main,main-sssu01-1,sssu,여름,"여름엔 물로 채워, 탈수 OUT!",2030,2030
-main,main-sssu01-2,sssu,여름,여름 + 물 = 탈수 예방,5060,5060
-main,main-sssu02-1,sssu,여름,"레저와 함께하는 여름, 더위는 No problem!",2030,2030
-main,main-sssu02-2,sssu,여름,여름에만 즐길 수 있는 레저와 함께 더위를 이겨내보세요.,5060,5060
 main,main-sssu03-1,sssu,여름,"여름 도착! 휴가 계획, 준비됐니?",2030,2030
 main,main-sssu03-2,sssu,여름,무더운 여름이 왔네요. 휴가 계획은 세우셨나요?,5060,5060
 main,main-sssu04-1,sssu,여름,여름이 슬쩍~ 푸른 나무랑 매미 소리랑 친해졌어요,2030,2030
 main,main-sssu04-2,sssu,여름,푸른 나무와 매미 소리가 잘 어우러진 여름이 다가왔어요~,5060,5060
-main,main-sssu05-1,sssu,여름,장마철? 홍수 피해는 미리미리 대비해요~,2030,2030
-main,main-sssu05-2,sssu,여름,여름 장마철에는 홍수 피해에 미리 대비하세요.,5060,5060
 main,main-ssfa01-1,ssfa,가을,"청명한 가을, 매일이 풍성해지길 바라요!",2030,2030
-main,main-ssfa01-2,ssfa,가을,청명한 가을을 맞아 풍성한 하루하루 되세요.,5060,5060
+main,main-ssfa01-2,ssfa,가을,"띠링~ {mall_id}가 준비한 혜택과 함께, 청명한 가을을 맞아 풍성한 하루하루 되세요.",5060,5060
 main,main-ssfa02-1,ssfa,가을,"시원한 가을바람, 온몸으로 즐겨봐요!",2030,2030
 main,main-ssfa02-2,ssfa,가을,가을의 시원한 바람을 온 몸으로 느껴보세요.,5060,5060
 main,main-ssfa03-1,ssfa,가을,"단풍으로 포토존 된 숲속, 놓치지 마세요!",2030,2030
@@ -806,16 +769,10 @@ main,main-ssfa04-1,ssfa,가을,일교차 실화? 감기 조심하세요!,2030,20
 main,main-ssfa04-2,ssfa,가을,"일교차가 커지는 요즘, 감기 조심하세요.",5060,5060
 main,main-ssfa05-1,ssfa,가을,"환절기? 건강 관리, 더블 체크 필수!",2030,2030
 main,main-ssfa05-2,ssfa,가을,요즘 같은 환절기에는 건강 관리에 더욱 유의하세요.,5060,5060
-main,main-sswi01-1,sswi,겨울,"겨울 + 영하 = 빙판길, 항상 조심!",2030,2030
-main,main-sswi01-2,sswi,겨울,영하권 날씨가 계속되는 겨울에는 빙판길 주의하세요.,5060,5060
 main,main-sswi02-1,sswi,겨울,"겨울엔 강추위가 계속돼요, 독감 조심!",2030,2030
 main,main-sswi02-2,sswi,겨울,강추위가 계속되는 겨울에는 독감 조심하세요!,5060,5060
 main,main-sswi03-1,sswi,겨울,바람의 역습에 맞서려면? 방한템으로 무장!,2030,2030
 main,main-sswi03-2,sswi,겨울,매서운 바람이 부는 날에는 외출시 방한용품을 꼭 착용하세요.,5060,5060
-main,main-sswi04-1,sswi,겨울,"추위야 가라, 면역력 IN! 감기 OUT!",2030,2030
-main,main-sswi04-2,sswi,겨울,추운 겨울에는 면역력 잘 챙기셔서 감기 예방하세요!,5060,5060
-main,main-sswi05-1,sswi,겨울,{mall_id}랑 같이 따스하고 포근포근~ 겨울나기!,2030,2030
-main,main-sswi05-2,sswi,겨울,"겨울 + {mall_id} = 따뜻, 포근함으로 Perfect!",5060,5060
 main,main-ssws01-1,ssws,초봄,풀린 날씨처럼 행복 가득한 하루 되길!,2030,2030
 main,main-ssws01-2,ssws,초봄,풀리는 날씨 만큼이나 따뜻하고 행복한 하루 되세요~,5060,5060
 main,main-ssws02-1,ssws,초봄,새싹들이 봄 속에서 새로운 시작을 하고 있어요~!,2030,2030
@@ -918,32 +875,106 @@ main,main-ste02-1,ste,성별 Best 상품 추천,고객님을 위한 특별한 �
 main,main-ste03-1,ste,성별 Best 상품 추천,인기 급상승! 고객님을 위해 {best_gender_items} 상품 추천드려요!,성별 Best 상품 추천,2030
 main,main-ste04-1,ste,성별 Best 상품 추천,고객님과 어울릴만한 상품 궁금하지 않으신가요? 지금 바로 만나보세요!\n상품명: {best_gender_items},성별 Best 상품 추천,2030
 main,main-ste05-1,ste,성별 Best 상품 추천,고객님께 딱 맞는 베스트 아이템을 추천해드려요!!\n상품명: {best_gender_items},성별 Best 상품 추천,2030
-main,main-stf01-1,stf,첫 구매 Best 상품 추천,첫 구매 고객님들께 가장 많이 사랑받는 {first_best_items} 상품을 추천해드립니다!,첫 구매 Best 상품 추천,2030
-main,main-stf02-1,stf,첫 구매 Best 상품 추천,처음 방문하신 고객님들을 위한 베스트셀러 {first_best_items} 상품을 소개합니다!,첫 구매 Best 상품 추천,2030
-main,main-stf03-1,stf,첫 구매 Best 상품 추천,우리 쇼핑몰에서 첫 구매하시는 분들이 가장 많이 선택한 {first_best_items} 상품을 만나보세요!,첫 구매 Best 상품 추천,2030
-main,main-stf04-1,stf,첫 구매 Best 상품 추천,새로운 고객들에게 가장 많은 사랑을 받는 아이템이 궁금하지 않으세요? 첫 구매 베스트 아이템을 지금 바로 만나보세요!\n상품명: {first_best_items},첫 구매 Best 상품 추천,2030
-main,main-stf05-1,stf,첫 구매 Best 상품 추천,신규 고객님들이 가장 많이 구매한 {first_best_items} 상품을 확인해보세요!,첫 구매 Best 상품 추천,2030
-main,main-stf06-1,stf,첫 구매 Best 상품 추천,구매를 고민하는 고객님을 위해 첫 구매 고객님들에게 가장 많은 사랑을 받는 상품을 추천해드려요!\n상품명: {first_best_items},첫 구매 Best 상품 추천,2030
-main,main-stf07-1,stf,첫 구매 Best 상품 추천,첫 구매의 대명사인 {first_best_items} 상품을 추천드려요!,첫 구매 Best 상품 추천,2030
-main,main-stst01-1,stst,스테디셀러 상품 추천,꾸준히 사랑받는 스테디셀러 {steady_items} 상품을 추천드립니다!,스테디셀러 상품 추천,2030
-main,main-stst02-1,stst,스테디셀러 상품 추천,구매를 고민하는 고객님을 위해 가장 꾸준히 사랑받고 있는 {steady_items} 상품을 추천해드려요!,스테디셀러 상품 추천,2030
-main,main-stst03-1,stst,스테디셀러 상품 추천,고객님을 위한 가장 트렌디하고 인기 있는 아이템을 소개드립니다! 지금 상품을 만나보세요!\n상품명: {steady_items},스테디셀러 상품 추천,2030
-main,main-stst04-1,stst,스테디셀러 상품 추천,스테디셀러 상품 선정! {steady_items} 상품을 추천해드려요!,스테디셀러 상품 추천,2030
-main,main-stst05-1,stst,스테디셀러 상품 추천,가장 꾸준하게 사랑받고 있는 아이템 궁금하지 않으세요? 스테디셀러 바로 만나보세요!\n상품명: {steady_items},스테디셀러 상품 추천,2030
-main,main-stcr01-1,stcr,Next구매 확률 높은 상품 추천,이전에 구매하신 상품과 함께 구매하면 더 좋은 {best_cross_items} 상품을 추천드려요!,Next구매 확률 높은 상품 추천,2030
-main,main-stcr02-1,stcr,Next구매 확률 높은 상품 추천,구매하신 상품과 찰떡궁합! {best_cross_items} 상품을 만나보세요!,Next구매 확률 높은 상품 추천,2030
-main,main-stcr03-1,stcr,Next구매 확률 높은 상품 추천,이전에 구매하셨던 상품을 구매한 고객님들이 함께 구매하는 인기 {best_cross_items} 상품을 소개합니다!,Next구매 확률 높은 상품 추천,2030
-main,main-stcr04-1,stcr,Next구매 확률 높은 상품 추천,이전에 구매하신 상품과 어울리는 추천 상품을 지금 확인해보세요!\n상품명: {best_cross_items},Next구매 확률 높은 상품 추천,2030
-main,main-stcr05-1,stcr,Next구매 확률 높은 상품 추천,더 나은 쇼핑 경험을 위한 {best_cross_items} 상품을 추천드립니다!,Next구매 확률 높은 상품 추천,2030
-main,main-stcr06-1,stcr,Next구매 확률 높은 상품 추천,이전에 구매하신 상품과 함께 구매하면 완벽한 {best_cross_items} 상품을 추천해드립니다!,Next구매 확률 높은 상품 추천,2030
-main,main-stcr07-1,stcr,Next구매 확률 높은 상품 추천,이전 구매 상품과 완벽하게 어울리는 {best_cross_items} 아이템을 만나보세요!,Next구매 확률 높은 상품 추천,2030
-main,main-stcr08-1,stcr,Next구매 확률 높은 상품 추천,고객님들이 함께 많이 사는 {best_cross_items} 상품을 소개해드립니다!,Next구매 확률 높은 상품 추천,2030
-main,main-stcr09-1,stcr,Next구매 확률 높은 상품 추천,구하신 상품과 최고의 조합! {best_cross_items} 상품을 추천합니다!,Next구매 확률 높은 상품 추천,2030
-main,main-stn01-1,stn,신상품 추천,고객님을 위한 신상 추천! 가장 핫한 트렌드를 담은 새로운 상품을 지금 확인해보세요. 최신 패션과 라이프스타일을 경험해보세요!\n상품명: {best_new_items},신상품 추천,2030
-main,main-stn02-1,stn,신상품 추천,새롭게 출시된 신상품을 소개드려요!\n상품명: {best_new_items},신상품 추천,2030
-main,main-stn03-1,stn,신상품 추천,따끈따끈한 신상품을 확인해보세요!\n상품명: {best_new_items},신상품 추천,2030
-main,main-stn04-1,stn,신상품 추천,새로운 시즌을 맞아 준비한 신상품 출시! 지금 바로 확인해보세요!\n상품명: {best_new_items},신상품 추천,2030
-main,main-stn05-1,stn,신상품 추천,고객님 혹시 신상품이 궁금하지 않으신가요? 새롭게 출시된 상품을 소개드려요!\n상품명: {best_new_items},신상품 추천,2030
+main,main-stf01-1,stf,첫 구매 Best 상품 추천,"첫 구매 고객님들께 가장 많이 찾는 제품! 나의 메이크업에도 적용해보세요!
+
+상품명: {first_best_items}
+바로가기: {first_best_items_link}",첫 구매 Best 상품 추천,2030
+main,main-stf02-1,stf,첫 구매 Best 상품 추천,"처음이라 망설이시고 계신 고객님들을 위한 베스트셀러 상품을 소개합니다!
+
+상품명: {first_best_items}
+바로가기: {first_best_items_link}",첫 구매 Best 상품 추천,2030
+main,main-stf03-1,stf,첫 구매 Best 상품 추천,"우리 쇼핑몰에서 첫 구매하시는 분들이 가장 많이 선택한 상품을 만나보세요!
+
+상품명: {first_best_items}
+바로가기: {first_best_items_link}",첫 구매 Best 상품 추천,2030
+main,main-stf04-1,stf,첫 구매 Best 상품 추천,"새로운 고객들에게 가장 많은 사랑을 받는 아이템이 궁금하지 않으세요? 첫 구매 베스트 아이템을 지금 바로 만나보세요!
+
+상품명: {first_best_items}
+바로가기: {first_best_items_link}",첫 구매 Best 상품 추천,2030
+main,main-stf05-1,stf,첫 구매 Best 상품 추천,"신규 고객님들이 가장 많이 구매한 상품을 확인해보세요!
+
+상품명: {first_best_items}
+바로가기: {first_best_items_link}",첫 구매 Best 상품 추천,2030
+main,main-stf06-1,stf,첫 구매 Best 상품 추천,"구매를 고민하는 고객님을 위해 첫 구매 고객님들에게 가장 많은 사랑을 받는 상품을 추천해드려요!
+
+상품명: {first_best_items}
+바로가기: {first_best_items_link}",첫 구매 Best 상품 추천,2030
+main,main-stst01-1,stst,스테디셀러 상품 추천,"꾸준히 사랑받는 스테디셀러 상품을 추천드립니다!
+
+상품명: {steady_items}
+바로가기: {steady_items_link}",스테디셀러 상품 추천,2030
+main,main-stst02-1,stst,스테디셀러 상품 추천,"구매를 고민하는 고객님을 위해 가장 꾸준히 사랑받고 있는 상품을 추천해드려요!
+
+상품명: {steady_items}
+바로가기: {steady_items_link}",스테디셀러 상품 추천,2030
+main,main-stst03-1,stst,스테디셀러 상품 추천,"고객님을 위한 가장 트렌디하고 인기 있는 아이템을 소개드립니다! 지금 상품을 만나보세요!
+
+상품명: {steady_items}
+바로가기: {steady_items_link}",스테디셀러 상품 추천,2030
+main,main-stst04-1,stst,스테디셀러 상품 추천,"고객님에게 꾸준하게 사랑받는 스테디셀러 상품을 추천해드려요!
+
+상품명: {steady_items}
+바로가기: {steady_items_link}",스테디셀러 상품 추천,2030
+main,main-stst05-1,stst,스테디셀러 상품 추천,"가장 꾸준하게 사랑받고 있는 아이템 궁금하지 않으세요? 스테디셀러 바로 만나보세요!
+
+상품명: {steady_items}
+바로가기: {steady_items_link}",스테디셀러 상품 추천,2030
+main,main-stcr01-1,stcr,Next구매 확률 높은 상품 추천,"이전에 구매하신 제품과 함께 믹스하기 좋은 아이템을 추천드려요!
+
+상품명: {best_cross_items}
+바로가기: {best_cross_items_link}",Next구매 확률 높은 상품 추천,2030
+main,main-stcr02-1,stcr,Next구매 확률 높은 상품 추천,"구매하신 상품과 찰떡궁합! 다양한 믹스매치로 나만의 컬러를 완성해보세요!
+
+상품명: {best_cross_items}
+바로가기: {best_cross_items_link}",Next구매 확률 높은 상품 추천,2030
+main,main-stcr03-1,stcr,Next구매 확률 높은 상품 추천,"이전에 구매하셨던 제품을 구매한 고객님들이 함께 구매하는 인기 아이템을 소개합니다!
+
+상품명: {best_cross_items}
+바로가기: {best_cross_items_link}",Next구매 확률 높은 상품 추천,2030
+main,main-stcr04-1,stcr,Next구매 확률 높은 상품 추천,"이전에 구매하신 상품과 어울리는 추천 상품을 지금 확인해보세요!
+
+상품명: {best_cross_items}
+바로가기: {best_cross_items_link}",Next구매 확률 높은 상품 추천,2030
+main,main-stcr05-1,stcr,Next구매 확률 높은 상품 추천,"더 나은 메이크업 경험을 위한 아이템을 추천드립니다!
+
+상품명: {best_cross_items}
+바로가기: {best_cross_items_link}",Next구매 확률 높은 상품 추천,2030
+main,main-stcr06-1,stcr,Next구매 확률 높은 상품 추천,"이전에 구매하신 상품과 함께 구매하면 완벽한 아이템을 추천해드립니다!
+
+상품명: {best_cross_items}
+바로가기: {best_cross_items_link}",Next구매 확률 높은 상품 추천,2030
+main,main-stcr07-1,stcr,Next구매 확률 높은 상품 추천,"이전 구매 상품과 완벽하게 어울리는 아이템을 만나보세요!
+
+상품명: {best_cross_items}
+바로가기: {best_cross_items_link}",Next구매 확률 높은 상품 추천,2030
+main,main-stcr08-1,stcr,Next구매 확률 높은 상품 추천,"고객님들이 함께 많이 찾아주시는 아이템을 소개해드립니다!
+
+상품명: {best_cross_items}
+바로가기: {best_cross_items_link}",Next구매 확률 높은 상품 추천,2030
+main,main-stcr09-1,stcr,Next구매 확률 높은 상품 추천,"구매하신 상품과 최고의 조합! 이런 아이템은 어떠세요?
+
+상품명: {best_cross_items}
+바로가기: {best_cross_items_link}",Next구매 확률 높은 상품 추천,2030
+main,main-stn01-1,stn,신상품 추천,"고객님을 위한 신상 추천! 가장 핫한 트렌드를 담은 아이템으로 나만의 메이크업과 퍼스널 컬러를 찾아보세요!
+
+상품명: {best_new_items}
+바로가기: {best_new_items_link}",신상품 추천,2030
+main,main-stn02-1,stn,신상품 추천,"새롭게 출시된 신상품을 소개드려요!
+
+상품명: {best_new_items}
+바로가기: {best_new_items_link}",신상품 추천,2030
+main,main-stn03-1,stn,신상품 추천,"따끈따끈한 신상품을 확인해보세요!
+
+상품명: {best_new_items}
+바로가기: {best_new_items_link}",신상품 추천,2030
+main,main-stn04-1,stn,신상품 추천,"새로운 시즌을 맞아 준비한 신상품 출시! 지금 바로 확인해보세요!
+
+상품명: {best_new_items}
+바로가기: {best_new_items_link}",신상품 추천,2030
+main,main-stn05-1,stn,신상품 추천,"고객님 혹시 신상품이 궁금하지 않으신가요? 새롭게 출시된 상품을 소개드려요!
+
+상품명: {best_new_items}
+바로가기: {best_new_items_link}",신상품 추천,2030
 main,main-stca01-1,stca,장바구니 상품 추천,"고객님이 장바구니에 담아놓은 {item_name}, 지금 바로 구매해보세요!",장바구니 상품 추천,2030
 main,main-stca02-1,stca,장바구니 상품 추천,"장바구니에 담아둔 {item_name}, 놓치지 마세요!",장바구니 상품 추천,2030
 main,main-stca03-1,stca,장바구니 상품 추천,"고객님께서 담아놓으신 {item_name}, 지금 아니면 구매하기 어려울 수 있어요!",장바구니 상품 추천,2030
@@ -955,16 +986,46 @@ main,main-stwi03-1,stwi,위시리스트 상품 추천,"고객님께서 찜해놓
 main,main-stwi04-1,stwi,위시리스트 상품 추천,"고객님이 찜해놓은 {item_name} 상품, 잊지말아요~!",위시리스트 상품 추천,2030
 main,main-stwi05-1,stwi,위시리스트 상품 추천,품절 임박! 고객님께서 위시리스트에 찜해놓은 {item_name} 상품 놓치지 마세요!,위시리스트 상품 추천,2030
 main,main-stwi06-1,stwi,위시리스트 상품 추천,"고객님이 선택한 {item_name}, 까먹으신 거 아니죠?! 지금 바로 확인하세요~!",위시리스트 상품 추천,2030
-main,main-stwb01-1,stwb,선호 카테고리 Best 상품 추천,"고객님의 취향을 고려한 상품 궁금하지 않으세요? 선호 카테고리 기반으로한 {best_category_items} 상품 추천드려요!",선호 카테고리 Best 상품 추천,2030
-main,main-stwb02-1,stwb,선호 카테고리 Best 상품 추천,"고객님의 관심 카테고리에서 추천드리는 {best_category_items} 상품, 지금 바로 만나보세요!",선호 카테고리 Best 상품 추천,2030
-main,main-stwb03-1,stwb,선호 카테고리 Best 상품 추천,"고객님의 취향저격! {best_category_items} 상품 바로 확인해보세요!",선호 카테고리 Best 상품 추천,2030
-main,main-stwb04-1,stwb,선호 카테고리 Best 상품 추천,"선호 카테고리의 {best_category_items}, 지금이 구매할 완벽한 타이밍입니다!",선호 카테고리 Best 상품 추천,2030
-main,main-stwb05-1,stwb,선호 카테고리 Best 상품 추천,"고객님의 관심 카테고리에서 추천드리는 {best_category_items} 상품, 지금 바로 만나보세요!",선호 카테고리 Best 상품 추천,2030
-main,main-stsb01-1,stsb,최대 할인 상품 추천,"최대 할인 혜택! 지금 가장 큰 할인율을 자랑하는 {best_promo_items} 상품을 추천드려요!",최대 할인 상품 추천,2030
-main,main-stsb02-1,stsb,최대 할인 상품 추천,"최대 할인 혜택! {best_promo_items} 상품 놓치지 마세요~!",최대 할인 상품 추천,2030
-main,main-stsb03-1,stsb,최대 할인 상품 추천,"단 3일! 구매를 고민하는 고객님을 위해 {best_promo_items} 상품 주말 특가를 소개해드려요",최대 할인 상품 추천,2030
-main,main-stsb04-1,stsb,최대 할인 상품 추천,"고객님 최대 할인 상품이 궁금하지 않으신가요? {best_promo_items} 상품 지금 바로 만나보세요!",최대 할인 상품 추천,2030
-main,main-stsb05-1,stsb,최대 할인 상품 추천,"최대 할인 상품 추천! 고객님을 위한 스페셜 할인 혜택! 최대 할인 상품인 {best_promo_items} 상품 지금 확인해보세요!",최대 할인 상품 추천,2030
+main,main-stwb01-1,stwb,선호 카테고리 Best 상품 추천,"고객님의 취향을 고려한 상품 궁금하지 않으세요? 선호 카테고리 기반으로한 아이템을 추천드려요!
+
+상품명: {best_category_items}
+바로가기: {best_category_items_link}",선호 카테고리 Best 상품 추천,2030
+main,main-stwb02-1,stwb,선호 카테고리 Best 상품 추천,"고객님의 관심 카테고리에서 추천드리는 아이템, 지금 바로 만나보세요!
+
+상품명: {best_category_items}
+바로가기: {best_category_items_link}",선호 카테고리 Best 상품 추천,2030
+main,main-stwb03-1,stwb,선호 카테고리 Best 상품 추천,"고객님의 취향저격! 바로 확인해보세요!
+
+상품명: {best_category_items}
+바로가기: {best_category_items_link}",선호 카테고리 Best 상품 추천,2030
+main,main-stwb04-1,stwb,선호 카테고리 Best 상품 추천,"고객님의 취향에 어울리는 아이템, 지금 한번 확인해보세요!
+
+상품명: {best_category_items}
+바로가기: {best_category_items_link}",선호 카테고리 Best 상품 추천,2030
+main,main-stwb05-1,stwb,선호 카테고리 Best 상품 추천,"고객님에게 어울릴만한 아이템, 지금 바로 만나보세요!
+
+상품명: {best_category_items}
+바로가기: {best_category_items_link}",선호 카테고리 Best 상품 추천,2030
+main,main-stsb01-1,stsb,최대 할인 상품 추천,"프로모션 진행중! 지금 계절에 맞는 메이크업을 고민 중이라면 이런 아이템은 어떠세요?
+
+상품명: {best_promo_items}
+바로가기: {best_promo_items_link}",최대 할인 상품 추천,2030
+main,main-stsb02-1,stsb,최대 할인 상품 추천,"혜택가 제공! 지금 타이밍을 놓치지 마세요~!
+
+상품명: {best_promo_items}
+바로가기: {best_promo_items_link}",최대 할인 상품 추천,2030
+main,main-stsb03-1,stsb,최대 할인 상품 추천,"혜택가를 지금 만나보세요! 구매를 고민하는 고객님을 위해 어울릴만한 아이템을 제안해드려요.
+
+상품명: {best_promo_items}
+바로가기: {best_promo_items_link}",최대 할인 상품 추천,2030
+main,main-stsb04-1,stsb,최대 할인 상품 추천,"고객님 평소 관심만 가지고 계시던 상품이 있지 않나요? 지금 바로 혜택가로 만나보세요!
+
+상품명: {best_promo_items}
+바로가기: {best_promo_items_link}",최대 할인 상품 추천,2030
+main,main-stsb05-1,stsb,최대 할인 상품 추천,"프로모션 진행 중! 나에게 어울리는 메이크업 아이템을 확인해보세요!
+
+상품명: {best_promo_items}
+바로가기: {best_promo_items_link}",최대 할인 상품 추천,2030
 main,main-stap01-1,stap,회원가입 감사 메시지 발송,"{고객명} 고객님, 회원가입 감사드립니다! 앞으로 많은 관심과 사랑 부탁드립니다!",회원가입 감사 메시지 발송,2030
 main,main-stap02-1,stap,회원가입 감사 메시지 발송,"{고객명} 고객님, 회원가입 축하드립니다! 앞으로 고객님께 특별한 혜택과 할인 정보를 제공해드리겠습니다. 첫 구매 시 추가 할인 혜택도 놓치지 마세요! 즐거운 쇼핑 되세요!!",회원가입 감사 메시지 발송,2030
 main,main-stap03-1,stap,회원가입 감사 메시지 발송,"안녕하세요 {고객명}님, 회원가입 해주셔서 감사드립니다. 이용에 불편함이 없도록 항상 최선을 다하겠습니다. 감사합니다.",회원가입 감사 메시지 발송,2030
@@ -1048,32 +1109,106 @@ main,main-ste02-2,ste,성별 Best 상품 추천,고객님을 위한 특별한 �
 main,main-ste03-2,ste,성별 Best 상품 추천,인기 급상승! 고객님을 위해 {best_gender_items} 상품 추천드려요!,성별 Best 상품 추천,5060
 main,main-ste04-2,ste,성별 Best 상품 추천,고객님과 어울릴만한 상품 궁금하지 않으신가요? 지금 바로 만나보세요!\n상품명: {best_gender_items},성별 Best 상품 추천,5060
 main,main-ste05-2,ste,성별 Best 상품 추천,고객님께 딱 맞는 베스트 아이템을 추천해드려요!!\n상품명: {best_gender_items},성별 Best 상품 추천,5060
-main,main-stf01-2,stf,첫 구매 Best 상품 추천,첫 구매 고객님들께 가장 많이 사랑받는 {first_best_items} 상품을 추천해드립니다!,첫 구매 Best 상품 추천,5060
-main,main-stf02-2,stf,첫 구매 Best 상품 추천,처음 방문하신 고객님들을 위한 베스트셀러 {first_best_items} 상품을 소개합니다!,첫 구매 Best 상품 추천,5060
-main,main-stf03-2,stf,첫 구매 Best 상품 추천,우리 쇼핑몰에서 첫 구매하시는 분들이 가장 많이 선택한 {first_best_items} 상품을 만나보세요!,첫 구매 Best 상품 추천,5060
-main,main-stf04-2,stf,첫 구매 Best 상품 추천,새로운 고객들에게 가장 많은 사랑을 받는 아이템이 궁금하지 않으세요? 첫 구매 베스트 아이템을 지금 바로 만나보세요!\n상품명: {first_best_items},첫 구매 Best 상품 추천,5060
-main,main-stf05-2,stf,첫 구매 Best 상품 추천,신규 고객님들이 가장 많이 구매한 {first_best_items} 상품을 확인해보세요!,첫 구매 Best 상품 추천,5060
-main,main-stf06-2,stf,첫 구매 Best 상품 추천,구매를 고민하는 고객님을 위해 첫 구매 고객님들에게 가장 많은 사랑을 받는 상품을 추천해드려요!\n상품명: {first_best_items},첫 구매 Best 상품 추천,5060
-main,main-stf07-2,stf,첫 구매 Best 상품 추천,첫 구매의 대명사인 {first_best_items} 상품을 추천드려요!,첫 구매 Best 상품 추천,2030
-main,main-stst01-2,stst,스테디셀러 상품 추천,꾸준히 사랑받는 스테디셀러 {steady_items} 상품을 추천드립니다!,스테디셀러 상품 추천,5060
-main,main-stst02-2,stst,스테디셀러 상품 추천,구매를 고민하는 고객님을 위해 가장 꾸준히 사랑받고 있는 {steady_items} 상품을 추천해드려요!,스테디셀러 상품 추천,5060
-main,main-stst03-2,stst,스테디셀러 상품 추천,고객님을 위한 가장 트렌디하고 인기 있는 아이템을 소개드립니다! 지금 상품을 만나보세요!\n상품명: {steady_items},스테디셀러 상품 추천,5060
-main,main-stst04-2,stst,스테디셀러 상품 추천,스테디셀러 상품 선정! {steady_items} 상품을 추천해드려요!,스테디셀러 상품 추천,5060
-main,main-stst05-2,stst,스테디셀러 상품 추천,가장 꾸준하게 사랑받고 있는 아이템 궁금하지 않으세요? 스테디셀러 바로 만나보세요!\n상품명: {steady_items},스테디셀러 상품 추천,5060
-main,main-stcr01-2,stcr,Next구매 확률 높은 상품 추천,이전에 구매하신 상품과 함께 구매하면 더 좋은 {best_cross_items} 상품을 추천드려요!,Next구매 확률 높은 상품 추천,5060
-main,main-stcr02-2,stcr,Next구매 확률 높은 상품 추천,구매하신 상품과 찰떡궁합! {best_cross_items} 상품을 만나보세요!,Next구매 확률 높은 상품 추천,5060
-main,main-stcr03-2,stcr,Next구매 확률 높은 상품 추천,이전에 구매하셨던 상품을 구매한 고객님들이 함께 구매하는 인기 {best_cross_items} 상품을 소개합니다!,Next구매 확률 높은 상품 추천,5060
-main,main-stcr04-2,stcr,Next구매 확률 높은 상품 추천,이전에 구매하신 상품과 어울리는 추천 상품을 지금 확인해보세요!\n상품명: {best_cross_items},Next구매 확률 높은 상품 추천,5060
-main,main-stcr05-2,stcr,Next구매 확률 높은 상품 추천,더 나은 쇼핑 경험을 위한 {best_cross_items} 상품을 추천드립니다!,Next구매 확률 높은 상품 추천,5060
-main,main-stcr06-2,stcr,Next구매 확률 높은 상품 추천,이전에 구매하신 상품과 함께 구매하면 완벽한 {best_cross_items} 상품을 추천해드립니다!,Next구매 확률 높은 상품 추천,5060
-main,main-stcr07-2,stcr,Next구매 확률 높은 상품 추천,이전 구매 상품과 완벽하게 어울리는 {best_cross_items} 아이템을 만나보세요!,Next구매 확률 높은 상품 추천,5060
-main,main-stcr08-2,stcr,Next구매 확률 높은 상품 추천,고객님들이 함께 많이 사는 {best_cross_items} 상품을 소개해드립니다!,Next구매 확률 높은 상품 추천,5060
-main,main-stcr09-2,stcr,Next구매 확률 높은 상품 추천,구하신 상품과 최고의 조합! {best_cross_items} 상품을 추천합니다!,Next구매 확률 높은 상품 추천,5060
-main,main-stn01-2,stn,신상품 추천,고객님을 위한 신상 추천! 가장 핫한 트렌드를 담은 새로운 상품을 지금 확인해보세요. 최신 패션과 라이프스타일을 경험해보세요!\n상품명: {best_new_items},신상품 추천,5060
-main,main-stn02-2,stn,신상품 추천,새롭게 출시된 신상품을 소개드려요!\n상품명: {best_new_items},신상품 추천,5060
-main,main-stn03-2,stn,신상품 추천,따끈따끈한 신상품을 확인해보세요!\n상품명: {best_new_items},신상품 추천,5060
-main,main-stn04-2,stn,신상품 추천,새로운 시즌을 맞아 준비한 신상품 출시! 지금 바로 확인해보세요!\n상품명: {best_new_items},신상품 추천,5060
-main,main-stn05-2,stn,신상품 추천,고객님 혹시 신상품이 궁금하지 않으신가요? 새롭게 출시된 상품을 소개드려요!\n상품명: {best_new_items},신상품 추천,5060
+main,main-stf01-2,stf,첫 구매 Best 상품 추천,"첫 구매 고객님들께 가장 많이 찾는 제품! 나의 메이크업에도 적용해보세요!
+
+상품명: {first_best_items}
+바로가기: {first_best_items_link}",첫 구매 Best 상품 추천,5060
+main,main-stf02-2,stf,첫 구매 Best 상품 추천,"처음이라 망설이시고 계신 고객님들을 위한 베스트셀러 상품을 소개합니다!
+
+상품명: {first_best_items}
+바로가기: {first_best_items_link}",첫 구매 Best 상품 추천,5060
+main,main-stf03-2,stf,첫 구매 Best 상품 추천,"첫 구매로 가장 많이 찾아주시는 아이템을 만나보세요!
+
+상품명: {first_best_items}
+바로가기: {first_best_items_link}",첫 구매 Best 상품 추천,5060
+main,main-stf04-2,stf,"첫 구매 Best 상품 추천,새로운 고객들에게 가장 많은 사랑을 받는 아이템이 궁금하지 않으세요? 첫 구매 베스트 아이템을 지금 바로 만나보세요!
+
+상품명: {first_best_items}
+바로가기: {first_best_items_link}",첫 구매 Best 상품 추천,5060
+main,main-stf05-2,stf,첫 구매 Best 상품 추천,"신규 고객님들이 가장 많이 구매한 상품을 확인해보세요!
+
+상품명: {first_best_items}
+바로가기: {first_best_items_link}",첫 구매 Best 상품 추천,5060
+main,main-stf06-2,stf,첫 구매 Best 상품 추천,"구매를 고민하는 고객님을 위해 첫 구매 고객님들에게 가장 많은 사랑을 받는 상품을 추천해드려요!
+
+상품명: {first_best_items}
+바로가기: {first_best_items_link}",첫 구매 Best 상품 추천,5060
+main,main-stst01-2,stst,스테디셀러 상품 추천,"꾸준히 사랑받는 스테디셀러 상품을 추천드립니다!
+
+상품명: {steady_items}
+바로가기: {steady_items_link}",스테디셀러 상품 추천,5060
+main,main-stst02-2,stst,스테디셀러 상품 추천,"구매를 고민하는 고객님을 위해 가장 꾸준히 사랑받고 있는 상품을 추천해드려요!
+
+상품명: {steady_items}
+바로가기: {steady_items_link}",스테디셀러 상품 추천,5060
+main,main-stst03-2,stst,스테디셀러 상품 추천,"고객님을 위한 가장 트렌디하고 인기 있는 아이템을 소개드립니다! 지금 상품을 만나보세요!
+
+상품명: {steady_items}
+바로가기: {steady_items_link}",스테디셀러 상품 추천,5060
+main,main-stst04-2,stst,스테디셀러 상품 추천,"고객님에게 꾸준하게 사랑받는 스테디셀러 상품을 추천해드려요!
+
+상품명: {steady_items}
+바로가기: {steady_items_link}",스테디셀러 상품 추천,5060
+main,main-stst05-2,stst,스테디셀러 상품 추천,"가장 꾸준하게 사랑받고 있는 아이템 궁금하지 않으세요? 스테디셀러 바로 만나보세요!
+
+상품명: {steady_items}
+바로가기: {steady_items_link}",스테디셀러 상품 추천,5060
+main,main-stcr01-2,stcr,Next구매 확률 높은 상품 추천,"이전에 구매하신 제품과 함께 믹스하기 좋은 아이템을 추천드려요!
+
+상품명: {best_cross_items}
+바로가기: {best_cross_items_link}",Next구매 확률 높은 상품 추천,5060
+main,main-stcr02-2,stcr,Next구매 확률 높은 상품 추천,"구매하신 상품과 찰떡궁합! 다양한 믹스매치로 나만의 컬러를 완성해보세요!
+
+상품명: {best_cross_items}
+바로가기: {best_cross_items_link}",Next구매 확률 높은 상품 추천,5060
+main,main-stcr03-2,stcr,Next구매 확률 높은 상품 추천,"이전에 구매하셨던 제품을 구매한 고객님들이 함께 구매하는 인기 아이템을 소개합니다!
+
+상품명: {best_cross_items}
+바로가기: {best_cross_items_link}",Next구매 확률 높은 상품 추천,5060
+main,main-stcr04-2,stcr,Next구매 확률 높은 상품 추천,"이전에 구매하신 상품과 어울리는 추천 상품을 지금 확인해보세요!
+
+상품명: {best_cross_items}
+바로가기: {best_cross_items_link}",Next구매 확률 높은 상품 추천,5060
+main,main-stcr05-2,stcr,Next구매 확률 높은 상품 추천,"더 나은 메이크업 경험을 위한 아이템을 추천드립니다!
+
+상품명: {best_cross_items}
+바로가기: {best_cross_items_link}",Next구매 확률 높은 상품 추천,5060
+main,main-stcr06-2,stcr,Next구매 확률 높은 상품 추천,"이전에 구매하신 상품과 함께 구매하면 완벽한 아이템을 추천해드립니다!
+
+상품명: {best_cross_items}
+바로가기: {best_cross_items_link}",Next구매 확률 높은 상품 추천,5060
+main,main-stcr07-2,stcr,Next구매 확률 높은 상품 추천,"이전 구매 상품과 완벽하게 어울리는 아이템을 만나보세요!
+
+상품명: {best_cross_items}
+바로가기: {best_cross_items_link}",Next구매 확률 높은 상품 추천,5060
+main,main-stcr08-2,stcr,Next구매 확률 높은 상품 추천,"고객님들이 함께 많이 찾아주시는 아이템을 소개해드립니다!
+
+상품명: {best_cross_items}
+바로가기: {best_cross_items_link}",Next구매 확률 높은 상품 추천,5060
+main,main-stcr09-2,stcr,Next구매 확률 높은 상품 추천,"구매하신 상품과 최고의 조합! 이런 아이템은 어떠세요?
+
+상품명: {best_cross_items}
+바로가기: {best_cross_items_link}",Next구매 확률 높은 상품 추천,5060
+main,main-stn01-2,stn,신상품 추천,"고객님을 위한 신상 추천! 가장 핫한 트렌드를 담은 아이템으로 나만의 메이크업과 퍼스널 컬러를 찾아보세요!
+
+상품명: {best_new_items}
+바로가기: {best_new_items_link}",신상품 추천,5060
+main,main-stn02-2,stn,신상품 추천,"새롭게 출시된 신상품을 소개드려요!
+
+상품명: {best_new_items}
+바로가기: {best_new_items_link}",신상품 추천,5060
+main,main-stn03-2,stn,신상품 추천,"따끈따끈한 신상품을 확인해보세요!
+
+상품명: {best_new_items}
+바로가기: {best_new_items_link}",신상품 추천,5060
+main,main-stn04-2,stn,신상품 추천,"새로운 시즌을 맞아 준비한 신상품 출시! 지금 바로 확인해보세요!
+
+상품명: {best_new_items}
+바로가기: {best_new_items_link}",신상품 추천,5060
+main,main-stn05-2,stn,신상품 추천,"고객님 혹시 신상품이 궁금하지 않으신가요? 새롭게 출시된 상품을 소개드려요!
+
+상품명: {best_new_items}
+바로가기: {best_new_items_link}",신상품 추천,5060
 main,main-stca01-2,stca,장바구니 상품 추천,"고객님이 장바구니에 담아놓은 {item_name}, 지금 바로 구매해보세요!",장바구니 상품 추천,5060
 main,main-stca02-2,stca,장바구니 상품 추천,"장바구니에 담아둔 {item_name}, 놓치지 마세요!",장바구니 상품 추천,5060
 main,main-stca03-2,stca,장바구니 상품 추천,"고객님께서 담아놓으신 {item_name}, 지금 아니면 구매하기 어려울 수 있어요!",장바구니 상품 추천,5060
@@ -1085,16 +1220,46 @@ main,main-stwi03-2,stwi,위시리스트 상품 추천,"고객님께서 찜해놓
 main,main-stwi04-2,stwi,위시리스트 상품 추천,"고객님이 찜해놓은 {item_name} 상품, 잊지말아요~!",위시리스트 상품 추천,5060
 main,main-stwi05-2,stwi,위시리스트 상품 추천,품절 임박! 고객님께서 위시리스트에 찜해놓은 {item_name} 상품 놓치지 마세요!,위시리스트 상품 추천,5060
 main,main-stwi06-2,stwi,위시리스트 상품 추천,"고객님이 선택한 {item_name}, 까먹으신 거 아니죠?! 지금 바로 확인하세요~!",위시리스트 상품 추천,5060
-main,main-stwb01-2,stwb,선호 카테고리 Best 상품 추천,"고객님의 취향을 고려한 상품 궁금하지 않으세요? 선호 카테고리 기반으로한 {best_category_items} 상품 추천드려요!",선호 카테고리 Best 상품 추천,5060
-main,main-stwb02-2,stwb,선호 카테고리 Best 상품 추천,"고객님의 관심 카테고리에서 추천드리는 {best_category_items} 상품, 지금 바로 만나보세요!",선호 카테고리 Best 상품 추천,5060
-main,main-stwb03-2,stwb,선호 카테고리 Best 상품 추천,"고객님의 취향저격! {best_category_items} 상품 바로 확인해보세요!",선호 카테고리 Best 상품 추천,5060
-main,main-stwb04-2,stwb,선호 카테고리 Best 상품 추천,"선호 카테고리의 {best_category_items}, 지금이 구매할 완벽한 타이밍입니다!",선호 카테고리 Best 상품 추천,5060
-main,main-stwb05-2,stwb,선호 카테고리 Best 상품 추천,"고객님의 관심 카테고리에서 추천드리는 {best_category_items} 상품, 지금 바로 만나보세요!",선호 카테고리 Best 상품 추천,5060
-main,main-stsb01-2,stsb,최대 할인 상품 추천,"최대 할인 혜택! 지금 가장 큰 할인율을 자랑하는 {best_promo_items} 상품을 추천드려요!",최대 할인 상품 추천,5060
-main,main-stsb02-2,stsb,최대 할인 상품 추천,"최대 할인 혜택! {best_promo_items} 상품 놓치지 마세요~!",최대 할인 상품 추천,5060
-main,main-stsb03-2,stsb,최대 할인 상품 추천,"단 3일! 구매를 고민하는 고객님을 위해 {best_promo_items} 상품 주말 특가를 소개해드려요",최대 할인 상품 추천,5060
-main,main-stsb04-2,stsb,최대 할인 상품 추천,"고객님 최대 할인 상품이 궁금하지 않으신가요? {best_promo_items} 상품 지금 바로 만나보세요!",최대 할인 상품 추천,5060
-main,main-stsb05-2,stsb,최대 할인 상품 추천,"최대 할인 상품 추천! 고객님을 위한 스페셜 할인 혜택! 최대 할인 상품인 {best_promo_items} 상품 지금 확인해보세요!",최대 할인 상품 추천,5060
+main,main-stwb01-2,stwb,선호 카테고리 Best 상품 추천,"고객님의 취향을 고려한 상품 궁금하지 않으세요? 선호 카테고리 기반으로한 아이템을 추천드려요!
+
+상품명: {best_category_items}
+바로가기: {best_category_items_link}",선호 카테고리 Best 상품 추천,5060
+main,main-stwb02-2,stwb,선호 카테고리 Best 상품 추천,"고객님의 관심 카테고리에서 추천드리는 아이템, 지금 바로 만나보세요!
+
+상품명: {best_category_items}
+바로가기: {best_category_items_link}",선호 카테고리 Best 상품 추천,5060
+main,main-stwb03-2,stwb,선호 카테고리 Best 상품 추천,"고객님의 취향저격! 바로 확인해보세요!
+
+상품명: {best_category_items}
+바로가기: {best_category_items_link}",선호 카테고리 Best 상품 추천,5060
+main,main-stwb04-2,stwb,선호 카테고리 Best 상품 추천,"고객님의 취향에 어울리는 아이템, 지금 한번 확인해보세요!
+
+상품명: {best_category_items}
+바로가기: {best_category_items_link}",선호 카테고리 Best 상품 추천,5060
+main,main-stwb05-2,stwb,선호 카테고리 Best 상품 추천,"고객님에게 어울릴만한 아이템, 지금 바로 만나보세요!
+
+상품명: {best_category_items}
+바로가기: {best_category_items_link}",선호 카테고리 Best 상품 추천,5060
+main,main-stsb01-2,stsb,최대 할인 상품 추천,"프로모션 진행중! 지금 계절에 맞는 메이크업을 고민 중이라면 이런 아이템은 어떠세요?
+
+상품명: {best_promo_items}
+바로가기: {best_promo_items_link}",최대 할인 상품 추천,5060
+main,main-stsb02-2,stsb,최대 할인 상품 추천,"혜택가 제공! 지금 타이밍을 놓치지 마세요~!
+
+상품명: {best_promo_items}
+바로가기: {best_promo_items_link}",최대 할인 상품 추천,5060
+main,main-stsb03-2,stsb,최대 할인 상품 추천,"혜택가를 지금 만나보세요! 구매를 고민하는 고객님을 위해 어울릴만한 아이템을 제안해드려요.
+
+상품명: {best_promo_items}
+바로가기: {best_promo_items_link}",최대 할인 상품 추천,5060
+main,main-stsb04-2,stsb,최대 할인 상품 추천,"고객님 평소 관심만 가지고 계시던 상품이 있지 않나요? 지금 바로 혜택가로 만나보세요!
+
+상품명: {best_promo_items}
+바로가기: {best_promo_items_link}",최대 할인 상품 추천,5060
+main,main-stsb05-2,stsb,최대 할인 상품 추천,"프로모션 진행 중! 나에게 어울리는 메이크업 아이템을 확인해보세요!
+
+상품명: {best_promo_items}
+바로가기: {best_promo_items_link}",최대 할인 상품 추천,5060
 main,main-stap01-2,stap,회원가입 감사 메시지 발송,"{고객명} 고객님, 회원가입 감사드립니다! 앞으로 많은 관심과 사랑 부탁드립니다!",회원가입 감사 메시지 발송,5060
 main,main-stap02-2,stap,회원가입 감사 메시지 발송,"{고객명} 고객님, 회원가입 축하드립니다! 앞으로 고객님께 특별한 혜택과 할인 정보를 제공해드리겠습니다. 첫 구매 시 추가 할인 혜택도 놓치지 마세요! 즐거운 쇼핑 되세요!!",회원가입 감사 메시지 발송,5060
 main,main-stap03-2,stap,회원가입 감사 메시지 발송,"안녕하세요 {고객명}님, 회원가입 해주셔서 감사드립니다. 이용에 불편함이 없도록 항상 최선을 다하겠습니다. 감사합니다.",회원가입 감사 메시지 발송,5060

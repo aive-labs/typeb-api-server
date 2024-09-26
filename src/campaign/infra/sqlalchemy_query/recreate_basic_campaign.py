@@ -232,6 +232,7 @@ def check_customer_data_consistency(campaign_set_df):
         raise PolicyException(
             detail={"code": "campaign/set/create", "message": "대상 고객이 존재하지 않습니다."},
         )
+
     # 한개의 cus_cd가 두개이상의 set_sort_num을 가지는 경우를 확인하고 에러 표시
     if len(campaign_set_df["cus_cd"].unique()) != len(campaign_set_df):
         raise PolicyException(
@@ -242,7 +243,7 @@ def check_customer_data_consistency(campaign_set_df):
 def exclude_customers_from_exclusion_audiences(audiences_exc, campaign_set_df, db):
     exc_aud_query = get_customers_by_audience_id(audiences_exc, db)
     exc_aud_df = DataConverter.convert_query_to_df(exc_aud_query)
-    exc_aud_df = exc_aud_df.drop(columns=["audience_id", "age_group_10"])
+    exc_aud_df = exc_aud_df.drop(columns=["audience_id"])
     exc_aud_df = exc_aud_df.drop_duplicates("cus_cd")
     campaign_set_df = pd.merge(campaign_set_df, exc_aud_df, on="cus_cd", how="left", indicator=True)
     campaign_set_df = campaign_set_df[campaign_set_df["_merge"] == "left_only"].drop(

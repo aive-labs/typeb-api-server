@@ -306,9 +306,13 @@ class CampaignManager:
 
         # audience 추출
         audience_ids = self.campaign_set_df["audience_id"].unique().tolist()
+        print("audience_ids")
+        print(audience_ids)
 
         # 고객 목록 호출
         recommend_models = self.campaign_set_df["recsys_model_id"].unique().tolist()
+        print("recommend_models")
+        print(recommend_models)
         cust_audiences = get_customers_for_expert_campaign(audience_ids, recommend_models, self.db)
         cust_audiences_df = DataConverter.convert_query_to_df(cust_audiences)
 
@@ -329,9 +333,9 @@ class CampaignManager:
             )
 
         if audiences_exc:
-            exc_aud_query = get_customers_by_audience_id(self.db, audiences_exc)
+            exc_aud_query = get_customers_by_audience_id(audiences_exc, self.db)
             exc_aud_df = DataConverter.convert_query_to_df(exc_aud_query)
-            exc_aud_df = exc_aud_df.drop(columns=["audience_id", "age_group_10"])
+            exc_aud_df = exc_aud_df.drop(columns=["audience_id"])
             exc_aud_df = exc_aud_df.drop_duplicates("cus_cd")
             cust_audiences_df = pd.merge(
                 cust_audiences_df, exc_aud_df, on="cus_cd", how="left", indicator=True
@@ -354,12 +358,6 @@ class CampaignManager:
                     "code": "campaign/set/create",
                     "message": "대상 고객이 존재하지 않습니다.",
                 },
-            )
-
-        # 한개의 cus_cd가 두개이상의 set_sort_num을 가지는 경우를 확인하고 에러 표시
-        if len(cust_audiences_df["cus_cd"].unique()) != len(cust_audiences_df):
-            raise PolicyException(
-                detail={"code": "campaign/set/create", "message": "중복된 고객이 존재합니다."},
             )
 
         ## 기본 캠페인 및 그룹별 분배 (케이스 1)

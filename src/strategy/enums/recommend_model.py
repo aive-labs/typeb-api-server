@@ -2,6 +2,7 @@ from src.common.enums.str_enum import StrEnum
 
 
 class RecommendModels(StrEnum):
+    NO_RECOMMEND = (0, 0, "추천없음", False, None)
     BIRTHDAY_DISCOUNT_COUPON = (1, 1, "생일자 할인 쿠폰 제공", False, None)
     COUPON_EXPIRATION_REMINDER = (2, 2, "쿠폰 소멸 임박 알림", False, None)
     CART_REMINDER = (3, 3, "장바구니 리마인드", False, None)

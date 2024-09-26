@@ -70,3 +70,7 @@ class BaseStrategyRepository(ABC):
     @abstractmethod
     def get_tags_search(self, strategy_theme_id, db: Session) -> tuple:
         pass
+
+    @abstractmethod
+    def get_recsys_id_by_strategy_theme_by_id(self, strategy_theme_id, db: Session) -> int | None:
+        pass

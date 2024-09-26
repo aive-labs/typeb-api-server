@@ -145,3 +145,9 @@ class OnboardingSqlAlchemyRepository:
             return None
 
         return entity.kakao_sender_key
+
+    def get_opt_out_phone_number(self, user, db) -> str | None:
+        entity = db.query(MessageIntegrationEntity).first()
+        if not entity:
+            return None
+        return entity.opt_out_phone_number

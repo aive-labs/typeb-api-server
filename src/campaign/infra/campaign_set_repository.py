@@ -198,7 +198,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
 
         # cust_campaign_object : 고객 audience_ids
         customer_query = get_customers_for_expert_campaign(audience_ids, recsys_model_ids, db)
-        # columns: [cus_cd, audience_id, ltv_frequency, age_group_10]
+        # columns: [cus_cd, audience_id, ltv_frequency]
         cust_audiences_df = DataConverter.convert_query_to_df(customer_query)
 
         # audience_id 특정 조건(반응률 등)에 따라 순위 생성
@@ -367,6 +367,21 @@ class CampaignSetRepository(BaseCampaignSetRepository):
                 detail={"code": "campaign/set/create", "message": "대상 고객이 존재하지 않습니다."}
             )
         # 한개의 cus_cd가 두개이상의 set_sort_num을 가지는 경우를 확인하고 에러 표시
+
+        print("validate_campaign_set_df")
+        print(len(campaign_set_df["cus_cd"].unique()))
+        print(len(campaign_set_df))
+        # cus_cd로 그룹화하고 각 그룹의 개수를 계산한 후, 카운트 기준으로 내림차순 정렬
+        grouped_count = (
+            campaign_set_df.groupby("cus_cd")
+            .size()
+            .reset_index(name="count")
+            .sort_values(by="count", ascending=False)
+        )
+
+        # 결과 출력
+        print(grouped_count)
+
         if len(campaign_set_df["cus_cd"].unique()) != len(campaign_set_df):
             raise ValidationException(
                 detail={"code": "campaign/set/create", "message": "중복된 고객이 존재합니다."}
@@ -390,7 +405,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
         if audiences_exc:
             exc_aud_query = get_customers_by_audience_id(audiences_exc, db)
             exc_aud_df = DataConverter.convert_query_to_df(exc_aud_query)
-            exc_aud_df = exc_aud_df.drop(columns=["audience_id", "age_group_10"])
+            exc_aud_df = exc_aud_df.drop(columns=["audience_id"])
             exc_aud_df = exc_aud_df.drop_duplicates("cus_cd")
             campaign_set_df = pd.merge(
                 campaign_set_df, exc_aud_df, on="cus_cd", how="left", indicator=True

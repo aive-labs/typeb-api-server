@@ -444,6 +444,7 @@ class Container(containers.DeclarativeContainer):
         provides=UpdateCampaignSetService,
         campaign_repository=campaign_repository,
         campaign_set_repository=campaign_set_repository,
+        strategy_repository=strategy_repository,
     )
 
     update_campaign_set_message_group_service = providers.Singleton(

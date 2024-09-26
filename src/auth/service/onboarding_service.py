@@ -10,6 +10,9 @@ from src.auth.routes.port.base_onboarding_service import BaseOnboardingService
 from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
 from src.core.exceptions.exceptions import ValidationException
 from src.core.transactional import transactional
+from src.message_template.routes.dto.response.opt_out_phone_number_response import (
+    OptOutPhoneNumberResponse,
+)
 from src.users.domain.user import User
 
 
@@ -100,3 +103,7 @@ class OnboardingService(BaseOnboardingService):
     ) -> OnboardingResponse:
         onboarding = self.onboarding_repository.update_onboarding_status(mall_id, status, db)
         return OnboardingResponse(onboarding_status=onboarding.onboarding_status)
+
+    def get_opt_out_phone_number(self, user: User, db: Session) -> OptOutPhoneNumberResponse:
+        opt_out_phone_number = self.onboarding_repository.get_opt_out_phone_number(user, db)
+        return OptOutPhoneNumberResponse(opt_out_phone_number=opt_out_phone_number)

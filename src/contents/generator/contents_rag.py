@@ -38,7 +38,7 @@ class StreamingConversationChain:
             openai_api_key=self.openai_api_key
         )  # pyright: ignore [reportCallIssue]
 
-        prd_loader = CSVLoader(file_path="src/contents/resources/arte_down.csv")
+        prd_loader = CSVLoader(file_path="src/contents/resources/ascc_product.csv")
         prd = prd_loader.load()
 
         prd_texts = self.text_splitter.split_documents(prd)

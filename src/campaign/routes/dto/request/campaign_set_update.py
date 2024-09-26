@@ -34,6 +34,9 @@ class CampaignSetUpdateDetail(BaseModel):
 
         return values
 
+    def set_recommend_model_id(self, recommend_model_id: int | None):
+        self.recsys_model_id = recommend_model_id
+
 
 class CampaignSetUpdate(BaseModel):
     set_list: list[CampaignSetUpdateDetail] | None = None

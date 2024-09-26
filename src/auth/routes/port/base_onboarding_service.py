@@ -9,6 +9,9 @@ from src.auth.routes.dto.response.kakao_channel_response import KakaoChannelResp
 from src.auth.routes.dto.response.message_sender_response import MessageSenderResponse
 from src.auth.routes.dto.response.onboarding_response import OnboardingResponse
 from src.core.transactional import transactional
+from src.message_template.routes.dto.response.opt_out_phone_number_response import (
+    OptOutPhoneNumberResponse,
+)
 from src.users.domain.user import User
 
 
@@ -60,4 +63,8 @@ class BaseOnboardingService(ABC):
     @transactional
     @abstractmethod
     def get_kakao_channel(self, mall_id: str, db: Session) -> KakaoChannelResponse | None:
+        pass
+
+    @abstractmethod
+    def get_opt_out_phone_number(self, user: User, db: Session) -> OptOutPhoneNumberResponse:
         pass

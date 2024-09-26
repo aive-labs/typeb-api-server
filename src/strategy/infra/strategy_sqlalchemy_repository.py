@@ -347,3 +347,15 @@ class StrategySqlAlchemy:
             raise NotFoundException(detail={"message": "전략테마를 찾을 수 없습니다."})
 
         return entity.contents_tags, entity.recsys_model_id
+
+    def get_recsys_id_by_strategy_theme_by_id(self, strategy_theme_id, db: Session) -> int | None:
+        entity = (
+            db.query(StrategyThemesEntity)
+            .filter(StrategyThemesEntity.strategy_theme_id == strategy_theme_id)
+            .first()
+        )
+
+        if entity is None:
+            return None
+
+        return entity.recsys_model_id

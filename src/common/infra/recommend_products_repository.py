@@ -20,11 +20,15 @@ class RecommendProductsRepository:
                 .all()
             )
         else:
-            result = db.query(
-                RecommendProductsModelEntity.recsys_model_id.label("id"),
-                RecommendProductsModelEntity.recsys_model_name.label("name"),
-                RecommendProductsModelEntity.description.label("description"),
-            ).all()
+            result = (
+                db.query(
+                    RecommendProductsModelEntity.recsys_model_id.label("id"),
+                    RecommendProductsModelEntity.recsys_model_name.label("name"),
+                    RecommendProductsModelEntity.description.label("description"),
+                )
+                .order_by(RecommendProductsModelEntity.recsys_model_id)
+                .all()
+            )
 
         return [
             IdWithItemDescription(id=data.id, name=data.name, description=data.description)
