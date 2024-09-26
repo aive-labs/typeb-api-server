@@ -1734,7 +1734,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         # 카드별로 그룹화 (header, message, img_url, img_link로 그룹화)
         grouped_cards = group.groupby(["header", "message", "img_url", "img_link"])
 
-        for (header, message, img_url, img_link), card_group in grouped_cards:
+        for (header, message, img_link, img_url), card_group in grouped_cards:
             buttons = []
             for _, row in card_group.iterrows():
                 # 버튼이 없으면 넣지 않는다.
