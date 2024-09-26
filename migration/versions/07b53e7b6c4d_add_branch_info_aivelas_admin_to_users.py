@@ -20,11 +20,11 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     op.add_column("users", sa.Column("brand_name_ko", sa.String(100)), schema="aivelabs_sv")
-    op.add_column("users", sa.Column("bran_name_en", sa.String(100)), schema="aivelabs_sv")
+    op.add_column("users", sa.Column("brand_name_en", sa.String(100)), schema="aivelabs_sv")
     op.add_column("users", sa.Column("is_aivelabs_admin", sa.Boolean), schema="aivelabs_sv")
 
 
 def downgrade() -> None:
     op.drop_column("users", "brand_name_ko", schema="aivelabs_sv")
-    op.drop_column("users", "bran_name_en", schema="aivelabs_sv")
+    op.drop_column("users", "brand_name_en", schema="aivelabs_sv")
     op.drop_column("users", "is_aivelabs_admin", schema="aivelabs_sv")
