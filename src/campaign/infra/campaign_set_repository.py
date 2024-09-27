@@ -887,6 +887,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
                 CampaignSetGroupsEntity.campaign_id,
                 CampaignSetGroupsEntity.set_sort_num,
                 CampaignSetGroupsEntity.group_sort_num,
+                KakaoCarouselCardEntity.carousel_sort_num,
                 KakaoCarouselMoreLinkEntity.url_mobile.label("tail_url_mobile"),
                 KakaoCarouselMoreLinkEntity.url_pc.label("tail_url_pc"),
                 KakaoCarouselCardEntity.message_body.label("header"),

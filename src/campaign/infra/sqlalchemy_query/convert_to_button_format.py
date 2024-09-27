@@ -216,7 +216,11 @@ def generate_kakao_carousel_json(send_rsv_format, carousel_df):
     # kko_json_button 컬럼을 위한 딕셔너리 생성
     kko_json_buttons = {}
     for group_seq, group in grouped:
-        kko_json = create_carousel_json(group)
+        # carousel_sort_num으로 오름차순 정렬
+        sorted_group = group.sort_values(by="carousel_sort_num")
+        sorted_group = sorted_group.drop(columns=["carousel_sort_num"])
+
+        kko_json = create_carousel_json(sorted_group)
         kko_json_buttons[group_seq] = kko_json
 
     # 2. 캐러셀 발송용 객체를 만들고 json으로 변환한다. 그리고 조인을 하면 될 것 같음.
