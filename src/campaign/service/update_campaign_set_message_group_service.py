@@ -75,6 +75,9 @@ from src.campaign.routes.port.update_campaign_set_message_group_usecase import (
 from src.campaign.service.authorization_checker import AuthorizationChecker
 from src.campaign.service.campaign_dependency_manager import CampaignDependencyManager
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
+from src.campaign.service.port.base_campaign_set_repository import (
+    BaseCampaignSetRepository,
+)
 from src.campaign.utils.utils import (
     split_dataframe_by_ratios,
     split_df_stratified_by_column,
@@ -93,13 +96,22 @@ from src.core.exceptions.exceptions import (
 from src.core.transactional import transactional
 from src.message_template.enums.kakao_button_type import KakaoButtonType
 from src.message_template.enums.message_type import MessageType
+from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
+from src.messages.service.port.base_message_repository import BaseMessageRepository
 from src.users.domain.user import User
 
 
 class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase):
 
-    def __init__(self, campaign_repository: BaseCampaignRepository):
+    def __init__(
+        self,
+        campaign_repository: BaseCampaignRepository,
+        campaign_set_repository: BaseCampaignSetRepository,
+        message_repository: BaseMessageRepository,
+    ):
         self.campaign_repository = campaign_repository
+        self.campaign_set_repository = campaign_set_repository
+        self.message_repository = message_repository
         self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
     @transactional
@@ -166,6 +178,8 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
         self.update_set_message_group(
             user_id, campaign_id, has_remind, set_seq, set_group_message_updated, db
         )
+
+        self.update_carousel_default_message(set_group_message_updated, user, db)
 
         return True
 
@@ -817,3 +831,31 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
                     setattr(button_item, k, v)
 
         return msg_obj
+
+    def update_carousel_default_message(
+        self, set_group_messages_updated: CampaignSetGroupUpdate, user: User, db: Session
+    ):
+        for message_updated in set_group_messages_updated.set_group_list:
+            if message_updated.msg_type != MessageType.KAKAO_CAROUSEL:
+                pass
+
+            set_group_messages = (
+                self.campaign_set_repository.get_campaign_set_group_messages_by_set_group_seq(
+                    message_updated.set_group_seq, db
+                )
+            )
+
+            for set_group_message in set_group_messages:
+                carousel_card_list = self.campaign_set_repository.get_carousel(
+                    set_group_message.set_group_msg_seq, db
+                )
+                if self.has_carousel_no_card(carousel_card_list):
+                    default_carousel_card = KakaoCarouselCard.get_default_card(
+                        set_group_message.set_group_msg_seq, user
+                    )
+                    self.message_repository.add_carousel_card_to_set_group_message(
+                        default_carousel_card, db
+                    )
+
+    def has_carousel_no_card(self, carousel_card_list):
+        return len(carousel_card_list) == 0

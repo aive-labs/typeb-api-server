@@ -168,3 +168,19 @@ class MessageRepository(BaseMessageRepository):
         )
 
         return max_sort_num + 1
+
+    def add_carousel_card_to_set_group_message(
+        self, default_carousel_card: KakaoCarouselCard, db: Session
+    ):
+        entity = KakaoCarouselCardEntity(
+            set_group_msg_seq=default_carousel_card.set_group_msg_seq,
+            carousel_sort_num=default_carousel_card.carousel_sort_num,
+            message_title=default_carousel_card.message_title,
+            message_body=default_carousel_card.message_body,
+            created_at=default_carousel_card.created_at,
+            created_by=default_carousel_card.created_by,
+            updated_at=default_carousel_card.updated_at,
+            updated_by=default_carousel_card.updated_by,
+        )
+        db.add(entity)
+        db.flush()

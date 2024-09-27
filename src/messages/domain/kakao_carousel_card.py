@@ -1,7 +1,9 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 
 from pydantic import BaseModel
+
+from src.users.domain.user import User
 
 
 class KakaoCarouselLinkButton(BaseModel):
@@ -45,3 +47,16 @@ class KakaoCarouselCard(BaseModel):
     def set_image_url(self, image_url, s3_image_path):
         self.image_url = image_url
         self.s3_image_path = s3_image_path
+
+    @staticmethod
+    def get_default_card(set_group_msg_seq, user: User):
+        return KakaoCarouselCard(
+            set_group_msg_seq=set_group_msg_seq,
+            carousel_sort_num=1,
+            message_title="메시지 제목",
+            message_body="메시지 본문",
+            created_at=datetime.now(timezone.utc),
+            created_by=str(user.user_id),
+            updated_at=datetime.now(timezone.utc),
+            updated_by=str(user.user_id),
+        )
