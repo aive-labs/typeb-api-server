@@ -180,6 +180,7 @@ class MessageRepository(BaseMessageRepository):
             image_url="",
             image_title="",
             image_link="",
+            s3_image_path="",
             created_at=default_carousel_card.created_at,
             created_by=default_carousel_card.created_by,
             updated_at=default_carousel_card.updated_at,
