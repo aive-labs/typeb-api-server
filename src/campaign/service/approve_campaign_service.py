@@ -1497,9 +1497,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 resource_df, on="set_group_msg_seq", how="left"
             )
 
-            print("send_rsv_format2")
-            print(send_rsv_format)
-
             # 파일이 없는 경우 nan -> 0
             send_rsv_format["send_filecount"] = send_rsv_format["send_filecount"].fillna(0)
 

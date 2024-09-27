@@ -216,12 +216,11 @@ def generate_kakao_carousel_json(send_rsv_format, carousel_df):
     # kko_json_button 컬럼을 위한 딕셔너리 생성
     kko_json_buttons = {}
     for group_seq, group in grouped:
-        # carousel_sort_num으로 오름차순 정렬
-        sorted_group = group.sort_values(by="carousel_sort_num")
-        sorted_group = sorted_group.drop(columns=["carousel_sort_num"])
-
-        kko_json = create_carousel_json(sorted_group)
+        kko_json = create_carousel_json(group)
         kko_json_buttons[group_seq] = kko_json
+
+    print("kko_json_buttons")
+    print(kko_json_buttons)
 
     # 2. 캐러셀 발송용 객체를 만들고 json으로 변환한다. 그리고 조인을 하면 될 것 같음.
     kko_json_df = pd.DataFrame(
@@ -230,9 +229,6 @@ def generate_kakao_carousel_json(send_rsv_format, carousel_df):
             "kko_button_json": list(kko_json_buttons.values()),
         }
     )
-
-    print("carousel_kko_json_df")
-    print(kko_json_df["kko_button_json"])
 
     # 3. send_rsv_format과 조인
     # 2에서 만든 테이블과 send_rsv_format 테이블을 조인한다.
@@ -246,8 +242,11 @@ def create_carousel_json(group):
 
     # 카드별로 그룹화 (header, message, img_url, img_link로 그룹화)
     grouped_cards = group.groupby(["header", "message", "img_url", "img_link"])
-
     for (header, message, img_link, img_url), card_group in grouped_cards:
+        print(f"header: {header}")
+        print(f"message: {message}")
+        print(f'carousel_sort_num: {card_group["carousel_sort_num"].iloc[0]}')
+
         buttons = []
         for _, row in card_group.iterrows():
             # 버튼이 없으면 넣지 않는다.
@@ -262,6 +261,7 @@ def create_carousel_json(group):
 
         carousel_items.append(carousel_item)
 
+    carousel_items.reverse()
     carousel = Carousel(list=carousel_items)
     more_link = extract_carousel_more_link(group)
     if more_link:
@@ -269,8 +269,6 @@ def create_carousel_json(group):
 
     send_kakao_carousel = SendKakaoCarousel(carousel=carousel)
 
-    print("json.dumps(carousel.model_dump())")
-    print(json.dumps(send_kakao_carousel.model_dump()))
     return json.dumps(send_kakao_carousel.model_dump(), ensure_ascii=False)
 
 
