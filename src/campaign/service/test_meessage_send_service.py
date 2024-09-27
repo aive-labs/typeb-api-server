@@ -148,6 +148,7 @@ class TestMessageSendService(TestSendMessageUseCase):
         carousel_query = self.campaign_set_repository.get_carousel_info(msg_seq_list, db)
         carousel_df = DataConverter.convert_query_to_df(carousel_query)
         carousel_df_with_kko_json = generate_kakao_carousel_json(test_send_rsv_format, carousel_df)
+
         # 두 개의 데이터프레임 통합
         kakao_button_df = pd.concat(
             [button_df_with_kko_json, carousel_df_with_kko_json], ignore_index=True
@@ -156,17 +157,6 @@ class TestMessageSendService(TestSendMessageUseCase):
         test_send_rsv_format = test_send_rsv_format.merge(
             kakao_button_df, on=group_keys, how="left"  # pyright: ignore [reportArgumentType]
         )
-
-        print("test_send_rsv_format.columns")
-        print(test_send_rsv_format.columns)
-
-        notnullbtn = test_send_rsv_format[test_send_rsv_format["kko_button_json"].notnull()]
-        isnullbtn = test_send_rsv_format[test_send_rsv_format["kko_button_json"].isnull()]
-        notnullbtn = notnullbtn[
-            ~notnullbtn["kko_button_json"].str.contains("{{")
-        ]  # 포매팅이 안되어 있는 메세지는 제외한다.
-
-        test_send_rsv_format = pd.concat([notnullbtn, isnullbtn])
 
         print("button 개인화 적용 후 row수 :" + str(len(test_send_rsv_format)))
         logging.info("3.[Test] button 개인화 적용 후 row수 :" + str(len(test_send_rsv_format)))

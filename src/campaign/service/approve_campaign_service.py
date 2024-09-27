@@ -1458,9 +1458,11 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 )
                 # keys = ["campaign_id", "set_sort_num", "group_sort_num", "set_group_msg_seq"]
                 carousel_df = DataConverter.convert_query_to_df(carousel_query)
+
                 carousel_df_with_kko_json = generate_kakao_carousel_json(
                     send_rsv_format, carousel_df
                 )
+
                 # 두 개의 데이터프레임 통합
                 kakao_button_df = pd.concat(
                     [button_df_with_kko_json, carousel_df_with_kko_json], ignore_index=True
@@ -1481,15 +1483,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             del send_rsv_format["contents_name"]
             del send_rsv_format["contents_url"]
 
-            notnullbtn = send_rsv_format[send_rsv_format["kko_button_json"].notnull()]
-            isnullbtn = send_rsv_format[send_rsv_format["kko_button_json"].isnull()]
-            notnullbtn = notnullbtn[
-                ~notnullbtn["kko_button_json"].str.contains("{{")
-            ]  # 포매팅이 안되어 있는 메세지는 제외한다.
-            send_rsv_format = pd.concat(  # pyright: ignore [reportCallIssue]
-                [notnullbtn, isnullbtn]  # pyright: ignore [reportArgumentType]
-            )
-
             logging.info("9. button 개인화 적용 후 row수 :" + str(len(send_rsv_format)))
             send_rsv_format = send_rsv.merge(send_rsv_format, on=group_keys, how="left")
 
@@ -1503,6 +1496,9 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             send_rsv_format: pd.DataFrame = send_rsv_format.merge(
                 resource_df, on="set_group_msg_seq", how="left"
             )
+
+            print("send_rsv_format2")
+            print(send_rsv_format)
 
             # 파일이 없는 경우 nan -> 0
             send_rsv_format["send_filecount"] = send_rsv_format["send_filecount"].fillna(0)

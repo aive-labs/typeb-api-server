@@ -231,6 +231,9 @@ def generate_kakao_carousel_json(send_rsv_format, carousel_df):
         }
     )
 
+    print("carousel_kko_json_df")
+    print(kko_json_df["kko_button_json"])
+
     # 3. send_rsv_format과 조인
     # 2에서 만든 테이블과 send_rsv_format 테이블을 조인한다.
     carousel_json_df = send_rsv_format.merge(kko_json_df, on="set_group_msg_seq", how="inner")
@@ -268,7 +271,7 @@ def create_carousel_json(group):
 
     print("json.dumps(carousel.model_dump())")
     print(json.dumps(send_kakao_carousel.model_dump()))
-    return json.dumps(send_kakao_carousel.model_dump())
+    return json.dumps(send_kakao_carousel.model_dump(), ensure_ascii=False)
 
 
 def extract_carousel_more_link(group) -> MoreLink | None:
