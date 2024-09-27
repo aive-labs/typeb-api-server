@@ -32,6 +32,7 @@ def replace_multiple(text, row, columns, pers_var_map):
             continue
 
         if var_col in list(row.index):  # 현재 행에 치환 대상 컬럼이 있는지 확인
+            print(row[var_col])
 
             if (
                 pd.isna(row[var_col]) or row[var_col] == "None"
@@ -39,6 +40,9 @@ def replace_multiple(text, row, columns, pers_var_map):
                 continue
 
             replace_text = "{{" + str(col) + "}}"
+            # print(f'replace_text: {replace_text}')
             text = text.replace(replace_text, str(row[var_col]))  # 컬럼 값으로 치환
+            print(f"replaced text: {text}")
+    print("----")
 
     return text

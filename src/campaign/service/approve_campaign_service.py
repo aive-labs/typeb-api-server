@@ -1521,6 +1521,8 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                     "offer_amount",
                     "send_msg_body",
                     "phone_callback",
+                    "send_msg_type",
+                    "kko_button_json",
                 ]
             ]
 
@@ -1529,14 +1531,25 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             )  # pyright: ignore [reportArgumentType]
 
             personal_processing_fm = personal_processing_fm[  # pyright: ignore [reportCallIssue]
-                ["set_group_msg_seq", "cus_cd", "send_msg_body", "phone_callback"]
+                [
+                    "set_group_msg_seq",
+                    "cus_cd",
+                    "send_msg_body",
+                    "phone_callback",
+                    "kko_button_json",
+                ]
             ].rename(
                 columns={"send_msg_body": "send_msg_body_fm", "phone_callback": "phone_callback_fm"}
             )
+            personal_processing_fm = personal_processing_fm.drop_duplicates()
 
+            del send_rsv_format["kko_button_json"]
             send_rsv_format = send_rsv_format.merge(
                 personal_processing_fm, on=["set_group_msg_seq", "cus_cd"], how="left"
             )
+
+            print("send_rsv_format.columns")
+            print(send_rsv_format.columns)
 
             del send_rsv_format["send_msg_body"]
             del send_rsv_format["phone_callback"]

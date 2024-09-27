@@ -12,11 +12,19 @@ def personal_variable_formatting(db, df: pd.DataFrame, test_send_list: list | No
 
     print(df)
 
-    df["body_extracted"] = df["send_msg_body"].apply(
-        lambda x: re.findall(r"\{\{(.*?)\}\}", x) if x is not None else []
-    )
+    if df["send_msg_type"][0] == "kakao_carousel":
+        df["body_extracted"] = df["kko_button_json"].apply(
+            lambda x: re.findall(r"\{\{(.*?)\}\}", x) if x is not None else []
+        )
+    else:
+        df["body_extracted"] = df["send_msg_body"].apply(
+            lambda x: re.findall(r"\{\{(.*?)\}\}", x) if x is not None else []
+        )
 
     pers_var = list(df["body_extracted"])
+    print("pers_var")
+    print(pers_var)
+
     from src.campaign.utils import utils
 
     flatten_pers_var = utils.flat(pers_var)
@@ -92,6 +100,11 @@ def personal_variable_formatting(db, df: pd.DataFrame, test_send_list: list | No
     df["send_msg_body"] = df.apply(
         lambda x: replace_multiple(x["send_msg_body"], x, x["body_extracted"], pers_var_map), axis=1
     )
+    if df["send_msg_type"][0] == "kakao_carousel":
+        df["kko_button_json"] = df.apply(
+            lambda x: replace_multiple(x["kko_button_json"], x, x["body_extracted"], pers_var_map),
+            axis=1,
+        )
 
     print("본문 : 포매팅 성공 변수 리스트")
     print(len(df[~df["send_msg_body"].str.contains("{{")]))

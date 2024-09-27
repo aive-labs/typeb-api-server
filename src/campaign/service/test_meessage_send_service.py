@@ -189,6 +189,8 @@ class TestMessageSendService(TestSendMessageUseCase):
                 "offer_amount",
                 "send_msg_body",
                 "phone_callback",
+                "send_msg_type",
+                "kko_button_json",
             ]
         ]
 
@@ -196,16 +198,14 @@ class TestMessageSendService(TestSendMessageUseCase):
         personal_processing_fm = personal_variable_formatting(
             db, personal_processing, test_send_request.recipient_list
         )
-        personal_processing_fm = personal_processing_fm[
-            ["set_group_msg_seq", "cus_cd", "send_msg_body", "phone_callback"]
+        personal_processing_fm = personal_processing_fm[  # pyright: ignore [reportCallIssue]
+            ["set_group_msg_seq", "cus_cd", "send_msg_body", "phone_callback", "kko_button_json"]
         ].rename(
-            columns={
-                "send_msg_body": "send_msg_body_fm",
-                "phone_callback": "phone_callback_fm",
-            }
+            columns={"send_msg_body": "send_msg_body_fm", "phone_callback": "phone_callback_fm"}
         )
         personal_processing_fm = personal_processing_fm.drop_duplicates()
 
+        del test_send_rsv_format["kko_button_json"]
         send_rsv_format = test_send_rsv_format.merge(
             personal_processing_fm, on=["set_group_msg_seq", "cus_cd"], how="left"
         )
