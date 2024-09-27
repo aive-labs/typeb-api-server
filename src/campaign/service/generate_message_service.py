@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import yaml
 from sqlalchemy.orm import Session
 
+from src.auth.infra.entity.message_integration_entity import MessageIntegrationEntity
 from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
 from src.campaign.core import generate_dm
 from src.campaign.core.message_group_controller import MessageGroupController
@@ -165,7 +166,15 @@ class GenerateMessageService(GenerateMessageUsecase):
             message_md = CampaignMessages(set_group_message=set_group_message)
             message_data.append(message_md)
 
-        msg_controller = MessageGroupController(phone_callback, campaign_base_obj, message_data)
+        message_sender_info_entity = db.query(MessageIntegrationEntity).first()
+        if message_sender_info_entity is None:
+            raise PolicyException(detail={"message": "입력된 발신자 정보가 없습니다."})
+        bottom_text = f"무료수신거부: {message_sender_info_entity.opt_out_phone_number}"
+        phone_callback = message_sender_info_entity.sender_phone_number
+
+        msg_controller = MessageGroupController(
+            phone_callback, campaign_base_obj, message_data, bottom_text
+        )
 
         # defaultdict 생성
         message_data_dict = defaultdict(list)
@@ -345,8 +354,15 @@ class GenerateMessageService(GenerateMessageUsecase):
             campaign_base_obj.campaign_id, req_set_group_seqs, db
         )
 
-        msg_controller = MessageGroupController(phone_callback, campaign_base_obj, message_data)
+        message_sender_info_entity = db.query(MessageIntegrationEntity).first()
+        if message_sender_info_entity is None:
+            raise PolicyException(detail={"message": "입력된 발신자 정보가 없습니다."})
+        bottom_text = f"무료수신거부: {message_sender_info_entity.opt_out_phone_number}"
+        phone_callback = message_sender_info_entity.sender_phone_number
 
+        msg_controller = MessageGroupController(
+            phone_callback, campaign_base_obj, message_data, bottom_text
+        )
         ## message send type campaing / remind
         ## handle generate data
         ## 프론트에서 input set_group_seq를 campaign / remind+step으로 구분
@@ -595,7 +611,15 @@ class GenerateMessageService(GenerateMessageUsecase):
             campaign_base_obj.campaign_id, req_set_group_seqs, db
         )
 
-        msg_controller = MessageGroupController(phone_callback, campaign_base_obj, message_data)
+        message_sender_info_entity = db.query(MessageIntegrationEntity).first()
+        if message_sender_info_entity is None:
+            raise PolicyException(detail={"message": "입력된 발신자 정보가 없습니다."})
+        bottom_text = f"무료수신거부: {message_sender_info_entity.opt_out_phone_number}"
+        phone_callback = message_sender_info_entity.sender_phone_number
+
+        msg_controller = MessageGroupController(
+            phone_callback, campaign_base_obj, message_data, bottom_text
+        )
 
         ## message send type campaing / remind
         ## handle generate data
@@ -667,5 +691,7 @@ class GenerateMessageService(GenerateMessageUsecase):
         carousel_card.message_title = msg_rtn[0].msg_title
         carousel_card.message_body = msg_rtn[0].msg_body
         self.message_repository.save_carousel_card(carousel_card, user, db)
+
+        db.commit()
 
         return carousel_card

@@ -102,3 +102,19 @@ class BaseCampaignRepository(ABC):
     @abstractmethod
     def get_already_sent_campaigns(self, campaign_id, db: Session) -> list[AlreadySentCampaign]:
         pass
+
+    @abstractmethod
+    def get_campaign_messages(self, campaign_id: str, req_set_group_seqs: list, db: Session):  ###
+        pass
+
+    @abstractmethod
+    def get_group_item_nm_stats(self, campaign_id: str, set_sort_num: int, db: Session):
+        pass
+
+    @abstractmethod
+    def get_it_gb_nm_stats(self, campaign_id: str, set_sort_num: int, db: Session):
+        pass
+
+    @abstractmethod
+    def get_age_stats(self, campaign_id: str, set_sort_num: int, db: Session):
+        pass

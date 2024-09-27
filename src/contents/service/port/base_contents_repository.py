@@ -57,3 +57,7 @@ class BaseContentsRepository(ABC):
     @abstractmethod
     def get_contents_by_tags(self, contents_tags, db: Session, keyword=None) -> list[IdWithItem]:
         pass
+
+    @abstractmethod
+    def get_contents_id_url_dict(self, db: Session) -> dict:
+        pass
