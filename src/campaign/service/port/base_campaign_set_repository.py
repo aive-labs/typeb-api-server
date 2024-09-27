@@ -118,3 +118,9 @@ class BaseCampaignSetRepository(ABC):
     @abstractmethod
     def get_carousel_info(self, set_group_msg_seqs, db: Session):
         pass
+
+    @abstractmethod
+    def get_campaign_set_group_messages_not_in_set_group_seq(
+        self, set_seq, existed_set_group_seq, db: Session
+    ):
+        pass

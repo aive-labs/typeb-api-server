@@ -923,3 +923,15 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             )
             .distinct()
         )
+
+    def get_campaign_set_group_messages_not_in_set_group_seq(
+        self, set_seq, existed_set_group_seq, db: Session
+    ):
+        return (
+            db.query(SetGroupMessagesEntity)
+            .filter(
+                SetGroupMessagesEntity.set_seq == set_seq,
+                SetGroupMessagesEntity.set_group_seq.not_in(existed_set_group_seq),
+            )
+            .all()
+        )

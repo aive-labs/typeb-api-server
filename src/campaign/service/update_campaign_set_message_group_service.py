@@ -179,7 +179,7 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
             user_id, campaign_id, has_remind, set_seq, set_group_message_updated, db
         )
 
-        self.update_carousel_default_message(set_group_message_updated, user, db)
+        self.update_carousel_default_message(set_seq, set_group_message_updated, user, db)
 
         return True
 
@@ -833,23 +833,42 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
         return msg_obj
 
     def update_carousel_default_message(
-        self, set_group_messages_updated: CampaignSetGroupUpdate, user: User, db: Session
+        self, set_seq, set_group_messages_updated: CampaignSetGroupUpdate, user: User, db: Session
     ):
         for message_updated in set_group_messages_updated.set_group_list:
+            print(message_updated.msg_type)
             if message_updated.msg_type != MessageType.KAKAO_CAROUSEL:
                 pass
 
-            set_group_messages = (
-                self.campaign_set_repository.get_campaign_set_group_messages_by_set_group_seq(
-                    message_updated.set_group_seq, db
+            if message_updated.set_group_seq:
+                print("????")
+                set_group_messages = (
+                    self.campaign_set_repository.get_campaign_set_group_messages_by_set_group_seq(
+                        message_updated.set_group_seq, db
+                    )
                 )
-            )
+            else:
+                print("!!!")
+                existed_set_group_seq = [
+                    set_group.set_group_seq
+                    for set_group in set_group_messages_updated.set_group_list
+                    if set_group.set_group_seq
+                ]
+                print(f"existed_set_group_seq: {existed_set_group_seq}")
+
+                set_group_messages = self.campaign_set_repository.get_campaign_set_group_messages_not_in_set_group_seq(
+                    set_seq, existed_set_group_seq, db
+                )
+
+                print(set_group_messages)
 
             for set_group_message in set_group_messages:
+                print(set_group_message.set_group_msg_seq)
                 carousel_card_list = self.campaign_set_repository.get_carousel(
                     set_group_message.set_group_msg_seq, db
                 )
                 if self.has_carousel_no_card(carousel_card_list):
+                    print("no card")
                     default_carousel_card = KakaoCarouselCard.get_default_card(
                         set_group_message.set_group_msg_seq, user
                     )
