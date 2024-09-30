@@ -19,12 +19,14 @@ from src.campaign.routes.dto.response.campaign_response import (
     CampaignSet,
     CampaignSetGroup,
 )
+from src.campaign.routes.dto.response.generate_message_response import GeneratedMessage
 from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
 from src.common.service.port.base_common_repository import BaseCommonRepository
 from src.common.utils.calculate_ratios import calculate_ratios
 from src.contents.service.port.base_contents_repository import BaseContentsRepository
 from src.core.exceptions.exceptions import PolicyException
+from src.message_template.enums.message_type import MessageType
 from src.messages.service.port.base_message_repository import BaseMessageRepository
 from src.offers.service.port.base_offer_repository import BaseOfferRepository
 from src.strategy.routes.dto.request.preview_message_create import PreviewMessageCreate
@@ -486,7 +488,31 @@ class GenerateMessageService(GenerateMessageUsecase):
         for msg in msg_rtn:
             msg.msg_photo_uri = msg.add_cloud_front_url(msg.msg_photo_uri)
 
-        return msg_rtn
+        # 여기에 캐러셀 생성 메시지 추가!
+
+        generate_message_responses = []
+        for msg in msg_rtn:
+            generated_message = GeneratedMessage.from_generated_message(msg)
+            if msg.msg_type == MessageType.KAKAO_CAROUSEL:
+                print("111?")
+                carousel_cards = self.message_repository.get_carousel_cards_by_set_group_msg_seq(
+                    msg.set_group_msg_seq, db=db
+                )
+                print(carousel_cards)
+                for carousel_card in carousel_cards:
+                    if carousel_card.id:
+                        carousel_message_generate = (
+                            CarouselMsgGenerationReq.from_msg_generation_request(
+                                carousel_card.id, message_generate
+                            )
+                        )
+                        carousel_message = self.generate_carousel_message(
+                            carousel_message_generate, user, db
+                        )
+                        print(f"carousel_message: {carousel_message}")
+                        generated_message.add_carousel_message(carousel_message)
+            generate_message_responses.append(generated_message)
+        return generate_message_responses
 
     def generate_carousel_message(
         self, carousel_message_generate: CarouselMsgGenerationReq, user: User, db: Session
