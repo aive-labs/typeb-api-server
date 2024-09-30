@@ -133,11 +133,16 @@ class MessageService:
                 if response["code"] not in ["200", "0000"]:
                     print("code", response["code"])
                     print(response)
+
                     match = re.search(r"Exception\((.*?)\)$", response["message"])
                     if match:
                         extracted_message = match.group(1)
                     else:
                         extracted_message = response["message"]
+
+                    if response["code"] == "405":
+                        if message_type == MessageType.KAKAO_IMAGE_WIDE.value:
+                            extracted_message = "친구톡 와이드형은 800px(가로) x 600px(세로) 이미지만 업로드가 가능합니다."
 
                     raise PolicyException(detail={"message": extracted_message})
 
