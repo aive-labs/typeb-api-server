@@ -496,11 +496,10 @@ class GenerateMessageService(GenerateMessageUsecase):
         for msg in msg_rtn:
             generated_message = GeneratedMessage.from_generated_message(msg)
             if msg.msg_type == MessageType.KAKAO_CAROUSEL:
-                print("111?")
                 carousel_cards = self.message_repository.get_carousel_cards_by_set_group_msg_seq(
                     msg.set_group_msg_seq, db=db
                 )
-                print(carousel_cards)
+                carousel_generated_messages = []
                 for carousel_card in carousel_cards:
                     if carousel_card.id:
                         carousel_message_generate = (
@@ -512,7 +511,8 @@ class GenerateMessageService(GenerateMessageUsecase):
                             carousel_message_generate, user, db
                         )
                         print(f"carousel_message: {carousel_message}")
-                        generated_message.add_carousel_message(carousel_message)
+                        carousel_generated_messages.append(carousel_message)
+                generated_message.add_carousel_message(carousel_generated_messages)
             generate_message_responses.append(generated_message)
         return generate_message_responses
 

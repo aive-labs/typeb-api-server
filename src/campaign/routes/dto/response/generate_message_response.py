@@ -25,7 +25,7 @@ class GeneratedMessage(BaseModel):
     phone_callback: str
     is_used: bool
     rec_explanation: List[str]
-    kakao_carousel: Optional[KakaoCarouselCard] = None
+    kakao_carousel: Optional[list[KakaoCarouselCard]] = None
 
     @staticmethod
     def from_generated_message(message):
@@ -48,7 +48,7 @@ class GeneratedMessage(BaseModel):
             rec_explanation=message.rec_explanation,
         )
 
-    def add_carousel_message(self, carousel_message: KakaoCarouselCard):
+    def add_carousel_message(self, carousel_message: list[KakaoCarouselCard]):
         self.kakao_carousel = carousel_message
 
 
