@@ -43,6 +43,7 @@ from src.campaign.routes.dto.response.campaign_timeline_response import (
 from src.campaign.routes.dto.response.exclusion_customer_detail import (
     ExcludeCustomerDetail,
 )
+from src.campaign.routes.dto.response.generate_message_response import GeneratedMessage
 from src.campaign.routes.dto.response.set_group_seq_with_message_response import (
     SetGroupSeqWithMessageResponse,
 )
@@ -169,7 +170,7 @@ def generate_message(
     generate_message_service: GenerateMessageUsecase = Depends(
         dependency=Provide[Container.generate_message_service]
     ),
-):
+) -> list[GeneratedMessage]:
     return generate_message_service.generate_message(message_generate, user, db=db)
 
 

@@ -235,7 +235,9 @@ class GenerateMessageService(GenerateMessageUsecase):
 
         return res
 
-    def generate_message(self, message_generate: MsgGenerationReq, user: User, db: Session):
+    def generate_message(
+        self, message_generate: MsgGenerationReq, user: User, db: Session
+    ) -> list[GeneratedMessage]:
         """메세지 생성"""
         campaign_base_obj = message_generate.campaign_base
         set_data_obj = message_generate.set_object
