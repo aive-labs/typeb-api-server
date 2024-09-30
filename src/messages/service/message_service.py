@@ -158,7 +158,6 @@ class MessageService:
             raise PolicyException(detail={"message": "이미지 파일의 크기는 2MB 이하여야 합니다."})
 
         async with aiohttp.ClientSession() as session:
-            print(1)
             url = get_env_variable("ppurio_kakao_carousel_image_upload_url")
 
             data = aiohttp.FormData()
@@ -166,18 +165,14 @@ class MessageService:
             data.add_field("apiKey", get_env_variable("kakao_api_key"))
             data.add_field("senderKey", kakao_sender_key)
 
-            print(2)
             data.add_field(
                 "imageList[0].image", file_read, filename=new_file_name, content_type=content_type
             )
             data.add_field("imageList[0].title", image_title)
             data.add_field("imageList[0].link", image_link)  # 링크를 실제 값으로 대체하세요
 
-            print(3)
             async with session.post(url, data=data, ssl=False) as response:
-                print(response.status)
                 upload_response = await response.json()
-                print(upload_response)
                 if response.status != 200:
                     raise PpurioException(
                         detail={
