@@ -21,7 +21,7 @@ class TossPaymentGateway(PaymentGateway):
 
     def __init__(self):
         self.secret_key = AwsService.get_key_from_parameter_store(
-            get_env_variable("toss_secretkey")
+            get_env_variable("toss_parameter_store_key")
         )
         self.payment_authorization_url = get_env_variable("payment_authorization_url")
         self.billing_payment_url = get_env_variable("payment_bulling_url")
