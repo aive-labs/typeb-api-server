@@ -23,6 +23,33 @@ def extract_body(row):
         )
 
 
+def replace_extract_body(row, pers_var_map):
+    # send_msg_body를 직접 처리
+    row["send_msg_body"] = replace_multiple(
+        row["send_msg_body"], row, row["body_extracted"], pers_var_map
+    )
+
+    # send_msg_type이 KAKAO_CAROUSEL일 경우 kko_button_json을 처리
+    if row["send_msg_type"] == MessageType.KAKAO_CAROUSEL.value:
+        row["kko_button_json"] = replace_multiple(
+            row["kko_button_json"], row, row["body_extracted"], pers_var_map
+        )
+
+    return row
+
+
+# def replace_extract_body(row, pers_var_map):
+#     row["send_msg_body"] = row.apply(
+#         lambda x: replace_multiple(x["send_msg_body"], x, x["body_extracted"], pers_var_map), axis=1
+#     )
+#     if row["send_msg_type"] == MessageType.KAKAO_CAROUSEL.value:
+#         row["kko_button_json"] = row.apply(
+#             lambda x: replace_multiple(x["kko_button_json"], x, x["body_extracted"], pers_var_map),
+#             axis=1,
+#         )
+#     return row
+
+
 def personal_variable_formatting(db, df: pd.DataFrame, test_send_list: list | None = None):
     personal_variable_query = db.query(PersonalVariablesEntity)
 
@@ -105,14 +132,16 @@ def personal_variable_formatting(db, df: pd.DataFrame, test_send_list: list | No
         del test_replaced_df
 
     # body_extracted 의 개인화 변수를 추가된 컬럼에서 포매팅
-    df["send_msg_body"] = df.apply(
-        lambda x: replace_multiple(x["send_msg_body"], x, x["body_extracted"], pers_var_map), axis=1
-    )
-    if df["send_msg_type"][0] == "kakao_carousel":
-        df["kko_button_json"] = df.apply(
-            lambda x: replace_multiple(x["kko_button_json"], x, x["body_extracted"], pers_var_map),
-            axis=1,
-        )
+    # df["send_msg_body"] = df.apply(
+    #     lambda x: replace_multiple(x["send_msg_body"], x, x["body_extracted"], pers_var_map), axis=1
+    # )
+    # if df["send_msg_type"][0] == "kakao_carousel":
+    #     df["kko_button_json"] = df.apply(
+    #         lambda x: replace_multiple(x["kko_button_json"], x, x["body_extracted"], pers_var_map),
+    #         axis=1,
+    #     )
+
+    df = df.apply(replace_extract_body, axis=1, args=(pers_var_map,))
 
     print("본문 : 포매팅 성공 변수 리스트")
     print(len(df[~df["send_msg_body"].str.contains("{{")]))
