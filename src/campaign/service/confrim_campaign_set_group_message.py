@@ -39,6 +39,15 @@ class ConfirmCampaignSetGroupMessage(ConfirmCampaignSetGroupMessageUseCase):
 
         msg_delivery_vendor = campaign.msg_delivery_vendor
         for msg_obj in campaign_set_groups:
+            if msg_obj.msg_type == MessageType.KAKAO_CAROUSEL.value:
+                carousel_cards = self.campaign_set_repository.get_carousel(
+                    msg_obj.set_group_msg_seq, db
+                )
+                if len(carousel_cards) < 2:
+                    raise PolicyException(
+                        detail={"message": "캐러셀 항목은 2개 이상 입력해야 합니다."}
+                    )
+
             message_model = Message.from_set_group_message(msg_obj)
             self.message_validator(msg_delivery_vendor, message_model)
             self.message_image_validator(message_model)

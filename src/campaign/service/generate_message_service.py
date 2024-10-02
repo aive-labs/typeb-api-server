@@ -495,6 +495,7 @@ class GenerateMessageService(GenerateMessageUsecase):
             sgm_obj.msg_body = msg.msg_body
             sgm_obj.rec_explanation = msg.rec_explanation
             # 기존에 생성된 버튼 링크가 없으면서, 새로 버튼링크가 생성되어야 할때, 업데이트
+
             if (
                 isinstance(sgm_obj.kakao_button_links, List)
                 and len(sgm_obj.kakao_button_links) == 0
@@ -754,22 +755,19 @@ class GenerateMessageService(GenerateMessageUsecase):
         carousel_card.message_body = generated_carousel_msg.msg_body
         ## 버튼 생성값이 있는 경우에 업데이트
         ## 추가되는 케이스, 1) 기존 입력된 버튼값이 없는 경우(생성된 값으로 대체되는 경우 방지), 2) 1번 sort_num 캐러셀만 업데이트, 3) 생성된 버튼값이 있는 경우
-        if (
-            len(carousel_card.carousel_button_links) == 0
-            and carousel_card.carousel_sort_num == 1
-            and len(generated_carousel_msg.kakao_button_links) > 0
-        ):
-            carousel_card.carousel_button_links = [
-                KakaoCarouselLinkButtonsEntity(
-                    name=button["button_name"],
-                    type=button["button_type"],
-                    url_pc=button["web_link"],
-                    url_mobile=button["app_link"],
-                    created_by=str(user.user_id),
-                    updated_by=str(user.user_id),
-                )
-                for button in generated_carousel_msg.kakao_button_links
-            ]
+        if len(carousel_card.carousel_button_links) == 0 and carousel_card.carousel_sort_num == 1:
+            if generated_carousel_msg.kakao_button_links:
+                carousel_card.carousel_button_links = [
+                    KakaoCarouselLinkButtonsEntity(
+                        name=button["button_name"],
+                        type=button["button_type"],
+                        url_pc=button["web_link"],
+                        url_mobile=button["app_link"],
+                        created_by=str(user.user_id),
+                        updated_by=str(user.user_id),
+                    )
+                    for button in generated_carousel_msg.kakao_button_links
+                ]
         self.message_repository.save_carousel_card(carousel_card, user, db)
 
         db.commit()

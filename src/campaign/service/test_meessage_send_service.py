@@ -36,7 +36,11 @@ from src.common.infra.entity.customer_master_entity import CustomerMasterEntity
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import localtime_converter
 from src.contents.infra.entity.contents_entity import ContentsEntity
-from src.core.exceptions.exceptions import ConsistencyException, NotFoundException
+from src.core.exceptions.exceptions import (
+    ConsistencyException,
+    NotFoundException,
+    PolicyException,
+)
 from src.message_template.enums.message_type import MessageType
 from src.message_template.infra.entity.message_template_entity import (
     MessageTemplateEntity,
@@ -112,11 +116,6 @@ class TestMessageSendService(TestSendMessageUseCase):
                 "track_id",
             ]
         ]
-        print("test_send_rsv_format0")
-        print(test_send_rsv_format)
-
-        print("msg_seq_list")
-        print(msg_seq_list)
 
         print("button 개인화 적용 전 row수 :" + str(len(test_send_rsv_format)))
         logging.info("2.[Test] button 개인화 적용 전 row수 :" + str(len(test_send_rsv_format)))
@@ -141,6 +140,13 @@ class TestMessageSendService(TestSendMessageUseCase):
         # keys = ["campaign_id", "set_sort_num", "group_sort_num", "set_group_msg_seq"]
         carousel_query = self.campaign_set_repository.get_carousel_info(msg_seq_list, db)
         carousel_df = DataConverter.convert_query_to_df(carousel_query)
+
+        is_one_carousel_card = carousel_df["carousel_sort_num"].nunique() == 1
+        if is_one_carousel_card:
+            raise PolicyException(
+                detail={"message": "캐러셀 항목은 2개 이상부터 발송이 가능합니다."}
+            )
+
         carousel_df_with_kko_json = generate_kakao_carousel_json(test_send_rsv_format, carousel_df)
 
         # 두 개의 데이터프레임 통합
