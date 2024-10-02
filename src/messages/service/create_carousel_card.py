@@ -96,7 +96,7 @@ class CreateCarouselCard(CreateCarouselCardUseCase):
 
             if button.url_pc:
                 if not validate_url(button.url_pc):
-                    if button.url_mobile not in personal_variables:
+                    if button.url_pc not in personal_variables:
                         raise PolicyException(
                             detail={"message": "버튼 링크(웹) 형식이 올바르지 않습니다."}
                         )

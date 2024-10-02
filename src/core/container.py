@@ -268,6 +268,8 @@ class Container(containers.DeclarativeContainer):
         ContentsRepository, contents_sqlalchemy=contents_sqlalchemy
     )
 
+    admin_repository = providers.Singleton(provides=AdminRepository)
+
     add_contents_service = providers.Singleton(
         provides=AddContentsService,
         contents_repository=contents_repository,
@@ -452,6 +454,7 @@ class Container(containers.DeclarativeContainer):
         campaign_repository=campaign_repository,
         campaign_set_repository=campaign_set_repository,
         message_repository=message_repository,
+        admin_repository=admin_repository,
     )
 
     update_campaign_progress_service = providers.Singleton(
@@ -548,8 +551,6 @@ class Container(containers.DeclarativeContainer):
         provides=DeleteMessageTemplateService,
         message_template_repository=message_template_repository,
     )
-
-    admin_repository = providers.Singleton(provides=AdminRepository)
 
     get_personal_variables_service = providers.Singleton(
         provides=GetPersonalVariablesService, admin_repository=admin_repository

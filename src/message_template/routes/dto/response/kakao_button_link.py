@@ -1,8 +1,7 @@
 from typing import Optional
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel
 
-from src.core.exceptions.exceptions import PolicyException
 from src.message_template.enums.kakao_button_type import KakaoButtonType
 
 
@@ -12,16 +11,3 @@ class KakaoButtonLink(BaseModel):
     button_type: KakaoButtonType
     web_link: Optional[str] = None
     app_link: Optional[str] = None
-
-    @field_validator("web_link", "app_link")
-    @classmethod
-    def validate_link(cls, value):
-        print("value", value)
-
-        if value == "{{contents_url}}":
-            # 링크가 개인화 변수인 경우엔 패스
-            return value
-
-        if value and not value.startswith("https://"):
-            raise PolicyException(detail={"message": "링크는 https://로 시작해야 합니다."})
-        return value
