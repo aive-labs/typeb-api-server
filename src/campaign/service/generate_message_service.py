@@ -1,5 +1,6 @@
 from collections import defaultdict
 from datetime import datetime, timedelta
+from typing import List
 
 import yaml
 from sqlalchemy.orm import Session
@@ -9,6 +10,7 @@ from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepos
 from src.campaign.core import generate_dm
 from src.campaign.core.message_group_controller import MessageGroupController
 from src.campaign.domain.campaign_messages import CampaignMessages, SetGroupMessage
+from src.campaign.infra.entity.kakao_link_buttons_entity import KakaoLinkButtonsEntity
 from src.campaign.infra.sqlalchemy_query.get_set_group_message import save_set_group_msg
 from src.campaign.routes.dto.request.message_generate import (
     CarouselMsgGenerationReq,
@@ -27,6 +29,9 @@ from src.common.utils.calculate_ratios import calculate_ratios
 from src.contents.service.port.base_contents_repository import BaseContentsRepository
 from src.core.exceptions.exceptions import PolicyException
 from src.message_template.enums.message_type import MessageType
+from src.messages.infra.entity.kakao_carousel_link_button_entity import (
+    KakaoCarouselLinkButtonsEntity,
+)
 from src.messages.service.port.base_message_repository import BaseMessageRepository
 from src.offers.service.port.base_offer_repository import BaseOfferRepository
 from src.strategy.routes.dto.request.preview_message_create import PreviewMessageCreate
@@ -293,7 +298,7 @@ class GenerateMessageService(GenerateMessageUsecase):
         else:
             recsys_model_name = None
 
-        # contents
+        # contents > {contents_id: [contents_name, contents_url]}
         contents_dict = self.contents_repository.get_contents_id_url_dict(db)
 
         set_data = {
@@ -343,8 +348,15 @@ class GenerateMessageService(GenerateMessageUsecase):
                 "it_gb_ratio": it_gb_stats.get(group["group_sort_num"]),
                 "age_ratio": age_stats.get(group["group_sort_num"]),
             }
-            if group.get("contents_id") is not None:
-                group["contents_url"] = contents_dict.get(group["contents_id"])
+            try:
+                # contents_id가 None이 아니고, contents_dict에 해당 key가 존재할 때 처리
+                # 콘텐츠가 선택되지 않는 경우 contents_id가 0으로 전달됨
+                if group.get("contents_id", 0) != 0:
+                    group["contents_name"] = contents_dict.get(group["contents_id"])[0]
+                    group["contents_url"] = contents_dict.get(group["contents_id"])[1]
+            except (TypeError, IndexError, KeyError) as e:
+                # 에러 로그 남기고 패스
+                print(f"Error occurred: {e}")
 
         # Define generation input
         generation_input = {
@@ -482,7 +494,23 @@ class GenerateMessageService(GenerateMessageUsecase):
             sgm_obj.msg_title = msg.msg_title
             sgm_obj.msg_body = msg.msg_body
             sgm_obj.rec_explanation = msg.rec_explanation
-            sgm_obj.kakao_button_links = msg.kakao_button_links
+            # 기존에 생성된 버튼 링크가 없으면서, 새로 버튼링크가 생성되어야 할때, 업데이트
+            if (
+                isinstance(sgm_obj.kakao_button_links, List)
+                and len(sgm_obj.kakao_button_links) == 0
+            ):
+                sgm_obj.kakao_button_links = [
+                    KakaoLinkButtonsEntity(
+                        set_group_msg_seq=sgm_obj.set_group_msg_seq,
+                        button_name=kakao_button["button_name"],
+                        button_type=kakao_button["button_type"],
+                        web_link=kakao_button["web_link"],
+                        app_link=kakao_button["app_link"],
+                        created_by=str(user.user_id),
+                        updated_by=str(user.user_id),
+                    )
+                    for kakao_button in msg.kakao_button_links
+                ]
             updated_sgm_obj.append(sgm_obj)
 
         self.save_generate_message(updated_sgm_obj, db)
@@ -574,7 +602,7 @@ class GenerateMessageService(GenerateMessageUsecase):
         else:
             recsys_model_name = None
 
-        # contents
+        # contents > {contents_id: [contents_name, contents_url]}
         contents_dict = self.contents_repository.get_contents_id_url_dict(db)
 
         set_data = {
@@ -624,8 +652,14 @@ class GenerateMessageService(GenerateMessageUsecase):
                 "it_gb_ratio": it_gb_stats.get(group["group_sort_num"]),
                 "age_ratio": age_stats.get(group["group_sort_num"]),
             }
-            if group.get("contents_id") is not None:
-                group["contents_url"] = contents_dict.get(group["contents_id"])
+            try:
+                # contents_id가 None이 아니고, contents_dict에 해당 key가 존재할 때 처리
+                if group.get("contents_id", 0) != 0:
+                    group["contents_name"] = contents_dict.get(group["contents_id"])[0]
+                    group["contents_url"] = contents_dict.get(group["contents_id"])[1]
+            except (TypeError, IndexError, KeyError) as e:
+                # 에러를 처리하고 로그를 남기거나 기본값을 설정
+                print(f"Error occurred: {e}")
 
         # Define generation input
         generation_input = {
@@ -706,7 +740,6 @@ class GenerateMessageService(GenerateMessageUsecase):
                         if len(generation_msg["kakao_button_link"]) > 0
                         else None
                     )
-
                     msg_rtn.append(msg_obj)
 
             else:
@@ -716,8 +749,27 @@ class GenerateMessageService(GenerateMessageUsecase):
         carousel_card = self.message_repository.get_carousel_card_by_id(
             carousel_message_generate.carousel_id, db
         )
-        carousel_card.message_title = msg_rtn[0].msg_title
-        carousel_card.message_body = msg_rtn[0].msg_body
+        generated_carousel_msg = msg_rtn[0]
+        carousel_card.message_title = generated_carousel_msg.msg_title
+        carousel_card.message_body = generated_carousel_msg.msg_body
+        ## 버튼 생성값이 있는 경우에 업데이트
+        ## 추가되는 케이스, 1) 기존 입력된 버튼값이 없는 경우(생성된 값으로 대체되는 경우 방지), 2) 1번 sort_num 캐러셀만 업데이트, 3) 생성된 버튼값이 있는 경우
+        if (
+            len(carousel_card.carousel_button_links) == 0
+            and carousel_card.carousel_sort_num == 1
+            and len(generated_carousel_msg.kakao_button_links) > 0
+        ):
+            carousel_card.carousel_button_links = [
+                KakaoCarouselLinkButtonsEntity(
+                    name=button["button_name"],
+                    type=button["button_type"],
+                    url_pc=button["web_link"],
+                    url_mobile=button["app_link"],
+                    created_by=str(user.user_id),
+                    updated_by=str(user.user_id),
+                )
+                for button in generated_carousel_msg.kakao_button_links
+            ]
         self.message_repository.save_carousel_card(carousel_card, user, db)
 
         db.commit()
