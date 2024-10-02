@@ -499,18 +499,19 @@ class GenerateMessageService(GenerateMessageUsecase):
                 isinstance(sgm_obj.kakao_button_links, List)
                 and len(sgm_obj.kakao_button_links) == 0
             ):
-                sgm_obj.kakao_button_links = [
-                    KakaoLinkButtonsEntity(
-                        set_group_msg_seq=sgm_obj.set_group_msg_seq,
-                        button_name=kakao_button["button_name"],
-                        button_type=kakao_button["button_type"],
-                        web_link=kakao_button["web_link"],
-                        app_link=kakao_button["app_link"],
-                        created_by=str(user.user_id),
-                        updated_by=str(user.user_id),
-                    )
-                    for kakao_button in msg.kakao_button_links
-                ]
+                if msg.kakao_button_links:
+                    sgm_obj.kakao_button_links = [
+                        KakaoLinkButtonsEntity(
+                            set_group_msg_seq=sgm_obj.set_group_msg_seq,
+                            button_name=kakao_button["button_name"],
+                            button_type=kakao_button["button_type"],
+                            web_link=kakao_button["web_link"],
+                            app_link=kakao_button["app_link"],
+                            created_by=str(user.user_id),
+                            updated_by=str(user.user_id),
+                        )
+                        for kakao_button in msg.kakao_button_links
+                    ]
             updated_sgm_obj.append(sgm_obj)
 
         self.save_generate_message(updated_sgm_obj, db)
@@ -519,7 +520,6 @@ class GenerateMessageService(GenerateMessageUsecase):
             msg.msg_photo_uri = msg.add_cloud_front_url(msg.msg_photo_uri)
 
         # 여기에 캐러셀 생성 메시지 추가!
-
         generate_message_responses = []
         for msg in msg_rtn:
             generated_message = GeneratedMessage.from_generated_message(msg)
