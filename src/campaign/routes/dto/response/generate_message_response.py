@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel
 
@@ -21,7 +21,7 @@ class GeneratedMessage(BaseModel):
     msg_send_type: MessageSendType
     media: CampaignMedia
     msg_type: MessageType
-    kakao_button_links: Optional[List[str]] = None
+    kakao_button_links: Optional[List[Dict]] = None
     phone_callback: str
     is_used: bool
     rec_explanation: List[str]

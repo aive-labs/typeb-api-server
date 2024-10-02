@@ -97,7 +97,21 @@ recsys_mode_name:
   22: 웰컴백 쿠폰 전달
   23: 연령대별 Best 상품 추천
 
+recsys_model_items:
+  8: '{first_best_items}'
+  12: '{best_cross_items}'
+  14: '{best_category_items}'
+  15: '{steady_items}'
+  18: '{best_new_items}'
+  20: '{best_promo_items}'
 
+recsys_model_item_links:
+  8: '{first_best_items_link}'
+  12: '{best_cross_items_link}'
+  14: '{best_category_items_link}'
+  15: '{steady_items_link}'
+  18: '{best_new_items_link}'
+  20: '{best_promo_items_link}'
 
 button_msg:
   [
