@@ -53,8 +53,6 @@ def replace_extract_body(row, pers_var_map):
 def personal_variable_formatting(db, df: pd.DataFrame, test_send_list: list | None = None):
     personal_variable_query = db.query(PersonalVariablesEntity)
 
-    print(df)
-
     df["body_extracted"] = df.apply(extract_body, axis=1)
     pers_var = list(df["body_extracted"])
     print("pers_var")

@@ -93,6 +93,7 @@ def convert_to_button_format(db, set_group_msg_seqs, send_rsv_format):
         empty_df = pd.DataFrame(columns=cols)
         return empty_df
 
+    button_df_msg_seqs = button_df["set_group_msg_seq"].unique().tolist()
     button_type_map = {"web_link_button": "WL"}
     button_df["button_type"] = button_df["button_type"].map(
         button_type_map
@@ -123,6 +124,7 @@ def convert_to_button_format(db, set_group_msg_seqs, send_rsv_format):
     keys = ["campaign_id", "set_sort_num", "group_sort_num", "set_group_msg_seq"]
     # contents_id, contents_link, contents_name
 
+    send_rsv_format = send_rsv_format[send_rsv_format["set_group_msg_seq"].isin(button_df_msg_seqs)]
     send_rsv_btn = send_rsv_format.merge(button_df, on=keys, how="left")
     send_rsv_btn = send_rsv_btn.replace({np.nan: None})
 
@@ -166,10 +168,6 @@ def convert_to_button_format(db, set_group_msg_seqs, send_rsv_format):
     ]
     send_rsv_btn["url_pc"] = np.select(cond, choice)
 
-    print("send_rsv_bt[send_rsv_btn]")
-    print(send_rsv_btn.columns)
-    print(send_rsv_btn[send_rsv_btn["type"].notnull()])
-
     if len(send_rsv_btn[send_rsv_btn["type"].notnull()]) == 0:
         cols = [
             "campaign_id",
@@ -210,8 +208,6 @@ def generate_kakao_carousel_json(send_rsv_format, carousel_df):
         empty_df = pd.DataFrame(columns=selected_column)
         return empty_df
 
-    print("carousel_df")
-    print(carousel_df)
     # 그룹화: set_group_msg_seq 기준
     grouped = carousel_df.groupby("set_group_msg_seq")
 
@@ -241,11 +237,6 @@ def create_carousel_json(group):
 
     # 카드별로 그룹화 (carousel_sort_num, header, message, img_url, img_link로 그룹화)
     grouped_cards = group.groupby(["carousel_sort_num", "header", "message", "img_url", "img_link"])
-    sorted_group = grouped_cards.apply(
-        lambda x: x.sort_values(by="carousel_sort_num", ascending=True)
-    )
-    print(sorted_group)
-
     for (carousel_sort_num, header, message, img_url, img_link), card_group in grouped_cards:
         print("-----------")
         print(f"carousel_sort_num: {carousel_sort_num}")
@@ -265,8 +256,6 @@ def create_carousel_json(group):
             message=message,
             attachment=Attachment(button=buttons, image=Image(img_url=img_url, img_link=img_link)),
         )
-
-        print(carousel_item)
 
         carousel_items.append(carousel_item)
 

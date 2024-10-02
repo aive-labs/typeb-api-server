@@ -90,12 +90,6 @@ class TestMessageSendService(TestSendMessageUseCase):
             item.test_callback_number.replace("-", "") for item in test_send_request.recipient_list
         ]
 
-        print("msg_seq_list")
-        print(msg_seq_list)
-
-        print("send_rsv_df")
-        print(send_rsv_df)
-
         test_send_df = pd.DataFrame()
         for msg in msg_seq_list:
             sample_df = send_rsv_df[send_rsv_df.set_group_msg_seq == msg].sample(
@@ -118,8 +112,8 @@ class TestMessageSendService(TestSendMessageUseCase):
                 "track_id",
             ]
         ]
-        print("test_send_rsv_format")
-        print(test_send_rsv_format.columns)
+        print("test_send_rsv_format0")
+        print(test_send_rsv_format)
 
         print("msg_seq_list")
         print(msg_seq_list)
@@ -170,6 +164,7 @@ class TestMessageSendService(TestSendMessageUseCase):
         test_send_rsv_format = test_send_rsv_format.merge(
             resource_df, on="set_group_msg_seq", how="left"
         )
+
         # 파일이 없는 경우 nan -> 0
         test_send_rsv_format["send_filecount"] = test_send_rsv_format["send_filecount"].fillna(0)
 
