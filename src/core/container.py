@@ -104,6 +104,7 @@ from src.message_template.service.update_message_template_service import (
 )
 from src.messages.infra.message_repository import MessageRepository
 from src.messages.service.create_carousel_card import CreateCarouselCard
+from src.messages.service.create_carousel_more_link import CreateCarouselMoreLink
 from src.messages.service.delete_carousel_card import DeleteCarouselCard
 from src.messages.service.message_service import MessageService
 from src.offers.infra.offer_repository import OfferRepository
@@ -397,6 +398,7 @@ class Container(containers.DeclarativeContainer):
 
     campaign_sqlalchemy = providers.Singleton(provides=CampaignSqlAlchemy)
 
+    message_repository = providers.Singleton(provides=MessageRepository)
     campaign_repository = providers.Singleton(
         provides=CampaignRepository, campaign_sqlalchemy=campaign_sqlalchemy
     )
@@ -434,6 +436,8 @@ class Container(containers.DeclarativeContainer):
         offer_repository=offer_repository,
         common_repository=common_repository,
         contents_repository=contents_repository,
+        onboarding_repository=onboarding_repository,
+        message_repository=message_repository,
     )
 
     update_campaign_set_service = providers.Singleton(
@@ -446,6 +450,8 @@ class Container(containers.DeclarativeContainer):
     update_campaign_set_message_group_service = providers.Singleton(
         provides=UpdateCampaignSetMessageGroupService,
         campaign_repository=campaign_repository,
+        campaign_set_repository=campaign_set_repository,
+        message_repository=message_repository,
     )
 
     update_campaign_progress_service = providers.Singleton(
@@ -494,7 +500,9 @@ class Container(containers.DeclarativeContainer):
     )
 
     test_send_service = providers.Singleton(
-        provides=TestMessageSendService, onboarding_repository=onboarding_repository
+        provides=TestMessageSendService,
+        onboarding_repository=onboarding_repository,
+        campaign_set_repository=campaign_set_repository,
     )
 
     delete_campaign_service = providers.Singleton(
@@ -718,9 +726,16 @@ class Container(containers.DeclarativeContainer):
     )
 
     create_carousel_card = providers.Singleton(
-        provides=CreateCarouselCard, message_repository=message_repository
+        provides=CreateCarouselCard,
+        message_repository=message_repository,
+        upload_image_for_message=upload_image_for_message,
     )
 
     delete_carousel_card = providers.Singleton(
         provides=DeleteCarouselCard, message_repository=message_repository
+    )
+
+    create_carousel_more_link = providers.Singleton(
+        provides=CreateCarouselMoreLink,
+        message_repository=message_repository,
     )

@@ -110,7 +110,7 @@ class MessageService:
             data.add_field("apiKey", get_env_variable("kakao_api_key"))
             data.add_field("imageType", image_type)
             data.add_field("title", new_file_name)
-            data.add_field("link", "www.aivelabs.com")
+            data.add_field("link", "www.aivelabs.com")  # TODO 쇼핑몰 링크 넣도록 수정
             data.add_field("senderKey", kakao_sender_key)
 
             data.add_field(
@@ -133,12 +133,70 @@ class MessageService:
                 if response["code"] not in ["200", "0000"]:
                     print("code", response["code"])
                     print(response)
+
                     match = re.search(r"Exception\((.*?)\)$", response["message"])
                     if match:
                         extracted_message = match.group(1)
                     else:
                         extracted_message = response["message"]
 
+                    if response["code"] == "405":
+                        if message_type == MessageType.KAKAO_IMAGE_WIDE.value:
+                            extracted_message = "친구톡 와이드형은 800px(가로) x 600px(세로) 이미지만 업로드가 가능합니다."
+
                     raise PolicyException(detail={"message": extracted_message})
 
         return response["image"]
+
+    async def upload_file_for_kakao_carousel(
+        self, new_file_name, file_read, content_type, kakao_sender_key, image_title, image_link
+    ) -> str:
+
+        max_size = 2 * 1024 * 1024
+        print(f"max_size: {max_size}")
+        if len(file_read) > max_size:
+            raise PolicyException(detail={"message": "이미지 파일의 크기는 2MB 이하여야 합니다."})
+
+        async with aiohttp.ClientSession() as session:
+            url = get_env_variable("ppurio_kakao_carousel_image_upload_url")
+
+            data = aiohttp.FormData()
+            data.add_field("bizId", get_env_variable("ppurio_account"))
+            data.add_field("apiKey", get_env_variable("kakao_api_key"))
+            data.add_field("senderKey", kakao_sender_key)
+
+            data.add_field(
+                "imageList[0].image", file_read, filename=new_file_name, content_type=content_type
+            )
+            data.add_field("imageList[0].title", image_title)
+            data.add_field("imageList[0].link", image_link)  # 링크를 실제 값으로 대체하세요
+
+            async with session.post(url, data=data, ssl=False) as response:
+                upload_response = await response.json()
+                if response.status != 200:
+                    raise PpurioException(
+                        detail={
+                            "message": "이미지 업로드에 실패하였습니다. 잠시 후에 다시 시도해주세요."
+                        }
+                    )
+
+                response = upload_response
+
+                if response["code"] not in ["200", "0000"]:
+                    print("code", response["code"])
+                    print(response)
+
+                    error_message = "이미지 업로드에 실패하였습니다. 잠시 후에 다시 시도해주세요."
+                    if response["code"] == "6000":
+                        match = re.search(
+                            r"Exception\((.*?)\)$",
+                            response["data"]["failure"][0]["error"]["message"],
+                        )
+                        if match:
+                            error_message = match.group(1)
+                    if response["code"] == "405":
+                        error_message = response["message"]
+
+                    raise PolicyException(detail={"message": error_message})
+
+        return response["data"]["success"][0]["url"]

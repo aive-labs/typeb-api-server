@@ -6,6 +6,8 @@ import pandas as pd
 import yaml
 from korean_lunar_calendar import KoreanLunarCalendar
 
+from src.common.utils.get_env_variable import get_env_variable
+
 
 class CreateDataDict:
     def __init__(self) -> None:
@@ -43,6 +45,8 @@ class CreateDataDict:
         data_dict["recsys_model_name"] = config["recsys_mode_name"][
             input_data["set_data"].get("recsys_model_id")
         ]
+        ## Set Data에 추천모델 id 입력 -> 없는 경우, 선택없음(0)으로 기입
+        data_dict["recsys_model_id"] = input_data["set_data"].get("recsys_model_id", 0)
 
         # 개인화 여부
         if input_data["base_data"].get("is_personalized") == True:
@@ -73,9 +77,10 @@ class CreateDataDict:
         for i, v in enumerate(input_data["group_info"]):
             if str(v["set_group_seq"]) == str(request_generate_group_seq):
                 group_num = i
-
+                # 콘텐츠 연동이 없는 경우 id가 0으로 전달
+                group_add_contents_id = input_data["group_info"][group_num].get("contents_id")
                 # 콘텐츠
-                if input_data["group_info"][group_num].get("contents_name") is not None:
+                if group_add_contents_id is not None and group_add_contents_id != 0:
                     data_dict["contents_yn"] = "y"
                     data_dict["contents_id"] = input_data["group_info"][group_num].get(
                         "contents_id"
@@ -87,6 +92,8 @@ class CreateDataDict:
                         data_dict["contents_url"] = input_data["group_info"][group_num].get(
                             "contents_url"
                         )
+                else:
+                    data_dict["contents_yn"] = "n"
 
                 # 대표상품명 입력 (group_info.rep_nm)
                 if (
@@ -247,7 +254,7 @@ class generate_message:
             self.msg_title = title
             self.msg_body = contents_text
             self.msg_gen_key.append(contents_df["gen_key"].values[0])
-        elif data_dict.get("msg_type") in ["kakao_image_wide"]:
+        elif data_dict.get("msg_type") in ["kakao_image_wide", "kakao_carousel"]:
             self.msg_body = title
             self.msg_gen_key.append(contents_df["gen_key"].values[0])
 
@@ -265,7 +272,7 @@ class generate_message:
             self.msg_title = title
             self.msg_body = contents_text
             self.msg_gen_key.append(contents_df["gen_key"].values[0])
-        elif data_dict.get("msg_type") in ["kakao_image_wide"]:
+        elif data_dict.get("msg_type") in ["kakao_image_wide", "kakao_carousel"]:
             self.msg_body = title
             self.msg_gen_key.append(contents_df["gen_key"].values[0])
 
@@ -340,9 +347,9 @@ class generate_message:
         basic = sample_df.sample(n=1)
         self.msg_gen_key.append(basic["gen_key"].values[0])
         self.msg_title = basic["text"].values[0]
-        if (
-            data_dict["msg_type"] not in ("lms", "mms")
-            and data_dict["msg_type"] != "kakao_image_wide"
+        if data_dict["msg_type"] not in ("lms", "mms") and data_dict["msg_type"] not in (
+            "kakao_image_wide",
+            "kakao_carousel",
         ):
             self.msg_body = basic["text"].values[0] + "\n\n"
 
@@ -620,8 +627,12 @@ class generate_message:
         )
 
     def contents_template(self, data_dict):
+        """메시지 본문에 콘텐츠 관련 정보를 업데이트
+        case1: contents_yn이 있는 경우 (Step2에서 연동된 콘텐츠가 있는 경우), 추천모델보다 우선해서 상품 연동
+        case2: 추천모델이 있고, 콘텐츠 연동은 안된 경우 추천모델에 대한 문구 업데이트
+        """
         config = CreateDataDict.load_yaml(self)
-
+        cloud_front_url = get_env_variable("cloud_front_asset_url")
         if data_dict["contents_yn"] == "y":
             if "contents_url" in data_dict.keys() and data_dict.get("contents_url") is not None:
                 if data_dict["msg_type"] in ("lms", "mms"):
@@ -631,39 +642,58 @@ class generate_message:
                         + "▷"
                         + data_dict["contents_name"]
                         + "\n"
-                        + data_dict["contents_url"]
+                        + f"""{cloud_front_url}/{data_dict["contents_url"]}"""
                     )
                 else:
                     self.msg_link_button.append(
                         {
                             "button_type": "web_link_button",
-                            "web_link": data_dict["contents_url"],
+                            "web_link": f"""{cloud_front_url}/{data_dict["contents_url"]}""",
                             "button_name": random.choice(config["button_msg"]),
-                            "app_link": data_dict["contents_url"],
+                            "app_link": f"""{cloud_front_url}/{data_dict["contents_url"]}""",
                             "set_group_msg_seq": data_dict["group_idx"],
                         }
                     )
+        elif (
+            data_dict["contents_yn"] != "y"
+            and data_dict["recsys_model_id"] != 0
+            and config["recsys_model_items"].get(data_dict["recsys_model_id"]) is not None
+        ):
+            # 추천모델에 의한 링크 연결시, cloud_front_url 프리픽스 입력 X
+            recommend_item_symbol = config["recsys_model_items"].get(data_dict["recsys_model_id"])
+            recommend_item_link_symbol = config["recsys_model_item_links"].get(
+                data_dict["recsys_model_id"]
+            )
+            if data_dict["msg_type"] in ("lms", "mms"):
+                self.msg_body = (
+                    self.msg_body
+                    + "\n\n"
+                    + f"추천상품: {recommend_item_symbol}"
+                    + "\n"
+                    + f"▷ {recommend_item_link_symbol}"
+                )
             else:
-                if data_dict["msg_type"] in ("lms", "mms"):
-                    self.msg_body = (
-                        self.msg_body + "\n\n" + "▷ {contents_name}" + "\n" + "{contents_url}"
-                    )
-                else:
-                    self.msg_link_button.append(
-                        {
-                            "button_type": "web_link_button",
-                            "web_link": "{{contents_url}}",
-                            "button_name": random.choice(config["button_msg"]),
-                            "app_link": "{{contents_url}}",
-                            "set_group_msg_seq": data_dict["group_idx"],
-                        }
-                    )
+                button_name_candidate = config["button_msg"]
+                if data_dict["msg_type"] in ("kakao_carousel"):
+                    button_name_candidate = [
+                        but_nm for but_nm in config["button_msg"] if len(but_nm) <= 8
+                    ]
+
+                self.msg_link_button.append(
+                    {
+                        "button_type": "web_link_button",
+                        "web_link": recommend_item_link_symbol,
+                        "button_name": random.choice(button_name_candidate),
+                        "app_link": recommend_item_link_symbol,
+                        "set_group_msg_seq": data_dict["group_idx"],
+                    }
+                )
 
     def notice_template(self, data_dict):
         self.msg_body = self.msg_body + "\n"
 
         ## 적용/미적용 상품
-        if data_dict["msg_type"] != "kakao_image_wide":
+        if data_dict["msg_type"] not in ("kakao_image_wide", "kakao_carousel"):
             if (
                 data_dict["offer_info"].get("offer_style_conditions") == "전 상품"
                 and data_dict["offer_info"].get("offer_style_exclusion_conditions") is None
@@ -696,7 +726,7 @@ class generate_message:
                 )
 
         ## 적용/미적용 채널
-        if data_dict["msg_type"] != "kakao_image_wide":
+        if data_dict["msg_type"] not in ("kakao_image_wide", "kakao_carousel"):
             if (
                 data_dict["offer_info"].get("offer_channel_conditions") is not None
                 and data_dict["offer_info"].get("offer_channel_exclusion_conditions") is None
@@ -868,6 +898,7 @@ def generate_dm(grp_idx, input_data, send_date, msg_type, remind_duration):
             "kakao_text",
             "kakao_image_general",
             "kakao_image_wide",
+            "kakao_carousel",
         ]:
             output = {}
             output["msg_gen_key"] = ""
@@ -891,7 +922,7 @@ def generate_dm(grp_idx, input_data, send_date, msg_type, remind_duration):
                 inst2.offer_template(data_dict)
             else:
                 inst2.cmp_date(data_dict)
-            if data_dict["contents_yn"] == "y":
+            if data_dict["contents_yn"] == "y" or data_dict["recsys_model_id"] != 0:
                 inst2.contents_template(data_dict)
             if data_dict["offer_yn"] == "y" and data_dict["msg_type"] in (
                 "lms",

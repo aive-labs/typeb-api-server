@@ -23,7 +23,10 @@ from src.campaign.routes.dto.request.campaign_set_message_use_request import (
     CampaignSetMessageUseRequest,
 )
 from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdate
-from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
+from src.campaign.routes.dto.request.message_generate import (
+    CarouselMsgGenerationReq,
+    MsgGenerationReq,
+)
 from src.campaign.routes.dto.request.test_send_request import TestSendRequest
 from src.campaign.routes.dto.response.campaign_set_description_response import (
     CampaignSetDescriptionResponse,
@@ -40,6 +43,7 @@ from src.campaign.routes.dto.response.campaign_timeline_response import (
 from src.campaign.routes.dto.response.exclusion_customer_detail import (
     ExcludeCustomerDetail,
 )
+from src.campaign.routes.dto.response.generate_message_response import GeneratedMessage
 from src.campaign.routes.dto.response.set_group_seq_with_message_response import (
     SetGroupSeqWithMessageResponse,
 )
@@ -166,8 +170,23 @@ def generate_message(
     generate_message_service: GenerateMessageUsecase = Depends(
         dependency=Provide[Container.generate_message_service]
     ),
-):
+) -> list[GeneratedMessage]:
     return generate_message_service.generate_message(message_generate, user, db=db)
+
+
+@campaign_router.post("/campaigns/generate-carousel-message")
+@inject
+def generate_carousel_message_request(
+    carousel_message_generate: CarouselMsgGenerationReq,
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
+    db=Depends(get_db),
+    generate_message_service: GenerateMessageUsecase = Depends(
+        dependency=Provide[Container.generate_message_service]
+    ),
+):
+    return generate_message_service.generate_carousel_message(
+        carousel_message_generate, user, db=db
+    )
 
 
 @campaign_router.get("/campaigns/excluded-custs/{campaign_id}")
@@ -428,3 +447,18 @@ async def delete_message_resources(
 ) -> SetGroupSeqWithMessageResponse:
     """이미지 업로드 API"""
     return await delete_image_for_message.exec(campaign_id, set_group_msg_seq, user, db=db)
+
+
+@campaign_router.post("/campaigns/{campaign_id}/test-carousel")
+@inject
+def carousel_test(
+    campaign_id: str,
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
+    db=Depends(get_db),
+    approve_campaign_service: ApproveCampaignUseCase = Depends(
+        dependency=Provide[Container.approve_campaign_service]
+    ),
+):
+    result = approve_campaign_service.save_campaign_reservation(db, user, campaign_id, None)
+    db.commit()
+    return result

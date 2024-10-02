@@ -894,7 +894,7 @@ class AudienceSqlAlchemy:
             AudienceEntity.audience_status_code != AudienceStatus.notdisplay.value
         ]
 
-        if target_strategy:
+        if target_strategy and target_strategy != "custom":
             strategy_conditions.append(AudienceEntity.target_strategy == target_strategy)
 
         result = (

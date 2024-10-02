@@ -1,3 +1,8 @@
+# env.py
+import importlib
+
+# env.py
+import pkgutil
 from logging.config import fileConfig
 
 import psycopg2
@@ -10,13 +15,23 @@ from src.core.database import Base
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
+
+
+def import_all_modules(package_name):
+    """주어진 패키지의 모든 서브 모듈을 임포트합니다."""
+    package = importlib.import_module(package_name)
+    for _, name, _ in pkgutil.walk_packages(package.__path__, package_name + "."):
+        importlib.import_module(name)
+
+
+# src 패키지 내의 모든 모듈 임포트
+import_all_modules("src")
 
 
 def get_db_list_for_migration() -> list:
@@ -34,7 +49,14 @@ def get_db_list_for_migration() -> list:
         mall_ids = [row[0] for row in result]
 
     user_db_conn.close()
-    return [f"{get_env_variable('prefix_db_url')}/{mall_id}" for mall_id in mall_ids]
+    return [f"{get_env_variable('prefix_db_url')}/{mall_id}" for mall_id in mall_ids[:1]]
+
+
+def include_object(object, name, type_, reflected, compare_to):
+    if type_ == "table":
+        return object.schema == target_metadata.schema
+    else:
+        return True
 
 
 def run_migrations_online() -> None:
@@ -48,17 +70,18 @@ def run_migrations_online() -> None:
     db_urls = get_db_list_for_migration()
     print("🔅DB MIGRATION TARGET")
     for db_url in db_urls:
-        print(f"✅ {db_url}")
+        print(f"✅ {db_url} / schema: {target_metadata.schema}")
+        print(f"tables: {target_metadata.tables.keys()}")
+
         connectable = create_engine(db_url, poolclass=pool.NullPool)
         with connectable.connect() as connection:
             context.configure(
                 connection=connection,
                 target_metadata=target_metadata,
                 version_table_schema=target_metadata.schema,
+                include_object=include_object,
             )
             with context.begin_transaction():
-                print(f"🔅 SET search_path TO {target_metadata.schema}")
-                context.execute(f"SET search_path TO {target_metadata.schema}")
                 context.run_migrations()
 
 

@@ -9,6 +9,17 @@ from src.campaign.infra.entity.kakao_link_buttons_entity import KakaoLinkButtons
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.string_utils import replace_multiple
+from src.core.exceptions.exceptions import PolicyException
+from src.message_template.enums.message_type import MessageType
+from src.messages.domain.send_kakao_carousel import (
+    Attachment,
+    Button,
+    Carousel,
+    CarouselItem,
+    Image,
+    MoreLink,
+    SendKakaoCarousel,
+)
 
 
 def create_dict_list(group):
@@ -61,7 +72,10 @@ def convert_to_button_format(db, set_group_msg_seqs, send_rsv_format):
             KakaoLinkButtonsEntity,
             SetGroupMessagesEntity.set_group_msg_seq == KakaoLinkButtonsEntity.set_group_msg_seq,
         )
-        .filter(KakaoLinkButtonsEntity.set_group_msg_seq.in_(set_group_msg_seqs))
+        .filter(
+            KakaoLinkButtonsEntity.set_group_msg_seq.in_(set_group_msg_seqs),
+            SetGroupMessagesEntity.msg_type != MessageType.KAKAO_CAROUSEL.value,
+        )
         .distinct()
     )
 
@@ -79,6 +93,7 @@ def convert_to_button_format(db, set_group_msg_seqs, send_rsv_format):
         empty_df = pd.DataFrame(columns=cols)
         return empty_df
 
+    button_df_msg_seqs = button_df["set_group_msg_seq"].unique().tolist()
     button_type_map = {"web_link_button": "WL"}
     button_df["button_type"] = button_df["button_type"].map(
         button_type_map
@@ -108,6 +123,8 @@ def convert_to_button_format(db, set_group_msg_seqs, send_rsv_format):
 
     keys = ["campaign_id", "set_sort_num", "group_sort_num", "set_group_msg_seq"]
     # contents_id, contents_link, contents_name
+
+    send_rsv_format = send_rsv_format[send_rsv_format["set_group_msg_seq"].isin(button_df_msg_seqs)]
     send_rsv_btn = send_rsv_format.merge(button_df, on=keys, how="left")
     send_rsv_btn = send_rsv_btn.replace({np.nan: None})
 
@@ -151,10 +168,6 @@ def convert_to_button_format(db, set_group_msg_seqs, send_rsv_format):
     ]
     send_rsv_btn["url_pc"] = np.select(cond, choice)
 
-    print("send_rsv_bt[send_rsv_btn]")
-    print(send_rsv_btn.columns)
-    print(send_rsv_btn[send_rsv_btn["type"].notnull()])
-
     if len(send_rsv_btn[send_rsv_btn["type"].notnull()]) == 0:
         cols = [
             "campaign_id",
@@ -169,6 +182,8 @@ def convert_to_button_format(db, set_group_msg_seqs, send_rsv_format):
 
     group_keys = ["campaign_id", "set_sort_num", "group_sort_num", "cus_cd", "set_group_msg_seq"]
 
+    # button_df columns
+    # ["campaign_id", "set_sort_num", "group_sort_num", "cus_cd", "set_group_msg_seq", "kko_button_json"]
     button_df = (
         send_rsv_btn.groupby(group_keys).apply(create_dict_list).reset_index(name="kko_button_json")
     )
@@ -178,3 +193,93 @@ def convert_to_button_format(db, set_group_msg_seqs, send_rsv_format):
     print(len(notnullbtn[notnullbtn["kko_button_json"].str.contains("{{")]))
 
     return button_df
+
+
+def generate_kakao_carousel_json(send_rsv_format, carousel_df):
+    selected_column = [
+        "campaign_id",
+        "set_sort_num",
+        "group_sort_num",
+        "cus_cd",
+        "set_group_msg_seq",
+        "kko_button_json",
+    ]
+    if len(carousel_df) == 0:
+        empty_df = pd.DataFrame(columns=selected_column)
+        return empty_df
+
+    # 그룹화: set_group_msg_seq 기준
+    grouped = carousel_df.groupby("set_group_msg_seq")
+
+    # kko_json_button 컬럼을 위한 딕셔너리 생성
+    kko_json_buttons = {}
+    for group_seq, group in grouped:
+        kko_json = create_carousel_json(group)
+        kko_json_buttons[group_seq] = kko_json
+
+    # 2. 캐러셀 발송용 객체를 만들고 json으로 변환한다. 그리고 조인을 하면 될 것 같음.
+    kko_json_df = pd.DataFrame(
+        {
+            "set_group_msg_seq": list(kko_json_buttons.keys()),
+            "kko_button_json": list(kko_json_buttons.values()),
+        }
+    )
+
+    # 3. send_rsv_format과 조인
+    # 2에서 만든 테이블과 send_rsv_format 테이블을 조인한다.
+    carousel_json_df = send_rsv_format.merge(kko_json_df, on="set_group_msg_seq", how="inner")
+
+    return carousel_json_df[selected_column]
+
+
+def create_carousel_json(group):
+    carousel_items = []
+
+    # 카드별로 그룹화 (carousel_sort_num, header, message, img_url, img_link로 그룹화)
+    grouped_cards = group.groupby(["carousel_sort_num", "header", "message", "img_url", "img_link"])
+    for (carousel_sort_num, header, message, img_url, img_link), card_group in grouped_cards:
+        print("-----------")
+        print(f"carousel_sort_num: {carousel_sort_num}")
+        print(f"header: {header}")
+        print(f"message: {message}")
+        print(f"img_url: {img_url}")
+        print(f"img_link: {img_link}")
+
+        buttons = []
+        for _, row in card_group.iterrows():
+            # 버튼이 없으면 넣지 않는다.
+            if row["name"] and row["type"]:
+                buttons.append(Button.from_button_data(row))
+
+        carousel_item = CarouselItem(
+            header=header,
+            message=message,
+            attachment=Attachment(button=buttons, image=Image(img_url=img_url, img_link=img_link)),
+        )
+
+        carousel_items.append(carousel_item)
+
+    carousel = Carousel(list=carousel_items)
+    more_link = extract_carousel_more_link(group)
+    if more_link:
+        carousel.set_more_link(more_link)
+
+    send_kakao_carousel = SendKakaoCarousel(carousel=carousel)
+
+    return json.dumps(send_kakao_carousel.model_dump(), ensure_ascii=False)
+
+
+def extract_carousel_more_link(group) -> MoreLink | None:
+    # Tail 정보 추출 (None일 경우 기본값 설정 또는 생략)
+    url_mobile = (
+        group["tail_url_mobile"].iloc[0] if pd.notna(group["tail_url_mobile"].iloc[0]) else None
+    )
+    url_pc = group["tail_url_pc"].iloc[0] if pd.notna(group["tail_url_pc"].iloc[0]) else None
+
+    if url_mobile is None and url_pc is None:
+        return None
+
+    if url_mobile is None:
+        raise PolicyException(detail={"message": "더 보기를 위한 모바일 링크 값은 필수입니다."})
+
+    return MoreLink(url_mobile=url_mobile, url_pc=url_pc)

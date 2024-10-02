@@ -160,6 +160,7 @@ class OfferRepository(BaseOfferRepository):
             OffersEntity.coupon_no.label("code"),
         ).filter(
             OffersEntity.benefit_type.isnot(None),
+            OffersEntity.is_available.is_(True),
             *condition,
         )
 

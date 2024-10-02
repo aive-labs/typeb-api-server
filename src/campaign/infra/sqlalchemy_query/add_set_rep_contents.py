@@ -59,4 +59,8 @@ def add_set_rep_contents(sets, set_groups, campaign_id, db):
             if set_dict["set_sort_num"] == set_sort_num:
                 # 콘텐츠명 중복 제거
                 sets[idx]["contents_names"] = list(set(result_dict[set_sort_num]))
+
+    print("sets")
+    print(sets)
+
     return sets

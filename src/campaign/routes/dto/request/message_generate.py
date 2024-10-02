@@ -50,3 +50,11 @@ class MsgGenerationReq(BaseModel):
     set_object: CampaignSet
     set_group_list: List[CampaignSetGroup]
     req_generate_msg_seq: List[int]
+
+
+class CarouselMsgGenerationReq(MsgGenerationReq):
+    carousel_id: int
+
+    @staticmethod
+    def from_msg_generation_request(carousel_id: int, msg_generation_req: MsgGenerationReq):
+        return CarouselMsgGenerationReq(**msg_generation_req.model_dump(), carousel_id=carousel_id)

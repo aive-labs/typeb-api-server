@@ -66,7 +66,14 @@ from src.core.exceptions.exceptions import (
 )
 from src.message_template.enums.message_type import MessageType
 from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
+from src.messages.domain.kakao_carousel_more_link import KakaoCarouselMoreLink
 from src.messages.infra.entity.kakao_carousel_card_entity import KakaoCarouselCardEntity
+from src.messages.infra.entity.kakao_carousel_link_button_entity import (
+    KakaoCarouselLinkButtonsEntity,
+)
+from src.messages.infra.entity.kakao_carousel_more_link_entity import (
+    KakaoCarouselMoreLinkEntity,
+)
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
 
 
@@ -846,3 +853,86 @@ class CampaignSetRepository(BaseCampaignSetRepository):
             .all()
         )
         return [KakaoCarouselCard.model_validate(entity) for entity in carousel_entities]
+
+    def get_campaign_by_set_group_message_by_msg_seq(self, set_group_msg_seq, db) -> str:
+        entity = (
+            db.query(SetGroupMessagesEntity)
+            .filter(SetGroupMessagesEntity.set_group_msg_seq == int(set_group_msg_seq))
+            .first()
+        )
+
+        if entity is None:
+            raise NotFoundException(
+                detail={"message": f"{set_group_msg_seq}에 해당하는 캠페인이 없습니다."}
+            )
+
+        return entity.campaign_id
+
+    def get_carousel_more_link(self, set_group_message_seq, db) -> KakaoCarouselMoreLink | None:
+        carousel_more_link_entity = (
+            db.query(KakaoCarouselMoreLinkEntity)
+            .filter(KakaoCarouselMoreLinkEntity.set_group_msg_seq == int(set_group_message_seq))
+            .first()
+        )
+
+        if carousel_more_link_entity is None:
+            return None
+
+        return KakaoCarouselMoreLink.model_validate(carousel_more_link_entity)
+
+    def get_carousel_info(self, set_group_msg_seqs, db: Session):
+        return (
+            db.query(
+                SetGroupMessagesEntity.set_group_msg_seq,
+                CampaignSetGroupsEntity.campaign_id,
+                CampaignSetGroupsEntity.set_sort_num,
+                CampaignSetGroupsEntity.group_sort_num,
+                KakaoCarouselCardEntity.carousel_sort_num,
+                KakaoCarouselMoreLinkEntity.url_mobile.label("tail_url_mobile"),
+                KakaoCarouselMoreLinkEntity.url_pc.label("tail_url_pc"),
+                KakaoCarouselCardEntity.message_title.label("header"),
+                KakaoCarouselCardEntity.message_body.label("message"),
+                KakaoCarouselCardEntity.image_url.label("img_url"),
+                KakaoCarouselCardEntity.image_link.label("img_link"),
+                KakaoCarouselLinkButtonsEntity.name,
+                KakaoCarouselLinkButtonsEntity.type,
+                KakaoCarouselLinkButtonsEntity.url_mobile,
+                KakaoCarouselLinkButtonsEntity.url_pc,
+            )
+            .join(
+                SetGroupMessagesEntity,
+                CampaignSetGroupsEntity.set_group_seq == SetGroupMessagesEntity.set_group_seq,
+            )
+            .join(
+                KakaoCarouselCardEntity,
+                SetGroupMessagesEntity.set_group_msg_seq
+                == KakaoCarouselCardEntity.set_group_msg_seq,
+            )
+            .outerjoin(
+                KakaoCarouselLinkButtonsEntity,
+                KakaoCarouselCardEntity.id == KakaoCarouselLinkButtonsEntity.carousel_card_id,
+            )
+            .outerjoin(
+                KakaoCarouselMoreLinkEntity,
+                SetGroupMessagesEntity.set_group_msg_seq
+                == KakaoCarouselMoreLinkEntity.set_group_msg_seq,
+            )
+            .filter(
+                SetGroupMessagesEntity.set_group_msg_seq.in_(set_group_msg_seqs),
+                SetGroupMessagesEntity.msg_type == MessageType.KAKAO_CAROUSEL.value,
+            )
+            .distinct()
+            .order_by(KakaoCarouselCardEntity.carousel_sort_num.asc())
+        )
+
+    def get_campaign_set_group_messages_not_in_set_group_seq(
+        self, set_seq, existed_set_group_seq, db: Session
+    ):
+        return (
+            db.query(SetGroupMessagesEntity)
+            .filter(
+                SetGroupMessagesEntity.set_seq == set_seq,
+                SetGroupMessagesEntity.set_group_seq.not_in(existed_set_group_seq),
+            )
+            .all()
+        )

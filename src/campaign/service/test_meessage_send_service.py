@@ -19,6 +19,7 @@ from src.campaign.infra.entity.send_reservation_entity import SendReservationEnt
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.campaign.infra.sqlalchemy_query.convert_to_button_format import (
     convert_to_button_format,
+    generate_kakao_carousel_json,
 )
 from src.campaign.infra.sqlalchemy_query.get_message_resources import (
     get_message_resources,
@@ -28,11 +29,18 @@ from src.campaign.infra.sqlalchemy_query.personal_variable_formatting import (
 )
 from src.campaign.routes.dto.request.test_send_request import TestSendRequest
 from src.campaign.routes.port.test_message_send_usecase import TestSendMessageUseCase
+from src.campaign.service.port.base_campaign_set_repository import (
+    BaseCampaignSetRepository,
+)
 from src.common.infra.entity.customer_master_entity import CustomerMasterEntity
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import localtime_converter
 from src.contents.infra.entity.contents_entity import ContentsEntity
-from src.core.exceptions.exceptions import ConsistencyException, NotFoundException
+from src.core.exceptions.exceptions import (
+    ConsistencyException,
+    NotFoundException,
+    PolicyException,
+)
 from src.message_template.enums.message_type import MessageType
 from src.message_template.infra.entity.message_template_entity import (
     MessageTemplateEntity,
@@ -46,8 +54,13 @@ pd.set_option("display.max_columns", None)
 
 class TestMessageSendService(TestSendMessageUseCase):
 
-    def __init__(self, onboarding_repository: BaseOnboardingRepository):
+    def __init__(
+        self,
+        campaign_set_repository: BaseCampaignSetRepository,
+        onboarding_repository: BaseOnboardingRepository,
+    ):
         self.onboarding_repository = onboarding_repository
+        self.campaign_set_repository = campaign_set_repository
 
     async def exec(
         self, campaign_id, test_send_request: TestSendRequest, user: User, db: Session
@@ -81,12 +94,6 @@ class TestMessageSendService(TestSendMessageUseCase):
             item.test_callback_number.replace("-", "") for item in test_send_request.recipient_list
         ]
 
-        print("msg_seq_list")
-        print(msg_seq_list)
-
-        print("send_rsv_df")
-        print(send_rsv_df)
-
         test_send_df = pd.DataFrame()
         for msg in msg_seq_list:
             sample_df = send_rsv_df[send_rsv_df.set_group_msg_seq == msg].sample(
@@ -109,11 +116,6 @@ class TestMessageSendService(TestSendMessageUseCase):
                 "track_id",
             ]
         ]
-        print("test_send_rsv_format")
-        print(test_send_rsv_format.columns)
-
-        print("msg_seq_list")
-        print(msg_seq_list)
 
         print("button 개인화 적용 전 row수 :" + str(len(test_send_rsv_format)))
         logging.info("2.[Test] button 개인화 적용 전 row수 :" + str(len(test_send_rsv_format)))
@@ -128,24 +130,33 @@ class TestMessageSendService(TestSendMessageUseCase):
         del test_send_rsv_format["contents_name"]
         del test_send_rsv_format["contents_url"]
 
-        button_df_convert = convert_to_button_format(db, msg_seq_list, test_send_rsv_format)
-        print("button_df_convert")
-        print(button_df_convert)
+        # 카카오 버튼을 가진 set_group_msg_seqs 데이터만 존재 (캐러셀은 제외)
+        # dataframe cols => ["campaign_id", "set_sort_num", "group_sort_num", "cus_cd", "set_group_msg_seq", "kko_button_json"]
+        button_df_with_kko_json = convert_to_button_format(db, msg_seq_list, test_send_rsv_format)
+        # 캐러셀인 set_group_msg_seqs 데이터만 존재
+        # dataframe cols => ["campaign_id", "set_sort_num", "group_sort_num", "cus_cd", "set_group_msg_seq", "kko_button_json"]
 
-        test_send_rsv_format = test_send_rsv_format.merge(
-            button_df_convert, on=group_keys, how="left"  # pyright: ignore [reportArgumentType]
+        # 1. set_group_msg_seqs이면서 msg_type이 캐러셀인 데이터를 조회한다.
+        # keys = ["campaign_id", "set_sort_num", "group_sort_num", "set_group_msg_seq"]
+        carousel_query = self.campaign_set_repository.get_carousel_info(msg_seq_list, db)
+        carousel_df = DataConverter.convert_query_to_df(carousel_query)
+
+        is_one_carousel_card = carousel_df["carousel_sort_num"].nunique() == 1
+        if is_one_carousel_card:
+            raise PolicyException(
+                detail={"message": "캐러셀 항목은 2개 이상부터 발송이 가능합니다."}
+            )
+
+        carousel_df_with_kko_json = generate_kakao_carousel_json(test_send_rsv_format, carousel_df)
+
+        # 두 개의 데이터프레임 통합
+        kakao_button_df = pd.concat(
+            [button_df_with_kko_json, carousel_df_with_kko_json], ignore_index=True
         )
 
-        print("test_send_rsv_format.columns")
-        print(test_send_rsv_format.columns)
-
-        notnullbtn = test_send_rsv_format[test_send_rsv_format["kko_button_json"].notnull()]
-        isnullbtn = test_send_rsv_format[test_send_rsv_format["kko_button_json"].isnull()]
-        notnullbtn = notnullbtn[
-            ~notnullbtn["kko_button_json"].str.contains("{{")
-        ]  # 포매팅이 안되어 있는 메세지는 제외한다.
-
-        test_send_rsv_format = pd.concat([notnullbtn, isnullbtn])
+        test_send_rsv_format = test_send_rsv_format.merge(
+            kakao_button_df, on=group_keys, how="left"  # pyright: ignore [reportArgumentType]
+        )
 
         print("button 개인화 적용 후 row수 :" + str(len(test_send_rsv_format)))
         logging.info("3.[Test] button 개인화 적용 후 row수 :" + str(len(test_send_rsv_format)))
@@ -159,6 +170,7 @@ class TestMessageSendService(TestSendMessageUseCase):
         test_send_rsv_format = test_send_rsv_format.merge(
             resource_df, on="set_group_msg_seq", how="left"
         )
+
         # 파일이 없는 경우 nan -> 0
         test_send_rsv_format["send_filecount"] = test_send_rsv_format["send_filecount"].fillna(0)
 
@@ -178,6 +190,8 @@ class TestMessageSendService(TestSendMessageUseCase):
                 "offer_amount",
                 "send_msg_body",
                 "phone_callback",
+                "send_msg_type",
+                "kko_button_json",
             ]
         ]
 
@@ -185,16 +199,14 @@ class TestMessageSendService(TestSendMessageUseCase):
         personal_processing_fm = personal_variable_formatting(
             db, personal_processing, test_send_request.recipient_list
         )
-        personal_processing_fm = personal_processing_fm[
-            ["set_group_msg_seq", "cus_cd", "send_msg_body", "phone_callback"]
+        personal_processing_fm = personal_processing_fm[  # pyright: ignore [reportCallIssue]
+            ["set_group_msg_seq", "cus_cd", "send_msg_body", "phone_callback", "kko_button_json"]
         ].rename(
-            columns={
-                "send_msg_body": "send_msg_body_fm",
-                "phone_callback": "phone_callback_fm",
-            }
+            columns={"send_msg_body": "send_msg_body_fm", "phone_callback": "phone_callback_fm"}
         )
         personal_processing_fm = personal_processing_fm.drop_duplicates()
 
+        del test_send_rsv_format["kko_button_json"]
         send_rsv_format = test_send_rsv_format.merge(
             personal_processing_fm, on=["set_group_msg_seq", "cus_cd"], how="left"
         )
@@ -485,6 +497,7 @@ class TestMessageSendService(TestSendMessageUseCase):
             MessageType.KAKAO_TEXT.value,  # 친구톡 이미지형에 이미지가 없는경우
             MessageType.KAKAO_IMAGE_GENERAL.value,  # 친구톡 이미지형
             MessageType.KAKAO_IMAGE_WIDE.value,  # 친구톡 와이드 이미지형
+            MessageType.KAKAO_CAROUSEL.value,  # 친구톡 캐러셀
         ]
 
         df["kko_yellowid"] = kakao_sender_key
@@ -498,6 +511,7 @@ class TestMessageSendService(TestSendMessageUseCase):
             MessageType.KAKAO_TEXT.value,  # 친구톡 이미지형에 이미지가 없는경우
             MessageType.KAKAO_IMAGE_GENERAL.value,  # 친구톡 이미지형
             MessageType.KAKAO_IMAGE_WIDE.value,  # 친구톡 와이드 이미지형
+            MessageType.KAKAO_CAROUSEL.value,  # 친구톡 캐러셀
         ]
         cond_resend = [
             (df["send_msg_type"] == MessageType.KAKAO_ALIM_TEXT.value),  # lms
@@ -558,6 +572,7 @@ class TestMessageSendService(TestSendMessageUseCase):
             (df["send_msg_type"] == "kakao_text"),  # 친구톡 텍스트
             (df["send_msg_type"] == "kakao_image_general")
             & (df["send_filecount"] == 0),  # 친구톡 & 이미지 X
+            df["send_msg_type"] == "kakao_carousel",
             (df["send_msg_type"].isin(["sms", "lms", "mms"])),  # 문자메세지
         ]
 
@@ -568,6 +583,7 @@ class TestMessageSendService(TestSendMessageUseCase):
             "ft",  # 친구톡와이드 & 이미지 X,
             "ft",  # 카카오 텍스트
             "ft",  # 친구톡 & 이미지 X
+            "fc",  # 친구톡 캐러셀
             df["send_msg_type"],
         ]
         df["send_msg_type"] = np.select(cond_msg_tp, choice_msg_tp)

@@ -34,6 +34,7 @@ from src.campaign.infra.entity.send_reservation_entity import SendReservationEnt
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.campaign.infra.sqlalchemy_query.convert_to_button_format import (
     convert_to_button_format,
+    generate_kakao_carousel_json,
 )
 from src.campaign.infra.sqlalchemy_query.get_message_resources import (
     get_message_resources,
@@ -408,7 +409,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             campaign.campaign_status_group_code = "o"
             campaign.campaign_status_group_name = "운영단계"
 
-            print("1111")
             # 발송 예약
             send_reservation_result = await self.today_approval_campaign_execute(
                 db,
@@ -1206,7 +1206,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         - msg_update_thres: 메세지 예약 발송일자 변경 기준일자
 
         - (메세지 발송예약일자 == 당일) 인 메세지만 저장
-
         -- 수정 시 test_send_executions_v2 api 영향도 체크 필요
         -- to-do : 처음 생성된 정보 <-> (수정단계 -> 진행중지)수정할 때 join 정보 불일치 영향도 고려
         """
@@ -1327,12 +1326,6 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 CustomerMasterEntity.track_id,
             )
 
-            # TODO [테스트 고객]이 고객마스터에 있는지 확인
-            test_cus = ["0005615876", "0005620054", "0005620055"]
-            test_cus_arr = cus_info_all.filter(CustomerMasterEntity.cus_cd.in_(test_cus)).all()
-            test_cus_cd_lst = [(item[0], item[1]) for item in test_cus_arr]
-
-            logging.info(f"2. 테스트 고객: {str(test_cus_cd_lst)}")
             set_group_message_df = DataConverter.convert_query_to_df(set_group_message)
             logging.info(set_group_message_df)
             set_group_messages_seqs = list(set(set_group_message_df["set_group_msg_seq"]))
@@ -1352,6 +1345,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             subquery = set_group_message.subquery()
 
             # recipients & messages
+            print(f"current_date: {current_date}")
             rsv_msg_filter = [
                 subquery.c.msg_body.isnot(None),  # 메세지 본문이 Null인 메세지 제외
                 subquery.c.msg_body != "",  # 메세지 본문이 공백인 메세지 제외
@@ -1453,8 +1447,25 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 ]
             ]
             try:
-                button_df_convert = convert_to_button_format(
+                # 카카오 버튼을 가진 set_group_msg_seqs 데이터만 존재 (캐러셀은 제외)
+                # dataframe cols => ["campaign_id", "set_sort_num", "group_sort_num", "cus_cd", "set_group_msg_seq", "kko_button_json"]
+                button_df_with_kko_json = convert_to_button_format(
                     db, set_group_msg_seqs, send_rsv_format
+                )
+                # 캐러셀인 set_group_msg_seqs 데이터만 존재
+                carousel_query = self.campaign_set_repository.get_carousel_info(
+                    set_group_msg_seqs, db
+                )
+                # keys = ["campaign_id", "set_sort_num", "group_sort_num", "set_group_msg_seq"]
+                carousel_df = DataConverter.convert_query_to_df(carousel_query)
+
+                carousel_df_with_kko_json = generate_kakao_carousel_json(
+                    send_rsv_format, carousel_df
+                )
+
+                # 두 개의 데이터프레임 통합
+                kakao_button_df = pd.concat(
+                    [button_df_with_kko_json, carousel_df_with_kko_json], ignore_index=True
                 )
             except Exception as e:
                 raise Exception(e)
@@ -1467,20 +1478,12 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 "cus_cd",
                 "set_group_msg_seq",
             ]
-            send_rsv_format = send_rsv_format.merge(button_df_convert, on=group_keys, how="left")
+            send_rsv_format = send_rsv_format.merge(kakao_button_df, on=group_keys, how="left")
+
             del send_rsv_format["contents_name"]
             del send_rsv_format["contents_url"]
 
-            notnullbtn = send_rsv_format[send_rsv_format["kko_button_json"].notnull()]
-            isnullbtn = send_rsv_format[send_rsv_format["kko_button_json"].isnull()]
-            notnullbtn = notnullbtn[
-                ~notnullbtn["kko_button_json"].str.contains("{{")
-            ]  # 포매팅이 안되어 있는 메세지는 제외한다.
-            send_rsv_format = pd.concat(  # pyright: ignore [reportCallIssue]
-                [notnullbtn, isnullbtn]  # pyright: ignore [reportArgumentType]
-            )
             logging.info("9. button 개인화 적용 후 row수 :" + str(len(send_rsv_format)))
-
             send_rsv_format = send_rsv.merge(send_rsv_format, on=group_keys, how="left")
 
             # set_group_msg_seq : send_filepath, send_filecount
@@ -1515,6 +1518,8 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                     "offer_amount",
                     "send_msg_body",
                     "phone_callback",
+                    "send_msg_type",
+                    "kko_button_json",
                 ]
             ]
 
@@ -1523,14 +1528,25 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             )  # pyright: ignore [reportArgumentType]
 
             personal_processing_fm = personal_processing_fm[  # pyright: ignore [reportCallIssue]
-                ["set_group_msg_seq", "cus_cd", "send_msg_body", "phone_callback"]
+                [
+                    "set_group_msg_seq",
+                    "cus_cd",
+                    "send_msg_body",
+                    "phone_callback",
+                    "kko_button_json",
+                ]
             ].rename(
                 columns={"send_msg_body": "send_msg_body_fm", "phone_callback": "phone_callback_fm"}
             )
+            personal_processing_fm = personal_processing_fm.drop_duplicates()
 
+            del send_rsv_format["kko_button_json"]
             send_rsv_format = send_rsv_format.merge(
                 personal_processing_fm, on=["set_group_msg_seq", "cus_cd"], how="left"
             )
+
+            print("send_rsv_format.columns")
+            print(send_rsv_format.columns)
 
             del send_rsv_format["send_msg_body"]
             del send_rsv_format["phone_callback"]
@@ -1574,7 +1590,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             ##SSG 재발송 시도 여부, kko_send_timeout, kakao_send_profile_key
             send_rsv_format = convert_by_message_format(  # pyright: ignore [reportAssignmentType]
                 send_rsv_format, kakao_sender_key
-            )  # pyright: ignore [reportAssignmentType]
+            )  # pyright: ignore [reportAssignmentTydpe]
 
             # 고객 중복 여부 체크
             keys = ["campaign_id", "remind_step", "cus_cd"]
@@ -1618,15 +1634,12 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             send_rsv_format["update_resv_user"] = user_obj.user_id
 
             # 저장
-            print("0000")
             send_reserv_columns = [
                 column.name
                 for column in SendReservationEntity.__table__.columns
                 if column.name
                 not in ["send_resv_seq", "shop_cd", "coupon_no", "log_date", "log_comment"]
             ]
-
-            print("111")
 
             res_df = send_rsv_format[send_reserv_columns]
 

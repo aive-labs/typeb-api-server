@@ -104,7 +104,7 @@ def classify_conditions_based_on_tablename(condition_dict):
     return table_condition_dict
 
 
-def apply_caculate_method(table_obj, query_list, field_list, condition_name, agg_variable_name):
+def apply_calculate_method(table_obj, query_list, field_list, condition_name, agg_variable_name):
     """
     변수(field)에 따라 집계 방법을 적용하는 함수
     """
@@ -196,7 +196,7 @@ def build_select_query(table_obj, condition, condition_name):
             select_query = getattr(table_obj, field)
         select_query_list.append(select_query)
 
-    apply_calculate_method_query = apply_caculate_method(
+    apply_calculate_method_query = apply_calculate_method(
         table_obj, select_query_list, field_list, condition_name, condition["field"]
     )
     return apply_calculate_method_query

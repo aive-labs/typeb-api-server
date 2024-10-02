@@ -3,6 +3,7 @@ import base64
 import aiohttp
 from fastapi import HTTPException
 
+from src.common.service.aws_service import AwsService
 from src.common.utils.get_env_variable import get_env_variable
 from src.payment.domain.payment import Payment
 from src.payment.enum.product_type import ProductType
@@ -19,7 +20,9 @@ from src.payment.routes.use_case.payment_gateway import PaymentGateway
 class TossPaymentGateway(PaymentGateway):
 
     def __init__(self):
-        self.secret_key = get_env_variable("toss_secretkey")
+        self.secret_key = AwsService.get_key_from_parameter_store(
+            get_env_variable("toss_parameter_store_key")
+        )
         self.payment_authorization_url = get_env_variable("payment_authorization_url")
         self.billing_payment_url = get_env_variable("payment_bulling_url")
         self.request_billing_key_url = get_env_variable("billing_url")

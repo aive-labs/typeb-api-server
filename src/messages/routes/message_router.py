@@ -1,7 +1,7 @@
 import json
 
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile, status
 from fastapi.params import File, Form
 from sqlalchemy.orm import Session
 
@@ -13,11 +13,17 @@ from src.messages.routes.dto.request.kakao_carousel_card_request import (
     KakaoCarouselCardRequest,
     KakaoCarouselLinkButtonsRequest,
 )
+from src.messages.routes.dto.request.kakao_carousel_more_link_request import (
+    KakaoCarouselMoreLinkRequest,
+)
 from src.messages.routes.dto.response.kakao_carousel_card_response import (
     KakaoCarouselCardResponse,
 )
 from src.messages.routes.port.create_carousel_card_usecase import (
     CreateCarouselCardUseCase,
+)
+from src.messages.routes.port.create_carousel_more_link_usecase import (
+    CreateCarouselMoreLinkUseCase,
 )
 from src.messages.routes.port.delete_carousel_card_usecase import (
     DeleteCarouselCardUseCase,
@@ -28,6 +34,9 @@ message_router = APIRouter(
     tags=["Message"],
 )
 
+# TODO: 허용할 IP 목록
+ALLOWED_IPS = {"123.123.123.123", "124.124.124.124"}
+
 
 # 요청 IP를 프린트하는 의존성
 def get_client_ip(request: Request):
@@ -35,10 +44,6 @@ def get_client_ip(request: Request):
     if client is None:
         return "unknown ip"
     return client.host
-
-
-# TODO: 허용할 IP 목록
-ALLOWED_IPS = {"123.123.123.123", "124.124.124.124"}
 
 
 # IP 검증 의존성 정의
@@ -92,8 +97,8 @@ def parse_carousel_card(
 
 @message_router.post("/kakao-carousel")
 @inject
-def add_kakao_carousel_card(
-    file: UploadFile = File(...),
+async def add_kakao_carousel_card(
+    file: UploadFile = File(None),
     carousel_card: KakaoCarouselCardRequest = Depends(parse_carousel_card),
     db: Session = Depends(get_db),
     user=Depends(get_permission_checker(required_permissions=["subscription"])),
@@ -101,7 +106,7 @@ def add_kakao_carousel_card(
         Provide[Container.create_carousel_card]
     ),
 ) -> KakaoCarouselCardResponse:
-    return create_carousel_card.create_carousel_card(file, carousel_card, user, db=db)
+    return await create_carousel_card.create_carousel_card(file, carousel_card, user, db)
 
 
 @message_router.delete("/kakao-carousel/{carousel_card_id}")
@@ -113,5 +118,21 @@ def delete_kakao_carousel_card(
     delete_carousel_card: DeleteCarouselCardUseCase = Depends(
         Provide[Container.delete_carousel_card]
     ),
+) -> list[KakaoCarouselCardResponse]:
+    return delete_carousel_card.exec(carousel_card_id, db=db)
+
+
+@message_router.post(
+    "/{set_group_msg_seq}/kakao-carousel-more-link", status_code=status.HTTP_201_CREATED
+)
+@inject
+def create_kakao_carousel_more_link(
+    set_group_msg_seq: int,
+    carousel_more_link_request: KakaoCarouselMoreLinkRequest,
+    db: Session = Depends(get_db),
+    user=Depends(get_permission_checker(required_permissions=["subscription"])),
+    create_carousel_more_link: CreateCarouselMoreLinkUseCase = Depends(
+        Provide[Container.create_carousel_more_link]
+    ),
 ):
-    delete_carousel_card.exec(carousel_card_id, db=db)
+    create_carousel_more_link.exec(set_group_msg_seq, carousel_more_link_request, user, db=db)

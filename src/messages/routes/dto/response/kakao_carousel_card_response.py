@@ -20,10 +20,14 @@ class KakaoCarouselCardResponse(BaseModel):
     carousel_sort_num: int
     message_title: str | None = None
     message_body: str | None = None
-    image_url: str | None = None
-    image_title: str | None = None
-    image_link: str | None = None
+    image_url: str
+    image_title: str
+    image_link: str
+    s3_image_path: str
     carousel_button_links: List[KakaoCarouselLinkButtonResponse] = []
 
     class Config:
         from_attributes = True
+
+    def set_image_url(self, image_path):
+        self.s3_image_path = image_path

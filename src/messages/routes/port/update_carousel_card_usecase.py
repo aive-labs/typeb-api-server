@@ -12,10 +12,10 @@ from src.messages.routes.dto.response.kakao_carousel_card_response import (
 from src.users.domain.user import User
 
 
-class CreateCarouselCardUseCase(ABC):
+class UpdateCarouselCardUseCase(ABC):
 
     @abstractmethod
-    async def create_carousel_card(
+    def exec(
         self,
         file: UploadFile,
         carousel_card_request: KakaoCarouselCardRequest,
