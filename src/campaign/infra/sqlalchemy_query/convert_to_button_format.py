@@ -210,6 +210,8 @@ def generate_kakao_carousel_json(send_rsv_format, carousel_df):
         empty_df = pd.DataFrame(columns=selected_column)
         return empty_df
 
+    print("carousel_df")
+    print(carousel_df)
     # 그룹화: set_group_msg_seq 기준
     grouped = carousel_df.groupby("set_group_msg_seq")
 
@@ -218,9 +220,6 @@ def generate_kakao_carousel_json(send_rsv_format, carousel_df):
     for group_seq, group in grouped:
         kko_json = create_carousel_json(group)
         kko_json_buttons[group_seq] = kko_json
-
-    print("kko_json_buttons")
-    print(kko_json_buttons)
 
     # 2. 캐러셀 발송용 객체를 만들고 json으로 변환한다. 그리고 조인을 하면 될 것 같음.
     kko_json_df = pd.DataFrame(
@@ -240,15 +239,20 @@ def generate_kakao_carousel_json(send_rsv_format, carousel_df):
 def create_carousel_json(group):
     carousel_items = []
 
-    # 카드별로 그룹화 (header, message, img_url, img_link로 그룹화)
+    # 카드별로 그룹화 (carousel_sort_num, header, message, img_url, img_link로 그룹화)
     grouped_cards = group.groupby(["carousel_sort_num", "header", "message", "img_url", "img_link"])
+    sorted_group = grouped_cards.apply(
+        lambda x: x.sort_values(by="carousel_sort_num", ascending=True)
+    )
+    print(sorted_group)
 
     for (carousel_sort_num, header, message, img_url, img_link), card_group in grouped_cards:
         print("-----------")
         print(f"carousel_sort_num: {carousel_sort_num}")
         print(f"header: {header}")
         print(f"message: {message}")
-        # print(f'carousel_sort_num: {card_group["carousel_sort_num"].iloc[0]}')
+        print(f"img_url: {img_url}")
+        print(f"img_link: {img_link}")
 
         buttons = []
         for _, row in card_group.iterrows():
