@@ -1,6 +1,7 @@
 from fastapi import UploadFile
 from sqlalchemy.orm import Session
 
+from src.admin.service.port.base_admin_repository import BaseAdminRepository
 from src.campaign.routes.port.upload_image_for_message_usecase import (
     UploadImageForMessageUseCase,
 )
@@ -28,9 +29,11 @@ class CreateCarouselCard(CreateCarouselCardUseCase):
         self,
         message_repository: BaseMessageRepository,
         upload_image_for_message: UploadImageForMessageUseCase,
+        admin_repository: BaseAdminRepository,
     ):
         self.message_repository = message_repository
         self.upload_image_for_message = upload_image_for_message
+        self.admin_repository = admin_repository
         self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
     async def create_carousel_card(
@@ -41,11 +44,13 @@ class CreateCarouselCard(CreateCarouselCardUseCase):
         db: Session,
     ) -> KakaoCarouselCardResponse:
 
-        print("carousel_card_request")
-        print(carousel_card_request)
+        personal_variable_response = self.admin_repository.get_personal_variables(user, db)
+        personal_variables = [
+            personal_variable.variable_symbol for personal_variable in personal_variable_response
+        ]
 
         self.validate_image_url(carousel_card_request)
-        self.validate_button_url(carousel_card_request)
+        self.validate_button_url(carousel_card_request, personal_variables)
         self.validate_carousel_message(carousel_card_request)
         self.validate_carousel_button_message(carousel_card_request)
         self.validate_carousel_card_count(carousel_card_request, db)
@@ -79,18 +84,22 @@ class CreateCarouselCard(CreateCarouselCardUseCase):
         if not validate_url(carousel_card_request.image_link):
             raise PolicyException(detail={"message": "이미지 링크 형식이 올바르지 않습니다."})
 
-    def validate_button_url(self, carousel_card_request: KakaoCarouselCardRequest):
+    def validate_button_url(
+        self, carousel_card_request: KakaoCarouselCardRequest, personal_variables: list[str]
+    ):
         for button in carousel_card_request.carousel_button_links:
             if not validate_url(button.url_mobile):
-                raise PolicyException(
-                    detail={"message": "버튼 링크(모바일) 형식이 올바르지 않습니다."}
-                )
+                if button.url_mobile not in personal_variables:
+                    raise PolicyException(
+                        detail={"message": "버튼 링크(모바일) 형식이 올바르지 않습니다."}
+                    )
 
             if button.url_pc:
                 if not validate_url(button.url_pc):
-                    raise PolicyException(
-                        detail={"message": "버튼 링크(웹) 형식이 올바르지 않습니다."}
-                    )
+                    if button.url_mobile not in personal_variables:
+                        raise PolicyException(
+                            detail={"message": "버튼 링크(웹) 형식이 올바르지 않습니다."}
+                        )
 
     def add_carousel_sort_num(self, carousel_card_request, db):
         if carousel_card_request.carousel_sort_num is None:

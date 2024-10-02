@@ -729,6 +729,7 @@ class Container(containers.DeclarativeContainer):
         provides=CreateCarouselCard,
         message_repository=message_repository,
         upload_image_for_message=upload_image_for_message,
+        admin_repository=admin_repository,
     )
 
     delete_carousel_card = providers.Singleton(
