@@ -241,11 +241,14 @@ def create_carousel_json(group):
     carousel_items = []
 
     # 카드별로 그룹화 (header, message, img_url, img_link로 그룹화)
-    grouped_cards = group.groupby(["header", "message", "img_url", "img_link"])
-    for (header, message, img_link, img_url), card_group in grouped_cards:
+    grouped_cards = group.groupby(["carousel_sort_num", "header", "message", "img_url", "img_link"])
+
+    for (carousel_sort_num, header, message, img_url, img_link), card_group in grouped_cards:
+        print("-----------")
+        print(f"carousel_sort_num: {carousel_sort_num}")
         print(f"header: {header}")
         print(f"message: {message}")
-        print(f'carousel_sort_num: {card_group["carousel_sort_num"].iloc[0]}')
+        # print(f'carousel_sort_num: {card_group["carousel_sort_num"].iloc[0]}')
 
         buttons = []
         for _, row in card_group.iterrows():
@@ -259,9 +262,10 @@ def create_carousel_json(group):
             attachment=Attachment(button=buttons, image=Image(img_url=img_url, img_link=img_link)),
         )
 
+        print(carousel_item)
+
         carousel_items.append(carousel_item)
 
-    carousel_items.reverse()
     carousel = Carousel(list=carousel_items)
     more_link = extract_carousel_more_link(group)
     if more_link:

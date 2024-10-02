@@ -922,6 +922,7 @@ class CampaignSetRepository(BaseCampaignSetRepository):
                 SetGroupMessagesEntity.msg_type == MessageType.KAKAO_CAROUSEL.value,
             )
             .distinct()
+            .order_by(KakaoCarouselCardEntity.carousel_sort_num.asc())
         )
 
     def get_campaign_set_group_messages_not_in_set_group_seq(
