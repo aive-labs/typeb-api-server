@@ -1,5 +1,6 @@
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from src.admin.routes.admin_router import admin_router
 from src.admin.routes.contact_router import contact_router
@@ -67,18 +68,7 @@ app.add_middleware(
 
 register_exception_handlers(app)
 
-
-# @app.middleware("http")
-# async def set_schema_middleware(request: Request, call_next):
-#     # Get the schema name from request headers (default to 'default_schema')
-#     schema_name = request.headers.get("X-Schema", "aivelabs_sv")
-#     # Set the schema in the context variable
-#     schema_context.set(schema_name)
-#     schema_name = schema_context.get()
-#     print(f"[middleware] {schema_name}")
-#     # Process the request
-#     response = await call_next(request)
-#     return response
+Instrumentator().instrument(app).expose(app)
 
 
 @app.get("/health", status_code=status.HTTP_200_OK)
