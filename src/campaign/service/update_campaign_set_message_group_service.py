@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from sqlalchemy.orm import Session
 
+from src.admin.service.port.base_admin_repository import BaseAdminRepository
 from src.campaign.domain.campaign import Campaign
 from src.campaign.domain.campaign_messages import (
     KakaoLinkButtons,
@@ -88,6 +89,7 @@ from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import get_localtime, localtime_converter
 from src.common.utils.get_env_variable import get_env_variable
 from src.common.utils.get_values_from_dict import get_values_from_dict
+from src.common.utils.validate_url import validate_url
 from src.core.exceptions.exceptions import (
     ConsistencyException,
     NotFoundException,
@@ -108,10 +110,12 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
         campaign_repository: BaseCampaignRepository,
         campaign_set_repository: BaseCampaignSetRepository,
         message_repository: BaseMessageRepository,
+        admin_repository: BaseAdminRepository,
     ):
         self.campaign_repository = campaign_repository
         self.campaign_set_repository = campaign_set_repository
         self.message_repository = message_repository
+        self.admin_repository = admin_repository
         self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
     @transactional
@@ -578,6 +582,29 @@ class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase)
         user: User,
         db: Session,
     ) -> UpdateCampaignSetGroupMessageResponse:
+
+        personal_variable_response = self.admin_repository.get_personal_variables(user, db)
+        personal_variables = [
+            personal_variable.variable_symbol for personal_variable in personal_variable_response
+        ]
+
+        if set_group_message_update.kakao_button_links:
+            for button in set_group_message_update.kakao_button_links:
+
+                if button.app_link:
+                    if not validate_url(button.app_link):
+                        if button.app_link not in personal_variables:
+                            raise PolicyException(
+                                detail={"message": "버튼 링크(모바일) 형식이 올바르지 않습니다."}
+                            )
+
+                if button.web_link:
+                    if not validate_url(button.web_link):
+                        if button.web_link not in personal_variables:
+                            raise PolicyException(
+                                detail={"message": "버튼 링크(웹) 형식이 올바르지 않습니다."}
+                            )
+
         set_group_message = self.campaign_repository.get_campaign_set_group_message(
             campaign_id, set_group_msg_seq, db
         )

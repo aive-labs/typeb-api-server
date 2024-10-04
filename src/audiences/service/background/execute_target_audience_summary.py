@@ -27,6 +27,7 @@ def execute_target_audience_summary(
         audience_id, db
     )
     cust_ids = DataConverter.convert_query_to_df(cust_ids_query)["cus_cd"].tolist()
+    audience_cnt = len(cust_ids)
     print("cust_ids")
     print(cust_ids)
 
