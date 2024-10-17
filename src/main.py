@@ -72,7 +72,7 @@ app.add_middleware(
 
 register_exception_handlers(app)
 
-Instrumentator().instrument(app).expose(app, endpoint="/books")
+Instrumentator().instrument(app).expose(app, endpoint="/pringles")
 # HTTP 요청 횟수
 REQUEST_COUNT = Counter(
     "http_request_count", "Number of HTTP requests received", ["method", "endpoint"]
