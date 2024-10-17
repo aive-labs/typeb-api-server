@@ -497,8 +497,8 @@ class GenerateMessageService(GenerateMessageUsecase):
             sgm_obj.msg_title = msg.msg_title
             sgm_obj.msg_body = msg.msg_body
             sgm_obj.rec_explanation = msg.rec_explanation
-            # 기존에 생성된 버튼 링크가 없으면서, 새로 버튼링크가 생성되어야 할때, 업데이트
 
+            # 기존에 생성된 버튼 링크가 없으면서, 새로 버튼링크가 생성되어야 할때, 업데이트
             print("ffff")
             print(sgm_obj.kakao_button_links)
             if (
@@ -506,6 +506,7 @@ class GenerateMessageService(GenerateMessageUsecase):
                 and len(sgm_obj.kakao_button_links) == 0
             ):
                 print("eeee")
+                print(msg.kakao_button_links)
                 if msg.kakao_button_links:
                     print("dddd")
                     sgm_obj.kakao_button_links = [
