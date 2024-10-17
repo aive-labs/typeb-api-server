@@ -600,7 +600,7 @@ class AudienceSqlAlchemy:
 
         return (
             db.query(
-                AudienceVariableOptionsEntity.option_name.label("option_id"),
+                AudienceVariableOptionsEntity.option_id,
                 AudienceVariableOptionsEntity.option_name,
                 AudienceVariableOptionsEntity.data_type,
                 AudienceVariableOptionsEntity.input_cell_type,
