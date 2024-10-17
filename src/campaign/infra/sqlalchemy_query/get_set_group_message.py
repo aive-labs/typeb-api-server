@@ -52,6 +52,7 @@ def save_set_group_msg(
     )
 
     if message.kakao_button_links:
+        print("save_button_links")
         kakao_button_link_list = [
             KakaoLinkButtonsEntity(
                 kakao_link_buttons_seq=kakao_button.kakao_link_buttons_seq,
