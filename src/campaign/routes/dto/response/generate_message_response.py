@@ -42,7 +42,7 @@ class GeneratedMessage(BaseModel):
             msg_send_type=message.msg_send_type,
             media=message.media,
             msg_type=message.msg_type,
-            kakao_button_links=message.kakao_button_links,
+            kakao_button_links=[button.model_dump() for button in message.kakao_button_links],
             phone_callback=message.phone_callback,
             is_used=message.is_used,
             rec_explanation=message.rec_explanation,
