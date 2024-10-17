@@ -1,5 +1,10 @@
+import psutil
+from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
+from prometheus_client import Counter, Gauge, Histogram
+from prometheus_fastapi_instrumentator import Instrumentator
+from starlette.requests import Request
 
 from src.admin.routes.admin_router import admin_router
 from src.admin.routes.contact_router import contact_router
@@ -67,18 +72,67 @@ app.add_middleware(
 
 register_exception_handlers(app)
 
+Instrumentator().instrument(app).expose(app, endpoint="/pringles")
+# HTTP 요청 횟수
+REQUEST_COUNT = Counter(
+    "http_request_count", "Number of HTTP requests received", ["method", "endpoint"]
+)
 
-# @app.middleware("http")
-# async def set_schema_middleware(request: Request, call_next):
-#     # Get the schema name from request headers (default to 'default_schema')
-#     schema_name = request.headers.get("X-Schema", "aivelabs_sv")
-#     # Set the schema in the context variable
-#     schema_context.set(schema_name)
-#     schema_name = schema_context.get()
-#     print(f"[middleware] {schema_name}")
-#     # Process the request
-#     response = await call_next(request)
-#     return response
+# 요청 실패 수 (상태 코드별)
+ERROR_COUNT = Counter(
+    "http_error_count", "Number of HTTP errors encountered", ["method", "endpoint", "status_code"]
+)
+
+# 요청 응답 지연 시간
+REQUEST_LATENCY = Histogram(
+    "http_request_latency_seconds", "HTTP request latency in seconds", ["method", "endpoint"]
+)
+
+# 현재 활성 사용자 수
+ACTIVE_USERS = Gauge("active_users", "Number of active users currently connected")
+
+# 메모리 및 CPU 사용량
+CPU_USAGE = Gauge("cpu_usage_percent", "CPU usage in percent")
+MEMORY_USAGE = Gauge("memory_usage_mb", "Memory usage in MB")
+MAX_MEMORY = Gauge("max_memory_mb", "Maximum Memory in MB")
+MAX_MEMORY.set(psutil.virtual_memory().total / (1024 * 1024))
+
+
+@app.middleware("http")
+async def prometheus_middleware(request: Request, call_next):
+    # 활성 사용자 수 증가
+    ACTIVE_USERS.inc()
+
+    # 요청 메트릭 기록 시작
+    method = request.method
+    endpoint = request.url.path
+
+    with REQUEST_LATENCY.labels(method=method, endpoint=endpoint).time():
+        response = await call_next(request)
+
+    # 요청 횟수 기록
+    REQUEST_COUNT.labels(method=method, endpoint=endpoint).inc()
+
+    # 오류 상태 코드 기록
+    if response.status_code >= 400:
+        ERROR_COUNT.labels(method=method, endpoint=endpoint, status_code=response.status_code).inc()
+
+    # 활성 사용자 수 감소
+    ACTIVE_USERS.dec()
+
+    return response
+
+
+# 시스템 메트릭을 주기적으로 업데이트 하는 함수
+def update_system_metrics():
+    CPU_USAGE.set(psutil.cpu_percent())
+    MEMORY_USAGE.set(psutil.virtual_memory().used / (1024 * 1024))
+
+
+#  APScheduler to call update_system_metrics 30초 간격으로 업데이트
+scheduler = BackgroundScheduler()
+scheduler.add_job(update_system_metrics, "interval", seconds=5)
+scheduler.start()
 
 
 @app.get("/health", status_code=status.HTTP_200_OK)
