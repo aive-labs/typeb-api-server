@@ -41,7 +41,8 @@ class UpdateContentsService(UpdateContentsUseCase):
         self, contents_id: int, contents_create: ContentsCreate, user: User, db: Session
     ) -> ContentsResponse:
 
-        if not self.contents_repository.get_contents_detail(contents_id, db):
+        original_contents = self.contents_repository.get_contents_detail(contents_id, db)
+        if not original_contents:
             raise NotFoundException(detail={"message": "해당하는 콘텐츠가 존재하지 않습니다."})
 
         contents_urls = self.contents_repository.get_contents_url_list(db)
@@ -79,7 +80,7 @@ class UpdateContentsService(UpdateContentsUseCase):
         else:
             thumbnail_uri = f"{mall_id}/contents/thumbnail/default.png"
 
-        contents_url = f"{mall_id}/contents/{new_uuid}.html"
+        contents_url = original_contents.contents_url
 
         contents_status = ContentsStatus.DRAFT.value
         if contents_create.is_public:
