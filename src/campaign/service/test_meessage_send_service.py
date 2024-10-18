@@ -163,6 +163,10 @@ class TestMessageSendService(TestSendMessageUseCase):
 
         test_send_rsv_format = test_send_df.merge(test_send_rsv_format, on=group_keys, how="left")
 
+        print("test_send_rsv_format")
+        print(len(test_send_rsv_format))
+        print(test_send_rsv_format)
+
         union_query = get_message_resources(db, msg_seq_list)
         resource_df = DataConverter.convert_query_to_df(union_query)
         resource_df["send_filepath"] = resource_df["send_filepath"].apply(lambda lst: ";".join(lst))
@@ -205,12 +209,19 @@ class TestMessageSendService(TestSendMessageUseCase):
             columns={"send_msg_body": "send_msg_body_fm", "phone_callback": "phone_callback_fm"}
         )
         personal_processing_fm = personal_processing_fm.drop_duplicates()
+        print("personal_processing_fm")
+        print(len(personal_processing_fm))
+        print(personal_processing_fm)
 
         del test_send_rsv_format["kko_button_json"]
         send_rsv_format = test_send_rsv_format.merge(
             personal_processing_fm, on=["set_group_msg_seq", "cus_cd"], how="left"
         )
         send_rsv_format = send_rsv_format.drop_duplicates()
+
+        print("send_rsv_format")
+        print(len(send_rsv_format))
+        print(send_rsv_format)
 
         # Todo: replace cus_cd to '0000000' for test
         del send_rsv_format["send_msg_body"]
