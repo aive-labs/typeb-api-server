@@ -224,9 +224,13 @@ class TestMessageSendService(TestSendMessageUseCase):
             inplace=True,
         )
 
-        send_rsv_format = send_rsv_format[
-            ~send_rsv_format["send_msg_body"].str.contains("{{")
-        ]  # 포매팅이 안되어 있는 메세지는 제외한다.
+        send_rsv_format.loc[
+            send_rsv_format["send_msg_type"] == "kakao_carousel", "send_msg_body"
+        ] = ""
+
+        # send_rsv_format = send_rsv_format[
+        #     ~send_rsv_format["send_msg_body"].str.contains("{{")
+        # ]  # 포매팅이 안되어 있는 메세지는 제외한다.
 
         print()
         print("send_msg_body 개인화 적용 후 row수 :" + str(len(send_rsv_format)))

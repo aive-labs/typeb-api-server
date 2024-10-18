@@ -47,9 +47,9 @@ class MessageService:
             return ppurio_message_result.MEDIA == "MMS" and ppurio_message_result.RESULT == "6600"
         if ppurio_message_result.MEDIA == "SMS":
             return ppurio_message_result.MEDIA == "SMS" and ppurio_message_result.RESULT == "4100"
-        if ppurio_message_result.MEDIA in ("KAT", "KFT", "KFP"):
+        if ppurio_message_result.MEDIA in ("KAT", "KFT", "KFP", "KFC"):
             return (
-                ppurio_message_result.MEDIA in ("KAT", "KFT", "KFP")
+                ppurio_message_result.MEDIA in ("KAT", "KFT", "KFP", "KFC")
                 and ppurio_message_result.RESULT == "7000"
             )
         # TODO 로그로 전환
