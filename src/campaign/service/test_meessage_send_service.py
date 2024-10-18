@@ -235,11 +235,17 @@ class TestMessageSendService(TestSendMessageUseCase):
             inplace=True,
         )
 
-        if send_rsv_format["send_msg_type"] != "kakao_carousel":
-            # kakao_carousel은 kko_button_json에 메시지를 만들어서 사용하기 때문에 send_msg_body를 포매팅하지 않음
-            send_rsv_format = send_rsv_format[
-                ~send_rsv_format["send_msg_body"].str.contains("{{")
-            ]  # 포매팅이 안되어 있는 메세지는 제외한다.
+        send_rsv_format.loc[
+            send_rsv_format["send_msg_type"] == "kakao_carousel", "send_msg_body"
+        ] = ""
+        # if send_rsv_format["send_msg_type"] != "kakao_carousel":
+        #     # kakao_carousel은 kko_button_json에 메시지를 만들어서 사용하기 때문에 send_msg_body를 포매팅하지 않음
+        #     send_rsv_format = send_rsv_format[
+        #         ~send_rsv_format["send_msg_body"].str.contains("{{")
+        #     ]  # 포매팅이 안되어 있는 메세지는 제외한다.
+
+        print("send_rsv_format - send_msg_body")
+        print(send_rsv_format)
 
         print()
         print("send_msg_body 개인화 적용 후 row수 :" + str(len(send_rsv_format)))
