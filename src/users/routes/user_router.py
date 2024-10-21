@@ -42,7 +42,7 @@ def sign_up(
     user_service: BaseUserService = Depends(dependency=Provide[Container.user_service]),
 ) -> UserResponse:
     mall_id = get_mall_id_by_user(user_create.email)
-    db = get_db_for_with_mall_id(mall_id)
+    db = next(get_db_for_with_mall_id(mall_id))
 
     saved_user = user_service.register_user(user_create, db=db)
     return saved_user
@@ -96,7 +96,7 @@ def sign_in(
     password = form_data.password
 
     mall_id = get_mall_id_by_user(login_id)
-    db = get_db_for_with_mall_id(mall_id)
+    db = next(get_db_for_with_mall_id(mall_id))
 
     token_response = auth_service.login(login_id, password, mall_id, db=db)
 

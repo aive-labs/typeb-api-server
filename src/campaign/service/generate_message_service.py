@@ -483,6 +483,9 @@ class GenerateMessageService(GenerateMessageUsecase):
         # 생성된 메시지 정보를 저장한다
         updated_sgm_obj = []
         for msg in msg_rtn:
+            print("msg")
+            print(msg)
+            print("----")
             # get SetGroupMessagesEntity obj
             sgm_obj = [
                 sgm.set_group_message
@@ -494,13 +497,18 @@ class GenerateMessageService(GenerateMessageUsecase):
             sgm_obj.msg_title = msg.msg_title
             sgm_obj.msg_body = msg.msg_body
             sgm_obj.rec_explanation = msg.rec_explanation
-            # 기존에 생성된 버튼 링크가 없으면서, 새로 버튼링크가 생성되어야 할때, 업데이트
 
+            # 기존에 생성된 버튼 링크가 없으면서, 새로 버튼링크가 생성되어야 할때, 업데이트
+            print("ffff")
+            print(sgm_obj.kakao_button_links)
             if (
                 isinstance(sgm_obj.kakao_button_links, List)
                 and len(sgm_obj.kakao_button_links) == 0
             ):
+                print("eeee")
+                print(msg.kakao_button_links)
                 if msg.kakao_button_links:
+                    print("dddd")
                     sgm_obj.kakao_button_links = [
                         KakaoLinkButtonsEntity(
                             set_group_msg_seq=sgm_obj.set_group_msg_seq,
@@ -514,6 +522,10 @@ class GenerateMessageService(GenerateMessageUsecase):
                         for kakao_button in msg.kakao_button_links
                     ]
             updated_sgm_obj.append(sgm_obj)
+            print("sgm_obj.kakao_button_links")
+            print(sgm_obj.kakao_button_links)
+
+            msg.kakao_button_links = sgm_obj.kakao_button_links
 
         self.save_generate_message(updated_sgm_obj, db)
 
@@ -523,7 +535,10 @@ class GenerateMessageService(GenerateMessageUsecase):
         # 여기에 캐러셀 생성 메시지 추가!
         generate_message_responses = []
         for msg in msg_rtn:
+            print("message.kakao_button_links")
+            print(msg.kakao_button_links)
             generated_message = GeneratedMessage.from_generated_message(msg)
+            print(generated_message.kakao_button_links)
             if msg.msg_type == MessageType.KAKAO_CAROUSEL:
                 carousel_cards = self.message_repository.get_carousel_cards_by_set_group_msg_seq(
                     msg.set_group_msg_seq, db=db
