@@ -13,6 +13,7 @@ class CampaignAudienceStatsResponse(BaseModel):
     audience_id: str
     audience_name: str
     recipient_count: int | None = None
+    sent_cust_count: int | None = None
     response_cust_count: int | None = None
     response_rate: float | None = None
     response_revenue: int | None = None

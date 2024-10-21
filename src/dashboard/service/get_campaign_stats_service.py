@@ -41,13 +41,25 @@ class GetCampaignStatsService:
 
         if len(campaign_stats_df) > 0:
             campaign_summary_stats_df.replace({np.nan: None}, inplace=True)
-            campaign_summary_stats_df["response_rate"] = (
-                campaign_summary_stats_df.response_cust_count
-                / campaign_summary_stats_df.recipient_count
+            campaign_summary_stats_df["response_rate"] = campaign_summary_stats_df[
+                ["sent_cust_count", "response_cust_count"]
+            ].apply(
+                lambda x: (
+                    x["response_cust_count"] / x["sent_cust_count"]
+                    if x["sent_cust_count"] > 0
+                    else 0
+                ),
+                axis=1,
             )
-            campaign_summary_stats_df["e_response_rate"] = (
-                campaign_summary_stats_df.e_response_cust_count
-                / campaign_summary_stats_df.recipient_count
+            campaign_summary_stats_df["e_response_rate"] = campaign_summary_stats_df[
+                ["sent_cust_count", "e_response_cust_count"]
+            ].apply(
+                lambda x: (
+                    x["e_response_cust_count"] / x["sent_cust_count"]
+                    if x["sent_cust_count"] > 0
+                    else 0
+                ),
+                axis=1,
             )
 
             campaign_summary_stats_df.response_unit_price = campaign_summary_stats_df[
