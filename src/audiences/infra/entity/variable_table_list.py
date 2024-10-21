@@ -91,7 +91,6 @@ class CustomerInfoStatusEntity(Base):
     best_cross_items_link = Column(String, nullable=True)
 
     kakao_friends_yn = Column(String, nullable=True)
-
     etltime = Column(Date, nullable=True)
 
 
