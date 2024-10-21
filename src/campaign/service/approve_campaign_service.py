@@ -1562,6 +1562,13 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             send_rsv_format.loc[
                 send_rsv_format["send_msg_type"] == "kakao_carousel", "send_msg_body"
             ] = ""
+
+            # send_rsv_format = send_rsv_format[  # pyright: ignore [reportAssignmentType]
+            #     ~send_rsv_format["send_msg_body"].str.contains("{{")
+            # ]  # 포매팅이 안되어 있는 메세지는 제외한다.
+            send_rsv_format.loc[
+                send_rsv_format["send_msg_type"] == "kakao_carousel", "send_msg_body"
+            ] = ""
             # if send_rsv_format["send_msg_type"] != "kakao_carousel":
             #     send_rsv_format = send_rsv_format[  # pyright: ignore [reportAssignmentType]
             #         ~send_rsv_format["send_msg_body"].str.contains("{{")

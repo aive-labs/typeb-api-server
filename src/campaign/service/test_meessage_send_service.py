@@ -209,19 +209,12 @@ class TestMessageSendService(TestSendMessageUseCase):
             columns={"send_msg_body": "send_msg_body_fm", "phone_callback": "phone_callback_fm"}
         )
         personal_processing_fm = personal_processing_fm.drop_duplicates()
-        print("personal_processing_fm")
-        print(len(personal_processing_fm))
-        print(personal_processing_fm)
 
         del test_send_rsv_format["kko_button_json"]
         send_rsv_format = test_send_rsv_format.merge(
             personal_processing_fm, on=["set_group_msg_seq", "cus_cd"], how="left"
         )
         send_rsv_format = send_rsv_format.drop_duplicates()
-
-        print("send_rsv_format")
-        print(len(send_rsv_format))
-        print(send_rsv_format)
 
         # Todo: replace cus_cd to '0000000' for test
         del send_rsv_format["send_msg_body"]
@@ -235,17 +228,9 @@ class TestMessageSendService(TestSendMessageUseCase):
             inplace=True,
         )
 
-        send_rsv_format.loc[
-            send_rsv_format["send_msg_type"] == "kakao_carousel", "send_msg_body"
-        ] = ""
-        # if send_rsv_format["send_msg_type"] != "kakao_carousel":
-        #     # kakao_carousel은 kko_button_json에 메시지를 만들어서 사용하기 때문에 send_msg_body를 포매팅하지 않음
-        #     send_rsv_format = send_rsv_format[
-        #         ~send_rsv_format["send_msg_body"].str.contains("{{")
-        #     ]  # 포매팅이 안되어 있는 메세지는 제외한다.
-
-        print("send_rsv_format - send_msg_body")
-        print(send_rsv_format)
+        send_rsv_format = send_rsv_format[
+            ~send_rsv_format["send_msg_body"].str.contains("{{")
+        ]  # 포매팅이 안되어 있는 메세지는 제외한다.
 
         print()
         print("send_msg_body 개인화 적용 후 row수 :" + str(len(send_rsv_format)))
