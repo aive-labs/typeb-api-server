@@ -74,7 +74,7 @@ def get_message_result_from_ppurio(
 
     # == 으로 구분함
     mall_id = refkey.split("==")[0]
-    db = get_db_for_with_mall_id(mall_id)
+    db = next(get_db_for_with_mall_id(mall_id))
 
     print(f"Bizppurio result log from ip: {client_ip}")
     message_service.save_message_result(ppurio_message_result, db=db)
