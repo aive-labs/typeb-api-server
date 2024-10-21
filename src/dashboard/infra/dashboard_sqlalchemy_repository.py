@@ -269,10 +269,10 @@ class DashboardSqlAlchemy:
                 campaign_stats_data.c.t_response_cust_count.label("response_cust_count"),
                 (
                     case(
-                        (campaign_stats_data.c.t_response_cust_count == 0, 0),
+                        (dash_daily_send_info.c.tot_success_count == 0, 0),
                         else_=(
                             campaign_stats_data.c.t_response_cust_count
-                            / dash_daily_send_info.c.tot_recipient_count
+                            / dash_daily_send_info.c.tot_success_count
                         ),
                     )
                 ).label("response_rate"),
@@ -289,10 +289,10 @@ class DashboardSqlAlchemy:
                 campaign_stats_data.c.e_response_cust_count,
                 (
                     case(
-                        (campaign_stats_data.c.e_response_cust_count == 0, 0),
+                        (dash_daily_send_info.c.tot_success_count == 0, 0),
                         else_=(
                             campaign_stats_data.c.e_response_cust_count
-                            / dash_daily_send_info.c.tot_recipient_count
+                            / dash_daily_send_info.c.tot_success_count
                         ),
                     )
                 ).label("e_response_rate"),
@@ -595,10 +595,10 @@ class DashboardSqlAlchemy:
             ),
             func.cast(
                 case(
-                    (campaign_group_stats.c.t_response_cust_count == 0, 0),
+                    (dash_daily_send_info.c.tot_success_count == 0, 0),
                     else_=(
                         campaign_group_stats.c.t_response_cust_count
-                        / dash_daily_send_info.c.tot_recipient_count
+                        / dash_daily_send_info.c.tot_success_count
                     ),
                 ),
                 Float,
@@ -613,10 +613,10 @@ class DashboardSqlAlchemy:
             (campaign_group_stats.c.e_response_cust_count).label("e_response_cust_count"),
             func.cast(
                 case(
-                    (campaign_group_stats.c.e_response_cust_count == 0, 0),
+                    (dash_daily_send_info.c.tot_success_count == 0, 0),
                     else_=(
                         campaign_group_stats.c.e_response_cust_count
-                        / dash_daily_send_info.c.tot_recipient_count
+                        / dash_daily_send_info.c.tot_success_count
                     ),
                 ),
                 Float,
@@ -755,9 +755,17 @@ class DashboardSqlAlchemy:
             dash_daily_send_info.c.audience_id,
             dash_daily_send_info.c.audience_name,
             dash_daily_send_info.c.tot_recipient_count.label("recipient_count"),
+            dash_daily_send_info.c.tot_success_count.label("sent_cust_count"),
             audience_stats.c.t_response_cust_count.label("response_cust_count"),
-            (
-                audience_stats.c.t_response_cust_count / dash_daily_send_info.c.tot_recipient_count
+            func.cast(
+                case(
+                    (dash_daily_send_info.c.tot_success_count == 0, 0),
+                    else_=(
+                        audience_stats.c.t_response_cust_count
+                        / dash_daily_send_info.c.tot_success_count
+                    ),
+                ),
+                Float,
             ).label("response_rate"),
             audience_stats.c.t_response_revenue.label("response_revenue"),
             (audience_stats.c.t_response_revenue / dash_daily_send_info.c.tot_send_cost).label(
