@@ -163,6 +163,10 @@ class TestMessageSendService(TestSendMessageUseCase):
 
         test_send_rsv_format = test_send_df.merge(test_send_rsv_format, on=group_keys, how="left")
 
+        print("test_send_rsv_format")
+        print(len(test_send_rsv_format))
+        print(test_send_rsv_format)
+
         union_query = get_message_resources(db, msg_seq_list)
         resource_df = DataConverter.convert_query_to_df(union_query)
         resource_df["send_filepath"] = resource_df["send_filepath"].apply(lambda lst: ";".join(lst))
