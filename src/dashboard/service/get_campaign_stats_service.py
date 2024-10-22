@@ -82,6 +82,12 @@ class GetCampaignStatsService:
                 ),
                 axis=1,
             )
+            campaign_summary_stats_df.response_roi = campaign_summary_stats_df[
+                ["response_revenue", "media_cost"]
+            ].apply(
+                lambda x: (x["response_revenue"] / x["media_cost"] if x["media_cost"] > 0 else 0),
+                axis=1,
+            )
             campaign_summary_stats_df.response_unit_price = (
                 campaign_summary_stats_df.response_unit_price.apply(
                     lambda x: int(x) if x != None else x
@@ -110,5 +116,5 @@ class GetCampaignStatsService:
         del campaign_stats_df["start_date"]
         del campaign_stats_df["end_date"]
         del campaign_stats_df["campaign_status_name"]
-
+        print(campaign_summary_stats_df)
         return campaign_summary_stats_df, campaign_stats_df

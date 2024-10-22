@@ -280,11 +280,7 @@ class DashboardSqlAlchemy:
                 campaign_stats_data.c.t_response_revenue.label("response_revenue"),
                 campaign_stats_data.c.t_response_unit_price.label("response_unit_price"),
                 (
-                    (
-                        campaign_stats_data.c.t_response_revenue
-                        / dash_daily_send_info.c.tot_send_cost
-                    )
-                    * 100
+                    campaign_stats_data.c.t_response_revenue / dash_daily_send_info.c.tot_send_cost
                 ).label("response_roi"),
                 campaign_stats_data.c.e_response_cust_count,
                 (
