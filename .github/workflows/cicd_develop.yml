@@ -83,13 +83,13 @@ jobs:
           script: |
             ssh -i ~/.ssh/aice-backend.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.DEV_API_SERVER }} '
               cd /home/ubuntu/typeb-api && \
-              docker build -t aice-app-image . && \
-              docker stop aice-container || true && \
-              docker rm aice-container || true && \
+              docker build -t aace-app-image . && \
+              docker stop aace-container || true && \
+              docker rm aace-container || true && \
               docker rmi $(docker images -f "dangling=true" -q) || true && \
-              docker run -d --name aice-container \
+              docker run -d --name aace-container \
                 -e AWS_ACCESS_KEY_ID=${{ secrets.DEV_AWS_ACCESS_KEY_ID }} \
                 -e AWS_SECRET_ACCESS_KEY=${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }} \
                 -e AWS_REGION=${{ secrets.DEV_AWS_REGION }} \
-                -p 8000:8000 aice-app-image
+                -p 8000:8000 aace-app-image
             '
