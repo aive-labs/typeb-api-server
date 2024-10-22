@@ -86,6 +86,7 @@ jobs:
               docker build -t aice-app-image . && \
               docker stop aice-container || true && \
               docker rm aice-container || true && \
+              docker rmi $(docker images -f "dangling=true" -q) || true && \
               docker run -d --name aice-container \
                 -e AWS_ACCESS_KEY_ID=${{ secrets.DEV_AWS_ACCESS_KEY_ID }} \
                 -e AWS_SECRET_ACCESS_KEY=${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }} \
