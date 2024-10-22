@@ -586,6 +586,7 @@ class DashboardSqlAlchemy:
             ).label("group_name_lv2"),
             func.cast(dash_daily_send_info.c.tot_recipient_count, Integer).label("recipient_count"),
             func.cast(dash_daily_send_info.c.tot_success_count, Integer).label("sent_cust_count"),
+            func.cast(dash_daily_send_info.c.tot_send_cost, Integer).label("media_cost"),
             func.cast(campaign_group_stats.c.t_response_cust_count, Integer).label(
                 "response_cust_count"
             ),

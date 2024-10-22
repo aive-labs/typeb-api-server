@@ -11,6 +11,7 @@ class CampaignGroupStatsResponse(BaseModel):
     group_name_lv2: str | None = None  ##필터컬럼2
     recipient_count: int | None = None  ##타겟고객수(명)
     sent_cust_count: int | None = None  ##발송고객수(명)
+    media_cost: int | None = None  ##발송비용
     response_cust_count: int | None = None  ##전환고객(명)
     response_rate: float | None = None  # 전환율(%)
     response_quantity: int | None = None  ##반응판매수량
