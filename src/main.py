@@ -5,6 +5,7 @@ from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import Counter, Gauge, Histogram
 from prometheus_fastapi_instrumentator import Instrumentator
+from sentry_sdk.integrations.fastapi import FastApiIntegration
 from starlette.requests import Request
 
 from src.admin.routes.admin_router import admin_router
@@ -46,6 +47,7 @@ sentry_sdk.init(
     dsn="https://2d53fe5b3523ee71d36b86baa929a6f6@o4508169200205824.ingest.us.sentry.io/4508169206235136",
     # Set traces_sample_rate to 1.0 to capture 100%
     # of transactions for tracing.
+    integrations=[FastApiIntegration()],
     traces_sample_rate=1.0,
     _experiments={
         # Set continuous_profiling_auto_start to True
