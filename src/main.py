@@ -1,9 +1,11 @@
 import psutil
+import sentry_sdk
 from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import Counter, Gauge, Histogram
 from prometheus_fastapi_instrumentator import Instrumentator
+from sentry_sdk.integrations.fastapi import FastApiIntegration
 from starlette.requests import Request
 
 from src.admin.routes.admin_router import admin_router
@@ -13,6 +15,7 @@ from src.auth.routes.auth_router import auth_router
 from src.auth.routes.onboarding_router import onboarding_router
 from src.campaign.routes.campaign_dag_router import campaign_dag_router
 from src.campaign.routes.campaign_router import campaign_router
+from src.common.utils.get_env_variable import get_env_variable
 from src.contents.routes.contents_router import contents_router
 from src.contents.routes.creatives_router import creatives_router
 from src.core.container import Container
@@ -39,6 +42,21 @@ def create_app():
 
     return app
 
+
+sentry_sdk.init(
+    dsn="https://2d53fe5b3523ee71d36b86baa929a6f6@o4508169200205824.ingest.us.sentry.io/4508169206235136",
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for tracing.
+    integrations=[FastApiIntegration()],
+    traces_sample_rate=1.0,
+    _experiments={
+        # Set continuous_profiling_auto_start to True
+        # to automatically start the profiler on when
+        # possible.
+        "continuous_profiling_auto_start": True,
+    },
+    environment=get_env_variable("env"),
+)
 
 app = create_app()
 app.include_router(router=auth_router, prefix="/auth")

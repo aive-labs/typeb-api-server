@@ -222,3 +222,6 @@ prometheus-fastapi-instrumentator==6.0.0
 
 #  apscheduler
 apscheduler==3.10.4
+
+# sentry
+sentry-sdk[fastapi]==2.17.0

@@ -17,6 +17,7 @@ from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
 from src.auth.utils.hash_password import generate_hash
 from src.common.utils.get_env_variable import get_env_variable
+from src.common.utils.s3_token_update_service import S3TokenService
 from src.core.transactional import transactional
 from src.users.service.port.base_user_repository import BaseUserRepository
 
@@ -65,9 +66,13 @@ class Cafe24Service(BaseOauthService):
         # 만들고 나서 DB에 저장해야함
         hashed_state = generate_hash(self.state + mall_id)
 
-        self.cafe24_repository.insert_basic_info(str(user.user_id), mall_id, hashed_state, db)
+        existing_cafe24 = self.cafe24_repository.get_cafe24_info_by_user_id(str(user.user_id), db)
+        if existing_cafe24 is None:
+            self.cafe24_repository.insert_basic_info(str(user.user_id), mall_id, hashed_state, db)
 
-        self.onboarding_repository.insert_first_onboarding(mall_id, db)
+        existing_onboarding = self.onboarding_repository.get_onboarding_status(mall_id, db)
+        if existing_onboarding is None:
+            self.onboarding_repository.insert_first_onboarding(mall_id, db)
 
         return self._generate_authentication_url(
             mall_id, self.client_id, hashed_state, self.redirect_uri, self.scope
@@ -93,16 +98,24 @@ class Cafe24Service(BaseOauthService):
 
         self.cafe24_repository.save_tokens(cafe24_tokens, db)
 
-        self.onboarding_repository.update_onboarding_status(
-            mall_id, OnboardingStatus.MIGRATION_IN_PROGRESS, db
-        )
+        existing_onboarding = self.onboarding_repository.get_onboarding_status(mall_id, db)
+        if (
+            existing_onboarding
+            and existing_onboarding.onboarding_status != OnboardingStatus.ONBOARDING_COMPLETE
+        ):
+            self.onboarding_repository.update_onboarding_status(
+                mall_id, OnboardingStatus.MIGRATION_IN_PROGRESS, db
+            )
 
-        # airflow request
-        result = self.execute_cafe24_dag_run(mall_id)
-        if result.status_code != 200:
-            # 슬랙 알림 -> 수동 마이그레이션 진행
-            print("airflow error")
-            print(result.text)
+            result = self.execute_cafe24_dag_run(mall_id)
+            if result.status_code != 200:
+                # TODO 슬랙 알림 -> 수동 마이그레이션 진행
+                print("airflow error")
+                print(result.text)
+
+        # s3에 토큰 업데이트
+        s3_reader = S3TokenService(bucket="aace-airflow-log", key="cafe24_token.yml")
+        s3_reader.update_dict(cafe24_state_token.mall_id, token_data)
 
         db.commit()
 
