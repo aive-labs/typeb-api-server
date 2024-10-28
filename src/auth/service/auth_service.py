@@ -13,7 +13,7 @@ from src.payment.service.port.base_subscription_repository import (
 )
 from src.users.service.port.base_user_repository import BaseUserRepository
 
-reuseable_oauth = OAuth2PasswordBearer(tokenUrl="/users/signin", scheme_name="JWT")
+reuseable_oauth = OAuth2PasswordBearer(tokenUrl="/api/v1/users/signin", scheme_name="JWT")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
