@@ -22,12 +22,14 @@ from src.audiences.service.update_audience_service import UpdateAudienceService
 from src.audiences.service.update_cycle_service import AudienceUpdateCycleService
 from src.auth.infra.cafe24_repository import Cafe24Repository
 from src.auth.infra.cafe24_sqlalchemy_repository import Cafe24SqlAlchemyRepository
+from src.auth.infra.ga_repository import GARepository
 from src.auth.infra.onboarding_repository import OnboardingRepository
 from src.auth.infra.onboarding_sqlalchemy_repository import (
     OnboardingSqlAlchemyRepository,
 )
 from src.auth.service.auth_service import AuthService
 from src.auth.service.cafe24_service import Cafe24Service
+from src.auth.service.ga_integration_service import GAIntegrationService
 from src.auth.service.onboarding_service import OnboardingService
 from src.auth.service.token_service import TokenService
 from src.campaign.infra.campaign_repository import CampaignRepository
@@ -163,6 +165,7 @@ class Container(containers.DeclarativeContainer):
             "src.auth.utils.get_current_user",
             "src.users.routes.user_router",
             "src.auth.routes.auth_router",
+            "src.auth.routes.ga_router",
             "src.audiences.routes.audience_router",
             "src.audiences.service.background.execute_target_audience_summary",
             "src.auth.routes.onboarding_router",
@@ -740,4 +743,10 @@ class Container(containers.DeclarativeContainer):
     create_carousel_more_link = providers.Singleton(
         provides=CreateCarouselMoreLink,
         message_repository=message_repository,
+    )
+
+    ga_repository = providers.Singleton(provides=GARepository)
+    ga_service = providers.Singleton(
+        provides=GAIntegrationService,
+        message_repository=ga_repository,
     )

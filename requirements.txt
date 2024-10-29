@@ -225,3 +225,7 @@ apscheduler==3.10.4
 
 # sentry
 sentry-sdk[fastapi]==2.17.0
+
+# gcloud
+google-api-python-client==2.149.0
+google-cloud==0.34.0
