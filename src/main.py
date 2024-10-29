@@ -23,6 +23,7 @@ from src.core.exceptions.register_exception_handler import register_exception_ha
 from src.dashboard.routes.dashboard_router import dashboard_router
 from src.message_template.routes.message_template_router import message_template_router
 from src.messages.routes.message_router import message_router
+from src.messages.routes.ppurio_message_router import ppurio_message_router
 from src.offers.routes.offer_router import offer_router
 from src.payment.routes.payment_router import payment_router
 from src.products.routes.product_router import product_router
@@ -62,6 +63,7 @@ app = create_app()
 app.include_router(router=auth_router, prefix="/api/v1/auth")
 app.include_router(router=onboarding_router, prefix="/api/v1/auth/onboarding")
 app.include_router(router=user_router, prefix="/api/v1/users")
+# app.include_router(router=ga_router, prefix="/api/v1/ga")
 app.include_router(router=campaign_router, prefix="/api/v1/campaign-management")
 app.include_router(router=campaign_dag_router, prefix="/api/v1/campaign-dag")
 app.include_router(router=creatives_router, prefix="/api/v1/contents-management/creatives")
@@ -70,6 +72,7 @@ app.include_router(router=audience_router, prefix="/api/v1/audience-management")
 app.include_router(router=strategy_router, prefix="/api/v1/strategy-management")
 app.include_router(router=search_router, prefix="/api/v1/search")
 app.include_router(router=message_router, prefix="/api/v1/message")
+app.include_router(router=ppurio_message_router, prefix="/message")
 app.include_router(router=offer_router, prefix="/api/v1/settings/offers")
 app.include_router(router=message_template_router, prefix="/api/v1/settings/templates")
 app.include_router(router=admin_router, prefix="/api/v1/settings/admin")
