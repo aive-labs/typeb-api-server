@@ -162,6 +162,7 @@ class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(
         modules=[
             "src.messages.routes.message_router",
+            "src.messages.routes.ppurio_message_router",
             "src.auth.utils.get_current_user",
             "src.users.routes.user_router",
             "src.auth.routes.auth_router",
