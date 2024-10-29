@@ -53,6 +53,14 @@ class S3Service:
         except (BotoCoreError, ClientError) as e:
             raise e
 
+    def get_object(self, key: str):
+        return self.s3_client.get_object(Bucket=self.bucket_name, Key=key)
+
+    async def get_object_async(self, file_key):
+        async with self.async_session.client("s3") as s3:
+            response = await s3.get_object(Bucket=self.bucket_name, Key=file_key)
+            return response
+
     async def put_object_async(self, s3_file_key: str, file_read):
         async with self.async_session.client("s3") as s3:
             await s3.put_object(Bucket=self.bucket_name, Key=s3_file_key, Body=file_read)

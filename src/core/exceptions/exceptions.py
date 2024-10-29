@@ -86,3 +86,8 @@ class AwsException(HTTPException):
 class PaymentException(HTTPException):
     def __init__(self, detail: Any = None, headers: dict[str, Any] | None = None) -> None:
         super().__init__(status.HTTP_500_INTERNAL_SERVER_ERROR, detail, headers)
+
+
+class GoogleTagException(HTTPException):
+    def __init__(self, detail: Any = None, headers: dict[str, Any] | None = None) -> None:
+        super().__init__(status.HTTP_503_SERVICE_UNAVAILABLE, detail, headers)
