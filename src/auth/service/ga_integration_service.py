@@ -30,15 +30,15 @@ class GAIntegrationService(BaseGAIntegrationService):
         self.ga_repository = ga_repository
         self.s3_service = S3Service("aace-ga-script")
 
-    def execute_ga_automation(self, mall_id: str, user: User, db: Session) -> GAIntegration:
+    async def execute_ga_automation(self, mall_id: str, user: User, db: Session) -> GAIntegration:
         mall_url = "https://cafe24.aivelabs.com"
         ga_integration = self.create_ga_settings(mall_id, mall_url, db)
-        ga_integration_with_gtm = self.create_gtm_settings(ga_integration, mall_url, db)
+        ga_integration_with_gtm = await self.create_gtm_settings(ga_integration, mall_url, db)
 
         return ga_integration_with_gtm
 
     async def create_gtm_settings(
-        self, ga_integration, mall_url: str, db: Session
+        self, ga_integration: GAIntegration, mall_url: str, db: Session
     ) -> GAIntegration:
         tagmanager = build("tagmanager", "v2", credentials=self.credentials)
         gtm_account_id = ga_integration.gtm_account_id

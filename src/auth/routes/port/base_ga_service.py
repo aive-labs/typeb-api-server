@@ -11,5 +11,5 @@ class BaseGAIntegrationService(ABC):
 
     @transactional
     @abstractmethod
-    def execute_ga_automation(self, mall_id: str, user: User, db: Session) -> GAIntegration:
+    async def execute_ga_automation(self, mall_id: str, user: User, db: Session) -> GAIntegration:
         pass
