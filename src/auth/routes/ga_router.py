@@ -14,10 +14,9 @@ ga_router = APIRouter(
 
 @ga_router.post("/")
 @inject
-def execute_ga_integration(
-    mall_id: str,
-    ga_service: BaseGAIntegrationService = Depends(Provide[Container.cafe24_service]),
+async def execute_ga_integration(
+    ga_service: BaseGAIntegrationService = Depends(Provide[Container.ga_service]),
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db),
 ):
-    ga_service.execute_ga_automation(mall_id, user, db)
+    await ga_service.execute_ga_automation(user, db=db)

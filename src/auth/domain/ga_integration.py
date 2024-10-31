@@ -49,29 +49,31 @@ class GAIntegration(BaseModel):
         return new_instance
 
     def set_ga_data_stream(
-        self, measurement_id, data_stream_id, data_stream_name, data_stream_url, data_stream_type
+        self, measurement_id, data_stream_id, data_stream_name, data_stream_uri, data_stream_type
     ) -> "GAIntegration":
         # Create a copy of the current instance
-        new_instance = deepcopy(self)
+        new_instance: GAIntegration = deepcopy(self)
 
         # Set new property id and name
-        new_instance.measurement_id = measurement_id
-        new_instance.data_stream_id = data_stream_id
-        new_instance.data_stream_name = data_stream_name
-        new_instance.data_stream_url = data_stream_url
-        new_instance.data_stream_type = data_stream_type
+        new_instance.ga_measurement_id = measurement_id
+        new_instance.ga_data_stream_id = data_stream_id
+        new_instance.ga_data_stream_name = data_stream_name
+        new_instance.ga_data_stream_uri = data_stream_uri
+        new_instance.ga_data_stream_type = data_stream_type
 
         return new_instance
 
-    def set_gtm_container(
-        self, container_id: int, container_name: str, gtm_tag_id: str
-    ) -> "GAIntegration":
+    def set_ga_script(self, ga_script) -> "GAIntegration":
         # Create a copy of the current instance
-        new_instance = deepcopy(self)
+        new_instance: GAIntegration = deepcopy(self)
 
         # Set new property id and name
-        new_instance.gtm_container_id = container_id
-        new_instance.gtm_container_name = container_name
-        new_instance.gtm_tag_id = gtm_tag_id
+        new_instance.ga_script = ga_script
 
         return new_instance
+
+    def set_gtm_container(self, container_id: int, container_name: str, gtm_tag_id: str):
+        # Set new property id and name
+        self.gtm_container_id = container_id
+        self.gtm_container_name = container_name
+        self.gtm_tag_id = gtm_tag_id

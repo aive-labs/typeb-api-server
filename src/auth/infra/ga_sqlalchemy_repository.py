@@ -13,7 +13,9 @@ class GASqlAlchemyRepository:
         )
 
         if not ga_info:
-            raise NotFoundException(detail={"message": "해당 state은 유효하지 않습니다."})
+            raise NotFoundException(
+                detail={"message": "구글 애널리틱스 연동 데이터가 존재하지 않습니다."}
+            )
 
         return GAIntegration.init(
             mall_id=ga_info.mall_id,

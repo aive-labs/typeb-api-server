@@ -7,7 +7,10 @@ from src.auth.enums.gtm_variable import GoogleTagManagerVariableFileName
 from src.auth.infra.ga_repository import GARepository
 from src.auth.routes.port.base_ga_service import BaseGAIntegrationService
 from src.common.utils.file.s3_service import S3Service
-from src.core.exceptions.exceptions import GoogleTagException
+from src.core.exceptions.exceptions import (
+    ConsistencyException,
+    GoogleTagException,
+)
 from src.users.domain.user import User
 
 
@@ -16,8 +19,10 @@ class GAIntegrationService(BaseGAIntegrationService):
     def __init__(self, ga_repository: GARepository):
         self.scopes = [
             "https://www.googleapis.com/auth/analytics",
+            "https://www.googleapis.com/auth/analytics.edit",
             "https://www.googleapis.com/auth/tagmanager",
             "https://www.googleapis.com/auth/tagmanager.edit.containers",
+            "https://www.googleapis.com/auth/tagmanager.delete.containers",
             "https://www.googleapis.com/auth/tagmanager.readonly",
             "https://www.googleapis.com/auth/tagmanager.publish",
             "https://www.googleapis.com/auth/tagmanager.edit.containerversions",
@@ -30,47 +35,135 @@ class GAIntegrationService(BaseGAIntegrationService):
         self.ga_repository = ga_repository
         self.s3_service = S3Service("aace-ga-script")
 
-    async def execute_ga_automation(self, mall_id: str, user: User, db: Session) -> GAIntegration:
-        mall_url = "https://cafe24.aivelabs.com"
-        ga_integration = self.create_ga_settings(mall_id, mall_url, db)
-        ga_integration_with_gtm = await self.create_gtm_settings(ga_integration, mall_url, db)
+    async def execute_ga_automation(self, user: User, db: Session) -> GAIntegration:
+        mall_id = user.mall_id
 
-        return ga_integration_with_gtm
+        if mall_id is None:
+            raise ConsistencyException(
+                detail={"message": "쇼핑몰이 정보가 등록되지 않은 사용자입니다."}
+            )
+
+        mall_url = "https://cafe24.aivelabs.com"
+
+        analytic_admin = self.create_ga_admin()
+        tagmanager = self.create_tag_manager()
+        ga_integration = self.ga_repository.get_by_mall_id(mall_id, db)
+
+        try:
+            ga_integration = self.create_ga_settings(
+                mall_id, mall_url, analytic_admin, ga_integration
+            )
+            print("Create GA Attributes.")
+
+            ga_integration_with_gtm = await self.create_gtm_settings(
+                ga_integration, mall_url, tagmanager
+            )
+            print("Create GTM Attributes.")
+
+            db.commit()
+
+            return ga_integration_with_gtm
+        except Exception as e:
+            # ga 속성 삭제
+            print("--------------- DELETE ---------------")
+            print(ga_integration)
+
+            if ga_integration.ga_property_id:
+                print("Delete GA property")
+                ga_response = (
+                    analytic_admin.properties()
+                    .delete(name=f"properties/{ga_integration.ga_property_id}")
+                    .execute()
+                )
+                print(ga_response)
+
+            print("ga_integration.gtm_container_id")
+            print(ga_integration.gtm_container_id)
+            if ga_integration.gtm_container_id:
+                print("Delete GTM container")
+                gtm_response = (
+                    tagmanager.accounts()
+                    .containers()
+                    .delete(
+                        path=f"accounts/{ga_integration.gtm_account_id}/containers/{ga_integration.gtm_container_id}"
+                    )
+                    .execute()
+                )
+                print(gtm_response)
+
+            raise e
+
+    def create_tag_manager(self):
+        return build("tagmanager", "v2", credentials=self.credentials)
 
     async def create_gtm_settings(
-        self, ga_integration: GAIntegration, mall_url: str, db: Session
+        self, ga_integration: GAIntegration, mall_url: str, tagmanager
     ) -> GAIntegration:
-        tagmanager = build("tagmanager", "v2", credentials=self.credentials)
+        print("Start GTM Settings.")
+
         gtm_account_id = ga_integration.gtm_account_id
 
         # 컨테이너 생성
         ga_integration = self.create_gtm_container(
             ga_integration, gtm_account_id, mall_url, tagmanager
         )
+        print("Create GTM container.")
 
         # 워크스페이스 조회
         workspace_id = self.get_workspace_id(gtm_account_id, ga_integration, tagmanager)
         workspace_path = f"accounts/{gtm_account_id}/containers/{ga_integration.gtm_container_id}/workspaces/{workspace_id}"
+        print(f"GET GTM container workspace {workspace_id}")
 
         # 변수 생성
         await self.create_gtm_variables(tagmanager, workspace_path)
+        print("Create GTM variables.")
 
         # 트리거 생성
         # 1. DOM 사용 가능 트리거 및 태그 생성
         await self.create_dom_use_trigger_and_tag(tagmanager, workspace_path)
+        print("Create GTM DOM trigger and tag.")
 
         # 2. 맞춤 이벤트 트리거
         self.create_custom_event_trigger_and_tag(tagmanager, workspace_path, ga_integration)
+        print("Create GTM custom event trigger and tag.")
 
-        # 모든 태그 생성(맞춤 HTML 태그, 이벤트 태그)
+        # 3. 구글 태그 생성
+        self.create_google_tag(ga_integration.ga_measurement_id, workspace_path, tagmanager)
+        print("Create Google Tag.")
 
-        # GTM 버전 생성 코드 (변경된 내용을 반영한 새로운 버전 생성)
+        # 4. GTM 버전 생성 코드 (변경된 내용을 반영한 새로운 버전 생성)
         version_id = self.create_new_tag_version(ga_integration, tagmanager, workspace_path)
+        print(f"Create GTM version. version id: {version_id}.")
 
-        # 버전 게시
+        # 5. 버전 게시
         self.publish_new_version(ga_integration, gtm_account_id, tagmanager, version_id)
+        print("Publish GTM version.")
 
         return ga_integration
+
+    def create_google_tag(self, ga_measurement_id, workspace_path, tagmanager):
+        # 구글 태그 생성
+        tag_body = {
+            "name": "Google Tag",
+            "type": "googtag",  # Google 태그 유형
+            "parameter": [
+                {"type": "template", "key": "tagId", "value": ga_measurement_id},  # 추적 ID 입력
+            ],
+        }
+        try:
+            response = (
+                tagmanager.accounts()
+                .containers()
+                .workspaces()
+                .tags()
+                .create(parent=workspace_path, body=tag_body)
+                .execute()
+            )
+
+            print("Custom HTML Tag created:", response)
+
+        except Exception as e:
+            print("Error creating tag:", e)
 
     async def create_gtm_variables(self, tagmanager, workspace_path):
         for file in GoogleTagManagerVariableFileName:
@@ -155,7 +248,10 @@ class GAIntegrationService(BaseGAIntegrationService):
             ),
             ("view_item_event_trigger", "view_item", [("items", "{{view_items}}")]),
         ]
+
+        # 3개 * 2 = 6개
         for trigger_name, event_name, event_parameter in custom_triggers:
+
             trigger_body = {
                 "name": trigger_name,
                 "type": "customEvent",  # 맞춤 이벤트 트리거 유형
@@ -179,6 +275,7 @@ class GAIntegrationService(BaseGAIntegrationService):
             }
 
             # 트리거 생성
+            print("Create Event Trigger")
             trigger_response = (
                 tagmanager.accounts()
                 .containers()
@@ -187,6 +284,7 @@ class GAIntegrationService(BaseGAIntegrationService):
                 .create(parent=workspace_path, body=trigger_body)
                 .execute()
             )
+            print(trigger_response)
             trigger_id = trigger_response["triggerId"]
 
             tag_body = {
@@ -239,6 +337,19 @@ class GAIntegrationService(BaseGAIntegrationService):
                 "firingTriggerId": [trigger_id],  # 트리거 ID (예: DOM Ready 트리거 ID)
             }
 
+            try:
+                response = (
+                    tagmanager.accounts()
+                    .containers()
+                    .workspaces()
+                    .tags()
+                    .create(parent=workspace_path, body=tag_body)
+                    .execute()
+                )
+                print("GA4 Event Tag created:", response)
+            except Exception as e:
+                print("Error creating tag:", e)
+
     async def create_dom_use_trigger_and_tag(self, tagmanager, workspace_path):
         dom_use_triggers = [
             ("begin_checkout_trigger", "/order/orderform.html", "begin_checkout_push"),
@@ -246,6 +357,7 @@ class GAIntegrationService(BaseGAIntegrationService):
             ("view_item_trigger", "/product/", "view_item_push"),
         ]
         for trigger_name, page_url_filter, tag_name in dom_use_triggers:
+
             trigger_body = {
                 "name": trigger_name,
                 "type": "domReady",  # DOM이 준비되었을 때 실행되는 트리거 ex (스크롤깊이: scrollDepth, 맞춤 이벤트: customEvent)
@@ -264,6 +376,10 @@ class GAIntegrationService(BaseGAIntegrationService):
                 ],
             }
 
+            print("TRIGGER")
+            print("workspace_path")
+            print(workspace_path)
+
             # 트리거 생성
             trigger_response = (
                 tagmanager.accounts()
@@ -275,6 +391,8 @@ class GAIntegrationService(BaseGAIntegrationService):
             )
 
             trigger_id = trigger_response["triggerId"]
+
+            print(f"Create trigger {trigger_name}, {trigger_id}")
 
             file_key = f"gtm-tag/tag_{tag_name}.html"
             response = await self.s3_service.get_object_async(file_key)
@@ -329,7 +447,7 @@ class GAIntegrationService(BaseGAIntegrationService):
         self, ga_integration, gtm_account_id, mall_url, tagmanager
     ) -> GAIntegration:
         container_body = {
-            "name": f"{ga_integration.mall_id}_container",  # 컨테이너 이름
+            "name": f"{ga_integration.mall_id}_container_cafe24",  # 컨테이너 이름
             "usageContext": ["web"],  # 사용 환경 (웹, Android, iOS 중 선택 가능)
             "domainName": [mall_url],  # 컨테이너가 적용될 웹사이트 도메인
         }
@@ -340,6 +458,7 @@ class GAIntegrationService(BaseGAIntegrationService):
                 .create(parent=f"accounts/{gtm_account_id}", body=container_body)
                 .execute()
             )
+            print(new_container)
             print(f"Container created with ID: {new_container['containerId']}")
 
             ga_integration.set_gtm_container(
@@ -348,37 +467,40 @@ class GAIntegrationService(BaseGAIntegrationService):
 
             return ga_integration
         except Exception as e:
+            print("e")
+            print(e)
             raise GoogleTagException(
                 detail={"message": "구글 태그 매니저 변수 생성 중 오류가 발생했습니다.", "error": e}
             )
 
-    def create_ga_settings(self, mall_id: str, mall_url: str, db: Session) -> GAIntegration:
-        analytic_admin = self.create_ga_admin()
-
-        ga_integration = self.ga_repository.get_by_mall_id(mall_id, db)
-
-        # GA 계정 조회
+    def create_ga_settings(
+        self, mall_id: str, mall_url: str, analytic_admin, ga_integration: GAIntegration
+    ) -> GAIntegration:
         # GA 속성 생성 요청
         ga_integration = self.create_ga_property(
-            ga_integration, f"{mall_id}_stream", analytic_admin
+            ga_integration, f"{mall_id}_cafe24", analytic_admin
         )
 
         # dataStream 생성
         data_stream_type = "WEB_DATA_STREAM"
-        self.create_datastream_with_enhanced_tag(
+        ga_integration = self.create_datastream_with_enhanced_tag(
             ga_integration, mall_url, data_stream_type, analytic_admin
         )
 
         # ga 스크립트 확인하기
-        self.get_ga_script(ga_integration, analytic_admin)
+        ga_integration = self.get_ga_script(ga_integration, analytic_admin)
 
         return ga_integration
 
     def get_ga_script(self, ga_integration: GAIntegration, analytic_admin):
+
+        print("get_ga_script")
+        print(ga_integration)
         tag_url = f"properties/{ga_integration.ga_property_id}/dataStreams/{ga_integration.ga_data_stream_id}/globalSiteTag"
         request = analytic_admin.properties().dataStreams().getGlobalSiteTag(name=tag_url)
         response = request.execute()
-        return response["snippet"]
+        ga_integration.set_ga_script(response["snippet"])
+        return ga_integration
 
     def create_datastream_with_enhanced_tag(
         self, ga_integration: GAIntegration, mall_url, data_stream_type, analytics_admin
@@ -387,8 +509,8 @@ class GAIntegrationService(BaseGAIntegrationService):
             ga_integration, analytics_admin, data_stream_type, mall_url
         )
 
-        data_stream_parent = f"properties/{ga_integration.ga_property_id}"
-        self.add_enhanced_measurement(analytics_admin, data_stream_parent)
+        print("data_stream_response")
+        print(data_stream_response)
 
         ga_integration = ga_integration.set_ga_data_stream(
             data_stream_response["webStreamData"]["measurementId"],
@@ -397,6 +519,12 @@ class GAIntegrationService(BaseGAIntegrationService):
             mall_url,
             data_stream_type,
         )
+
+        print("ga_integration")
+        print(ga_integration)
+
+        data_stream_parent = f"properties/{ga_integration.ga_property_id}/dataStreams/{ga_integration.ga_data_stream_id}"
+        self.add_enhanced_measurement(analytics_admin, data_stream_parent)
 
         return ga_integration
 
@@ -433,6 +561,9 @@ class GAIntegrationService(BaseGAIntegrationService):
             "videoEngagementEnabled": True,
             "searchQueryParameter": "q,s,search,query,keyword",
         }
+
+        print("datastream")
+        print(f"{data_stream_parent}/enhancedMeasurementSettings")
         request = (
             analytics_admin.properties()
             .dataStreams()
