@@ -7,6 +7,7 @@ from src.auth.enums.gtm_variable import GoogleTagManagerVariableFileName
 from src.auth.infra.ga_repository import GARepository
 from src.auth.routes.port.base_ga_service import BaseGAIntegrationService
 from src.common.utils.file.s3_service import S3Service
+from src.core.database import get_mall_url_by_user
 from src.core.exceptions.exceptions import (
     ConsistencyException,
     GoogleTagException,
@@ -43,7 +44,7 @@ class GAIntegrationService(BaseGAIntegrationService):
                 detail={"message": "쇼핑몰이 정보가 등록되지 않은 사용자입니다."}
             )
 
-        mall_url = "https://cafe24.aivelabs.com"
+        mall_url = get_mall_url_by_user(str(user.user_id))
 
         analytic_admin = self.create_ga_admin()
         tagmanager = self.create_tag_manager()
@@ -207,7 +208,7 @@ class GAIntegrationService(BaseGAIntegrationService):
         except Exception as e:
             print("Error publishing version:", e)
 
-    def create_new_tag_version(self, ga_integration, tagmanager, workspace_path) -> str:
+    def create_new_tag_version(self, ga_integration, tagmanager, workspace_path):
         version_body = {
             "name": f"{ga_integration.mall_id}_workspace_id",
             "notes": f"{ga_integration.mall_id} 버전 생성",
