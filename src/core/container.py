@@ -23,6 +23,7 @@ from src.audiences.service.update_cycle_service import AudienceUpdateCycleServic
 from src.auth.infra.cafe24_repository import Cafe24Repository
 from src.auth.infra.cafe24_sqlalchemy_repository import Cafe24SqlAlchemyRepository
 from src.auth.infra.ga_repository import GARepository
+from src.auth.infra.ga_sqlalchemy_repository import GASqlAlchemyRepository
 from src.auth.infra.onboarding_repository import OnboardingRepository
 from src.auth.infra.onboarding_sqlalchemy_repository import (
     OnboardingSqlAlchemyRepository,
@@ -145,17 +146,6 @@ from src.strategy.service.update_strategy_service import UpdateStrategyService
 from src.users.infra.user_repository import UserRepository
 from src.users.infra.user_sqlalchemy import UserSqlAlchemy
 from src.users.service.user_service import UserService
-
-# class CachedFactory(providers.Factory):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         self._cache = lru_cache(maxsize=None)(self._provide)
-#
-#     def _provide(self, *args, **kwargs):
-#         return super()._provide(*args, **kwargs)  # pyright: ignore [reportAttributeAccessIssue]
-#
-#     def __call__(self, *args, **kwargs):
-#         return self._cache(*args, **kwargs)
 
 
 class Container(containers.DeclarativeContainer):
@@ -746,8 +736,10 @@ class Container(containers.DeclarativeContainer):
         message_repository=message_repository,
     )
 
-    ga_repository = providers.Singleton(provides=GARepository)
+    ga_sqlalchemy = providers.Singleton(provides=GASqlAlchemyRepository)
+
+    ga_repository = providers.Singleton(provides=GARepository, ga_sqlalchemy=ga_sqlalchemy)
     ga_service = providers.Singleton(
         provides=GAIntegrationService,
-        message_repository=ga_repository,
+        ga_repository=ga_repository,
     )
