@@ -68,6 +68,8 @@ class CreateAudienceService(CreateAudienceUseCase):
                 new_audience_id, db
             )
             conditions = audience_filter_condition[0].conditions
+            print("conditions")
+            print(conditions)
             query = self.get_final_query(user, conditions, db)
             execute_query_compiler(query)
             print("query")
@@ -398,6 +400,10 @@ class CreateAudienceService(CreateAudienceUseCase):
                         # variable_type 고정 : target
                         print("query_type_dict")
                         print(query_type_dict)
+
+                        if query_type_dict["field"] == "visit_product_name":
+                            query_type_dict["field"] = "product_name"
+
                         variable_table = self.audience_repository.get_tablename_by_variable_id(
                             query_type_dict["field"], db
                         )
@@ -422,7 +428,9 @@ class CreateAudienceService(CreateAudienceUseCase):
                         temp_select_query = build_select_query(
                             variable_table, condition, condition_name
                         )
+
                         print("select query")
+                        print(temp_select_query)
                         a = execute_query_compiler(temp_select_query[1])
                         print(a)
 
@@ -464,6 +472,10 @@ class CreateAudienceService(CreateAudienceUseCase):
                                 condition_list,
                                 where_condition_dict,
                             )
+
+                            print("where_condition_dict")
+                            print(where_condition_dict)
+
                             all_customer = all_customer.outerjoin(  # pyright: ignore [reportAttributeAccessIssue]
                                 sub_alias,
                                 CustomerInfoStatusEntity.cus_cd == sub_alias.c.cus_cd,

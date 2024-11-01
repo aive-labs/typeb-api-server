@@ -137,6 +137,8 @@ def apply_calculate_method(table_obj, query_list, field_list, condition_name, ag
         print("create_subquery")
         if field_list[0].startswith("visit_dt"):
             return (True, func.count(distinct(query_list[0])).label(condition_name))
+        elif field_list[0].startswith("product_name"):
+            return (True, query_list[0].label(condition_name))
     else:
         return (True, query_list[0].label(condition_name))
 
@@ -222,7 +224,11 @@ def build_select_query(table_obj, condition, condition_name):
                 )  # pyright: ignore [reportArgumentType]
             )
         else:
+            print("else")
+            print(field)
+            print(table_obj)
             select_query = getattr(table_obj, field)
+            print(select_query)
         select_query_list.append(select_query)
 
     apply_calculate_method_query = apply_calculate_method(
