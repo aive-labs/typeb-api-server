@@ -1,4 +1,4 @@
-from sqlalchemy import and_, case, func, not_
+from sqlalchemy import and_, case, distinct, func, not_
 
 from src.audiences.infra.entity.customer_promotion_master_entity import (
     CustomerPromotionMasterEntity,
@@ -12,8 +12,9 @@ from src.audiences.infra.entity.purchase_analytics_master_style_entity import (
 from src.audiences.infra.entity.variable_table_list import (
     CustomerInfoStatusEntity,
     CustomerProductPurchaseSummaryEntity,
+    GaViewMasterEntity,
 )
-from src.core.exceptions.exceptions import ValidationException
+from src.core.exceptions.exceptions import ConsistencyException, ValidationException
 
 
 def set_query_type_lv2(and_condition):
@@ -132,6 +133,10 @@ def apply_calculate_method(table_obj, query_list, field_list, condition_name, ag
                 True,
                 (func.sum(query_list[0]) / func.sum(query_list[1])).label(condition_name),
             )
+    elif table_obj == GaViewMasterEntity:
+        print("create_subquery")
+        if field_list[0].startswith("visit_dt"):
+            return (True, func.count(distinct(query_list[0])).label(condition_name))
     else:
         return (True, query_list[0].label(condition_name))
 
@@ -143,9 +148,18 @@ def build_select_query(table_obj, condition, condition_name):
     additional_filters = condition.get("additional_filters")
 
     field = condition["field"]
+    print(f"field: {field}")
     field_list = []
+
+    # 이벤트 변수이거나 행동 데이터이거나
     if is_event_variable := field.startswith("e_"):
         field = delete_event_field_check(field)
+
+    if is_action_variable := field.startswith("visit_count"):
+        field = "visit_dt"
+        print("action field")
+        print(field)
+
     if field.startswith(("freq", "recency", "purcycle")):
         field_list = ["sale_dt_array"]
 
@@ -169,6 +183,18 @@ def build_select_query(table_obj, condition, condition_name):
                 and_conditions_in_case.append(
                     and_(getattr(table_obj, dt_column).between(period[0], period[1]))
                 )
+            elif is_action_variable:
+                dt_column = "visit_dt"
+                if table_obj != GaViewMasterEntity:
+                    raise ConsistencyException(
+                        detail={
+                            "message": "타겟 오디언스 생성 중 오류가 발생했습니다.",
+                            "error": "table_obj != GaViewMasterEntity",
+                        }
+                    )
+                and_conditions_in_case.append(
+                    and_(getattr(table_obj, dt_column).between(period[0], period[1]))
+                )
             else:
                 field = field + "_" + period
 
@@ -186,6 +212,9 @@ def build_select_query(table_obj, condition, condition_name):
             )
 
         if and_conditions_in_case:
+            print("and_conditions_in_case")
+            print(table_obj)
+            print(field)
             select_query = case(  # pyright: ignore [reportCallIssue]
                 (
                     and_(*and_conditions_in_case),

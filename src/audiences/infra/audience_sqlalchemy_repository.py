@@ -49,6 +49,7 @@ from src.audiences.infra.entity.strategy_theme_audience_entity import (
 from src.audiences.infra.entity.variable_table_list import (
     CustomerInfoStatusEntity,
     CustomerProductPurchaseSummaryEntity,
+    GaViewMasterEntity,
 )
 from src.audiences.infra.entity.variable_table_mapping_entity import (
     VariableTableMappingEntity,
@@ -375,6 +376,7 @@ class AudienceSqlAlchemy:
             PurchaseAnalyticsMasterStyle,
             CustomerPromotionMasterEntity,
             CustomerPromotionReactSummaryEntity,
+            GaViewMasterEntity,
         ):
             return self.get_subquery_with_groupby
         else:
@@ -389,6 +391,7 @@ class AudienceSqlAlchemy:
         subquery_method = self.get_subquery_method(table_obj)
         subquery = subquery_method(select_query_list, table_obj, db)
         sub_alias = subquery.alias(f"t{idx}")
+
         return sub_alias
 
     def get_subquery_with_array_select_query_list(

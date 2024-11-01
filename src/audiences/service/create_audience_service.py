@@ -396,6 +396,8 @@ class CreateAudienceService(CreateAudienceUseCase):
                             raise Exception()
 
                         # variable_type 고정 : target
+                        print("query_type_dict")
+                        print(query_type_dict)
                         variable_table = self.audience_repository.get_tablename_by_variable_id(
                             query_type_dict["field"], db
                         )
@@ -420,6 +422,9 @@ class CreateAudienceService(CreateAudienceUseCase):
                         temp_select_query = build_select_query(
                             variable_table, condition, condition_name
                         )
+                        print("select query")
+                        a = execute_query_compiler(temp_select_query[1])
+                        print(a)
 
                         if temp_select_query is None:
                             raise Exception()
@@ -432,6 +437,8 @@ class CreateAudienceService(CreateAudienceUseCase):
                     for temp_idx, temp_select_list in enumerate(
                         [select_query_list, array_select_query_list]
                     ):
+                        print("temp_idx")
+                        print(temp_idx)
                         if temp_select_list:
                             if temp_idx == 0:
                                 sub_alias: Alias = (
@@ -446,6 +453,10 @@ class CreateAudienceService(CreateAudienceUseCase):
                                         variable_table, array_select_query_list, idx, db
                                     )
                                 )
+
+                            print("sub_alias query")
+                            a = execute_query_compiler(sub_alias)
+                            print(a)
 
                             where_condition_dict = group_where_conditions(
                                 sub_alias,
@@ -467,4 +478,8 @@ class CreateAudienceService(CreateAudienceUseCase):
                 )
                 filter_or_exclutions_query_list.append(all_customer)
         result = except_(*filter_or_exclutions_query_list)
+
+        print("result select query")
+        a = execute_query_compiler(result)
+        print(a)
         return result
