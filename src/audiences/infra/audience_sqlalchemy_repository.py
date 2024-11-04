@@ -365,6 +365,7 @@ class AudienceSqlAlchemy:
         print("select_query_list")
         print(select_query_list)
         select_compile = execute_query_compiler(select_query_list[0])
+        print(select_compile)
 
         ga_columns = [
             "ga_view_master.product_code",
@@ -375,7 +376,9 @@ class AudienceSqlAlchemy:
             "ga_view_master.full_category_name_3",
         ]
 
-        if any(keyword in str(select_compile) for keyword in ga_columns):
+        if any(keyword in str(select_compile) for keyword in ga_columns) and "count" not in str(
+            select_compile
+        ):
             return (
                 db.query(variabletable.cus_cd, *select_query_list)
                 .group_by(variabletable.cus_cd, *select_query_list)
