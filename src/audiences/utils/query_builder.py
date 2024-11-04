@@ -137,7 +137,15 @@ def apply_calculate_method(table_obj, query_list, field_list, condition_name, ag
         print("create_ga_subquery")
         if field_list[0].startswith("visit_dt"):
             return (True, func.count(distinct(query_list[0])).label(condition_name))
-        elif field_list[0].startswith("product_name"):
+        elif field_list[0].startswith(
+            (
+                "product_name",
+                "full_category_name_1",
+                "full_category_name_2",
+                "full_category_name_3",
+                "page_title",
+            )
+        ):
             return (True, query_list[0].label(condition_name))
     else:
         return (True, query_list[0].label(condition_name))
