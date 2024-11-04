@@ -16,6 +16,7 @@ from src.audiences.service.port.base_audience_repository import BaseAudienceRepo
 from src.audiences.utils.query_builder import (
     build_select_query,
     classify_conditions_based_on_tablename,
+    execute_query_compiler,
     get_query_type_with_additional_filters,
     group_where_conditions,
 )
@@ -210,6 +211,19 @@ class UpdateAudienceService(UpdateAudienceUseCase):
                             raise Exception()
 
                         # variable_type 고정 : target
+                        print("query_type_dict")
+                        print(query_type_dict)
+
+                        if query_type_dict["field"] in (
+                            "visit_product_name",
+                            "visit_full_category_name_1",
+                            "visit_full_category_name_2",
+                            "visit_full_category_name_3",
+                            "visit_page_title",
+                        ):
+                            field_with_visit_prefix = query_type_dict["field"].replace("visit_", "")
+                            query_type_dict["field"] = field_with_visit_prefix
+
                         variable_table = self.audience_repository.get_tablename_by_variable_id(
                             query_type_dict["field"], db
                         )
@@ -235,6 +249,11 @@ class UpdateAudienceService(UpdateAudienceUseCase):
                             variable_table, condition, condition_name
                         )
 
+                        print("select query")
+                        print(temp_select_query)
+                        a = execute_query_compiler(temp_select_query[1])
+                        print(a)
+
                         if temp_select_query is None:
                             raise Exception()
 
@@ -246,6 +265,8 @@ class UpdateAudienceService(UpdateAudienceUseCase):
                     for temp_idx, temp_select_list in enumerate(
                         [select_query_list, array_select_query_list]
                     ):
+                        print("temp_idx")
+                        print(temp_idx)
                         if temp_select_list:
                             if temp_idx == 0:
                                 sub_alias: Alias = (
@@ -261,12 +282,20 @@ class UpdateAudienceService(UpdateAudienceUseCase):
                                     )
                                 )
 
+                            print("sub_alias query")
+                            a = execute_query_compiler(sub_alias)
+                            print(a)
+
                             where_condition_dict = group_where_conditions(
                                 sub_alias,
                                 condition_dict,
                                 condition_list,
                                 where_condition_dict,
                             )
+
+                            print("where_condition_dict")
+                            print(where_condition_dict)
+
                             all_customer = all_customer.outerjoin(  # pyright: ignore [reportAttributeAccessIssue]
                                 sub_alias,
                                 CustomerInfoStatusEntity.cus_cd == sub_alias.c.cus_cd,
@@ -281,4 +310,8 @@ class UpdateAudienceService(UpdateAudienceUseCase):
                 )
                 filter_or_exclutions_query_list.append(all_customer)
         result = except_(*filter_or_exclutions_query_list)
+
+        print("result select query")
+        a = execute_query_compiler(result)
+        print(a)
         return result
