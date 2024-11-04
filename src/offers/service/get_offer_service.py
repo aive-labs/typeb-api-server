@@ -33,7 +33,7 @@ class GetOfferService(GetOfferUseCase):
     ) -> list[OfferResponse]:
 
         if user.mall_id is None:
-            raise NotFoundException(detail={"message": "mall 정보가 존재하지 않습니다."})
+            raise NotFoundException(detail={"message": "쇼핑몰 정보가 존재하지 않습니다."})
 
         token = self.cafe24_repository.get_token(user.mall_id, db)
         access_token = token.access_token

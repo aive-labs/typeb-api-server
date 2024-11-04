@@ -17,12 +17,14 @@ class GASqlAlchemyRepository:
                 detail={"message": "구글 애널리틱스 연동 데이터가 존재하지 않습니다."}
             )
 
-        return GAIntegration.init(
+        return GAIntegration(
             mall_id=ga_info.mall_id,
             ga_account_id=ga_info.ga_account_id,
             ga_account_name=ga_info.ga_account_name,
             gtm_account_id=ga_info.gtm_account_id,
             gtm_account_name=ga_info.gtm_account_name,
+            ga_measurement_id=ga_info.ga_measurement_id,
+            gtm_tag_id=ga_info.gtm_tag_id,
         )
 
     def save_ga_integration(self, ga_integration: GAIntegration, db: Session):

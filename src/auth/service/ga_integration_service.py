@@ -7,12 +7,14 @@ from sqlalchemy.orm import Session
 from src.auth.domain.ga_integration import GAIntegration
 from src.auth.enums.gtm_variable import GoogleTagManagerVariableFileName
 from src.auth.infra.ga_repository import GARepository
+from src.auth.routes.dto.response.ga_script_response import GAScriptResponse
 from src.auth.routes.port.base_ga_service import BaseGAIntegrationService
 from src.common.utils.file.s3_service import S3Service
 from src.core.database import get_mall_url_by_user
 from src.core.exceptions.exceptions import (
     ConsistencyException,
     GoogleTagException,
+    NotFoundException,
 )
 from src.users.domain.user import User
 
@@ -37,6 +39,26 @@ class GAIntegrationService(BaseGAIntegrationService):
 
         self.ga_repository = ga_repository
         self.s3_service = S3Service("aace-ga-script")
+
+    def generate_ga_script(self, user: User, db: Session) -> GAScriptResponse:
+
+        if user.mall_id is None:
+            raise NotFoundException(detail={"message": "쇼핑몰 정보가 존재하지 않습니다."})
+
+        ga_integration = self.ga_repository.get_by_mall_id(user.mall_id, db)
+
+        print(ga_integration)
+
+        head_script = (
+            f'<script src="https://aace-ga-script.s3.ap-northeast-2.amazonaws.com/ga-tracking.js" '
+            f'data-ga-id="{ga_integration.ga_measurement_id}" data-gtm-id="{ga_integration.gtm_tag_id}"></script>'
+        )
+
+        body_script = f'<script src="https://aace-ga-script.s3.ap-northeast-2.amazonaws.com/gtm-body.js" data-gtm-id="{ga_integration.gtm_tag_id}"></script>'
+
+        print(head_script)
+
+        return GAScriptResponse(head_script=head_script, body_script=body_script)
 
     async def execute_ga_automation(self, user: User, db: Session) -> GAIntegration:
         mall_id = user.mall_id
