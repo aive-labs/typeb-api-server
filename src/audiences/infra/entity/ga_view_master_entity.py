@@ -7,10 +7,10 @@ Base = declarative_base()
 class GaViewMasterEntity(Base):
     __tablename__ = "ga_view_master"
     __table_args__ = (
-        Index("idx_visit_product", "visit_dt"),  # event_date와 product_code에 인덱스 생성
-        Index("idx_visit_product", "product_code"),  # event_date와 product_code에 인덱스 생성
+        Index("idx_visit", "visit_dt"),  # event_date와 product_code에 인덱스 생성
+        Index("idx_product_code", "product_code"),  # event_date와 product_code에 인덱스 생성
         Index(
-            "idx_visit_product", "visit_dt", "product_code"
+            "idx_visit_product_code", "visit_dt", "product_code"
         ),  # event_date와 product_code에 인덱스 생성
         Index("idx_category1", "full_category_name_1"),  # full_category_name.1에 인덱스 생성
         Index("idx_category2", "full_category_name_2"),  # full_category_name.2에 인덱스 생성

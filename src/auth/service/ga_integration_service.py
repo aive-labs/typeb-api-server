@@ -47,7 +47,10 @@ class GAIntegrationService(BaseGAIntegrationService):
 
         ga_integration = self.ga_repository.get_by_mall_id(user.mall_id, db)
 
-        print(ga_integration)
+        if ga_integration.ga_measurement_id is None or ga_integration.gtm_tag_id is None:
+            raise ConsistencyException(
+                detail={"message": "GA 연동 도중 문제가 발생했습니다. 관리자에게 문의하세요."}
+            )
 
         head_script = (
             f'<script src="https://aace-ga-script.s3.ap-northeast-2.amazonaws.com/ga-tracking.js" '
