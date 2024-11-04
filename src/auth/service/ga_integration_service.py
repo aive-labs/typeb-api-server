@@ -1,3 +1,5 @@
+import time
+
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from sqlalchemy.orm import Session
@@ -44,7 +46,7 @@ class GAIntegrationService(BaseGAIntegrationService):
                 detail={"message": "쇼핑몰이 정보가 등록되지 않은 사용자입니다."}
             )
 
-        mall_url = get_mall_url_by_user(str(user.user_id))
+        mall_url = get_mall_url_by_user(str(user.email))
 
         analytic_admin = self.create_ga_admin()
         tagmanager = self.create_tag_manager()
@@ -60,6 +62,8 @@ class GAIntegrationService(BaseGAIntegrationService):
                 ga_integration, mall_url, tagmanager
             )
             print("Create GTM Attributes.")
+
+            self.ga_repository.save_ga_integration(ga_integration, db)
 
             db.commit()
 
@@ -143,6 +147,7 @@ class GAIntegrationService(BaseGAIntegrationService):
         return ga_integration
 
     def create_google_tag(self, ga_measurement_id, workspace_path, tagmanager):
+
         # 구글 태그 생성
         tag_body = {
             "name": "Google Tag",
@@ -231,6 +236,7 @@ class GAIntegrationService(BaseGAIntegrationService):
     def create_custom_event_trigger_and_tag(
         self, tagmanager, workspace_path, ga_integration: GAIntegration
     ):
+
         custom_triggers = [
             (
                 "begin_checkout_event_trigger",
@@ -252,7 +258,7 @@ class GAIntegrationService(BaseGAIntegrationService):
 
         # 3개 * 2 = 6개
         for trigger_name, event_name, event_parameter in custom_triggers:
-
+            time.sleep(4)
             trigger_body = {
                 "name": trigger_name,
                 "type": "customEvent",  # 맞춤 이벤트 트리거 유형
@@ -358,7 +364,7 @@ class GAIntegrationService(BaseGAIntegrationService):
             ("view_item_trigger", "/product/", "view_item_push"),
         ]
         for trigger_name, page_url_filter, tag_name in dom_use_triggers:
-
+            time.sleep(4)
             trigger_body = {
                 "name": trigger_name,
                 "type": "domReady",  # DOM이 준비되었을 때 실행되는 트리거 ex (스크롤깊이: scrollDepth, 맞춤 이벤트: customEvent)

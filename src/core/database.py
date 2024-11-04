@@ -139,6 +139,7 @@ def get_mall_url_by_user(user_id: str) -> str:
         )
 
         result = cursor.fetchone()
+
         if result is None:
             raise NotFoundException(detail={"message": "사용자 정보를 찾을 수 없습니다."})
 

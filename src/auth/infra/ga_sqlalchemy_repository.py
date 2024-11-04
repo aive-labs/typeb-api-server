@@ -24,3 +24,7 @@ class GASqlAlchemyRepository:
             gtm_account_id=ga_info.gtm_account_id,
             gtm_account_name=ga_info.gtm_account_name,
         )
+
+    def save_ga_integration(self, ga_integration: GAIntegration, db: Session):
+        entity = GAIntegrationEntity.from_model(ga_integration)
+        db.merge(entity)
