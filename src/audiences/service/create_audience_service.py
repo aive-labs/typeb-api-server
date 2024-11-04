@@ -401,8 +401,15 @@ class CreateAudienceService(CreateAudienceUseCase):
                         print("query_type_dict")
                         print(query_type_dict)
 
-                        if query_type_dict["field"] == "visit_product_name":
-                            query_type_dict["field"] = "product_name"
+                        if query_type_dict["field"] in (
+                            "visit_product_name",
+                            "visit_full_category_name_1",
+                            "visit_full_category_name_2",
+                            "visit_full_category_name_3",
+                            "visit_page_title",
+                        ):
+                            field_with_visit_prefix = query_type_dict["field"].replace("visit_", "")
+                            query_type_dict["field"] = field_with_visit_prefix
 
                         variable_table = self.audience_repository.get_tablename_by_variable_id(
                             query_type_dict["field"], db

@@ -134,7 +134,7 @@ def apply_calculate_method(table_obj, query_list, field_list, condition_name, ag
                 (func.sum(query_list[0]) / func.sum(query_list[1])).label(condition_name),
             )
     elif table_obj == GaViewMasterEntity:
-        print("create_subquery")
+        print("create_ga_subquery")
         if field_list[0].startswith("visit_dt"):
             return (True, func.count(distinct(query_list[0])).label(condition_name))
         elif field_list[0].startswith("product_name"):
