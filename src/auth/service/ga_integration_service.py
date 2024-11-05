@@ -60,9 +60,9 @@ class GAIntegrationService(BaseGAIntegrationService):
 
         body_script = f'<script src="https://aace-ga-script.s3.ap-northeast-2.amazonaws.com/gtm-body.js" data-gtm-id="{ga_integration.gtm_tag_id}"></script>'
 
-        print(head_script)
-
-        return GAScriptResponse(head_script=head_script, body_script=body_script)
+        return GAScriptResponse(
+            head_script=head_script, body_script=body_script, status=ga_integration.ga_script_status
+        )
 
     async def execute_ga_automation(self, user: User, db: Session) -> GAIntegration:
         mall_id = user.mall_id
