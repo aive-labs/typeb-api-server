@@ -182,23 +182,7 @@ class CustomerProductPurchaseSummaryEntity(Base):
 class GaViewMasterEntity(Base):
     __tablename__ = "ga_view_master"
     __table_args__ = (
-        Index("idx_visit", "visit_dt"),  # event_date와 product_code에 인덱스 생성
-        Index("idx_product_code", "product_code"),  # event_date와 product_code에 인덱스 생성
-        Index(
-            "idx_visit_product_code", "visit_dt", "product_code"
-        ),  # event_date와 product_code에 인덱스 생성
-        Index("idx_category1", "full_category_name_1"),  # full_category_name.1에 인덱스 생성
-        Index("idx_category2", "full_category_name_2"),  # full_category_name.2에 인덱스 생성
-        Index("idx_category3", "full_category_name_3"),  # full_category_name.3에 인덱스 생성
-        Index(
-            "idx_visit_category1", "visit_dt", "full_category_name_1"
-        ),  # full_category_name.1에 인덱스 생성
-        Index(
-            "idx_visit_category2", "visit_dt", "full_category_name_2"
-        ),  # full_category_name.2에 인덱스 생성
-        Index(
-            "idx_visit_category3", "visit_dt", "full_category_name_3"
-        ),  # full_category_name.3에 인덱스 생성
+        Index("ga_view_master_cus_cd_index", "cus_cd"),  # event_date와 product_code에 인덱스 생성
     )
 
     cus_cd = Column(String, nullable=False, primary_key=True)
