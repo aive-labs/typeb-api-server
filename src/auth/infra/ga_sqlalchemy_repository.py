@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
 from src.auth.domain.ga_integration import GAIntegration
+from src.auth.enums.ga_script_status import GAScriptStatus
 from src.auth.infra.entity.ga_integration_entity import GAIntegrationEntity
 from src.core.exceptions.exceptions import NotFoundException
 
@@ -25,8 +26,14 @@ class GASqlAlchemyRepository:
             gtm_account_name=ga_info.gtm_account_name,
             ga_measurement_id=ga_info.ga_measurement_id,
             gtm_tag_id=ga_info.gtm_tag_id,
+            ga_script_status=GAScriptStatus(ga_info.ga_script_status),
         )
 
     def save_ga_integration(self, ga_integration: GAIntegration, db: Session):
         entity = GAIntegrationEntity.from_model(ga_integration)
         db.merge(entity)
+
+    def update_status(self, mall_id, to_status, db):
+        db.query(GAIntegrationEntity).filter(GAIntegrationEntity.mall_id == mall_id).update(
+            {"ga_script_status": to_status}
+        )

@@ -25,6 +25,7 @@ class GAIntegrationEntity(Base):
     gtm_container_name = Column(String, nullable=True)
     gtm_tag_id = Column(String, nullable=True)
     ga_script = Column(String, nullable=True)
+    ga_script_status = Column(String, nullable=False)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 

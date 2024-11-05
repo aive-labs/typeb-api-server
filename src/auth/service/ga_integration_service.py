@@ -16,6 +16,7 @@ from src.core.exceptions.exceptions import (
     GoogleTagException,
     NotFoundException,
 )
+from src.core.transactional import transactional
 from src.users.domain.user import User
 
 
@@ -629,3 +630,7 @@ class GAIntegrationService(BaseGAIntegrationService):
 
     def create_ga_admin(self):
         return build("analyticsadmin", "v1alpha", credentials=self.credentials)
+
+    @transactional
+    def update_status(self, user: User, to_status: str, db: Session):
+        self.ga_repository.update_status(user.mall_id, to_status, db)

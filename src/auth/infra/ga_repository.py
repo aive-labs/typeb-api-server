@@ -15,3 +15,6 @@ class GARepository(BaseGARepository):
 
     def save_ga_integration(self, ga_integration: GAIntegration, db: Session):
         self.ga_sqlalchemy.save_ga_integration(ga_integration, db)
+
+    def update_status(self, mall_id, to_status, db: Session):
+        self.ga_sqlalchemy.update_status(mall_id, to_status, db)

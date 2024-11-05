@@ -4,6 +4,8 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from src.auth.enums.ga_script_status import GAScriptStatus
+
 
 class GAIntegration(BaseModel):
     mall_id: str
@@ -22,6 +24,7 @@ class GAIntegration(BaseModel):
     gtm_container_name: str | None = None
     gtm_tag_id: str | None = None
     ga_script: str | None = None
+    ga_script_status: GAScriptStatus
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
@@ -36,6 +39,7 @@ class GAIntegration(BaseModel):
             ga_account_name=ga_account_name,
             gtm_account_id=gtm_account_id,
             gtm_account_name=gtm_account_name,
+            ga_script_status=GAScriptStatus.PENDING,
         )
 
     def set_ga_property(self, property_id: int, property_name: str) -> "GAIntegration":

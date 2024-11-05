@@ -13,3 +13,7 @@ class BaseGARepository(ABC):
     @abstractmethod
     def save_ga_integration(self, ga_integration: GAIntegration, db: Session):
         pass
+
+    @abstractmethod
+    def update_status(self, mall_id, to_status, db: Session):
+        pass

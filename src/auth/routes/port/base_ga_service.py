@@ -20,3 +20,8 @@ class BaseGAIntegrationService(ABC):
     @abstractmethod
     def generate_ga_script(self, user: User, db: Session) -> GAScriptResponse:
         pass
+
+    @transactional
+    @abstractmethod
+    def update_status(self, user: User, to_status: str, db: Session):
+        pass
