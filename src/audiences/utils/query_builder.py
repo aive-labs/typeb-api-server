@@ -1,3 +1,6 @@
+from datetime import datetime, timedelta
+
+import pytz
 from sqlalchemy import and_, case, distinct, func, not_
 
 from src.audiences.infra.entity.customer_promotion_master_entity import (
@@ -299,3 +302,50 @@ def execute_query_compiler(query):
     쿼리 객체 컴파일 함수
     """
     return query.compile(compile_kwargs={"literal_binds": True})
+
+
+def transform_visit_count_category_to_visit_count(data):
+    korea_timezone = pytz.timezone("Asia/Seoul")
+    today = datetime.now(korea_timezone).date()
+
+    for filter_item in data.get("filters", []):
+        for and_condition in filter_item.get("and_conditions", []):
+            if and_condition.get("variable_id") == "visit_count_category":
+
+                and_condition["variable_id"] = "visit_count"
+
+                new_conditions = []
+                conditions = and_condition.get("conditions", [])
+
+                for condition in conditions:
+                    # Replace the condition with data_type 'd_visit_period'
+                    if condition.get("data_type") == "d_visit_period":
+
+                        period_value = condition.get("value", "0d")
+
+                        if period_value not in ("7d", "14d", "30d", "60d", "90d"):
+                            raise ConsistencyException(
+                                detail={"message": "유효하지 않은 날짜 타입이 입력되었습니다."}
+                            )
+
+                        days = int(period_value.rstrip("d"))
+
+                        # Calculate the start and end dates
+                        start_date = (today - timedelta(days=days)).strftime("%Y%m%d")
+                        end_date = today.strftime("%Y%m%d")
+
+                        # Create a new condition with the date range
+                        new_condition = {
+                            "cell_type": "date_range_picker",
+                            "data_type": "d_date",
+                            "value": f"{start_date},{end_date}",
+                        }
+                        new_conditions.append(new_condition)
+                    else:
+                        # Keep other conditions unchanged
+                        new_conditions.append(condition)
+
+                # Update the conditions with the new_conditions list
+                and_condition["conditions"] = new_conditions
+
+    return data

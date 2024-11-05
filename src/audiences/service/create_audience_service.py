@@ -33,6 +33,7 @@ from src.audiences.utils.query_builder import (
     execute_query_compiler,
     get_query_type_with_additional_filters,
     group_where_conditions,
+    transform_visit_count_category_to_visit_count,
 )
 from src.core.exceptions.exceptions import DuplicatedException
 from src.core.transactional import transactional
@@ -67,9 +68,14 @@ class CreateAudienceService(CreateAudienceUseCase):
             audience_filter_condition = self.audience_repository.get_db_filter_conditions(
                 new_audience_id, db
             )
+
             conditions = audience_filter_condition[0].conditions
-            print("conditions")
+            print("before conditions")
             print(conditions)
+            conditions = transform_visit_count_category_to_visit_count(conditions)
+            print("after conditions")
+            print(conditions)
+
             query = self.get_final_query(user, conditions, db)
             execute_query_compiler(query)
             print("query")
@@ -373,6 +379,7 @@ class CreateAudienceService(CreateAudienceUseCase):
     def get_final_query(self, user, filter_condition, db: Session):
         # **variable_type 반환(target / event) : 추가 필요
         # 인덱스 기준 넘버링된 조건 입력되는 딕셔너리(condition_1_1, condition_1_2, condition_2_1 ...)
+
         condition_dict = {}
         filter_or_exclutions_query_list = []
         # filters, exclusions 키 별로 조건들을 저장

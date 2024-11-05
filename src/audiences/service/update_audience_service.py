@@ -19,6 +19,7 @@ from src.audiences.utils.query_builder import (
     execute_query_compiler,
     get_query_type_with_additional_filters,
     group_where_conditions,
+    transform_visit_count_category_to_visit_count,
 )
 from src.core.transactional import transactional
 from src.users.domain.user import User
@@ -62,6 +63,7 @@ class UpdateAudienceService(UpdateAudienceUseCase):
         options = creation_options[0].conditions
         print("options")
         print(options)
+        options = transform_visit_count_category_to_visit_count(options)
         query = self.get_final_query(user, options, db)
         print("query")
         print(query)
