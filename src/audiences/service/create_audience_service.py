@@ -402,19 +402,22 @@ class CreateAudienceService(CreateAudienceUseCase):
                         print(query_type_dict)
 
                         if query_type_dict["field"] in (
-                            "visit_product_name",
-                            "visit_full_category_name_1",
-                            "visit_full_category_name_2",
-                            "visit_full_category_name_3",
-                            "visit_page_title",
+                            "visit_option_product_name",
+                            "visit_option_full_category_name_1",
+                            "visit_option_full_category_name_2",
+                            "visit_option_full_category_name_3",
                         ):
-                            field_with_visit_prefix = query_type_dict["field"].replace("visit_", "")
+                            field_with_visit_prefix = query_type_dict["field"].replace(
+                                "option_", ""
+                            )
                             query_type_dict["field"] = field_with_visit_prefix
 
                         variable_table = self.audience_repository.get_tablename_by_variable_id(
                             query_type_dict["field"], db
                         )
                         table_name = variable_table.target_table
+                        print("tablename")
+                        print(table_name)
 
                         query_type_dict["table_name"] = table_name
                         condition_dict[f"condition_{n1}_{n2}"] = query_type_dict

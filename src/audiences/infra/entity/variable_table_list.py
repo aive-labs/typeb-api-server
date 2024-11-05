@@ -182,10 +182,10 @@ class CustomerProductPurchaseSummaryEntity(Base):
 class GaViewMasterEntity(Base):
     __tablename__ = "ga_view_master"
     __table_args__ = (
-        Index("idx_visit_product", "visit_dt"),  # event_date와 product_code에 인덱스 생성
-        Index("idx_visit_product", "product_code"),  # event_date와 product_code에 인덱스 생성
+        Index("idx_visit", "visit_dt"),  # event_date와 product_code에 인덱스 생성
+        Index("idx_product_code", "product_code"),  # event_date와 product_code에 인덱스 생성
         Index(
-            "idx_visit_product", "visit_dt", "product_code"
+            "idx_visit_product_code", "visit_dt", "product_code"
         ),  # event_date와 product_code에 인덱스 생성
         Index("idx_category1", "full_category_name_1"),  # full_category_name.1에 인덱스 생성
         Index("idx_category2", "full_category_name_2"),  # full_category_name.2에 인덱스 생성
@@ -203,12 +203,12 @@ class GaViewMasterEntity(Base):
 
     cus_cd = Column(String, nullable=False, primary_key=True)
     visit_dt = Column(String, nullable=False, primary_key=True)
-    page_title = Column(String, nullable=False, primary_key=True)
-    page_entry_time = Column(DateTime(timezone=True), nullable=False, primary_key=True)
-    product_code = Column(String, nullable=True)
-    product_name = Column(String, nullable=True)
-    full_category_name_1 = Column(String, nullable=True)
-    full_category_name_2 = Column(String, nullable=True)
-    full_category_name_3 = Column(String, nullable=True)
+    visit_page_title = Column("page_title", String, nullable=False, primary_key=True)
+    page_entry_time = Column(TIMESTAMP(timezone=True), nullable=False, primary_key=True)
+    visit_product_code = Column("product_code", String, nullable=True)
+    visit_product_name = Column("product_name", String, nullable=True)
+    visit_full_category_name_1 = Column("full_category_name_1", String, nullable=True)
+    visit_full_category_name_2 = Column("full_category_name_2", String, nullable=True)
+    visit_full_category_name_3 = Column("full_category_name_3", String, nullable=True)
     engagement_time_sec = Column(Double, nullable=True)
     etltime = Column(TIMESTAMP(timezone=True))

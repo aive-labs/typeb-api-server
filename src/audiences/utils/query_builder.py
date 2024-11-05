@@ -208,18 +208,35 @@ def build_select_query(table_obj, condition, condition_name):
             else:
                 field = field + "_" + period
 
+        print("additional_filters")
+        print(additional_filters)
         if additional_filters:
-            and_conditions_in_case.append(
-                and_(
-                    *[
-                        getattr(
-                            table_obj,
-                            delete_event_field_check(each_additional_filter["field"]),
-                        ).in_(each_additional_filter["data"].split(","))
-                        for each_additional_filter in additional_filters
-                    ]
+
+            if table_obj == GaViewMasterEntity:
+                print("GaView Additional")
+                and_conditions_in_case.append(
+                    and_(
+                        *[
+                            getattr(
+                                table_obj,
+                                each_additional_filter["field"].replace("option_", ""),
+                            ).in_(each_additional_filter["data"].split(","))
+                            for each_additional_filter in additional_filters
+                        ]
+                    )
                 )
-            )
+            else:
+                and_conditions_in_case.append(
+                    and_(
+                        *[
+                            getattr(
+                                table_obj,
+                                delete_event_field_check(each_additional_filter["field"]),
+                            ).in_(each_additional_filter["data"].split(","))
+                            for each_additional_filter in additional_filters
+                        ]
+                    )
+                )
 
         if and_conditions_in_case:
             print("and_conditions_in_case")
