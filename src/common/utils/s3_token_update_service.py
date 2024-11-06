@@ -1,3 +1,5 @@
+from io import StringIO
+
 import boto3
 import yaml
 
@@ -8,22 +10,25 @@ class S3TokenService:
         self.bucket = bucket
         self.key = key
 
-    def read_as_dict(self, section: str = None) -> dict:
-        response = self.s3_client.get_object(Bucket=self.bucket, Key=self.key)
-        content = response["Body"].read().decode("utf-8")
-        yaml_dict = yaml.safe_load(content)
-        return yaml_dict[section] if section else yaml_dict
+    def create_and_upload_yaml(self, data: dict):
+        """
+        Create a YAML file from a dictionary and upload it to S3.
 
-    def update_dict(self, section: str, new_data_dict: dict):
-        existing_data = self.read_as_dict() or {}
+        :param data: Dictionary to save as YAML.
+        :param mallid: mallid
+        """
+        # Convert dictionary to YAML string
+        yaml_content = yaml.dump(data, default_flow_style=False)
 
-        if section not in existing_data:
-            existing_data[section] = {}
+        # Use a StringIO buffer to simulate a file for uploading
+        yaml_buffer = StringIO(yaml_content)
 
-        existing_data[section].update(new_data_dict)
-
-        yaml_content = yaml.dump(existing_data, default_flow_style=False)
-        self.s3_client.put_object(Bucket=self.bucket, Key=self.key, Body=yaml_content)
+        # Upload the YAML file to the specified S3 path
+        self.s3_client.put_object(
+            Bucket=self.bucket,
+            Key=self.key,
+            Body=yaml_buffer.getvalue(),
+        )
 
     def insert_csv(self, csv_buffer):
         self.s3_client.put_object(Bucket=self.bucket, Key=self.key, Body=csv_buffer.getvalue())

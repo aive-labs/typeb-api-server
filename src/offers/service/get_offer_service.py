@@ -56,8 +56,10 @@ class GetOfferService(GetOfferUseCase):
                 access_token = cafe24_token_data.access_token
 
             # s3에 토큰 업데이트
-            s3_reader = S3TokenService(bucket="aace-airflow-log", key="cafe24_token.yml")
-            s3_reader.update_dict(user.mall_id, response)
+            s3_reader = S3TokenService(
+                bucket="aace-airflow-log", key=f"cafe24_token/{user.mall_id}.yml"
+            )
+            s3_reader.create_and_upload_yaml(response)
 
         async with aiohttp.ClientSession() as session:
             # 현재 날짜와 내일 날짜 계산
