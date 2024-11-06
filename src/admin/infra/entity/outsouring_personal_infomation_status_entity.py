@@ -16,4 +16,6 @@ class OutSouringPersonalInformationStatusEntity(Base):
 
 @event.listens_for(OutSouringPersonalInformationStatusEntity.__table__, "after_create")
 def insert_personal_information_initial_value(target, connection, **kw):
-    connection.execute(target.insert().values(term_status="pendindg"))
+    connection.execute(
+        target.insert().values(term_status="pending", created_by="aivelabs", updated_by="aivelabs")
+    )
