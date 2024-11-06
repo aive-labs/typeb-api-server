@@ -9,7 +9,9 @@ from src.auth.enums.gtm_variable import GoogleTagManagerVariableFileName
 from src.auth.infra.ga_repository import GARepository
 from src.auth.routes.dto.response.ga_script_response import GAScriptResponse
 from src.auth.routes.port.base_ga_service import BaseGAIntegrationService
+from src.common.slack.slack_message import send_slack_message
 from src.common.utils.file.s3_service import S3Service
+from src.common.utils.get_env_variable import get_env_variable
 from src.core.database import get_mall_url_by_user
 from src.core.exceptions.exceptions import (
     ConsistencyException,
@@ -93,12 +95,17 @@ class GAIntegrationService(BaseGAIntegrationService):
 
             db.commit()
 
+            send_slack_message(
+                title=f"🌎 GA, GTM 생성 완료 (*mall id*: {mall_id}*)",
+                body="GA, GTM 연동에 필요한 속성 생성이 완료되었습니다. 다음 작업을 진행해주세요"
+                "1. 빅쿼리 연동"
+                "2. 데이터 스트림 연결 여부 확인(최대 48시간)",
+                member_id=get_env_variable("slack_wally"),
+            )
+
             return ga_integration_with_gtm
         except Exception as e:
             # ga 속성 삭제
-            print("--------------- DELETE ---------------")
-            print(ga_integration)
-
             if ga_integration.ga_property_id:
                 print("Delete GA property")
                 ga_response = (
@@ -108,8 +115,6 @@ class GAIntegrationService(BaseGAIntegrationService):
                 )
                 print(ga_response)
 
-            print("ga_integration.gtm_container_id")
-            print(ga_integration.gtm_container_id)
             if ga_integration.gtm_container_id:
                 print("Delete GTM container")
                 gtm_response = (
@@ -120,7 +125,12 @@ class GAIntegrationService(BaseGAIntegrationService):
                     )
                     .execute()
                 )
-                print(gtm_response)
+
+            send_slack_message(
+                title=f"❌ GA, GTM 생성 실패 (*mall id*: {mall_id}*)",
+                body="GA, GTM 연동에 필요한 속성 생성에 실패했습니다. 로그를 확인해주세요.",
+                member_id=get_env_variable("slack_wally"),
+            )
 
             raise e
 
