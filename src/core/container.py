@@ -1,7 +1,11 @@
 from dependency_injector import containers, providers
 
 from src.admin.infra.admin_repository import AdminRepository
+from src.admin.infra.personal_information_repository import (
+    PersonalInformationRepository,
+)
 from src.admin.service.get_personal_variables_service import GetPersonalVariablesService
+from src.admin.service.personal_information_service import PersonalInformationService
 from src.audiences.infra.audience_repository import AudienceRepository
 from src.audiences.infra.audience_sqlalchemy_repository import AudienceSqlAlchemy
 from src.audiences.service.background.target_audience_summary_sqlalchemy import (
@@ -743,4 +747,10 @@ class Container(containers.DeclarativeContainer):
     ga_service = providers.Singleton(
         provides=GAIntegrationService,
         ga_repository=ga_repository,
+    )
+
+    personal_information_repository = providers.Singleton(provides=PersonalInformationRepository)
+    personal_information_service = providers.Singleton(
+        provides=PersonalInformationService,
+        personal_information_repository=personal_information_repository,
     )
