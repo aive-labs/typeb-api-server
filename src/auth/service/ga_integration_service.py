@@ -5,6 +5,7 @@ from googleapiclient.discovery import build
 from sqlalchemy.orm import Session
 
 from src.auth.domain.ga_integration import GAIntegration
+from src.auth.enums.ga_script_status import GAScriptStatus
 from src.auth.enums.gtm_variable import GoogleTagManagerVariableFileName
 from src.auth.infra.ga_repository import GARepository
 from src.auth.routes.dto.response.ga_script_response import GAScriptResponse
@@ -51,9 +52,12 @@ class GAIntegrationService(BaseGAIntegrationService):
         ga_integration = self.ga_repository.get_by_mall_id(user.mall_id, db)
 
         if ga_integration.ga_measurement_id is None or ga_integration.gtm_tag_id is None:
-            raise ConsistencyException(
-                detail={"message": "GA 연동 도중 문제가 발생했습니다. 관리자에게 문의하세요."}
+            send_slack_message(
+                title=f"🌎 GA, GTM 생성 확인 필요 (*mall id*: {user.mall_id}*)",
+                body="GA, GTM 정상적으로 생성되었는지 확인이 필요합니다.",
+                member_id=get_env_variable("slack_wally"),
             )
+            return GAScriptResponse(status=GAScriptStatus.PENDING)
 
         head_script = (
             f'<script src="https://aace-ga-script.s3.ap-northeast-2.amazonaws.com/ga-tracking.js" '
