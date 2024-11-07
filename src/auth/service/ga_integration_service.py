@@ -15,7 +15,6 @@ from src.common.utils.file.s3_service import S3Service
 from src.common.utils.get_env_variable import get_env_variable
 from src.core.database import get_mall_url_by_user
 from src.core.exceptions.exceptions import (
-    ConsistencyException,
     GoogleTagException,
     NotFoundException,
 )
@@ -73,9 +72,18 @@ class GAIntegrationService(BaseGAIntegrationService):
     async def execute_ga_automation(self, user: User, db: Session) -> GAIntegration:
         mall_id = user.mall_id
 
+        send_slack_message(
+            title=f"GA, GTM 생성 시작 (mall id: {mall_id})",
+            body="GA, GTM 속성 생성이 시작되었습니다. 1~2분 후 슬랙 완료 메시지가 도착했는지 꼭 확인하세요..",
+            member_id=get_env_variable("slack_wally"),
+        )
+
         if mall_id is None:
-            raise ConsistencyException(
-                detail={"message": "쇼핑몰이 정보가 등록되지 않은 사용자입니다."}
+            send_slack_message(
+                title=f"❌ GA, GTM 생성 실패 (*mall id*: {mall_id}*)",
+                body="GA, GTM 연동에 필요한 속성 생성에 실패했습니다. "
+                "쇼핑몰 정보(mall_id)가 등록되지 않은 사용자입니다.",
+                member_id=get_env_variable("slack_wally"),
             )
 
         mall_url = get_mall_url_by_user(str(user.email))
