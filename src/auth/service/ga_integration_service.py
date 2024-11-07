@@ -35,7 +35,7 @@ class GAIntegrationService(BaseGAIntegrationService):
             "https://www.googleapis.com/auth/tagmanager.publish",
             "https://www.googleapis.com/auth/tagmanager.edit.containerversions",
         ]
-        self.KEY_FILE_LOCATION = "/Users/wally/Documents/key/deeptune-1e645741bf74.json"
+        self.KEY_FILE_LOCATION = "config/env/deeptune-1e645741bf74.json"
         self.credentials = service_account.Credentials.from_service_account_file(
             self.KEY_FILE_LOCATION, scopes=self.scopes
         )
