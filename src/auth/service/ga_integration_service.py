@@ -53,7 +53,7 @@ class GAIntegrationService(BaseGAIntegrationService):
 
         if ga_integration.ga_measurement_id is None or ga_integration.gtm_tag_id is None:
             send_slack_message(
-                title=f"🌎 GA, GTM 생성 확인 필요 (*mall id*: {user.mall_id}*)",
+                title=f"GA, GTM 생성 확인 필요 (mall id: {user.mall_id})",
                 body="GA, GTM 정상적으로 생성되었는지 확인이 필요합니다.",
                 member_id=get_env_variable("slack_wally"),
             )
@@ -100,7 +100,7 @@ class GAIntegrationService(BaseGAIntegrationService):
             db.commit()
 
             send_slack_message(
-                title=f"🌎 GA, GTM 생성 완료 (*mall id*: {mall_id}*)",
+                title=f"GA, GTM 생성 완료 (mall id: {mall_id})",
                 body="GA, GTM 연동에 필요한 속성 생성이 완료되었습니다. 다음 작업을 진행해주세요"
                 "1. 빅쿼리 연동"
                 "2. 데이터 스트림 연결 여부 확인(최대 48시간)",
