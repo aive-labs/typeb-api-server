@@ -22,7 +22,7 @@ alembic revision -m "message"
 - 적용된 버전부터 현재 버전까지 변경사항을 마이그레이션을 진행해주는 기능이다.
 
 ```
-  alembic upgrade head
+  alembic upgrade head --sql
   ```
 
 가장 과거 버전으로 DB 마이그레이션(downgrade) 진행
@@ -63,5 +63,5 @@ TARGET_DB_NAME={mall_id} alembic current
 - 여기서 환경 변수로 설정하는 mall_id는 `common.clients` 테이블에 정의된 mall_id와 동일해야 한다.
 
 ```
-TARGET_DB_NAME={mall_id} alembic upgrade head
+TARGET_DB_NAME={mall_id} alembic upgrade head --sql
 ```
