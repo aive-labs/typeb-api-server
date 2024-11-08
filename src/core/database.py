@@ -24,11 +24,12 @@ class DBSettings(BaseSettings):
         if not env_type:
             env_file = "config/env/.env"
         elif env_type == "test_code":
-            env_file = "config/env/test.env"
+            env_file = "config/env/.env.test"
         else:
             env_file = f"config/env/{env_type}.env"
 
         print(f"env_file: {env_file}")
+        print(get_env_variable("database_url"))
 
 
 def get_db_url():
