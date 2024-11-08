@@ -33,6 +33,18 @@ def get_personal_variable(
     return get_personal_variables_service.get_personal_variable(user, db=db)
 
 
+@admin_router.get("/personal-information-term/status")
+@inject
+def get_outsourcing_personal_information_status(
+    user=Depends(get_permission_checker(required_permissions=[])),
+    personal_information_service: BasePersonalInformationService = Depends(
+        Provide[Container.personal_information_service]
+    ),
+    db: Session = Depends(get_db),
+):
+    return personal_information_service.get_status(db=db)
+
+
 @admin_router.patch("/personal-information-term/status", status_code=status.HTTP_204_NO_CONTENT)
 @inject
 def update_outsourcing_personal_information_status(

@@ -1,6 +1,8 @@
 import pytest
 from fastapi import HTTPException
+from sqlalchemy.orm import Session
 
+from src.search.routes.dto.send_user_response import SendUserResponse
 from src.users.domain.user import User
 from src.users.routes.dto.request.user_create import UserCreate
 from src.users.routes.dto.request.user_modify import UserModify
@@ -26,6 +28,7 @@ class FakeUserRepository(BaseUserRepository):
             department_id="1",
             language="ko",
             test_callback_number="010-0000-0000",
+            is_aivelabs_admin=False,
         )
 
         sample_user2 = User(
@@ -38,12 +41,13 @@ class FakeUserRepository(BaseUserRepository):
             department_id="1",
             language="ko",
             test_callback_number="010-1111-1111",
+            is_aivelabs_admin=False,
         )
 
         self.users.append(sample_user1)
         self.users.append(sample_user2)
 
-    def register_user(self, user_create: UserCreate) -> User:
+    def register_user(self, user_create: UserCreate, db) -> User:
         user: User = user_create.to_user()
         user.user_id = self.auto_increment_id
         self.auto_increment_id += 1
@@ -51,30 +55,40 @@ class FakeUserRepository(BaseUserRepository):
 
         return user
 
-    def is_existing_user(self, email: str) -> bool:
+    def is_existing_user(self, email: str, db) -> bool:
         for user in self.users:
             if user.email == email:
                 return True
         return False
 
-    def update_user(self, user_modify: UserModify):
+    def update_user(self, user_modify: UserModify, db):
         pass
 
-    def delete_user(self, user_id: int):
+    def delete_user(self, user_id: int, db):
         self.users = [user for user in self.users if user.user_id != user_id]
 
-    def get_user_by_id(self, user_id: int) -> User | None:
+    def get_user_by_id(self, user_id: int, db) -> User | None:
         for user in self.users:
             if user.user_id == user_id:
                 return user
 
-    def get_user_by_email(self, email: str) -> User | None:
+    def get_user_by_email(self, email: str, db) -> User | None:
         for user in self.users:
             if user.email == email:
                 return user
 
-    def get_all_users(self) -> list[User]:
+    def get_all_users(self, db) -> list[User]:
         return self.users
+
+    def get_send_users(self, db, keyword=None) -> list[SendUserResponse]:
+        users = [user for user in self.users if user.is_aivelabs_admin == False]
+        return [
+            SendUserResponse(
+                user_name_object=f"{user.username}/{user.department_name}",
+                test_callback_number=user.cell_phone_number if user.cell_phone_number else "",
+            )
+            for user in users
+        ]
 
 
 class FakeUserService(BaseUserService):
@@ -82,21 +96,24 @@ class FakeUserService(BaseUserService):
     def __init__(self, user_repository: BaseUserRepository):
         self.user_service = UserService(user_repository=user_repository)
 
-    def register_user(self, user_create: UserCreate) -> UserResponse:
-        user = self.user_service.register_user(user_create)
+    def register_user(self, user_create: UserCreate, db) -> UserResponse:
+        user = self.user_service.register_user(user_create, db)
         return UserResponse(**user.model_dump())
 
-    def delete_user(self, user_id: int):
-        self.user_service.delete_user(user_id=user_id)
+    def delete_user(self, user_id: int, db):
+        self.user_service.delete_user(user_id=user_id, db=db)
 
-    def update_user(self, user_modify: UserModify):
+    def update_user(self, user_modify: UserModify, db):
         pass
 
-    def get_user_by_id(self, user_id: int):
-        return self.user_service.get_user_by_id(user_id=user_id)
+    def get_user_by_id(self, user_id: int, db):
+        return self.user_service.get_user_by_id(user_id=user_id, db=db)
 
-    def get_all_users(self):
-        return self.user_service.get_all_users()
+    def get_all_users(self, db):
+        return self.user_service.get_all_users(db)
+
+    def get_send_users(self, db, keyword=None):
+        return self.user_service.get_send_users(db)
 
 
 @pytest.fixture
