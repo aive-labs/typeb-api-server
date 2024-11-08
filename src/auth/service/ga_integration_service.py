@@ -1,3 +1,4 @@
+import json
 import time
 
 from google.oauth2 import service_account
@@ -10,11 +11,13 @@ from src.auth.enums.gtm_variable import GoogleTagManagerVariableFileName
 from src.auth.infra.ga_repository import GARepository
 from src.auth.routes.dto.response.ga_script_response import GAScriptResponse
 from src.auth.routes.port.base_ga_service import BaseGAIntegrationService
+from src.common.service.aws_service import AwsService
 from src.common.slack.slack_message import send_slack_message
 from src.common.utils.file.s3_service import S3Service
 from src.common.utils.get_env_variable import get_env_variable
 from src.core.database import get_mall_url_by_user
 from src.core.exceptions.exceptions import (
+    ConsistencyException,
     GoogleTagException,
     NotFoundException,
 )
@@ -35,13 +38,26 @@ class GAIntegrationService(BaseGAIntegrationService):
             "https://www.googleapis.com/auth/tagmanager.publish",
             "https://www.googleapis.com/auth/tagmanager.edit.containerversions",
         ]
-        self.KEY_FILE_LOCATION = "config/env/deeptune-1e645741bf74.json"
-        self.credentials = service_account.Credentials.from_service_account_file(
-            self.KEY_FILE_LOCATION, scopes=self.scopes
+        self.s3_service = S3Service("aace-ga-script")
+
+        json_content = AwsService.get_key_from_parameter_store(
+            get_env_variable("service_json_store_key")
+        )
+        if json_content is None:
+            send_slack_message(
+                title="구글 서비스 계정 키 오류",
+                body="Google Service JSON 파일을 S3에서 읽을 수 없습니다. 확인해주세요",
+                member_id=get_env_variable("slack_wally"),
+            )
+
+            raise ConsistencyException(detail={"message": "요청 중에 오류가 발생했습니다."})
+        credentials_dict = json.loads(json_content)
+
+        self.credentials = service_account.Credentials.from_service_account_info(
+            credentials_dict, scopes=self.scopes
         )
 
         self.ga_repository = ga_repository
-        self.s3_service = S3Service("aace-ga-script")
 
     def generate_ga_script(self, user: User, db: Session) -> GAScriptResponse:
 
