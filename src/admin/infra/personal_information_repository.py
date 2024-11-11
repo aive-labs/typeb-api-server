@@ -8,7 +8,6 @@ from src.admin.infra.entity.outsouring_personal_infomation_status_entity import 
 from src.admin.service.port.base_personal_information_repository import (
     BasePersonalInformationRepository,
 )
-from src.core.exceptions.exceptions import ConsistencyException
 from src.users.domain.user import User
 
 
@@ -17,8 +16,16 @@ class PersonalInformationRepository(BasePersonalInformationRepository):
     def get_status(self, db) -> str:
         entity = db.query(OutSouringPersonalInformationStatusEntity).first()
 
-        if entity is None:
-            raise ConsistencyException("등록된 상태가 없습니다.")
+        if not entity:
+            entity = OutSouringPersonalInformationStatusEntity(
+                term_status="pending",
+                created_by="aivelabs",
+                created_at=datetime.now(timezone.utc),
+                updated_by="aivelabs",
+                updated_at=datetime.now(timezone.utc),
+            )
+            db.add(entity)
+            db.commit()
 
         return entity.term_status
 
