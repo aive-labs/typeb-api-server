@@ -2,9 +2,11 @@
 import importlib
 import os
 
+print("------------------------------------------")
+print(os.getcwd())
+
 # env.py
 import pkgutil
-import sys
 from logging.config import fileConfig
 
 import psycopg2
@@ -16,10 +18,7 @@ from src.core.database import Base
 
 print("------------------------------------------")
 print(os.getcwd())
-current_dir = os.path.dirname(os.path.realpath(__file__))
-project_root = os.path.abspath(os.path.join(current_dir, "..", "src"))
-
-sys.path.append(project_root)
+print("------------------------------------------")
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
