@@ -68,7 +68,7 @@ class Database:
             print(f"DATABASE: {base_db_name} SCHEMA: {Base.metadata.schema}")
         else:
             print(f"DATABASE: {base_db_name}")
-            Base.metadata.create_all(bind=self._engine)
+            # Base.metadata.create_all(bind=self._engine)
 
     @contextmanager  # type: ignore
     def session(self) -> Callable[..., AbstractContextManager[Session]]:  # type: ignore
