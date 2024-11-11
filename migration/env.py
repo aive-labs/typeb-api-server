@@ -14,6 +14,8 @@ from sqlalchemy import engine_from_config, pool, text
 from src.common.utils.get_env_variable import get_env_variable
 from src.core.database import Base
 
+print("------------------------------------------")
+print(os.getcwd())
 current_dir = os.path.dirname(os.path.realpath(__file__))
 project_root = os.path.abspath(os.path.join(current_dir, "..", "src"))
 
