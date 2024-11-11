@@ -863,7 +863,7 @@ def upgrade() -> None:
         sa.Column("cost_per_send", sa.Float(precision=24), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=True),
-        sa.PrimaryKeyConstraint("msg_delivery_vendor"),
+        sa.PrimaryKeyConstraint("msg_delivery_vendor", "media", "msg_type"),
         schema="aivelabs_sv",
     )
 
