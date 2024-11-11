@@ -15,7 +15,7 @@ class AudiencePredefVariableEntity(Base):
     __tablename__ = "audience_predefiend_variables"
 
     predef_var_seq = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    variable_id = Column(String, primary_key=True, index=True)
+    variable_id = Column(String, index=True)
     variable_name = Column(String, nullable=False)
     variable_group_code = Column(String, nullable=False)
     variable_group_name = Column(String, nullable=False)

@@ -1,4 +1,16 @@
-from sqlalchemy import ARRAY, BigInteger, Column, Date, DateTime, Float, Integer, String
+from sqlalchemy import (
+    ARRAY,
+    TIMESTAMP,
+    BigInteger,
+    Column,
+    Date,
+    DateTime,
+    Double,
+    Float,
+    Index,
+    Integer,
+    String,
+)
 
 from src.core.database import Base
 
@@ -165,3 +177,22 @@ class CustomerProductPurchaseSummaryEntity(Base):
     milege_usage_1m = Column(Integer)
     milege_usage_ss = Column(Integer)
     milege_usage_fw = Column(Integer)
+
+
+class GaViewMasterEntity(Base):
+    __tablename__ = "ga_view_master"
+    __table_args__ = (
+        Index("ga_view_master_cus_cd_index", "cus_cd"),  # event_date와 product_code에 인덱스 생성
+    )
+
+    cus_cd = Column(String, nullable=False, primary_key=True)
+    visit_dt = Column(String, nullable=False, primary_key=True)
+    visit_page_title = Column("page_title", String, nullable=False, primary_key=True)
+    page_entry_time = Column(TIMESTAMP(timezone=True), nullable=False, primary_key=True)
+    visit_product_code = Column("product_code", String, nullable=True)
+    visit_product_name = Column("product_name", String, nullable=True)
+    visit_full_category_name_1 = Column("full_category_name_1", String, nullable=True)
+    visit_full_category_name_2 = Column("full_category_name_2", String, nullable=True)
+    visit_full_category_name_3 = Column("full_category_name_3", String, nullable=True)
+    engagement_time_sec = Column(Double, nullable=True)
+    etltime = Column(TIMESTAMP(timezone=True))

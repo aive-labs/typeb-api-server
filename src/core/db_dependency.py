@@ -5,7 +5,6 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 from src.auth.service.auth_service import reuseable_oauth
 from src.common.utils.get_env_variable import get_env_variable
-from src.core.database import Base
 from src.core.exceptions.exceptions import AuthException, CredentialException
 
 db_engine = {}
@@ -64,7 +63,7 @@ def get_db(token: str = Depends(reuseable_oauth)):
 def get_db_for_with_mall_id(mall_id):
     mall_id = "aivelabsdb" if mall_id == "aivelabs" else mall_id
     engine = get_engine(prefix_db_url(mall_id))
-    Base.metadata.create_all(bind=engine)
+    # Base.metadata.create_all(bind=engine)
     session_local = get_session(engine)
     db = session_local()
     try:

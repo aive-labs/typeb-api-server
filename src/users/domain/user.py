@@ -26,10 +26,12 @@ class User(BaseModel):
     brand_name_en: str | None = None
     parent_dept_cd: str | None = None
     language: str
+    cell_phone_number: str | None = None
     test_callback_number: str | None = None
     last_login: datetime | None = None
     mall_id: str | None = None
     subscription: MySubscription | None = None
+    is_aivelabs_admin: bool | None = None
 
     def to_entity(self) -> UserEntity:
         return UserEntity(

@@ -8,11 +8,12 @@ def get_env_variable(key: str) -> str:
 
     env_files = {
         None: "config/env/.env",
-        "test_code": "config/env/test.env",
-        "nepa-stg": "config/env/local_nepa.env",
+        "test_code": "config/env/.env.test",
     }
     env_file = env_files.get(env_type, f"config/env/{env_type}.env")
     load_dotenv(env_file)
+
+    current_directory = os.getcwd()
 
     value = os.getenv(key)
 

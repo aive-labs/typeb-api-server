@@ -33,6 +33,7 @@ from src.audiences.utils.query_builder import (
     execute_query_compiler,
     get_query_type_with_additional_filters,
     group_where_conditions,
+    transform_visit_count_category_to_visit_count,
 )
 from src.core.exceptions.exceptions import DuplicatedException
 from src.core.transactional import transactional
@@ -67,7 +68,14 @@ class CreateAudienceService(CreateAudienceUseCase):
             audience_filter_condition = self.audience_repository.get_db_filter_conditions(
                 new_audience_id, db
             )
+
             conditions = audience_filter_condition[0].conditions
+            print("before conditions")
+            print(conditions)
+            conditions = transform_visit_count_category_to_visit_count(conditions)
+            print("after conditions")
+            print(conditions)
+
             query = self.get_final_query(user, conditions, db)
             execute_query_compiler(query)
             print("query")
@@ -371,6 +379,7 @@ class CreateAudienceService(CreateAudienceUseCase):
     def get_final_query(self, user, filter_condition, db: Session):
         # **variable_type 반환(target / event) : 추가 필요
         # 인덱스 기준 넘버링된 조건 입력되는 딕셔너리(condition_1_1, condition_1_2, condition_2_1 ...)
+
         condition_dict = {}
         filter_or_exclutions_query_list = []
         # filters, exclusions 키 별로 조건들을 저장
@@ -396,10 +405,26 @@ class CreateAudienceService(CreateAudienceUseCase):
                             raise Exception()
 
                         # variable_type 고정 : target
+                        print("query_type_dict")
+                        print(query_type_dict)
+
+                        if query_type_dict["field"] in (
+                            "visit_option_product_name",
+                            "visit_option_full_category_name_1",
+                            "visit_option_full_category_name_2",
+                            "visit_option_full_category_name_3",
+                        ):
+                            field_with_visit_prefix = query_type_dict["field"].replace(
+                                "option_", ""
+                            )
+                            query_type_dict["field"] = field_with_visit_prefix
+
                         variable_table = self.audience_repository.get_tablename_by_variable_id(
                             query_type_dict["field"], db
                         )
                         table_name = variable_table.target_table
+                        print("tablename")
+                        print(table_name)
 
                         query_type_dict["table_name"] = table_name
                         condition_dict[f"condition_{n1}_{n2}"] = query_type_dict
@@ -421,6 +446,11 @@ class CreateAudienceService(CreateAudienceUseCase):
                             variable_table, condition, condition_name
                         )
 
+                        print("select query")
+                        print(temp_select_query)
+                        a = execute_query_compiler(temp_select_query[1])
+                        print(a)
+
                         if temp_select_query is None:
                             raise Exception()
 
@@ -432,6 +462,8 @@ class CreateAudienceService(CreateAudienceUseCase):
                     for temp_idx, temp_select_list in enumerate(
                         [select_query_list, array_select_query_list]
                     ):
+                        print("temp_idx")
+                        print(temp_idx)
                         if temp_select_list:
                             if temp_idx == 0:
                                 sub_alias: Alias = (
@@ -447,12 +479,20 @@ class CreateAudienceService(CreateAudienceUseCase):
                                     )
                                 )
 
+                            print("sub_alias query")
+                            a = execute_query_compiler(sub_alias)
+                            print(a)
+
                             where_condition_dict = group_where_conditions(
                                 sub_alias,
                                 condition_dict,
                                 condition_list,
                                 where_condition_dict,
                             )
+
+                            print("where_condition_dict")
+                            print(where_condition_dict)
+
                             all_customer = all_customer.outerjoin(  # pyright: ignore [reportAttributeAccessIssue]
                                 sub_alias,
                                 CustomerInfoStatusEntity.cus_cd == sub_alias.c.cus_cd,
@@ -467,4 +507,8 @@ class CreateAudienceService(CreateAudienceUseCase):
                 )
                 filter_or_exclutions_query_list.append(all_customer)
         result = except_(*filter_or_exclutions_query_list)
+
+        print("result select query")
+        a = execute_query_compiler(result)
+        print(a)
         return result

@@ -12,6 +12,7 @@ from src.admin.routes.admin_router import admin_router
 from src.admin.routes.contact_router import contact_router
 from src.audiences.routes.audience_router import audience_router
 from src.auth.routes.auth_router import auth_router
+from src.auth.routes.ga_router import ga_router
 from src.auth.routes.onboarding_router import onboarding_router
 from src.campaign.routes.campaign_dag_router import campaign_dag_router
 from src.campaign.routes.campaign_router import campaign_router
@@ -63,7 +64,7 @@ app = create_app()
 app.include_router(router=auth_router, prefix="/api/v1/auth")
 app.include_router(router=onboarding_router, prefix="/api/v1/auth/onboarding")
 app.include_router(router=user_router, prefix="/api/v1/users")
-# app.include_router(router=ga_router, prefix="/api/v1/ga")
+app.include_router(router=ga_router, prefix="/api/v1/ga")
 app.include_router(router=campaign_router, prefix="/api/v1/campaign-management")
 app.include_router(router=campaign_dag_router, prefix="/api/v1/campaign-dag")
 app.include_router(router=creatives_router, prefix="/api/v1/contents-management/creatives")

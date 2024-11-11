@@ -1,4 +1,7 @@
-from sqlalchemy import and_, case, func, not_
+from datetime import datetime, timedelta
+
+import pytz
+from sqlalchemy import and_, case, distinct, func, not_
 
 from src.audiences.infra.entity.customer_promotion_master_entity import (
     CustomerPromotionMasterEntity,
@@ -12,8 +15,9 @@ from src.audiences.infra.entity.purchase_analytics_master_style_entity import (
 from src.audiences.infra.entity.variable_table_list import (
     CustomerInfoStatusEntity,
     CustomerProductPurchaseSummaryEntity,
+    GaViewMasterEntity,
 )
-from src.core.exceptions.exceptions import ValidationException
+from src.core.exceptions.exceptions import ConsistencyException, ValidationException
 
 
 def set_query_type_lv2(and_condition):
@@ -132,6 +136,21 @@ def apply_calculate_method(table_obj, query_list, field_list, condition_name, ag
                 True,
                 (func.sum(query_list[0]) / func.sum(query_list[1])).label(condition_name),
             )
+    elif table_obj == GaViewMasterEntity:
+        print("create_ga_subquery")
+        print(field_list)
+        if field_list[0].startswith("visit_dt"):
+            return (True, func.count(distinct(query_list[0])).label(condition_name))
+        elif field_list[0].startswith(
+            (
+                "visit_product_name",
+                "visit_full_category_name_1",
+                "visit_full_category_name_2",
+                "visit_full_category_name_3",
+                "visit_page_title",
+            )
+        ):
+            return (True, query_list[0].label(condition_name))
     else:
         return (True, query_list[0].label(condition_name))
 
@@ -143,9 +162,18 @@ def build_select_query(table_obj, condition, condition_name):
     additional_filters = condition.get("additional_filters")
 
     field = condition["field"]
+    print(f"field: {field}")
     field_list = []
+
+    # 이벤트 변수이거나 행동 데이터이거나
     if is_event_variable := field.startswith("e_"):
         field = delete_event_field_check(field)
+
+    if is_action_variable := field.startswith("visit_count"):
+        field = "visit_dt"
+        print("action field")
+        print(field)
+
     if field.startswith(("freq", "recency", "purcycle")):
         field_list = ["sale_dt_array"]
 
@@ -169,23 +197,55 @@ def build_select_query(table_obj, condition, condition_name):
                 and_conditions_in_case.append(
                     and_(getattr(table_obj, dt_column).between(period[0], period[1]))
                 )
+            elif is_action_variable:
+                dt_column = "visit_dt"
+                if table_obj != GaViewMasterEntity:
+                    raise ConsistencyException(
+                        detail={
+                            "message": "타겟 오디언스 생성 중 오류가 발생했습니다.",
+                            "error": "table_obj != GaViewMasterEntity",
+                        }
+                    )
+                and_conditions_in_case.append(
+                    and_(getattr(table_obj, dt_column).between(period[0], period[1]))
+                )
             else:
                 field = field + "_" + period
 
+        print("additional_filters")
+        print(additional_filters)
         if additional_filters:
-            and_conditions_in_case.append(
-                and_(
-                    *[
-                        getattr(
-                            table_obj,
-                            delete_event_field_check(each_additional_filter["field"]),
-                        ).in_(each_additional_filter["data"].split(","))
-                        for each_additional_filter in additional_filters
-                    ]
+
+            if table_obj == GaViewMasterEntity:
+                print("GaView Additional")
+                and_conditions_in_case.append(
+                    and_(
+                        *[
+                            getattr(
+                                table_obj,
+                                each_additional_filter["field"].replace("option_", ""),
+                            ).in_(each_additional_filter["data"].split(","))
+                            for each_additional_filter in additional_filters
+                        ]
+                    )
                 )
-            )
+            else:
+                and_conditions_in_case.append(
+                    and_(
+                        *[
+                            getattr(
+                                table_obj,
+                                delete_event_field_check(each_additional_filter["field"]),
+                            ).in_(each_additional_filter["data"].split(","))
+                            for each_additional_filter in additional_filters
+                        ]
+                    )
+                )
 
         if and_conditions_in_case:
+            print("and_conditions_in_case")
+            print(table_obj)
+            print(field)
             select_query = case(  # pyright: ignore [reportCallIssue]
                 (
                     and_(*and_conditions_in_case),
@@ -193,7 +253,11 @@ def build_select_query(table_obj, condition, condition_name):
                 )  # pyright: ignore [reportArgumentType]
             )
         else:
+            print("else")
+            print(field)
+            print(table_obj)
             select_query = getattr(table_obj, field)
+            print(select_query)
         select_query_list.append(select_query)
 
     apply_calculate_method_query = apply_calculate_method(
@@ -239,3 +303,50 @@ def execute_query_compiler(query):
     쿼리 객체 컴파일 함수
     """
     return query.compile(compile_kwargs={"literal_binds": True})
+
+
+def transform_visit_count_category_to_visit_count(data):
+    korea_timezone = pytz.timezone("Asia/Seoul")
+    today = datetime.now(korea_timezone).date()
+
+    for filter_item in data.get("filters", []):
+        for and_condition in filter_item.get("and_conditions", []):
+            if and_condition.get("variable_id") == "visit_count_category":
+
+                and_condition["variable_id"] = "visit_count"
+
+                new_conditions = []
+                conditions = and_condition.get("conditions", [])
+
+                for condition in conditions:
+                    # Replace the condition with data_type 'd_visit_period'
+                    if condition.get("data_type") == "d_visit_period":
+
+                        period_value = condition.get("value", "0d")
+
+                        if period_value not in ("7d", "14d", "30d", "60d", "90d"):
+                            raise ConsistencyException(
+                                detail={"message": "유효하지 않은 날짜 타입이 입력되었습니다."}
+                            )
+
+                        days = int(period_value.rstrip("d"))
+
+                        # Calculate the start and end dates
+                        start_date = (today - timedelta(days=days)).strftime("%Y%m%d")
+                        end_date = today.strftime("%Y%m%d")
+
+                        # Create a new condition with the date range
+                        new_condition = {
+                            "cell_type": "date_range_picker",
+                            "data_type": "d_date",
+                            "value": f"{start_date},{end_date}",
+                        }
+                        new_conditions.append(new_condition)
+                    else:
+                        # Keep other conditions unchanged
+                        new_conditions.append(condition)
+
+                # Update the conditions with the new_conditions list
+                and_condition["conditions"] = new_conditions
+
+    return data

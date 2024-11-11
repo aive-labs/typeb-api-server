@@ -36,7 +36,7 @@ class CreditHistory(BaseModel):
             status=CreditStatus.CHARGE_COMPLETE.value,
             charge_amount=charge_amount,
             charging_type=ChargingType.PAYMENT.value,
-            remaining_amount=remaining_amount,
+            remaining_amount=remaining_amount + charge_amount,
             created_by=str(user.user_id),
             updated_by=str(user.user_id),
         )

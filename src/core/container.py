@@ -1,7 +1,11 @@
 from dependency_injector import containers, providers
 
 from src.admin.infra.admin_repository import AdminRepository
+from src.admin.infra.personal_information_repository import (
+    PersonalInformationRepository,
+)
 from src.admin.service.get_personal_variables_service import GetPersonalVariablesService
+from src.admin.service.personal_information_service import PersonalInformationService
 from src.audiences.infra.audience_repository import AudienceRepository
 from src.audiences.infra.audience_sqlalchemy_repository import AudienceSqlAlchemy
 from src.audiences.service.background.target_audience_summary_sqlalchemy import (
@@ -23,6 +27,7 @@ from src.audiences.service.update_cycle_service import AudienceUpdateCycleServic
 from src.auth.infra.cafe24_repository import Cafe24Repository
 from src.auth.infra.cafe24_sqlalchemy_repository import Cafe24SqlAlchemyRepository
 from src.auth.infra.ga_repository import GARepository
+from src.auth.infra.ga_sqlalchemy_repository import GASqlAlchemyRepository
 from src.auth.infra.onboarding_repository import OnboardingRepository
 from src.auth.infra.onboarding_sqlalchemy_repository import (
     OnboardingSqlAlchemyRepository,
@@ -145,17 +150,6 @@ from src.strategy.service.update_strategy_service import UpdateStrategyService
 from src.users.infra.user_repository import UserRepository
 from src.users.infra.user_sqlalchemy import UserSqlAlchemy
 from src.users.service.user_service import UserService
-
-# class CachedFactory(providers.Factory):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         self._cache = lru_cache(maxsize=None)(self._provide)
-#
-#     def _provide(self, *args, **kwargs):
-#         return super()._provide(*args, **kwargs)  # pyright: ignore [reportAttributeAccessIssue]
-#
-#     def __call__(self, *args, **kwargs):
-#         return self._cache(*args, **kwargs)
 
 
 class Container(containers.DeclarativeContainer):
@@ -529,6 +523,7 @@ class Container(containers.DeclarativeContainer):
         campaign_set_repository=campaign_set_repository,
         approve_campaign_service=approve_campaign_service,
         generate_message_service=generate_message_service,
+        credit_repository=credit_repository,
     )
 
     """
@@ -746,8 +741,16 @@ class Container(containers.DeclarativeContainer):
         message_repository=message_repository,
     )
 
-    ga_repository = providers.Singleton(provides=GARepository)
+    ga_sqlalchemy = providers.Singleton(provides=GASqlAlchemyRepository)
+
+    ga_repository = providers.Singleton(provides=GARepository, ga_sqlalchemy=ga_sqlalchemy)
     ga_service = providers.Singleton(
         provides=GAIntegrationService,
-        message_repository=ga_repository,
+        ga_repository=ga_repository,
+    )
+
+    personal_information_repository = providers.Singleton(provides=PersonalInformationRepository)
+    personal_information_service = providers.Singleton(
+        provides=PersonalInformationService,
+        personal_information_repository=personal_information_repository,
     )

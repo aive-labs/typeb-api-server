@@ -1,5 +1,9 @@
 # env.py
 import importlib
+import os
+
+print("------------------------------------------")
+print(os.getcwd())
 
 # env.py
 import pkgutil
@@ -7,10 +11,14 @@ from logging.config import fileConfig
 
 import psycopg2
 from alembic import context
-from sqlalchemy import create_engine, pool
+from sqlalchemy import engine_from_config, pool, text
 
 from src.common.utils.get_env_variable import get_env_variable
 from src.core.database import Base
+
+print("------------------------------------------")
+print(os.getcwd())
+print("------------------------------------------")
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -30,7 +38,7 @@ def import_all_modules(package_name):
         importlib.import_module(name)
 
 
-# src 패키지 내의 모든 모듈 임포트
+# src 패키지 내의 모든 모듈 임포트, 엔티티를 문제없이 읽기 위해 실행
 import_all_modules("src")
 
 
@@ -49,7 +57,15 @@ def get_db_list_for_migration() -> list:
         mall_ids = [row[0] for row in result]
 
     user_db_conn.close()
-    return [f"{get_env_variable('prefix_db_url')}/{mall_id}" for mall_id in mall_ids[:1]]
+
+    target_db_name = os.getenv("TARGET_DB_NAME")
+    if target_db_name:
+        mall_ids = [mall_id for mall_id in mall_ids if mall_id == target_db_name]
+
+    return [
+        f"{get_env_variable('prefix_db_url')}/{'aivelabsdb' if mall_id == 'aivelabs' else mall_id}"
+        for mall_id in mall_ids
+    ]
 
 
 def include_object(object, name, type_, reflected, compare_to):
@@ -73,7 +89,19 @@ def run_migrations_online() -> None:
         print(f"✅ {db_url} / schema: {target_metadata.schema}")
         print(f"tables: {target_metadata.tables.keys()}")
 
-        connectable = create_engine(db_url, poolclass=pool.NullPool)
+        mall_id = db_url.split("/")[-1]
+        config.set_main_option("sqlalchemy.url", db_url)
+        config.set_main_option("version_locations", f"migration/versions/{mall_id}/schemas")
+        config.set_main_option("script_location", "migration")
+        section = config.get_section(config.config_ini_section)
+
+        # 데이터베이스마다 연결하고 마이그레이션 실행
+        connectable = engine_from_config(
+            section,
+            prefix="sqlalchemy.",
+            poolclass=pool.NullPool,
+        )
+
         with connectable.connect() as connection:
             context.configure(
                 connection=connection,
@@ -81,6 +109,9 @@ def run_migrations_online() -> None:
                 version_table_schema=target_metadata.schema,
                 include_object=include_object,
             )
+
+            connection.execute(text(f"CREATE SCHEMA IF NOT EXISTS {target_metadata.schema}"))
+
             with context.begin_transaction():
                 context.run_migrations()
 

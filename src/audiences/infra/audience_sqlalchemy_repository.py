@@ -49,6 +49,7 @@ from src.audiences.infra.entity.strategy_theme_audience_entity import (
 from src.audiences.infra.entity.variable_table_list import (
     CustomerInfoStatusEntity,
     CustomerProductPurchaseSummaryEntity,
+    GaViewMasterEntity,
 )
 from src.audiences.infra.entity.variable_table_mapping_entity import (
     VariableTableMappingEntity,
@@ -56,6 +57,7 @@ from src.audiences.infra.entity.variable_table_mapping_entity import (
 from src.audiences.routes.dto.response.default_exclude_audience import (
     DefaultExcludeAudience,
 )
+from src.audiences.utils.query_builder import execute_query_compiler
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.common.enums.role import RoleEnum
 from src.common.utils.data_converter import DataConverter
@@ -360,6 +362,29 @@ class AudienceSqlAlchemy:
 
     def get_subquery_with_groupby(self, select_query_list, variabletable, db: Session):
 
+        print("select_query_list")
+        print(select_query_list)
+        select_compile = execute_query_compiler(select_query_list[0])
+        print(select_compile)
+
+        ga_columns = [
+            "ga_view_master.product_code",
+            "ga_view_master.product_name",
+            "ga_view_master.page_title",
+            "ga_view_master.full_category_name_1",
+            "ga_view_master.full_category_name_2",
+            "ga_view_master.full_category_name_3",
+        ]
+
+        if any(keyword in str(select_compile) for keyword in ga_columns) and "count" not in str(
+            select_compile
+        ):
+            return (
+                db.query(variabletable.cus_cd, *select_query_list)
+                .group_by(variabletable.cus_cd, *select_query_list)
+                .subquery()
+            )
+
         return (
             db.query(variabletable.cus_cd, *select_query_list)
             .group_by(variabletable.cus_cd)
@@ -375,6 +400,7 @@ class AudienceSqlAlchemy:
             PurchaseAnalyticsMasterStyle,
             CustomerPromotionMasterEntity,
             CustomerPromotionReactSummaryEntity,
+            GaViewMasterEntity,
         ):
             return self.get_subquery_with_groupby
         else:
@@ -389,6 +415,7 @@ class AudienceSqlAlchemy:
         subquery_method = self.get_subquery_method(table_obj)
         subquery = subquery_method(select_query_list, table_obj, db)
         sub_alias = subquery.alias(f"t{idx}")
+
         return sub_alias
 
     def get_subquery_with_array_select_query_list(

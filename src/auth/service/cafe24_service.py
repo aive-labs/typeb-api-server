@@ -114,8 +114,9 @@ class Cafe24Service(BaseOauthService):
                 print(result.text)
 
         # s3에 토큰 업데이트
-        s3_reader = S3TokenService(bucket="aace-airflow-log", key="cafe24_token.yml")
-        s3_reader.update_dict(cafe24_state_token.mall_id, token_data)
+        mall_id = cafe24_state_token.mall_id
+        s3_reader = S3TokenService(bucket="aace-airflow-log", key=f"cafe24_token/{mall_id}.yml")
+        s3_reader.create_and_upload_yaml({mall_id: token_data})
 
         db.commit()
 

@@ -12,3 +12,9 @@ class GARepository(BaseGARepository):
 
     def get_by_mall_id(self, mall_id: str, db: Session) -> GAIntegration:
         return self.ga_sqlalchemy.get_by_mall_id(mall_id, db)
+
+    def save_ga_integration(self, ga_integration: GAIntegration, db: Session):
+        self.ga_sqlalchemy.save_ga_integration(ga_integration, db)
+
+    def update_status(self, mall_id, to_status, db: Session):
+        self.ga_sqlalchemy.update_status(mall_id, to_status, db)

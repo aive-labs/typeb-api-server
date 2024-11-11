@@ -24,11 +24,12 @@ class DBSettings(BaseSettings):
         if not env_type:
             env_file = "config/env/.env"
         elif env_type == "test_code":
-            env_file = "config/env/test.env"
+            env_file = "config/env/.env.test"
         else:
             env_file = f"config/env/{env_type}.env"
 
         print(f"env_file: {env_file}")
+        print(get_env_variable("database_url"))
 
 
 def get_db_url():
@@ -67,7 +68,7 @@ class Database:
             print(f"DATABASE: {base_db_name} SCHEMA: {Base.metadata.schema}")
         else:
             print(f"DATABASE: {base_db_name}")
-            Base.metadata.create_all(bind=self._engine)
+            # Base.metadata.create_all(bind=self._engine)
 
     @contextmanager  # type: ignore
     def session(self) -> Callable[..., AbstractContextManager[Session]]:  # type: ignore
@@ -118,4 +119,29 @@ def get_mall_id_by_user(user_id: str) -> str:
             raise NotFoundException(detail={"message": "사용자 정보를 찾을 수 없습니다."})
         return mall_id
 
-    user_db_conn.close()
+
+def get_mall_url_by_user(user_id: str) -> str:
+    user_db_conn = psycopg2.connect(
+        dbname=get_env_variable("user_db_name"),
+        user=get_env_variable("user_db_user"),
+        password=get_env_variable("user_db_password"),
+        host=get_env_variable("user_db_host"),
+        port=get_env_variable("user_db_port"),
+    )
+
+    with user_db_conn.cursor() as cursor:
+        cursor.execute(
+            """
+            select mall_url
+            from public.clients
+            where user_id = %s
+            """,
+            (user_id,),
+        )
+
+        result = cursor.fetchone()
+
+        if result is None:
+            raise NotFoundException(detail={"message": "사용자 정보를 찾을 수 없습니다."})
+
+        return result[0]
