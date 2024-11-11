@@ -14,7 +14,6 @@ def get_env_variable(key: str) -> str:
     load_dotenv(env_file)
 
     current_directory = os.getcwd()
-    print(f"Current working directory: {current_directory}")
 
     value = os.getenv(key)
 
