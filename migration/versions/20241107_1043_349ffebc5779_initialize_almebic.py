@@ -10,6 +10,7 @@ from typing import Sequence, Union
 
 import sqlalchemy as sa
 from alembic import op
+from sqlalchemy import text
 
 # revision identifiers, used by Alembic.
 revision: str = "349ffebc5779"
@@ -865,6 +866,108 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("msg_delivery_vendor"),
         schema="aivelabs_sv",
     )
+
+    # 전체 데이터 리스트
+    data = [
+        {
+            "msg_delivery_vendor": "dau",
+            "media": "kat",
+            "msg_type": "kakao_alim_text",
+            "shop_send_yn": "n",
+            "cost_per_send": 9,
+        },
+        {
+            "msg_delivery_vendor": "dau",
+            "media": "kft",
+            "msg_type": "kakao_text",
+            "shop_send_yn": "n",
+            "cost_per_send": 22,
+        },
+        {
+            "msg_delivery_vendor": "dau",
+            "media": "kft",
+            "msg_type": "kakao_carousel",
+            "shop_send_yn": "n",
+            "cost_per_send": 34,
+        },
+        {
+            "msg_delivery_vendor": "dau",
+            "media": "kft",
+            "msg_type": "kakao_image_wide",
+            "shop_send_yn": "n",
+            "cost_per_send": 26,
+        },
+        {
+            "msg_delivery_vendor": "dau",
+            "media": "kft",
+            "msg_type": "kakao_image_general",
+            "shop_send_yn": "n",
+            "cost_per_send": 24,
+        },
+        {
+            "msg_delivery_vendor": "dau",
+            "media": "tms",
+            "msg_type": "mms",
+            "shop_send_yn": "n",
+            "cost_per_send": 84,
+        },
+        {
+            "msg_delivery_vendor": "dau",
+            "media": "tms",
+            "msg_type": "lms",
+            "shop_send_yn": "n",
+            "cost_per_send": 29,
+        },
+        {
+            "msg_delivery_vendor": "dau",
+            "media": "tms",
+            "msg_type": "sms",
+            "shop_send_yn": "n",
+            "cost_per_send": 9,
+        },
+    ]
+
+    # 데이터 삽입
+    conn = op.get_bind()
+    for item in data:
+        exists = conn.execute(
+            text(
+                "SELECT 1 FROM aivelabs_sv.delivery_cost_by_vendor WHERE msg_delivery_vendor = :vendor AND media = :media AND msg_type = :msg_type"
+            ),
+            {
+                "vendor": item["msg_delivery_vendor"],
+                "media": item["media"],
+                "msg_type": item["msg_type"],
+            },
+        ).scalar()
+
+        if exists:
+            print(
+                f"Vendor {item['msg_delivery_vendor']} with media {item['media']} and type {item['msg_type']} already exists. Skipping insertion."
+            )
+            continue
+
+        conn.execute(
+            text(
+                """
+                INSERT INTO aivelabs_sv.delivery_cost_by_vendor (
+                    msg_delivery_vendor, media, msg_type, shop_send_yn,
+                    cost_per_send, created_at, updated_at
+                ) VALUES (
+                    :msg_delivery_vendor, :media, :msg_type, :shop_send_yn,
+                    :cost_per_send, NOW(), NOW()
+                )
+            """
+            ),
+            {
+                "msg_delivery_vendor": item["msg_delivery_vendor"],
+                "media": item["media"],
+                "msg_type": item["msg_type"],
+                "shop_send_yn": item["shop_send_yn"],
+                "cost_per_send": item["cost_per_send"],
+            },
+        )
+
     op.create_table(
         "ga_integration",
         sa.Column("mall_id", sa.String(), nullable=False),
@@ -1544,6 +1647,170 @@ def upgrade() -> None:
         unique=False,
         schema="aivelabs_sv",
     )
+
+    # 전체 추천모델 리스트
+    data = [
+        {
+            "recsys_model_id": 0,
+            "recsys_model_name": "추천없음",
+            "description": "상품을 추천하지 않습니다.",
+            "created_by": "aivelabs",
+            "updated_by": "aivelabs",
+        },
+        {
+            "recsys_model_id": 1,
+            "recsys_model_name": "생일자 할인 쿠폰 제공",
+            "description": "생일까지 7일 남은 고객님들에게 생일 축하 메시지와 함께 생일 할인 쿠폰을 발송합니다.",
+            "created_by": "aivelabs",
+            "updated_by": "aivelabs",
+        },
+        {
+            "recsys_model_id": 2,
+            "recsys_model_name": "쿠폰 소멸 임박 알림",
+            "description": "쿠폰 소멸까지 7일 남은 고객님들에게 쿠폰 소멸 임박 안내 알림을 보냅니다.",
+            "created_by": "aivelabs",
+            "updated_by": "aivelabs",
+        },
+        {
+            "recsys_model_id": 3,
+            "recsys_model_name": "장바구니 리마인드",
+            "description": "어제 장바구니에 상품이 업데이트 된 고객님들에게 리마인드 알림을 보냅니다. 이 때 장바구니에 있는 상품 중 가장 최근에 업데이트한 상품의 상품명이 노출됩니다.",
+            "created_by": "aivelabs",
+            "updated_by": "aivelabs",
+        },
+        {
+            "recsys_model_id": 4,
+            "recsys_model_name": "위시리스트 리마인드",
+            "description": "어제 위시리스트에 상품이 업데이트 된 고객님들에게 리마인드 알림을 보냅니다. 이 때 위시리스트에 있는 상품 중 가장 최근에 업데이트한 상품의 상품명이 노출됩니다.",
+            "created_by": "aivelabs",
+            "updated_by": "aivelabs",
+        },
+        {
+            "recsys_model_id": 6,
+            "recsys_model_name": "회원가입 감사 메시지 발송",
+            "description": "어제 신규 회원가입한 고객님들에게 회원 가입 감사 메시지를 발송합니다.",
+            "created_by": "aivelabs",
+            "updated_by": "aivelabs",
+        },
+        {
+            "recsys_model_id": 7,
+            "recsys_model_name": "첫 구매 할인 쿠폰 제공",
+            "description": "첫 구매를 유도하기 위한 첫구매 할인 쿠폰을 발송합니다.",
+            "created_by": "aivelabs",
+            "updated_by": "aivelabs",
+        },
+        {
+            "recsys_model_id": 8,
+            "recsys_model_name": "첫 구매 Best 상품 추천",
+            "description": "최근 한 달 동안 첫 구매 고객이 가장 많이 구매하는 상품을 추천합니다.",
+            "created_by": "aivelabs",
+            "updated_by": "aivelabs",
+        },
+        {
+            "recsys_model_id": 10,
+            "recsys_model_name": "Best 상품 후기 전달",
+            "description": "Best 상품 후기 전달",
+            "created_by": "aivelabs",
+            "updated_by": "aivelabs",
+        },
+        {
+            "recsys_model_id": 11,
+            "recsys_model_name": "첫 구매 감사 메시지 발송",
+            "description": "어제 첫 구매가 발생한 고객님들에게 첫 구매 감사 메시지를 발송합니다.",
+            "created_by": "aivelabs",
+            "updated_by": "aivelabs",
+        },
+        {
+            "recsys_model_id": 12,
+            "recsys_model_name": "Next구매 확률 높은 상품 추천",
+            "description": "직전에 구매한 상품과 함께 가장 많이 판매된 상품을 추천합니다. 이미 구매기록이 있을 시 차순위 상품을 추천합니다.",
+            "created_by": "aivelabs",
+            "updated_by": "aivelabs",
+        },
+        {
+            "recsys_model_id": 13,
+            "recsys_model_name": "선호 카테고리 Best 상품 후기 전달",
+            "description": "선호 카테고리 Best 상품 후기 전달",
+            "created_by": "aivelabs",
+            "updated_by": "aivelabs",
+        },
+        {
+            "recsys_model_id": 14,
+            "recsys_model_name": "선호 카테고리 Best 상품 추천",
+            "description": "고객의 선호 카테고리 내에서 최근 한 달 동안 판매량이 가장 많은 상품을 추천합니다. 이미 구매기록이 있을 시 차순위 상품을 추천합니다.",
+            "created_by": "aivelabs",
+            "updated_by": "aivelabs",
+        },
+        {
+            "recsys_model_id": 15,
+            "recsys_model_name": "스테디셀러 상품 추천",
+            "description": "최근 일 년 동안 판매량이 가장 많은 상품을 추천합니다. 이미 구매기록이 있을 시 차순위 상품을 추천합니다.",
+            "created_by": "aivelabs",
+            "updated_by": "aivelabs",
+        },
+        {
+            "recsys_model_id": 18,
+            "recsys_model_name": "신상품 추천",
+            "description": "고객의 선호 카테고리 내에서 최근 한 달 이내 출시한 신상품 중 가장 판매량이 높은 상품을 추천합니다. 이미 구매 기록이 있을 시 차순위 상품을 추천합니다.",
+            "created_by": "aivelabs",
+            "updated_by": "aivelabs",
+        },
+        {
+            "recsys_model_id": 20,
+            "recsys_model_name": "최대 할인 상품 추천",
+            "description": "최대 할인 상품 추천",
+            "created_by": "aivelabs",
+            "updated_by": "aivelabs",
+        },
+        {
+            "recsys_model_id": 21,
+            "recsys_model_name": "시크릿 쿠폰 발송",
+            "description": "시크릿 쿠폰 발송",
+            "created_by": "aivelabs",
+            "updated_by": "aivelabs",
+        },
+        {
+            "recsys_model_id": 22,
+            "recsys_model_name": "웰컴백 쿠폰 전달",
+            "description": "마지막 구매 일자가 1년이 넘은 고객님들에게 웰컴백 기원 쿠폰을 전달합니다.",
+            "created_by": "aivelabs",
+            "updated_by": "aivelabs",
+        },
+    ]
+
+    # 데이터 삽입
+    conn = op.get_bind()
+    for item in data:
+        exists = conn.execute(
+            text("SELECT 1 FROM aivelabs_sv.recommend_products_model WHERE recsys_model_id = :id"),
+            {"id": item["recsys_model_id"]},
+        ).scalar()
+
+        if exists:
+            print(f"ID {item['recsys_model_id']} already exists. Skipping insertion.")
+            continue
+
+        conn.execute(
+            text(
+                """
+                INSERT INTO aivelabs_sv.recommend_products_model (
+                    recsys_model_id, recsys_model_name, description,
+                    created_at, created_by, updated_at, updated_by
+                ) VALUES (
+                    :recsys_model_id, :recsys_model_name, :description,
+                    NOW(), :created_by, NOW(), :updated_by
+                )
+            """
+            ),
+            {
+                "recsys_model_id": item["recsys_model_id"],
+                "recsys_model_name": item["recsys_model_name"],
+                "description": item["description"],
+                "created_by": item["created_by"],
+                "updated_by": item["updated_by"],
+            },
+        )
+
     op.create_table(
         "remaining_credit",
         sa.Column("remaining_credit", sa.BigInteger(), nullable=False),
@@ -2330,6 +2597,7 @@ def upgrade() -> None:
         unique=False,
         schema="aivelabs_sv",
     )
+
     # ### end Alembic commands ###
 
 
