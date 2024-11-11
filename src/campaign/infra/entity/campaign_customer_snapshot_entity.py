@@ -3,7 +3,6 @@ from sqlalchemy import (
     BigInteger,
     Column,
     Integer,
-    PrimaryKeyConstraint,
     String,
 )
 
@@ -12,12 +11,7 @@ from src.core.database import Base
 
 class CampaignCustomerSnapshot(Base):
     __tablename__ = "campaign_customer_snapshot"
-    __table_args__ = {
-        "schema": "aivelabs_sv",
-        "primary_key": PrimaryKeyConstraint(
-            "cus_cd", "campaign_id", name="campaign_customer_snapshot_pkey"
-        ),
-    }
+    __table_args__ = {"schema": "aivelabs_sv"}
 
     cus_cd = Column(String, primary_key=True, nullable=False)
     campaign_id = Column(String(10), primary_key=True, nullable=False)

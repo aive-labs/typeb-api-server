@@ -39,8 +39,8 @@ def upgrade():
 
     op.create_table(
         "campaign_customer_snapshot",
-        sa.Column("cus_cd", sa.String, nullable=False),
-        sa.Column("campaign_id", sa.String(10), nullable=False),
+        sa.Column("cus_cd", sa.String, primary_key=True, nullable=False),
+        sa.Column("campaign_id", sa.String(10), primary_key=True, nullable=False),
         sa.Column("campaign_name", sa.String, nullable=False),
         sa.Column("send_date", sa.String, nullable=False),
         sa.Column("start_date", sa.String, nullable=False),
@@ -131,48 +131,6 @@ def upgrade():
         schema="aivelabs_sv",
     )
 
-    op.create_table(
-        "dash_end_table",
-        sa.Column("sale_dt", sa.String, nullable=False),
-        sa.Column("campaign_id", sa.String(10), nullable=False),
-        sa.Column("campaign_name", sa.String, nullable=True),
-        sa.Column("start_date", sa.String, nullable=True),
-        sa.Column("end_date", sa.String, nullable=True),
-        sa.Column("campaign_status_name", sa.String, nullable=True),
-        sa.Column("campaign_group_id", sa.String, nullable=True),
-        sa.Column("strategy_id", sa.String, nullable=True),
-        sa.Column("strategy_name", sa.String, nullable=True),
-        sa.Column("strategy_theme_id", sa.Integer, nullable=False),
-        sa.Column("strategy_theme_name", sa.String, nullable=True),
-        sa.Column("audience_id", sa.String, nullable=False),
-        sa.Column("audience_name", sa.String, nullable=True),
-        sa.Column("coupon_no", sa.String, nullable=True),
-        sa.Column("coupon_name", sa.String, nullable=True),
-        sa.Column("media", sa.String, nullable=False),
-        sa.Column("cus_cd", sa.String, nullable=False),
-        sa.Column("group_sort_num", sa.Integer, nullable=False),
-        sa.Column("recp_no", sa.String, nullable=False),
-        sa.Column("order_item_code", sa.String, nullable=False),
-        sa.Column("cust_grade1", sa.String, nullable=True),
-        sa.Column("cust_grade1_nm", sa.String, nullable=True),
-        sa.Column("age_group_10", sa.String, nullable=True),
-        sa.Column("cv_lv2", sa.String, nullable=True),
-        sa.Column("order_coupon_no", sa.String, nullable=True),
-        sa.Column("coupon_usage", sa.Integer, nullable=True),
-        sa.Column("category_name", sa.String, nullable=True),
-        sa.Column("rep_nm", sa.String, nullable=True),
-        sa.Column("product_name", sa.String, nullable=True),
-        sa.Column("sale_amt", sa.Integer, nullable=True),
-        sa.Column("sale_qty", sa.Integer, nullable=True),
-        sa.Column("etl_time", sa.TIMESTAMP(timezone=True), nullable=True),
-        sa.PrimaryKeyConstraint(
-            "campaign_id",
-            "cus_cd",
-            "order_item_code",
-        ),
-        schema="aivelabs_sv",
-    )
-
 
 def downgrade():
     op.drop_table("send_message_logs", schema="aivelabs_sv")
@@ -184,5 +142,3 @@ def downgrade():
     op.drop_table("dash_daily_date_ranges", schema="aivelabs_sv")
 
     op.drop_table("dash_daily_purchase_master", schema="aivelabs_sv")
-
-    op.drop_table("dash_end_table", schema="aivelabs_sv")
