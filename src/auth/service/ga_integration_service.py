@@ -672,3 +672,9 @@ class GAIntegrationService(BaseGAIntegrationService):
     @transactional
     def update_status(self, user: User, to_status: str, db: Session):
         self.ga_repository.update_status(user.mall_id, to_status, db)
+
+        send_slack_message(
+            title=f"GA 스크립트 삽입 완료 (mall id: {user.mall_id}",
+            body="고객사에서 스크립트 삽입을 완료했습니다. 데이터 스트림 및 빅쿼리 연동을 확인해주세요.",
+            member_id=get_env_variable("slack_wally"),
+        )
