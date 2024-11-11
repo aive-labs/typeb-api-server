@@ -68,8 +68,8 @@ jobs:
 
       - name: Copy files from Bastion Host to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -i /tmp/pem.key ubuntu@${{ secrets.PROD_BASTION_HOST }} '
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aice-backend.pem ubuntu@${{ secrets.PROD_API_SERVER }} "rm -rf /home/ubuntu/typeb-api/*"
+          ssh -o StrictHostKeyChecking=no -i /tmp/pem.key ubuntu@${{ secrets.BASTION_HOST }} '
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aice-backend.pem ubuntu@${{ secrets.PROD_API_SERVER }} "find /home/ubuntu/typeb-api -mindepth 1 -not -path '/home/ubuntu/typeb-api/config/*' -not -path '/home/ubuntu/typeb-api/config' -delete"
           scp -o StrictHostKeyChecking=no -i ~/.ssh/aice-backend.pem -r /home/ubuntu/typeb-api/* ubuntu@${{ secrets.PROD_API_SERVER }}:/home/ubuntu/typeb-api
           '
 
