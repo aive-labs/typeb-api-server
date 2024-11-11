@@ -4,6 +4,7 @@ import os
 
 # env.py
 import pkgutil
+import sys
 from logging.config import fileConfig
 
 import psycopg2
@@ -12,6 +13,11 @@ from sqlalchemy import engine_from_config, pool, text
 
 from src.common.utils.get_env_variable import get_env_variable
 from src.core.database import Base
+
+current_dir = os.path.dirname(os.path.realpath(__file__))
+project_root = os.path.abspath(os.path.join(current_dir, "..", "src"))
+
+sys.path.append(project_root)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
