@@ -5,6 +5,7 @@ import pytest
 
 from src.users.domain.user import User
 from src.users.routes.dto.request.user_create import UserCreate
+from src.users.routes.dto.request.user_modify import UserModify
 from src.users.service.port.base_user_repository import BaseUserRepository
 
 
@@ -27,24 +28,28 @@ def get_mock_user_repository():
         return len(existing_user) > 0
 
     # # get_user_by_id 메서드 동작 설정
-    # def get_user_by_id_side_effect(user_id, db):
-    #     if user_id == "test_id_1":
-    #         return User(user_id="test_id_1", email="test1@example.com")
-    #     elif user_id == "test_id_2":
-    #         return User(user_id="test_id_2", email="test2@example.com")
-    #     return None  # 존재하지 않는 user_id인 경우
-    #
-    # # get_all_users 메서드 동작 설정
-    # def get_all_users_side_effect(db):
-    #     return [
-    #         User(user_id="test_id_1", email="test1@example.com"),
-    #         User(user_id="test_id_2", email="test2@example.com"),
-    #         User(user_id="test_id_3", email="test3@example.com")
-    #     ]
+    def get_user_by_id(user_id, db):
+        find_user = [user for user in users if user.user_id == user_id]
+        if len(find_user) == 0:
+            return None
+        else:
+            return find_user[0]
+
+    # get_all_users 메서드 동작 설정
+    def get_all_users(db):
+        return users
+
+    def update_user(user_modify: UserModify, db):
+        find_user = [user for user in users if user.user_id == user_modify.user_id][0]
+
+        # user_modify 객체의 필드를 find_user 객체에 동적으로 업데이트
+        for field, value in user_modify.dict(exclude_unset=True).items():
+            setattr(find_user, field, value)
 
     mock_repository.register_user.side_effect = register_user
     mock_repository.is_existing_user.side_effect = is_existing_user
-    # mock_repository.get_user_by_id.side_effect = get_user_by_id_side_effect
-    # mock_repository.get_all_users.side_effect = get_all_users_side_effect
+    mock_repository.get_user_by_id.side_effect = get_user_by_id
+    mock_repository.get_all_users.side_effect = get_all_users
+    mock_repository.update_user = update_user
 
     return mock_repository

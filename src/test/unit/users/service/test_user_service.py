@@ -1,27 +1,32 @@
 import pytest
 from fastapi import HTTPException
+
+from src.core.exceptions.exceptions import NotFoundException, DuplicatedException
 from src.users.routes.dto.request.user_create import UserCreate
+from src.users.routes.dto.request.user_modify import UserModify
 
 
-def 사용자는_정보를_입력해_회원가입을_한다(user_service, mock_db_session):
-    user_create: UserCreate = UserCreate(
+# 사용자 생성용 픽스처 정의
+@pytest.fixture
+def default_user(user_service, mock_db_session):
+    user_create = UserCreate(
         username="테스트",
         password="테스트",
         email="test@test.com",
         role_id="admin",
         photo_uri="",
         department_id="1",
+        brand_name_ko="브랜드",
+        brand_name_en="brand",
         language="ko",
+        cell_phone_number="010-1234-1234",
         test_callback_number="010-1234-1234",
     )
     saved_user = user_service.register_user(user_create=user_create, db=mock_db_session)
+    return saved_user
 
-    assert saved_user.user_id == 1
-    assert saved_user.username == "테스트"
-    assert saved_user.email == "test@test.com"
-    assert saved_user.language == "ko"
-    assert saved_user.test_callback_number == "010-1234-1234"
 
+def test_사용자는_정보를_입력해_회원가입을_한다(user_service, mock_db_session, default_user):
     user_create2: UserCreate = UserCreate(
         username="테스트2",
         password="테스트2",
@@ -29,6 +34,8 @@ def 사용자는_정보를_입력해_회원가입을_한다(user_service, mock_d
         role_id="admin",
         photo_uri="",
         department_id="1",
+        brand_name_ko="브랜드2",
+        brand_name_en="brand2",
         language="ko",
         test_callback_number="010-1234-1234",
     )
@@ -39,7 +46,7 @@ def 사용자는_정보를_입력해_회원가입을_한다(user_service, mock_d
     assert saved_user2.email == "test2@test.com"
 
 
-def 가입된_이메일이_존재하면_예외를_던진다(user_service, mock_db_session):
+def test_가입된_이메일이_존재하면_예외를_던진다(user_service, mock_db_session):
     user_create: UserCreate = UserCreate(
         username="테스트",
         password="테스트",
@@ -47,6 +54,8 @@ def 가입된_이메일이_존재하면_예외를_던진다(user_service, mock_d
         role_id="admin",
         photo_uri="",
         department_id="1",
+        brand_name_ko="브랜드3",
+        brand_name_en="brand3",
         language="ko",
         test_callback_number="010-1234-1234",
     )
@@ -56,40 +65,61 @@ def 가입된_이메일이_존재하면_예외를_던진다(user_service, mock_d
     with pytest.raises(HTTPException) as exc_info:
         user_service.register_user(user_create=user_create, db=mock_db_session)
 
+    assert exc_info.type == DuplicatedException
     assert (
-        str(exc_info.value.detail["message"]) == "동일한 이메일이 존재합니다."
-    )  # pyright: ignore [reportArgumentType]
+        str(exc_info.value.detail["message"])
+        == "동일한 이메일이 존재합니다."  # pyright: ignore [reportArgumentType]
+    )
 
 
-# @pytest.mark.describe("전체 사용자를 조회한다.")
-# def test_get_all_users(test_user_service: FakeUserService):
-#     all_users = test_user_service.get_all_users()
-#     assert len(all_users) == 2
-#
-#
+def test_전체_사용자를_조회한다(user_service, mock_db_session, default_user):
+    user_create2: UserCreate = UserCreate(
+        username="테스트2",
+        password="테스트2",
+        email="test2@test.com",
+        role_id="admin",
+        photo_uri="",
+        department_id="1",
+        brand_name_ko="브랜드2",
+        brand_name_en="brand2",
+        language="ko",
+        test_callback_number="010-1234-1234",
+    )
+    user_service.register_user(user_create=user_create2, db=mock_db_session)
+
+    all_users = user_service.get_all_users(db=mock_db_session)
+    assert len(all_users) == 2
+
+
 # @pytest.mark.describe("user_id로 특정 사용자를 조회한다.")
-# def test_get_user_by_id(test_user_service: FakeUserService):
-#     user = test_user_service.get_user_by_id(0)
-#
-#     assert user.user_id == 0
-#     assert user.username == "테스트0"
-#     assert user.email == "test0@test.com"
-#     assert user.test_callback_number == "010-0000-0000"
-#
-#
-# @pytest.mark.describe("user_id를 가진 사용자가 없으면 예외를 던진다.")
-# def test_not_found_user_by_id(test_user_service: FakeUserService):
-#     with pytest.raises(HTTPException) as exc_info:
-#         test_user_service.get_user_by_id(99999)
-#
-#     assert str(exc_info.value.detail) == "사용자를 찾지 못했습니다."
-#
-#
-# @pytest.mark.describe("user_id를 가진 사용자를 삭제한다.")
-# def test_delete_user_by_id(test_user_service: FakeUserService):
-#     delete_user_id = 0
-#     test_user_service.delete_user(delete_user_id)
-#
-#     with pytest.raises(HTTPException) as exc_info:
-#         test_user_service.get_user_by_id(delete_user_id)
-#     assert str(exc_info.value.detail) == "사용자를 찾지 못했습니다."
+def test_아이디로_특정_사용자를_조회한다(user_service, mock_db_session, default_user):
+    user = user_service.get_user_by_id(1, mock_db_session)
+
+    assert default_user.user_id == 1
+    assert default_user.username == "테스트"
+    assert default_user.email == "test@test.com"
+
+
+def test_아이디로_사용자를_찾지못하면_예외를_던진다(user_service, mock_db_session):
+    with pytest.raises(HTTPException) as exc_info:
+        user_service.get_user_by_id(5, mock_db_session)
+
+    assert exc_info.type == NotFoundException
+    assert (
+        str(exc_info.value.detail["message"])
+        == "사용자를 찾지 못했습니다."  # pyright: ignore [reportArgumentType]
+    )
+
+
+def test_아이디를_입력받아_사용자를_정보를_수정한다(user_service, mock_db_session, default_user):
+    test_data_1 = UserModify(
+        user_id=1, username="새로운", language="en", test_callback_number="010-5678-5678"
+    )
+    user_service.update_user(test_data_1, mock_db_session)
+
+    update_user = user_service.get_user_by_id(test_data_1.user_id, mock_db_session)
+
+    assert update_user.user_id == 1
+    assert update_user.username == "새로운"
+    assert update_user.language == "en"
+    assert update_user.test_callback_number == "010-5678-5678"
