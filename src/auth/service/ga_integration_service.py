@@ -359,7 +359,9 @@ class GAIntegrationService(BaseGAIntegrationService):
         ]
 
         for trigger_name, event_name, event_parameter in custom_triggers:
-            await asyncio.sleep(4)
+            # 프로젝트당 0.25QPS (초당 쿼리 수)
+            # QPS 할당량은 100초 슬라이딩 윈도우 (100초당 25개 요청)에 적용됩니다.
+            await asyncio.sleep(8)
             trigger_body = {
                 "name": trigger_name,
                 "type": "customEvent",  # 맞춤 이벤트 트리거 유형
@@ -465,7 +467,7 @@ class GAIntegrationService(BaseGAIntegrationService):
             ("view_item_trigger", "/product/", "view_item_push"),
         ]
         for trigger_name, page_url_filter, tag_name in dom_use_triggers:
-            await asyncio.sleep(4)
+            await asyncio.sleep(8)
             trigger_body = {
                 "name": trigger_name,
                 "type": "domReady",  # DOM이 준비되었을 때 실행되는 트리거 ex (스크롤깊이: scrollDepth, 맞춤 이벤트: customEvent)
