@@ -154,6 +154,8 @@ class GAIntegrationService(BaseGAIntegrationService):
                 ) as response:
                     if response.status != 200:
                         response_text = await response.text()
+                        print("onboarding_ga dagRun reservation")
+                        print(data)
                         raise HTTPException(
                             status_code=response.status,
                             detail={"code": "airflow call error", "message": response_text},
@@ -444,7 +446,7 @@ class GAIntegrationService(BaseGAIntegrationService):
             }
 
             try:
-                response = await (
+                response = (
                     tagmanager.accounts()
                     .containers()
                     .workspaces()
