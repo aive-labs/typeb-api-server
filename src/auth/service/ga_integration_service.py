@@ -18,6 +18,7 @@ from src.common.service.aws_service import AwsService
 from src.common.slack.slack_message import send_slack_message
 from src.common.utils.date_utils import (
     create_logical_date_for_airflow,
+    get_korean_current_datetime_yyyymmddhh24mims,
 )
 from src.common.utils.file.s3_service import S3Service
 from src.common.utils.get_env_variable import get_env_variable
@@ -133,7 +134,8 @@ class GAIntegrationService(BaseGAIntegrationService):
 
             db.commit()
 
-            dag_run_id = f"{mall_id}_ga"
+            yyyymmddhh24mi = get_korean_current_datetime_yyyymmddhh24mims()
+            dag_run_id = f"{mall_id}_ga_{yyyymmddhh24mi}"
             send_date = (datetime.now() + timedelta(days=1)).strftime("%Y%m%d")
             send_time = "11:00"
             logical_date = create_logical_date_for_airflow(send_date, send_time)
