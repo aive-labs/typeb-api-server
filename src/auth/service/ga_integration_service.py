@@ -99,19 +99,10 @@ class GAIntegrationService(BaseGAIntegrationService):
     async def execute_ga_automation(self, user: User, db: Session) -> GAIntegration:
         mall_id = user.mall_id
 
-        send_slack_message(
-            title=f"GA, GTM 생성 시작 (mall id: {mall_id})",
-            body="GA, GTM 속성 생성이 시작되었습니다. 1~2분 후 슬랙 완료 메시지가 도착했는지 꼭 확인하세요..",
-            member_id=get_env_variable("slack_wally"),
-        )
+        self.send_start_to_slack(mall_id)
 
         if mall_id is None:
-            send_slack_message(
-                title=f"❌ GA, GTM 생성 실패 (*mall id*: {mall_id}*)",
-                body="GA, GTM 연동에 필요한 속성 생성에 실패했습니다. "
-                "쇼핑몰 정보(mall_id)가 등록되지 않은 사용자입니다.",
-                member_id=get_env_variable("slack_wally"),
-            )
+            self.send_error_to_slack(mall_id)
 
         mall_url = get_mall_url_by_user(str(user.email))
 
@@ -123,49 +114,18 @@ class GAIntegrationService(BaseGAIntegrationService):
             ga_integration = self.create_ga_settings(
                 mall_id, mall_url, analytic_admin, ga_integration
             )
-            print("Create GA Attributes.")
 
             ga_integration_with_gtm = await self.create_gtm_settings(
                 ga_integration, mall_url, tagmanager
             )
-            print("Create GTM Attributes.")
 
             self.ga_repository.save_ga_integration(ga_integration, db)
 
             db.commit()
 
-            yyyymmddhh24mi = get_korean_current_datetime_yyyymmddhh24mims()
-            dag_run_id = f"{mall_id}_ga_{yyyymmddhh24mi}"
-            send_date = (datetime.now() + timedelta(days=1)).strftime("%Y%m%d")
-            send_time = "11:00"
-            logical_date = create_logical_date_for_airflow(send_date, send_time)
+            await self.trigger_airflow_onboarding_dagrun(mall_id)
 
-            data = {
-                "dag_run_id": dag_run_id,
-                "conf": {"mall_id": mall_id},
-                "logical_date": logical_date,
-            }
-
-            async with aiohttp.ClientSession() as session:
-                async with session.post(
-                    url=f"{self.airflow_api}/dags/onboarding_ga/dagRuns",
-                    json=data,
-                    auth=BasicAuth(self.airflow_username, self.airflow_password),
-                    ssl=False,
-                ) as response:
-                    if response.status != 200:
-                        response_text = await response.text()
-                        print("onboarding_ga dagRun reservation")
-                        print(data)
-                        print(response_text)
-
-            send_slack_message(
-                title=f"GA, GTM 생성 완료 (mall id: {mall_id})",
-                body="GA, GTM 연동에 필요한 속성 생성이 완료되었습니다. 다음 작업을 진행해주세요"
-                "1. 빅쿼리 연동"
-                "2. 데이터 스트림 연결 여부 확인(최대 48시간)",
-                member_id=get_env_variable("slack_wally"),
-            )
+            self.send_complete_to_slack(mall_id)
 
             return ga_integration_with_gtm
         except Exception as e:
@@ -207,6 +167,54 @@ class GAIntegrationService(BaseGAIntegrationService):
             )
 
             raise e
+
+    def send_complete_to_slack(self, mall_id):
+        send_slack_message(
+            title=f"GA, GTM 생성 완료 (mall id: {mall_id})",
+            body="GA, GTM 연동에 필요한 속성 생성이 완료되었습니다. 다음 작업을 진행해주세요"
+            "1. 빅쿼리 연동"
+            "2. 데이터 스트림 연결 여부 확인(최대 48시간)",
+            member_id=get_env_variable("slack_wally"),
+        )
+
+    def send_error_to_slack(self, mall_id):
+        send_slack_message(
+            title=f"❌ GA, GTM 생성 실패 (*mall id*: {mall_id}*)",
+            body="GA, GTM 연동에 필요한 속성 생성에 실패했습니다. "
+            "쇼핑몰 정보(mall_id)가 등록되지 않은 사용자입니다.",
+            member_id=get_env_variable("slack_wally"),
+        )
+
+    def send_start_to_slack(self, mall_id):
+        send_slack_message(
+            title=f"GA, GTM 생성 시작 (mall id: {mall_id})",
+            body="GA, GTM 속성 생성이 시작되었습니다. 1~2분 후 슬랙 완료 메시지가 도착했는지 꼭 확인하세요..",
+            member_id=get_env_variable("slack_wally"),
+        )
+
+    async def trigger_airflow_onboarding_dagrun(self, mall_id):
+        yyyymmddhh24mi = get_korean_current_datetime_yyyymmddhh24mims()
+        dag_run_id = f"{mall_id}_ga_{yyyymmddhh24mi}"
+        send_date = (datetime.now() + timedelta(days=1)).strftime("%Y%m%d")
+        send_time = "11:00"
+        logical_date = create_logical_date_for_airflow(send_date, send_time)
+        data = {
+            "dag_run_id": dag_run_id,
+            "conf": {"mall_id": mall_id},
+            "logical_date": logical_date,
+        }
+        print("onboarding_ga dagRun reservation")
+        print(data)
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                url=f"{self.airflow_api}/dags/onboarding_ga/dagRuns",
+                json=data,
+                auth=BasicAuth(self.airflow_username, self.airflow_password),
+                ssl=False,
+            ) as response:
+                if response.status != 200:
+                    response_text = await response.text()
+                    print(response_text)
 
     def create_tag_manager(self):
         return build("tagmanager", "v2", credentials=self.credentials)
@@ -288,9 +296,6 @@ class GAIntegrationService(BaseGAIntegrationService):
             js_content = await response["Body"].read()
             js_content = js_content.decode("utf-8")
 
-            print(file.value)
-            print(js_content)
-
             # 맞춤 자바스크립트 변수 생성
             variable_body = {
                 "name": file.value,
@@ -317,9 +322,6 @@ class GAIntegrationService(BaseGAIntegrationService):
             publish_response = (
                 tagmanager.accounts().containers().versions().publish(path=version_path).execute()
             )
-
-            print("Version published:", publish_response)
-
         except Exception as e:
             print("Error publishing version:", e)
 
@@ -336,8 +338,6 @@ class GAIntegrationService(BaseGAIntegrationService):
                 .create_version(path=workspace_path, body=version_body)
                 .execute()
             )
-            print("New Version created")
-            print(version_response["containerVersion"]["containerVersionId"])
 
             return version_response["containerVersion"]["containerVersionId"]
         except Exception as e:
@@ -402,7 +402,6 @@ class GAIntegrationService(BaseGAIntegrationService):
                 .create(parent=workspace_path, body=trigger_body)
                 .execute()
             )
-            print(trigger_response)
             trigger_id = trigger_response["triggerId"]
 
             tag_body = {
@@ -494,10 +493,6 @@ class GAIntegrationService(BaseGAIntegrationService):
                 ],
             }
 
-            print("TRIGGER")
-            print("workspace_path")
-            print(workspace_path)
-
             # 트리거 생성
             trigger_response = (
                 tagmanager.accounts()
@@ -518,7 +513,6 @@ class GAIntegrationService(BaseGAIntegrationService):
             js_content = js_content.decode("utf-8")
 
             print(tag_name)
-            print(js_content)
 
             # 맞춤 HTML 태그 생성
             tag_body = {
