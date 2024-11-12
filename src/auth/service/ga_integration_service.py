@@ -104,8 +104,8 @@ class GAIntegrationService(BaseGAIntegrationService):
 
         mall_url = get_mall_url_by_user(str(user.email))
 
-        analytic_admin = await self.create_ga_admin()
-        tagmanager = await self.create_tag_manager()
+        analytic_admin = self.create_ga_admin()
+        tagmanager = self.create_tag_manager()
         ga_integration = self.ga_repository.get_by_mall_id(mall_id, db)
 
         try:
@@ -162,8 +162,8 @@ class GAIntegrationService(BaseGAIntegrationService):
 
             raise e
 
-    async def create_tag_manager(self):
-        return await build("tagmanager", "v2", credentials=self.credentials)
+    def create_tag_manager(self):
+        return build("tagmanager", "v2", credentials=self.credentials)
 
     async def create_gtm_settings(
         self, ga_integration: GAIntegration, mall_url: str, tagmanager
@@ -665,8 +665,8 @@ class GAIntegrationService(BaseGAIntegrationService):
 
         return ga_integration
 
-    async def create_ga_admin(self):
-        return await build("analyticsadmin", "v1alpha", credentials=self.credentials)
+    def create_ga_admin(self):
+        return build("analyticsadmin", "v1alpha", credentials=self.credentials)
 
     @transactional
     def update_status(self, user: User, to_status: str, db: Session):
