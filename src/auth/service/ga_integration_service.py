@@ -1,6 +1,10 @@
 import asyncio
 import json
+from datetime import datetime, timedelta
 
+import aiohttp
+from aiohttp import BasicAuth
+from fastapi import HTTPException
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from sqlalchemy.orm import Session
@@ -13,6 +17,9 @@ from src.auth.routes.dto.response.ga_script_response import GAScriptResponse
 from src.auth.routes.port.base_ga_service import BaseGAIntegrationService
 from src.common.service.aws_service import AwsService
 from src.common.slack.slack_message import send_slack_message
+from src.common.utils.date_utils import (
+    create_logical_date_for_airflow,
+)
 from src.common.utils.file.s3_service import S3Service
 from src.common.utils.get_env_variable import get_env_variable
 from src.core.database import get_mall_url_by_user
@@ -56,6 +63,10 @@ class GAIntegrationService(BaseGAIntegrationService):
         self.credentials = service_account.Credentials.from_service_account_info(
             credentials_dict, scopes=self.scopes
         )
+
+        self.airflow_api = get_env_variable("airflow_api")
+        self.airflow_username = get_env_variable("airflow_username")
+        self.airflow_password = get_env_variable("airflow_password")
 
         self.ga_repository = ga_repository
 
@@ -122,6 +133,31 @@ class GAIntegrationService(BaseGAIntegrationService):
             self.ga_repository.save_ga_integration(ga_integration, db)
 
             db.commit()
+
+            dag_run_id = f"{mall_id}_ga"
+            send_date = (datetime.now() + timedelta(days=1)).strftime("%Y%m%d")
+            send_time = "11:00"
+            logical_date = create_logical_date_for_airflow(send_date, send_time)
+
+            data = {
+                "dag_run_id": dag_run_id,
+                "conf": {"mallid": mall_id},
+                "logical_date": logical_date,
+            }
+
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    url=f"{self.airflow_api}/dags/onboarding_ga/dagRuns",
+                    json=data,
+                    auth=BasicAuth(self.airflow_username, self.airflow_password),
+                    ssl=False,
+                ) as response:
+                    if response.status != 200:
+                        response_text = await response.text()
+                        raise HTTPException(
+                            status_code=response.status,
+                            detail={"code": "airflow call error", "message": response_text},
+                        )
 
             send_slack_message(
                 title=f"GA, GTM 생성 완료 (mall id: {mall_id})",
