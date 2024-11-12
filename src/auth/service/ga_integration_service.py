@@ -611,7 +611,7 @@ class GAIntegrationService(BaseGAIntegrationService):
     def create_datastream_with_enhanced_tag(
         self, ga_integration: GAIntegration, mall_url, data_stream_type, analytics_admin
     ):
-        data_stream_response = await self.create_data_stream(
+        data_stream_response = self.create_data_stream(
             ga_integration, analytics_admin, data_stream_type, mall_url
         )
 
