@@ -26,6 +26,7 @@ def get_cafe24_authentication_url(
 ) -> str:
     authentication_url = cafe24_service.get_oauth_authentication_url(mall_id, user, db=db)
 
+    user.mall_id = mall_id
     background_tasks.add_task(ga_service.execute_ga_automation, user, db)
 
     return authentication_url
