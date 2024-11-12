@@ -45,7 +45,10 @@ class User(BaseModel):
             department_id=self.department_id,
             brand_name_ko=self.brand_name_ko,
             brand_name_en=self.brand_name_en,
+            department_name=self.department_id,
+            department_abb_name=self.department_id,
             language=self.language,
+            cell_phone_number=self.cell_phone_number,
             test_callback_number=self.test_callback_number,
             is_aivelabs_admin=False,
         )
