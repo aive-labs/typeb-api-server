@@ -120,7 +120,7 @@ class GAIntegrationService(BaseGAIntegrationService):
         ga_integration = self.ga_repository.get_by_mall_id(mall_id, db)
 
         try:
-            ga_integration = await self.create_ga_settings(
+            ga_integration = self.create_ga_settings(
                 mall_id, mall_url, analytic_admin, ga_integration
             )
             print("Create GA Attributes.")
@@ -141,7 +141,7 @@ class GAIntegrationService(BaseGAIntegrationService):
 
             data = {
                 "dag_run_id": dag_run_id,
-                "conf": {"mallid": mall_id},
+                "conf": {"mall_id": mall_id},
                 "logical_date": logical_date,
             }
 
@@ -209,13 +209,13 @@ class GAIntegrationService(BaseGAIntegrationService):
         gtm_account_id = ga_integration.gtm_account_id
 
         # 컨테이너 생성
-        ga_integration = await self.create_gtm_container(
+        ga_integration = self.create_gtm_container(
             ga_integration, gtm_account_id, mall_url, tagmanager
         )
         print("Create GTM container.")
 
         # 워크스페이스 조회
-        workspace_id = await self.get_workspace_id(gtm_account_id, ga_integration, tagmanager)
+        workspace_id = self.get_workspace_id(gtm_account_id, ga_integration, tagmanager)
         workspace_path = f"accounts/{gtm_account_id}/containers/{ga_integration.gtm_container_id}/workspaces/{workspace_id}"
         print(f"GET GTM container workspace {workspace_id}")
 
@@ -233,20 +233,20 @@ class GAIntegrationService(BaseGAIntegrationService):
         print("Create GTM custom event trigger and tag.")
 
         # 3. 구글 태그 생성
-        await self.create_google_tag(ga_integration.ga_measurement_id, workspace_path, tagmanager)
+        self.create_google_tag(ga_integration.ga_measurement_id, workspace_path, tagmanager)
         print("Create Google Tag.")
 
         # 4. GTM 버전 생성 코드 (변경된 내용을 반영한 새로운 버전 생성)
-        version_id = await self.create_new_tag_version(ga_integration, tagmanager, workspace_path)
+        version_id = self.create_new_tag_version(ga_integration, tagmanager, workspace_path)
         print(f"Create GTM version. version id: {version_id}.")
 
         # 5. 버전 게시
-        await self.publish_new_version(ga_integration, gtm_account_id, tagmanager, version_id)
+        self.publish_new_version(ga_integration, gtm_account_id, tagmanager, version_id)
         print("Publish GTM version.")
 
         return ga_integration
 
-    async def create_google_tag(self, ga_measurement_id, workspace_path, tagmanager):
+    def create_google_tag(self, ga_measurement_id, workspace_path, tagmanager):
 
         # 구글 태그 생성
         tag_body = {
@@ -257,7 +257,7 @@ class GAIntegrationService(BaseGAIntegrationService):
             ],
         }
         try:
-            response = await (
+            response = (
                 tagmanager.accounts()
                 .containers()
                 .workspaces()
@@ -289,7 +289,7 @@ class GAIntegrationService(BaseGAIntegrationService):
             }
 
             # 변수 생성 요청
-            response = await (
+            response = (
                 tagmanager.accounts()
                 .containers()
                 .workspaces()
@@ -300,11 +300,11 @@ class GAIntegrationService(BaseGAIntegrationService):
 
             print(f"{file.value} variable created: {response}")
 
-    async def publish_new_version(self, ga_integration, gtm_account_id, tagmanager, version_id):
+    def publish_new_version(self, ga_integration, gtm_account_id, tagmanager, version_id):
         try:
             # 생성된 버전 ID를 사용하여 게시
             version_path = f"accounts/{gtm_account_id}/containers/{ga_integration.gtm_container_id}/versions/{version_id}"
-            publish_response = await (
+            publish_response = (
                 tagmanager.accounts().containers().versions().publish(path=version_path).execute()
             )
 
@@ -313,13 +313,13 @@ class GAIntegrationService(BaseGAIntegrationService):
         except Exception as e:
             print("Error publishing version:", e)
 
-    async def create_new_tag_version(self, ga_integration, tagmanager, workspace_path):
+    def create_new_tag_version(self, ga_integration, tagmanager, workspace_path):
         version_body = {
             "name": f"{ga_integration.mall_id}_workspace_id",
             "notes": f"{ga_integration.mall_id} 버전 생성",
         }
         try:
-            version_response = await (
+            version_response = (
                 tagmanager.accounts()
                 .containers()
                 .workspaces()
@@ -382,7 +382,7 @@ class GAIntegrationService(BaseGAIntegrationService):
 
             # 트리거 생성
             print("Create Event Trigger")
-            trigger_response = await (
+            trigger_response = (
                 tagmanager.accounts()
                 .containers()
                 .workspaces()
@@ -487,7 +487,7 @@ class GAIntegrationService(BaseGAIntegrationService):
             print(workspace_path)
 
             # 트리거 생성
-            trigger_response = await (
+            trigger_response = (
                 tagmanager.accounts()
                 .containers()
                 .workspaces()
@@ -524,7 +524,7 @@ class GAIntegrationService(BaseGAIntegrationService):
 
             # 태그 생성 요청
             try:
-                response = await (
+                response = (
                     tagmanager.accounts()
                     .containers()
                     .workspaces()
@@ -537,8 +537,8 @@ class GAIntegrationService(BaseGAIntegrationService):
             except Exception as e:
                 print("Error creating tag:", e)
 
-    async def get_workspace_id(self, gtm_account_id, gtm_container, tagmanager):
-        workspaces = await (
+    def get_workspace_id(self, gtm_account_id, gtm_container, tagmanager):
+        workspaces = (
             tagmanager.accounts()
             .containers()
             .workspaces()
@@ -549,7 +549,7 @@ class GAIntegrationService(BaseGAIntegrationService):
         workspace_id = max(workspaces_ids)
         return workspace_id
 
-    async def create_gtm_container(
+    def create_gtm_container(
         self, ga_integration, gtm_account_id, mall_url, tagmanager
     ) -> GAIntegration:
         container_body = {
@@ -558,7 +558,7 @@ class GAIntegrationService(BaseGAIntegrationService):
             "domainName": [mall_url],  # 컨테이너가 적용될 웹사이트 도메인
         }
         try:
-            new_container = await (
+            new_container = (
                 tagmanager.accounts()
                 .containers()
                 .create(parent=f"accounts/{gtm_account_id}", body=container_body)
@@ -579,36 +579,36 @@ class GAIntegrationService(BaseGAIntegrationService):
                 detail={"message": "구글 태그 매니저 변수 생성 중 오류가 발생했습니다.", "error": e}
             )
 
-    async def create_ga_settings(
+    def create_ga_settings(
         self, mall_id: str, mall_url: str, analytic_admin, ga_integration: GAIntegration
     ) -> GAIntegration:
         # GA 속성 생성 요청
-        ga_integration = await self.create_ga_property(
+        ga_integration = self.create_ga_property(
             ga_integration, f"{mall_id}_cafe24", analytic_admin
         )
 
         # dataStream 생성
         data_stream_type = "WEB_DATA_STREAM"
-        ga_integration = await self.create_datastream_with_enhanced_tag(
+        ga_integration = self.create_datastream_with_enhanced_tag(
             ga_integration, mall_url, data_stream_type, analytic_admin
         )
 
         # ga 스크립트 확인하기
-        ga_integration = await self.get_ga_script(ga_integration, analytic_admin)
+        ga_integration = self.get_ga_script(ga_integration, analytic_admin)
 
         return ga_integration
 
-    async def get_ga_script(self, ga_integration: GAIntegration, analytic_admin):
+    def get_ga_script(self, ga_integration: GAIntegration, analytic_admin):
 
         print("get_ga_script")
         print(ga_integration)
         tag_url = f"properties/{ga_integration.ga_property_id}/dataStreams/{ga_integration.ga_data_stream_id}/globalSiteTag"
         request = analytic_admin.properties().dataStreams().getGlobalSiteTag(name=tag_url)
-        response = await request.execute()
+        response = request.execute()
         ga_integration.set_ga_script(response["snippet"])
         return ga_integration
 
-    async def create_datastream_with_enhanced_tag(
+    def create_datastream_with_enhanced_tag(
         self, ga_integration: GAIntegration, mall_url, data_stream_type, analytics_admin
     ):
         data_stream_response = await self.create_data_stream(
@@ -630,11 +630,11 @@ class GAIntegrationService(BaseGAIntegrationService):
         print(ga_integration)
 
         data_stream_parent = f"properties/{ga_integration.ga_property_id}/dataStreams/{ga_integration.ga_data_stream_id}"
-        await self.add_enhanced_measurement(analytics_admin, data_stream_parent)
+        self.add_enhanced_measurement(analytics_admin, data_stream_parent)
 
         return ga_integration
 
-    async def create_data_stream(
+    def create_data_stream(
         self, ga_integration: GAIntegration, analytics_admin, datastream_type, mall_url
     ):
         data_stream_body = {
@@ -651,10 +651,10 @@ class GAIntegrationService(BaseGAIntegrationService):
                 body=data_stream_body,
             )
         )
-        data_stream_response = await request.execute()
+        data_stream_response = request.execute()
         return data_stream_response
 
-    async def add_enhanced_measurement(self, analytics_admin, data_stream_parent):
+    def add_enhanced_measurement(self, analytics_admin, data_stream_parent):
         # 향상된 측정 세팅
         enhancement_measurement_body = {
             "fileDownloadsEnabled": True,
@@ -679,9 +679,9 @@ class GAIntegrationService(BaseGAIntegrationService):
                 body=enhancement_measurement_body,
             )
         )
-        response = await request.execute()
+        response = request.execute()
 
-    async def create_ga_property(
+    def create_ga_property(
         self, ga_integration: GAIntegration, display_name, analytic_admin
     ) -> GAIntegration:
         property_parent = f"accounts/{ga_integration.ga_account_id}"
@@ -693,7 +693,7 @@ class GAIntegrationService(BaseGAIntegrationService):
             "currencyCode": "KRW",
         }
         # 속성 생성 요청
-        request = await analytic_admin.properties().create(body=property_body)
+        request = analytic_admin.properties().create(body=property_body)
         response = request.execute()
         ga_integration = ga_integration.set_ga_property(
             response["name"].split("/")[-1], response["displayName"]
