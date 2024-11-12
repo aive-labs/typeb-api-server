@@ -172,7 +172,7 @@ class GAIntegrationService(BaseGAIntegrationService):
             # ga 속성 삭제
             if ga_integration.ga_property_id:
                 print("Delete GA property")
-                ga_response = await (
+                ga_response = (
                     analytic_admin.properties()
                     .delete(name=f"properties/{ga_integration.ga_property_id}")
                     .execute()
@@ -181,7 +181,7 @@ class GAIntegrationService(BaseGAIntegrationService):
 
             if ga_integration.gtm_container_id:
                 print("Delete GTM container")
-                await (
+                (
                     tagmanager.accounts()
                     .containers()
                     .delete(

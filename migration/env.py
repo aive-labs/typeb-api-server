@@ -86,8 +86,8 @@ def run_migrations_online() -> None:
     db_urls = get_db_list_for_migration()
     print("🔅DB MIGRATION TARGET")
     for db_url in db_urls:
-        print(f"✅ {db_url} / schema: {target_metadata.schema}")
-        print(f"tables: {target_metadata.tables.keys()}")
+        print(f"✅ {db_url} / schema: {target_metadata.schema} ✅")
+        # print(f"tables: {target_metadata.tables.keys()}")
 
         mall_id = db_url.split("/")[-1]
         config.set_main_option("sqlalchemy.url", db_url)
