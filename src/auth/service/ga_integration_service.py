@@ -173,24 +173,34 @@ class GAIntegrationService(BaseGAIntegrationService):
         except Exception as e:
             # ga 속성 삭제
             if ga_integration.ga_property_id:
-                print("Delete GA property")
-                ga_response = (
-                    analytic_admin.properties()
-                    .delete(name=f"properties/{ga_integration.ga_property_id}")
-                    .execute()
-                )
-                print(ga_response)
+                try:
+                    print("Delete GA property")
+                    ga_response = (
+                        analytic_admin.properties()
+                        .delete(name=f"properties/{ga_integration.ga_property_id}")
+                        .execute()
+                    )
+                    print(ga_response)
+                except Exception as delete_e:
+                    raise GoogleTagException(
+                        detail={"message": f"Failed to delete GA property: {delete_e}"}
+                    )
 
             if ga_integration.gtm_container_id:
-                print("Delete GTM container")
-                (
-                    tagmanager.accounts()
-                    .containers()
-                    .delete(
-                        path=f"accounts/{ga_integration.gtm_account_id}/containers/{ga_integration.gtm_container_id}"
+                try:
+                    print("Delete GTM container")
+                    (
+                        tagmanager.accounts()
+                        .containers()
+                        .delete(
+                            path=f"accounts/{ga_integration.gtm_account_id}/containers/{ga_integration.gtm_container_id}"
+                        )
+                        .execute()
                     )
-                    .execute()
-                )
+                except Exception as delete_e:
+                    raise GoogleTagException(
+                        detail={"message": f"Failed to delete GTM property: {delete_e}"}
+                    )
 
             send_slack_message(
                 title=f"❌ GA, GTM 생성 실패 (*mall id*: {mall_id}*)",
