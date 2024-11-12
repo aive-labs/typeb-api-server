@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 
 import aiohttp
 from aiohttp import BasicAuth
-from fastapi import HTTPException
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from sqlalchemy.orm import Session
@@ -156,10 +155,7 @@ class GAIntegrationService(BaseGAIntegrationService):
                         response_text = await response.text()
                         print("onboarding_ga dagRun reservation")
                         print(data)
-                        raise HTTPException(
-                            status_code=response.status,
-                            detail={"code": "airflow call error", "message": response_text},
-                        )
+                        print(response_text)
 
             send_slack_message(
                 title=f"GA, GTM 생성 완료 (mall id: {mall_id})",
