@@ -2209,7 +2209,7 @@ def upgrade() -> None:
         sa.Column("option_id", sa.String(), nullable=False),
         sa.Column("option_name", sa.String(), nullable=False),
         sa.Column("cell_type", sa.String(), nullable=False),
-        sa.Column("input_cell_type", sa.String(), nullable=False),
+        sa.Column("input_cell_type", sa.String(), nullable=True),
         sa.Column("querying_type", sa.String(), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column("created_by", sa.String(), nullable=False),
