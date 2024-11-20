@@ -201,12 +201,13 @@ class Cafe24Service(BaseOauthService):
         access_token = self.get_access_token(mall_id)
         authorization_header = f"Bearer {access_token}"
 
+        base_return_url = get_env_variable("order_return_url")
         # Prepare the request data
         data = {
             "request": {
                 "order_name": cafe24_order_request.order_name,
                 "order_amount": str(cafe24_order_request.order_amount),
-                "return_url": f"https://aace.ai/main/billing?order_id={cafe24_order_request.order_id}",
+                "return_url": f"{base_return_url}?order_id={cafe24_order_request.order_id}",
                 "automatic_payment": "F",
             }
         }
