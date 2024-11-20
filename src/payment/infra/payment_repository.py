@@ -2,9 +2,11 @@ from sqlalchemy import asc, desc, func
 from sqlalchemy.orm import Session
 
 from src.core.exceptions.exceptions import NotFoundException
+from src.payment.domain.cafe24_order import Cafe24Order
 from src.payment.domain.card import Card
 from src.payment.domain.payment import Payment
 from src.payment.enum.product_type import ProductType
+from src.payment.infra.entity.cafe24_order_entity import Cafe24OrderEntity
 from src.payment.infra.entity.card_entity import CardEntity
 from src.payment.infra.entity.customer_key_entity import MallCustomerKeyMappingEntity
 from src.payment.infra.entity.payment_entity import PaymentEntity
@@ -156,3 +158,9 @@ class PaymentRepository(BasePaymentRepository):
 
         print(entity)
         return Payment.model_validate(entity)
+
+    def save_cafe24_order(self, cafe24_order: Cafe24Order, user: User, db: Session):
+        entity = Cafe24OrderEntity.from_model(cafe24_order, user)
+        db.add(entity)
+
+        db.commit()

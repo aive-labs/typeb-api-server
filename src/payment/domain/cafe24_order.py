@@ -5,7 +5,7 @@ class Cafe24Order(BaseModel):
     order_id: str
     cafe24_order_id: str
     order_name: str
-    order_amount: int
+    order_amount: float
     currency: str
     return_url: str
     automatic_payment: str
@@ -17,7 +17,7 @@ class Cafe24Order(BaseModel):
             order_id=order_id,
             cafe24_order_id=data["order"]["cafe24_order_id"],
             order_name=data["order"]["order_name"],
-            order_amount=data["order"]["order_amount"],
+            order_amount=float(data["order"]["order_amount"]),
             currency=data["order"]["currency"],
             return_url=data["order"]["return_url"],
             automatic_payment=data["order"]["automatic_payment"],
