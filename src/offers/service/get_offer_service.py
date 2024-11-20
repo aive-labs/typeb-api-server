@@ -8,7 +8,7 @@ from src.auth.infra.dto.cafe24_token import Cafe24TokenData
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.common.timezone_setting import selected_timezone
 from src.common.utils.get_env_variable import get_env_variable
-from src.common.utils.s3_token_update_service import S3TokenService
+from src.common.utils.s3_token_service import S3TokenService
 from src.core.exceptions.exceptions import NotFoundException
 from src.core.transactional import transactional
 from src.offers.domain.cafe24_coupon import Cafe24CouponResponse

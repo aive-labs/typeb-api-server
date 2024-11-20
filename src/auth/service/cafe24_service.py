@@ -17,7 +17,7 @@ from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
 from src.auth.utils.hash_password import generate_hash
 from src.common.utils.get_env_variable import get_env_variable
-from src.common.utils.s3_token_update_service import S3TokenService
+from src.common.utils.s3_token_service import S3TokenService
 from src.core.transactional import transactional
 from src.payment.domain.cafe24_order import Cafe24Order
 from src.payment.routes.dto.request.cafe24_order_request import Cafe24OrderRequest
@@ -187,13 +187,19 @@ class Cafe24Service(BaseOauthService):
 
                 return res
 
+    # 토큰 조회 기능 추가
+    def get_access_token(self, mall_id: str):
+        s3_token_service = S3TokenService(
+            bucket="aace-airflow-log", key=f"cafe24_token/{mall_id}.yml"
+        )
+        return s3_token_service.read_access_token()
+
     async def create_order(
         self, mall_id: str, cafe24_order_request: Cafe24OrderRequest
     ) -> Cafe24Order:
-        # basic authentication 생성
-        credentials = f"{self.client_id}:{self.client_secret}".encode()
-        encoded_credentials = base64.b64encode(credentials).decode("utf-8")
-        authorization_header = f"Basic {encoded_credentials}"
+
+        access_token = self.get_access_token(mall_id)
+        authorization_header = f"Bearer {access_token}"
 
         # Prepare the request data
         data = {
