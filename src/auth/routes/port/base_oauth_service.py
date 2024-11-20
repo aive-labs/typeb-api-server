@@ -6,7 +6,9 @@ from src.auth.infra.dto.external_integration import ExternalIntegration
 from src.auth.routes.dto.request.cafe24_token_request import OauthAuthenticationRequest
 from src.core.transactional import transactional
 from src.payment.domain.cafe24_order import Cafe24Order
+from src.payment.domain.cafe24_payment import Cafe24Payment
 from src.payment.routes.dto.request.cafe24_order_request import Cafe24OrderRequest
+from src.users.domain.user import User
 
 
 class BaseOauthService(ABC):
@@ -29,4 +31,8 @@ class BaseOauthService(ABC):
     async def create_order(
         self, mall_id: str, cafe24_order_request: Cafe24OrderRequest
     ) -> Cafe24Order:
+        pass
+
+    @abstractmethod
+    async def get_payment(self, order_id: str, user: User) -> Cafe24Payment:
         pass

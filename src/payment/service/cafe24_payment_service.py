@@ -11,7 +11,7 @@ from src.payment.routes.use_case.create_cafe24_order_usecase import (
 from src.users.domain.user import User
 
 
-class Cafe24PaymentService(CreateCafe24OrderUseCase):
+class Cafe24OrderService(CreateCafe24OrderUseCase):
 
     def __init__(self, cafe24_service: BaseOauthService, payment_repository: PaymentRepository):
         self.cafe24_service = cafe24_service
@@ -26,6 +26,6 @@ class Cafe24PaymentService(CreateCafe24OrderUseCase):
         cafe24_order = await self.cafe24_service.create_order(user.mall_id, order_request)
 
         # cafe24 주문 정보 DB 저장
-        self.payment_repository.save_cafe24_order(cafe24_order, db)
+        self.payment_repository.save_cafe24_order(cafe24_order, user, db)
 
         return Cafe24OrderResponse.from_model(cafe24_order)

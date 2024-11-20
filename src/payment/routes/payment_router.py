@@ -16,6 +16,9 @@ from src.payment.routes.dto.request.payment_request import (
 )
 from src.payment.routes.dto.request.pre_data_for_validation import PreDataForValidation
 from src.payment.routes.dto.response.cafe24_order_response import Cafe24OrderResponse
+from src.payment.routes.dto.response.cafe24_payment_response import (
+    Cafe24PaymentResponse,
+)
 from src.payment.routes.dto.response.card_response import CardResponse
 from src.payment.routes.dto.response.credit_history_response import (
     CreditHistoryResponse,
@@ -39,6 +42,9 @@ from src.payment.routes.use_case.create_cafe24_order_usecase import (
 from src.payment.routes.use_case.delete_card import DeleteCardUseCase
 from src.payment.routes.use_case.deposit_without_account_usecase import (
     DepositWithoutAccountUseCase,
+)
+from src.payment.routes.use_case.get_cafe24_payment_usecase import (
+    GetCafe24PaymentUseCase,
 )
 from src.payment.routes.use_case.get_card_usecase import GetCardUseCase
 from src.payment.routes.use_case.get_credit import GetCreditUseCase
@@ -276,8 +282,20 @@ async def create_cafe24_order(
     cafe24_order_request: Cafe24OrderRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db),
-    cafe24_payment_service: CreateCafe24OrderUseCase = Depends(
-        Provide[Container.cafe24_payment_service]
+    cafe24_order_service: CreateCafe24OrderUseCase = Depends(
+        Provide[Container.cafe24_order_service]
     ),
 ) -> Cafe24OrderResponse:
-    return await cafe24_payment_service.exec(user, db, cafe24_order_request)
+    return await cafe24_order_service.exec(user, db, cafe24_order_request)
+
+
+@payment_router.get("/cafe24-payment")
+async def get_cafe24_payment(
+    cafe24_order_id: str,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
+    cafe24_payment_service: GetCafe24PaymentUseCase = Depends(
+        Provide[Container.cafe24_payment_service]
+    ),
+) -> Cafe24PaymentResponse:
+    return await cafe24_payment_service.exec(cafe24_order_id, user, db)
