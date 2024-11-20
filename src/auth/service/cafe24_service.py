@@ -19,6 +19,8 @@ from src.auth.utils.hash_password import generate_hash
 from src.common.utils.get_env_variable import get_env_variable
 from src.common.utils.s3_token_update_service import S3TokenService
 from src.core.transactional import transactional
+from src.payment.domain.cafe24_order import Cafe24Order
+from src.payment.routes.dto.request.cafe24_order_request import Cafe24OrderRequest
 from src.users.service.port.base_user_repository import BaseUserRepository
 
 
@@ -179,8 +181,49 @@ class Cafe24Service(BaseOauthService):
                 print(response)
                 if response.status != 200:
                     raise HTTPException(
-                        status_code=response.status_code,
+                        status_code=response.status,
                         detail={"code": "cafe24 auth error", "message": response.text},
                     )
 
                 return res
+
+    async def create_order(
+        self, mall_id: str, cafe24_order_request: Cafe24OrderRequest
+    ) -> Cafe24Order:
+        # basic authentication 생성
+        credentials = f"{self.client_id}:{self.client_secret}".encode()
+        encoded_credentials = base64.b64encode(credentials).decode("utf-8")
+        authorization_header = f"Basic {encoded_credentials}"
+
+        # Prepare the request data
+        data = {
+            "request": {
+                "order_name": cafe24_order_request.order_name,
+                "order_amount": str(cafe24_order_request.order_amount),
+                "return_url": f"https://aace.ai/main/billing?order_id={cafe24_order_request.order_id}",
+                "automatic_payment": "F",
+            }
+        }
+
+        headers = {
+            "Authorization": authorization_header,
+            "Content-Type": "application/x-www-form-urlencoded",
+        }
+
+        # Send the POST request
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                url=f"https://{mall_id}.cafe24api.com/api/v2/admin/appstore/orders",
+                data=data,
+                headers=headers,
+                ssl=False,
+            ) as response:
+                res = await response.json()
+
+                if response.status != 200:
+                    raise HTTPException(
+                        status_code=response.status,
+                        detail={"code": "cafe24 auth error", "message": response.text},
+                    )
+
+                return Cafe24Order.from_api_response(res, cafe24_order_request.order_id)

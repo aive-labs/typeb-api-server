@@ -15,6 +15,7 @@ from src.payment.routes.dto.request.payment_request import (
     PaymentRequest,
 )
 from src.payment.routes.dto.request.pre_data_for_validation import PreDataForValidation
+from src.payment.routes.dto.response.cafe24_order_response import Cafe24OrderResponse
 from src.payment.routes.dto.response.card_response import CardResponse
 from src.payment.routes.dto.response.credit_history_response import (
     CreditHistoryResponse,
@@ -31,6 +32,9 @@ from src.payment.routes.dto.response.subscription_history_response import (
 )
 from src.payment.routes.use_case.change_card_to_primary_usecase import (
     ChangeCardToPrimaryUseCase,
+)
+from src.payment.routes.use_case.create_cafe24_order_usecase import (
+    CreateCafe24OrderUseCase,
 )
 from src.payment.routes.use_case.delete_card import DeleteCardUseCase
 from src.payment.routes.use_case.deposit_without_account_usecase import (
@@ -272,13 +276,8 @@ async def create_cafe24_order(
     cafe24_order_request: Cafe24OrderRequest,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db),
-    cafe24_payment_service: PaymentUseCase = Depends(Provide[Container.cafe24_payment_service]),
-):
-    payment_request = PaymentRequest(
-        order_id=cafe24_order_request.order_id,
-        order_name=cafe24_order_request.order_name,
-        amount=cafe24_order_request.order_amount,
-        product_type=cafe24_order_request.product_type,
-    )
-
-    await cafe24_payment_service.exec(user, db, payment_request)
+    cafe24_payment_service: CreateCafe24OrderUseCase = Depends(
+        Provide[Container.cafe24_payment_service]
+    ),
+) -> Cafe24OrderResponse:
+    return await cafe24_payment_service.exec(user, db, cafe24_order_request)
