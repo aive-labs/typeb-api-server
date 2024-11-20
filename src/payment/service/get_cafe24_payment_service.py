@@ -25,16 +25,7 @@ class GetCafe24PaymentService(GetCafe24PaymentUseCase):
 
         self.payment_repository.save_cafe24_payment(payment_result, user, db)
 
-        return Cafe24PaymentResponse(
-            cafe24_order_id=payment_result.order_id,
-            payment_status=payment_result.payment_status,
-            title=payment_result.title,
-            payment_method=payment_result.payment_method,
-            payment_amount=payment_result.payment_amount,
-            refund_amount=payment_result.refund_amount,
-            currency=payment_result.currency,
-            pay_date=payment_result.pay_date,
-        )
+        return Cafe24PaymentResponse.from_model(payment_result)
 
     def check_existing_order(self, db, order_id):
         is_existing_order = self.payment_repository.existing_order_by_cafe24_order_id(order_id, db)
