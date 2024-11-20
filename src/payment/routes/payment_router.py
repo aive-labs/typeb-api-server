@@ -9,6 +9,7 @@ from src.auth.utils.permission_checker import get_permission_checker
 from src.common.pagination.pagination_response import PaginationResponse
 from src.core.container import Container
 from src.core.db_dependency import get_db
+from src.payment.routes.dto.request.cafe24_order_request import Cafe24OrderRequest
 from src.payment.routes.dto.request.deposit_without_account import DepositWithoutAccount
 from src.payment.routes.dto.request.payment_request import (
     PaymentRequest,
@@ -247,7 +248,7 @@ def deposit_complete(
 
 @payment_router.get("/invoice/{credit_history_id}")
 @inject
-def donwload_invoice(
+def download_invoice(
     credit_history_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db),
@@ -263,3 +264,21 @@ def donwload_invoice(
         media_type="application/pdf",
         headers={"Content-Disposition": f"attachment; filename=invoice_{download_date}.pdf"},
     )
+
+
+@payment_router.post("/cafe24-order")
+@inject
+async def create_cafe24_order(
+    cafe24_order_request: Cafe24OrderRequest,
+    user=Depends(get_permission_checker(required_permissions=[])),
+    db: Session = Depends(get_db),
+    cafe24_payment_service: PaymentUseCase = Depends(Provide[Container.cafe24_payment_service]),
+):
+    payment_request = PaymentRequest(
+        order_id=cafe24_order_request.order_id,
+        order_name=cafe24_order_request.order_name,
+        amount=cafe24_order_request.order_amount,
+        product_type=cafe24_order_request.product_type,
+    )
+
+    await cafe24_payment_service.exec(user, db, payment_request)

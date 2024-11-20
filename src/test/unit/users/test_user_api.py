@@ -3,7 +3,6 @@ from unittest.mock import MagicMock
 
 import pytest
 from dependency_injector import providers
-from sqlalchemy.orm import Session
 from starlette.testclient import TestClient
 
 from src.auth.enums.onboarding_status import OnboardingStatus
@@ -16,7 +15,6 @@ from src.auth.utils.permission_checker import get_permission_checker
 from src.core.db_dependency import get_db
 from src.main import app
 from src.payment.domain.subscription import Subscription, SubscriptionPlan
-from src.payment.routes.use_case.get_subscription import GetSubscriptionUseCase
 from src.payment.service.get_subscription_service import GetSubscriptionService
 from src.users.domain.user import User
 
@@ -91,8 +89,6 @@ def mock_subscription_service():
         plan=plan,  # 명시적으로 생성한 plan 객체 사용
     )
 
-    print("service.get_my_subscription")
-    print(service.get_my_subscription)
     service.get_my_subscription.return_value = subscription
     return service
 
