@@ -150,8 +150,11 @@ class Cafe24Service(BaseOauthService):
     ) -> str:
         return (
             f"https://{mall_id}.cafe24api.com/api/v2/oauth/authorize?"
-            f"response_type=code&client_id={client_id}&state={state}&"
-            f"redirect_uri={redirect_uri}&scope={scope}"
+            f"response_type=code&"
+            f"client_id={client_id}&"
+            f"state={state}&"
+            f"redirect_uri={redirect_uri}&"
+            f"scope={scope}"
         )
 
     async def _request_token_to_cafe24(self, code, mall_id):

@@ -44,7 +44,11 @@ class GetOfferService(GetOfferUseCase):
                 start_date = today.strftime("%Y-%m-%d")
                 end_date = tomorrow.strftime("%Y-%m-%d")
 
-                url = f"https://{user.mall_id}.cafe24api.com/api/v2/admin/coupons?created_start_date={start_date}&created_end_date={end_date}"
+                url = (
+                    f"https://{user.mall_id}.cafe24api.com/api/v2/admin/coupons?"
+                    f"created_start_date={start_date}&"
+                    f"created_end_date={end_date}"
+                )
 
                 headers = {
                     "Authorization": f"Bearer {access_token}",
