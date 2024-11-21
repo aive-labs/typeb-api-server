@@ -285,31 +285,35 @@ class Cafe24Service(BaseOauthService):
             ) as response:
                 res = await response.json()
 
+                print("cafe24 payment")
+                print(res)
+
                 if response.status != 200:
-                    res = {
-                        "payments": [
-                            {
-                                "order_id": "cafe24-20180704-100000000",
-                                "payment_status": "paid",
-                                "title": "App Name_App Store Order1",
-                                "approval_no": "10000000",
-                                "payment_gateway_name": "allat",
-                                "payment_method": "card",
-                                "payment_amount": "1000.00",
-                                "refund_amount": "0.00",
-                                "currency": "KRW",
-                                "locale_code": "ko_KR",
-                                "automatic_payment": "T",
-                                "pay_date": "2018-07-04T11:19:27+09:00",
-                                "refund_date": None,
-                                "expiration_date": "2018-08-04T11:19:27+09:00",
-                            }
-                        ]
-                    }
-                    # raise HTTPException(
-                    #     status_code=response.status,
-                    #     detail={"code": "cafe24 auth error", "message": response.text},
-                    # )
+                    raise HTTPException(
+                        status_code=response.status,
+                        detail={"code": "cafe24 auth error", "message": response.text},
+                    )
+
+                res = {
+                    "payments": [
+                        {
+                            "order_id": "cafe24-20180704-100000000",
+                            "payment_status": "paid",
+                            "title": "App Name_App Store Order1",
+                            "approval_no": "10000000",
+                            "payment_gateway_name": "allat",
+                            "payment_method": "card",
+                            "payment_amount": "1000.00",
+                            "refund_amount": "0.00",
+                            "currency": "KRW",
+                            "locale_code": "ko_KR",
+                            "automatic_payment": "T",
+                            "pay_date": "2018-07-04T11:19:27+09:00",
+                            "refund_date": None,
+                            "expiration_date": "2018-08-04T11:19:27+09:00",
+                        }
+                    ]
+                }
 
                 payments_list = res["payments"]
 

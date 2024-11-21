@@ -30,7 +30,7 @@ class Cafe24OrderEntity(Base):
     def from_model(cafe24_order: Cafe24Order, user: User):
         return Cafe24OrderEntity(
             order_id=cafe24_order.order_id,
-            cafe24_order_id=cafe24_order.order_id,
+            cafe24_order_id=cafe24_order.cafe24_order_id,
             order_name=cafe24_order.order_name,
             order_amount=cafe24_order.order_amount,
             currency=cafe24_order.currency,
