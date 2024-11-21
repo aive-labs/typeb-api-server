@@ -52,28 +52,30 @@ class S3TokenService:
 
             # access_token_expired_at과 access_token 가져오기
             mall_id = self.extract_mall_id()
-            expired_at_str = data.get(mall_id, {}).get("access_token_expired_at")
+            expired_at_str = data.get(mall_id, {}).get("expires_at")
             access_token = data.get(mall_id, {}).get("access_token")
 
             if not expired_at_str or not access_token:
                 raise Cafe24Exception(detail={"message": "카페24 연동 정보가 존재하지 않습니다."})
 
             # access_token_expired_at을 한국 시간으로 파싱
-            expired_at = datetime.strptime(expired_at_str, "%Y-%m-%d %H:%M:%S")
+            expired_at = datetime.strptime(expired_at_str, "%Y-%m-%dT%H:%M:%S.%f")
             korea_tz = pytz.timezone("Asia/Seoul")
+            expired_at = korea_tz.localize(expired_at)
 
             # 현재 시간을 한국 시간대로 가져오기
             current_time = datetime.now(korea_tz)
 
             if current_time > expired_at:
+                print("토큰 만료")
                 raise Cafe24Exception(
-                    detail={"message": "결저 요청에 실패했습니다. 잠시 후에 다시 시도해주세요."}
+                    detail={"message": "결제 요청에 실패했습니다. 잠시 후에 다시 시도해주세요."}
                 )
 
             return access_token
         except Exception as e:
             raise Cafe24Exception(
-                detail={"message": "결저 요청에 실패했습니다. 잠시 후에 다시 시도해주세요."}
+                detail={"message": "결제 요청에 실패했습니다. 잠시 후에 다시 시도해주세요."}
             )
 
     def extract_mall_id(self):

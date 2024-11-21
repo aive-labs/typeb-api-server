@@ -23,7 +23,7 @@ class Cafe24OrderService(CreateCafe24OrderUseCase):
         if user.mall_id is None:
             raise ConsistencyException(detail={"message": "등록된 쇼핑몰 정보가 없습니다."})
 
-        cafe24_order = await self.cafe24_service.create_order(user.mall_id, order_request)
+        cafe24_order = await self.cafe24_service.create_order(user, order_request)
 
         # cafe24 주문 정보 DB 저장
         self.payment_repository.save_cafe24_order(cafe24_order, user, db)

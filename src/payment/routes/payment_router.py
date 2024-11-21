@@ -290,6 +290,7 @@ async def create_cafe24_order(
 
 
 @payment_router.get("/cafe24-payment")
+@inject
 async def get_cafe24_payment(
     cafe24_order_id: str,
     user=Depends(get_permission_checker(required_permissions=[])),

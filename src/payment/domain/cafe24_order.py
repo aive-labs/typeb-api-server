@@ -15,7 +15,7 @@ class Cafe24Order(BaseModel):
     def from_api_response(data, order_id) -> "Cafe24Order":
         return Cafe24Order(
             order_id=order_id,
-            cafe24_order_id=data["order"]["cafe24_order_id"],
+            cafe24_order_id=data["order"]["order_id"],
             order_name=data["order"]["order_name"],
             order_amount=float(data["order"]["order_amount"]),
             currency=data["order"]["currency"],

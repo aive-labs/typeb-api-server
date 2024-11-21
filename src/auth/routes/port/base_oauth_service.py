@@ -29,10 +29,10 @@ class BaseOauthService(ABC):
 
     @abstractmethod
     async def create_order(
-        self, mall_id: str, cafe24_order_request: Cafe24OrderRequest
+        self, user: User, cafe24_order_request: Cafe24OrderRequest
     ) -> Cafe24Order:
         pass
 
     @abstractmethod
-    async def get_payment(self, order_id: str, user: User) -> Cafe24Payment:
+    async def get_payment(self, order_id: str) -> Cafe24Payment:
         pass

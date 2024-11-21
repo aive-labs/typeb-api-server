@@ -122,9 +122,11 @@ from src.payment.infra.deposit_repository import DepositRepository
 from src.payment.infra.payment_repository import PaymentRepository
 from src.payment.infra.subscription_repository import SubscriptionRepository
 from src.payment.service.billing_payment_service import BillingPaymentService
+from src.payment.service.cafe24_payment_service import Cafe24OrderService
 from src.payment.service.change_card_to_primary import ChangeCardToPrimaryService
 from src.payment.service.delete_card_service import DeleteCardService
 from src.payment.service.deposit_service import DepositService
+from src.payment.service.get_cafe24_payment_service import GetCafe24PaymentService
 from src.payment.service.get_card_service import GetCardService
 from src.payment.service.get_credit_service import GetCreditService
 from src.payment.service.get_payment_service import (
@@ -723,6 +725,18 @@ class Container(containers.DeclarativeContainer):
         payment_repository=payment_repository,
         credit_repository=credit_repository,
         deposit_repository=deposit_repository,
+    )
+
+    cafe24_order_service = providers.Singleton(
+        provides=Cafe24OrderService,
+        payment_repository=payment_repository,
+        cafe24_service=cafe24_service,
+    )
+
+    cafe24_payment_service = providers.Singleton(
+        provides=GetCafe24PaymentService,
+        payment_repository=payment_repository,
+        cafe24_service=cafe24_service,
     )
 
     create_carousel_card = providers.Singleton(
