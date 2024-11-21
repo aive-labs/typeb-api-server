@@ -126,7 +126,7 @@ def override_dependencies(
     app.dependency_overrides = {}
 
 
-def test_내_정보_조회를_요청한다(
+def test__내_정보_요청__성공하면_응답코드_200과_데이터를_응답한다(
     test_client,
     access_token,
     mock_db,
@@ -137,8 +137,6 @@ def test_내_정보_조회를_요청한다(
 ):
     headers = {"Authorization": f"Bearer {access_token}"}
 
-    print(access_token)
-
     response = test_client.get("/api/v1/users/me", headers=headers)
     assert response.status_code == 200
     data = response.json()
@@ -148,7 +146,7 @@ def test_내_정보_조회를_요청한다(
     # 추가적인 필드 검증
 
 
-def test_내_정보_요청__카페24_연동이_안된_경우_온보딩_상태는_카페24_통합필요이다(
+def test__내_정보_요청__카페24_연동이_안된_경우_온보딩_상태는_카페24_통합필요이다(
     test_client,
     access_token,
     mock_user,
@@ -171,7 +169,7 @@ def test_내_정보_요청__카페24_연동이_안된_경우_온보딩_상태는
     assert data["onboarding_status"] == OnboardingStatus.CAFE24_INTEGRATION_REQUIRED.value
 
 
-def test_내_정보_요청__온보딩_상태가_없는_경우_온보딩_상태는_카페24_통합필요이다(
+def test__내_정보_요청__온보딩_상태가_없는_경우_온보딩_상태는_카페24_통합필요이다(
     test_client,
     access_token,
     mock_user,
