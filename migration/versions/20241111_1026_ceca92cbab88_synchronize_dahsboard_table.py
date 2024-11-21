@@ -154,12 +154,18 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_table("send_message_logs", schema="aivelabs_sv")
+    conn = op.get_bind()
+    inspector = reflection.Inspector.from_engine(conn)
 
-    op.drop_table("campaign_customer_snapshot", schema="aivelabs_sv")
+    target_tables = [
+        "send_message_logs",
+        "campaign_customer_snapshot",
+        "dash_daily_campaign_cost",
+        "dash_daily_date_ranges",
+        "dash_daily_purchase_master",
+    ]
 
-    op.drop_table("dash_daily_campaign_cost", schema="aivelabs_sv")
-
-    op.drop_table("dash_daily_date_ranges", schema="aivelabs_sv")
-
-    op.drop_table("dash_daily_purchase_master", schema="aivelabs_sv")
+    for table_name in target_tables:
+        # 테이블 존재 여부 확인
+        if table_name in inspector.get_table_names(schema="aivelabs_sv"):
+            op.drop_table(table_name, schema="aivelabs_sv")
