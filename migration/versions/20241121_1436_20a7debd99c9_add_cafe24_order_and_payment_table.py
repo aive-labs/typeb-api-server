@@ -47,6 +47,7 @@ def upgrade():
                 server_default=sa.func.now(),
                 onupdate=sa.func.now(),
             ),
+            schema="aivelabs_sv",
         )
 
     if "cafe24_payments" in inspector.get_table_names(schema="aivelabs_sv"):
@@ -77,9 +78,17 @@ def upgrade():
                 server_default=sa.func.now(),
                 onupdate=sa.func.now(),
             ),
+            schema="aivelabs_sv",
         )
 
 
 def downgrade():
-    op.drop_table("cafe24_payments", schema="aivelabs_sv")
-    op.drop_table("cafe24_orders", schema="aivelabs_sv")
+    conn = op.get_bind()
+    inspector = reflection.Inspector.from_engine(conn)
+
+    # 테이블 존재 여부 확인
+    if "cafe24_payments" in inspector.get_table_names(schema="aivelabs_sv"):
+        op.drop_table("cafe24_payments", schema="aivelabs_sv")
+
+    if "cafe24_orders" in inspector.get_table_names(schema="aivelabs_sv"):
+        op.drop_table("cafe24_orders", schema="aivelabs_sv")
