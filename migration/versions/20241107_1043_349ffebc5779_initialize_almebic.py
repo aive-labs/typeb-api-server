@@ -1887,6 +1887,30 @@ def upgrade() -> None:
         unique=False,
         schema="aivelabs_sv",
     )
+
+    # 데이터 삽입
+    conn = op.get_bind()
+
+    exists = conn.execute(
+        text("SELECT 1 FROM aivelabs_sv.subscription_plans WHERE id = 1")
+    ).scalar()
+
+    if not exists:
+        op.execute(
+            """
+                INSERT INTO aivelabs_sv.subscription_plans (name, price, description, created_by, created_at, updated_by, updated_at)
+                VALUES (
+                    '1개월',
+                    30000,
+                    '한달 일별캠페인의 집행 금액 평균의 합계가 100만원 이하입니다.',
+                    '10',
+                    timezone('UTC', now()),
+                    '10',
+                    timezone('UTC', now())
+                );
+            """
+        )
+
     op.create_table(
         "user_passwords",
         sa.Column("login_id", sa.String(length=20), nullable=False),
