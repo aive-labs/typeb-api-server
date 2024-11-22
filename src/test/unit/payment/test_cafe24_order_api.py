@@ -81,3 +81,65 @@ def test__카페24_주문_생성_요청__필드명을_잘못_입력하면_422를
 
     response = test_client.post("api/v1/payment/cafe24-order", headers=headers, json=body)
     assert response.status_code == 422
+
+
+@pytest.mark.parametrize(
+    "body, expected_status_code, expected_detail",
+    [
+        # order_name 누락
+        (
+            {"order_amount": "order_name"},
+            422,
+            "invalid type",
+        ),
+        # order_amount 누락
+        (
+            {"order_name": "order1"},
+            422,
+            "field required",
+        ),
+        # order_name 타입 오류 (정수형 입력)
+        (
+            {"order_name": 12345, "order_amount": 30000},
+            422,
+            "str type expected",
+        ),
+        # order_amount 타입 오류 (문자열 입력)
+        (
+            {"order_name": "order1", "order_amount": "삼만 원"},
+            422,
+            "value is not a valid float",
+        ),
+        # 잘못된 필드명 사용 (order_name을 order_nam으로 오타)
+        (
+            {"order_nam": "order1", "order_amount": 30000},
+            422,
+            "field required",
+        ),
+        # 잘못된 필드명 사용 (order_amount를 order_amunt로 오타)
+        (
+            {"order_name": "order1", "order_amunt": 30000},
+            422,
+            "field required",
+        ),
+        # 추가적인 유효성 검사 (order_amount가 음수)
+        (
+            {"order_name": "order1", "order_amount": -1000},
+            422,
+            "ensure this value is greater than 0",
+        ),
+        # 추가적인 유효성 검사 (order_name이 빈 문자열)
+        (
+            {"order_name": "", "order_amount": 30000},
+            422,
+            "ensure this value has at least 1 characters",
+        ),
+    ],
+)
+def test__카페24_주문_생성_요청__유효성_검사(
+    test_client, access_token, body, expected_status_code, expected_detail
+):
+    headers = {"Authorization": f"Bearer {access_token}"}
+
+    response = test_client.post("api/v1/payment/cafe24-order", headers=headers, json=body)
+    assert response.status_code == expected_status_code
