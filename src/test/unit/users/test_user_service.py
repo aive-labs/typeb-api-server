@@ -26,7 +26,7 @@ def default_user(user_service, mock_db):
     return saved_user
 
 
-def test_사용자는_정보를_입력해_회원가입을_한다(user_service, mock_db, default_user):
+def test__사용자는_정보를_입력해_회원가입을_한다(user_service, mock_db, default_user):
     user_create2: UserCreate = UserCreate(
         username="테스트2",
         password="테스트2",
@@ -46,7 +46,7 @@ def test_사용자는_정보를_입력해_회원가입을_한다(user_service, m
     assert saved_user2.email == "test2@test.com"
 
 
-def test_가입된_이메일이_존재하면_예외를_던진다(user_service, mock_db):
+def test__가입된_이메일이_존재하면_예외를_던진다(user_service, mock_db):
     user_create: UserCreate = UserCreate(
         username="테스트",
         password="테스트",
@@ -72,7 +72,7 @@ def test_가입된_이메일이_존재하면_예외를_던진다(user_service, m
     )
 
 
-def test_전체_사용자를_조회한다(user_service, mock_db, default_user):
+def test__전체_사용자를_조회한다(user_service, mock_db, default_user):
     user_create2: UserCreate = UserCreate(
         username="테스트2",
         password="테스트2",
@@ -92,7 +92,7 @@ def test_전체_사용자를_조회한다(user_service, mock_db, default_user):
 
 
 # @pytest.mark.describe("user_id로 특정 사용자를 조회한다.")
-def test_아이디로_특정_사용자를_조회한다(user_service, mock_db, default_user):
+def test__아이디로_특정_사용자를_조회한다(user_service, mock_db, default_user):
     user = user_service.get_user_by_id(1, mock_db)
 
     assert default_user.user_id == 1
@@ -100,7 +100,7 @@ def test_아이디로_특정_사용자를_조회한다(user_service, mock_db, de
     assert default_user.email == "test@test.com"
 
 
-def test_아이디로_사용자를_찾지못하면_예외를_던진다(user_service, mock_db):
+def test__아이디로_사용자를_찾지못하면_예외를_던진다(user_service, mock_db):
     with pytest.raises(HTTPException) as exc_info:
         user_service.get_user_by_id(5, mock_db)
 
@@ -111,7 +111,7 @@ def test_아이디로_사용자를_찾지못하면_예외를_던진다(user_serv
     )
 
 
-def test_아이디를_입력받아_사용자를_정보를_수정한다(user_service, mock_db, default_user):
+def test__아이디를_입력받아_사용자를_정보를_수정한다(user_service, mock_db, default_user):
     test_data_1 = UserModify(
         user_id=1, username="새로운", language="en", test_callback_number="010-5678-5678"
     )
