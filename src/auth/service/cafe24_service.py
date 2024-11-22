@@ -279,6 +279,7 @@ class Cafe24Service(BaseOauthService):
 
                 print("cafe24 payment")
                 print(res)
+                print(response.status)
 
                 if response.status != 200:
                     raise HTTPException(
@@ -286,34 +287,11 @@ class Cafe24Service(BaseOauthService):
                         detail={"code": "cafe24 auth error", "message": response.text},
                     )
 
-                res = {
-                    "payments": [
-                        {
-                            "order_id": "cafe24-20180704-100000000",
-                            "payment_status": "paid",
-                            "title": "App Name_App Store Order1",
-                            "approval_no": "10000000",
-                            "payment_gateway_name": "allat",
-                            "payment_method": "card",
-                            "payment_amount": "1000.00",
-                            "refund_amount": "0.00",
-                            "currency": "KRW",
-                            "locale_code": "ko_KR",
-                            "automatic_payment": "T",
-                            "pay_date": "2018-07-04T11:19:27+09:00",
-                            "refund_date": None,
-                            "expiration_date": "2018-08-04T11:19:27+09:00",
-                        }
-                    ]
-                }
-
                 payments_list = res["payments"]
 
                 if len(payments_list) != 1:
-                    Cafe24Exception(
+                    raise Cafe24Exception(
                         detail={"message": "주문 정보와 일치하는 결제정보를 찾지 못했습니다."}
                     )
-
-                print(res)
 
                 return Cafe24Payment.from_api_response(payments_list[0])
