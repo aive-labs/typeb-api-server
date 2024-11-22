@@ -8,13 +8,22 @@ from src.users.domain.user import User
 def get_mock_payment_repository():
     mock_repository = MagicMock(spec_set=BasePaymentRepository)
 
+    cafe24_orders: list[Cafe24Order] = []
+
     def save_cafe24_order(cafe24_order: Cafe24Order, user: User, db):
-        pass
+        cafe24_orders.append(cafe24_order)
 
     def save_cafe24_payment(payment_result, user: User, db):
         pass
 
     def existing_order_by_cafe24_order_id(order_id, db):
-        pass
+        existing_order = [order for order in cafe24_orders if order.cafe24_order_id == order_id]
+        return len(existing_order) > 0
+
+    mock_repository.save_cafe24_order.side_effect = save_cafe24_order
+    mock_repository.save_cafe24_payment.side_effect = save_cafe24_payment
+    mock_repository.existing_order_by_cafe24_order_id.side_effect = (
+        existing_order_by_cafe24_order_id
+    )
 
     return mock_repository

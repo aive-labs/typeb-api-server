@@ -88,3 +88,11 @@ class BasePaymentRepository(ABC):
     @abstractmethod
     def save_cafe24_order(self, cafe24_order: Cafe24Order, user: User, db: Session):
         pass
+
+    @abstractmethod
+    def save_cafe24_payment(self, payment_result, user: User, db: Session):
+        pass
+
+    @abstractmethod
+    def existing_order_by_cafe24_order_id(self, order_id, db: Session):
+        pass

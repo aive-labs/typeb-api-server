@@ -1,10 +1,11 @@
 # conftest.py
 import os
 from unittest.mock import MagicMock
+from starlette.testclient import TestClient
 
 import pytest
-from src.test.fixtures.mock_db import mock_db_session
-from src.test.fixtures.client import client
+
+from src.main import app
 from src.test.unit.users.fixtures.create_token import create_access_token
 from src.users.domain.user import User
 
@@ -47,3 +48,9 @@ def access_token():
     }
     token = create_access_token(data=payload)
     return token
+
+
+@pytest.fixture
+def test_client():
+    with TestClient(app) as client:
+        yield client

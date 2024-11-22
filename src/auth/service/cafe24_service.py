@@ -227,7 +227,7 @@ class Cafe24Service(BaseOauthService):
                             "order_name": "Appstore Order Name",
                             "order_amount": "1000.00",
                             "currency": "KRW",
-                            "return_url": "https://sample_shop.cafe24.com",
+                            "return_url": f"{get_env_variable('order_return_url')}?cafe24_order_id=cafe24-20180704-100000000",
                             "automatic_payment": "F",
                             "confirmation_url": "https://samplemall.cafe24.com/disp/common/myapps/order?signature=BAhpBBMxojw%3D--d1c0134218f0ff3c0f57cb3b57bcc34e6f170727",
                         }
