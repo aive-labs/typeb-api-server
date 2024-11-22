@@ -56,7 +56,7 @@ def upgrade():
         op.create_table(
             "cafe24_payments",
             sa.Column("order_id", sa.String, primary_key=True, nullable=False),
-            sa.Column("payment_status", sa.String, nullable=False),
+            sa.Column("payment_status", sa.String, primary_key=True, nullable=False),
             sa.Column("title", sa.String, nullable=False),
             sa.Column("approval_no", sa.String, nullable=False),
             sa.Column("payment_gateway_name", sa.String, nullable=False),

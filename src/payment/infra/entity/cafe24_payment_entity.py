@@ -11,7 +11,7 @@ class Cafe24PaymentEntity(Base):
     __tablename__ = "cafe24_payments"
 
     order_id = Column(String, primary_key=True, nullable=False)  # PK로 설정
-    payment_status = Column(String, nullable=False)  # pyright: ignore [reportUndefinedVariable]
+    payment_status = Column(String, primary_key=True, nullable=False)
     title = Column(String, nullable=False)
     approval_no = Column(String, nullable=False)
     payment_gateway_name = Column(String, nullable=False)
