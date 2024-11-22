@@ -14,7 +14,7 @@ class Cafe24Payment(BaseModel):
     payment_gateway_name: str
     payment_method: str
     payment_amount: float
-    refund_amount: float
+    refund_amount: float | None = None
     currency: str
     locale_code: str
     automatic_payment: str
