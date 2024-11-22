@@ -1817,6 +1817,19 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("remaining_credit"),
         schema="aivelabs_sv",
     )
+
+    # 데이터 삽입
+    conn = op.get_bind()
+
+    exists = conn.execute(text("SELECT 1 FROM aivelabs_sv.remaining_credit limit 1")).scalar()
+
+    if not exists:
+        op.execute(
+            """
+                INSERT INTO aivelabs_sv.remaining_credit (remaining_credit) VALUES (0)
+            """
+        )
+
     op.create_table(
         "rep_contents_rank",
         sa.Column("contents_id", sa.Integer(), nullable=False),
