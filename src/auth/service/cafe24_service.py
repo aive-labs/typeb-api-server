@@ -63,7 +63,6 @@ class Cafe24Service(BaseOauthService):
 
     def _get_env_variable(self, var_name: str) -> str:
         value = os.getenv(var_name)
-        print(value, var_name)
         if value is None:
             raise ValueError(f"{var_name} cannot be None")
         return value
@@ -210,6 +209,8 @@ class Cafe24Service(BaseOauthService):
         headers = self.create_order_request_header(mall_id)
         data = self.create_order_body(cafe24_order_request)
 
+        print(data)
+
         # Send the POST request
         async with aiohttp.ClientSession() as session:
             async with session.post(
@@ -220,24 +221,15 @@ class Cafe24Service(BaseOauthService):
             ) as response:
                 res = await response.json()
 
-                if response.status != 200:
-                    res = {
-                        "order": {
-                            "order_id": "cafe24-20180704-100000000",
-                            "order_name": "Appstore Order Name",
-                            "order_amount": "1000.00",
-                            "currency": "KRW",
-                            "return_url": f"{get_env_variable('order_return_url')}?cafe24_order_id=cafe24-20180704-100000000",
-                            "automatic_payment": "F",
-                            "confirmation_url": "https://samplemall.cafe24.com/disp/common/myapps/order?signature=BAhpBBMxojw%3D--d1c0134218f0ff3c0f57cb3b57bcc34e6f170727",
-                        }
-                    }
-                    # raise HTTPException(
-                    #     status_code=response.status,
-                    #     detail={"code": "cafe24 order error", "message": response.text},
-                    # )
+                print("*******")
+                print(response.status)
+                print(response.text)
 
-                print(res)
+                if response.status != 201:
+                    raise HTTPException(
+                        status_code=response.status,
+                        detail={"code": "cafe24 order error", "message": response.text},
+                    )
 
                 return Cafe24Order.from_api_response(res, cafe24_order_request.order_id)
 
@@ -247,7 +239,7 @@ class Cafe24Service(BaseOauthService):
             "request": {
                 "order_name": cafe24_order_request.order_name,
                 "order_amount": str(cafe24_order_request.order_amount),
-                "return_url": f"{base_return_url}?order_id={cafe24_order_request.order_id}",
+                "return_url": f"{base_return_url}",
                 "automatic_payment": "F",
             }
         }

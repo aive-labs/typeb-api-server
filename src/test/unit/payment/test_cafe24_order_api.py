@@ -37,7 +37,7 @@ def mock_cafe24_order_service():
             order_id=cafe24_order_request.order_id,
             cafe24_order_id="cafe24-20180704-100000000",
             confirmation_url="https://sample_shop.cafe24.com",
-            return_url="https://aace.ai/billing/cafe24-order-result?signature=BAhpBBMxojw%3D--d1c0134218f0ff3c0f57cb3b57bcc34e6f170727",
+            return_url="https://aace.ai/billing/cafe24-order-result",
             order_amount=cafe24_order_request.order_amount,
         )
         return order_response

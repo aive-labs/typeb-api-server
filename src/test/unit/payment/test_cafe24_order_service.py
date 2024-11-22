@@ -61,15 +61,8 @@ async def test__cafe24_주문_요청__주문_정보를_생성한다(cafe24_order
     assert response.cafe24_order_id is not None
     assert response.return_url is not None
 
-    return_url = response.return_url
     base_return_url = get_env_variable("order_return_url")
-    assert return_url.startswith(base_return_url)
-
-    parsed_url = urlparse(response.return_url)
-    query_params = parse_qs(parsed_url.query)
-    assert (
-        "cafe24_order_id" in query_params
-    ), "cafe24_order_id return url's query parameter is missing"
+    assert response.return_url == base_return_url
 
     assert response.confirmation_url is not None
 
