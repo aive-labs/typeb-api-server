@@ -46,7 +46,7 @@ Base = declarative_base(metadata=meta_obj)
 class Database:
     def __init__(self, db_url: str) -> None:
         self._engine = create_engine(
-            db_url, pool_recycle=60, pool_size=10, max_overflow=20, echo=False
+            db_url, pool_pre_ping=True, pool_recycle=600, pool_size=16, max_overflow=24, echo=False
         )
         self._session_factory = orm.scoped_session(
             session_factory=orm.sessionmaker(
