@@ -86,11 +86,11 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
             new_file_name = self.generate_timestamp_file_name(file.filename)
             s3_file_key = f"{user.mall_id}/messages_resource/{campaign_id}/{set_group_msg_seq}/images/{new_file_name}"
 
+            ppurio_filekey = None
+            kakao_landing_url = None
             try:
                 file_read = await file.read()
 
-                # 뿌리오 MMS 이미지 업로드
-                ppurio_filekey = None
                 if message_type in (
                     MessageType.MMS.value,
                     MessageType.LMS.value,
@@ -99,19 +99,18 @@ class UploadImageForMessage(UploadImageForMessageUseCase):
                     ppurio_filekey = await self.message_service.upload_file(
                         new_file_name, file_read, file.content_type
                     )
-
-                # 카카오 이미지 업로드
-                kakao_sender_key = self.onboarding_repository.get_kakao_sender_key(
-                    mall_id=user.mall_id, db=db
-                )
-                if kakao_sender_key is None:
-                    raise NotFoundException(
-                        detail={"messsage": "등록된 kakao sender key가 존재하지 않습니다."}
+                else:
+                    kakao_sender_key = self.onboarding_repository.get_kakao_sender_key(
+                        mall_id=user.mall_id, db=db
                     )
+                    if kakao_sender_key is None:
+                        raise NotFoundException(
+                            detail={"messsage": "등록된 kakao sender key가 존재하지 않습니다."}
+                        )
 
-                kakao_landing_url = await self.message_service.upload_file_for_kakao(
-                    new_file_name, file_read, file.content_type, message_type, kakao_sender_key
-                )
+                    kakao_landing_url = await self.message_service.upload_file_for_kakao(
+                        new_file_name, file_read, file.content_type, message_type, kakao_sender_key
+                    )
 
                 # s3에 이미지 저장
                 await self.s3_service.put_object_async(s3_file_key, file_read)
