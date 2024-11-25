@@ -111,4 +111,5 @@ class PurchaseAnalyticsMasterStyle(Base):
     cloth_fabric = Column(String)
     product_material = Column(String)
     summary_description = Column(String)
+    actual_amt = Column(Integer, nullable=True)
     etltime = Column(TIMESTAMP(timezone=True))
