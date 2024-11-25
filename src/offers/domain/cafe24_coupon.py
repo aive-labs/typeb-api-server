@@ -45,7 +45,7 @@ class Cafe24Coupon(BaseModel):
     issue_review_has_image: str | None = None
     issue_quantity_min: str | None = None
     issue_quntity_type: str | None = None
-    issue_max_count: str | None = None
+    issue_max_count: int | None = None
     issue_max_count_by_user: str | None = None
     issue_count_per_once: str | None = None
     issued_count: str | None = None
@@ -60,7 +60,7 @@ class Cafe24Coupon(BaseModel):
     available_end_datetime: str | None = None
     available_site: str | None = None
     available_scope: str | None = None
-    available_day_from_issued: str | None = None
+    available_day_from_issued: int | None = None
     available_price_type: str | None = None
     available_order_price_type: str | None = None
     available_min_price: str | None = None

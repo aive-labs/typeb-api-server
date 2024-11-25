@@ -58,9 +58,7 @@ class GetOfferService(GetOfferUseCase):
                 async with session.get(url=url, headers=headers, ssl=False) as response:
                     if response.status == 200:
                         response = await response.json()
-                        print("cafe24 coupon")
                         cafe24_coupon_response = Cafe24CouponResponse(**response)
-                        print(cafe24_coupon_response)
                         self.offer_repository.save_new_coupon(cafe24_coupon_response, db)
 
         offers = self.offer_repository.get_all_offers(
