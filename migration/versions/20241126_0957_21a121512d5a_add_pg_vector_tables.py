@@ -21,7 +21,7 @@ def upgrade() -> None:
     # Activate VECTOR Extension
     op.execute(
         """
-        CREATE EXTENSION IF NOT EXISTS vector;
+        CREATE EXTENSION IF NOT EXISTS vector SCHEMA aivelabs_sv;
         """
     )
 
@@ -48,7 +48,7 @@ def upgrade() -> None:
             CREATE TABLE IF NOT EXISTS aivelabs_sv.langchain_pg_embedding (
                 collection_id UUID REFERENCES aivelabs_sv.langchain_pg_collection
                     ON DELETE CASCADE,
-                embedding VECTOR,
+                embedding aivelabs_sv.VECTOR,
                 document VARCHAR,
                 cmetadata JSON,
                 custom_id VARCHAR,
