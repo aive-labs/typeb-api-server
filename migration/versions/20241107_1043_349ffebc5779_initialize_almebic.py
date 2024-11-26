@@ -997,7 +997,7 @@ def upgrade() -> None:
         sa.Column("cus_cd", sa.String(), nullable=False),
         sa.Column("visit_dt", sa.String(), nullable=False),
         sa.Column("page_title", sa.String(), nullable=False),
-        sa.Column("page_entry_time", sa.TIMESTAMP(timezone=True), nullable=False),
+        sa.Column("initial_page_entry_time", sa.TIMESTAMP(timezone=True), nullable=False),
         sa.Column("product_code", sa.String(), nullable=True),
         sa.Column("product_name", sa.String(), nullable=True),
         sa.Column("full_category_name_1", sa.String(), nullable=True),
@@ -1005,7 +1005,7 @@ def upgrade() -> None:
         sa.Column("full_category_name_3", sa.String(), nullable=True),
         sa.Column("engagement_time_sec", sa.Double(), nullable=True),
         sa.Column("etltime", sa.TIMESTAMP(timezone=True), nullable=True),
-        sa.PrimaryKeyConstraint("cus_cd", "visit_dt", "page_title", "page_entry_time"),
+        sa.PrimaryKeyConstraint("cus_cd", "visit_dt", "page_title", "initial_page_entry_time"),
         schema="aivelabs_sv",
     )
     op.create_index(
