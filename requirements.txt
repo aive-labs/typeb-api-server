@@ -73,10 +73,12 @@ jsonpointer==2.4
 jupyter_client==8.4.0
 jupyter_core==5.4.0
 kiwisolver==1.4.5
-langchain==0.0.351
-langchain-community==0.0.4
-langchain-core==0.1.1
-langsmith==0.0.72
+langchain==0.3.8
+langchain-community==0.3.8
+langchain-core==0.3.21
+langchain-postgres==0.0.12
+langchain-text-splitters==0.3.2
+langsmith==0.1.145
 lazy-object-proxy==1.9.0
 llvmlite==0.41.0
 locket==1.0.0
@@ -107,6 +109,7 @@ patsy==0.5.3
 pendulum==2.1.2
 pep8==1.7.1
 pexpect==4.8.0
+pgvector==0.2.5
 pickleshare==0.7.5
 pip==23.2.1
 platformdirs==3.11.0
