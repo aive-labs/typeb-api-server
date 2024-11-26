@@ -171,6 +171,6 @@ async def generate_contents(
     generate_req = json.loads(contents_generate_req)
     generation_obj = ContentsGenerate(**generate_req)
     return StreamingResponse(
-        generate_contents_service.exec(generation_obj, db),
+        generate_contents_service.exec(generation_obj, db, user),
         media_type="text/event-stream",
     )

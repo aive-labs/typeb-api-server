@@ -179,19 +179,18 @@ def get_summary_dict(head_product):
     }
     word_mapper = {"F": "여성", "M": "남성", "U": "남녀공용"}
     product_info = head_product[0]
-    if int(float(product_info.price)) > 0 and (
-        product_info.discountprice is None or product_info.discountprice == 0
-    ):
+    price_value = int(float(product_info.price)) if product_info.price else 0
+    discount_value = int(float(product_info.discountprice)) if product_info.discountprice else 0
+    discount_rate = discount_value / float(price_value) * 100 if price_value > 0 else 0.0
+    if price_value > 0 and (product_info.discountprice is None or product_info.discountprice == 0):
         find_keys["price"] = "현재가"
-        adj_price_str = f"{product_info.price:,}원"
-    else:
+        adj_price_str = f"{price_value:,}원"
+    elif discount_value > 0:
         find_keys["price"] = "혜택 적용가"
-        adj_price_str = (
-            f"{int(float(product_info.price)) - int(product_info.discountprice):,}원 ({int(float(product_info.discount_value))}% off)"
-            if product_info.discount_value_unit == "P"
-            else f"{int(float(product_info.price)) - int(product_info.discountprice):,}원 ({product_info.discountprice:,}원 할인)"
-        )
-
+        adj_price_str = f"{price_value - discount_value:,}원 ({int(discount_rate)}% off)"
+    else:
+        del find_keys["price"]
+        adj_price_str = f"{price_value:,}원"
     head_product = [head_product._mapping for head_product in head_product]
 
     product_dict = {}
