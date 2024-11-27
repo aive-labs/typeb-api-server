@@ -737,6 +737,7 @@ class Container(containers.DeclarativeContainer):
         provides=GetCafe24PaymentService,
         payment_repository=payment_repository,
         cafe24_service=cafe24_service,
+        subscription_repository=subscription_repository,
     )
 
     create_carousel_card = providers.Singleton(
