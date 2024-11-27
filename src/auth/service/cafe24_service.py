@@ -205,7 +205,7 @@ class Cafe24Service(BaseOauthService):
         self, user: User, cafe24_order_request: Cafe24OrderRequest
     ) -> Cafe24Order:
 
-        mall_id = "aivelabs"
+        mall_id = user.mall_id
         headers = self.create_order_request_header(mall_id)
         data = self.create_order_body(cafe24_order_request)
 
@@ -254,8 +254,8 @@ class Cafe24Service(BaseOauthService):
         }
         return headers
 
-    async def get_payment(self, order_id: str) -> Cafe24Payment:
-        mall_id = "aivelabs"
+    async def get_payment(self, order_id: str, user: User) -> Cafe24Payment:
+        mall_id = user.mall_id
         headers = self.create_order_request_header(mall_id)
 
         korea_tz = pytz.timezone("Asia/Seoul")

@@ -21,7 +21,7 @@ class GetCafe24PaymentService(GetCafe24PaymentUseCase):
     async def exec(self, order_id: str, user: User, db: Session) -> Cafe24PaymentResponse:
         self.check_existing_order(order_id, db)
 
-        payment_result = await self.cafe24_service.get_payment(order_id)
+        payment_result = await self.cafe24_service.get_payment(order_id, user)
 
         self.payment_repository.save_cafe24_payment(payment_result, user, db)
 
