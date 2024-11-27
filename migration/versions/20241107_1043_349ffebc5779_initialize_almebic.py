@@ -1301,6 +1301,7 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("variable_id"),
         schema="aivelabs_sv",
     )
+
     op.create_index(
         op.f("ix_aivelabs_sv_personal_variables_variable_id"),
         "personal_variables",
@@ -1308,6 +1309,33 @@ def upgrade() -> None:
         unique=False,
         schema="aivelabs_sv",
     )
+
+    connection = op.get_bind()
+    insert_query = """
+        INSERT INTO aivelabs_sv.personal_variables
+            (variable_id, variable_name, variable_symbol, variable_column, variable_example, variable_option, access_level, created_at, updated_at)
+        VALUES
+            (3, '첫 구매 Best 상품 추천', '{{first_best_items}}', 'first_best_items', '에어데님 와이드 청바지', 'select cus_cd, first_best_items from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
+            (4, '고객명', '{{고객명}}', 'cust_name', '홍길동', 'select distinct cus_cd, cust_name from aivelabs_sv.customer_master where cust_name <> ''휴면''', 30, NOW(), NOW()),
+            (5, '고객번호', '{{고객번호}}', 'cus_cd', '0000000016', 'select distinct cus_cd, cus_cd from aivelabs_sv.customer_master where cust_name <> ''휴면''', 20, NOW(), NOW()),
+            (7, '이번달말일', '{{이번달말일}}', 'last_day_of_month', '2024-02-29', 'SELECT distinct cus_cd, (DATE_TRUNC(''MONTH'', CURRENT_TIMESTAMP AT TIME ZONE ''Asia/Seoul'') + INTERVAL ''1 MONTH - 1 DAY'')::DATE AS last_day_of_month FROM aivelabs_sv.customer_master WHERE cust_name <> ''휴면'';', 20, NOW(), NOW()),
+            (14, '잔여포인트', '{{잔여포인트}}', 'remain_point', '10,000', 'select distinct cus_cd, TO_CHAR(available_points::numeric, ''FM9,999,999'') as remain_point from aivelabs_sv.customer_master where cust_name <> ''휴면''', 30, NOW(), NOW()),
+            (15, '어제날짜', '{{어제날짜}}', 'yesterday', '2024년 05월 13일', 'SELECT CUS_CD, TRIM(TO_CHAR((CURRENT_TIMESTAMP AT TIME ZONE ''Asia/Seoul'') - INTERVAL ''1 day'', ''YYYY"년" MM"월" DD"일"'')) AS yesterday FROM aivelabs_sv.customer_master where cust_name <> ''휴면''', 20, NOW(), NOW()),
+            (16, '세달후말일', '{{세달후말일}}', 'end_of_third_month', '2024년 08월 31일', 'SELECT CUS_CD, TO_CHAR(DATE_TRUNC(''month'', (CURRENT_TIMESTAMP AT TIME ZONE ''Asia/Seoul'') + INTERVAL ''3 months'') + INTERVAL ''1 month - 1 day'', ''YYYY"년" MM"월" DD"일"'') AS end_of_third_month FROM aivelabs_sv.customer_master where cust_name <> ''휴면''', 20, NOW(), NOW()),
+            (31, '스테디셀러 상품 추천', '{{steady_items}}', 'steady_items', '에어스트 투인원 쇼츠', 'select cus_cd, steady_items from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
+            (32, 'Next구매 확률 높은 상품 추천', '{{best_cross_items}}', 'best_cross_items', '에어데님 와이드 청바지', 'select cus_cd, best_cross_items from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
+            (33, '신상품 추천', '{{best_new_items}}', 'best_new_items', '[풀스택] NEW 에어스트 맨즈 슬랙스', 'select cus_cd, best_new_items from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
+            (34, '선호 카테고리 Best 상품 추천', '{{best_category_items}}', 'best_category_items', '릴렉스 에어소프트 요가매트 (8mm)', 'select cus_cd, best_category_items from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
+            (35, '최대 할인 상품 추천', '{{best_promo_items}}', 'best_promo_items', '라이트 쿨링 크루 삭스', 'select cus_cd, best_promo_items from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
+            (36, '첫 구매 Best 상품 추천 링크', '{{first_best_items_link}}', 'first_best_items_link', 'https://contents.aace.ai/aivelabs/contents/sample.html', 'select cus_cd, first_best_items_link from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
+            (40, '최대 할인 상품 추천 링크', '{{best_promo_items_link}}', 'best_promo_items_link', 'https://contents.aace.ai/aivelabs/contents/sample.html', 'select cus_cd, best_promo_items_link from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
+            (39, '선호 카테고리 Best 상품 추천 링크', '{{best_category_items_link}}', 'best_category_items_link', 'https://contents.aace.ai/aivelabs/contents/sample.html', 'select cus_cd, best_category_items_link from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
+            (37, '스테디셀러 상품 추천 링크', '{{steady_items_link}}', 'steady_items_link', 'https://contents.aace.ai/aivelabs/contents/sample.html', 'select cus_cd, steady_items_link from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
+            (41, 'Next구매 확률 높은 상품 추천 링크', '{{best_cross_items_link}}', 'best_cross_items_link', 'https://contents.aace.ai/aivelabs/contents/sample.html', 'select cus_cd, best_cross_items_link from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
+            (38, '신상품 추천 링크', '{{best_new_items_link}}', 'best_new_items_link', 'https://contents.aace.ai/aivelabs/contents/sample.html', 'select cus_cd, best_new_items_link from aivelabs_sv.cus_info_status', 20, NOW(), NOW());
+    """
+    connection.execute(text(insert_query))
+
     op.create_table(
         "ppurio_message_results",
         sa.Column("id", sa.Integer(), nullable=False),
