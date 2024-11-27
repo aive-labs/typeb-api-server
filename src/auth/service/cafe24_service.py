@@ -1,7 +1,9 @@
 import base64
 import os
+from datetime import datetime, timedelta
 
 import aiohttp
+import pytz
 import requests
 from dotenv import load_dotenv
 from fastapi import HTTPException
@@ -17,8 +19,13 @@ from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
 from src.auth.utils.hash_password import generate_hash
 from src.common.utils.get_env_variable import get_env_variable
-from src.common.utils.s3_token_update_service import S3TokenService
+from src.common.utils.s3_token_service import S3TokenService
+from src.core.exceptions.exceptions import Cafe24Exception
 from src.core.transactional import transactional
+from src.payment.domain.cafe24_order import Cafe24Order
+from src.payment.domain.cafe24_payment import Cafe24Payment
+from src.payment.routes.dto.request.cafe24_order_request import Cafe24OrderRequest
+from src.users.domain.user import User
 from src.users.service.port.base_user_repository import BaseUserRepository
 
 
@@ -56,7 +63,6 @@ class Cafe24Service(BaseOauthService):
 
     def _get_env_variable(self, var_name: str) -> str:
         value = os.getenv(var_name)
-        print(value, var_name)
         if value is None:
             raise ValueError(f"{var_name} cannot be None")
         return value
@@ -143,8 +149,11 @@ class Cafe24Service(BaseOauthService):
     ) -> str:
         return (
             f"https://{mall_id}.cafe24api.com/api/v2/oauth/authorize?"
-            f"response_type=code&client_id={client_id}&state={state}&"
-            f"redirect_uri={redirect_uri}&scope={scope}"
+            f"response_type=code&"
+            f"client_id={client_id}&"
+            f"state={state}&"
+            f"redirect_uri={redirect_uri}&"
+            f"scope={scope}"
         )
 
     async def _request_token_to_cafe24(self, code, mall_id):
@@ -179,8 +188,110 @@ class Cafe24Service(BaseOauthService):
                 print(response)
                 if response.status != 200:
                     raise HTTPException(
-                        status_code=response.status_code,
+                        status_code=response.status,
                         detail={"code": "cafe24 auth error", "message": response.text},
                     )
 
                 return res
+
+    # 토큰 조회 기능 추가
+    def get_access_token(self, mall_id: str):
+        s3_token_service = S3TokenService(
+            bucket="aace-airflow-log", key=f"cafe24_token/{mall_id}.yml"
+        )
+        return s3_token_service.read_access_token()
+
+    async def create_order(
+        self, user: User, cafe24_order_request: Cafe24OrderRequest
+    ) -> Cafe24Order:
+
+        mall_id = user.mall_id
+        headers = self.create_order_request_header(mall_id)
+        data = self.create_order_body(cafe24_order_request)
+
+        print(data)
+
+        # Send the POST request
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                url=f"https://{mall_id}.cafe24api.com/api/v2/admin/appstore/orders",
+                json=data,
+                headers=headers,
+                ssl=False,
+            ) as response:
+                res = await response.json()
+
+                print("*******")
+                print(response.status)
+                print(response.text)
+
+                if response.status != 201:
+                    raise HTTPException(
+                        status_code=response.status,
+                        detail={"code": "cafe24 order error", "message": response.text},
+                    )
+
+                return Cafe24Order.from_api_response(res, cafe24_order_request.order_id)
+
+    def create_order_body(self, cafe24_order_request):
+        base_return_url = get_env_variable("order_return_url")
+        data = {
+            "request": {
+                "order_name": cafe24_order_request.order_name,
+                "order_amount": str(cafe24_order_request.order_amount),
+                "return_url": f"{base_return_url}",
+                "automatic_payment": "F",
+            }
+        }
+        return data
+
+    def create_order_request_header(self, mall_id):
+        access_token = self.get_access_token(mall_id)
+        authorization_header = f"Bearer {access_token}"
+        headers = {
+            "Authorization": authorization_header,
+            "Content-Type": "application/json",
+        }
+        return headers
+
+    async def get_payment(self, order_id: str, user: User) -> Cafe24Payment:
+        mall_id = user.mall_id
+        headers = self.create_order_request_header(mall_id)
+
+        korea_tz = pytz.timezone("Asia/Seoul")
+        today = datetime.now(korea_tz)
+        yesterday = today - timedelta(days=1)
+
+        today_str = today.strftime("%Y-%m-%d")
+        yesterday_str = yesterday.strftime("%Y-%m-%d")
+
+        # Send the POST request
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                url=f"https://{mall_id}.cafe24api.com/api/v2/admin/appstore/payments?"
+                f"start_date={yesterday_str}&"
+                f"end_date={today_str}&"
+                f"order_id={order_id}",
+                headers=headers,
+                ssl=False,
+            ) as response:
+                res = await response.json()
+
+                print("cafe24 payment")
+                print(res)
+                print(response.status)
+
+                if response.status != 200:
+                    raise HTTPException(
+                        status_code=response.status,
+                        detail={"code": "cafe24 auth error", "message": response.text},
+                    )
+
+                payments_list = res["payments"]
+
+                if len(payments_list) != 1:
+                    raise Cafe24Exception(
+                        detail={"message": "주문 정보와 일치하는 결제정보를 찾지 못했습니다."}
+                    )
+
+                return Cafe24Payment.from_api_response(payments_list[0])

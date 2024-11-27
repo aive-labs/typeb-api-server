@@ -1,6 +1,7 @@
 # test/users/conftest.py
 import pytest
 
+from src.test.unit.users.fixtures.create_token import create_access_token
 from src.test.unit.users.fixtures.mock_user_repository import get_mock_user_repository
 from src.users.service.user_service import UserService
 

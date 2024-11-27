@@ -1,14 +1,11 @@
-import base64
 from datetime import datetime, timedelta
 
 import aiohttp
 from sqlalchemy.orm import Session
 
-from src.auth.infra.dto.cafe24_token import Cafe24TokenData
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.common.timezone_setting import selected_timezone
 from src.common.utils.get_env_variable import get_env_variable
-from src.common.utils.s3_token_update_service import S3TokenService
 from src.core.exceptions.exceptions import NotFoundException
 from src.core.transactional import transactional
 from src.offers.domain.cafe24_coupon import Cafe24CouponResponse
@@ -37,52 +34,32 @@ class GetOfferService(GetOfferUseCase):
 
         token = self.cafe24_repository.get_token(user.mall_id, db)
         access_token = token.access_token
-        if self.is_access_token_expired(token):
-            url = f"https://{user.mall_id}.cafe24api.com/api/v2/oauth/token"
-            payload = f"""grant_type=refresh_token&refresh_token={token.refresh_token}"""
-            credentials = f"{self.client_id}:{self.client_secret}".encode()
-            encoded_credentials = base64.b64encode(credentials).decode("utf-8")
-            authorization_header = f"Basic {encoded_credentials}"
-            headers = {
-                "Authorization": authorization_header,
-                "Content-Type": "application/x-www-form-urlencoded",
-            }
-
+        if not self.is_access_token_expired(token):
             async with aiohttp.ClientSession() as session:
-                response = await self.renew_token(url, payload, headers, session)
-                cafe24_token_data = Cafe24TokenData(**response)
-                print(cafe24_token_data)
-                self.cafe24_repository.save_tokens(cafe24_token_data, db)
-                access_token = cafe24_token_data.access_token
+                # 현재 날짜와 내일 날짜 계산
+                today = datetime.now(selected_timezone)
+                tomorrow = today + timedelta(days=1)
 
-            # s3에 토큰 업데이트
-            mall_id = user.mall_id
-            s3_reader = S3TokenService(bucket="aace-airflow-log", key=f"cafe24_token/{mall_id}.yml")
-            s3_reader.create_and_upload_yaml({mall_id: response})
+                # 날짜를 문자열로 포맷팅 (YYYY-MM-DD 형식)
+                start_date = today.strftime("%Y-%m-%d")
+                end_date = tomorrow.strftime("%Y-%m-%d")
 
-        async with aiohttp.ClientSession() as session:
-            # 현재 날짜와 내일 날짜 계산
-            today = datetime.now(selected_timezone)
-            tomorrow = today + timedelta(days=1)
+                url = (
+                    f"https://{user.mall_id}.cafe24api.com/api/v2/admin/coupons?"
+                    f"created_start_date={start_date}&"
+                    f"created_end_date={end_date}"
+                )
 
-            # 날짜를 문자열로 포맷팅 (YYYY-MM-DD 형식)
-            start_date = today.strftime("%Y-%m-%d")
-            end_date = tomorrow.strftime("%Y-%m-%d")
-
-            url = f"https://{user.mall_id}.cafe24api.com/api/v2/admin/coupons?created_start_date={start_date}&created_end_date={end_date}"
-
-            headers = {
-                "Authorization": f"Bearer {access_token}",
-                "Content-Type": "application/json",
-                "X-Cafe24-Api-Version": "2024-06-01",
-            }
-            async with session.get(url=url, headers=headers, ssl=False) as response:
-                if response.status == 200:
-                    response = await response.json()
-                    print("cafe24 coupon")
-                    cafe24_coupon_response = Cafe24CouponResponse(**response)
-                    print(cafe24_coupon_response)
-                    self.offer_repository.save_new_coupon(cafe24_coupon_response, db)
+                headers = {
+                    "Authorization": f"Bearer {access_token}",
+                    "Content-Type": "application/json",
+                    "X-Cafe24-Api-Version": "2024-06-01",
+                }
+                async with session.get(url=url, headers=headers, ssl=False) as response:
+                    if response.status == 200:
+                        response = await response.json()
+                        cafe24_coupon_response = Cafe24CouponResponse(**response)
+                        self.offer_repository.save_new_coupon(cafe24_coupon_response, db)
 
         offers = self.offer_repository.get_all_offers(
             based_on, sort_by, start_date, end_date, query, db

@@ -1,17 +1,17 @@
 import asyncio
 from typing import AsyncGenerator
 
-from langchain.document_loaders.csv_loader import CSVLoader
-from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.prompts import (
     ChatPromptTemplate,
 )
 from langchain.schema.output_parser import StrOutputParser
 from langchain.schema.runnable import RunnablePassthrough
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.chat_models import ChatOpenAI
 from langchain_community.document_loaders import JSONLoader
-from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.vectorstores.pgvector import PGVector
+
+from src.common.utils.get_env_variable import get_env_variable
 
 
 class StreamingConversationChain:
@@ -24,6 +24,7 @@ class StreamingConversationChain:
     def __init__(
         self,
         openai_api_key: str,
+        mall_id: str,
         temperature: float = 0.7,
         model_name="gpt-4-0613",
     ):
@@ -31,19 +32,19 @@ class StreamingConversationChain:
         self.model_name = model_name
         self.openai_api_key = openai_api_key
         self.temperature = temperature
-        self.text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-            chunk_size=500, chunk_overlap=0
-        )
+        self.collection_name = "product_vectors"
         self.embeddings = OpenAIEmbeddings(
             openai_api_key=self.openai_api_key
         )  # pyright: ignore [reportCallIssue]
+        self.db_str = (
+            get_env_variable("prefix_db_url") + f"/{mall_id}?options=-c%20search_path%3Daivelabs_sv"
+        )
 
-        prd_loader = CSVLoader(file_path="src/contents/resources/ascc_product.csv")
-        prd = prd_loader.load()
-
-        prd_texts = self.text_splitter.split_documents(prd)
-
-        self.vectorstore = FAISS.from_documents(prd_texts, self.embeddings)
+        self.vectorstore = PGVector(
+            connection_string=self.db_str,
+            embedding_function=self.embeddings,
+            collection_name=self.collection_name,
+        )
         self.retriever = self.vectorstore.as_retriever()
 
     def add_docs(self, jsonl_path: str, schema):
@@ -101,7 +102,7 @@ class StreamingConversationChain:
 
         replace_dict = {}
         if "summary" in kwargs:
-            replace_dict["[summary_template]"] = kwargs["summary"]
+            replace_dict["[non_edit_sum]"] = kwargs["summary"]
         if "review_resource" in kwargs:
             replace_dict["[reviews]"] = kwargs["review_resource"]  # dict
         if "youtube_resource" in kwargs:
@@ -139,8 +140,8 @@ class StreamingConversationChain:
                 elif "\n" in buffer or buffer.endswith(tuple(find_words)):
                     msg = buffer.replace("\n", "").strip()
                     buffer = ""
-                    if "[summary_template]" in msg:
-                        replace_str = replace_dict.get("[summary_template]", "")
+                    if "[non_edit_sum]" in msg:
+                        replace_str = replace_dict.get("[non_edit_sum]", "")
                         msg = "__summary__" + replace_str
                         buffer = ""
                     elif "[reviews]" in msg:

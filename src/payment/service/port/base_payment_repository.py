@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
+from src.payment.domain.cafe24_order import Cafe24Order
 from src.payment.domain.card import Card
 from src.payment.domain.payment import Payment
 from src.payment.routes.dto.request.pre_data_for_validation import PreDataForValidation
@@ -82,4 +83,16 @@ class BasePaymentRepository(ABC):
 
     @abstractmethod
     def get_payment_by_credit_history_id(self, credit_history_id, db: Session) -> Payment:
+        pass
+
+    @abstractmethod
+    def save_cafe24_order(self, cafe24_order: Cafe24Order, user: User, db: Session):
+        pass
+
+    @abstractmethod
+    def save_cafe24_payment(self, payment_result, user: User, db: Session):
+        pass
+
+    @abstractmethod
+    def existing_order_by_cafe24_order_id(self, order_id, db: Session):
         pass

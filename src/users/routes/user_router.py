@@ -81,6 +81,7 @@ def get_me(
             onboarding_status = onboarding.onboarding_status.value
 
     subscription = subscription_service.get_my_subscription(db)
+
     return UserProfileResponse.from_user(
         user, permissions, cafe24_integration, onboarding_status, subscription
     )

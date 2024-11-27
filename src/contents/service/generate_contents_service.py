@@ -33,8 +33,10 @@ class GenerateContentsService(GenerateContentsUseCase):
         self.openai_api_key = get_env_variable("openai_api_key")
         self.cloud_front_url = get_env_variable("cloud_front_asset_url")
 
+    def _vector_db_init(self, mall_id: str):
         self.chain = StreamingConversationChain(
             openai_api_key=self.openai_api_key,
+            mall_id=mall_id,
             model_name="gpt-4-0613",
         )
 
@@ -106,17 +108,9 @@ class GenerateContentsService(GenerateContentsUseCase):
                 if product_item_cnt > 0:
                     query += query_handler.add_product_data()
 
-                data = (json.dumps(i, ensure_ascii=False) + "\n" for i in additional_remark)
-                sample_path = "src/contents/resources/product_data.jsonl"
-                with open(sample_path, "w") as f:
-                    for line in data:
-                        f.write(line)
-                if contents_generate.subject not in ["sn000009"]:
-                    self.chain.add_docs(sample_path, ".remark")
-                else:
+                if contents_generate.subject in ["sn000009"]:
                     for item in additional_remark:
                         query += "\n" + item["remark"] + "\n"
-
             if contents_generate.product_object:
                 product_code_list = [item.product_code for item in contents_generate.product_object]
                 product_data = self.contents_repository.get_product_from_code(product_code_list, db)
@@ -126,7 +120,7 @@ class GenerateContentsService(GenerateContentsUseCase):
                     summary_dict = get_summary_dict(product_data)
                     kwargs_dict["summary"] = summary_dict
                 else:
-                    selected_template.replace("__summary__[summary_template], ", "")
+                    selected_template.replace("__summary__[non_edit_sum], ", "")
                     kwargs_dict["summary"] = ""
                 # Additional data
                 product_resource_entity = self.contents_repository.get_product_media_resource(
@@ -136,7 +130,6 @@ class GenerateContentsService(GenerateContentsUseCase):
                 youtube_resource, insta_resource, review_resource = self._product_resource_handler(
                     product_resource_entity, review_entity
                 )
-
                 # Additional data 유무에 따른 템플릿 수정
                 if len(youtube_resource) == 0:
                     selected_template.replace(", __youtube__[youtube_uri], __dashed_divider__", "")
@@ -184,7 +177,11 @@ class GenerateContentsService(GenerateContentsUseCase):
             selected_template += f"추가 정보 : {contents_generate.additional_prompt}"
         return selected_template, query, kwargs_dict
 
-    async def exec(self, contents_generate: ContentsGenerate, db):
+    async def exec(self, contents_generate: ContentsGenerate, db, user):
+        # vector db init
+        mall_id = "aivelabsdb" if user.mall_id == "aivelabs" else user.mall_id
+        self._vector_db_init(mall_id)
+
         selected_template, query, kwargs_dict = await self._prepare_contents_resource(
             contents_generate, db
         )
