@@ -20,7 +20,7 @@ class Cafe24Payment(BaseModel):
     automatic_payment: str
     pay_date: datetime
     refund_date: Optional[datetime] = None
-    expiration_date: datetime
+    expiration_date: Optional[datetime] = None
 
     @staticmethod
     def from_api_response(data):
@@ -37,6 +37,6 @@ class Cafe24Payment(BaseModel):
             locale_code=data["locale_code"],
             automatic_payment=data["automatic_payment"],
             pay_date=data["pay_date"],
-            refund_date=data["refund_date"],
-            expiration_date=data["expiration_date"],
+            refund_date=data.get("refund_date"),
+            expiration_date=data.get("expiration_date"),
         )
