@@ -15,6 +15,9 @@ from src.payment.service.get_cafe24_payment_service import GetCafe24PaymentServi
 from src.test.unit.auth.fixtures.mock_cafe24_repository import get_mock_cafe24_repository
 from src.test.unit.auth.fixtures.mock_onboarding_repository import get_mock_onboarding_repository
 from src.test.unit.payment.fixtures.mock_payment_repository import get_mock_payment_repository
+from src.test.unit.payment.fixtures.mock_subscription_repository import (
+    get_mock_subscription_repository,
+)
 from src.test.unit.users.fixtures.mock_user_repository import get_mock_user_repository
 from src.users.service.user_service import UserService
 
@@ -37,6 +40,11 @@ def mock_cafe24_repository():
 @pytest.fixture
 def mock_user_repository():
     return get_mock_user_repository()
+
+
+@pytest.fixture()
+def mock_subscription_repository():
+    return get_mock_subscription_repository()
 
 
 @pytest.fixture
@@ -64,7 +72,7 @@ def mock_cafe24_service(mock_user_repository, mock_cafe24_repository, mock_onboa
             currency="KRW",
         )
 
-    def get_payment(order_id):
+    def get_payment(order_id, user):
         if order_id == "cafe24-20180704-100000000":
             return Cafe24Payment(
                 order_id=order_id,
@@ -101,7 +109,11 @@ def cafe24_order_service(mock_cafe24_service, mock_payment_repository):
 
 
 @pytest.fixture
-def cafe24_payment_service(mock_cafe24_service, mock_payment_repository):
+def cafe24_payment_service(
+    mock_cafe24_service, mock_payment_repository, mock_subscription_repository
+):
     return GetCafe24PaymentService(
-        payment_repository=mock_payment_repository, cafe24_service=mock_cafe24_service
+        payment_repository=mock_payment_repository,
+        cafe24_service=mock_cafe24_service,
+        subscription_repository=mock_subscription_repository,
     )
