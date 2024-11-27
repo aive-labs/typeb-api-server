@@ -862,16 +862,25 @@ main,main-stp09-1,stp,Purpose 추천,고객님의 마음을 사로잡을 제품�
 main,main-stp09-2,stp,Purpose 추천,끌리는 아이템에는 다 이유가 있죠?,"Purpose 추천,5060",5060
 main,main-stp10-1,stp,Purpose 추천,고민은 이제 끝! 취향저격 아이템 추천!,"Purpose 추천,2030",2030
 main,main-stp10-2,stp,Purpose 추천,구매 고민을 종결해줄 {mall_id} 상품을 추천합니다.,"Purpose 추천,5060",5060
-main,main-sta01-1,sta,연령대별 Best 상품 추천,고객님께 딱 맞는 베스트 아이템을 추천해드려요!!\n상품명: {best_age_items},연령대별 Best 상품 추천,2030
-main,main-sta02-1,sta,연령대별 Best 상품 추천,고객님께서 좋아하실만한 아이템을 소개합니다. 핫한 아이템으로 삶의 질을 한층 업그레이드하세요!\n상품명: {best_age_items},연령대별 Best 상품 추천,2030
-main,main-sta03-1,sta,연령대별 Best 상품 추천,지금 주목받고 있는 베스트 상품 안내드려요! 지금 바로 만나보실까요?\n상품명: {best_age_items},연령대별 Best 상품 추천,2030
-main,main-sta04-1,sta,연령대별 Best 상품 추천,고객님을 위해 선별했어요. 많은 고객님들이 선택한 이 제품! 바로 만나보세요!\n상품명: {best_age_items},연령대별 Best 상품 추천,2030
-main,main-sta05-1,sta,연령대별 Best 상품 추천,고객님의 취향을 저격할 베스트 아이템을 추천해드려요!\n상품명: {best_age_items},연령대별 Best 상품 추천,2030
-main,main-ste01-1,ste,성별 Best 상품 추천,고객님을 위한 가장 인기 있는 아이템을 소개드립니다! 지금 바로 상품을 만나보세요!\n상품명: {best_gender_items},성별 Best 상품 추천,2030
-main,main-ste02-1,ste,성별 Best 상품 추천,고객님을 위한 특별 추천 상품이에요. 지금 바로 만나보세요!!\n상품명: {best_gender_items},성별 Best 상품 추천,2030
+main,main-sta01-1,sta,연령대별 Best 상품 추천,"고객님께 딱 맞는 베스트 아이템을 추천해드려요!!
+상품명: {best_age_items}",연령대별 Best 상품 추천,2030
+main,main-sta02-1,sta,연령대별 Best 상품 추천,"고객님께서 좋아하실만한 아이템을 소개합니다. 핫한 아이템으로 삶의 질을 한층 업그레이드하세요!
+상품명: {best_age_items}",연령대별 Best 상품 추천,2030
+main,main-sta03-1,sta,연령대별 Best 상품 추천,"지금 주목받고 있는 베스트 상품 안내드려요! 지금 바로 만나보실까요?
+상품명: {best_age_items}",연령대별 Best 상품 추천,2030
+main,main-sta04-1,sta,연령대별 Best 상품 추천,"고객님을 위해 선별했어요. 많은 고객님들이 선택한 이 제품! 바로 만나보세요!
+상품명: {best_age_items}",연령대별 Best 상품 추천,2030
+main,main-sta05-1,sta,연령대별 Best 상품 추천,"고객님의 취향을 저격할 베스트 아이템을 추천해드려요!
+상품명: {best_age_items}",연령대별 Best 상품 추천,2030
+main,main-ste01-1,ste,성별 Best 상품 추천,"고객님을 위한 가장 인기 있는 아이템을 소개드립니다! 지금 바로 상품을 만나보세요!
+상품명: {best_gender_items}",성별 Best 상품 추천,2030
+main,main-ste02-1,ste,성별 Best 상품 추천,"고객님을 위한 특별 추천 상품이에요. 지금 바로 만나보세요!!
+상품명: {best_gender_items}",성별 Best 상품 추천,2030
 main,main-ste03-1,ste,성별 Best 상품 추천,인기 급상승! 고객님을 위해 {best_gender_items} 상품 추천드려요!,성별 Best 상품 추천,2030
-main,main-ste04-1,ste,성별 Best 상품 추천,고객님께서 좋아하실만한 상품! 궁금하지 않으신가요? 지금 바로 확인해보세요!\n상품명: {best_gender_items},성별 Best 상품 추천,2030
-main,main-ste05-1,ste,성별 Best 상품 추천,고객님께 딱인 베스트 아이템을 추천해드려요!!\n상품명: {best_gender_items},성별 Best 상품 추천,2030
+main,main-ste04-1,ste,성별 Best 상품 추천,"고객님께서 좋아하실만한 상품! 궁금하지 않으신가요? 지금 바로 확인해보세요!
+상품명: {best_gender_items}",성별 Best 상품 추천,2030
+main,main-ste05-1,ste,성별 Best 상품 추천,"고객님께 딱인 베스트 아이템을 추천해드려요!!
+상품명: {best_gender_items}",성별 Best 상품 추천,2030
 main,main-stf01-1,stf,첫 구매 Best 상품 추천,첫 구매 고객님들께서 가장 많이 찾는 제품! 놓치지마세요!,첫 구매 Best 상품 추천,2030
 main,main-stf02-1,stf,첫 구매 Best 상품 추천,처음이라 망설이시고 계신 고객님들을 위한 베스트셀러 상품을 소개합니다!,첫 구매 Best 상품 추천,2030
 main,main-stf03-1,stf,첫 구매 Best 상품 추천,우리 쇼핑몰에서 첫 구매하시는 분들이 가장 많이 선택한 상품을 만나보세요!,첫 구매 Best 상품 추천,2030
@@ -1012,11 +1021,15 @@ main,main-sta04-2,sta,연령대별 Best 상품 추천,"고객님을 위해서 �
 상품명: {best_age_items}",연령대별 Best 상품 추천,5060
 main,main-sta05-2,sta,연령대별 Best 상품 추천,"고객님 취향을 저격할 베스트셀러 아이템을 추천해드려요!
 상품명: {best_age_items}",연령대별 Best 상품 추천,5060
-main,main-ste01-2,ste,성별 Best 상품 추천,고객님을 위한 가장 인기 있는 아이템을 소개드립니다! 지금 상품을 만나보세요!\n상품명: {best_gender_items},성별 Best 상품 추천,5060
-main,main-ste02-2,ste,성별 Best 상품 추천,고객님을 위한 특별한 추천 상품이에요. 지금 바로 만나보세요!!\n상품명: {best_gender_items},성별 Best 상품 추천,5060
+main,main-ste01-2,ste,성별 Best 상품 추천,"고객님을 위한 가장 인기 있는 아이템을 소개드립니다! 지금 상품을 만나보세요!
+상품명: {best_gender_items}",성별 Best 상품 추천,5060
+main,main-ste02-2,ste,성별 Best 상품 추천,"고객님을 위한 특별한 추천 상품이에요. 지금 바로 만나보세요!!
+상품명: {best_gender_items}",성별 Best 상품 추천,5060
 main,main-ste03-2,ste,성별 Best 상품 추천,인기 급상승! 고객님을 위해 {best_gender_items} 상품 추천드려요!,성별 Best 상품 추천,5060
-main,main-ste04-2,ste,성별 Best 상품 추천,고객님과 어울릴만한 상품 궁금하지 않으신가요? 지금 바로 만나보세요!\n상품명: {best_gender_items},성별 Best 상품 추천,5060
-main,main-ste05-2,ste,성별 Best 상품 추천,고객님께 딱 맞는 베스트 아이템을 추천해드려요!!\n상품명: {best_gender_items},성별 Best 상품 추천,5060
+main,main-ste04-2,ste,성별 Best 상품 추천,"고객님과 어울릴만한 상품 궁금하지 않으신가요? 지금 바로 만나보세요!
+상품명: {best_gender_items}",성별 Best 상품 추천,5060
+main,main-ste05-2,ste,성별 Best 상품 추천,"고객님께 딱 맞는 베스트 아이템을 추천해드려요!!
+상품명: {best_gender_items}",성별 Best 상품 추천,5060
 main,main-stf01-2,stf,첫 구매 Best 상품 추천,첫 구매 고객님들께서 가장 많이 찾는 제품! 바로 확인해보세요!,첫 구매 Best 상품 추천,5060
 main,main-stf02-2,stf,첫 구매 Best 상품 추천,구매를 망설이고 계신 고객님들을 위한 베스트셀러 상품을 소개합니다!,첫 구매 Best 상품 추천,5060
 main,main-stf03-2,stf,첫 구매 Best 상품 추천,우리 쇼핑몰에서 첫 구매하시는 분들이 가장 많이 선택한 상품을 만나보세요!,첫 구매 Best 상품 추천,5060
