@@ -253,6 +253,7 @@ class ContentsSqlAlchemy:
                 ProductMasterEntity.rep_nm,
                 ProductMasterEntity.category_name,
                 ProductMasterEntity.price,
+                ProductMasterEntity.retail_price,
                 ProductMasterEntity.discountprice,
                 ProductMasterEntity.discount_value_unit,
                 ProductMasterEntity.discount_value,
