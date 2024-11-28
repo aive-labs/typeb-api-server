@@ -74,6 +74,11 @@ class S3Service:
 
     def invalidate_cache(self, invalidation_path: str):
         distribution_id = get_env_variable("cloud_front_distribution_id")
+
+        # Ensure invalidation_path starts with '/'
+        if not invalidation_path.startswith("/"):
+            invalidation_path = f"/{invalidation_path}"
+
         try:
             # Create invalidation in CloudFront
             response = self.cloudfront.create_invalidation(
