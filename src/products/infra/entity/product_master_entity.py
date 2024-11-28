@@ -84,7 +84,7 @@ class ProductMasterEntity(Base):
     discount_value = Column("period_sale.discount_value", BigInteger, nullable=True)
 
     # 화면에서 수정 가능한 필드
-    comment = Column(String)
+    comment = Column(String, nullable=True)
     recommend_yn = Column(String, default="Y")
     rep_nm = Column(String)
 
