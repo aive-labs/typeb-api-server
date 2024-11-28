@@ -86,6 +86,7 @@ class UpdateContentsService(UpdateContentsUseCase):
         if contents_create.is_public:
             contents_html = create_contents_html(external_html_body)
             self.s3_service.put_object(key=contents_url, body=contents_html)
+            self.s3_service.invalidate_cache(invalidation_path=contents_url)
             contents_status = ContentsStatus.PUBLISHED.value
 
         new_style_code = (

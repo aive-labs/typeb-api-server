@@ -2,11 +2,14 @@ import aioboto3
 import boto3
 from botocore.exceptions import BotoCoreError, ClientError, NoCredentialsError
 
+from src.common.utils.get_env_variable import get_env_variable
+
 
 class S3Service:
 
     def __init__(self, bucket_name):
         self.s3_client = boto3.client("s3")
+        self.cloudfront = boto3.client("cloudfront")
         self.bucket_name = bucket_name
         self.async_session = aioboto3.Session()
 
@@ -68,3 +71,21 @@ class S3Service:
     async def delete_object_async(self, s3_file_key: str):
         async with self.async_session.client("s3") as s3:
             await s3.delete_object(Bucket=self.bucket_name, Key=s3_file_key)
+
+    def invalidate_cache(self, invalidation_path: str):
+        distribution_id = get_env_variable("cloud_front_distribution_id")
+        try:
+            # Create invalidation in CloudFront
+            response = self.cloudfront.create_invalidation(
+                DistributionId=distribution_id,
+                InvalidationBatch={
+                    "Paths": {"Quantity": 1, "Items": [invalidation_path]},
+                    "CallerReference": str(
+                        hash(invalidation_path)
+                    ),  # Unique reference for this invalidation
+                },
+            )
+            print("Cache Invalidation response:", response)
+        except Exception as e:
+            print(f"Error invalidating CloudFront cache: {e}")
+            raise
