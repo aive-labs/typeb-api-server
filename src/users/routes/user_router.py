@@ -67,8 +67,6 @@ def get_me(
         user_role=get_user_role_from_mapping(user.role_id),
     )
 
-    print("user")
-    print(user)
     cafe24_integration = cafe24_service.get_connected_info_by_user(user.user_id, db=db)
 
     if cafe24_integration is None:

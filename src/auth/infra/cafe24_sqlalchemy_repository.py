@@ -53,7 +53,6 @@ class Cafe24SqlAlchemyRepository:
             return None
         else:
             entity = entities[0]
-            print(entity.scopes)
             return Cafe24MallInfo(
                 mall_id=entity.mall_id,
                 user_id=str(user_id),
