@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import aioboto3
 import boto3
 from botocore.exceptions import BotoCoreError, ClientError, NoCredentialsError
@@ -85,9 +87,9 @@ class S3Service:
                 DistributionId=distribution_id,
                 InvalidationBatch={
                     "Paths": {"Quantity": 1, "Items": [invalidation_path]},
-                    "CallerReference": str(
-                        hash(invalidation_path)
-                    ),  # Unique reference for this invalidation
+                    # CallerReference: 고유한 값이 되어야함.
+                    # 동일한 값이 전달되는 경우 중복 요청으로 간주해서 캐시 무효화 작업이 발생하지 않음
+                    "CallerReference": f"{hash(invalidation_path)}-{datetime.utcnow().isoformat()}",
                 },
             )
             print("Cache Invalidation response:", response)
