@@ -53,9 +53,10 @@ class Cafe24SqlAlchemyRepository:
             return None
         else:
             entity = entities[0]
+            print(entity.scopes)
             return Cafe24MallInfo(
                 mall_id=entity.mall_id,
-                user_id=user_id,
+                user_id=str(user_id),
                 scopes=entity.scopes.split(",") if entity.scopes else [],
                 shop_no=entity.shop_no,
             )
