@@ -52,7 +52,7 @@ class ProductResponse(BaseModel):
             price=product.price,
             discount_price=product.discountprice,
             sale_status=product.product_condition,
-            sale_yn="Y" if product.display == "T" else "N",
+            sale_yn="Y" if product.selling == "T" else "N",
             youtube=youtube_links,
             instagram=instagram_links,
             created_at=product.created_at,
