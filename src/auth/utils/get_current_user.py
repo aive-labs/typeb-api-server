@@ -38,7 +38,7 @@ def get_current_user(
     if user.user_id is None:
         raise AuthException(detail={"message": "해당 사용자 id를 찾지 못했습니다."})
 
-    cafe24_info = cafe24_repository.get_cafe24_info_by_user_id(str(user.user_id), db=db)
+    cafe24_info = cafe24_repository.get_cafe24_info(str(user.user_id), db=db)
 
     if cafe24_info:
         mall_id = cafe24_info.mall_id if cafe24_info.mall_id else None

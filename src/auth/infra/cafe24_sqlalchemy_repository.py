@@ -45,7 +45,7 @@ class Cafe24SqlAlchemyRepository:
 
         return Cafe24StateToken(mall_id=token.mall_id, state_token=token.state_token)
 
-    def get_cafe24_info_by_user_id(self, user_id: str, db: Session):
+    def get_cafe24_info(self, user_id: str, db: Session):
 
         entities: List[Cafe24IntegrationEntity] = db.query(Cafe24IntegrationEntity).all()
 

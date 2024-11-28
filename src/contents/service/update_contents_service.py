@@ -60,7 +60,7 @@ class UpdateContentsService(UpdateContentsUseCase):
         image_source = [elem["src"] for elem in soup.find_all("img") if elem is not None]
         external_html_body = contents_create.contents_body
 
-        cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(str(user.user_id), db=db)
+        cafe24_info = self.cafe24_repository.get_cafe24_info(str(user.user_id), db=db)
         if cafe24_info is None:
             raise NotFoundException(detail={"message": "연동된 cafe24 계정이 없습니다."})
 

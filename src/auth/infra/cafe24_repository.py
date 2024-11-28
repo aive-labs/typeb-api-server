@@ -25,8 +25,8 @@ class Cafe24Repository(BaseOauthRepository):
     def save_tokens(self, cafe24_tokens: Cafe24TokenData, db: Session):
         self.cafe24_sqlalchemy.save_tokens(cafe24_tokens, db)
 
-    def get_cafe24_info_by_user_id(self, user_id: str, db: Session) -> Cafe24MallInfo | None:
-        return self.cafe24_sqlalchemy.get_cafe24_info_by_user_id(user_id, db)
+    def get_cafe24_info(self, user_id: str, db: Session) -> Cafe24MallInfo | None:
+        return self.cafe24_sqlalchemy.get_cafe24_info(user_id, db)
 
     def get_token(self, mall_id: str, db: Session) -> Cafe24Token:
         return self.cafe24_sqlalchemy.get_token(mall_id, db)

@@ -26,7 +26,7 @@ class BaseOauthRepository(ABC):
         pass
 
     @abstractmethod
-    def get_cafe24_info_by_user_id(self, user_id: str, db: Session) -> Cafe24MallInfo | None:
+    def get_cafe24_info(self, user_id: str, db: Session) -> Cafe24MallInfo | None:
         pass
 
     @abstractmethod

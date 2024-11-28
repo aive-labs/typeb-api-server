@@ -34,7 +34,7 @@ class AddCreativesService(AddCreativesUseCase):
     def generate_s3_url(
         self, s3_presigned_url_request: S3PresignedUrlRequest, user, db: Session
     ) -> list[S3PresignedResponse]:
-        cafe24_info = self.cafe24_repository.get_cafe24_info_by_user_id(str(user.user_id), db)
+        cafe24_info = self.cafe24_repository.get_cafe24_info(str(user.user_id), db)
 
         if cafe24_info is None:
             raise NotFoundException(detail={"message": "연동된 cafe24 계정이 없습니다."})
