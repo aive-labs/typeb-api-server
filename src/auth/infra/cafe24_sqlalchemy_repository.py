@@ -47,21 +47,15 @@ class Cafe24SqlAlchemyRepository:
 
     def get_cafe24_info_by_user_id(self, user_id: str, db: Session):
 
-        entities: List[Cafe24IntegrationEntity] = (
-            db.query(Cafe24IntegrationEntity)
-            .filter(Cafe24IntegrationEntity.user_id == user_id)
-            .all()
-        )
+        entities: List[Cafe24IntegrationEntity] = db.query(Cafe24IntegrationEntity).all()
 
         if len(entities) == 0:
             return None
-        elif len(entities) > 1:
-            raise Exception("user_id는 1개만 가질 수 있습니다.")
         else:
             entity = entities[0]
             return Cafe24MallInfo(
                 mall_id=entity.mall_id,
-                user_id=str(entity.user_id),
+                user_id=user_id,
                 scopes=entity.scopes.split(",") if entity.scopes else [],
                 shop_no=entity.shop_no,
             )
