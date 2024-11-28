@@ -72,7 +72,7 @@ class Cafe24Service(BaseOauthService):
         # 만들고 나서 DB에 저장해야함
         hashed_state = generate_hash(self.state + mall_id)
 
-        existing_cafe24 = self.cafe24_repository.get_cafe24_info_by_user_id(str(user.user_id), db)
+        existing_cafe24 = self.cafe24_repository.get_cafe24_info(str(user.user_id), db)
         if existing_cafe24 is None:
             self.cafe24_repository.insert_basic_info(str(user.user_id), mall_id, hashed_state, db)
 
@@ -85,7 +85,7 @@ class Cafe24Service(BaseOauthService):
         )
 
     def get_connected_info_by_user(self, user_id: str, db: Session) -> ExternalIntegration | None:
-        cafe24_mall_info = self.cafe24_repository.get_cafe24_info_by_user_id(user_id, db=db)
+        cafe24_mall_info = self.cafe24_repository.get_cafe24_info(user_id, db=db)
 
         if cafe24_mall_info is None:
             return None

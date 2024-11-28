@@ -828,7 +828,7 @@ def upgrade() -> None:
         sa.Column("cus_cd", sa.String(), nullable=False),
         sa.Column("group_sort_num", sa.Integer(), nullable=False),
         sa.Column("recp_no", sa.String(), nullable=False),
-        sa.Column("order_item_code", sa.Integer(), nullable=False),
+        sa.Column("order_item_code", sa.String(), nullable=False),
         sa.Column("cust_grade1", sa.String(), nullable=True),
         sa.Column("cust_grade1_nm", sa.String(), nullable=True),
         sa.Column("age_group_10", sa.String(), nullable=True),
