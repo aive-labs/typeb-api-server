@@ -51,25 +51,27 @@ def test__사용자는_상품_전체를_조회할_수_있다(product_service, mo
 
 @pytest.mark.parametrize(
     # 전체 데이터는 20개 가정
-    "current_page, per_page, expected_count",
+    "current_page, per_page, expected_count, sort_by",
     [
-        (1, 5, 5),  # 첫 번째 페이지, 5개씩
-        (2, 5, 5),  # 두 번째 페이지, 5개씩
-        (3, 5, 5),  # 세 번째 페이지, 5개씩
-        (4, 5, 5),  # 네 번째 페이지, 5개씩
-        (5, 5, 0),  # 다섯 번째 페이지, 5개씩, 데이터 없음
-        (1, 10, 10),  # 첫 번째 페이지, 10개씩
-        (2, 10, 10),  # 두 번째 페이지, 10개씩
-        (3, 10, 0),  # 세 번째 페이지, 10개씩, 데이터 없음
+        (1, 5, 5, "asc"),  # 첫 번째 페이지, 5개씩, 5개 조회 예상
+        (2, 5, 5, "asc"),  # 두 번째 페이지, 5개씩, 5개 조회 예상
+        (3, 5, 5, "desc"),  # 세 번째 페이지, 5개씩, 5개 조회 예상
+        (4, 5, 5, "desc"),  # 네 번째 페이지, 5개씩, 5개 조회 예상
+        (1, 10, 10, "asc"),  # 첫 번째 페이지, 10개씩, 10개 조회  예상
+        (2, 10, 10, "desc"),  # 두 번째 페이지, 10개씩, 10개 조회 예상
+        (1, 50, 20, "asc"),  # 세 번째 페이지, 50개씩, 20개 조회 예상
+        (4, 6, 2, "asc"),  # 네 번째 페이지, 6개씩, 2개 조회 예상
+        (3, 10, 0, "asc"),  # 세 번째 페이지, 10개씩, 데이터 없음
+        (5, 5, 0, "asc"),  # 다섯 번째 페이지, 5개씩, 데이터 없음
     ],
 )
 def test__사용자는_상품_페이지네이션_결과를_확인할_수_있다(
-    product_service, mock_db, default_user, current_page, per_page, expected_count
+    product_service, mock_db, default_user, current_page, per_page, expected_count, sort_by
 ):
     # get_all_products 호출
     all_products = product_service.get_all_products(
         based_on="product_no",
-        sort_by="asc",
+        sort_by=sort_by,
         current_page=current_page,
         per_page=per_page,
         db=mock_db,
@@ -79,15 +81,17 @@ def test__사용자는_상품_페이지네이션_결과를_확인할_수_있다(
     start_index = (current_page - 1) * per_page
 
     if start_index >= total_products:
-        assert len(all_products) == 0
+        assert len(all_products) == expected_count
     else:
         # 전체 상품 수 확인
         assert (
-            len(all_products) == per_page
-        ), f"페이지당 반환된 상품 개수가 예상과 다릅니다: {len(all_products)} != {per_page}"
+            len(all_products) == expected_count
+        ), f"페이지당 반환된 상품 개수가 예상과 다릅니다: {len(all_products)} != {expected_count}"
 
     # 정렬된 전체 상품 리스트 시뮬레이션 (20개 상품)
     sorted_product_nos = list(range(1, total_products + 1))  # [1, 2, ..., 20]
+    if sort_by == "desc":
+        sorted_product_nos.reverse()
 
     # 현재 페이지의 시작 인덱스와 데이터 범위
     end_index = start_index + per_page
