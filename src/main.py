@@ -24,6 +24,7 @@ from src.common.utils.get_env_variable import get_env_variable
 from src.contents.routes.contents_router import contents_router
 from src.contents.routes.creatives_router import creatives_router
 from src.core.container import Container
+from src.core.contextvars_context import correlation_id_var
 from src.core.exceptions.register_exception_handler import register_exception_handlers
 from src.core.logging import logger
 from src.dashboard.routes.dashboard_router import dashboard_router
@@ -161,8 +162,9 @@ scheduler.start()
 # 상관 ID 미들웨어
 @app.middleware("http")
 async def add_correlation_id(request: Request, call_next):
-    correlation_id = str(uuid.uuid4())
+    correlation_id = str(uuid.uuid4()).replace("-", "")[:8]
     request.state.correlation_id = correlation_id
+    correlation_id_var.set(correlation_id)
 
     # 요청 바디를 읽고 저장
     request_body = await request.body()
