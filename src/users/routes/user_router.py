@@ -1,5 +1,3 @@
-import logging
-
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
@@ -27,8 +25,6 @@ from src.users.routes.dto.response.user_profile_response import UserProfileRespo
 from src.users.routes.dto.response.user_response import UserResponse
 from src.users.routes.port.base_user_service import BaseUserService
 from src.users.utils.user_role_mapping import get_user_role_from_mapping
-
-logger = logging.getLogger(__name__)
 
 user_router = APIRouter(
     tags=["Users"],
