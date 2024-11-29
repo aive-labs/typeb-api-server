@@ -136,15 +136,21 @@ class CreativesSqlAlchemy:
 
         filter_conditions = []
 
+        print(tag_nm)
+        keyword = f"%{tag_nm}%"
+
         if tag_nm != "":
-            filter_conditions.append(CreativesEntity.creative_tags.ilike(f"%{tag_nm}%"))
-            filter_conditions.append(CreativesEntity.style_object_name.ilike(f"%{tag_nm}%"))
+            print(keyword)
+            filter_conditions.append(CreativesEntity.creative_tags.ilike(keyword))
+            filter_conditions.append(CreativesEntity.style_object_name.ilike(keyword))
         elif len(style_cd_list) > 0:
             filter_conditions.append(func.lower(CreativesEntity.style_cd).in_(style_cd_list))
 
-        filter_conditions.append(~CreativesEntity.is_deleted)
-
-        query = db.query(CreativesEntity).filter(or_(*filter_conditions))
+        query = (
+            db.query(CreativesEntity)
+            .filter(or_(*filter_conditions))
+            .filter(~CreativesEntity.is_deleted)
+        )
 
         if style_cd_list:
             query = self._add_style_order(query, style_cd_list)

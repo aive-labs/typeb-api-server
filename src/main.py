@@ -1,3 +1,6 @@
+import time
+import uuid
+
 import psutil
 import sentry_sdk
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -7,6 +10,7 @@ from prometheus_client import Counter, Gauge, Histogram
 from prometheus_fastapi_instrumentator import Instrumentator
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 from starlette.requests import Request
+from starlette.responses import JSONResponse
 
 from src.admin.routes.admin_router import admin_router
 from src.admin.routes.contact_router import contact_router
@@ -21,6 +25,7 @@ from src.contents.routes.contents_router import contents_router
 from src.contents.routes.creatives_router import creatives_router
 from src.core.container import Container
 from src.core.exceptions.register_exception_handler import register_exception_handlers
+from src.core.logging import logger
 from src.dashboard.routes.dashboard_router import dashboard_router
 from src.message_template.routes.message_template_router import message_template_router
 from src.messages.routes.message_router import message_router
@@ -36,29 +41,25 @@ from src.users.routes.user_router import user_router
 # FastAPI 앱 초기화
 def create_app():
     app = FastAPI()
-    print("create container..")
+    print("Create Dependency Container.")
     container = Container()
-    # container.init_resources()
-    # print("initailize container..")
     app.container = container  # pyright: ignore [reportAttributeAccessIssue]
 
     return app
 
 
-sentry_sdk.init(
-    dsn="https://2d53fe5b3523ee71d36b86baa929a6f6@o4508169200205824.ingest.us.sentry.io/4508169206235136",
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for tracing.
-    integrations=[FastApiIntegration()],
-    traces_sample_rate=1.0,
-    _experiments={
-        # Set continuous_profiling_auto_start to True
-        # to automatically start the profiler on when
-        # possible.
-        "continuous_profiling_auto_start": True,
-    },
-    environment=get_env_variable("env"),
-)
+env_profile = get_env_variable("env")
+
+if env_profile != "local":
+    sentry_sdk.init(
+        dsn="https://2d53fe5b3523ee71d36b86baa929a6f6@o4508169200205824.ingest.us.sentry.io/4508169206235136",
+        integrations=[FastApiIntegration()],
+        traces_sample_rate=1.0,  # traces_sample_rate to 1.0 to capture 100%
+        _experiments={
+            "continuous_profiling_auto_start": True,
+        },
+        environment=env_profile,
+    )
 
 app = create_app()
 app.include_router(router=auth_router, prefix="/api/v1/auth")
@@ -155,6 +156,35 @@ def update_system_metrics():
 scheduler = BackgroundScheduler()
 scheduler.add_job(update_system_metrics, "interval", seconds=5)
 scheduler.start()
+
+
+# 상관 ID 미들웨어
+@app.middleware("http")
+async def add_correlation_id(request: Request, call_next):
+    correlation_id = str(uuid.uuid4())
+    request.state.correlation_id = correlation_id
+
+    # 요청 정보 로그
+    start_time = time.time()
+    try:
+        response = await call_next(request)
+    except Exception as exc:
+        logger.error(
+            f"Exception in {request.method} {request.url.path}: {exc}",
+            exc_info=True,
+            extra={"correlation_id": correlation_id},
+        )
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Internal Server Error", "correlation_id": correlation_id},
+        )
+
+    process_time = (time.time() - start_time) * 1000
+    logger.info(
+        f"{request.method} {request.url.path} - {response.status_code} - {process_time:.2f}ms",
+        extra={"correlation_id": correlation_id},
+    )
+    return response
 
 
 @app.get("/health", status_code=status.HTTP_200_OK)
