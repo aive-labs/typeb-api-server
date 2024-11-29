@@ -13,7 +13,7 @@ from src.test.unit.products.fixtures.mock_product_repository import get_mock_pro
 def mock_product_repository():
     products = []
 
-    for i in range(1, 11):
+    for i in range(1, 21):
         product = Product(
             shop_no=1,
             product_no=1000 + i,
