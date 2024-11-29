@@ -164,6 +164,16 @@ async def add_correlation_id(request: Request, call_next):
     correlation_id = str(uuid.uuid4())
     request.state.correlation_id = correlation_id
 
+    # 요청 바디를 읽고 저장
+    request_body = await request.body()
+    request.state.body = request_body
+
+    # 요청 바디를 다시 읽을 수 있도록 스트림 재설정
+    async def receive():
+        return {"type": "http.request", "body": request_body, "more_body": False}
+
+    request._receive = receive
+
     # 요청 정보 로그
     start_time = time.time()
     try:

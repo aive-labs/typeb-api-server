@@ -136,11 +136,9 @@ class CreativesSqlAlchemy:
 
         filter_conditions = []
 
-        print(tag_nm)
         keyword = f"%{tag_nm}%"
 
         if tag_nm != "":
-            print(keyword)
             filter_conditions.append(CreativesEntity.creative_tags.ilike(keyword))
             filter_conditions.append(CreativesEntity.style_object_name.ilike(keyword))
         elif len(style_cd_list) > 0:
