@@ -82,7 +82,7 @@ def mock_product_repository():
             relational_product=f"관련 상품 {i}",
             comment=f"코멘트 {i}",
             recommend_yn="Y" if i % 2 == 0 else "N",
-            rep_nm=f"대표자명 {i}",
+            rep_nm=f"rep_nm_{i}",
             created_at=f"2022-03-{i:02d} 10:00:00",
             updated_at=f"2022-04-{i:02d} 10:00:00",
             etltime=datetime.now(),

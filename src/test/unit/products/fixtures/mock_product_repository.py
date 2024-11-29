@@ -1,5 +1,6 @@
 from unittest.mock import MagicMock
 
+from src.core.exceptions.exceptions import NotFoundException
 from src.products.domain.product import Product
 from src.products.infra.dto.product_search_condition import ProductSearchCondition
 from src.products.routes.dto.request.product_link_update import ProductLinkUpdate
@@ -18,6 +19,10 @@ def get_mock_product_repository(mock_products):
 
     def get_product_detail(product_id: str, db):
         product = [product for product in products if product.product_code == product_id]
+
+        if not product:
+            raise NotFoundException(detail={"message": "존재하지 않는 상품입니다."})
+
         return Product.model_validate(product[0])
 
     def get_all_products(
@@ -45,7 +50,15 @@ def get_mock_product_repository(mock_products):
         pass
 
     def update(product_id, product_update: ProductUpdate, db):
-        pass
+        filtered_product = [product for product in products if product.product_code == product_id]
+
+        if not filtered_product:
+            raise NotFoundException(detail={"message": "존재하지 않는 상품입니다."})
+
+        target_product = filtered_product[0]
+        target_product.recommend_yn = product_update.recommend_yn.value
+        target_product.comment = product_update.comment
+        target_product.rep_nm = product_update.rep_nm
 
     def get_all_products_count(db, search_condition: ProductSearchCondition | None = None):
         products = filter_search_condition(search_condition)
@@ -106,5 +119,6 @@ def get_mock_product_repository(mock_products):
     mock_repository.update_product_link.side_effect = update_product_link
     mock_repository.update.side_effect = update
     mock_repository.get_rep_nms.side_effect = get_rep_nms
+    mock_repository.update.side_effect = update
 
     return mock_repository

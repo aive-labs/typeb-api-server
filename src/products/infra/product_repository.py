@@ -1,6 +1,7 @@
 from sqlalchemy import func, or_, update
 from sqlalchemy.orm import Session
 
+from src.core.exceptions.exceptions import NotFoundException
 from src.products.domain.product import Product
 from src.products.enums.product_link_type import ProductLinkType
 from src.products.infra.dto.product_search_condition import ProductSearchCondition
@@ -30,6 +31,10 @@ class ProductRepository(BaseProductRepository):
             .filter(ProductMasterEntity.product_code == product_id)
             .first()
         )
+
+        if entity is None:
+            raise NotFoundException(detail={"message": "존재하지 않는 상품입니다."})
+
         return Product.model_validate(entity)
 
     def get_all_products(
@@ -146,6 +151,15 @@ class ProductRepository(BaseProductRepository):
                 )
 
     def update(self, product_id, product_update: ProductUpdate, db):
+        entity = (
+            db.query(ProductMasterEntity)
+            .filter(ProductMasterEntity.product_code == product_id)
+            .first()
+        )
+
+        if entity is None:
+            raise NotFoundException(detail={"message": "존재하지 않는 상품입니다."})
+
         update_statement = (
             update(ProductMasterEntity)
             .where(ProductMasterEntity.product_code == product_id)
