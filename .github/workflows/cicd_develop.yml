@@ -91,6 +91,8 @@ jobs:
               docker rm aace-container || true && \
               docker rmi $(docker images -f "dangling=true" -q) || true && \
               docker run -d --name aace-container \
+                -v ./logs:/app/logs \
+                -v ./config:/app/config \
                 -e AWS_ACCESS_KEY_ID=${{ secrets.DEV_AWS_ACCESS_KEY_ID }} \
                 -e AWS_SECRET_ACCESS_KEY=${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }} \
                 -e AWS_REGION=${{ secrets.DEV_AWS_REGION }} \
@@ -98,9 +100,9 @@ jobs:
             '
 
   deploy-promtail:
-    name: deploy promtail
+    name: deploy_promtail
     runs-on: ubuntu-latest
-    needs: build_and_deploy # api 작업이 완료된 후 실행
+    needs: build_and_deploy # api 컨테이너 배포된 이후 실행
 
     steps:
       - name: Checkout code
