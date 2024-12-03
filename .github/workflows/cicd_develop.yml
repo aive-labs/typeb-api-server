@@ -96,3 +96,38 @@ jobs:
                 -e AWS_REGION=${{ secrets.DEV_AWS_REGION }} \
                 -p 8000:8000 aace-app-image
             '
+
+  deploy-promtail:
+    name: Deploy Promtail
+    runs-on: ubuntu-latest
+    needs: build_and_deploy # api 작업이 완료된 후 실행
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH agent
+        run: |
+          # GitHub Secrets에 저장된 SSH_PRIVATE_KEY 값을 파일로 저장
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/pem.key
+          # 파일 권한 설정
+          chmod 600 /tmp/pem.key
+
+      - name: Deploy Promtail on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.BASTION_HOST }}
+          username: ubuntu
+          script: |
+            ssh -i ~/.ssh/aice-backend.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.DEV_API_SERVER }} '
+              cd /home/ubuntu/typeb-api && \
+              docker stop promtail || true && \
+              docker rm promtail || true && \
+              docker rmi $(docker images -f "dangling=true" -q) || true && \
+              docker run -d --name=promtail \
+                -v ./promtail:/etc/promtail \
+                -v ./logs:/var/log \
+                -e LOKI_URL=${{ secrets.DEV_LOKI_URL }} \
+                grafana/promtail:latest \
+                -config.file=/etc/promtail/config.yml
