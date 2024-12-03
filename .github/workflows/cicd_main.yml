@@ -91,6 +91,8 @@ jobs:
               docker rm aice-container || true && \
               docker rmi $(docker images -f "dangling=true" -q) || true && \
               docker run -d --name aice-container \
+                -v ./logs:/app/logs \
+                -v ./config:/app/config \
                 -e AWS_ACCESS_KEY_ID=${{ secrets.PROD_AWS_ACCESS_KEY_ID }} \
                 -e AWS_SECRET_ACCESS_KEY=${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }} \
                 -e AWS_REGION=${{ secrets.PROD_AWS_REGION }} \
