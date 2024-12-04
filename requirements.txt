@@ -219,10 +219,6 @@ slack_sdk==3.31.0
 # html to pdf
 weasyprint==62.3
 
-# prometheus
-prometheus_client==0.21.0
-prometheus-fastapi-instrumentator==6.0.0
-
 #  apscheduler
 apscheduler==3.10.4
 
@@ -232,3 +228,13 @@ sentry-sdk[fastapi]==2.17.0
 # gcloud
 google-api-python-client==2.149.0
 google-cloud==0.34.0
+
+# prometheus
+prometheus_client==0.21.0
+prometheus-fastapi-instrumentator==6.0.0
+
+# monitoring
+opentelemetry-distro==0.45b0
+opentelemetry-instrumentation-fastapi==0.45b0
+opentelemetry-instrumentation-logging==0.45b0
+opentelemetry-exporter-otlp==1.24.0

@@ -91,8 +91,45 @@ jobs:
               docker rm aice-container || true && \
               docker rmi $(docker images -f "dangling=true" -q) || true && \
               docker run -d --name aice-container \
+                -v ./logs:/app/logs \
+                -v ./config:/app/config \
                 -e AWS_ACCESS_KEY_ID=${{ secrets.PROD_AWS_ACCESS_KEY_ID }} \
                 -e AWS_SECRET_ACCESS_KEY=${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }} \
                 -e AWS_REGION=${{ secrets.PROD_AWS_REGION }} \
                 -p 8000:8000 aice-app-image
             '
+  deploy_promtail:
+    name: deploy_promtail
+    runs-on: ubuntu-latest
+    needs: build_and_deploy # api 컨테이너 배포된 이후 실행
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH agent
+        run: |
+          # GitHub Secrets에 저장된 SSH_PRIVATE_KEY 값을 파일로 저장
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/pem.key
+          # 파일 권한 설정
+          chmod 600 /tmp/pem.key
+
+      - name: Deploy Promtail on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.PROD_BASTION_HOST }}
+          username: ubuntu
+          script: |
+            ssh -i ~/.ssh/aice-backend.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.PROD_API_SERVER }} '
+              cd /home/ubuntu/typeb-api && \
+              docker stop promtail || true && \
+              docker rm promtail || true && \
+              docker rmi $(docker images -f "dangling=true" -q) || true && \
+              docker run -d --name=promtail \
+                -v ./promtail:/etc/promtail \
+                -v ./logs:/var/log \
+                -e LOKI_URL=${{ secrets.PROD_LOKI_URL }} \
+                grafana/promtail:3.3.0 \
+                -config.file=/etc/promtail/config.yml
+              '

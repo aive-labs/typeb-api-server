@@ -1,13 +1,9 @@
 import time
 import uuid
 
-import psutil
 import sentry_sdk
-from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
-from prometheus_client import Counter, Gauge, Histogram
-from prometheus_fastapi_instrumentator import Instrumentator
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 from starlette.requests import Request
 from starlette.responses import JSONResponse
@@ -24,8 +20,10 @@ from src.common.utils.get_env_variable import get_env_variable
 from src.contents.routes.contents_router import contents_router
 from src.contents.routes.creatives_router import creatives_router
 from src.core.container import Container
+from src.core.contextvars_context import correlation_id_var
 from src.core.exceptions.register_exception_handler import register_exception_handlers
 from src.core.logging import logger
+from src.core.middleware.prometheus import PrometheusMiddleware, metrics
 from src.dashboard.routes.dashboard_router import dashboard_router
 from src.message_template.routes.message_template_router import message_template_router
 from src.messages.routes.message_router import message_router
@@ -95,74 +93,26 @@ app.add_middleware(
 
 register_exception_handlers(app)
 
-Instrumentator().instrument(app).expose(app, endpoint="/pringles")
-# HTTP 요청 횟수
-REQUEST_COUNT = Counter(
-    "http_request_count", "Number of HTTP requests received", ["method", "endpoint"]
-)
-
-# 요청 실패 수 (상태 코드별)
-ERROR_COUNT = Counter(
-    "http_error_count", "Number of HTTP errors encountered", ["method", "endpoint", "status_code"]
-)
-
-# 요청 응답 지연 시간
-REQUEST_LATENCY = Histogram(
-    "http_request_latency_seconds", "HTTP request latency in seconds", ["method", "endpoint"]
-)
-
-# 현재 활성 사용자 수
-ACTIVE_USERS = Gauge("active_users", "Number of active users currently connected")
-
-# 메모리 및 CPU 사용량
-CPU_USAGE = Gauge("cpu_usage_percent", "CPU usage in percent")
-MEMORY_USAGE = Gauge("memory_usage_mb", "Memory usage in MB")
-MAX_MEMORY = Gauge("max_memory_mb", "Maximum Memory in MB")
-MAX_MEMORY.set(psutil.virtual_memory().total / (1024 * 1024))
-
-
-@app.middleware("http")
-async def prometheus_middleware(request: Request, call_next):
-    # 활성 사용자 수 증가
-    ACTIVE_USERS.inc()
-
-    # 요청 메트릭 기록 시작
-    method = request.method
-    endpoint = request.url.path
-
-    with REQUEST_LATENCY.labels(method=method, endpoint=endpoint).time():
-        response = await call_next(request)
-
-    # 요청 횟수 기록
-    REQUEST_COUNT.labels(method=method, endpoint=endpoint).inc()
-
-    # 오류 상태 코드 기록
-    if response.status_code >= 400:
-        ERROR_COUNT.labels(method=method, endpoint=endpoint, status_code=response.status_code).inc()
-
-    # 활성 사용자 수 감소
-    ACTIVE_USERS.dec()
-
-    return response
-
-
-# 시스템 메트릭을 주기적으로 업데이트 하는 함수
-def update_system_metrics():
-    CPU_USAGE.set(psutil.cpu_percent())
-    MEMORY_USAGE.set(psutil.virtual_memory().used / (1024 * 1024))
-
-
-#  APScheduler to call update_system_metrics 30초 간격으로 업데이트
-scheduler = BackgroundScheduler()
-scheduler.add_job(update_system_metrics, "interval", seconds=5)
-scheduler.start()
+app.add_middleware(PrometheusMiddleware, app_name="aace-api-server")
+app.add_route("/pringles", metrics)
 
 
 # 상관 ID 미들웨어
 @app.middleware("http")
 async def add_correlation_id(request: Request, call_next):
-    correlation_id = str(uuid.uuid4())
+    correlation_id = str(uuid.uuid4()).replace("-", "")[:8]
     request.state.correlation_id = correlation_id
+    correlation_id_var.set(correlation_id)
+
+    # 요청 바디를 읽고 저장
+    request_body = await request.body()
+    request.state.body = request_body
+
+    # 요청 바디를 다시 읽을 수 있도록 스트림 재설정
+    async def receive():
+        return {"type": "http.request", "body": request_body, "more_body": False}
+
+    request._receive = receive
 
     # 요청 정보 로그
     start_time = time.time()
