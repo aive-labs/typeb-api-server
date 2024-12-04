@@ -133,4 +133,5 @@ jobs:
                 -e LOKI_URL=${{ secrets.DEV_LOKI_URL }} \
                 grafana/promtail:3.3.0 \
                 -config.file=/etc/promtail/config.yml
+                -config.expand-env=true
               '
