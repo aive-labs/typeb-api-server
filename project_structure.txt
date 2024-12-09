@@ -1,0 +1,1000 @@
+.
+├── Dockerfile
+├── README.md
+├── __init__.py
+├── alembic.ini
+├── config
+│   └── env
+├── entrypoint.sh
+├── logs
+│   ├── app.log
+│   ├── app.log.2024-11-29
+│   ├── app.log.2024-12-02
+│   └── errors
+│       ├── error.log
+│       ├── error.log.2024-11-29
+│       └── error.log.2024-12-02
+├── migration
+│   ├── README.md
+│   ├── env.py
+│   ├── script.py.mako
+│   └── versions
+│       ├── 20241107_1043_349ffebc5779_initialize_almebic.py
+│       ├── 20241107_1052_a5ca1ee840ec_insert_variable_options_data_for_target_.py
+│       ├── 20241107_1305_a8cb1cade643_add_personal_information_agree_status.py
+│       ├── 20241111_1026_ceca92cbab88_synchronize_dahsboard_table.py
+│       ├── 20241121_1436_20a7debd99c9_add_cafe24_order_and_payment_table.py
+│       ├── 20241125_1139_502d9913b4ef_add_actual_amt_column_to_purchase_.py
+│       ├── 20241126_0957_21a121512d5a_add_pg_vector_tables.py
+│       ├── 20241128_0958_228a55ff2bfe_add_send_date_column_to_dash_daily_send_.py
+│       └── 20241129_1004_79ede840a3cf_alter_column_name_in_dashboard_tables.py
+├── project_structure.txt
+├── promtail
+│   ├── config.yml
+│   └── positions.yaml
+├── pyproject.toml
+├── pytest.ini
+├── requirements.txt
+└── src
+    ├── __init__.py
+    ├── admin
+    │   ├── domain
+    │   ├── enums
+    │   │   └── outsoring_personal_information_status.py
+    │   ├── infra
+    │   │   ├── admin_repository.py
+    │   │   ├── entity
+    │   │   │   ├── contact_us_entity.py
+    │   │   │   ├── outsouring_personal_infomation_status_entity.py
+    │   │   │   └── personal_variable_entity.py
+    │   │   └── personal_information_repository.py
+    │   ├── routes
+    │   │   ├── admin_router.py
+    │   │   ├── contact_router.py
+    │   │   ├── dto
+    │   │   │   ├── request
+    │   │   │   │   └── contact_us_request.py
+    │   │   │   └── response
+    │   │   │       ├── PersonalInformationAgreeStatus.py
+    │   │   │       └── personal_variable_response.py
+    │   │   └── port
+    │   │       ├── base_personal_information_service.py
+    │   │       └── get_personal_variables_usecase.py
+    │   └── service
+    │       ├── get_personal_variables_service.py
+    │       ├── personal_information_service.py
+    │       └── port
+    │           ├── base_admin_repository.py
+    │           └── base_personal_information_repository.py
+    ├── audiences
+    │   ├── domain
+    │   │   ├── audience.py
+    │   │   └── variable_table_mapping.py
+    │   ├── enums
+    │   │   ├── audience_create_type.py
+    │   │   ├── audience_status.py
+    │   │   ├── audience_type.py
+    │   │   ├── csv_template.py
+    │   │   ├── predefined_variable_access.py
+    │   │   └── target_audience_update_cycle.py
+    │   ├── infra
+    │   │   ├── audience_repository.py
+    │   │   ├── audience_sqlalchemy_repository.py
+    │   │   ├── dto
+    │   │   │   ├── audience_info.py
+    │   │   │   ├── filter_condition.py
+    │   │   │   ├── linked_campaign.py
+    │   │   │   └── upload_conditon.py
+    │   │   └── entity
+    │   │       ├── __init__.py
+    │   │       ├── audience_count_by_month_entity.py
+    │   │       ├── audience_count_trend_entity.py
+    │   │       ├── audience_customer_mapping_entity.py
+    │   │       ├── audience_entity.py
+    │   │       ├── audience_predefined_variable_entity.py
+    │   │       ├── audience_queries_entity.py
+    │   │       ├── audience_stats_entity.py
+    │   │       ├── audience_upload_condition_entity.py
+    │   │       ├── audience_variable_options_entity.py
+    │   │       ├── customer_promotion_master_entity.py
+    │   │       ├── customer_promotion_react_summary_entity.py
+    │   │       ├── ga_view_master_entity.py
+    │   │       ├── ltv_score_entity.py
+    │   │       ├── primary_rep_product_entity.py
+    │   │       ├── purchase_analytics_master_style_entity.py
+    │   │       ├── strategy_theme_audience_entity.py
+    │   │       ├── variable_table_list.py
+    │   │       └── variable_table_mapping_entity.py
+    │   ├── resources
+    │   │   └── template
+    │   │       └── upload_templates.zip
+    │   ├── routes
+    │   │   ├── audience_router.py
+    │   │   ├── dto
+    │   │   │   ├── request
+    │   │   │   │   ├── audience_create.py
+    │   │   │   │   └── audience_update.py
+    │   │   │   └── response
+    │   │   │       ├── audience_stat_info.py
+    │   │   │       ├── audience_variable_combinations.py
+    │   │   │       ├── audiences.py
+    │   │   │       ├── code_items.py
+    │   │   │       ├── default_exclude_audience.py
+    │   │   │       ├── target_strategy_combination.py
+    │   │   │       └── upload_condition_response.py
+    │   │   └── port
+    │   │       └── usecase
+    │   │           ├── create_audience_usecase.py
+    │   │           ├── csv_upload_usecase.py
+    │   │           ├── delete_audience_usecase.py
+    │   │           ├── download_audience_usecase.py
+    │   │           ├── get_audience_creation_options_usecase.py
+    │   │           ├── get_audience_usecase.py
+    │   │           ├── update_audience_exclude_status.py
+    │   │           ├── update_audience_usecase.py
+    │   │           └── update_cycle_usecase.py
+    │   ├── service
+    │   │   ├── background
+    │   │   │   ├── execute_target_audience_summary.py
+    │   │   │   └── target_audience_summary_sqlalchemy.py
+    │   │   ├── create_audience_service.py
+    │   │   ├── csv_upload_audience_service.py
+    │   │   ├── delete_audience_service.py
+    │   │   ├── download_audience_service.py
+    │   │   ├── get_audience_creation_options.py
+    │   │   ├── get_audience_service.py
+    │   │   ├── port
+    │   │   │   └── base_audience_repository.py
+    │   │   ├── update_audience_exclude_status_service.py
+    │   │   ├── update_audience_service.py
+    │   │   └── update_cycle_service.py
+    │   └── utils
+    │       ├── csv_sentence_converter.py
+    │       └── query_builder.py
+    ├── auth
+    │   ├── __init__.py
+    │   ├── domain
+    │   │   ├── cafe24_token.py
+    │   │   ├── ga_integration.py
+    │   │   └── onboarding.py
+    │   ├── enums
+    │   │   ├── cafe24_data_migration_status.py
+    │   │   ├── ga_script_status.py
+    │   │   ├── gtm_variable.py
+    │   │   └── onboarding_status.py
+    │   ├── infra
+    │   │   ├── __init__.py
+    │   │   ├── cafe24_repository.py
+    │   │   ├── cafe24_sqlalchemy_repository.py
+    │   │   ├── dto
+    │   │   │   ├── cafe24_mall_info.py
+    │   │   │   ├── cafe24_state_token.py
+    │   │   │   ├── cafe24_token.py
+    │   │   │   └── external_integration.py
+    │   │   ├── entity
+    │   │   │   ├── cafe24_integration_entity.py
+    │   │   │   ├── ga_integration_entity.py
+    │   │   │   ├── kakao_integration_entity.py
+    │   │   │   ├── message_integration_entity.py
+    │   │   │   └── onboarding_entity.py
+    │   │   ├── ga_repository.py
+    │   │   ├── ga_sqlalchemy_repository.py
+    │   │   ├── onboarding_repository.py
+    │   │   └── onboarding_sqlalchemy_repository.py
+    │   ├── routes
+    │   │   ├── auth_router.py
+    │   │   ├── dto
+    │   │   │   ├── request
+    │   │   │   │   ├── cafe24_token_request.py
+    │   │   │   │   ├── kakao_channel_request.py
+    │   │   │   │   ├── message_sender_request.py
+    │   │   │   │   └── onboarding_request.py
+    │   │   │   └── response
+    │   │   │       ├── ga_script_response.py
+    │   │   │       ├── kakao_channel_response.py
+    │   │   │       ├── message_sender_response.py
+    │   │   │       ├── onboarding_response.py
+    │   │   │       └── token_response.py
+    │   │   ├── ga_router.py
+    │   │   ├── onboarding_router.py
+    │   │   └── port
+    │   │       ├── base_ga_service.py
+    │   │       ├── base_oauth_service.py
+    │   │       ├── base_onboarding_service.py
+    │   │       └── base_token_service.py
+    │   ├── service
+    │   │   ├── auth_service.py
+    │   │   ├── cafe24_service.py
+    │   │   ├── ga_integration_service.py
+    │   │   ├── onboarding_service.py
+    │   │   ├── port
+    │   │   │   ├── base_cafe24_repository.py
+    │   │   │   ├── base_ga_repository.py
+    │   │   │   └── base_onboarding_repository.py
+    │   │   └── token_service.py
+    │   └── utils
+    │       ├── get_current_user.py
+    │       ├── hash_password.py
+    │       ├── jwt_settings.py
+    │       └── permission_checker.py
+    ├── campaign
+    │   ├── __init__.py
+    │   ├── core
+    │   │   ├── generate_dm.py
+    │   │   ├── message_group_controller.py
+    │   │   └── preview_data.yaml
+    │   ├── domain
+    │   │   ├── campaign.py
+    │   │   ├── campaign_messages.py
+    │   │   ├── campaign_remind.py
+    │   │   ├── campaign_set_recipients.py
+    │   │   ├── campaign_timeline.py
+    │   │   ├── send_reservation.py
+    │   │   └── vo
+    │   │       └── carousel_upload_link.py
+    │   ├── enums
+    │   │   ├── campagin_status.py
+    │   │   ├── campaign_approval_status.py
+    │   │   ├── campaign_progress.py
+    │   │   ├── campaign_timeline_type.py
+    │   │   ├── campaign_type.py
+    │   │   ├── message_send_type.py
+    │   │   ├── repeat_type.py
+    │   │   ├── send_type.py
+    │   │   └── set_group_category.py
+    │   ├── infra
+    │   │   ├── __init__.py
+    │   │   ├── campaign_repository.py
+    │   │   ├── campaign_set_repository.py
+    │   │   ├── campaign_sqlalchemy_repository.py
+    │   │   ├── dto
+    │   │   │   ├── already_sent_campaign.py
+    │   │   │   └── campaign_reviewer_info.py
+    │   │   ├── entity
+    │   │   │   ├── __init__.py
+    │   │   │   ├── approver_entity.py
+    │   │   │   ├── campaign_approval_entity.py
+    │   │   │   ├── campaign_credit_payment_entity.py
+    │   │   │   ├── campaign_customer_snapshot_entity.py
+    │   │   │   ├── campaign_entity.py
+    │   │   │   ├── campaign_remind_entity.py
+    │   │   │   ├── campaign_set_groups_entity.py
+    │   │   │   ├── campaign_set_recipients_entity.py
+    │   │   │   ├── campaign_sets_entity.py
+    │   │   │   ├── campaign_status_history_entity.py
+    │   │   │   ├── campaign_timeline_entity.py
+    │   │   │   ├── coupon_custs.py
+    │   │   │   ├── delivery_cost_vendor_entity.py
+    │   │   │   ├── kakao_link_buttons_entity.py
+    │   │   │   ├── message_resource_entity.py
+    │   │   │   ├── rep_contents_rank_entity.py
+    │   │   │   ├── send_dag_log_entity.py
+    │   │   │   ├── send_reservation_entity.py
+    │   │   │   └── set_group_messages_entity.py
+    │   │   └── sqlalchemy_query
+    │   │       ├── add_set_rep_contents.py
+    │   │       ├── campaign_set
+    │   │       │   ├── apply_personalized_option.py
+    │   │       │   └── recipient_custom_contents_mapping.py
+    │   │       ├── convert_to_button_format.py
+    │   │       ├── create_set_group_messages.py
+    │   │       ├── create_set_group_recipient.py
+    │   │       ├── delete_campaign_recipients.py
+    │   │       ├── delete_campaign_set_group.py
+    │   │       ├── delete_campaign_sets.py
+    │   │       ├── delete_excluded_campaign_sets.py
+    │   │       ├── delete_message_reousrces_by_seq.py
+    │   │       ├── get_audience_rank_between.py
+    │   │       ├── get_campaign_base_obj.py
+    │   │       ├── get_campaign_remind.py
+    │   │       ├── get_campaign_set_by_set_seq.py
+    │   │       ├── get_campaign_set_groups.py
+    │   │       ├── get_campaign_sets.py
+    │   │       ├── get_campaign_sets_by_set_seq.py
+    │   │       ├── get_contents_from_strategy.py
+    │   │       ├── get_contents_name.py
+    │   │       ├── get_contents_name_with_rep_nm.py
+    │   │       ├── get_coupons_by_ids.py
+    │   │       ├── get_customer_by_audience_id.py
+    │   │       ├── get_customer_by_excluded_audience_id.py
+    │   │       ├── get_customers_for_expert_campaign.py
+    │   │       ├── get_exclude_customer_list.py
+    │   │       ├── get_excluded_customer_list_for_calculation.py
+    │   │       ├── get_first_offer_by_strategy_theme.py
+    │   │       ├── get_ltv.py
+    │   │       ├── get_message_resources.py
+    │   │       ├── get_phone_callback.py
+    │   │       ├── get_recipients_by_campaign_set_sort_num.py
+    │   │       ├── get_recommend_model_ids_by_strategy_themes.py
+    │   │       ├── get_rep_from_themes.py
+    │   │       ├── get_set_group_message.py
+    │   │       ├── get_set_group_seqs.py
+    │   │       ├── get_set_groups_by_group_seqs.py
+    │   │       ├── get_set_rep_nm_list.py
+    │   │       ├── get_strategy_theme_audience_mapping.py
+    │   │       ├── modify_reservation_sync_service.py
+    │   │       ├── personal_variable_formatting.py
+    │   │       ├── recreate_basic_campaign.py
+    │   │       ├── recreate_expert_campaign.py
+    │   │       ├── recurring_campaign
+    │   │       │   ├── convert_to_set_group_message_list.py
+    │   │       │   ├── get_campaign_api_logic.py
+    │   │       │   ├── get_campaign_reviewers.py
+    │   │       │   ├── get_campaign_set_group_messages.py
+    │   │       │   ├── get_data_value.py
+    │   │       │   └── get_set_portion.py
+    │   │       ├── save_campaign_set.py
+    │   │       ├── status_general_change.py
+    │   │       └── validate_phone_call.py
+    │   ├── routes
+    │   │   ├── campaign_dag_router.py
+    │   │   ├── campaign_router.py
+    │   │   ├── dto
+    │   │   │   ├── request
+    │   │   │   │   ├── campaign_create.py
+    │   │   │   │   ├── campaign_progress_request.py
+    │   │   │   │   ├── campaign_remind.py
+    │   │   │   │   ├── campaign_remind_create.py
+    │   │   │   │   ├── campaign_set_group_message_request.py
+    │   │   │   │   ├── campaign_set_group_update.py
+    │   │   │   │   ├── campaign_set_message_confirm_request.py
+    │   │   │   │   ├── campaign_set_message_use_request.py
+    │   │   │   │   ├── campaign_set_update.py
+    │   │   │   │   ├── message_generate.py
+    │   │   │   │   └── test_send_request.py
+    │   │   │   └── response
+    │   │   │       ├── campaign_basic_response.py
+    │   │   │       ├── campaign_remind_response.py
+    │   │   │       ├── campaign_response.py
+    │   │   │       ├── campaign_reviewer.py
+    │   │   │       ├── campaign_set_description_response.py
+    │   │   │       ├── campaign_set_group_update_response.py
+    │   │   │       ├── campaign_summary_response.py
+    │   │   │       ├── campaign_timeline_response.py
+    │   │   │       ├── exclusion_customer_detail.py
+    │   │   │       ├── generate_message_response.py
+    │   │   │       ├── set_group_seq_with_message_response.py
+    │   │   │       └── update_campaign_set_group_message_response.py
+    │   │   └── port
+    │   │       ├── approve_campaign_usecase.py
+    │   │       ├── campaign_message_image_upload_usecase.py
+    │   │       ├── confirm_campaign_set_group_message_usecase.py
+    │   │       ├── create_campaign_summary_usecase.py
+    │   │       ├── create_campaign_usecase.py
+    │   │       ├── create_recurring_campaign_usecase.py
+    │   │       ├── delete_campaign_usecase.py
+    │   │       ├── delete_image_for_message_usecase.py
+    │   │       ├── generate_message_usecase.py
+    │   │       ├── get_campaign_set_description_usecase.py
+    │   │       ├── get_campaign_usecase.py
+    │   │       ├── reserve_campaigns_usecase.py
+    │   │       ├── test_message_send_usecase.py
+    │   │       ├── update_campaign_progress_usecase.py
+    │   │       ├── update_campaign_set_confirm_usecase.py
+    │   │       ├── update_campaign_set_message_group_usecase.py
+    │   │       ├── update_campaign_set_usecase.py
+    │   │       ├── update_campaign_usecase.py
+    │   │       ├── update_message_use_status_usecase.py
+    │   │       └── upload_image_for_message_usecase.py
+    │   ├── service
+    │   │   ├── approve_campaign_service.py
+    │   │   ├── authorization_checker.py
+    │   │   ├── background
+    │   │   │   └── save_offer_custs.py
+    │   │   ├── campaign_dependency_manager.py
+    │   │   ├── campaign_manager.py
+    │   │   ├── campaign_message_image_upload.py
+    │   │   ├── confrim_campaign_set_group_message.py
+    │   │   ├── create_campaign_service.py
+    │   │   ├── create_campaign_summary.py
+    │   │   ├── create_recurring_campaign.py
+    │   │   ├── delete_campaign_service.py
+    │   │   ├── delete_image_for_message.py
+    │   │   ├── generate_message_service.py
+    │   │   ├── get_campaign_service.py
+    │   │   ├── get_campaign_set_description.py
+    │   │   ├── port
+    │   │   │   ├── base_campaign_repository.py
+    │   │   │   └── base_campaign_set_repository.py
+    │   │   ├── reserve_campaigns_service.py
+    │   │   ├── test_meessage_send_service.py
+    │   │   ├── update_campaign_progress_service.py
+    │   │   ├── update_campaign_service.py
+    │   │   ├── update_campaign_set_message_group_service.py
+    │   │   ├── update_campaign_set_service.py
+    │   │   ├── update_campaign_set_status_to_confrim.py
+    │   │   ├── update_message_use_status.py
+    │   │   └── upload_image_for_message.py
+    │   └── utils
+    │       ├── campagin_status_utils.py
+    │       ├── convert_by_message_format.py
+    │       └── utils.py
+    ├── common
+    │   ├── __init__.py
+    │   ├── domain
+    │   │   └── recsys_models.py
+    │   ├── enums
+    │   │   ├── access_level.py
+    │   │   ├── campaign_media.py
+    │   │   ├── message_delivery_vendor.py
+    │   │   ├── role.py
+    │   │   ├── str_enum.py
+    │   │   └── yes_no.py
+    │   ├── infra
+    │   │   ├── common_repository.py
+    │   │   ├── entity
+    │   │   │   ├── channel_master_entity.py
+    │   │   │   ├── customer_master_entity.py
+    │   │   │   └── recommend_products.py
+    │   │   └── recommend_products_repository.py
+    │   ├── pagination
+    │   │   ├── pagination_base.py
+    │   │   └── pagination_response.py
+    │   ├── service
+    │   │   ├── aws_service.py
+    │   │   └── port
+    │   │       └── base_common_repository.py
+    │   ├── slack
+    │   │   └── slack_message.py
+    │   ├── sqlalchemy
+    │   │   └── object_access_condition.py
+    │   ├── timezone_setting.py
+    │   ├── utils
+    │   │   ├── __init__.py
+    │   │   ├── add_vat_to_price.py
+    │   │   ├── calculate_ratios.py
+    │   │   ├── data_converter.py
+    │   │   ├── date_utils.py
+    │   │   ├── dict_utils.py
+    │   │   ├── file
+    │   │   │   ├── __init__.py
+    │   │   │   └── s3_service.py
+    │   │   ├── get_env_variable.py
+    │   │   ├── get_round_up_to_then_thousand.py
+    │   │   ├── get_values_from_dict.py
+    │   │   ├── model_converter.py
+    │   │   ├── repeat_date.py
+    │   │   ├── s3_token_service.py
+    │   │   ├── string_utils.py
+    │   │   └── validate_url.py
+    │   └── view_settings.py
+    ├── contents
+    │   ├── __init__.py
+    │   ├── domain
+    │   │   ├── contents.py
+    │   │   ├── contents_menu.py
+    │   │   └── creatives.py
+    │   ├── enums
+    │   │   ├── contents_status.py
+    │   │   ├── image_asset_type.py
+    │   │   ├── image_source.py
+    │   │   └── image_use_type.py
+    │   ├── generator
+    │   │   ├── contents_rag.py
+    │   │   └── contents_template_prompts.py
+    │   ├── infra
+    │   │   ├── contents_repository.py
+    │   │   ├── contents_sqlalchemy_repository.py
+    │   │   ├── creatives_repository.py
+    │   │   ├── creatives_sqlalchemy_repository.py
+    │   │   ├── dto
+    │   │   │   └── response
+    │   │   │       ├── contents_menu_response.py
+    │   │   │       ├── contents_response.py
+    │   │   │       ├── creative_recommend.py
+    │   │   │       └── s3_presigned_response.py
+    │   │   └── entity
+    │   │       ├── contents_entity.py
+    │   │       ├── contents_menu_entity.py
+    │   │       ├── contents_retriever_etc_story_entity.py
+    │   │       ├── contents_retriever_hiking_course_entity.py
+    │   │       ├── contents_retriever_mountain_entity.py
+    │   │       ├── contents_retriever_product_tip_entity.py
+    │   │       ├── contents_retriever_theme_mountain_entity.py
+    │   │       ├── contents_retriever_trekking_course_entity.py
+    │   │       └── creatives_entity.py
+    │   ├── resources
+    │   │   ├── arte_down.csv
+    │   │   ├── ascc_product.csv
+    │   │   ├── html_template
+    │   │   │   ├── base.html
+    │   │   │   ├── default.html
+    │   │   │   └── error.html
+    │   │   └── product_data.jsonl
+    │   ├── routes
+    │   │   ├── __init__.py
+    │   │   ├── contents_router.py
+    │   │   ├── creatives_router.py
+    │   │   ├── dto
+    │   │   │   ├── request
+    │   │   │   │   ├── contents_create.py
+    │   │   │   │   ├── contents_generate.py
+    │   │   │   │   ├── creatives_create.py
+    │   │   │   │   └── s3_presigned_url_request.py
+    │   │   │   └── response
+    │   │   │       └── creative_base.py
+    │   │   └── port
+    │   │       └── usecase
+    │   │           ├── add_contents_usecase.py
+    │   │           ├── add_creatives_usecase.py
+    │   │           ├── delete_contents_usecase.py
+    │   │           ├── delete_creatives_usecase.py
+    │   │           ├── generate_contents_usecase.py
+    │   │           ├── get_contents_usecase.py
+    │   │           ├── get_creative_recommendations_for_content_usecase.py
+    │   │           ├── get_creatives_usecase.py
+    │   │           ├── update_contents_usecase.py
+    │   │           └── update_creatives_usecase.py
+    │   ├── service
+    │   │   ├── __init__.py
+    │   │   ├── add_contents_service.py
+    │   │   ├── add_creatives_service.py
+    │   │   ├── delete_contents_service.py
+    │   │   ├── delete_creatives_service.py
+    │   │   ├── generate_contents_service.py
+    │   │   ├── get_contents_service.py
+    │   │   ├── get_creative_recommendations_for_content.py
+    │   │   ├── get_creatives_service.py
+    │   │   ├── port
+    │   │   │   ├── base_contents_repository.py
+    │   │   │   └── base_creatives_repository.py
+    │   │   ├── update_contents_service.py
+    │   │   └── update_creatives_service.py
+    │   └── utils
+    │       ├── create_html.py
+    │       ├── generate_input_handler.py
+    │       └── generation_template.py
+    ├── core
+    │   ├── __init__.py
+    │   ├── container.py
+    │   ├── contextvars_context.py
+    │   ├── data
+    │   │   ├── msg_data.csv
+    │   │   ├── msg_notice_temp.csv
+    │   │   ├── msg_offer_temp.csv
+    │   │   ├── msg_predefine.yaml
+    │   │   ├── rep_extra_text.csv
+    │   │   ├── rep_tag.csv
+    │   │   └── text_template.csv
+    │   ├── database.py
+    │   ├── db_dependency.py
+    │   ├── exceptions
+    │   │   ├── __init__.py
+    │   │   ├── exception_handlers.py
+    │   │   ├── exceptions.py
+    │   │   └── register_exception_handler.py
+    │   ├── logging.py
+    │   ├── middleware
+    │   │   └── prometheus.py
+    │   ├── schema.py
+    │   └── transactional.py
+    ├── dashboard
+    │   ├── domain
+    │   ├── enums
+    │   ├── infra
+    │   │   ├── __init__.py
+    │   │   ├── dashboard_repository.py
+    │   │   ├── dashboard_sqlalchemy_repository.py
+    │   │   ├── dto
+    │   │   │   ├── __init__.py
+    │   │   │   └── response
+    │   │   │       ├── __init__.py
+    │   │   │       ├── campaign_audience_stats_response.py
+    │   │   │       ├── campaign_group_code_response.py
+    │   │   │       ├── campaign_group_stats_response.py
+    │   │   │       ├── campaign_stats_response.py
+    │   │   │       └── campaign_summary_stats_response.py
+    │   │   └── entity
+    │   │       ├── __init__.py
+    │   │       ├── dash_campaign_purchase_entity.py
+    │   │       ├── dash_daily_campaign_cost_entity.py
+    │   │       ├── dash_daily_data_ranges_entity.py
+    │   │       ├── dash_daily_purchase_master.py
+    │   │       ├── dash_daily_sale_amt_entity.py
+    │   │       ├── dash_daily_send_info_entity.py
+    │   │       └── dash_end_table_entity.py
+    │   ├── routes
+    │   │   ├── __init__.py
+    │   │   ├── dashboard_router.py
+    │   │   ├── dto
+    │   │   │   ├── __init__.py
+    │   │   │   └── response
+    │   │   │       └── __init__.py
+    │   │   └── port
+    │   └── service
+    │       ├── __init__.py
+    │       ├── get_audience_stats_service.py
+    │       ├── get_campaign_group_stats_service.py
+    │       ├── get_campaign_stats_service.py
+    │       └── port
+    │           ├── __init__.py
+    │           └── base_dashboard_repository.py
+    ├── main.py
+    ├── message_template
+    │   ├── domain
+    │   │   ├── message_template.py
+    │   │   └── message_template_button_detail.py
+    │   ├── enums
+    │   │   ├── kakao_button_type.py
+    │   │   └── message_type.py
+    │   ├── infra
+    │   │   ├── entity
+    │   │   │   ├── message_template_button_detail_entity.py
+    │   │   │   └── message_template_entity.py
+    │   │   └── message_template_repository.py
+    │   ├── routes
+    │   │   ├── dto
+    │   │   │   ├── request
+    │   │   │   │   ├── message_template_create.py
+    │   │   │   │   └── message_template_update.py
+    │   │   │   └── response
+    │   │   │       ├── kakao_button_link.py
+    │   │   │       └── opt_out_phone_number_response.py
+    │   │   ├── message_template_router.py
+    │   │   └── port
+    │   │       ├── create_message_template_usecase.py
+    │   │       ├── delete_message_template_usecase.py
+    │   │       ├── get_message_template_usecase.py
+    │   │       └── update_message_template_usecase.py
+    │   └── service
+    │       ├── create_message_template_service.py
+    │       ├── delete_message_template_service.py
+    │       ├── get_message_template_service.py
+    │       ├── port
+    │       │   └── base_message_template_repository.py
+    │       └── update_message_template_service.py
+    ├── messages
+    │   ├── domain
+    │   │   ├── kakao_carousel_card.py
+    │   │   ├── kakao_carousel_more_link.py
+    │   │   └── send_kakao_carousel.py
+    │   ├── enums
+    │   ├── infra
+    │   │   ├── entity
+    │   │   │   ├── kakao_carousel_card_entity.py
+    │   │   │   ├── kakao_carousel_link_button_entity.py
+    │   │   │   ├── kakao_carousel_more_link_entity.py
+    │   │   │   ├── ppurio_message_result_entity.py
+    │   │   │   └── send_message_log_entity.py
+    │   │   └── message_repository.py
+    │   ├── routes
+    │   │   ├── dto
+    │   │   │   ├── ppurio_message_result.py
+    │   │   │   ├── request
+    │   │   │   │   ├── kakao_carousel_card_request.py
+    │   │   │   │   └── kakao_carousel_more_link_request.py
+    │   │   │   └── response
+    │   │   │       ├── kakao_carousel_card_response.py
+    │   │   │       └── kakao_carousel_more_link_response.py
+    │   │   ├── message_router.py
+    │   │   ├── port
+    │   │   │   ├── create_carousel_card_usecase.py
+    │   │   │   ├── create_carousel_more_link_usecase.py
+    │   │   │   ├── delete_carousel_card_usecase.py
+    │   │   │   └── update_carousel_card_usecase.py
+    │   │   └── ppurio_message_router.py
+    │   └── service
+    │       ├── create_carousel_card.py
+    │       ├── create_carousel_more_link.py
+    │       ├── delete_carousel_card.py
+    │       ├── message_reserve_controller.py
+    │       ├── message_service.py
+    │       └── port
+    │           └── base_message_repository.py
+    ├── offers
+    │   ├── domain
+    │   │   ├── cafe24_coupon.py
+    │   │   ├── offer.py
+    │   │   ├── offer_condition_variable.py
+    │   │   ├── offer_details.py
+    │   │   └── offer_option.py
+    │   ├── enums
+    │   │   ├── available_period_type.py
+    │   │   ├── available_scope.py
+    │   │   ├── cafe24_coupon_benefit_type.py
+    │   │   ├── offer_type.py
+    │   │   └── offer_use_type.py
+    │   ├── infra
+    │   │   ├── entity
+    │   │   │   ├── offer_details_entity.py
+    │   │   │   └── offers_entity.py
+    │   │   └── offer_repository.py
+    │   ├── routes
+    │   │   ├── dto
+    │   │   │   ├── request
+    │   │   │   │   ├── offer_target_detail.py
+    │   │   │   │   └── offer_update.py
+    │   │   │   └── response
+    │   │   │       ├── offer_detail_response.py
+    │   │   │       └── offer_response.py
+    │   │   ├── offer_router.py
+    │   │   └── port
+    │   │       ├── get_offer_usecase.py
+    │   │       └── update_offer_usecase.py
+    │   └── service
+    │       ├── get_offer_service.py
+    │       ├── port
+    │       │   └── base_offer_repository.py
+    │       └── update_offer_service.py
+    ├── payment
+    │   ├── domain
+    │   │   ├── cafe24_order.py
+    │   │   ├── cafe24_payment.py
+    │   │   ├── card.py
+    │   │   ├── credit_history.py
+    │   │   ├── payment.py
+    │   │   ├── pending_deposit.py
+    │   │   └── subscription.py
+    │   ├── enum
+    │   │   ├── cafe24_payment_status.py
+    │   │   ├── card_company.py
+    │   │   ├── charging_type.py
+    │   │   ├── credit_status.py
+    │   │   ├── deposit_without_account_status.py
+    │   │   ├── payment_method.py
+    │   │   ├── payment_status.py
+    │   │   ├── payment_type.py
+    │   │   ├── product_type.py
+    │   │   └── subscription_status.py
+    │   ├── infra
+    │   │   ├── credit_repository.py
+    │   │   ├── deposit_repository.py
+    │   │   ├── dto
+    │   │   │   └── response
+    │   │   │       ├── toss_payment_billing_response.py
+    │   │   │       └── toss_payment_response.py
+    │   │   ├── entity
+    │   │   │   ├── cafe24_order_entity.py
+    │   │   │   ├── cafe24_payment_entity.py
+    │   │   │   ├── card_entity.py
+    │   │   │   ├── credit_history_entity.py
+    │   │   │   ├── customer_key_entity.py
+    │   │   │   ├── payment_entity.py
+    │   │   │   ├── pending_deposit_entity.py
+    │   │   │   ├── pre_data_for_validation.py
+    │   │   │   ├── remaining_credit_entity.py
+    │   │   │   └── subscription_entity.py
+    │   │   ├── payment_repository.py
+    │   │   └── subscription_repository.py
+    │   ├── resources
+    │   │   └── templates
+    │   │       ├── invoice_template.html
+    │   │       └── receipt_template.html
+    │   ├── routes
+    │   │   ├── dto
+    │   │   │   ├── request
+    │   │   │   │   ├── cafe24_order_request.py
+    │   │   │   │   ├── deposit_without_account.py
+    │   │   │   │   ├── payment_request.py
+    │   │   │   │   └── pre_data_for_validation.py
+    │   │   │   └── response
+    │   │   │       ├── cafe24_order_response.py
+    │   │   │       ├── cafe24_payment_response.py
+    │   │   │       ├── card_response.py
+    │   │   │       ├── credit_history_response.py
+    │   │   │       ├── dynamic_subscription_plans.py
+    │   │   │       ├── key_response.py
+    │   │   │       ├── my_subscription.py
+    │   │   │       ├── remaining_credit.py
+    │   │   │       └── subscription_history_response.py
+    │   │   ├── payment_router.py
+    │   │   └── use_case
+    │   │       ├── change_card_to_primary_usecase.py
+    │   │       ├── create_cafe24_order_usecase.py
+    │   │       ├── delete_card.py
+    │   │       ├── deposit_without_account_usecase.py
+    │   │       ├── get_cafe24_payment_usecase.py
+    │   │       ├── get_card_usecase.py
+    │   │       ├── get_credit.py
+    │   │       ├── get_payment.py
+    │   │       ├── get_subscription.py
+    │   │       ├── invoice_download_usecase.py
+    │   │       ├── issue_billing_key.py
+    │   │       ├── key_generator.py
+    │   │       ├── payment.py
+    │   │       ├── payment_gateway.py
+    │   │       └── save_pre_data_for_validation.py
+    │   └── service
+    │       ├── billing_payment_service.py
+    │       ├── cafe24_order_service.py
+    │       ├── change_card_to_primary.py
+    │       ├── delete_card_service.py
+    │       ├── deposit_service.py
+    │       ├── get_cafe24_payment_service.py
+    │       ├── get_card_service.py
+    │       ├── get_credit_service.py
+    │       ├── get_payment_service.py
+    │       ├── get_subscription_service.py
+    │       ├── invoice_download_service.py
+    │       ├── issue_billing_service.py
+    │       ├── one_time_payment_service.py
+    │       ├── port
+    │       │   ├── base_credit_repository.py
+    │       │   ├── base_deposit_repository.py
+    │       │   ├── base_payment_repository.py
+    │       │   └── base_subscription_repository.py
+    │       ├── save_pre_data_for_validation_service.py
+    │       ├── toss_payment_gateway.py
+    │       └── toss_uuid_key_generator.py
+    ├── products
+    │   ├── domain
+    │   │   └── product.py
+    │   ├── enums
+    │   │   └── product_link_type.py
+    │   ├── infra
+    │   │   ├── dto
+    │   │   │   └── product_search_condition.py
+    │   │   ├── entity
+    │   │   │   ├── comment_master_entity.py
+    │   │   │   ├── product_link_entity.py
+    │   │   │   └── product_master_entity.py
+    │   │   └── product_repository.py
+    │   ├── routes
+    │   │   ├── dto
+    │   │   │   ├── request
+    │   │   │   │   ├── product_link_update.py
+    │   │   │   │   └── product_update.py
+    │   │   │   └── response
+    │   │   │       ├── product_response.py
+    │   │   │       └── title_with_link.py
+    │   │   ├── port
+    │   │   │   └── base_product_service.py
+    │   │   └── product_router.py
+    │   └── service
+    │       ├── port
+    │       │   └── base_product_repository.py
+    │       └── product_service.py
+    ├── search
+    │   ├── domain
+    │   ├── enums
+    │   ├── infra
+    │   │   └── entity
+    │   ├── routes
+    │   │   ├── dto
+    │   │   │   ├── id_with_item_response.py
+    │   │   │   ├── id_with_label_response.py
+    │   │   │   ├── reviewer_response.py
+    │   │   │   ├── send_user_response.py
+    │   │   │   └── strategy_search_response.py
+    │   │   ├── port
+    │   │   │   └── base_search_service.py
+    │   │   └── search_router.py
+    │   └── service
+    │       ├── port
+    │       └── search_service.py
+    ├── strategy
+    │   ├── domain
+    │   │   ├── strategy.py
+    │   │   └── strategy_theme.py
+    │   ├── enums
+    │   │   ├── recommend_model.py
+    │   │   ├── strategy_metrics.py
+    │   │   ├── strategy_status.py
+    │   │   └── target_strategy.py
+    │   ├── infra
+    │   │   ├── entity
+    │   │   │   ├── strategy_entity.py
+    │   │   │   ├── strategy_theme_entity.py
+    │   │   │   └── strategy_theme_offers_entity.py
+    │   │   ├── strategy_repository.py
+    │   │   └── strategy_sqlalchemy_repository.py
+    │   ├── routes
+    │   │   ├── dto
+    │   │   │   ├── common.py
+    │   │   │   ├── request
+    │   │   │   │   ├── preview_message_create.py
+    │   │   │   │   └── strategy_create.py
+    │   │   │   └── response
+    │   │   │       ├── preview_message_response.py
+    │   │   │       ├── strategy_response.py
+    │   │   │       └── strategy_with_campaign_theme_response.py
+    │   │   ├── port
+    │   │   │   ├── create_strategy_usecase.py
+    │   │   │   ├── delete_strategy_usecase.py
+    │   │   │   ├── get_strategy_usecase.py
+    │   │   │   ├── strategy_theme_preview_usecase.py
+    │   │   │   └── update_strategy_usecase.py
+    │   │   └── strategy_router.py
+    │   └── service
+    │       ├── create_strategy_service.py
+    │       ├── delete_strategy_service.py
+    │       ├── get_strategy_service.py
+    │       ├── port
+    │       │   └── base_strategy_repository.py
+    │       └── update_strategy_service.py
+    ├── test
+    │   ├── __init__.py
+    │   ├── conftest.py
+    │   ├── test_main.py
+    │   └── unit
+    │       ├── __init__.py
+    │       ├── _test_template
+    │       │   ├── __init__.py
+    │       │   ├── conftest.py
+    │       │   └── fixtures
+    │       ├── admin
+    │       │   ├── __init__.py
+    │       │   ├── conftest.py
+    │       │   ├── fixtures
+    │       │   │   └── mock_personal_information_repository.py
+    │       │   └── test_personal_information_service.py
+    │       ├── auth
+    │       │   ├── __init__.py
+    │       │   └── fixtures
+    │       │       ├── mock_cafe24_repository.py
+    │       │       └── mock_onboarding_repository.py
+    │       ├── creatives
+    │       │   ├── __init__.py
+    │       │   ├── conftest.py
+    │       │   └── fixtures
+    │       │       └── mock_creatives_repository.py
+    │       ├── payment
+    │       │   ├── __init__.py
+    │       │   ├── conftest.py
+    │       │   ├── fixtures
+    │       │   │   ├── mock_payment_repository.py
+    │       │   │   └── mock_subscription_repository.py
+    │       │   ├── test_cafe24_order_api.py
+    │       │   ├── test_cafe24_order_service.py
+    │       │   ├── test_cafe24_payment_api.py
+    │       │   ├── test_cafe24_payment_service.py
+    │       │   └── test_subscription_service.py
+    │       ├── products
+    │       │   ├── __init__.py
+    │       │   ├── conftest.py
+    │       │   ├── fixtures
+    │       │   │   └── mock_product_repository.py
+    │       │   └── test_product_service.py
+    │       └── users
+    │           ├── __init__.py
+    │           ├── conftest.py
+    │           ├── fixtures
+    │           │   ├── create_token.py
+    │           │   └── mock_user_repository.py
+    │           ├── test_user_api.py
+    │           └── test_user_service.py
+    └── users
+        ├── __init__.py
+        ├── domain
+        │   ├── __init__.py
+        │   ├── gnb_permission.py
+        │   ├── resource_permission.py
+        │   ├── user.py
+        │   └── user_role.py
+        ├── infra
+        │   ├── __init__.py
+        │   ├── entity
+        │   │   ├── __init__.py
+        │   │   ├── user_entity.py
+        │   │   ├── user_password.py
+        │   │   └── user_whitelist.py
+        │   ├── user_repository.py
+        │   └── user_sqlalchemy.py
+        ├── routes
+        │   ├── __init__.py
+        │   ├── dto
+        │   │   ├── __init__.py
+        │   │   ├── request
+        │   │   │   ├── __init__.py
+        │   │   │   ├── user_create.py
+        │   │   │   └── user_modify.py
+        │   │   └── response
+        │   │       ├── __init__.py
+        │   │       ├── user_profile_response.py
+        │   │       └── user_response.py
+        │   ├── port
+        │   │   ├── __init__.py
+        │   │   └── base_user_service.py
+        │   └── user_router.py
+        ├── service
+        │   ├── __init__.py
+        │   ├── port
+        │   │   ├── __init__.py
+        │   │   └── base_user_repository.py
+        │   └── user_service.py
+        ├── use_case
+        │   └── __init__.py
+        └── utils
+            └── user_role_mapping.py
+
+237 directories, 761 files

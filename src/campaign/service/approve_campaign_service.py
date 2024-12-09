@@ -727,7 +727,8 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             # 리마인드 메세지가 존재하지 않고, 캠페인 메세지가 발송되었을 경우 진행 중지 불가
             remind_msgs = db.query(SetGroupMessagesEntity).filter(
                 SetGroupMessagesEntity.campaign_id == campaign_id,
-                SetGroupMessagesEntity.msg_resv_date > current_korea_date,
+                func.to_char(SetGroupMessagesEntity.msg_resv_date, "YYYYMMDD") + "2359"
+                > current_korea_date + "0000",
             )
             if remind_msgs.count() == 0:
                 raise PolicyException(

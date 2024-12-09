@@ -78,7 +78,7 @@ class BaseCampaignRepository(ABC):
     @abstractmethod
     def get_message_in_send_reservation(
         self, campaign_id, set_group_msg_seq, db: Session
-    ) -> SendReservation:
+    ) -> SendReservation | None:
         pass
 
     @abstractmethod

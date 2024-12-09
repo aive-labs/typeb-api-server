@@ -501,7 +501,7 @@ class CampaignSqlAlchemy:
 
     def get_message_in_send_reservation(
         self, campaign_id, set_group_msg_seq, db
-    ) -> SendReservation:
+    ) -> SendReservation | None:
         send_msg_first = (
             db.query(SendReservationEntity)
             .filter(
@@ -514,6 +514,9 @@ class CampaignSqlAlchemy:
             )
             .first()
         )
+
+        if send_msg_first is None:
+            return None
 
         return SendReservation.model_validate(send_msg_first)
 
