@@ -213,7 +213,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 refund_credit_history = CreditHistory(
                     user_name=user.username,
                     description=f"캠페인({campaign_id}) 수정으로 인한 크레딧 사용 취소",
-                    status=CreditStatus.REFUND.value,
+                    status=CreditStatus.CANCEL.value,
                     charge_amount=refund_cost,
                     remaining_amount=remaining_amount + refund_cost,
                     created_by=str(user.user_id),
@@ -670,7 +670,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             refund_credit_history = CreditHistory(
                 user_name=user.username,
                 description=f"캠페인({campaign_id}) 일시중지로 인한 크레딧 사용 취소",
-                status=CreditStatus.REFUND.value,
+                status=CreditStatus.CANCEL.value,
                 charge_amount=campaign_cost,
                 remaining_amount=remaining_amount + campaign_cost,
                 created_by=str(user.user_id),
@@ -1033,7 +1033,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
         refund_credit_history = CreditHistory(
             user_name=user.username,
             description=f"캠페인({campaign_id}) 중지로 인한 크레딧 사용 취소",
-            status=CreditStatus.REFUND.value,
+            status=CreditStatus.CANCEL.value,
             charge_amount=refund_cost,
             remaining_amount=remaining_amount + refund_cost,
             created_by=str(user.user_id),
