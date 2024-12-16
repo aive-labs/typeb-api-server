@@ -1,7 +1,8 @@
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import List
 
+import pytz
 import yaml
 from sqlalchemy.orm import Session
 
@@ -26,6 +27,7 @@ from src.campaign.routes.port.generate_message_usecase import GenerateMessageUse
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
 from src.common.service.port.base_common_repository import BaseCommonRepository
 from src.common.utils.calculate_ratios import calculate_ratios
+from src.common.utils.repeat_date import get_last_day_of_month
 from src.contents.service.port.base_contents_repository import BaseContentsRepository
 from src.core.exceptions.exceptions import PolicyException
 from src.message_template.enums.message_type import MessageType
@@ -72,11 +74,12 @@ class GenerateMessageService(GenerateMessageUsecase):
 
         campaign_base_obj = CampaignReadBase(**yaml_data["campaign_read"])
         campaign_base_obj.campaign_name = "얼리버드 캠페인"
-        current_date = datetime.now()
+
+        korea_timezone = pytz.timezone("Asia/Seoul")
+        current_date = datetime.now(korea_timezone)
         start_date = current_date.replace(day=1)
-        end_date = (
-            current_date.replace(month=current_date.month + 1, day=1) - timedelta(days=1)
-        ).replace(hour=23, minute=59, second=59)
+        last_day = get_last_day_of_month(current_date)
+        end_date = current_date.replace(day=last_day, hour=23, minute=59, second=59)
 
         campaign_base_obj.start_date = start_date.strftime("%Y%m%d")
         campaign_base_obj.end_date = end_date.strftime("%Y%m%d")
