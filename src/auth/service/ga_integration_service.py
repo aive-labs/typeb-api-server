@@ -103,6 +103,7 @@ class GAIntegrationService(BaseGAIntegrationService):
 
         if mall_id is None:
             self.send_error_to_slack(mall_id)
+            raise ConsistencyException(detail={"message": "쇼핑몰 정보가 존재하지 않습니다."})
 
         mall_url = get_mall_url_by_user(str(user.email))
 

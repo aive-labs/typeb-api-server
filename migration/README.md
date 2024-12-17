@@ -22,7 +22,7 @@ alembic revision -m "message"
 - 적용된 버전부터 현재 버전까지 변경사항을 마이그레이션을 진행해주는 기능이다.
 
 ```
-  alembic upgrade head --sql
+  alembic upgrade head
   ```
 
 가장 과거 버전으로 DB 마이그레이션(downgrade) 진행
