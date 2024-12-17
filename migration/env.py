@@ -2,9 +2,6 @@
 import importlib
 import os
 
-print("------------------------------------------")
-print(os.getcwd())
-
 # env.py
 import pkgutil
 from logging.config import fileConfig
@@ -15,10 +12,6 @@ from sqlalchemy import engine_from_config, pool, text
 
 from src.common.utils.get_env_variable import get_env_variable
 from src.core.database import Base
-
-print("------------------------------------------")
-print(os.getcwd())
-print("------------------------------------------")
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
