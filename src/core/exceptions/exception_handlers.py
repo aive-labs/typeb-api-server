@@ -81,7 +81,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
             "timestamp": datetime.now(local_timezone).isoformat() + "Z",
             "path": str(request.url),
             "detail": {
-                "message": "요청 데이터가 유효하지 않습니다."
+                "message": "요청 데이터의 타입이 유효하지 않습니다."
             },  # Pydantic이 제공하는 에러 메시지
             "error": exc.errors(),  # 요청 본문을 그대로 반환할 수도 있음
         },
