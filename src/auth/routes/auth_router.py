@@ -3,6 +3,9 @@ from fastapi import APIRouter, BackgroundTasks, Depends, status
 from sqlalchemy.orm import Session
 
 from src.auth.routes.dto.request.cafe24_token_request import OauthAuthenticationRequest
+from src.auth.routes.dto.response.cafe24_app_execution_link import (
+    Cafe24AppExecutionLink,
+)
 from src.auth.routes.port.base_ga_service import BaseGAIntegrationService
 from src.auth.routes.port.base_oauth_service import BaseOauthService
 from src.auth.utils.permission_checker import get_permission_checker
@@ -41,3 +44,14 @@ async def get_cafe24_access_token(
     db: Session = Depends(get_db),
 ) -> None:
     await cafe24_service.get_oauth_access_token(cafe_authentication_request, db=db)
+
+
+@auth_router.post("/oauth/cafe24/app-link/validation", status_code=status.HTTP_200_OK)
+@inject
+def validate_app_execution_link(
+    cafe24_app_execution_link: Cafe24AppExecutionLink,
+    cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
+) -> None:
+    cafe24_service.get_app_execution_validation_check(
+        cafe24_app_execution_link.url.unicode_string()
+    )
