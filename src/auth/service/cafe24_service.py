@@ -355,7 +355,7 @@ class Cafe24Service(BaseOauthService):
             )
         return hmac_cafe
 
-    def validate_timestamp(self, url: str, time_limit_hours: int = 2) -> bool:
+    def validate_timestamp(self, url: str, time_limit_hours: int = 2):
         """
         URL의 timestamp 값을 확인하여 주어진 시간 이내인지 검증합니다.
         """
@@ -374,6 +374,6 @@ class Cafe24Service(BaseOauthService):
         time_diff = current_time - request_time
 
         if time_diff > timedelta(hours=time_limit_hours):
-            return False
-
-        return True
+            raise Cafe24Exception(
+                detail={"message": "비정상적인 접근입니다. 관리자에게 문의해주세요."}
+            )
