@@ -36,10 +36,10 @@ def get_ga_script(
 
 @ga_router.patch("/status", status_code=status.HTTP_204_NO_CONTENT)
 @inject
-def change_ga_script_status(
+async def change_ga_script_status(
     to_status: GAScriptStatus,
     ga_service: BaseGAIntegrationService = Depends(Provide[Container.ga_service]),
     user=Depends(get_permission_checker(required_permissions=[])),
     db: Session = Depends(get_db),
 ):
-    ga_service.update_status(user, to_status.value, db=db)
+    await ga_service.update_status(user, to_status.value, db=db)

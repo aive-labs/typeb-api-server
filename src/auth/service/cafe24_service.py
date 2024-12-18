@@ -1,6 +1,9 @@
 import base64
+import hashlib
+import hmac
 import os
-from datetime import datetime, timedelta
+import urllib
+from datetime import datetime, timedelta, timezone
 
 import aiohttp
 import pytz
@@ -20,7 +23,11 @@ from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepos
 from src.auth.utils.hash_password import generate_hash
 from src.common.utils.get_env_variable import get_env_variable
 from src.common.utils.s3_token_service import S3TokenService
-from src.core.exceptions.exceptions import Cafe24Exception
+from src.core.exceptions.exceptions import (
+    Cafe24Exception,
+    ConvertException,
+    ValidationException,
+)
 from src.core.transactional import transactional
 from src.payment.domain.cafe24_order import Cafe24Order
 from src.payment.domain.cafe24_payment import Cafe24Payment
@@ -209,8 +216,6 @@ class Cafe24Service(BaseOauthService):
         headers = self.create_order_request_header(mall_id)
         data = self.create_order_body(cafe24_order_request)
 
-        print(data)
-
         # Send the POST request
         async with aiohttp.ClientSession() as session:
             async with session.post(
@@ -295,3 +300,80 @@ class Cafe24Service(BaseOauthService):
                     )
 
                 return Cafe24Payment.from_api_response(payments_list[0])
+
+    def get_app_execution_validation_check(self, url: str) -> None:
+        self.validation_check_hmac(url)
+        self.validate_timestamp(url)
+
+    def validation_check_hmac(self, url: str) -> None:
+        # URL을 파싱하여 query string 부분만 추출
+        try:
+            parsed_url = urllib.parse.urlparse(url)
+            query_params = urllib.parse.parse_qs(parsed_url.query, keep_blank_values=True)
+        except Exception as e:
+            raise ValidationException(detail={"message": "URL 포맷이 잘못되었습니다."})
+
+        hmac_cafe = self.extract_hmac_from(query_params)
+        plain_query = self.generate_plain_query_from(query_params)
+        made_hmac = self.generact_hmac_from(plain_query)
+
+        # 클라이언트 HMAC 값과 비교
+        if hmac_cafe != made_hmac:
+            raise Cafe24Exception(detail={"message": "비정상적인 접근입니다."})
+
+    def generact_hmac_from(self, plain_query):
+        secret_key = self.client_secret
+        try:
+            mac = hmac.new(secret_key.encode("utf-8"), plain_query.encode("utf-8"), hashlib.sha256)
+            made_hmac = base64.b64encode(mac.digest()).decode("utf-8")
+        except Exception:
+            raise ConvertException(detail={"message": "데이터 검증 중 서버 오류가 발생했습니다."})
+        return made_hmac
+
+    def generate_plain_query_from(self, query_params):
+        # auth_config 제외 조건
+        if "user_type" in query_params:
+            user_type = query_params["user_type"][0]
+            # user_type이 P(대표 운영자)인 경우에만 auth_config 제외
+            if user_type == "P":
+                if "auth_config" in query_params:
+                    del query_params["auth_config"]
+        sorted_query = sorted(query_params.items())
+        plain_query = "&".join(
+            f"{key}={urllib.parse.quote(str(value[0]))}" for key, value in sorted_query
+        )
+        return plain_query
+
+    def extract_hmac_from(self, query_params):
+        # 'hmac' 파라미터를 제외하고 plain_query 생성
+        hmac_cafe = None
+        if "hmac" in query_params:
+            hmac_cafe = query_params.pop("hmac", None)[0]  # hmac 키 제거
+        if hmac_cafe is None:
+            raise Cafe24Exception(
+                detail={"message": "비정상적인 접근입니다. 관리자에게 문의해주세요."}
+            )
+        return hmac_cafe
+
+    def validate_timestamp(self, url: str, time_limit_hours: int = 2) -> bool:
+        """
+        URL의 timestamp 값을 확인하여 주어진 시간 이내인지 검증합니다.
+        """
+
+        parsed_url = urllib.parse.urlparse(url)
+        query_params = urllib.parse.parse_qs(parsed_url.query)
+
+        if "timestamp" not in query_params:
+            raise Cafe24Exception(
+                detail={"message": "링크가 잘못되었습니다. 관리자에게 문의해주세요."}
+            )
+
+        timestamp = int(query_params["timestamp"][0])
+        request_time = datetime.fromtimestamp(timestamp, tz=timezone.utc)
+        current_time = datetime.now(timezone.utc)
+        time_diff = current_time - request_time
+
+        if time_diff > timedelta(hours=time_limit_hours):
+            return False
+
+        return True

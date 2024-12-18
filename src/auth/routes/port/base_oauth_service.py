@@ -36,3 +36,7 @@ class BaseOauthService(ABC):
     @abstractmethod
     async def get_payment(self, order_id: str, user: User) -> Cafe24Payment:
         pass
+
+    @abstractmethod
+    def get_app_execution_validation_check(self, url: str) -> None:
+        pass
