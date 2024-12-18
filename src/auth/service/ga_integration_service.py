@@ -124,8 +124,6 @@ class GAIntegrationService(BaseGAIntegrationService):
 
             db.commit()
 
-            await self.trigger_airflow_onboarding_dagrun(mall_id)
-
             self.send_complete_to_slack(mall_id)
 
             return ga_integration_with_gtm
@@ -162,7 +160,7 @@ class GAIntegrationService(BaseGAIntegrationService):
                     )
 
             send_slack_message(
-                title=f"❌ GA, GTM 생성 실패 (*mall id*: {mall_id}*)",
+                title=f"❌ GA, GTM 생성 실패 (*mall id*: {mall_id}*) ❌",
                 body="GA, GTM 연동에 필요한 속성 생성에 실패했습니다. 로그를 확인해주세요.",
                 member_id=get_env_variable("slack_wally"),
             )
@@ -197,6 +195,7 @@ class GAIntegrationService(BaseGAIntegrationService):
         yyyymmddhh24mi = get_korean_current_datetime_yyyymmddhh24mims()
         dag_run_id = f"{mall_id}_ga_{yyyymmddhh24mi}"
         send_date = (datetime.now() + timedelta(days=1)).strftime("%Y%m%d")
+
         send_time = "11:00"
         logical_date = create_logical_date_for_airflow(send_date, send_time)
         data = {
@@ -712,11 +711,13 @@ class GAIntegrationService(BaseGAIntegrationService):
         return build("analyticsadmin", "v1alpha", credentials=self.credentials)
 
     @transactional
-    def update_status(self, user: User, to_status: str, db: Session):
+    async def update_status(self, user: User, to_status: str, db: Session):
         self.ga_repository.update_status(user.mall_id, to_status, db)
 
+        await self.trigger_airflow_onboarding_dagrun(user.mall_id)
+
         send_slack_message(
-            title=f"GA 스크립트 삽입 완료 (mall id: {user.mall_id}",
-            body="고객사에서 스크립트 삽입을 완료했습니다. 데이터 스트림 및 빅쿼리 연동을 확인해주세요.",
+            title=f"{user.mall_id} - GA 스크립트 삽입 완료",
+            body="고객사가 카페24 관리자 페이지에 GA 스크립트 삽입을 완료했습니다. 빅쿼리에 데이터 정상 적재 여부를 확인해주세요.",
             member_id=get_env_variable("slack_wally"),
         )

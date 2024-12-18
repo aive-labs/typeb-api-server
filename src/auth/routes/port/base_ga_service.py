@@ -23,5 +23,5 @@ class BaseGAIntegrationService(ABC):
 
     @transactional
     @abstractmethod
-    def update_status(self, user: User, to_status: str, db: Session):
+    async def update_status(self, user: User, to_status: str, db: Session):
         pass
