@@ -3,10 +3,10 @@ name: CI/CD-main
 on:
   push:
     branches:
-      - main
+      - prod
   pull_request:
     branches:
-      - main
+      - prod
 
 jobs:
   lint_and_formatting:
