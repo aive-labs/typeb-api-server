@@ -51,9 +51,8 @@ async def get_cafe24_access_token(
 def get_cafe24_authentication_url_when_install(
     mall_id: str,
     cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
-    db: Session = Depends(get_db),
 ) -> str:
-    authentication_url = cafe24_service.get_oauth_authentication_url_when_install(mall_id, db=db)
+    authentication_url = cafe24_service.get_oauth_authentication_url_when_install(mall_id)
 
     return authentication_url
 
@@ -63,7 +62,6 @@ def get_cafe24_authentication_url_when_install(
 async def get_cafe24_access_token_when_install(
     cafe_authentication_request: OauthAuthenticationRequest,
     cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
-    db: Session = Depends(get_db),
 ) -> None:
     await cafe24_service.get_oauth_access_token_when_install(cafe_authentication_request, db=db)
 

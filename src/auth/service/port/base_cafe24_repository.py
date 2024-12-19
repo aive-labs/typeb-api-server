@@ -34,5 +34,5 @@ class BaseOauthRepository(ABC):
         pass
 
     @abstractmethod
-    def save_app_install_auth_info(self, mall_id, hashed_state, db: Session):
+    def save_app_install_auth_info(self, mall_id, hashed_state):
         pass

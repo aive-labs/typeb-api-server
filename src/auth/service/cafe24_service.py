@@ -91,12 +91,11 @@ class Cafe24Service(BaseOauthService):
             mall_id, self.client_id, hashed_state, self.redirect_uri, self.scope
         )
 
-    @transactional
-    def get_oauth_authentication_url_when_install(self, mall_id, db: Session):
+    def get_oauth_authentication_url_when_install(self, mall_id):
         # 만들고 나서 DB에 저장해야함
         hashed_state = generate_hash(self.state + mall_id)
 
-        self.cafe24_repository.save_app_install_auth_info(mall_id, hashed_state, db)
+        self.cafe24_repository.save_app_install_auth_info(mall_id, hashed_state)
 
         return self._generate_authentication_url(
             mall_id, self.client_id, hashed_state, self.redirect_uri, self.scope
