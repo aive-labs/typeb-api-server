@@ -4,9 +4,10 @@ from typing import List
 from fastapi import HTTPException
 
 from src.common.utils.get_env_variable import get_env_variable
+from src.content.agent.chat_gpt_agent.contents_rag import StreamingConversationChain
 from src.content.domain.contents_menu import ContentsMenu
-from src.content.generator.contents_rag import StreamingConversationChain
 from src.content.infra.contents_repository import ContentsRepository
+from src.content.resources.generation_template import template_dict
 from src.content.routes.dto.request.contents_generate import ContentsGenerate
 from src.content.routes.port.usecase.generate_contents_usecase import (
     GenerateContentsUseCase,
@@ -15,7 +16,6 @@ from src.content.utils.generate_input_handler import (
     ContentQueryHandler,
     get_summary_dict,
 )
-from src.content.utils.generation_template import template_dict
 
 
 class GenerateContentsService(GenerateContentsUseCase):
