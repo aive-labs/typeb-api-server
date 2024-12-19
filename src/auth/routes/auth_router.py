@@ -46,6 +46,26 @@ async def get_cafe24_access_token(
     await cafe24_service.get_oauth_access_token(cafe_authentication_request, db=db)
 
 
+@auth_router.get("/oauth/cafe24/install")
+@inject
+def get_cafe24_authentication_url_when_install(
+    mall_id: str,
+    cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
+) -> str:
+    authentication_url = cafe24_service.get_oauth_authentication_url_when_install(mall_id)
+
+    return authentication_url
+
+
+@auth_router.post("/oauth/cafe24/install/token", status_code=status.HTTP_201_CREATED)
+@inject
+async def get_cafe24_access_token_when_install(
+    cafe_authentication_request: OauthAuthenticationRequest,
+    cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
+) -> None:
+    await cafe24_service.get_oauth_access_token_when_install(cafe_authentication_request)
+
+
 @auth_router.post("/oauth/cafe24/app-link/validation", status_code=status.HTTP_200_OK)
 @inject
 def validate_app_execution_link(

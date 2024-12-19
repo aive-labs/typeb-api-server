@@ -145,3 +145,61 @@ def get_mall_url_by_user(user_id: str) -> str:
             raise NotFoundException(detail={"message": "사용자 정보를 찾을 수 없습니다."})
 
         return result[0]
+
+
+def save_cafe24_app_auth(mall_id, state):
+    db_conn = psycopg2.connect(
+        dbname=get_env_variable("user_db_name"),
+        user=get_env_variable("user_db_user"),
+        password=get_env_variable("user_db_password"),
+        host=get_env_variable("user_db_host"),
+        port=get_env_variable("user_db_port"),
+    )
+
+    try:
+        with db_conn.cursor() as cursor:
+            cursor.execute(
+                """
+                INSERT INTO public.cafe24_app_install_auth_info (mall_id, state)
+                VALUES (%s, %s);
+                """,
+                (mall_id, state),
+            )
+        # 트랜잭션 커밋
+        db_conn.commit()
+    except Exception as e:
+        # 에러 발생 시 롤백
+        db_conn.rollback()
+        print(f"An error occurred: {e}")
+
+
+def get_cafe24_install_state_token(state):
+    db_conn = psycopg2.connect(
+        dbname=get_env_variable("user_db_name"),
+        user=get_env_variable("user_db_user"),
+        password=get_env_variable("user_db_password"),
+        host=get_env_variable("user_db_host"),
+        port=get_env_variable("user_db_port"),
+    )
+
+    try:
+        with db_conn.cursor() as cursor:
+            cursor.execute(
+                """
+                select mall_id
+                from public.cafe24_app_install_auth_info
+                where state = %s
+                """,
+                (state,),
+            )
+            result = cursor.fetchone()
+
+            if result is None:
+                raise NotFoundException(detail={"message": "인증 정보를 찾을 수 없습니다."})
+
+            return result[0]
+
+    except Exception as e:
+        # 에러 발생 시 롤백
+        db_conn.rollback()
+        print(f"An error occurred: {e}")
