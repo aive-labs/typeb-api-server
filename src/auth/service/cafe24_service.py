@@ -13,10 +13,10 @@ from fastapi import HTTPException
 from requests.auth import HTTPBasicAuth
 from sqlalchemy.orm import Session
 
-from src.auth.enums.onboarding_status import OnboardingStatus
 from src.auth.infra.dto.cafe24_token import Cafe24TokenData
 from src.auth.infra.dto.external_integration import ExternalIntegration
-from src.auth.routes.dto.request.cafe24_token_request import OauthAuthenticationRequest
+from src.auth.model.onboarding_status import OnboardingStatus
+from src.auth.model.request.cafe24_token_request import OauthAuthenticationRequest
 from src.auth.routes.port.base_oauth_service import BaseOauthService
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
@@ -31,7 +31,7 @@ from src.main.exceptions.exceptions import (
 from src.main.transactional import transactional
 from src.payment.domain.cafe24_order import Cafe24Order
 from src.payment.domain.cafe24_payment import Cafe24Payment
-from src.payment.routes.dto.request.cafe24_order_request import Cafe24OrderRequest
+from src.payment.model.request.cafe24_order_request import Cafe24OrderRequest
 from src.user.domain.user import User
 from src.user.service.port.base_user_repository import BaseUserRepository
 

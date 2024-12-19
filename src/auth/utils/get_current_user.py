@@ -9,7 +9,7 @@ from src.common.utils.get_env_variable import get_env_variable
 from src.main.container import Container
 from src.main.db_dependency import get_db
 from src.main.exceptions.exceptions import AuthException, CredentialException
-from src.payment.routes.dto.response.my_subscription import MySubscription
+from src.payment.model.response.my_subscription import MySubscription
 from src.user.infra.user_repository import UserRepository
 
 

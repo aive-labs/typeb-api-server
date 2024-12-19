@@ -1,6 +1,6 @@
 from src.campaign.infra.sqlalchemy_query.get_set_rep_nm_list import get_set_rep_nm_list
 from src.common.utils.data_converter import DataConverter
-from src.strategy.enums.recommend_model import RecommendModels
+from src.strategy.model.recommend_model import RecommendModels
 
 
 def add_set_rep_contents(sets, set_groups, campaign_id, db):

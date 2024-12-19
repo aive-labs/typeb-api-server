@@ -6,13 +6,6 @@ from sqlalchemy.sql import Alias
 
 from src.audience.domain.audience import Audience
 from src.audience.domain.variable_table_mapping import VariableTableMapping
-from src.audience.enums.audience_create_type import AudienceCreateType
-from src.audience.enums.audience_status import AudienceStatus
-from src.audience.enums.csv_template import CsvTemplates
-from src.audience.infra.dto.audience_info import AudienceInfo
-from src.audience.infra.dto.filter_condition import FilterCondition
-from src.audience.infra.dto.linked_campaign import LinkedCampaign
-from src.audience.infra.dto.upload_conditon import UploadCondition
 from src.audience.infra.entity.audience_count_by_month_entity import (
     AudienceCountByMonthEntity,
 )
@@ -54,17 +47,24 @@ from src.audience.infra.entity.variable_table_list import (
 from src.audience.infra.entity.variable_table_mapping_entity import (
     VariableTableMappingEntity,
 )
-from src.audience.routes.dto.response.default_exclude_audience import (
+from src.audience.model.audience_create_type import AudienceCreateType
+from src.audience.model.audience_info import AudienceInfo
+from src.audience.model.audience_status import AudienceStatus
+from src.audience.model.csv_template import CsvTemplates
+from src.audience.model.filter_condition import FilterCondition
+from src.audience.model.linked_campaign import LinkedCampaign
+from src.audience.model.response.default_exclude_audience import (
     DefaultExcludeAudience,
 )
+from src.audience.model.upload_conditon import UploadCondition
 from src.audience.utils.query_builder import execute_query_compiler
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
-from src.common.enums.role import RoleEnum
+from src.common.model.role import RoleEnum
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.model_converter import ModelConverter
 from src.common.utils.string_utils import is_convertible_to_int
 from src.main.exceptions.exceptions import NotFoundException
-from src.search.routes.dto.id_with_label_response import IdWithLabel
+from src.search.model.id_with_label_response import IdWithLabel
 from src.strategy.infra.entity.strategy_entity import StrategyEntity
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
 from src.user.domain.user import User

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.campaign.routes.dto.response.campaign_summary_response import (
+from src.campaign.model.response.campaign_summary_response import (
     CampaignSummaryResponse,
 )
 

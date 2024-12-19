@@ -2,10 +2,10 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.search.routes.dto.send_user_response import SendUserResponse
+from src.search.model.send_user_response import SendUserResponse
 from src.user.domain.user import User
-from src.user.routes.dto.request.user_create import UserCreate
-from src.user.routes.dto.request.user_modify import UserModify
+from src.user.model.request.user_create import UserCreate
+from src.user.model.request.user_modify import UserModify
 
 
 class BaseUserRepository(ABC):

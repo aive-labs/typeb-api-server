@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.payment.routes.dto.request.payment_request import (
+from src.payment.model.request.payment_request import (
     PaymentRequest,
 )
 from src.user.domain.user import User

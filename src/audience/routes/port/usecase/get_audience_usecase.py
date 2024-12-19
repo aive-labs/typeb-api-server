@@ -3,9 +3,9 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.audience.domain.audience import Audience
-from src.audience.routes.dto.response.audience_stat_info import AudienceStatsInfo
-from src.audience.routes.dto.response.audiences import AudienceResponse
-from src.audience.routes.dto.response.default_exclude_audience import (
+from src.audience.model.response.audience_stat_info import AudienceStatsInfo
+from src.audience.model.response.audiences import AudienceResponse
+from src.audience.model.response.default_exclude_audience import (
     DefaultExcludeAudience,
 )
 from src.user.domain.user import User

@@ -11,7 +11,7 @@ from src.main.database import Base
 
 
 class UserEntity(Base):
-    __tablename__ = "user"
+    __tablename__ = "users"
     __table_args__ = {"extend_existing": True}
 
     user_id = Column(Integer, primary_key=True, index=True, autoincrement=True)

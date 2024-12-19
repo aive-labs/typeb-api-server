@@ -12,12 +12,12 @@ from src.campaign.infra.sqlalchemy_query.get_exclude_customer_list import (
     get_excluded_customer_list,
 )
 from src.campaign.infra.sqlalchemy_query.get_ltv import get_ltv
-from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdateDetail
-from src.common.enums.campaign_media import CampaignMedia
+from src.campaign.model.request.campaign_set_update import CampaignSetUpdateDetail
+from src.common.model.campaign_media import CampaignMedia
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import localtime_converter
 from src.main.exceptions.exceptions import PolicyException
-from src.message_template.enums.message_type import MessageType
+from src.message_template.model.message_type import MessageType
 
 
 def recreate_basic_campaign_set(

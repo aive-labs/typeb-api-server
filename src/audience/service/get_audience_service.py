@@ -1,18 +1,18 @@
 from sqlalchemy.orm import Session
 
 from src.audience.domain.audience import Audience
-from src.audience.routes.dto.response.audience_stat_info import (
+from src.audience.model.response.audience_stat_info import (
     AudienceStats,
     AudienceStatsInfo,
     AudienceSummary,
 )
-from src.audience.routes.dto.response.audiences import (
+from src.audience.model.response.audiences import (
     AudienceFilter,
     AudienceRes,
     AudienceResponse,
     FilterItem,
 )
-from src.audience.routes.dto.response.default_exclude_audience import (
+from src.audience.model.response.default_exclude_audience import (
     DefaultExcludeAudience,
 )
 from src.audience.routes.port.usecase.get_audience_usecase import GetAudienceUseCase

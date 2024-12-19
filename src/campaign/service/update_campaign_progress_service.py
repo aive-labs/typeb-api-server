@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from src.campaign.enums.campaign_progress import CampaignProgress
+from src.campaign.model.campaign_progress import CampaignProgress
 from src.campaign.routes.port.update_campaign_progress_usecase import (
     UpdateCampaignProgressUseCase,
 )

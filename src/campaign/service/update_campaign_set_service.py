@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
-from src.campaign.enums.campaign_type import CampaignType
 from src.campaign.infra.sqlalchemy_query.create_set_group_messages import (
     create_set_group_messages,
 )
@@ -16,7 +15,8 @@ from src.campaign.infra.sqlalchemy_query.recreate_expert_campaign import (
     recreate_expert_campaign_set,
 )
 from src.campaign.infra.sqlalchemy_query.save_campaign_set import save_campaign_set
-from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdate
+from src.campaign.model.campaign_type import CampaignType
+from src.campaign.model.request.campaign_set_update import CampaignSetUpdate
 from src.campaign.routes.port.update_campaign_set_usecase import (
     UpdateCampaignSetUseCase,
 )

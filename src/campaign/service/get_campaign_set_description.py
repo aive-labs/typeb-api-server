@@ -17,7 +17,7 @@ from src.campaign.infra.sqlalchemy_query.get_campaign_set_groups import (
     get_campaign_set_groups,
 )
 from src.campaign.infra.sqlalchemy_query.get_campaign_sets import get_campaign_sets
-from src.campaign.routes.dto.response.campaign_set_description_response import (
+from src.campaign.model.response.campaign_set_description_response import (
     CampaignSetDescription,
     CampaignSetDescriptionResponse,
 )

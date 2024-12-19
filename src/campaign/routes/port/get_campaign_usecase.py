@@ -3,13 +3,13 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
-from src.campaign.routes.dto.response.campaign_basic_response import (
+from src.campaign.model.response.campaign_basic_response import (
     CampaignBasicResponse,
 )
-from src.campaign.routes.dto.response.campaign_timeline_response import (
+from src.campaign.model.response.campaign_timeline_response import (
     CampaignTimelineResponse,
 )
-from src.campaign.routes.dto.response.exclusion_customer_detail import (
+from src.campaign.model.response.exclusion_customer_detail import (
     ExcludeCustomerDetail,
 )
 from src.user.domain.user import User

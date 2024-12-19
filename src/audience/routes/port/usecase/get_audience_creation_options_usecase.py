@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.audience.routes.dto.response.upload_condition_response import (
+from src.audience.model.response.upload_condition_response import (
     AudienceCreationOptionsResponse,
 )
 

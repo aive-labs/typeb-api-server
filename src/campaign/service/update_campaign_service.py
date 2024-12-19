@@ -6,10 +6,6 @@ from sqlalchemy import and_, delete, func, update
 from sqlalchemy.orm import Session
 
 from src.auth.infra.entity.message_integration_entity import MessageIntegrationEntity
-from src.campaign.enums.campagin_status import CampaignStatus
-from src.campaign.enums.campaign_timeline_type import CampaignTimelineType
-from src.campaign.enums.campaign_type import CampaignType
-from src.campaign.enums.send_type import SendTypeEnum
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.campaign.infra.entity.campaign_remind_entity import CampaignRemindEntity
 from src.campaign.infra.entity.campaign_timeline_entity import CampaignTimelineEntity
@@ -34,20 +30,24 @@ from src.campaign.infra.sqlalchemy_query.recurring_campaign.get_campaign_set_gro
 from src.campaign.infra.sqlalchemy_query.recurring_campaign.get_set_portion import (
     get_set_portion,
 )
-from src.campaign.routes.dto.request.campaign_create import CampaignCreate
+from src.campaign.model.campagin_status import CampaignStatus
+from src.campaign.model.campaign_timeline_type import CampaignTimelineType
+from src.campaign.model.campaign_type import CampaignType
+from src.campaign.model.request.campaign_create import CampaignCreate
+from src.campaign.model.send_type import SendTypeEnum
 from src.campaign.routes.port.update_campaign_usecase import UpdateCampaignUseCase
 from src.campaign.service.authorization_checker import AuthorizationChecker
 from src.campaign.service.campaign_dependency_manager import CampaignDependencyManager
 from src.campaign.service.campaign_manager import CampaignManager
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
 from src.campaign.utils.utils import set_summary_sentence
-from src.common.enums.campaign_media import CampaignMedia
+from src.common.model.campaign_media import CampaignMedia
 from src.common.timezone_setting import selected_timezone
 from src.common.utils import repeat_date
 from src.common.utils.date_utils import calculate_remind_date
 from src.main.exceptions.exceptions import PolicyException
 from src.main.transactional import transactional
-from src.message_template.enums.message_type import MessageType
+from src.message_template.model.message_type import MessageType
 from src.user.domain.user import User
 
 

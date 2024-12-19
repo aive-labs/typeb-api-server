@@ -4,7 +4,7 @@ from src.main.database import Base
 
 
 class OffersEntity(Base):
-    __tablename__ = "offer"
+    __tablename__ = "offers"
 
     coupon_no = Column(String, primary_key=True, index=True, nullable=False)
     coupon_name = Column(String, nullable=False)

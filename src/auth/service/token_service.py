@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 import pytz
 from jose import jwt
 
-from src.auth.routes.dto.response.token_response import TokenResponse
+from src.auth.model.response.token_response import TokenResponse
 from src.auth.utils.jwt_settings import JwtSettings
 from src.common.utils.date_utils import get_expired_at_to_iso_format_kr_time
 from src.common.utils.get_env_variable import get_env_variable

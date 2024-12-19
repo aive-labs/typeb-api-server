@@ -32,11 +32,11 @@ from src.campaign.utils.utils import (
     split_dataframe_by_ratios,
     split_df_stratified_by_column,
 )
-from src.common.enums.campaign_media import CampaignMedia
+from src.common.model.campaign_media import CampaignMedia
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import localtime_converter
 from src.main.exceptions.exceptions import PolicyException
-from src.message_template.enums.message_type import MessageType
+from src.message_template.model.message_type import MessageType
 
 
 class CampaignManager:

@@ -5,14 +5,14 @@ from sqlalchemy.orm import Session
 from src.auth.utils.permission_checker import get_permission_checker
 from src.common.pagination.pagination_response import PaginationResponse
 from src.content.domain.creatives import Creatives
-from src.content.enums.image_asset_type import ImageAssetTypeEnum
 from src.content.infra.dto.response.s3_presigned_response import S3PresignedResponse
-from src.content.routes.dto.request.contents_create import StyleObject
-from src.content.routes.dto.request.creatives_create import CreativeCreate
-from src.content.routes.dto.request.s3_presigned_url_request import (
+from src.content.model.image_asset_type import ImageAssetTypeEnum
+from src.content.model.request.contents_create import StyleObject
+from src.content.model.request.creatives_create import CreativeCreate
+from src.content.model.request.s3_presigned_url_request import (
     S3PresignedUrlRequest,
 )
-from src.content.routes.dto.response.creative_base import CreativeBase
+from src.content.model.response.creative_base import CreativeBase
 from src.content.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase
 from src.content.routes.port.usecase.delete_creatives_usecase import (
     DeleteCreativesUseCase,

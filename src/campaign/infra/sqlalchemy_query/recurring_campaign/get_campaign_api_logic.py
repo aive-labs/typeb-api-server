@@ -1,6 +1,5 @@
 import pandas as pd
 
-from src.campaign.enums.campaign_type import CampaignType
 from src.campaign.infra.sqlalchemy_query.add_set_rep_contents import (
     add_set_rep_contents,
 )
@@ -24,6 +23,7 @@ from src.campaign.infra.sqlalchemy_query.recurring_campaign.get_campaign_set_gro
 from src.campaign.infra.sqlalchemy_query.recurring_campaign.get_set_portion import (
     get_set_portion,
 )
+from src.campaign.model.campaign_type import CampaignType
 from src.campaign.utils.utils import set_summary_sentence
 from src.main.exceptions.exceptions import NotFoundException
 

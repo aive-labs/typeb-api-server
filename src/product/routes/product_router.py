@@ -10,9 +10,9 @@ from src.common.pagination.pagination_response import PaginationResponse
 from src.main.container import Container
 from src.main.db_dependency import get_db
 from src.product.infra.dto.product_search_condition import ProductSearchCondition
-from src.product.routes.dto.request.product_link_update import ProductLinkUpdate
-from src.product.routes.dto.request.product_update import ProductUpdate
-from src.product.routes.dto.response.product_response import ProductResponse
+from src.product.model.request.product_link_update import ProductLinkUpdate
+from src.product.model.request.product_update import ProductUpdate
+from src.product.model.response.product_response import ProductResponse
 from src.product.routes.port.base_product_service import BaseProductService
 
 product_router = APIRouter(tags=["Products"])

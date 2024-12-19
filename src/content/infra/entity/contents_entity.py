@@ -13,7 +13,7 @@ from src.main.database import Base
 
 
 class ContentsEntity(Base):
-    __tablename__ = "content"
+    __tablename__ = "contents"
 
     contents_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     contents_name = Column(String, nullable=False)

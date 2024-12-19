@@ -1,4 +1,4 @@
-from src.campaign.enums.campagin_status import CampaignStatus
+from src.campaign.model.campagin_status import CampaignStatus
 
 
 def is_status_review_to_pending(from_status, to_status):

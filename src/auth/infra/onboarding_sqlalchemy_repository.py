@@ -3,14 +3,14 @@ from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
 from src.auth.domain.onboarding import Onboarding
-from src.auth.enums.onboarding_status import OnboardingStatus
 from src.auth.infra.entity.kakao_integration_entity import KakaoIntegrationEntity
 from src.auth.infra.entity.message_integration_entity import MessageIntegrationEntity
 from src.auth.infra.entity.onboarding_entity import OnboardingEntity
-from src.auth.routes.dto.request.kakao_channel_request import KakaoChannelRequest
-from src.auth.routes.dto.request.message_sender_request import MessageSenderRequest
-from src.auth.routes.dto.response.kakao_channel_response import KakaoChannelResponse
-from src.auth.routes.dto.response.message_sender_response import MessageSenderResponse
+from src.auth.model.onboarding_status import OnboardingStatus
+from src.auth.model.request.kakao_channel_request import KakaoChannelRequest
+from src.auth.model.request.message_sender_request import MessageSenderRequest
+from src.auth.model.response.kakao_channel_response import KakaoChannelResponse
+from src.auth.model.response.message_sender_response import MessageSenderResponse
 from src.common.utils.model_converter import ModelConverter
 from src.main.exceptions.exceptions import NotFoundException
 

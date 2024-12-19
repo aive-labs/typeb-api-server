@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from src.message.domain.kakao_carousel_card import KakaoCarouselCard
 from src.message.domain.kakao_carousel_more_link import KakaoCarouselMoreLink
-from src.message.routes.dto.ppurio_message_result import PpurioMessageResult
+from src.message.model.ppurio_message_result import PpurioMessageResult
 from src.user.domain.user import User
 
 

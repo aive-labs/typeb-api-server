@@ -4,7 +4,7 @@ from src.common.utils.validate_url import validate_url
 from src.main.exceptions.exceptions import PolicyException
 from src.main.transactional import transactional
 from src.message.domain.kakao_carousel_more_link import KakaoCarouselMoreLink
-from src.message.routes.dto.request.kakao_carousel_more_link_request import (
+from src.message.model.request.kakao_carousel_more_link_request import (
     KakaoCarouselMoreLinkRequest,
 )
 from src.message.routes.port.create_carousel_more_link_usecase import (

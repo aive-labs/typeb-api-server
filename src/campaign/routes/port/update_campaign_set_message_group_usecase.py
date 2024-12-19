@@ -2,16 +2,16 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.campaign.routes.dto.request.campaign_set_group_message_request import (
+from src.campaign.model.request.campaign_set_group_message_request import (
     CampaignSetGroupMessageRequest,
 )
-from src.campaign.routes.dto.request.campaign_set_group_update import (
+from src.campaign.model.request.campaign_set_group_update import (
     CampaignSetGroupUpdate,
 )
-from src.campaign.routes.dto.response.campaign_set_group_update_response import (
+from src.campaign.model.response.campaign_set_group_update_response import (
     CampaignSetGroupUpdateResponse,
 )
-from src.campaign.routes.dto.response.update_campaign_set_group_message_response import (
+from src.campaign.model.response.update_campaign_set_group_message_response import (
     UpdateCampaignSetGroupMessageResponse,
 )
 from src.main.transactional import transactional

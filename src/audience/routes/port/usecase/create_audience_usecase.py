@@ -2,12 +2,12 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.audience.routes.dto.request.audience_create import AudienceCreate
-from src.audience.routes.dto.response.audience_variable_combinations import (
+from src.audience.model.request.audience_create import AudienceCreate
+from src.audience.model.response.audience_variable_combinations import (
     DataType,
     PredefinedVariable,
 )
-from src.audience.routes.dto.response.target_strategy_combination import (
+from src.audience.model.response.target_strategy_combination import (
     TargetStrategyCombination,
 )
 from src.main.transactional import transactional

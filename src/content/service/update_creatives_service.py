@@ -4,7 +4,7 @@ from src.common.utils.file.s3_service import S3Service
 from src.common.utils.get_env_variable import get_env_variable
 from src.content.domain.creatives import Creatives
 from src.content.infra.creatives_repository import CreativesRepository
-from src.content.routes.dto.request.creatives_create import CreativeCreate
+from src.content.model.request.creatives_create import CreativeCreate
 from src.content.routes.port.usecase.update_creatives_usecase import (
     UpdateCreativesUseCase,
 )

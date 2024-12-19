@@ -15,12 +15,12 @@ from src.content.infra.entity.contents_entity import ContentsEntity
 from src.content.infra.entity.contents_menu_entity import ContentsMenuEntity
 from src.content.infra.entity.creatives_entity import CreativesEntity
 from src.main.exceptions.exceptions import NotFoundException
-from src.product.infra.entity.comment_master_entity import (
-    ProductReviewEntity,
-)
 from src.product.infra.entity.product_link_entity import ProductLinkEntity
 from src.product.infra.entity.product_master_entity import ProductMasterEntity
-from src.search.routes.dto.id_with_item_response import IdWithItem
+from src.product.infra.entity.product_reviews_entity import (
+    ProductReviewEntity,
+)
+from src.search.model.id_with_item_response import IdWithItem
 
 
 class ContentsSqlAlchemy:

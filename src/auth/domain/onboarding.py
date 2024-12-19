@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from src.auth.enums.onboarding_status import OnboardingStatus
+from src.auth.model.onboarding_status import OnboardingStatus
 
 
 class Onboarding(BaseModel):

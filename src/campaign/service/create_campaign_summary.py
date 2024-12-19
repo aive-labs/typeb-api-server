@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from src.campaign.routes.dto.response.campaign_summary_response import (
+from src.campaign.model.response.campaign_summary_response import (
     CampaignSummaryResponse,
 )
 from src.campaign.routes.port.create_campaign_summary_usecase import (

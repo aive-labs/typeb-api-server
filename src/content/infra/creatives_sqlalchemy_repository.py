@@ -5,8 +5,8 @@ from src.common.utils.model_converter import ModelConverter
 from src.content.domain.creatives import Creatives
 from src.content.infra.dto.response.creative_recommend import CreativeRecommend
 from src.content.infra.entity.creatives_entity import CreativesEntity
-from src.content.routes.dto.request.contents_create import StyleObject
-from src.content.routes.dto.response.creative_base import CreativeBase
+from src.content.model.request.contents_create import StyleObject
+from src.content.model.response.creative_base import CreativeBase
 from src.main.exceptions.exceptions import NotFoundException
 from src.product.infra.entity.product_master_entity import ProductMasterEntity
 

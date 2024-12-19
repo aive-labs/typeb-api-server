@@ -2,15 +2,15 @@ from datetime import datetime, timezone
 
 from sqlalchemy.orm import Session
 
-from src.common.enums.campaign_media import CampaignMedia
+from src.common.model.campaign_media import CampaignMedia
 from src.main.exceptions.exceptions import ValidationException
 from src.main.transactional import transactional
 from src.message_template.domain.message_template import MessageTemplate
 from src.message_template.domain.message_template_button_detail import (
     MessageTemplateButtonDetail,
 )
-from src.message_template.enums.message_type import MessageType
-from src.message_template.routes.dto.request.message_template_create import (
+from src.message_template.model.message_type import MessageType
+from src.message_template.model.request.message_template_create import (
     TemplateCreate,
 )
 from src.message_template.routes.port.create_message_template_usecase import (

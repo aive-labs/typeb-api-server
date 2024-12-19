@@ -7,8 +7,8 @@ from weasyprint import HTML
 
 from src.common.utils.date_utils import format_datetime
 from src.main.exceptions.exceptions import ConsistencyException, ConvertException
-from src.payment.enum.charging_type import ChargingType
-from src.payment.enum.credit_status import CreditStatus
+from src.payment.model.charging_type import ChargingType
+from src.payment.model.credit_status import CreditStatus
 
 # from weasyprint import HTML
 from src.payment.routes.use_case.invoice_download_usecase import InvoiceDownloadUseCase

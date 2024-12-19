@@ -5,14 +5,14 @@ from src.main.exceptions.exceptions import NotFoundException
 from src.payment.domain.cafe24_order import Cafe24Order
 from src.payment.domain.card import Card
 from src.payment.domain.payment import Payment
-from src.payment.enum.product_type import ProductType
 from src.payment.infra.entity.cafe24_order_entity import Cafe24OrderEntity
 from src.payment.infra.entity.cafe24_payment_entity import Cafe24PaymentEntity
 from src.payment.infra.entity.card_entity import CardEntity
 from src.payment.infra.entity.customer_key_entity import MallCustomerKeyMappingEntity
 from src.payment.infra.entity.payment_entity import PaymentEntity
 from src.payment.infra.entity.pre_data_for_validation import PreDataForValidationEntity
-from src.payment.routes.dto.request.pre_data_for_validation import PreDataForValidation
+from src.payment.model.product_type import ProductType
+from src.payment.model.request.pre_data_for_validation import PreDataForValidation
 from src.payment.service.port.base_payment_repository import BasePaymentRepository
 from src.user.domain.user import User
 

@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.campaign.routes.dto.request.campaign_create import CampaignCreate
-from src.campaign.routes.dto.response.campaign_basic_response import (
+from src.campaign.model.request.campaign_create import CampaignCreate
+from src.campaign.model.response.campaign_basic_response import (
     CampaignBasicResponse,
 )
 from src.main.transactional import transactional

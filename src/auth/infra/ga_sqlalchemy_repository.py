@@ -3,8 +3,8 @@ from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 
 from src.auth.domain.ga_integration import GAIntegration
-from src.auth.enums.ga_script_status import GAScriptStatus
 from src.auth.infra.entity.ga_integration_entity import GAIntegrationEntity
+from src.auth.model.ga_script_status import GAScriptStatus
 from src.common.utils.get_env_variable import get_env_variable
 
 

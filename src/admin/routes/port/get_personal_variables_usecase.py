@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.admin.routes.dto.response.personal_variable_response import (
+from src.admin.model.response.personal_variable_response import (
     PersonalVariableResponse,
 )
 from src.user.domain.user import User

@@ -9,10 +9,10 @@ from src.common.utils.get_round_up_to_then_thousand import (
     round_up_to_nearest_ten_thousand,
 )
 from src.payment.domain.subscription import Subscription
-from src.payment.routes.dto.response.dynamic_subscription_plans import (
+from src.payment.model.response.dynamic_subscription_plans import (
     DynamicSubscriptionPlans,
 )
-from src.payment.routes.dto.response.subscription_history_response import (
+from src.payment.model.response.subscription_history_response import (
     SubscriptionHistoryResponse,
 )
 from src.payment.routes.use_case.get_subscription import GetSubscriptionUseCase

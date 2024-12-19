@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.main.transactional import transactional
-from src.payment.routes.dto.response.card_response import CardResponse
+from src.payment.model.response.card_response import CardResponse
 
 
 class GetCardUseCase(ABC):

@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from src.campaign.enums.campagin_status import CampaignStatus
 from src.campaign.infra.campaign_repository import CampaignRepository
+from src.campaign.model.campagin_status import CampaignStatus
 from src.main.exceptions.exceptions import (
     LinkedCampaignException,
 )

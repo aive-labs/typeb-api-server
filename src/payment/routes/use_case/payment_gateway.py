@@ -4,7 +4,7 @@ from src.payment.domain.payment import Payment
 from src.payment.infra.dto.response.toss_payment_billing_response import (
     TossPaymentBillingResponse,
 )
-from src.payment.routes.dto.request.payment_request import (
+from src.payment.model.request.payment_request import (
     PaymentRequest,
 )
 

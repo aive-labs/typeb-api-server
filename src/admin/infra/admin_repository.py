@@ -1,11 +1,11 @@
 from sqlalchemy.orm import Session
 
 from src.admin.infra.entity.personal_variable_entity import PersonalVariablesEntity
-from src.admin.routes.dto.response.personal_variable_response import (
+from src.admin.model.response.personal_variable_response import (
     PersonalVariableResponse,
 )
 from src.admin.service.port.base_admin_repository import BaseAdminRepository
-from src.common.enums.access_level import AccessLevel
+from src.common.model.access_level import AccessLevel
 from src.user.domain.user import User
 
 

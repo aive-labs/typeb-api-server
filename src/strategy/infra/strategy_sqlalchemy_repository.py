@@ -6,19 +6,19 @@ from sqlalchemy.orm import Session
 from src.audience.infra.entity.strategy_theme_audience_entity import (
     StrategyThemeAudienceMappingEntity,
 )
-from src.common.enums.role import RoleEnum
+from src.common.model.role import RoleEnum
 from src.common.utils.date_utils import localtime_converter
 from src.main.exceptions.exceptions import NotFoundException
-from src.search.routes.dto.id_with_item_response import IdWithItem
-from src.search.routes.dto.strategy_search_response import StrategySearchResponse
+from src.search.model.id_with_item_response import IdWithItem
+from src.search.model.strategy_search_response import StrategySearchResponse
 from src.strategy.domain.strategy import Strategy
 from src.strategy.domain.strategy_theme import StrategyTheme
-from src.strategy.enums.strategy_status import StrategyStatus
 from src.strategy.infra.entity.strategy_entity import StrategyEntity
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
 from src.strategy.infra.entity.strategy_theme_offers_entity import (
     StrategyThemeOfferMappingEntity,
 )
+from src.strategy.model.strategy_status import StrategyStatus
 from src.user.domain.user import User
 from src.user.infra.entity.user_entity import UserEntity
 

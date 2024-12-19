@@ -3,12 +3,12 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from src.common.enums.campaign_media import CampaignMedia
+from src.common.model.campaign_media import CampaignMedia
 from src.main.exceptions.exceptions import ValidationException
 from src.message_template.domain.message_template_button_detail import (
     MessageTemplateButtonDetail,
 )
-from src.message_template.enums.message_type import MessageType
+from src.message_template.model.message_type import MessageType
 
 
 class MessageTemplate(BaseModel):

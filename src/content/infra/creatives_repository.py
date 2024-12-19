@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from src.content.domain.creatives import Creatives
 from src.content.infra.creatives_sqlalchemy_repository import CreativesSqlAlchemy
 from src.content.infra.dto.response.creative_recommend import CreativeRecommend
-from src.content.routes.dto.response.creative_base import CreativeBase
+from src.content.model.response.creative_base import CreativeBase
 from src.content.service.port.base_creatives_repository import BaseCreativesRepository
 
 

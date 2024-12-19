@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from src.content.enums.image_source import ImageSource
 from src.content.infra.creatives_repository import CreativesRepository
+from src.content.model.image_source import ImageSource
 from src.content.routes.port.usecase.delete_creatives_usecase import (
     DeleteCreativesUseCase,
 )

@@ -9,11 +9,11 @@ from src.main.exceptions.exceptions import (
 )
 from src.payment.domain.credit_history import CreditHistory
 from src.payment.domain.subscription import Subscription
-from src.payment.enum.product_type import ProductType
-from src.payment.enum.subscription_status import SubscriptionStatus
-from src.payment.routes.dto.request.payment_request import (
+from src.payment.model.product_type import ProductType
+from src.payment.model.request.payment_request import (
     PaymentRequest,
 )
+from src.payment.model.subscription_status import SubscriptionStatus
 from src.payment.routes.use_case.payment import PaymentUseCase
 from src.payment.routes.use_case.payment_gateway import PaymentGateway
 from src.payment.service.port.base_credit_repository import BaseCreditRepository

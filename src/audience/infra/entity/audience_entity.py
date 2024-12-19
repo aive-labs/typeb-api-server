@@ -5,7 +5,7 @@ from src.main.database import Base as Base
 
 
 class AudienceEntity(Base):
-    __tablename__ = "audience"
+    __tablename__ = "audiences"
 
     audience_id = Column(
         String,
@@ -29,7 +29,7 @@ class AudienceEntity(Base):
     default_excl_on_camp = Column(Boolean, nullable=False, default=False)
     user_exc_deletable = Column(Boolean, nullable=True)
 
-    mapping = relationship("StrategyThemeAudienceMappingEntity", backref="audience")
+    mapping = relationship("StrategyThemeAudienceMappingEntity", backref="audiences")
 
 
 audience_id_seq = Sequence("audience_seq", schema="aivelabs_sv")

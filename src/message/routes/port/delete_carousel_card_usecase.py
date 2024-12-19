@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.main.transactional import transactional
-from src.message.routes.dto.response.kakao_carousel_card_response import (
+from src.message.model.response.kakao_carousel_card_response import (
     KakaoCarouselCardResponse,
 )
 

@@ -9,10 +9,10 @@ from googleapiclient.discovery import build
 from sqlalchemy.orm import Session
 
 from src.auth.domain.ga_integration import GAIntegration
-from src.auth.enums.ga_script_status import GAScriptStatus
-from src.auth.enums.gtm_variable import GoogleTagManagerVariableFileName
 from src.auth.infra.ga_repository import GARepository
-from src.auth.routes.dto.response.ga_script_response import GAScriptResponse
+from src.auth.model.ga_script_status import GAScriptStatus
+from src.auth.model.gtm_variable import GoogleTagManagerVariableFileName
+from src.auth.model.response.ga_script_response import GAScriptResponse
 from src.auth.routes.port.base_ga_service import BaseGAIntegrationService
 from src.common.service.aws_service import AwsService
 from src.common.slack.slack_message import send_slack_message

@@ -2210,7 +2210,7 @@ def upgrade() -> None:
         sa.Column("apply_offer_rate", sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(
             ["coupon_no"],
-            ["aivelabs_sv.offer.coupon_no"],
+            ["aivelabs_sv.offers.coupon_no"],
         ),
         sa.PrimaryKeyConstraint("offer_detail_id"),
         schema="aivelabs_sv",
@@ -2451,7 +2451,7 @@ def upgrade() -> None:
         sa.Column("updated_by", sa.String(), nullable=False),
         sa.ForeignKeyConstraint(
             ["coupon_no"],
-            ["aivelabs_sv.offer.coupon_no"],
+            ["aivelabs_sv.offers.coupon_no"],
         ),
         sa.ForeignKeyConstraint(
             ["strategy_theme_id"],

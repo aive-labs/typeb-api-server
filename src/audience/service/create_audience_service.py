@@ -4,20 +4,20 @@ from sqlalchemy import and_, except_, or_
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import Alias
 
-from src.audience.enums.audience_create_type import AudienceCreateType
-from src.audience.enums.audience_status import AudienceStatus
-from src.audience.enums.csv_template import CsvTemplates
-from src.audience.enums.predefined_variable_access import PredefinedVariableAccess
 from src.audience.infra.audience_repository import AudienceRepository
 from src.audience.infra.entity import variable_table_list
 from src.audience.infra.entity.variable_table_list import CustomerInfoStatusEntity
-from src.audience.routes.dto.request.audience_create import AudienceCreate
-from src.audience.routes.dto.response.audience_variable_combinations import (
+from src.audience.model.audience_create_type import AudienceCreateType
+from src.audience.model.audience_status import AudienceStatus
+from src.audience.model.csv_template import CsvTemplates
+from src.audience.model.predefined_variable_access import PredefinedVariableAccess
+from src.audience.model.request.audience_create import AudienceCreate
+from src.audience.model.response.audience_variable_combinations import (
     DataType,
     Option,
     PredefinedVariable,
 )
-from src.audience.routes.dto.response.target_strategy_combination import (
+from src.audience.model.response.target_strategy_combination import (
     TargetStrategyAndCondition,
     TargetStrategyCombination,
     TargetStrategyCondition,

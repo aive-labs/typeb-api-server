@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.payment.routes.dto.request.pre_data_for_validation import PreDataForValidation
+from src.payment.model.request.pre_data_for_validation import PreDataForValidation
 from src.user.domain.user import User
 
 

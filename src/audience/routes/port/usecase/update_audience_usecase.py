@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.audience.routes.dto.request.audience_update import AudienceUpdate
+from src.audience.model.request.audience_update import AudienceUpdate
 from src.main.transactional import transactional
 from src.user.domain.user import User
 

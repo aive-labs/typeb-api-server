@@ -9,10 +9,10 @@ from src.common.utils.get_env_variable import get_env_variable
 from src.common.utils.validate_url import validate_url
 from src.main.exceptions.exceptions import PolicyException
 from src.message.domain.kakao_carousel_card import KakaoCarouselCard
-from src.message.routes.dto.request.kakao_carousel_card_request import (
+from src.message.model.request.kakao_carousel_card_request import (
     KakaoCarouselCardRequest,
 )
-from src.message.routes.dto.response.kakao_carousel_card_response import (
+from src.message.model.response.kakao_carousel_card_response import (
     KakaoCarouselCardResponse,
 )
 from src.message.routes.port.create_carousel_card_usecase import (

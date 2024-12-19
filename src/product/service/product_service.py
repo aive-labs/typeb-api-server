@@ -5,11 +5,11 @@ from src.content.service.port.base_creatives_repository import BaseCreativesRepo
 from src.main.exceptions.exceptions import ValidationException
 from src.main.transactional import transactional
 from src.product.domain.product import Product
-from src.product.enums.product_link_type import ProductLinkType
 from src.product.infra.dto.product_search_condition import ProductSearchCondition
-from src.product.routes.dto.request.product_link_update import ProductLinkUpdate
-from src.product.routes.dto.request.product_update import ProductUpdate
-from src.product.routes.dto.response.product_response import ProductResponse
+from src.product.model.product_link_type import ProductLinkType
+from src.product.model.request.product_link_update import ProductLinkUpdate
+from src.product.model.request.product_update import ProductUpdate
+from src.product.model.response.product_response import ProductResponse
 from src.product.routes.port.base_product_service import BaseProductService
 from src.product.service.port.base_product_repository import BaseProductRepository
 

@@ -6,48 +6,48 @@ from sqlalchemy.orm import Session
 from starlette.background import BackgroundTasks
 
 from src.auth.utils.permission_checker import get_permission_checker
-from src.campaign.routes.dto.request.campaign_create import CampaignCreate
-from src.campaign.routes.dto.request.campaign_progress_request import (
+from src.campaign.model.request.campaign_create import CampaignCreate
+from src.campaign.model.request.campaign_progress_request import (
     CampaignProgressRequest,
 )
-from src.campaign.routes.dto.request.campaign_set_group_message_request import (
+from src.campaign.model.request.campaign_set_group_message_request import (
     CampaignSetGroupMessageRequest,
 )
-from src.campaign.routes.dto.request.campaign_set_group_update import (
+from src.campaign.model.request.campaign_set_group_update import (
     CampaignSetGroupUpdate,
 )
-from src.campaign.routes.dto.request.campaign_set_message_confirm_request import (
+from src.campaign.model.request.campaign_set_message_confirm_request import (
     CampaignSetMessageConfirmReqeust,
 )
-from src.campaign.routes.dto.request.campaign_set_message_use_request import (
+from src.campaign.model.request.campaign_set_message_use_request import (
     CampaignSetMessageUseRequest,
 )
-from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdate
-from src.campaign.routes.dto.request.message_generate import (
+from src.campaign.model.request.campaign_set_update import CampaignSetUpdate
+from src.campaign.model.request.message_generate import (
     CarouselMsgGenerationReq,
     MsgGenerationReq,
 )
-from src.campaign.routes.dto.request.test_send_request import TestSendRequest
-from src.campaign.routes.dto.response.campaign_set_description_response import (
+from src.campaign.model.request.test_send_request import TestSendRequest
+from src.campaign.model.response.campaign_set_description_response import (
     CampaignSetDescriptionResponse,
 )
-from src.campaign.routes.dto.response.campaign_set_group_update_response import (
+from src.campaign.model.response.campaign_set_group_update_response import (
     CampaignSetGroupUpdateResponse,
 )
-from src.campaign.routes.dto.response.campaign_summary_response import (
+from src.campaign.model.response.campaign_summary_response import (
     CampaignSummaryResponse,
 )
-from src.campaign.routes.dto.response.campaign_timeline_response import (
+from src.campaign.model.response.campaign_timeline_response import (
     CampaignTimelineResponse,
 )
-from src.campaign.routes.dto.response.exclusion_customer_detail import (
+from src.campaign.model.response.exclusion_customer_detail import (
     ExcludeCustomerDetail,
 )
-from src.campaign.routes.dto.response.generate_message_response import GeneratedMessage
-from src.campaign.routes.dto.response.set_group_seq_with_message_response import (
+from src.campaign.model.response.generate_message_response import GeneratedMessage
+from src.campaign.model.response.set_group_seq_with_message_response import (
     SetGroupSeqWithMessageResponse,
 )
-from src.campaign.routes.dto.response.update_campaign_set_group_message_response import (
+from src.campaign.model.response.update_campaign_set_group_message_response import (
     UpdateCampaignSetGroupMessageResponse,
 )
 from src.campaign.routes.port.approve_campaign_usecase import ApproveCampaignUseCase

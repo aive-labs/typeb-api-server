@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.common.pagination.pagination_response import PaginationResponse
-from src.payment.routes.dto.response.credit_history_response import (
+from src.payment.model.response.credit_history_response import (
     CreditHistoryResponse,
 )
 

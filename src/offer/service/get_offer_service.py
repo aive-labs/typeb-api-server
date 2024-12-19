@@ -10,8 +10,8 @@ from src.main.exceptions.exceptions import NotFoundException
 from src.main.transactional import transactional
 from src.offer.domain.cafe24_coupon import Cafe24CouponResponse
 from src.offer.infra.offer_repository import OfferRepository
-from src.offer.routes.dto.response.offer_detail_response import OfferDetailResponse
-from src.offer.routes.dto.response.offer_response import OfferResponse
+from src.offer.model.response.offer_detail_response import OfferDetailResponse
+from src.offer.model.response.offer_response import OfferResponse
 from src.offer.routes.port.get_offer_usecase import GetOfferUseCase
 from src.user.domain.user import User
 

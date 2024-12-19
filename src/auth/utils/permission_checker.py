@@ -2,7 +2,7 @@ from fastapi import Depends
 
 from src.auth.utils.get_current_user import get_current_user
 from src.main.exceptions.exceptions import AuthorizationException
-from src.payment.enum.subscription_status import SubscriptionStatus
+from src.payment.model.subscription_status import SubscriptionStatus
 from src.user.domain.gnb_permission import ContentsManager, GNBPermissions
 from src.user.domain.resource_permission import ResourcePermission
 from src.user.domain.user_role import UserPermissions, UserRole

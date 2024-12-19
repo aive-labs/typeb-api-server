@@ -2,8 +2,8 @@ from itertools import count
 from unittest.mock import MagicMock
 
 from src.user.domain.user import User
-from src.user.routes.dto.request.user_create import UserCreate
-from src.user.routes.dto.request.user_modify import UserModify
+from src.user.model.request.user_create import UserCreate
+from src.user.model.request.user_modify import UserModify
 from src.user.service.port.base_user_repository import BaseUserRepository
 
 

@@ -7,8 +7,8 @@ from src.common.utils.get_env_variable import get_env_variable
 from src.content.agent.chat_gpt_agent.contents_rag import StreamingConversationChain
 from src.content.domain.contents_menu import ContentsMenu
 from src.content.infra.contents_repository import ContentsRepository
+from src.content.model.request.contents_generate import ContentsGenerate
 from src.content.resources.generation_template import template_dict
-from src.content.routes.dto.request.contents_generate import ContentsGenerate
 from src.content.routes.port.usecase.generate_contents_usecase import (
     GenerateContentsUseCase,
 )

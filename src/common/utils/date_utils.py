@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 import pytz
 
-from src.campaign.enums.message_send_type import MessageSendType
+from src.campaign.model.message_send_type import MessageSendType
 from src.main.exceptions.exceptions import ConsistencyException
 
 

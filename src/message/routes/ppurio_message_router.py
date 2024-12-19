@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 
 from src.main.container import Container
 from src.main.db_dependency import get_db_for_with_mall_id
-from src.message.routes.dto.ppurio_message_result import PpurioMessageResult
+from src.message.model.ppurio_message_result import PpurioMessageResult
 from src.message.service.message_service import MessageService
 
 ppurio_message_router = APIRouter(

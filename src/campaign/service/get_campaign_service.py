@@ -4,7 +4,6 @@ import pandas as pd
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
-from src.campaign.enums.campaign_type import CampaignType
 from src.campaign.infra.sqlalchemy_query.add_set_rep_contents import (
     add_set_rep_contents,
 )
@@ -27,17 +26,18 @@ from src.campaign.infra.sqlalchemy_query.get_excluded_customer_list_for_calculat
 from src.campaign.infra.sqlalchemy_query.get_strategy_theme_audience_mapping import (
     get_strategy_theme_audience_mapping_query,
 )
-from src.campaign.routes.dto.response.campaign_basic_response import (
+from src.campaign.model.campaign_type import CampaignType
+from src.campaign.model.response.campaign_basic_response import (
     CampaignBasicResponse,
     RecipientSummary,
 )
-from src.campaign.routes.dto.response.campaign_response import CampaignSet
-from src.campaign.routes.dto.response.campaign_reviewer import CampaignReviewer
-from src.campaign.routes.dto.response.campaign_timeline_response import (
+from src.campaign.model.response.campaign_response import CampaignSet
+from src.campaign.model.response.campaign_reviewer import CampaignReviewer
+from src.campaign.model.response.campaign_timeline_response import (
     CampaignTimelineResponse,
     StatusUserProfile,
 )
-from src.campaign.routes.dto.response.exclusion_customer_detail import (
+from src.campaign.model.response.exclusion_customer_detail import (
     ExcludeCustomerDetail,
     ExcludeCustomerDetailStats,
 )
@@ -48,16 +48,16 @@ from src.campaign.service.port.base_campaign_set_repository import (
     BaseCampaignSetRepository,
 )
 from src.campaign.utils.utils import set_summary_sentence
-from src.common.enums.campaign_media import CampaignMedia
+from src.common.model.campaign_media import CampaignMedia
 from src.common.utils.data_converter import DataConverter
 from src.main.exceptions.exceptions import PolicyException
-from src.message.routes.dto.response.kakao_carousel_card_response import (
+from src.message.model.response.kakao_carousel_card_response import (
     KakaoCarouselCardResponse,
 )
-from src.message.routes.dto.response.kakao_carousel_more_link_response import (
+from src.message.model.response.kakao_carousel_more_link_response import (
     KakaoCarouselMoreLinkResponse,
 )
-from src.message_template.enums.message_type import MessageType
+from src.message_template.model.message_type import MessageType
 from src.user.domain.user import User
 
 

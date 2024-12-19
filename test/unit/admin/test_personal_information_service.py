@@ -1,6 +1,6 @@
 import pytest
 
-from src.admin.enums.outsoring_personal_information_status import (
+from src.admin.model.outsoring_personal_information_status import (
     OutSourcingPersonalInformationStatus,
 )
 from src.user.domain.user import User

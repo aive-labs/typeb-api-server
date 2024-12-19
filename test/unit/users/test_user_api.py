@@ -5,9 +5,9 @@ import pytest
 from dependency_injector import providers
 from starlette.testclient import TestClient
 
-from src.auth.enums.onboarding_status import OnboardingStatus
+from src.auth.model.onboarding_status import OnboardingStatus
 from src.auth.infra.dto.external_integration import ExternalIntegration
-from src.auth.routes.dto.response.onboarding_response import OnboardingResponse
+from src.auth.model.response.onboarding_response import OnboardingResponse
 from src.auth.routes.port.base_oauth_service import BaseOauthService
 from src.auth.routes.port.base_onboarding_service import BaseOnboardingService
 from src.auth.utils.get_current_user import get_current_user

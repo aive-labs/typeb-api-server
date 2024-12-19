@@ -3,7 +3,7 @@ from datetime import datetime
 from passlib.context import CryptContext
 from pydantic import BaseModel
 
-from src.payment.routes.dto.response.my_subscription import MySubscription
+from src.payment.model.response.my_subscription import MySubscription
 from src.user.infra.entity.user_entity import UserEntity
 from src.user.infra.entity.user_password import UserPasswordEntity
 

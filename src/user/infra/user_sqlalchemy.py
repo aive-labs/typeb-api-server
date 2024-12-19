@@ -2,12 +2,12 @@ from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
 from src.main.exceptions.exceptions import NotFoundException
-from src.search.routes.dto.send_user_response import SendUserResponse
+from src.search.model.send_user_response import SendUserResponse
 from src.user.domain.user import User
 from src.user.infra.entity.user_entity import UserEntity
 from src.user.infra.entity.user_password import UserPasswordEntity
 from src.user.infra.entity.user_whitelist import UserWhitelist
-from src.user.routes.dto.request.user_modify import UserModify
+from src.user.model.request.user_modify import UserModify
 
 
 class UserSqlAlchemy:

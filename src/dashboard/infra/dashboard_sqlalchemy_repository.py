@@ -20,7 +20,7 @@ from src.dashboard.infra.entity.dash_daily_send_info_entity import (
     DashDailySendInfoEntity,
 )
 from src.dashboard.infra.entity.dash_end_table_entity import DashEndTableEntity
-from src.search.routes.dto.id_with_item_response import IdWithItem
+from src.search.model.id_with_item_response import IdWithItem
 
 
 class DashboardSqlAlchemy:

@@ -4,10 +4,10 @@ from sqlalchemy.orm import Session
 
 from src.common.pagination.pagination_response import PaginationResponse
 from src.payment.domain.subscription import Subscription
-from src.payment.routes.dto.response.dynamic_subscription_plans import (
+from src.payment.model.response.dynamic_subscription_plans import (
     DynamicSubscriptionPlans,
 )
-from src.payment.routes.dto.response.subscription_history_response import (
+from src.payment.model.response.subscription_history_response import (
     SubscriptionHistoryResponse,
 )
 

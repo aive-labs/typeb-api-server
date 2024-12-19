@@ -3,12 +3,12 @@ from sqlalchemy import and_, except_, or_
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import Alias
 
-from src.audience.enums.audience_create_type import AudienceCreateType
-from src.audience.enums.audience_status import AudienceStatus
-from src.audience.enums.csv_template import CsvTemplates
 from src.audience.infra.entity import variable_table_list
 from src.audience.infra.entity.variable_table_list import CustomerInfoStatusEntity
-from src.audience.routes.dto.request.audience_update import AudienceUpdate
+from src.audience.model.audience_create_type import AudienceCreateType
+from src.audience.model.audience_status import AudienceStatus
+from src.audience.model.csv_template import CsvTemplates
+from src.audience.model.request.audience_update import AudienceUpdate
 from src.audience.routes.port.usecase.update_audience_usecase import (
     UpdateAudienceUseCase,
 )

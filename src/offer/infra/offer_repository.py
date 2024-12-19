@@ -9,11 +9,11 @@ from src.common.utils.string_utils import is_convertible_to_int
 from src.main.exceptions.exceptions import NotFoundException
 from src.offer.domain.cafe24_coupon import Cafe24CouponResponse
 from src.offer.domain.offer import Offer
-from src.offer.enums.cafe24_coupon_benefit_type import Cafe24CouponBenefitType
 from src.offer.infra.entity.offer_details_entity import OfferDetailsEntity
 from src.offer.infra.entity.offers_entity import OffersEntity
+from src.offer.model.cafe24_coupon_benefit_type import Cafe24CouponBenefitType
 from src.offer.service.port.base_offer_repository import BaseOfferRepository
-from src.search.routes.dto.id_with_label_response import IdWithLabel
+from src.search.model.id_with_label_response import IdWithLabel
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
 from src.strategy.infra.entity.strategy_theme_offers_entity import (
     StrategyThemeOfferMappingEntity,

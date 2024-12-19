@@ -4,7 +4,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from src.auth.enums.ga_script_status import GAScriptStatus
+from src.auth.model.ga_script_status import GAScriptStatus
 
 
 class GAIntegration(BaseModel):

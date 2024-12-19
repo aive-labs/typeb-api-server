@@ -1,12 +1,12 @@
 from sqlalchemy.orm import Session
 
 from src.auth.domain.onboarding import Onboarding
-from src.auth.enums.onboarding_status import OnboardingStatus
 from src.auth.infra.onboarding_sqlalchemy_repository import (
     OnboardingSqlAlchemyRepository,
 )
-from src.auth.routes.dto.response.kakao_channel_response import KakaoChannelResponse
-from src.auth.routes.dto.response.message_sender_response import MessageSenderResponse
+from src.auth.model.onboarding_status import OnboardingStatus
+from src.auth.model.response.kakao_channel_response import KakaoChannelResponse
+from src.auth.model.response.message_sender_response import MessageSenderResponse
 from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
 from src.user.domain.user import User
 

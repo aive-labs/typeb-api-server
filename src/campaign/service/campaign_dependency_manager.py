@@ -1,12 +1,12 @@
 from sqlalchemy import func
 
-from src.audience.enums.audience_status import AudienceStatus
 from src.audience.infra.entity.audience_entity import AudienceEntity
-from src.campaign.enums.campagin_status import CampaignStatus
+from src.audience.model.audience_status import AudienceStatus
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
-from src.strategy.enums.strategy_status import StrategyStatus
+from src.campaign.model.campagin_status import CampaignStatus
 from src.strategy.infra.entity.strategy_entity import StrategyEntity
+from src.strategy.model.strategy_status import StrategyStatus
 from src.user.domain.user import User
 
 

@@ -2,8 +2,8 @@ import pytest
 from fastapi import HTTPException
 
 from src.main.exceptions.exceptions import DuplicatedException, NotFoundException
-from src.user.routes.dto.request.user_create import UserCreate
-from src.user.routes.dto.request.user_modify import UserModify
+from src.user.model.request.user_create import UserCreate
+from src.user.model.request.user_modify import UserModify
 
 
 # 사용자 생성용 픽스처 정의

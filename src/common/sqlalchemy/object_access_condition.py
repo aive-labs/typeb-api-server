@@ -1,6 +1,6 @@
 from sqlalchemy import or_
 
-from src.common.enums.role import RoleEnum
+from src.common.model.role import RoleEnum
 from src.user.infra.entity.user_entity import UserEntity
 
 

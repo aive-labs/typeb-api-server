@@ -13,16 +13,16 @@ from src.campaign.core.message_group_controller import MessageGroupController
 from src.campaign.domain.campaign_messages import CampaignMessages, SetGroupMessage
 from src.campaign.infra.entity.kakao_link_buttons_entity import KakaoLinkButtonsEntity
 from src.campaign.infra.sqlalchemy_query.get_set_group_message import save_set_group_msg
-from src.campaign.routes.dto.request.message_generate import (
+from src.campaign.model.request.message_generate import (
     CarouselMsgGenerationReq,
     MsgGenerationReq,
 )
-from src.campaign.routes.dto.response.campaign_response import (
+from src.campaign.model.response.campaign_response import (
     CampaignReadBase,
     CampaignSet,
     CampaignSetGroup,
 )
-from src.campaign.routes.dto.response.generate_message_response import GeneratedMessage
+from src.campaign.model.response.generate_message_response import GeneratedMessage
 from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
 from src.common.service.port.base_common_repository import BaseCommonRepository
@@ -34,10 +34,10 @@ from src.message.infra.entity.kakao_carousel_link_button_entity import (
     KakaoCarouselLinkButtonsEntity,
 )
 from src.message.service.port.base_message_repository import BaseMessageRepository
-from src.message_template.enums.message_type import MessageType
+from src.message_template.model.message_type import MessageType
 from src.offer.service.port.base_offer_repository import BaseOfferRepository
-from src.strategy.routes.dto.request.preview_message_create import PreviewMessageCreate
-from src.strategy.routes.dto.response.preview_message_response import (
+from src.strategy.model.request.preview_message_create import PreviewMessageCreate
+from src.strategy.model.response.preview_message_response import (
     PreviewMessageResponse,
 )
 from src.user.domain.user import User

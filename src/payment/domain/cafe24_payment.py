@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from src.payment.enum.cafe24_payment_status import Cafe24PaymentStatus
+from src.payment.model.cafe24_payment_status import Cafe24PaymentStatus
 
 
 class Cafe24Payment(BaseModel):

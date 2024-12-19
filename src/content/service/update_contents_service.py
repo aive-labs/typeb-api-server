@@ -7,10 +7,10 @@ from src.common.utils.file.s3_service import S3Service
 from src.common.utils.get_env_variable import get_env_variable
 from src.common.utils.string_utils import generate_random_string
 from src.content.domain.contents import Contents
-from src.content.enums.contents_status import ContentsStatus
 from src.content.infra.contents_repository import ContentsRepository
 from src.content.infra.dto.response.contents_response import ContentsResponse
-from src.content.routes.dto.request.contents_create import ContentsCreate
+from src.content.model.contents_status import ContentsStatus
+from src.content.model.request.contents_create import ContentsCreate
 from src.content.routes.port.usecase.update_contents_usecase import (
     UpdateContentsUseCase,
 )

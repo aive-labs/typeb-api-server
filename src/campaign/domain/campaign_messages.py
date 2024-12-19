@@ -3,9 +3,9 @@ from typing import List
 
 from pydantic import BaseModel
 
-from src.common.enums.campaign_media import CampaignMedia
+from src.common.model.campaign_media import CampaignMedia
 from src.common.utils.get_env_variable import get_env_variable
-from src.message_template.enums.message_type import MessageType
+from src.message_template.model.message_type import MessageType
 
 
 class KakaoLinkButtons(BaseModel):

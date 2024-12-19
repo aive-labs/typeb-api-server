@@ -2,10 +2,10 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
-from src.campaign.routes.dto.response.generate_message_response import GeneratedMessage
-from src.strategy.routes.dto.request.preview_message_create import PreviewMessageCreate
-from src.strategy.routes.dto.response.preview_message_response import (
+from src.campaign.model.request.message_generate import MsgGenerationReq
+from src.campaign.model.response.generate_message_response import GeneratedMessage
+from src.strategy.model.request.preview_message_create import PreviewMessageCreate
+from src.strategy.model.response.preview_message_response import (
     PreviewMessageResponse,
 )
 from src.user.domain.user import User

@@ -5,12 +5,6 @@ from sqlalchemy import literal_column
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
-from src.campaign.enums.campagin_status import CampaignStatus
-from src.campaign.enums.campaign_approval_status import CampaignApprovalStatus
-from src.campaign.enums.campaign_progress import CampaignProgress
-from src.campaign.enums.campaign_timeline_type import CampaignTimelineType
-from src.campaign.enums.campaign_type import CampaignType
-from src.campaign.enums.repeat_type import RepeatTypeEnum
 from src.campaign.infra.entity.approver_entity import ApproverEntity
 from src.campaign.infra.entity.campaign_approval_entity import CampaignApprovalEntity
 from src.campaign.infra.entity.campaign_credit_payment_entity import (
@@ -36,7 +30,13 @@ from src.campaign.infra.sqlalchemy_query.recurring_campaign.get_campaign_api_log
 from src.campaign.infra.sqlalchemy_query.recurring_campaign.get_data_value import (
     get_data_value,
 )
-from src.campaign.routes.dto.request.message_generate import MsgGenerationReq
+from src.campaign.model.campagin_status import CampaignStatus
+from src.campaign.model.campaign_approval_status import CampaignApprovalStatus
+from src.campaign.model.campaign_progress import CampaignProgress
+from src.campaign.model.campaign_timeline_type import CampaignTimelineType
+from src.campaign.model.campaign_type import CampaignType
+from src.campaign.model.repeat_type import RepeatTypeEnum
+from src.campaign.model.request.message_generate import MsgGenerationReq
 from src.campaign.routes.port.approve_campaign_usecase import ApproveCampaignUseCase
 from src.campaign.routes.port.create_recurring_campaign_usecase import (
     CreateRecurringCampaignUseCase,
@@ -57,7 +57,7 @@ from src.common.utils.date_utils import calculate_remind_date, localtime_convert
 from src.main.exceptions.exceptions import NotFoundException
 from src.main.transactional import transactional
 from src.payment.domain.credit_history import CreditHistory
-from src.payment.enum.credit_status import CreditStatus
+from src.payment.model.credit_status import CreditStatus
 from src.payment.service.port.base_credit_repository import BaseCreditRepository
 from src.user.domain.user import User
 from src.user.infra.entity.user_entity import UserEntity

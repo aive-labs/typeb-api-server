@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.admin.routes.dto.response.PersonalInformationAgreeStatus import (
+from src.admin.model.response.PersonalInformationAgreeStatus import (
     PersonalInformationAgreeStatus,
 )
 from src.main.transactional import transactional

@@ -3,8 +3,8 @@ from unittest.mock import MagicMock
 from src.main.exceptions.exceptions import NotFoundException
 from src.product.domain.product import Product
 from src.product.infra.dto.product_search_condition import ProductSearchCondition
-from src.product.routes.dto.request.product_link_update import ProductLinkUpdate
-from src.product.routes.dto.request.product_update import ProductUpdate
+from src.product.model.request.product_link_update import ProductLinkUpdate
+from src.product.model.request.product_update import ProductUpdate
 from src.product.service.port.base_product_repository import BaseProductRepository
 
 

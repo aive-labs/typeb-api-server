@@ -7,11 +7,6 @@ from sqlalchemy.orm import Session
 from src.campaign.domain.campaign import Campaign
 from src.campaign.domain.campaign_remind import CampaignRemind
 from src.campaign.domain.campaign_timeline import CampaignTimeline
-from src.campaign.enums.campagin_status import CampaignStatus
-from src.campaign.enums.campaign_progress import CampaignProgress
-from src.campaign.enums.campaign_timeline_type import CampaignTimelineType
-from src.campaign.enums.campaign_type import CampaignType
-from src.campaign.enums.send_type import SendType, SendTypeEnum
 from src.campaign.infra.sqlalchemy_query.add_set_rep_contents import (
     add_set_rep_contents,
 )
@@ -19,12 +14,17 @@ from src.campaign.infra.sqlalchemy_query.get_campaign_set_groups import (
     get_campaign_set_groups,
 )
 from src.campaign.infra.sqlalchemy_query.get_campaign_sets import get_campaign_sets
-from src.campaign.routes.dto.request.campaign_create import CampaignCreate
-from src.campaign.routes.dto.request.campaign_remind_create import CampaignRemindCreate
-from src.campaign.routes.dto.response.campaign_basic_response import (
+from src.campaign.model.campagin_status import CampaignStatus
+from src.campaign.model.campaign_progress import CampaignProgress
+from src.campaign.model.campaign_timeline_type import CampaignTimelineType
+from src.campaign.model.campaign_type import CampaignType
+from src.campaign.model.request.campaign_create import CampaignCreate
+from src.campaign.model.request.campaign_remind_create import CampaignRemindCreate
+from src.campaign.model.response.campaign_basic_response import (
     CampaignBasicResponse,
     RecipientSummary,
 )
+from src.campaign.model.send_type import SendType, SendTypeEnum
 from src.campaign.routes.port.create_campaign_usecase import CreateCampaignUseCase
 from src.campaign.service.campaign_dependency_manager import CampaignDependencyManager
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository

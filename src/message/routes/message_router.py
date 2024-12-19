@@ -8,15 +8,15 @@ from sqlalchemy.orm import Session
 from src.auth.utils.permission_checker import get_permission_checker
 from src.main.container import Container
 from src.main.db_dependency import get_db, get_db_for_with_mall_id
-from src.message.routes.dto.ppurio_message_result import PpurioMessageResult
-from src.message.routes.dto.request.kakao_carousel_card_request import (
+from src.message.model.ppurio_message_result import PpurioMessageResult
+from src.message.model.request.kakao_carousel_card_request import (
     KakaoCarouselCardRequest,
     KakaoCarouselLinkButtonsRequest,
 )
-from src.message.routes.dto.request.kakao_carousel_more_link_request import (
+from src.message.model.request.kakao_carousel_more_link_request import (
     KakaoCarouselMoreLinkRequest,
 )
-from src.message.routes.dto.response.kakao_carousel_card_response import (
+from src.message.model.response.kakao_carousel_card_response import (
     KakaoCarouselCardResponse,
 )
 from src.message.routes.port.create_carousel_card_usecase import (

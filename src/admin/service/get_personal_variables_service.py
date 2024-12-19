@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from src.admin.routes.dto.response.personal_variable_response import (
+from src.admin.model.response.personal_variable_response import (
     PersonalVariableResponse,
 )
 from src.admin.routes.port.get_personal_variables_usecase import (

@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign_messages import Message
-from src.campaign.routes.dto.response.set_group_seq_with_message_response import (
+from src.campaign.model.response.set_group_seq_with_message_response import (
     SetGroupSeqWithMessageResponse,
 )
 from src.campaign.routes.port.delete_image_for_message_usecase import (
@@ -12,7 +12,7 @@ from src.campaign.service.port.base_campaign_set_repository import (
 )
 from src.common.utils.file.s3_service import S3Service
 from src.main.exceptions.exceptions import ConsistencyException
-from src.message_template.enums.message_type import MessageType
+from src.message_template.model.message_type import MessageType
 
 
 class DeleteImageForMessage(DeleteImageForMessageUseCase):

@@ -10,8 +10,8 @@ from src.auth.utils.permission_checker import get_permission_checker
 from src.content.infra.dto.response.contents_menu_response import ContentsMenuResponse
 from src.content.infra.dto.response.contents_response import ContentsResponse
 from src.content.infra.dto.response.creative_recommend import CreativeRecommend
-from src.content.routes.dto.request.contents_create import ContentsCreate
-from src.content.routes.dto.request.contents_generate import ContentsGenerate
+from src.content.model.request.contents_create import ContentsCreate
+from src.content.model.request.contents_generate import ContentsGenerate
 from src.content.routes.port.usecase.add_contents_usecase import AddContentsUseCase
 from src.content.routes.port.usecase.delete_contents_usecase import (
     DeleteContentsUseCase,

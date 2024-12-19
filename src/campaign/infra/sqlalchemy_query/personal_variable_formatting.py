@@ -5,7 +5,7 @@ from sqlalchemy import text
 
 from src.admin.infra.entity.personal_variable_entity import PersonalVariablesEntity
 from src.common.utils.string_utils import replace_multiple
-from src.message_template.enums.message_type import MessageType
+from src.message_template.model.message_type import MessageType
 
 
 def extract_body(row):

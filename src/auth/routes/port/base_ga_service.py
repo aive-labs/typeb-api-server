@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.auth.domain.ga_integration import GAIntegration
-from src.auth.routes.dto.response.ga_script_response import (
+from src.auth.model.response.ga_script_response import (
     GAScriptResponse,
 )
 from src.main.transactional import transactional

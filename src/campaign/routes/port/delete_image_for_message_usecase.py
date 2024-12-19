@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.campaign.routes.dto.response.set_group_seq_with_message_response import (
+from src.campaign.model.response.set_group_seq_with_message_response import (
     SetGroupSeqWithMessageResponse,
 )
 

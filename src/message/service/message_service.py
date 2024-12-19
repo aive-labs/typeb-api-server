@@ -8,8 +8,8 @@ from src.common.utils.get_env_variable import get_env_variable
 from src.main.exceptions.exceptions import PolicyException, PpurioException
 from src.main.transactional import transactional
 from src.message.infra.message_repository import MessageRepository
-from src.message.routes.dto.ppurio_message_result import PpurioMessageResult
-from src.message_template.enums.message_type import MessageType
+from src.message.model.ppurio_message_result import PpurioMessageResult
+from src.message_template.model.message_type import MessageType
 
 
 class MessageService:

@@ -5,7 +5,7 @@ from src.content.domain.contents_menu import ContentsMenu
 from src.content.infra.contents_sqlalchemy_repository import ContentsSqlAlchemy
 from src.content.infra.dto.response.contents_response import ContentsResponse
 from src.content.service.port.base_contents_repository import BaseContentsRepository
-from src.search.routes.dto.id_with_item_response import IdWithItem
+from src.search.model.id_with_item_response import IdWithItem
 
 
 class ContentsRepository(BaseContentsRepository):

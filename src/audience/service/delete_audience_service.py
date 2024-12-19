@@ -4,7 +4,7 @@ from src.audience.routes.port.usecase.delete_audience_usecase import (
     DeleteAudienceUseCase,
 )
 from src.audience.service.port.base_audience_repository import BaseAudienceRepository
-from src.campaign.enums.campagin_status import CampaignStatus
+from src.campaign.model.campagin_status import CampaignStatus
 from src.main.exceptions.exceptions import LinkedCampaignException, PolicyException
 from src.main.transactional import transactional
 

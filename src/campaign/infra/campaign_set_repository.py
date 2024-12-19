@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session, subqueryload
 
 from src.campaign.domain.campaign import Campaign
 from src.campaign.domain.campaign_messages import MessageResource, SetGroupMessage
-from src.campaign.enums.campaign_type import CampaignType
 from src.campaign.infra.entity.campaign_entity import CampaignEntity
 from src.campaign.infra.entity.campaign_remind_entity import CampaignRemindEntity
 from src.campaign.infra.entity.campaign_set_groups_entity import CampaignSetGroupsEntity
@@ -51,11 +50,12 @@ from src.campaign.infra.sqlalchemy_query.get_first_offer_by_strategy_theme impor
 from src.campaign.infra.sqlalchemy_query.get_strategy_theme_audience_mapping import (
     get_strategy_theme_audience_mapping_query,
 )
+from src.campaign.model.campaign_type import CampaignType
 from src.campaign.service.port.base_campaign_set_repository import (
     BaseCampaignSetRepository,
 )
-from src.common.enums.campaign_media import CampaignMedia
 from src.common.infra.entity.customer_master_entity import CustomerMasterEntity
+from src.common.model.campaign_media import CampaignMedia
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import localtime_converter
 from src.common.utils.get_env_variable import get_env_variable
@@ -73,7 +73,7 @@ from src.message.infra.entity.kakao_carousel_link_button_entity import (
 from src.message.infra.entity.kakao_carousel_more_link_entity import (
     KakaoCarouselMoreLinkEntity,
 )
-from src.message_template.enums.message_type import MessageType
+from src.message_template.model.message_type import MessageType
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
 
 

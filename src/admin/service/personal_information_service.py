@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
 
-from src.admin.enums.outsoring_personal_information_status import (
+from src.admin.model.outsoring_personal_information_status import (
     OutSourcingPersonalInformationStatus,
 )
-from src.admin.routes.dto.response.PersonalInformationAgreeStatus import (
+from src.admin.model.response.PersonalInformationAgreeStatus import (
     PersonalInformationAgreeStatus,
 )
 from src.admin.routes.port.base_personal_information_service import (

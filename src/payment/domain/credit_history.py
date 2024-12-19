@@ -3,10 +3,10 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from src.payment.enum.charging_type import ChargingType
-from src.payment.enum.credit_status import CreditStatus
-from src.payment.enum.deposit_without_account_status import DepositWithoutAccountStatus
 from src.payment.infra.entity.credit_history_entity import CreditHistoryEntity
+from src.payment.model.charging_type import ChargingType
+from src.payment.model.credit_status import CreditStatus
+from src.payment.model.deposit_without_account_status import DepositWithoutAccountStatus
 from src.user.domain.user import User
 
 

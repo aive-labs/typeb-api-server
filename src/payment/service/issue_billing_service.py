@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 
 from src.payment.domain.card import Card
 from src.payment.infra.payment_repository import PaymentRepository
-from src.payment.routes.dto.request.payment_request import (
+from src.payment.model.request.payment_request import (
     PaymentRequest,
 )
 from src.payment.routes.use_case.issue_billing_key import IssueBillingKeyUseCase

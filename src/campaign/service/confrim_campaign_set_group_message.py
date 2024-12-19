@@ -8,10 +8,10 @@ from src.campaign.service.port.base_campaign_repository import BaseCampaignRepos
 from src.campaign.service.port.base_campaign_set_repository import (
     BaseCampaignSetRepository,
 )
-from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
+from src.common.model.message_delivery_vendor import MsgDeliveryVendorEnum
 from src.main.exceptions.exceptions import NotFoundException, PolicyException
 from src.main.transactional import transactional
-from src.message_template.enums.message_type import MessageType
+from src.message_template.model.message_type import MessageType
 
 
 class ConfirmCampaignSetGroupMessage(ConfirmCampaignSetGroupMessageUseCase):

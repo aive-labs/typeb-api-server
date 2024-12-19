@@ -1,12 +1,12 @@
 from pydantic import BaseModel
 
-from src.payment.enum.card_company import CardCompany
-from src.payment.enum.payment_method import PaymentMethod
-from src.payment.enum.payment_status import PaymentStatus
-from src.payment.enum.payment_type import PaymentType
-from src.payment.enum.product_type import ProductType
 from src.payment.infra.dto.response.toss_payment_response import TossPaymentResponse
 from src.payment.infra.entity.payment_entity import PaymentEntity
+from src.payment.model.card_company import CardCompany
+from src.payment.model.payment_method import PaymentMethod
+from src.payment.model.payment_status import PaymentStatus
+from src.payment.model.payment_type import PaymentType
+from src.payment.model.product_type import ProductType
 from src.user.domain.user import User
 
 

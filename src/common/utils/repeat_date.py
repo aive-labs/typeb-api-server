@@ -5,7 +5,7 @@ from typing import Literal
 import pytz
 from dateutil.relativedelta import relativedelta
 
-from src.campaign.enums.repeat_type import RepeatTypeEnum
+from src.campaign.model.repeat_type import RepeatTypeEnum
 
 
 def get_last_day_of_month(date: datetime) -> int:

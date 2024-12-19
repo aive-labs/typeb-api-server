@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from src.common.pagination.pagination_base import PaginationBase
 from src.common.pagination.pagination_response import PaginationResponse
-from src.payment.routes.dto.response.credit_history_response import (
+from src.payment.model.response.credit_history_response import (
     CreditHistoryResponse,
 )
 from src.payment.routes.use_case.get_credit import GetCreditUseCase

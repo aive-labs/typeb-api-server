@@ -12,8 +12,6 @@ from sqlalchemy.sql.functions import coalesce
 
 from src.auth.infra.entity.cafe24_integration_entity import Cafe24IntegrationEntity
 from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepository
-from src.campaign.enums.campaign_approval_status import CampaignApprovalStatus
-from src.campaign.enums.campaign_timeline_type import CampaignTimelineType
 from src.campaign.infra.entity.approver_entity import ApproverEntity
 from src.campaign.infra.entity.campaign_approval_entity import CampaignApprovalEntity
 from src.campaign.infra.entity.campaign_credit_payment_entity import (
@@ -45,6 +43,8 @@ from src.campaign.infra.sqlalchemy_query.modify_reservation_sync_service import 
 from src.campaign.infra.sqlalchemy_query.personal_variable_formatting import (
     personal_variable_formatting,
 )
+from src.campaign.model.campaign_approval_status import CampaignApprovalStatus
+from src.campaign.model.campaign_timeline_type import CampaignTimelineType
 from src.campaign.routes.port.approve_campaign_usecase import ApproveCampaignUseCase
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
 from src.campaign.service.port.base_campaign_set_repository import (
@@ -52,8 +52,8 @@ from src.campaign.service.port.base_campaign_set_repository import (
 )
 from src.campaign.utils.campagin_status_utils import *
 from src.campaign.utils.convert_by_message_format import convert_by_message_format
-from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
 from src.common.infra.entity.customer_master_entity import CustomerMasterEntity
+from src.common.model.message_delivery_vendor import MsgDeliveryVendorEnum
 from src.common.sqlalchemy.object_access_condition import object_access_condition
 from src.common.timezone_setting import selected_timezone
 from src.common.utils.add_vat_to_price import add_vat_to
@@ -78,8 +78,8 @@ from src.message_template.infra.entity.message_template_entity import (
 )
 from src.offer.infra.entity.offers_entity import OffersEntity
 from src.payment.domain.credit_history import CreditHistory
-from src.payment.enum.credit_status import CreditStatus
 from src.payment.infra.entity.remaining_credit_entity import RemainingCreditEntity
+from src.payment.model.credit_status import CreditStatus
 from src.payment.service.port.base_credit_repository import BaseCreditRepository
 from src.user.domain.user import User
 from src.user.infra.entity.user_entity import UserEntity

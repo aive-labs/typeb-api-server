@@ -6,12 +6,12 @@ from fastapi import HTTPException
 from src.common.service.aws_service import AwsService
 from src.common.utils.get_env_variable import get_env_variable
 from src.payment.domain.payment import Payment
-from src.payment.enum.product_type import ProductType
 from src.payment.infra.dto.response.toss_payment_billing_response import (
     TossPaymentBillingResponse,
 )
 from src.payment.infra.dto.response.toss_payment_response import TossPaymentResponse
-from src.payment.routes.dto.request.payment_request import (
+from src.payment.model.product_type import ProductType
+from src.payment.model.request.payment_request import (
     PaymentRequest,
 )
 from src.payment.routes.use_case.payment_gateway import PaymentGateway

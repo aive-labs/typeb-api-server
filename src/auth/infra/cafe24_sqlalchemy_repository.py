@@ -5,11 +5,11 @@ from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
 from src.auth.domain.cafe24_token import Cafe24Token
-from src.auth.enums.cafe24_data_migration_status import CAFE24DataMigrationStatus
 from src.auth.infra.dto.cafe24_mall_info import Cafe24MallInfo
 from src.auth.infra.dto.cafe24_state_token import Cafe24StateToken
 from src.auth.infra.dto.cafe24_token import Cafe24TokenData
 from src.auth.infra.entity.cafe24_integration_entity import Cafe24IntegrationEntity
+from src.auth.model.cafe24_data_migration_status import CAFE24DataMigrationStatus
 from src.main.exceptions.exceptions import NotFoundException
 
 

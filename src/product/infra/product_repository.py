@@ -3,13 +3,13 @@ from sqlalchemy.orm import Session
 
 from src.main.exceptions.exceptions import NotFoundException
 from src.product.domain.product import Product
-from src.product.enums.product_link_type import ProductLinkType
 from src.product.infra.dto.product_search_condition import ProductSearchCondition
 from src.product.infra.entity.product_link_entity import ProductLinkEntity
 from src.product.infra.entity.product_master_entity import ProductMasterEntity
-from src.product.routes.dto.request.product_link_update import ProductLinkUpdate
-from src.product.routes.dto.request.product_update import ProductUpdate
-from src.product.routes.dto.response.title_with_link import TitleWithLink
+from src.product.model.product_link_type import ProductLinkType
+from src.product.model.request.product_link_update import ProductLinkUpdate
+from src.product.model.request.product_update import ProductUpdate
+from src.product.model.response.title_with_link import TitleWithLink
 from src.product.service.port.base_product_repository import BaseProductRepository
 
 

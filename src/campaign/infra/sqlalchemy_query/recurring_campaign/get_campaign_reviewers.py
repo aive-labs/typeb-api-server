@@ -1,10 +1,10 @@
 from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 
-from src.campaign.enums.campaign_approval_status import CampaignApprovalStatus
 from src.campaign.infra.dto.campaign_reviewer_info import CampaignReviewerInfo
 from src.campaign.infra.entity.approver_entity import ApproverEntity
 from src.campaign.infra.entity.campaign_approval_entity import CampaignApprovalEntity
+from src.campaign.model.campaign_approval_status import CampaignApprovalStatus
 from src.user.infra.entity.user_entity import UserEntity
 
 

@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from src.auth.enums.onboarding_status import OnboardingStatus
+from src.auth.model.onboarding_status import OnboardingStatus
 from src.auth.routes.port.base_oauth_service import BaseOauthService
 from src.auth.routes.port.base_onboarding_service import BaseOnboardingService
 from src.auth.service.auth_service import AuthService
@@ -19,10 +19,10 @@ from src.payment.routes.use_case.get_subscription import GetSubscriptionUseCase
 from src.user.domain.gnb_permission import GNBPermissions
 from src.user.domain.resource_permission import ResourcePermission
 from src.user.domain.user_role import UserPermissions
-from src.user.routes.dto.request.user_create import UserCreate
-from src.user.routes.dto.request.user_modify import UserModify
-from src.user.routes.dto.response.user_profile_response import UserProfileResponse
-from src.user.routes.dto.response.user_response import UserResponse
+from src.user.model.request.user_create import UserCreate
+from src.user.model.request.user_modify import UserModify
+from src.user.model.response.user_profile_response import UserProfileResponse
+from src.user.model.response.user_response import UserResponse
 from src.user.routes.port.base_user_service import BaseUserService
 from src.user.utils.user_role_mapping import get_user_role_from_mapping
 

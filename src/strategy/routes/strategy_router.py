@@ -6,12 +6,12 @@ from src.auth.utils.permission_checker import get_permission_checker
 from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase  ##
 from src.main.container import Container
 from src.main.db_dependency import get_db
-from src.strategy.routes.dto.request.preview_message_create import PreviewMessageCreate
-from src.strategy.routes.dto.request.strategy_create import StrategyCreate
-from src.strategy.routes.dto.response.preview_message_response import (
+from src.strategy.model.request.preview_message_create import PreviewMessageCreate
+from src.strategy.model.request.strategy_create import StrategyCreate
+from src.strategy.model.response.preview_message_response import (
     PreviewMessageResponse,
 )
-from src.strategy.routes.dto.response.strategy_response import StrategyResponse
+from src.strategy.model.response.strategy_response import StrategyResponse
 from src.strategy.routes.port.create_strategy_usecase import CreateStrategyUseCase
 from src.strategy.routes.port.delete_strategy_usecase import DeleteStrategyUseCase
 from src.strategy.routes.port.get_strategy_usecase import GetStrategyUseCase

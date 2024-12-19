@@ -4,9 +4,9 @@ from sqlalchemy.orm import Session
 
 from src.main.transactional import transactional
 from src.product.infra.dto.product_search_condition import ProductSearchCondition
-from src.product.routes.dto.request.product_link_update import ProductLinkUpdate
-from src.product.routes.dto.request.product_update import ProductUpdate
-from src.product.routes.dto.response.product_response import ProductResponse
+from src.product.model.request.product_link_update import ProductLinkUpdate
+from src.product.model.request.product_update import ProductUpdate
+from src.product.model.response.product_response import ProductResponse
 
 
 class BaseProductService(ABC):

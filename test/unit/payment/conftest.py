@@ -8,8 +8,8 @@ from src.common.utils.get_env_variable import get_env_variable
 from src.main.exceptions.exceptions import Cafe24Exception
 from src.payment.domain.cafe24_order import Cafe24Order
 from src.payment.domain.cafe24_payment import Cafe24Payment
-from src.payment.enum.cafe24_payment_status import Cafe24PaymentStatus
-from src.payment.routes.dto.request.cafe24_order_request import Cafe24OrderRequest
+from src.payment.model.cafe24_payment_status import Cafe24PaymentStatus
+from src.payment.model.request.cafe24_order_request import Cafe24OrderRequest
 from src.payment.service.cafe24_order_service import Cafe24OrderService
 from src.payment.service.get_cafe24_payment_service import GetCafe24PaymentService
 from src.user.service.user_service import UserService

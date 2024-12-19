@@ -29,7 +29,7 @@ from src.main.exceptions.exceptions import (
 )
 from src.message.domain.kakao_carousel_card import KakaoCarouselCard
 from src.message.service.message_service import MessageService
-from src.message_template.enums.message_type import MessageType
+from src.message_template.model.message_type import MessageType
 from src.user.domain.user import User
 
 

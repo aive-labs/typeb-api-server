@@ -5,12 +5,12 @@ from src.campaign.domain.campaign_messages import SetGroupMessage
 from src.campaign.domain.campaign_remind import CampaignRemind
 from src.campaign.domain.campaign_timeline import CampaignTimeline
 from src.campaign.domain.send_reservation import SendReservation
-from src.campaign.enums.campaign_progress import CampaignProgress
 from src.campaign.infra.campaign_sqlalchemy_repository import CampaignSqlAlchemy
 from src.campaign.infra.dto.already_sent_campaign import AlreadySentCampaign
 from src.campaign.infra.dto.campaign_reviewer_info import CampaignReviewerInfo
+from src.campaign.model.campaign_progress import CampaignProgress
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
-from src.search.routes.dto.id_with_item_response import IdWithItem
+from src.search.model.id_with_item_response import IdWithItem
 from src.user.domain.user import User
 
 

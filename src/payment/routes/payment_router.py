@@ -9,28 +9,28 @@ from src.auth.utils.permission_checker import get_permission_checker
 from src.common.pagination.pagination_response import PaginationResponse
 from src.main.container import Container
 from src.main.db_dependency import get_db
-from src.payment.routes.dto.request.cafe24_order_request import Cafe24OrderRequest
-from src.payment.routes.dto.request.deposit_without_account import DepositWithoutAccount
-from src.payment.routes.dto.request.payment_request import (
+from src.payment.model.request.cafe24_order_request import Cafe24OrderRequest
+from src.payment.model.request.deposit_without_account import DepositWithoutAccount
+from src.payment.model.request.payment_request import (
     PaymentRequest,
 )
-from src.payment.routes.dto.request.pre_data_for_validation import PreDataForValidation
-from src.payment.routes.dto.response.cafe24_order_response import Cafe24OrderResponse
-from src.payment.routes.dto.response.cafe24_payment_response import (
+from src.payment.model.request.pre_data_for_validation import PreDataForValidation
+from src.payment.model.response.cafe24_order_response import Cafe24OrderResponse
+from src.payment.model.response.cafe24_payment_response import (
     Cafe24PaymentResponse,
 )
-from src.payment.routes.dto.response.card_response import CardResponse
-from src.payment.routes.dto.response.credit_history_response import (
+from src.payment.model.response.card_response import CardResponse
+from src.payment.model.response.credit_history_response import (
     CreditHistoryResponse,
 )
-from src.payment.routes.dto.response.dynamic_subscription_plans import (
+from src.payment.model.response.dynamic_subscription_plans import (
     DynamicSubscriptionPlans,
 )
-from src.payment.routes.dto.response.key_response import KeyResponse
-from src.payment.routes.dto.response.remaining_credit import (
+from src.payment.model.response.key_response import KeyResponse
+from src.payment.model.response.remaining_credit import (
     RemainingCreditResponse,
 )
-from src.payment.routes.dto.response.subscription_history_response import (
+from src.payment.model.response.subscription_history_response import (
     SubscriptionHistoryResponse,
 )
 from src.payment.routes.use_case.change_card_to_primary_usecase import (

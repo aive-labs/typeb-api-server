@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from src.campaign.enums.message_send_type import MessageSendType
+from src.campaign.model.message_send_type import MessageSendType
 from src.main.exceptions.exceptions import ConsistencyException
 
 

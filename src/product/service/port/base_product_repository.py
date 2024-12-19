@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from src.product.domain.product import Product
 from src.product.infra.dto.product_search_condition import ProductSearchCondition
-from src.product.routes.dto.response.title_with_link import TitleWithLink
+from src.product.model.response.title_with_link import TitleWithLink
 
 
 class BaseProductRepository(ABC):

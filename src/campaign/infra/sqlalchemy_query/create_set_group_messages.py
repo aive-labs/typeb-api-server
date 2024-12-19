@@ -1,13 +1,13 @@
 from sqlalchemy.orm import Session
 
 from src.auth.infra.entity.message_integration_entity import MessageIntegrationEntity
-from src.campaign.enums.campaign_type import CampaignType
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.campaign.infra.sqlalchemy_query.get_campaign_remind import get_campaign_remind
-from src.common.enums.campaign_media import CampaignMedia
+from src.campaign.model.campaign_type import CampaignType
+from src.common.model.campaign_media import CampaignMedia
 from src.common.utils.date_utils import get_reservation_date
 from src.main.exceptions.exceptions import PolicyException
-from src.message_template.enums.message_type import MessageType
+from src.message_template.model.message_type import MessageType
 
 
 def create_set_group_messages(

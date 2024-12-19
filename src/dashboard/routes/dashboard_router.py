@@ -5,13 +5,13 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from src.dashboard.infra.dto.response.campaign_audience_stats_response import (
+from src.dashboard.model.response.campaign_audience_stats_response import (
     CampaignAudienceStatsResponse,
 )
-from src.dashboard.infra.dto.response.campaign_stats_response import (
+from src.dashboard.model.response.campaign_stats_response import (
     CampaignStatsResponse,
 )
-from src.dashboard.infra.dto.response.campaign_summary_stats_response import (
+from src.dashboard.model.response.campaign_summary_stats_response import (
     CampaignSummaryStatsResponse,
 )
 from src.dashboard.service.get_audience_stats_service import GetAudienceStatsService
@@ -21,7 +21,7 @@ from src.dashboard.service.get_campaign_group_stats_service import (
 from src.dashboard.service.get_campaign_stats_service import GetCampaignStatsService
 from src.main.container import Container
 from src.main.db_dependency import get_db
-from src.search.routes.dto.id_with_item_response import IdWithItem
+from src.search.model.id_with_item_response import IdWithItem
 
 dashboard_router = APIRouter(
     tags=["Dashboard"],

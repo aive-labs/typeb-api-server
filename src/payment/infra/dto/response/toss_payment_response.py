@@ -2,9 +2,9 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from src.payment.enum.payment_method import PaymentMethod
-from src.payment.enum.payment_status import PaymentStatus
-from src.payment.enum.payment_type import PaymentType
+from src.payment.model.payment_method import PaymentMethod
+from src.payment.model.payment_status import PaymentStatus
+from src.payment.model.payment_type import PaymentType
 
 
 class CardDetails(BaseModel):

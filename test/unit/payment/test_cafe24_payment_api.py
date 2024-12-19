@@ -9,8 +9,8 @@ from src.auth.utils.permission_checker import get_permission_checker
 from src.main.db_dependency import get_db
 from src.main.exceptions.exceptions import NotFoundException
 from src.app import app
-from src.payment.enum.cafe24_payment_status import Cafe24PaymentStatus
-from src.payment.routes.dto.response.cafe24_payment_response import (
+from src.payment.model.cafe24_payment_status import Cafe24PaymentStatus
+from src.payment.model.response.cafe24_payment_response import (
     Cafe24PaymentResponse,
 )
 from src.payment.routes.use_case.get_cafe24_payment_usecase import (

@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.strategy.routes.dto.response.strategy_response import StrategyResponse
-from src.strategy.routes.dto.response.strategy_with_campaign_theme_response import (
+from src.strategy.model.response.strategy_response import StrategyResponse
+from src.strategy.model.response.strategy_with_campaign_theme_response import (
     StrategyWithStrategyThemeResponse,
 )
 from src.user.domain.user import User

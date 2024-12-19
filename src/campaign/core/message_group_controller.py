@@ -3,8 +3,8 @@ from random import choice
 from fastapi import HTTPException
 
 from src.campaign.domain.campaign_messages import Message, MessageGenerate
-from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
-from src.message_template.enums.message_type import MessageType
+from src.common.model.message_delivery_vendor import MsgDeliveryVendorEnum
+from src.message_template.model.message_type import MessageType
 
 
 class MessageGroupController:

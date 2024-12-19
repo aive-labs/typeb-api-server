@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from src.audience.enums.audience_create_type import AudienceCreateType
-from src.audience.routes.dto.response.upload_condition_response import (
+from src.audience.model.audience_create_type import AudienceCreateType
+from src.audience.model.response.upload_condition_response import (
     AudienceCreationOptionsResponse,
     UploadOptionResponse,
 )

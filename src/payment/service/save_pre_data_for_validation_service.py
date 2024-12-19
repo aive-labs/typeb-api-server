@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from src.payment.infra.payment_repository import PaymentRepository
-from src.payment.routes.dto.request.pre_data_for_validation import PreDataForValidation
+from src.payment.model.request.pre_data_for_validation import PreDataForValidation
 from src.payment.routes.use_case.save_pre_data_for_validation import (
     SavePreDataForValidation,
 )

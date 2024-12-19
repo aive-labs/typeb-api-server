@@ -5,7 +5,7 @@ import pytest
 from dateutil.relativedelta import relativedelta
 
 from src.payment.domain.subscription import Subscription, SubscriptionPlan
-from src.payment.enum.subscription_status import SubscriptionStatus
+from src.payment.model.subscription_status import SubscriptionStatus
 from src.user.domain.user import User
 
 

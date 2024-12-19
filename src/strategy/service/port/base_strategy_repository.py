@@ -2,11 +2,11 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.search.routes.dto.id_with_item_response import IdWithItem
-from src.search.routes.dto.strategy_search_response import StrategySearchResponse
+from src.search.model.id_with_item_response import IdWithItem
+from src.search.model.strategy_search_response import StrategySearchResponse
 from src.strategy.domain.strategy import Strategy
 from src.strategy.domain.strategy_theme import StrategyTheme
-from src.strategy.routes.dto.response.strategy_with_campaign_theme_response import (
+from src.strategy.model.response.strategy_with_campaign_theme_response import (
     StrategyThemeSelectV2,
 )
 from src.user.domain.user import User

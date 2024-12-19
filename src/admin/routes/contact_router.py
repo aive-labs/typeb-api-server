@@ -1,7 +1,7 @@
 import psycopg2
 from fastapi import APIRouter, status
 
-from src.admin.routes.dto.request.contact_us_request import ContactUsRequest
+from src.admin.model.request.contact_us_request import ContactUsRequest
 from src.common.utils.get_env_variable import get_env_variable
 
 contact_router = APIRouter(tags=["Contact Us"])

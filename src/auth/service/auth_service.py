@@ -2,7 +2,7 @@ from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
-from src.auth.routes.dto.response.token_response import TokenResponse
+from src.auth.model.response.token_response import TokenResponse
 from src.auth.service.token_service import TokenService
 from src.main.exceptions.exceptions import (
     AuthException,

@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from src.payment.routes.dto.request.deposit_without_account import DepositWithoutAccount
+from src.payment.model.request.deposit_without_account import DepositWithoutAccount
 from src.user.domain.user import User
 
 

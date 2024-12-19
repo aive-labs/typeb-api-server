@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from src.common.infra.entity.recommend_products import RecommendProductsModelEntity
-from src.search.routes.dto.id_with_item_response import IdWithItemDescription
+from src.search.model.id_with_item_response import IdWithItemDescription
 
 
 class RecommendProductsRepository:

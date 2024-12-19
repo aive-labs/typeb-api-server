@@ -7,9 +7,9 @@ from src.strategy.domain.strategy_theme import (
     StrategyThemeAudienceMapping,
     StrategyThemeOfferMapping,
 )
-from src.strategy.enums.strategy_status import StrategyStatus
 from src.strategy.infra.entity.strategy_entity import StrategyEntity
-from src.strategy.routes.dto.request.strategy_create import StrategyCreate
+from src.strategy.model.request.strategy_create import StrategyCreate
+from src.strategy.model.strategy_status import StrategyStatus
 
 
 class Strategy(BaseModel):

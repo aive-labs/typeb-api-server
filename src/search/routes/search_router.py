@@ -7,16 +7,16 @@ from sqlalchemy.orm import Session
 from src.auth.utils.permission_checker import get_permission_checker
 from src.main.container import Container
 from src.main.db_dependency import get_db
-from src.search.routes.dto.id_with_item_response import (
+from src.search.model.id_with_item_response import (
     IdWithItem,
     IdWithItemDescription,
 )
-from src.search.routes.dto.id_with_label_response import IdWithLabel
-from src.search.routes.dto.reviewer_response import ReviewerResponse
-from src.search.routes.dto.send_user_response import SendUserResponse
-from src.search.routes.dto.strategy_search_response import StrategySearchResponse
+from src.search.model.id_with_label_response import IdWithLabel
+from src.search.model.reviewer_response import ReviewerResponse
+from src.search.model.send_user_response import SendUserResponse
+from src.search.model.strategy_search_response import StrategySearchResponse
 from src.search.routes.port.base_search_service import BaseSearchService
-from src.strategy.enums.target_strategy import TargetStrategy
+from src.strategy.model.target_strategy import TargetStrategy
 
 search_router = APIRouter(tags=["Search"])
 

@@ -19,7 +19,7 @@ from src.message.domain.send_kakao_carousel import (
     MoreLink,
     SendKakaoCarousel,
 )
-from src.message_template.enums.message_type import MessageType
+from src.message_template.model.message_type import MessageType
 
 
 def create_dict_list(group):

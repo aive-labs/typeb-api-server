@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from src.common.enums.access_level import AccessLevel
+from src.common.model.access_level import AccessLevel
 from src.main.exceptions.exceptions import AuthorizationException
 from src.main.transactional import transactional
 from src.message_template.domain.message_template import MessageTemplate
@@ -10,7 +10,7 @@ from src.message_template.domain.message_template_button_detail import (
 from src.message_template.infra.message_template_repository import (
     MessageTemplateRepository,
 )
-from src.message_template.routes.dto.request.message_template_update import (
+from src.message_template.model.request.message_template_update import (
     TemplateUpdate,
 )
 from src.message_template.routes.port.update_message_template_usecase import (

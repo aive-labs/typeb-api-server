@@ -7,8 +7,8 @@ from src.main.exceptions.exceptions import BadRequestException
 from src.main.transactional import transactional
 from src.payment.domain.credit_history import CreditHistory
 from src.payment.domain.pending_deposit import PendingDeposit
-from src.payment.enum.credit_status import CreditStatus
-from src.payment.routes.dto.request.deposit_without_account import DepositWithoutAccount
+from src.payment.model.credit_status import CreditStatus
+from src.payment.model.request.deposit_without_account import DepositWithoutAccount
 from src.payment.routes.use_case.deposit_without_account_usecase import (
     DepositWithoutAccountUseCase,
 )

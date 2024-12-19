@@ -2,8 +2,8 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, BackgroundTasks, Depends, status
 from sqlalchemy.orm import Session
 
-from src.auth.routes.dto.request.cafe24_token_request import OauthAuthenticationRequest
-from src.auth.routes.dto.response.cafe24_app_execution_link import (
+from src.auth.model.request.cafe24_token_request import OauthAuthenticationRequest
+from src.auth.model.response.cafe24_app_execution_link import (
     Cafe24AppExecutionLink,
 )
 from src.auth.routes.port.base_ga_service import BaseGAIntegrationService

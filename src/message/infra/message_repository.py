@@ -15,7 +15,7 @@ from src.message.infra.entity.kakao_carousel_more_link_entity import (
 from src.message.infra.entity.ppurio_message_result_entity import (
     PpurioMessageResultEntity,
 )
-from src.message.routes.dto.ppurio_message_result import PpurioMessageResult
+from src.message.model.ppurio_message_result import PpurioMessageResult
 from src.message.service.port.base_message_repository import BaseMessageRepository
 from src.user.domain.user import User
 

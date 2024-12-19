@@ -9,8 +9,8 @@ from src.common.pagination.pagination_base import PaginationBase
 from src.common.pagination.pagination_response import PaginationResponse
 from src.main.container import Container
 from src.main.db_dependency import get_db
-from src.offer.routes.dto.response.offer_detail_response import OfferDetailResponse
-from src.offer.routes.dto.response.offer_response import OfferResponse
+from src.offer.model.response.offer_detail_response import OfferDetailResponse
+from src.offer.model.response.offer_response import OfferResponse
 from src.offer.routes.port.get_offer_usecase import GetOfferUseCase
 
 offer_router = APIRouter(

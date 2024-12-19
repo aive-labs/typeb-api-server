@@ -1,18 +1,15 @@
 from sqlalchemy import Integer, and_, delete, desc, distinct, func, not_, or_, update
 from sqlalchemy.orm import Session, joinedload
 
-from src.audience.enums.audience_status import AudienceStatus
 from src.audience.infra.entity.audience_entity import AudienceEntity
 from src.audience.infra.entity.audience_stats_entity import AudienceStatsEntity
 from src.audience.infra.entity.variable_table_list import CustomerInfoStatusEntity
+from src.audience.model.audience_status import AudienceStatus
 from src.campaign.domain.campaign import Campaign
 from src.campaign.domain.campaign_messages import CampaignMessages, SetGroupMessage
 from src.campaign.domain.campaign_remind import CampaignRemind
 from src.campaign.domain.campaign_timeline import CampaignTimeline
 from src.campaign.domain.send_reservation import SendReservation
-from src.campaign.enums.campagin_status import CampaignStatus
-from src.campaign.enums.campaign_approval_status import CampaignApprovalStatus
-from src.campaign.enums.send_type import SendType
 from src.campaign.infra.dto.already_sent_campaign import AlreadySentCampaign
 from src.campaign.infra.dto.campaign_reviewer_info import CampaignReviewerInfo
 from src.campaign.infra.entity.approver_entity import ApproverEntity
@@ -30,13 +27,16 @@ from src.campaign.infra.entity.campaign_timeline_entity import CampaignTimelineE
 from src.campaign.infra.entity.coupon_custs import OfferCustEntity
 from src.campaign.infra.entity.send_reservation_entity import SendReservationEntity
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
+from src.campaign.model.campagin_status import CampaignStatus
+from src.campaign.model.campaign_approval_status import CampaignApprovalStatus
+from src.campaign.model.send_type import SendType
 from src.common.sqlalchemy.object_access_condition import object_access_condition
 from src.common.utils.string_utils import is_convertible_to_int
 from src.offer.infra.entity.offers_entity import OffersEntity
 from src.product.infra.entity.product_master_entity import ProductMasterEntity
-from src.search.routes.dto.id_with_item_response import IdWithItem
-from src.strategy.enums.strategy_status import StrategyStatus
+from src.search.model.id_with_item_response import IdWithItem
 from src.strategy.infra.entity.strategy_entity import StrategyEntity
+from src.strategy.model.strategy_status import StrategyStatus
 from src.user.domain.user import User
 from src.user.infra.entity.user_entity import UserEntity
 

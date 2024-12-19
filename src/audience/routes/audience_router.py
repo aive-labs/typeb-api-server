@@ -14,25 +14,25 @@ from fastapi import (
 from fastapi.responses import FileResponse, StreamingResponse
 from sqlalchemy.orm import Session
 
-from src.audience.enums.audience_create_type import AudienceCreateType
-from src.audience.enums.csv_template import CsvTemplates
-from src.audience.enums.target_audience_update_cycle import TargetAudienceUpdateCycle
-from src.audience.routes.dto.request.audience_create import AudienceCreate
-from src.audience.routes.dto.request.audience_update import AudienceUpdate
-from src.audience.routes.dto.response.audience_stat_info import AudienceStatsInfo
-from src.audience.routes.dto.response.audience_variable_combinations import (
+from src.audience.model.audience_create_type import AudienceCreateType
+from src.audience.model.csv_template import CsvTemplates
+from src.audience.model.request.audience_create import AudienceCreate
+from src.audience.model.request.audience_update import AudienceUpdate
+from src.audience.model.response.audience_stat_info import AudienceStatsInfo
+from src.audience.model.response.audience_variable_combinations import (
     AudienceVariableCombinations,
 )
-from src.audience.routes.dto.response.audiences import AudienceResponse
-from src.audience.routes.dto.response.default_exclude_audience import (
+from src.audience.model.response.audiences import AudienceResponse
+from src.audience.model.response.default_exclude_audience import (
     DefaultExcludeAudience,
 )
-from src.audience.routes.dto.response.target_strategy_combination import (
+from src.audience.model.response.target_strategy_combination import (
     TargetStrategyCombination,
 )
-from src.audience.routes.dto.response.upload_condition_response import (
+from src.audience.model.response.upload_condition_response import (
     AudienceCreationOptionsResponse,
 )
+from src.audience.model.target_audience_update_cycle import TargetAudienceUpdateCycle
 from src.audience.routes.port.usecase.create_audience_usecase import (
     CreateAudienceUseCase,
 )

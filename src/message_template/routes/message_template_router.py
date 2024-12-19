@@ -6,17 +6,17 @@ from sqlalchemy.orm import Session
 
 from src.auth.routes.port.base_onboarding_service import BaseOnboardingService
 from src.auth.utils.permission_checker import get_permission_checker
-from src.common.enums.campaign_media import CampaignMedia
+from src.common.model.campaign_media import CampaignMedia
 from src.main.container import Container
 from src.main.db_dependency import get_db
 from src.message_template.domain.message_template import MessageTemplate
-from src.message_template.routes.dto.request.message_template_create import (
+from src.message_template.model.request.message_template_create import (
     TemplateCreate,
 )
-from src.message_template.routes.dto.request.message_template_update import (
+from src.message_template.model.request.message_template_update import (
     TemplateUpdate,
 )
-from src.message_template.routes.dto.response.opt_out_phone_number_response import (
+from src.message_template.model.response.opt_out_phone_number_response import (
     OptOutPhoneNumberResponse,
 )
 from src.message_template.service.create_message_template_service import (

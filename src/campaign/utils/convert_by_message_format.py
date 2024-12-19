@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.message_template.enums.message_type import MessageType
+from src.message_template.model.message_type import MessageType
 
 
 def convert_send_msg_type(row):

@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.payment.routes.dto.request.cafe24_order_request import Cafe24OrderRequest
-from src.payment.routes.dto.response.cafe24_order_response import Cafe24OrderResponse
+from src.payment.model.request.cafe24_order_request import Cafe24OrderRequest
+from src.payment.model.response.cafe24_order_response import Cafe24OrderResponse
 from src.user.domain.user import User
 
 

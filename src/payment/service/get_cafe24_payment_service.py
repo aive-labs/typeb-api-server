@@ -3,10 +3,10 @@ from sqlalchemy.orm import Session
 from src.auth.routes.port.base_oauth_service import BaseOauthService
 from src.main.exceptions.exceptions import NotFoundException
 from src.payment.domain.subscription import Subscription
-from src.payment.enum.subscription_status import SubscriptionStatus
-from src.payment.routes.dto.response.cafe24_payment_response import (
+from src.payment.model.response.cafe24_payment_response import (
     Cafe24PaymentResponse,
 )
+from src.payment.model.subscription_status import SubscriptionStatus
 from src.payment.routes.use_case.get_cafe24_payment_usecase import (
     GetCafe24PaymentUseCase,
 )

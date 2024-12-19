@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from src.payment.infra.payment_repository import PaymentRepository
-from src.payment.routes.dto.response.card_response import CardResponse
+from src.payment.model.response.card_response import CardResponse
 from src.payment.routes.use_case.get_card_usecase import GetCardUseCase
 
 

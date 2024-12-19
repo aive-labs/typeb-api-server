@@ -56,18 +56,18 @@ from src.campaign.infra.sqlalchemy_query.modify_reservation_sync_service import 
 from src.campaign.infra.sqlalchemy_query.validate_phone_call import (
     validate_phone_callback,
 )
-from src.campaign.routes.dto.request.campaign_set_group_message_request import (
+from src.campaign.model.request.campaign_set_group_message_request import (
     CampaignSetGroupMessageRequest,
 )
-from src.campaign.routes.dto.request.campaign_set_group_update import (
+from src.campaign.model.request.campaign_set_group_update import (
     CampaignSetGroupUpdate,
 )
-from src.campaign.routes.dto.response.campaign_response import CampaignSetGroup
-from src.campaign.routes.dto.response.campaign_set_group_update_response import (
+from src.campaign.model.response.campaign_response import CampaignSetGroup
+from src.campaign.model.response.campaign_set_group_update_response import (
     CampaignSetGroupUpdateResponse,
     CampaignSetResponse,
 )
-from src.campaign.routes.dto.response.update_campaign_set_group_message_response import (
+from src.campaign.model.response.update_campaign_set_group_message_response import (
     UpdateCampaignSetGroupMessageResponse,
 )
 from src.campaign.routes.port.update_campaign_set_message_group_usecase import (
@@ -83,8 +83,8 @@ from src.campaign.utils.utils import (
     split_dataframe_by_ratios,
     split_df_stratified_by_column,
 )
-from src.common.enums.campaign_media import CampaignMedia
-from src.common.enums.message_delivery_vendor import MsgDeliveryVendorEnum
+from src.common.model.campaign_media import CampaignMedia
+from src.common.model.message_delivery_vendor import MsgDeliveryVendorEnum
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import get_localtime, localtime_converter
 from src.common.utils.get_env_variable import get_env_variable
@@ -98,8 +98,8 @@ from src.main.exceptions.exceptions import (
 from src.main.transactional import transactional
 from src.message.domain.kakao_carousel_card import KakaoCarouselCard
 from src.message.service.port.base_message_repository import BaseMessageRepository
-from src.message_template.enums.kakao_button_type import KakaoButtonType
-from src.message_template.enums.message_type import MessageType
+from src.message_template.model.kakao_button_type import KakaoButtonType
+from src.message_template.model.message_type import MessageType
 from src.user.domain.user import User
 
 

@@ -1,4 +1,4 @@
-from src.audience.enums.csv_template import CsvTemplates
+from src.audience.model.csv_template import CsvTemplates
 
 
 def csv_check_sentence_converter(actual_count, template_type, upload_count, checked_shop_cnt=None):

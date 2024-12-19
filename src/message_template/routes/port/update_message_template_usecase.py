@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.main.transactional import transactional
-from src.message_template.routes.dto.request.message_template_update import (
+from src.message_template.model.request.message_template_update import (
     TemplateUpdate,
 )
 from src.user.domain.user import User

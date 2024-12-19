@@ -5,10 +5,10 @@ from src.common.utils.date_utils import get_unix_timestamp
 from src.common.utils.file.s3_service import S3Service
 from src.common.utils.get_env_variable import get_env_variable
 from src.content.domain.creatives import Creatives
-from src.content.enums.image_source import ImageSource
 from src.content.infra.dto.response.s3_presigned_response import S3PresignedResponse
-from src.content.routes.dto.request.creatives_create import CreativeCreate
-from src.content.routes.dto.request.s3_presigned_url_request import (
+from src.content.model.image_source import ImageSource
+from src.content.model.request.creatives_create import CreativeCreate
+from src.content.model.request.s3_presigned_url_request import (
     S3PresignedUrlRequest,
 )
 from src.content.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase

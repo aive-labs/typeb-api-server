@@ -7,13 +7,13 @@ from sqlalchemy.sql import Alias
 
 from src.audience.domain.audience import Audience
 from src.audience.domain.variable_table_mapping import VariableTableMapping
-from src.audience.infra.dto.filter_condition import FilterCondition
-from src.audience.infra.dto.linked_campaign import LinkedCampaign
-from src.audience.infra.dto.upload_conditon import UploadCondition
-from src.audience.routes.dto.response.default_exclude_audience import (
+from src.audience.model.filter_condition import FilterCondition
+from src.audience.model.linked_campaign import LinkedCampaign
+from src.audience.model.response.default_exclude_audience import (
     DefaultExcludeAudience,
 )
-from src.search.routes.dto.id_with_label_response import IdWithLabel
+from src.audience.model.upload_conditon import UploadCondition
+from src.search.model.id_with_label_response import IdWithLabel
 from src.user.domain.user import User
 
 

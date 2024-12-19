@@ -2,10 +2,10 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from src.admin.enums.outsoring_personal_information_status import (
+from src.admin.model.outsoring_personal_information_status import (
     OutSourcingPersonalInformationStatus,
 )
-from src.admin.routes.dto.response.personal_variable_response import (
+from src.admin.model.response.personal_variable_response import (
     PersonalVariableResponse,
 )
 from src.admin.routes.port.base_personal_information_service import (

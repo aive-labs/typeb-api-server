@@ -23,12 +23,12 @@ from src.campaign.infra.sqlalchemy_query.recreate_basic_campaign import (
     exclude_customers_from_exclusion_audiences,
     exclude_customers_from_exclusion_campaign,
 )
-from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdateDetail
-from src.common.enums.campaign_media import CampaignMedia
+from src.campaign.model.request.campaign_set_update import CampaignSetUpdateDetail
+from src.common.model.campaign_media import CampaignMedia
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import localtime_converter
 from src.main.exceptions.exceptions import ConsistencyException
-from src.message_template.enums.message_type import MessageType
+from src.message_template.model.message_type import MessageType
 
 
 def recreate_expert_campaign_set(

@@ -27,7 +27,7 @@ from src.campaign.infra.sqlalchemy_query.get_message_resources import (
 from src.campaign.infra.sqlalchemy_query.personal_variable_formatting import (
     personal_variable_formatting,
 )
-from src.campaign.routes.dto.request.test_send_request import TestSendRequest
+from src.campaign.model.request.test_send_request import TestSendRequest
 from src.campaign.routes.port.test_message_send_usecase import TestSendMessageUseCase
 from src.campaign.service.port.base_campaign_set_repository import (
     BaseCampaignSetRepository,
@@ -42,10 +42,10 @@ from src.main.exceptions.exceptions import (
     PolicyException,
 )
 from src.message.service.message_reserve_controller import MessageReserveController
-from src.message_template.enums.message_type import MessageType
 from src.message_template.infra.entity.message_template_entity import (
     MessageTemplateEntity,
 )
+from src.message_template.model.message_type import MessageType
 from src.offer.infra.entity.offers_entity import OffersEntity
 from src.user.domain.user import User
 
