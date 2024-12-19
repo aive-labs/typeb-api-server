@@ -7,7 +7,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "../src"))
 
 from fastapi.testclient import TestClient
 
-from src.main import app
+from src.app import app
 
 client = TestClient(app)
 

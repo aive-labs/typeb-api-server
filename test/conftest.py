@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 import pytest
 from starlette.testclient import TestClient
 
-from src.main import app
+from src.app import app
 from src.user.domain.user import User
 from test.unit.users.fixtures.create_token import create_access_token
 
