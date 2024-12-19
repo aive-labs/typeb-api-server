@@ -498,7 +498,6 @@
     │   │   ├── ascc_product.csv
     │   │   ├── html_template
     │   │   │   ├── base.html
-    │   │   │   ├── default.html
     │   │   │   └── error.html
     │   │   └── product_data.jsonl
     │   ├── routes
