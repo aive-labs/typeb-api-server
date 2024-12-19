@@ -10,7 +10,7 @@ from src.auth.infra.dto.cafe24_mall_info import Cafe24MallInfo
 from src.auth.infra.dto.cafe24_state_token import Cafe24StateToken
 from src.auth.infra.dto.cafe24_token import Cafe24TokenData
 from src.auth.infra.entity.cafe24_integration_entity import Cafe24IntegrationEntity
-from src.core.database import save_cafe24_app_auth
+from src.core.database import get_cafe24_install_state_token, save_cafe24_app_auth
 from src.core.exceptions.exceptions import NotFoundException
 
 
@@ -121,3 +121,10 @@ class Cafe24SqlAlchemyRepository:
 
     def save_app_install_auth_info(self, mall_id, hashed_state):
         save_cafe24_app_auth(mall_id, hashed_state)
+
+    def get_app_install_state_token(self, state) -> str:
+        mall_id = get_cafe24_install_state_token(state)
+        if mall_id is None:
+            raise NotFoundException(detail={"message": "인증 정보를 찾을 수 없습니다."})
+
+        return mall_id

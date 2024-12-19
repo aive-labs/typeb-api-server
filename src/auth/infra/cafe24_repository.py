@@ -33,3 +33,6 @@ class Cafe24Repository(BaseOauthRepository):
 
     def save_app_install_auth_info(self, mall_id, hashed_state):
         self.cafe24_sqlalchemy.save_app_install_auth_info(mall_id, hashed_state)
+
+    def get_app_install_mall_id_by_state_token(self, state) -> str:
+        return self.cafe24_sqlalchemy.get_app_install_state_token(state)

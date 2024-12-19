@@ -143,16 +143,13 @@ class Cafe24Service(BaseOauthService):
 
         db.commit()
 
-    async def get_oauth_access_token_when_install(
-        self, oauth_request: OauthAuthenticationRequest, db: Session
-    ):
-        cafe24_state_token = self.cafe24_repository.get_state_token(oauth_request.state, db=db)
-        mall_id = cafe24_state_token.mall_id
+    async def get_oauth_access_token_when_install(self, oauth_request: OauthAuthenticationRequest):
+        mall_id = self.cafe24_repository.get_app_install_mall_id_by_state_token(oauth_request.state)
 
         token_data = await self._request_token_to_cafe24(oauth_request.code, mall_id)
         cafe24_tokens = Cafe24TokenData(**token_data)
 
-        self.cafe24_repository.save_tokens(cafe24_tokens, db)
+        print(cafe24_tokens)
 
     def execute_cafe24_dag_run(self, mall_id):
 

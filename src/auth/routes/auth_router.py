@@ -63,7 +63,7 @@ async def get_cafe24_access_token_when_install(
     cafe_authentication_request: OauthAuthenticationRequest,
     cafe24_service: BaseOauthService = Depends(Provide[Container.cafe24_service]),
 ) -> None:
-    await cafe24_service.get_oauth_access_token_when_install(cafe_authentication_request, db=db)
+    await cafe24_service.get_oauth_access_token_when_install(cafe_authentication_request)
 
 
 @auth_router.post("/oauth/cafe24/app-link/validation", status_code=status.HTTP_200_OK)

@@ -28,9 +28,7 @@ class BaseOauthService(ABC):
         pass
 
     @abstractmethod
-    async def get_oauth_access_token_when_install(
-        self, oauth_request: OauthAuthenticationRequest, db: Session
-    ):
+    async def get_oauth_access_token_when_install(self, oauth_request: OauthAuthenticationRequest):
         pass
 
     @abstractmethod
