@@ -30,3 +30,6 @@ class Cafe24Repository(BaseOauthRepository):
 
     def get_token(self, mall_id: str, db: Session) -> Cafe24Token:
         return self.cafe24_sqlalchemy.get_token(mall_id, db)
+
+    def save_app_install_auth_info(self, mall_id, hashed_state, db: Session):
+        self.cafe24_sqlalchemy.save_app_install_auth_info(mall_id, hashed_state, db)

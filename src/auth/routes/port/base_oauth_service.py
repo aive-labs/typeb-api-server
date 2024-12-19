@@ -20,7 +20,19 @@ class BaseOauthService(ABC):
 
     @transactional
     @abstractmethod
+    def get_oauth_authentication_url_when_install(self, mall_id, db: Session) -> str:
+        pass
+
+    @transactional
+    @abstractmethod
     async def get_oauth_access_token(self, oauth_request: OauthAuthenticationRequest, db: Session):
+        pass
+
+    @transactional
+    @abstractmethod
+    async def get_oauth_access_token_when_install(
+        self, oauth_request: OauthAuthenticationRequest, db: Session
+    ):
         pass
 
     @abstractmethod

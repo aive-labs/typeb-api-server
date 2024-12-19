@@ -9,6 +9,9 @@ from src.auth.enums.cafe24_data_migration_status import CAFE24DataMigrationStatu
 from src.auth.infra.dto.cafe24_mall_info import Cafe24MallInfo
 from src.auth.infra.dto.cafe24_state_token import Cafe24StateToken
 from src.auth.infra.dto.cafe24_token import Cafe24TokenData
+from src.auth.infra.entity.cafe24_app_install_auth_info_entity import (
+    Cafe24AppInstallAuthInfoEntity,
+)
 from src.auth.infra.entity.cafe24_integration_entity import Cafe24IntegrationEntity
 from src.core.exceptions.exceptions import NotFoundException
 
@@ -117,3 +120,10 @@ class Cafe24SqlAlchemyRepository:
             refresh_token=entity.refresh_token,
             refresh_token_expires_at=entity.refresh_token_expired_at,
         )
+
+    def save_app_install_auth_info(self, mall_id, hashed_state, db):
+        entity = Cafe24AppInstallAuthInfoEntity(
+            mall_id=mall_id,
+            state=hashed_state,
+        )
+        db.add(entity)

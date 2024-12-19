@@ -32,3 +32,7 @@ class BaseOauthRepository(ABC):
     @abstractmethod
     def get_token(self, mall_id: str, db: Session) -> Cafe24Token:
         pass
+
+    @abstractmethod
+    def save_app_install_auth_info(self, mall_id, hashed_state, db: Session):
+        pass
