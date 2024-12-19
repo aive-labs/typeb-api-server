@@ -3,7 +3,7 @@ from collections import defaultdict
 import pandas as pd
 from sqlalchemy.inspection import inspect
 
-from src.audiences.infra.dto.audience_info import AudienceInfo
+from src.audience.infra.dto.audience_info import AudienceInfo
 
 
 class DataConverter:

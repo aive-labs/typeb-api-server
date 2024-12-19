@@ -5,7 +5,7 @@ from src.payment.routes.dto.request.pre_data_for_validation import PreDataForVal
 from src.payment.routes.use_case.save_pre_data_for_validation import (
     SavePreDataForValidation,
 )
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class SavePreDataForValidationService(SavePreDataForValidation):

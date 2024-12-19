@@ -15,7 +15,7 @@ from src.payment.routes.use_case.invoice_download_usecase import InvoiceDownload
 from src.payment.service.port.base_credit_repository import BaseCreditRepository
 from src.payment.service.port.base_deposit_repository import BaseDepositRepository
 from src.payment.service.port.base_payment_repository import BasePaymentRepository
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class InvoiceDownloadService(InvoiceDownloadUseCase):
@@ -41,7 +41,7 @@ class InvoiceDownloadService(InvoiceDownloadUseCase):
             purchase_or_cancel = "구매"
         else:
             raise ConsistencyException(
-                detail={"messages": "구매, 환불에 대해서만 영수증 다운로드가 가능합니다."}
+                detail={"message": "구매, 환불에 대해서만 영수증 다운로드가 가능합니다."}
             )
 
         items = []

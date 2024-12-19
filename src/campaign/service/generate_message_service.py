@@ -28,19 +28,19 @@ from src.campaign.service.port.base_campaign_repository import BaseCampaignRepos
 from src.common.service.port.base_common_repository import BaseCommonRepository
 from src.common.utils.calculate_ratios import calculate_ratios
 from src.common.utils.repeat_date import get_last_day_of_month
-from src.contents.service.port.base_contents_repository import BaseContentsRepository
+from src.content.service.port.base_contents_repository import BaseContentsRepository
 from src.core.exceptions.exceptions import PolicyException
-from src.message_template.enums.message_type import MessageType
-from src.messages.infra.entity.kakao_carousel_link_button_entity import (
+from src.message.infra.entity.kakao_carousel_link_button_entity import (
     KakaoCarouselLinkButtonsEntity,
 )
-from src.messages.service.port.base_message_repository import BaseMessageRepository
-from src.offers.service.port.base_offer_repository import BaseOfferRepository
+from src.message.service.port.base_message_repository import BaseMessageRepository
+from src.message_template.enums.message_type import MessageType
+from src.offer.service.port.base_offer_repository import BaseOfferRepository
 from src.strategy.routes.dto.request.preview_message_create import PreviewMessageCreate
 from src.strategy.routes.dto.response.preview_message_response import (
     PreviewMessageResponse,
 )
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class GenerateMessageService(GenerateMessageUsecase):
@@ -169,7 +169,7 @@ class GenerateMessageService(GenerateMessageUsecase):
 
         message_data = []
         phone_callback = "02-2088-5502"  # 매장 번호 또는 대표번호
-        for msg in yaml_data["messages"]:
+        for msg in yaml_data["message"]:
             msg["created_at"] = datetime.fromisoformat(msg["created_at"])
             msg["updated_at"] = datetime.fromisoformat(msg["updated_at"])
             set_group_message = SetGroupMessage(**msg)
@@ -301,7 +301,7 @@ class GenerateMessageService(GenerateMessageUsecase):
         else:
             recsys_model_name = None
 
-        # contents > {contents_id: [contents_name, contents_url]}
+        # content > {contents_id: [contents_name, contents_url]}
         contents_dict = self.contents_repository.get_contents_id_url_dict(db)
 
         set_data = {
@@ -621,7 +621,7 @@ class GenerateMessageService(GenerateMessageUsecase):
         else:
             recsys_model_name = None
 
-        # contents > {contents_id: [contents_name, contents_url]}
+        # content > {contents_id: [contents_name, contents_url]}
         contents_dict = self.contents_repository.get_contents_id_url_dict(db)
 
         set_data = {

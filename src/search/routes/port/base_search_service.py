@@ -11,7 +11,7 @@ from src.search.routes.dto.id_with_label_response import IdWithLabel
 from src.search.routes.dto.reviewer_response import ReviewerResponse
 from src.search.routes.dto.send_user_response import SendUserResponse
 from src.search.routes.dto.strategy_search_response import StrategySearchResponse
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class BaseSearchService(ABC):

@@ -14,7 +14,7 @@ from src.payment.infra.entity.payment_entity import PaymentEntity
 from src.payment.infra.entity.pre_data_for_validation import PreDataForValidationEntity
 from src.payment.routes.dto.request.pre_data_for_validation import PreDataForValidation
 from src.payment.service.port.base_payment_repository import BasePaymentRepository
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class PaymentRepository(BasePaymentRepository):

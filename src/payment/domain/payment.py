@@ -7,7 +7,7 @@ from src.payment.enum.payment_type import PaymentType
 from src.payment.enum.product_type import ProductType
 from src.payment.infra.dto.response.toss_payment_response import TossPaymentResponse
 from src.payment.infra.entity.payment_entity import PaymentEntity
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class Payment(BaseModel):

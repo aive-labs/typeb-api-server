@@ -6,7 +6,7 @@ from src.payment.domain.cafe24_order import Cafe24Order
 from src.payment.domain.card import Card
 from src.payment.domain.payment import Payment
 from src.payment.routes.dto.request.pre_data_for_validation import PreDataForValidation
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class BasePaymentRepository(ABC):

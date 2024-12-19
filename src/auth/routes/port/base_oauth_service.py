@@ -8,7 +8,7 @@ from src.core.transactional import transactional
 from src.payment.domain.cafe24_order import Cafe24Order
 from src.payment.domain.cafe24_payment import Cafe24Payment
 from src.payment.routes.dto.request.cafe24_order_request import Cafe24OrderRequest
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class BaseOauthService(ABC):

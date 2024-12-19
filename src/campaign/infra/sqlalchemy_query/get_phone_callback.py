@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from src.users.infra.entity.user_entity import UserEntity
+from src.user.infra.entity.user_entity import UserEntity
 
 
 def get_phone_callback(user_id, db: Session):

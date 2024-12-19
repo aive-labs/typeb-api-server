@@ -1,7 +1,7 @@
 from sqlalchemy import func
 
 from src.campaign.infra.entity.rep_contents_rank_entity import RepContentsRankEntity
-from src.contents.infra.entity.contents_entity import ContentsEntity
+from src.content.infra.entity.contents_entity import ContentsEntity
 
 
 def get_contents_name_with_rep_nm(db):

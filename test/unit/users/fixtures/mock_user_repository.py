@@ -1,10 +1,10 @@
 from itertools import count
 from unittest.mock import MagicMock
 
-from src.users.domain.user import User
-from src.users.routes.dto.request.user_create import UserCreate
-from src.users.routes.dto.request.user_modify import UserModify
-from src.users.service.port.base_user_repository import BaseUserRepository
+from src.user.domain.user import User
+from src.user.routes.dto.request.user_create import UserCreate
+from src.user.routes.dto.request.user_modify import UserModify
+from src.user.service.port.base_user_repository import BaseUserRepository
 
 
 def get_mock_user_repository():

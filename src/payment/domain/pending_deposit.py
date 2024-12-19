@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 from src.payment.routes.dto.request.deposit_without_account import DepositWithoutAccount
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class PendingDeposit(BaseModel):

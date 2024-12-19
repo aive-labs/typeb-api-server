@@ -1,7 +1,7 @@
 from sqlalchemy import ARRAY, Column, DateTime, ForeignKey, Integer, String, func, text
 from sqlalchemy.orm import relationship
 
-from src.audiences.infra.entity.strategy_theme_audience_entity import (
+from src.audience.infra.entity.strategy_theme_audience_entity import (
     StrategyThemeAudienceMappingEntity,
 )
 from src.core.database import Base

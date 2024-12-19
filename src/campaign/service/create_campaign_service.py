@@ -42,7 +42,7 @@ from src.core.exceptions.exceptions import (
 )
 from src.core.transactional import transactional
 from src.strategy.service.port.base_strategy_repository import BaseStrategyRepository
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class CreateCampaignService(CreateCampaignUseCase):
@@ -201,7 +201,7 @@ class CreateCampaignService(CreateCampaignUseCase):
                 row._asdict() for row in get_campaign_set_groups(campaign_id=campaign_id, db=db)
             ]
 
-            # campaign set rep_nm, contents 조회
+            # campaign set rep_nm, content 조회
             sets = add_set_rep_contents(sets, set_groups, campaign_id, db)
             set_df = pd.DataFrame(sets)
 

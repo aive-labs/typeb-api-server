@@ -10,7 +10,7 @@ from src.core.container import Container
 from src.core.db_dependency import get_db
 from src.core.exceptions.exceptions import AuthException, CredentialException
 from src.payment.routes.dto.response.my_subscription import MySubscription
-from src.users.infra.user_repository import UserRepository
+from src.user.infra.user_repository import UserRepository
 
 
 @inject

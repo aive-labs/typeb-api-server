@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from src.campaign.routes.dto.request.campaign_create import CampaignCreate
 from src.core.transactional import transactional
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class UpdateCampaignUseCase(ABC):

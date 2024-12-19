@@ -1,4 +1,4 @@
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class AuthorizationChecker:

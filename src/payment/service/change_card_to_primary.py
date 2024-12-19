@@ -6,7 +6,7 @@ from src.payment.infra.payment_repository import PaymentRepository
 from src.payment.routes.use_case.change_card_to_primary_usecase import (
     ChangeCardToPrimaryUseCase,
 )
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class ChangeCardToPrimaryService(ChangeCardToPrimaryUseCase):

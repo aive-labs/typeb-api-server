@@ -7,7 +7,7 @@ from src.campaign.routes.dto.response.campaign_basic_response import (
     CampaignBasicResponse,
 )
 from src.core.transactional import transactional
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class CreateCampaignUseCase(ABC):

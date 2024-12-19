@@ -27,10 +27,10 @@ from src.core.exceptions.exceptions import (
     NotFoundException,
     PolicyException,
 )
+from src.message.domain.kakao_carousel_card import KakaoCarouselCard
+from src.message.service.message_service import MessageService
 from src.message_template.enums.message_type import MessageType
-from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
-from src.messages.service.message_service import MessageService
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class UploadImageForMessage(UploadImageForMessageUseCase):

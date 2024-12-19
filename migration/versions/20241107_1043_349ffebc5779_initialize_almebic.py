@@ -185,10 +185,10 @@ def upgrade() -> None:
         schema="aivelabs_sv",
     )
 
-    # audiences
+    # audience
     op.execute("CREATE SEQUENCE aivelabs_sv.audience_seq")
     op.create_table(
-        "audiences",
+        "audience",
         sa.Column("audience_id", sa.String(), nullable=False),
         sa.Column("audience_name", sa.String(), nullable=False),
         sa.Column("main_mix_lv1", sa.String(), nullable=True),
@@ -211,7 +211,7 @@ def upgrade() -> None:
     )
     op.create_index(
         op.f("ix_aivelabs_sv_audiences_audience_id"),
-        "audiences",
+        "audience",
         ["audience_id"],
         unique=False,
         schema="aivelabs_sv",
@@ -380,7 +380,7 @@ def upgrade() -> None:
         schema="aivelabs_sv",
     )
     op.create_table(
-        "contents",
+        "content",
         sa.Column("contents_id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("contents_name", sa.String(), nullable=False),
         sa.Column("contents_status", sa.String(), nullable=False),
@@ -410,7 +410,7 @@ def upgrade() -> None:
     )
     op.create_index(
         op.f("ix_aivelabs_sv_contents_contents_id"),
-        "contents",
+        "content",
         ["contents_id"],
         unique=False,
         schema="aivelabs_sv",
@@ -1156,7 +1156,7 @@ def upgrade() -> None:
         schema="aivelabs_sv",
     )
     op.create_table(
-        "offers",
+        "offer",
         sa.Column("coupon_no", sa.String(), nullable=False),
         sa.Column("coupon_name", sa.String(), nullable=False),
         sa.Column("coupon_type", sa.String(), nullable=True),
@@ -1213,7 +1213,7 @@ def upgrade() -> None:
     )
     op.create_index(
         op.f("ix_aivelabs_sv_offers_coupon_no"),
-        "offers",
+        "offer",
         ["coupon_no"],
         unique=False,
         schema="aivelabs_sv",
@@ -1327,12 +1327,12 @@ def upgrade() -> None:
             (33, '신상품 추천', '{{best_new_items}}', 'best_new_items', '[풀스택] NEW 에어스트 맨즈 슬랙스', 'select cus_cd, best_new_items from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
             (34, '선호 카테고리 Best 상품 추천', '{{best_category_items}}', 'best_category_items', '릴렉스 에어소프트 요가매트 (8mm)', 'select cus_cd, best_category_items from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
             (35, '최대 할인 상품 추천', '{{best_promo_items}}', 'best_promo_items', '라이트 쿨링 크루 삭스', 'select cus_cd, best_promo_items from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
-            (36, '첫 구매 Best 상품 추천 링크', '{{first_best_items_link}}', 'first_best_items_link', 'https://contents.aace.ai/aivelabs/contents/sample.html', 'select cus_cd, first_best_items_link from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
-            (40, '최대 할인 상품 추천 링크', '{{best_promo_items_link}}', 'best_promo_items_link', 'https://contents.aace.ai/aivelabs/contents/sample.html', 'select cus_cd, best_promo_items_link from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
-            (39, '선호 카테고리 Best 상품 추천 링크', '{{best_category_items_link}}', 'best_category_items_link', 'https://contents.aace.ai/aivelabs/contents/sample.html', 'select cus_cd, best_category_items_link from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
-            (37, '스테디셀러 상품 추천 링크', '{{steady_items_link}}', 'steady_items_link', 'https://contents.aace.ai/aivelabs/contents/sample.html', 'select cus_cd, steady_items_link from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
-            (41, 'Next구매 확률 높은 상품 추천 링크', '{{best_cross_items_link}}', 'best_cross_items_link', 'https://contents.aace.ai/aivelabs/contents/sample.html', 'select cus_cd, best_cross_items_link from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
-            (38, '신상품 추천 링크', '{{best_new_items_link}}', 'best_new_items_link', 'https://contents.aace.ai/aivelabs/contents/sample.html', 'select cus_cd, best_new_items_link from aivelabs_sv.cus_info_status', 20, NOW(), NOW());
+            (36, '첫 구매 Best 상품 추천 링크', '{{first_best_items_link}}', 'first_best_items_link', 'https://content.aace.ai/aivelabs/content/sample.html', 'select cus_cd, first_best_items_link from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
+            (40, '최대 할인 상품 추천 링크', '{{best_promo_items_link}}', 'best_promo_items_link', 'https://content.aace.ai/aivelabs/content/sample.html', 'select cus_cd, best_promo_items_link from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
+            (39, '선호 카테고리 Best 상품 추천 링크', '{{best_category_items_link}}', 'best_category_items_link', 'https://content.aace.ai/aivelabs/content/sample.html', 'select cus_cd, best_category_items_link from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
+            (37, '스테디셀러 상품 추천 링크', '{{steady_items_link}}', 'steady_items_link', 'https://content.aace.ai/aivelabs/content/sample.html', 'select cus_cd, steady_items_link from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
+            (41, 'Next구매 확률 높은 상품 추천 링크', '{{best_cross_items_link}}', 'best_cross_items_link', 'https://content.aace.ai/aivelabs/content/sample.html', 'select cus_cd, best_cross_items_link from aivelabs_sv.cus_info_status', 20, NOW(), NOW()),
+            (38, '신상품 추천 링크', '{{best_new_items_link}}', 'best_new_items_link', 'https://content.aace.ai/aivelabs/content/sample.html', 'select cus_cd, best_new_items_link from aivelabs_sv.cus_info_status', 20, NOW(), NOW());
     """
     connection.execute(text(insert_query))
 
@@ -1989,7 +1989,7 @@ def upgrade() -> None:
         schema="aivelabs_sv",
     )
     op.create_table(
-        "users",
+        "user",
         sa.Column("user_id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("username", sa.String(length=30), nullable=False),
         sa.Column("role_id", sa.String(length=15), nullable=False),
@@ -2023,7 +2023,7 @@ def upgrade() -> None:
     )
     op.create_index(
         op.f("ix_aivelabs_sv_users_user_id"),
-        "users",
+        "user",
         ["user_id"],
         unique=False,
         schema="aivelabs_sv",
@@ -2210,7 +2210,7 @@ def upgrade() -> None:
         sa.Column("apply_offer_rate", sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(
             ["coupon_no"],
-            ["aivelabs_sv.offers.coupon_no"],
+            ["aivelabs_sv.offer.coupon_no"],
         ),
         sa.PrimaryKeyConstraint("offer_detail_id"),
         schema="aivelabs_sv",
@@ -2431,7 +2431,7 @@ def upgrade() -> None:
         sa.Column("updated_by", sa.String(), nullable=False),
         sa.ForeignKeyConstraint(
             ["audience_id"],
-            ["aivelabs_sv.audiences.audience_id"],
+            ["aivelabs_sv.audience.audience_id"],
         ),
         sa.ForeignKeyConstraint(
             ["strategy_theme_id"],
@@ -2451,7 +2451,7 @@ def upgrade() -> None:
         sa.Column("updated_by", sa.String(), nullable=False),
         sa.ForeignKeyConstraint(
             ["coupon_no"],
-            ["aivelabs_sv.offers.coupon_no"],
+            ["aivelabs_sv.offer.coupon_no"],
         ),
         sa.ForeignKeyConstraint(
             ["strategy_theme_id"],
@@ -2809,8 +2809,8 @@ def downgrade() -> None:
     )
     op.drop_table("approvers", schema="aivelabs_sv")
     op.drop_table("variable_table_info", schema="aivelabs_sv")
-    op.drop_index(op.f("ix_aivelabs_sv_users_user_id"), table_name="users", schema="aivelabs_sv")
-    op.drop_table("users", schema="aivelabs_sv")
+    op.drop_index(op.f("ix_aivelabs_sv_users_user_id"), table_name="user", schema="aivelabs_sv")
+    op.drop_table("user", schema="aivelabs_sv")
     op.drop_index(
         op.f("ix_aivelabs_sv_user_whitelist_user_id"),
         table_name="user_whitelist",
@@ -2896,10 +2896,8 @@ def downgrade() -> None:
     op.drop_table("payments", schema="aivelabs_sv")
     op.drop_table("outsourcing_personal_information_status", schema="aivelabs_sv")
     op.drop_table("onboarding", schema="aivelabs_sv")
-    op.drop_index(
-        op.f("ix_aivelabs_sv_offers_coupon_no"), table_name="offers", schema="aivelabs_sv"
-    )
-    op.drop_table("offers", schema="aivelabs_sv")
+    op.drop_index(op.f("ix_aivelabs_sv_offers_coupon_no"), table_name="offer", schema="aivelabs_sv")
+    op.drop_table("offer", schema="aivelabs_sv")
     op.drop_table("offer_custs", schema="aivelabs_sv")
     op.drop_index(
         op.f("ix_aivelabs_sv_message_templates_template_id"),
@@ -2952,9 +2950,9 @@ def downgrade() -> None:
     )
     op.drop_table("contents_menu", schema="aivelabs_sv")
     op.drop_index(
-        op.f("ix_aivelabs_sv_contents_contents_id"), table_name="contents", schema="aivelabs_sv"
+        op.f("ix_aivelabs_sv_contents_contents_id"), table_name="content", schema="aivelabs_sv"
     )
-    op.drop_table("contents", schema="aivelabs_sv")
+    op.drop_table("content", schema="aivelabs_sv")
     op.drop_table("channel_master", schema="aivelabs_sv")
     op.drop_index(op.f("ix_aivelabs_sv_cards_card_id"), table_name="cards", schema="aivelabs_sv")
     op.drop_table("cards", schema="aivelabs_sv")
@@ -2984,10 +2982,10 @@ def downgrade() -> None:
     op.drop_table("campaign_approvals", schema="aivelabs_sv")
     op.drop_table("cafe24_integration", schema="aivelabs_sv")
     op.drop_index(
-        op.f("ix_aivelabs_sv_audiences_audience_id"), table_name="audiences", schema="aivelabs_sv"
+        op.f("ix_aivelabs_sv_audiences_audience_id"), table_name="audience", schema="aivelabs_sv"
     )
     op.execute("DROP SEQUENCE IF EXISTS aivelabs_sv.audience_seq")
-    op.drop_table("audiences", schema="aivelabs_sv")
+    op.drop_table("audience", schema="aivelabs_sv")
     op.drop_index(
         op.f("ix_aivelabs_sv_audience_upload_conditions_audience_id"),
         table_name="audience_upload_conditions",

@@ -11,7 +11,7 @@ from src.campaign.service.port.base_campaign_set_repository import (
     BaseCampaignSetRepository,
 )
 from src.common.utils.data_converter import DataConverter
-from src.contents.service.port.base_contents_repository import BaseContentsRepository
+from src.content.service.port.base_contents_repository import BaseContentsRepository
 from src.core.exceptions.exceptions import ConsistencyException
 
 

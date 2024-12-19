@@ -3,8 +3,8 @@ from fastapi import HTTPException
 
 from src.common.enums.yes_no import YesNo
 from src.core.exceptions.exceptions import NotFoundException
-from src.products.routes.dto.request.product_update import ProductUpdate
-from src.users.domain.user import User
+from src.product.routes.dto.request.product_update import ProductUpdate
+from src.user.domain.user import User
 
 
 @pytest.fixture

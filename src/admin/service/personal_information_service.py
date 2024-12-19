@@ -13,7 +13,7 @@ from src.admin.service.port.base_personal_information_repository import (
     BasePersonalInformationRepository,
 )
 from src.core.transactional import transactional
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class PersonalInformationService(BasePersonalInformationService):

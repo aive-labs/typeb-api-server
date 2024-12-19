@@ -2,7 +2,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import coalesce
 
-from src.offers.infra.entity.offers_entity import OffersEntity
+from src.offer.infra.entity.offers_entity import OffersEntity
 from src.strategy.infra.entity.strategy_theme_offers_entity import (
     StrategyThemeOfferMappingEntity,
 )

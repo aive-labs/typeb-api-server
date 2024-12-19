@@ -2,8 +2,8 @@ from datetime import datetime
 
 import pytest
 
-from src.products.domain.product import Product
-from src.products.service.product_service import ProductService
+from src.product.domain.product import Product
+from src.product.service.product_service import ProductService
 from test.unit.creatives.fixtures.mock_creatives_repository import (
     get_mock_creatives_repository,
 )

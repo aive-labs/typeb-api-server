@@ -10,8 +10,7 @@ from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessages
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.string_utils import replace_multiple
 from src.core.exceptions.exceptions import PolicyException
-from src.message_template.enums.message_type import MessageType
-from src.messages.domain.send_kakao_carousel import (
+from src.message.domain.send_kakao_carousel import (
     Attachment,
     Button,
     Carousel,
@@ -20,6 +19,7 @@ from src.messages.domain.send_kakao_carousel import (
     MoreLink,
     SendKakaoCarousel,
 )
+from src.message_template.enums.message_type import MessageType
 
 
 def create_dict_list(group):

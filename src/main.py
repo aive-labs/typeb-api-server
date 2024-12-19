@@ -10,30 +10,30 @@ from starlette.responses import JSONResponse
 
 from src.admin.routes.admin_router import admin_router
 from src.admin.routes.contact_router import contact_router
-from src.audiences.routes.audience_router import audience_router
+from src.audience.routes.audience_router import audience_router
 from src.auth.routes.auth_router import auth_router
 from src.auth.routes.ga_router import ga_router
 from src.auth.routes.onboarding_router import onboarding_router
 from src.campaign.routes.campaign_dag_router import campaign_dag_router
 from src.campaign.routes.campaign_router import campaign_router
 from src.common.utils.get_env_variable import get_env_variable
-from src.contents.routes.contents_router import contents_router
-from src.contents.routes.creatives_router import creatives_router
+from src.content.routes.contents_router import contents_router
+from src.content.routes.creatives_router import creatives_router
 from src.core.container import Container
 from src.core.contextvars_context import correlation_id_var
 from src.core.exceptions.register_exception_handler import register_exception_handlers
 from src.core.logging import logger
 from src.core.middleware.prometheus import PrometheusMiddleware, metrics
 from src.dashboard.routes.dashboard_router import dashboard_router
+from src.message.routes.message_router import message_router
+from src.message.routes.ppurio_message_router import ppurio_message_router
 from src.message_template.routes.message_template_router import message_template_router
-from src.messages.routes.message_router import message_router
-from src.messages.routes.ppurio_message_router import ppurio_message_router
-from src.offers.routes.offer_router import offer_router
+from src.offer.routes.offer_router import offer_router
 from src.payment.routes.payment_router import payment_router
-from src.products.routes.product_router import product_router
+from src.product.routes.product_router import product_router
 from src.search.routes.search_router import search_router
 from src.strategy.routes.strategy_router import strategy_router
-from src.users.routes.user_router import user_router
+from src.user.routes.user_router import user_router
 
 
 # FastAPI 앱 초기화
@@ -62,21 +62,21 @@ if env_profile != "local":
 app = create_app()
 app.include_router(router=auth_router, prefix="/api/v1/auth")
 app.include_router(router=onboarding_router, prefix="/api/v1/auth/onboarding")
-app.include_router(router=user_router, prefix="/api/v1/users")
+app.include_router(router=user_router, prefix="/api/v1/user")
 app.include_router(router=ga_router, prefix="/api/v1/ga")
 app.include_router(router=campaign_router, prefix="/api/v1/campaign-management")
 app.include_router(router=campaign_dag_router, prefix="/api/v1/campaign-dag")
-app.include_router(router=creatives_router, prefix="/api/v1/contents-management/creatives")
-app.include_router(router=contents_router, prefix="/api/v1/contents-management/contents")
+app.include_router(router=creatives_router, prefix="/api/v1/content-management/creatives")
+app.include_router(router=contents_router, prefix="/api/v1/content-management/content")
 app.include_router(router=audience_router, prefix="/api/v1/audience-management")
 app.include_router(router=strategy_router, prefix="/api/v1/strategy-management")
 app.include_router(router=search_router, prefix="/api/v1/search")
 app.include_router(router=message_router, prefix="/api/v1/message")
 app.include_router(router=ppurio_message_router, prefix="/message")
-app.include_router(router=offer_router, prefix="/api/v1/settings/offers")
+app.include_router(router=offer_router, prefix="/api/v1/settings/offer")
 app.include_router(router=message_template_router, prefix="/api/v1/settings/templates")
 app.include_router(router=admin_router, prefix="/api/v1/settings/admin")
-app.include_router(router=product_router, prefix="/api/v1/products")
+app.include_router(router=product_router, prefix="/api/v1/product")
 app.include_router(router=dashboard_router, prefix="/api/v1/dashboard")
 app.include_router(router=payment_router, prefix="/api/v1/payment")
 app.include_router(router=contact_router, prefix="/api/v1/contact-us")

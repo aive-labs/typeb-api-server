@@ -12,7 +12,7 @@ from src.payment.routes.dto.request.payment_request import (
 from src.payment.routes.use_case.payment import PaymentUseCase
 from src.payment.routes.use_case.payment_gateway import PaymentGateway
 from src.payment.service.toss_uuid_key_generator import TossUUIDKeyGenerator
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class BillingPaymentService(PaymentUseCase):

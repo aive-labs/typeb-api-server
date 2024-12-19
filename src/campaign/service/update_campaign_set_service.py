@@ -29,7 +29,7 @@ from src.campaign.service.port.base_campaign_set_repository import (
 from src.core.exceptions.exceptions import PolicyException, ValidationException
 from src.core.transactional import transactional
 from src.strategy.service.port.base_strategy_repository import BaseStrategyRepository
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class UpdateCampaignSetService(UpdateCampaignSetUseCase):

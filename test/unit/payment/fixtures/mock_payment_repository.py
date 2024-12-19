@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 from src.common.utils.get_env_variable import get_env_variable
 from src.payment.domain.cafe24_order import Cafe24Order
 from src.payment.service.port.base_payment_repository import BasePaymentRepository
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 def get_mock_payment_repository():

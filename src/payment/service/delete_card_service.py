@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from src.core.transactional import transactional
 from src.payment.routes.use_case.delete_card import DeleteCardUseCase
 from src.payment.service.port.base_payment_repository import BasePaymentRepository
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class DeleteCardService(DeleteCardUseCase):

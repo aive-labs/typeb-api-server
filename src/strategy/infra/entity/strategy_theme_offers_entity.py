@@ -12,7 +12,7 @@ class StrategyThemeOfferMappingEntity(Base):
         primary_key=True,
     )
     coupon_no = Column(
-        String, ForeignKey("offers.coupon_no"), primary_key=True
+        String, ForeignKey("offer.coupon_no"), primary_key=True
     )  # test로 체크 추후 확인
     created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(String, nullable=False, default=text("(user)"))

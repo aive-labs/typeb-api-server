@@ -5,19 +5,19 @@ from sqlalchemy import distinct, func
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import coalesce
 
-from src.audiences.infra.entity.audience_customer_mapping_entity import (
+from src.audience.infra.entity.audience_customer_mapping_entity import (
     AudienceCustomerMappingEntity,
 )
-from src.audiences.infra.entity.variable_table_list import CustomerInfoStatusEntity
-from src.audiences.service.port.base_audience_repository import BaseAudienceRepository
+from src.audience.infra.entity.variable_table_list import CustomerInfoStatusEntity
+from src.audience.service.port.base_audience_repository import BaseAudienceRepository
 from src.campaign.infra.campaign_repository import CampaignRepository
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
 from src.common.timezone_setting import selected_timezone
-from src.contents.infra.contents_repository import ContentsRepository
+from src.content.infra.contents_repository import ContentsRepository
 from src.core.exceptions.exceptions import ConsistencyException, NotFoundException
-from src.offers.infra.entity.offers_entity import OffersEntity
-from src.offers.infra.offer_repository import OfferRepository
-from src.products.infra.product_repository import ProductRepository
+from src.offer.infra.entity.offers_entity import OffersEntity
+from src.offer.infra.offer_repository import OfferRepository
+from src.product.infra.product_repository import ProductRepository
 from src.search.routes.dto.id_with_item_response import (
     IdWithItem,
     IdWithItemDescription,
@@ -30,8 +30,8 @@ from src.search.routes.port.base_search_service import BaseSearchService
 from src.strategy.enums.recommend_model import RecommendModels
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
 from src.strategy.infra.strategy_repository import StrategyRepository
-from src.users.domain.user import User
-from src.users.infra.user_repository import UserRepository
+from src.user.domain.user import User
+from src.user.infra.user_repository import UserRepository
 
 
 class SearchService(BaseSearchService):

@@ -64,7 +64,7 @@ from src.common.utils.date_utils import (
     get_unix_timestamp,
     localtime_converter,
 )
-from src.contents.infra.entity.contents_entity import ContentsEntity
+from src.content.infra.entity.contents_entity import ContentsEntity
 from src.core.exceptions.exceptions import (
     ConsistencyException,
     DuplicatedException,
@@ -72,17 +72,17 @@ from src.core.exceptions.exceptions import (
     PolicyException,
 )
 from src.core.transactional import transactional
+from src.message.service.message_reserve_controller import MessageReserveController
 from src.message_template.infra.entity.message_template_entity import (
     MessageTemplateEntity,
 )
-from src.messages.service.message_reserve_controller import MessageReserveController
-from src.offers.infra.entity.offers_entity import OffersEntity
+from src.offer.infra.entity.offers_entity import OffersEntity
 from src.payment.domain.credit_history import CreditHistory
 from src.payment.enum.credit_status import CreditStatus
 from src.payment.infra.entity.remaining_credit_entity import RemainingCreditEntity
 from src.payment.service.port.base_credit_repository import BaseCreditRepository
-from src.users.domain.user import User
-from src.users.infra.entity.user_entity import UserEntity
+from src.user.domain.user import User
+from src.user.infra.entity.user_entity import UserEntity
 
 
 class ApproveCampaignService(ApproveCampaignUseCase):
@@ -1241,7 +1241,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
                 .subquery()
             )
 
-            # messages
+            # message
             set_group_message = (
                 db.query(
                     CampaignEntity.campaign_group_id,
@@ -1345,7 +1345,7 @@ class ApproveCampaignService(ApproveCampaignUseCase):
             cus_info = cus_info_all.subquery()
             subquery = set_group_message.subquery()
 
-            # recipients & messages
+            # recipients & message
             print(f"current_date: {current_date}")
             rsv_msg_filter = [
                 subquery.c.msg_body.isnot(None),  # 메세지 본문이 Null인 메세지 제외

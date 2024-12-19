@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 
 from src.campaign.domain.campaign import Campaign
 from src.campaign.domain.campaign_messages import MessageResource, SetGroupMessage
-from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
-from src.messages.domain.kakao_carousel_more_link import KakaoCarouselMoreLink
+from src.message.domain.kakao_carousel_card import KakaoCarouselCard
+from src.message.domain.kakao_carousel_more_link import KakaoCarouselMoreLink
 
 
 class BaseCampaignSetRepository(ABC):

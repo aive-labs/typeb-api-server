@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class InvoiceDownloadUseCase(ABC):

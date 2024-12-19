@@ -3,7 +3,7 @@ from typing import List
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from src.audiences.infra.entity.audience_stats_entity import AudienceStatsEntity
+from src.audience.infra.entity.audience_stats_entity import AudienceStatsEntity
 
 
 def get_audience_rank_between(audience_ids: List, db: Session):

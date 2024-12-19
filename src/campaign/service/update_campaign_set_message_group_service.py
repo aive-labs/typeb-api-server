@@ -96,11 +96,11 @@ from src.core.exceptions.exceptions import (
     PolicyException,
 )
 from src.core.transactional import transactional
+from src.message.domain.kakao_carousel_card import KakaoCarouselCard
+from src.message.service.port.base_message_repository import BaseMessageRepository
 from src.message_template.enums.kakao_button_type import KakaoButtonType
 from src.message_template.enums.message_type import MessageType
-from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
-from src.messages.service.port.base_message_repository import BaseMessageRepository
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class UpdateCampaignSetMessageGroupService(UpdateCampaignSetMessageGroupUseCase):

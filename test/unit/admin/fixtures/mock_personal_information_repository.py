@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 from src.admin.service.port.base_personal_information_repository import (
     BasePersonalInformationRepository,
 )
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 def get_mock_personal_information_repository():

@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock
 
-from src.contents.service.port.base_creatives_repository import BaseCreativesRepository
+from src.content.service.port.base_creatives_repository import BaseCreativesRepository
 
 
 def get_mock_creatives_repository():

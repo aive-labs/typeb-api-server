@@ -12,7 +12,7 @@ from src.core.transactional import transactional
 from src.message_template.routes.dto.response.opt_out_phone_number_response import (
     OptOutPhoneNumberResponse,
 )
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class BaseOnboardingService(ABC):

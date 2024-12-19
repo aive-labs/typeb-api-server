@@ -8,7 +8,7 @@ from src.admin.infra.entity.outsouring_personal_infomation_status_entity import 
 from src.admin.service.port.base_personal_information_repository import (
     BasePersonalInformationRepository,
 )
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class PersonalInformationRepository(BasePersonalInformationRepository):

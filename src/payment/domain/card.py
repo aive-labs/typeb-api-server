@@ -7,7 +7,7 @@ from src.payment.infra.dto.response.toss_payment_billing_response import (
     TossPaymentBillingResponse,
 )
 from src.payment.infra.entity.card_entity import CardEntity
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class Card(BaseModel):

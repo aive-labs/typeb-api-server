@@ -3,7 +3,7 @@ from typing import Type
 from sqlalchemy import func, or_, update
 from sqlalchemy.orm import Session
 
-from src.audiences.infra.entity.strategy_theme_audience_entity import (
+from src.audience.infra.entity.strategy_theme_audience_entity import (
     StrategyThemeAudienceMappingEntity,
 )
 from src.common.enums.role import RoleEnum
@@ -19,8 +19,8 @@ from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
 from src.strategy.infra.entity.strategy_theme_offers_entity import (
     StrategyThemeOfferMappingEntity,
 )
-from src.users.domain.user import User
-from src.users.infra.entity.user_entity import UserEntity
+from src.user.domain.user import User
+from src.user.infra.entity.user_entity import UserEntity
 
 
 class StrategySqlAlchemy:

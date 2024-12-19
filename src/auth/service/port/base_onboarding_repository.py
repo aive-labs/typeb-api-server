@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from src.auth.domain.onboarding import Onboarding
 from src.auth.routes.dto.response.kakao_channel_response import KakaoChannelResponse
 from src.auth.routes.dto.response.message_sender_response import MessageSenderResponse
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class BaseOnboardingRepository(ABC):

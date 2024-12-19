@@ -7,7 +7,7 @@ from src.strategy.routes.dto.response.strategy_with_campaign_theme_response impo
     StrategyWithStrategyThemeResponse,
 )
 from src.strategy.routes.port.get_strategy_usecase import GetStrategyUseCase
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class GetStrategyService(GetStrategyUseCase):

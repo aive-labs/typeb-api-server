@@ -8,7 +8,7 @@ from src.auth.utils.jwt_settings import JwtSettings
 from src.common.utils.date_utils import get_expired_at_to_iso_format_kr_time
 from src.common.utils.get_env_variable import get_env_variable
 from src.payment.domain.subscription import Subscription
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class TokenService:

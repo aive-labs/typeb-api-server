@@ -7,7 +7,7 @@ from src.payment.routes.dto.request.payment_request import (
 )
 from src.payment.routes.use_case.issue_billing_key import IssueBillingKeyUseCase
 from src.payment.routes.use_case.payment_gateway import PaymentGateway
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class IssueBillingService(IssueBillingKeyUseCase):

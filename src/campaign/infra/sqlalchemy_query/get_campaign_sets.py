@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from src.audiences.infra.entity.audience_stats_entity import AudienceStatsEntity
+from src.audience.infra.entity.audience_stats_entity import AudienceStatsEntity
 from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
 
 

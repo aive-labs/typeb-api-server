@@ -16,7 +16,7 @@ from src.message_template.routes.dto.request.message_template_update import (
 from src.message_template.routes.port.update_message_template_usecase import (
     UpdateMessageTemplateUseCase,
 )
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class UpdateMessageTemplateService(UpdateMessageTemplateUseCase):

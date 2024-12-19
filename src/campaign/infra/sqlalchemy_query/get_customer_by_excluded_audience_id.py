@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
 
-from src.audiences.infra.entity.audience_customer_mapping_entity import (
+from src.audience.infra.entity.audience_customer_mapping_entity import (
     AudienceCustomerMappingEntity,
 )
-from src.audiences.infra.entity.audience_entity import AudienceEntity
+from src.audience.infra.entity.audience_entity import AudienceEntity
 
 
 def get_customer_by_excluded_audience_ids(audience_ids: list, db: Session):

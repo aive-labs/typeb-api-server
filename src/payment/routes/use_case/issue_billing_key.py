@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from src.payment.routes.dto.request.payment_request import (
     PaymentRequest,
 )
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class IssueBillingKeyUseCase(ABC):

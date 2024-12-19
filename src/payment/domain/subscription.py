@@ -4,7 +4,7 @@ from dateutil.relativedelta import relativedelta
 from pydantic import BaseModel
 
 from src.payment.infra.entity.subscription_entity import SubscriptionEntity
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class SubscriptionPlan(BaseModel):

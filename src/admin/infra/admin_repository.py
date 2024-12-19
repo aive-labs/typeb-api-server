@@ -6,7 +6,7 @@ from src.admin.routes.dto.response.personal_variable_response import (
 )
 from src.admin.service.port.base_admin_repository import BaseAdminRepository
 from src.common.enums.access_level import AccessLevel
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class AdminRepository(BaseAdminRepository):

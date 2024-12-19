@@ -2,7 +2,7 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
-from src.audiences.infra.entity.audience_customer_mapping_entity import (
+from src.audience.infra.entity.audience_customer_mapping_entity import (
     AudienceCustomerMappingEntity,
 )
 

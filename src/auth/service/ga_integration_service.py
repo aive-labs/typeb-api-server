@@ -29,7 +29,7 @@ from src.core.exceptions.exceptions import (
     NotFoundException,
 )
 from src.core.transactional import transactional
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class GAIntegrationService(BaseGAIntegrationService):

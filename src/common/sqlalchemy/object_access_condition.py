@@ -1,7 +1,7 @@
 from sqlalchemy import or_
 
 from src.common.enums.role import RoleEnum
-from src.users.infra.entity.user_entity import UserEntity
+from src.user.infra.entity.user_entity import UserEntity
 
 
 def object_access_condition(db, user, model):

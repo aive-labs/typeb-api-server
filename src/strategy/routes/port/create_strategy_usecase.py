@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.strategy.routes.dto.request.strategy_create import StrategyCreate
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class CreateStrategyUseCase(ABC):

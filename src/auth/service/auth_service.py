@@ -11,9 +11,9 @@ from src.core.exceptions.exceptions import (
 from src.payment.service.port.base_subscription_repository import (
     BaseSubscriptionRepository,
 )
-from src.users.service.port.base_user_repository import BaseUserRepository
+from src.user.service.port.base_user_repository import BaseUserRepository
 
-reuseable_oauth = OAuth2PasswordBearer(tokenUrl="/api/v1/users/signin", scheme_name="JWT")
+reuseable_oauth = OAuth2PasswordBearer(tokenUrl="/api/v1/user/signin", scheme_name="JWT")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

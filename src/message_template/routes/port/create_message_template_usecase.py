@@ -7,7 +7,7 @@ from src.message_template.domain.message_template import MessageTemplate
 from src.message_template.routes.dto.request.message_template_create import (
     TemplateCreate,
 )
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class CreateMessageTemplateUseCase(ABC):

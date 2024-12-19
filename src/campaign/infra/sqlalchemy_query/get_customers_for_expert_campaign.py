@@ -1,11 +1,11 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import coalesce
 
-from src.audiences.infra.entity.audience_customer_mapping_entity import (
+from src.audience.infra.entity.audience_customer_mapping_entity import (
     AudienceCustomerMappingEntity,
 )
-from src.audiences.infra.entity.ltv_score_entity import LTVScoreEntity
-from src.audiences.infra.entity.variable_table_list import CustomerInfoStatusEntity
+from src.audience.infra.entity.ltv_score_entity import LTVScoreEntity
+from src.audience.infra.entity.variable_table_list import CustomerInfoStatusEntity
 
 
 def get_customers_for_expert_campaign(

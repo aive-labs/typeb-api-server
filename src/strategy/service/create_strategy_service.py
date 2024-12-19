@@ -11,7 +11,7 @@ from src.strategy.enums.recommend_model import RecommendModels
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.routes.dto.request.strategy_create import StrategyCreate
 from src.strategy.routes.port.create_strategy_usecase import CreateStrategyUseCase
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class CreateStrategyService(CreateStrategyUseCase):

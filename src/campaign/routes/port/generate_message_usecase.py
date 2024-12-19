@@ -8,7 +8,7 @@ from src.strategy.routes.dto.request.preview_message_create import PreviewMessag
 from src.strategy.routes.dto.response.preview_message_response import (
     PreviewMessageResponse,
 )
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class GenerateMessageUsecase(ABC):

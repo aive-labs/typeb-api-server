@@ -6,7 +6,7 @@ from src.admin.routes.dto.response.PersonalInformationAgreeStatus import (
     PersonalInformationAgreeStatus,
 )
 from src.core.transactional import transactional
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class BasePersonalInformationService(ABC):

@@ -14,7 +14,7 @@ from src.payment.service.port.base_payment_repository import BasePaymentReposito
 from src.payment.service.port.base_subscription_repository import (
     BaseSubscriptionRepository,
 )
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class GetCafe24PaymentService(GetCafe24PaymentUseCase):

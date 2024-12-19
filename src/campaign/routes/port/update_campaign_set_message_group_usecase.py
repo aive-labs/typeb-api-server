@@ -15,7 +15,7 @@ from src.campaign.routes.dto.response.update_campaign_set_group_message_response
     UpdateCampaignSetGroupMessageResponse,
 )
 from src.core.transactional import transactional
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class UpdateCampaignSetMessageGroupUseCase(ABC):

@@ -12,7 +12,7 @@ from src.campaign.routes.dto.response.campaign_timeline_response import (
 from src.campaign.routes.dto.response.exclusion_customer_detail import (
     ExcludeCustomerDetail,
 )
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class GetCampaignUseCase(ABC):

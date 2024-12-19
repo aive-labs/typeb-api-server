@@ -17,7 +17,7 @@ from src.strategy.enums.strategy_status import StrategyStatus
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.routes.dto.request.strategy_create import StrategyCreate
 from src.strategy.routes.port.update_strategy_usecase import UpdateStrategyUseCase
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class UpdateStrategyService(UpdateStrategyUseCase):

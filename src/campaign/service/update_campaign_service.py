@@ -48,7 +48,7 @@ from src.common.utils.date_utils import calculate_remind_date
 from src.core.exceptions.exceptions import PolicyException
 from src.core.transactional import transactional
 from src.message_template.enums.message_type import MessageType
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class UpdateCampaignService(UpdateCampaignUseCase):

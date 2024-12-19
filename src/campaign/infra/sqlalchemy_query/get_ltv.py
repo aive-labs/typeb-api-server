@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import coalesce
 
-from src.audiences.infra.entity.ltv_score_entity import LTVScoreEntity
+from src.audience.infra.entity.ltv_score_entity import LTVScoreEntity
 
 
 def get_ltv(db: Session):

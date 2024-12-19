@@ -6,7 +6,7 @@ from src.core.transactional import transactional
 from src.message_template.routes.dto.request.message_template_update import (
     TemplateUpdate,
 )
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class UpdateMessageTemplateUseCase(ABC):

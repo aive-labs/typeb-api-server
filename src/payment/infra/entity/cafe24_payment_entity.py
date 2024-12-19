@@ -4,7 +4,7 @@ from sqlalchemy import Column, DateTime, Float, String, func
 
 from src.core.database import Base
 from src.payment.domain.cafe24_payment import Cafe24Payment
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class Cafe24PaymentEntity(Base):

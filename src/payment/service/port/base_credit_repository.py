@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.payment.domain.credit_history import CreditHistory
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class BaseCreditRepository(ABC):

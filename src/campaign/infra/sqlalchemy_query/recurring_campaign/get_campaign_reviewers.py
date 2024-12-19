@@ -5,7 +5,7 @@ from src.campaign.enums.campaign_approval_status import CampaignApprovalStatus
 from src.campaign.infra.dto.campaign_reviewer_info import CampaignReviewerInfo
 from src.campaign.infra.entity.approver_entity import ApproverEntity
 from src.campaign.infra.entity.campaign_approval_entity import CampaignApprovalEntity
-from src.users.infra.entity.user_entity import UserEntity
+from src.user.infra.entity.user_entity import UserEntity
 
 
 def get_campaign_reviewers(campaign_id: str, db: Session) -> list[CampaignReviewerInfo]:

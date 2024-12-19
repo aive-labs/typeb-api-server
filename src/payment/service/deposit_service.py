@@ -14,7 +14,7 @@ from src.payment.routes.use_case.deposit_without_account_usecase import (
 )
 from src.payment.service.port.base_credit_repository import BaseCreditRepository
 from src.payment.service.port.base_deposit_repository import BaseDepositRepository
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class DepositService(DepositWithoutAccountUseCase):

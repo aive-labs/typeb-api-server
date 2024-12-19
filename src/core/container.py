@@ -6,24 +6,24 @@ from src.admin.infra.personal_information_repository import (
 )
 from src.admin.service.get_personal_variables_service import GetPersonalVariablesService
 from src.admin.service.personal_information_service import PersonalInformationService
-from src.audiences.infra.audience_repository import AudienceRepository
-from src.audiences.infra.audience_sqlalchemy_repository import AudienceSqlAlchemy
-from src.audiences.service.background.target_audience_summary_sqlalchemy import (
+from src.audience.infra.audience_repository import AudienceRepository
+from src.audience.infra.audience_sqlalchemy_repository import AudienceSqlAlchemy
+from src.audience.service.background.target_audience_summary_sqlalchemy import (
     TargetAudienceSummarySqlAlchemy,
 )
-from src.audiences.service.create_audience_service import CreateAudienceService
-from src.audiences.service.csv_upload_audience_service import CSVUploadAudienceService
-from src.audiences.service.delete_audience_service import DeleteAudienceService
-from src.audiences.service.download_audience_service import DownloadAudienceService
-from src.audiences.service.get_audience_creation_options import (
+from src.audience.service.create_audience_service import CreateAudienceService
+from src.audience.service.csv_upload_audience_service import CSVUploadAudienceService
+from src.audience.service.delete_audience_service import DeleteAudienceService
+from src.audience.service.download_audience_service import DownloadAudienceService
+from src.audience.service.get_audience_creation_options import (
     GetAudienceCreationOptions,
 )
-from src.audiences.service.get_audience_service import GetAudienceService
-from src.audiences.service.update_audience_exclude_status_service import (
+from src.audience.service.get_audience_service import GetAudienceService
+from src.audience.service.update_audience_exclude_status_service import (
     UpdateAudienceExcludeStatusService,
 )
-from src.audiences.service.update_audience_service import UpdateAudienceService
-from src.audiences.service.update_cycle_service import AudienceUpdateCycleService
+from src.audience.service.update_audience_service import UpdateAudienceService
+from src.audience.service.update_cycle_service import AudienceUpdateCycleService
 from src.auth.infra.cafe24_repository import Cafe24Repository
 from src.auth.infra.cafe24_sqlalchemy_repository import Cafe24SqlAlchemyRepository
 from src.auth.infra.ga_repository import GARepository
@@ -71,22 +71,22 @@ from src.common.infra.common_repository import CommonRepository
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
 from src.common.utils.file.s3_service import S3Service
 from src.common.utils.get_env_variable import get_env_variable
-from src.contents.infra.contents_repository import ContentsRepository
-from src.contents.infra.contents_sqlalchemy_repository import ContentsSqlAlchemy
-from src.contents.infra.creatives_repository import CreativesRepository
-from src.contents.infra.creatives_sqlalchemy_repository import CreativesSqlAlchemy
-from src.contents.service.add_contents_service import AddContentsService
-from src.contents.service.add_creatives_service import AddCreativesService
-from src.contents.service.delete_contents_service import DeleteContentsService
-from src.contents.service.delete_creatives_service import DeleteCreativesService
-from src.contents.service.generate_contents_service import GenerateContentsService
-from src.contents.service.get_contents_service import GetContentsService
-from src.contents.service.get_creative_recommendations_for_content import (
+from src.content.infra.contents_repository import ContentsRepository
+from src.content.infra.contents_sqlalchemy_repository import ContentsSqlAlchemy
+from src.content.infra.creatives_repository import CreativesRepository
+from src.content.infra.creatives_sqlalchemy_repository import CreativesSqlAlchemy
+from src.content.service.add_contents_service import AddContentsService
+from src.content.service.add_creatives_service import AddCreativesService
+from src.content.service.delete_contents_service import DeleteContentsService
+from src.content.service.delete_creatives_service import DeleteCreativesService
+from src.content.service.generate_contents_service import GenerateContentsService
+from src.content.service.get_contents_service import GetContentsService
+from src.content.service.get_creative_recommendations_for_content import (
     GetCreativeRecommendationsForContent,
 )
-from src.contents.service.get_creatives_service import GetCreativesService
-from src.contents.service.update_contents_service import UpdateContentsService
-from src.contents.service.update_creatives_service import UpdateCreativesService
+from src.content.service.get_creatives_service import GetCreativesService
+from src.content.service.update_contents_service import UpdateContentsService
+from src.content.service.update_creatives_service import UpdateCreativesService
 from src.dashboard.infra.dashboard_repository import DashboardRepository
 from src.dashboard.infra.dashboard_sqlalchemy_repository import DashboardSqlAlchemy
 from src.dashboard.service.get_audience_stats_service import GetAudienceStatsService
@@ -94,6 +94,11 @@ from src.dashboard.service.get_campaign_group_stats_service import (
     GetCampaignGroupStatsService,
 )
 from src.dashboard.service.get_campaign_stats_service import GetCampaignStatsService
+from src.message.infra.message_repository import MessageRepository
+from src.message.service.create_carousel_card import CreateCarouselCard
+from src.message.service.create_carousel_more_link import CreateCarouselMoreLink
+from src.message.service.delete_carousel_card import DeleteCarouselCard
+from src.message.service.message_service import MessageService
 from src.message_template.infra.message_template_repository import (
     MessageTemplateRepository,
 )
@@ -109,14 +114,9 @@ from src.message_template.service.get_message_template_service import (
 from src.message_template.service.update_message_template_service import (
     UpdateMessageTemplateService,
 )
-from src.messages.infra.message_repository import MessageRepository
-from src.messages.service.create_carousel_card import CreateCarouselCard
-from src.messages.service.create_carousel_more_link import CreateCarouselMoreLink
-from src.messages.service.delete_carousel_card import DeleteCarouselCard
-from src.messages.service.message_service import MessageService
-from src.offers.infra.offer_repository import OfferRepository
-from src.offers.service.get_offer_service import GetOfferService
-from src.offers.service.update_offer_service import UpdateOfferService
+from src.offer.infra.offer_repository import OfferRepository
+from src.offer.service.get_offer_service import GetOfferService
+from src.offer.service.update_offer_service import UpdateOfferService
 from src.payment.infra.credit_repository import CreditRepository
 from src.payment.infra.deposit_repository import DepositRepository
 from src.payment.infra.payment_repository import PaymentRepository
@@ -140,8 +140,8 @@ from src.payment.service.save_pre_data_for_validation_service import (
     SavePreDataForValidationService,
 )
 from src.payment.service.toss_payment_gateway import TossPaymentGateway
-from src.products.infra.product_repository import ProductRepository
-from src.products.service.product_service import ProductService
+from src.product.infra.product_repository import ProductRepository
+from src.product.service.product_service import ProductService
 from src.search.service.search_service import SearchService
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.infra.strategy_sqlalchemy_repository import StrategySqlAlchemy
@@ -149,33 +149,33 @@ from src.strategy.service.create_strategy_service import CreateStrategyService
 from src.strategy.service.delete_strategy_service import DeleteStrategyService
 from src.strategy.service.get_strategy_service import GetStrategyService
 from src.strategy.service.update_strategy_service import UpdateStrategyService
-from src.users.infra.user_repository import UserRepository
-from src.users.infra.user_sqlalchemy import UserSqlAlchemy
-from src.users.service.user_service import UserService
+from src.user.infra.user_repository import UserRepository
+from src.user.infra.user_sqlalchemy import UserSqlAlchemy
+from src.user.service.user_service import UserService
 
 
 class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(
         modules=[
-            "src.messages.routes.message_router",
-            "src.messages.routes.ppurio_message_router",
+            "src.message.routes.message_router",
+            "src.message.routes.ppurio_message_router",
             "src.auth.utils.get_current_user",
-            "src.users.routes.user_router",
+            "src.user.routes.user_router",
             "src.auth.routes.auth_router",
             "src.auth.routes.ga_router",
-            "src.audiences.routes.audience_router",
-            "src.audiences.service.background.execute_target_audience_summary",
+            "src.audience.routes.audience_router",
+            "src.audience.service.background.execute_target_audience_summary",
             "src.auth.routes.onboarding_router",
             "src.campaign.routes.campaign_router",
             "src.campaign.routes.campaign_dag_router",
-            "src.contents.routes.contents_router",
-            "src.contents.routes.creatives_router",
+            "src.content.routes.contents_router",
+            "src.content.routes.creatives_router",
             "src.search.routes.search_router",
             "src.strategy.routes.strategy_router",
-            "src.offers.routes.offer_router",
+            "src.offer.routes.offer_router",
             "src.message_template.routes.message_template_router",
             "src.admin.routes.admin_router",
-            "src.products.routes.product_router",
+            "src.product.routes.product_router",
             "src.dashboard.routes.dashboard_router",
             "src.payment.routes.payment_router",
         ]

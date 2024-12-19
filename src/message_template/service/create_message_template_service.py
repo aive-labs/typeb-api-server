@@ -19,7 +19,7 @@ from src.message_template.routes.port.create_message_template_usecase import (
 from src.message_template.service.port.base_message_template_repository import (
     BaseMessageTemplateRepository,
 )
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class CreateMessageTemplateService(CreateMessageTemplateUseCase):

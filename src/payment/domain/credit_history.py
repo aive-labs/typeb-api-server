@@ -7,7 +7,7 @@ from src.payment.enum.charging_type import ChargingType
 from src.payment.enum.credit_status import CreditStatus
 from src.payment.enum.deposit_without_account_status import DepositWithoutAccountStatus
 from src.payment.infra.entity.credit_history_entity import CreditHistoryEntity
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class CreditHistory(BaseModel):

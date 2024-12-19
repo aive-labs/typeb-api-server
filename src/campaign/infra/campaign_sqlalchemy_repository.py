@@ -1,10 +1,10 @@
 from sqlalchemy import Integer, and_, delete, desc, distinct, func, not_, or_, update
 from sqlalchemy.orm import Session, joinedload
 
-from src.audiences.enums.audience_status import AudienceStatus
-from src.audiences.infra.entity.audience_entity import AudienceEntity
-from src.audiences.infra.entity.audience_stats_entity import AudienceStatsEntity
-from src.audiences.infra.entity.variable_table_list import CustomerInfoStatusEntity
+from src.audience.enums.audience_status import AudienceStatus
+from src.audience.infra.entity.audience_entity import AudienceEntity
+from src.audience.infra.entity.audience_stats_entity import AudienceStatsEntity
+from src.audience.infra.entity.variable_table_list import CustomerInfoStatusEntity
 from src.campaign.domain.campaign import Campaign
 from src.campaign.domain.campaign_messages import CampaignMessages, SetGroupMessage
 from src.campaign.domain.campaign_remind import CampaignRemind
@@ -32,13 +32,13 @@ from src.campaign.infra.entity.send_reservation_entity import SendReservationEnt
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.common.sqlalchemy.object_access_condition import object_access_condition
 from src.common.utils.string_utils import is_convertible_to_int
-from src.offers.infra.entity.offers_entity import OffersEntity
-from src.products.infra.entity.product_master_entity import ProductMasterEntity
+from src.offer.infra.entity.offers_entity import OffersEntity
+from src.product.infra.entity.product_master_entity import ProductMasterEntity
 from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.strategy.enums.strategy_status import StrategyStatus
 from src.strategy.infra.entity.strategy_entity import StrategyEntity
-from src.users.domain.user import User
-from src.users.infra.entity.user_entity import UserEntity
+from src.user.domain.user import User
+from src.user.infra.entity.user_entity import UserEntity
 
 
 class CampaignSqlAlchemy:

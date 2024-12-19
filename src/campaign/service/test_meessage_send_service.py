@@ -35,19 +35,19 @@ from src.campaign.service.port.base_campaign_set_repository import (
 from src.common.infra.entity.customer_master_entity import CustomerMasterEntity
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import localtime_converter
-from src.contents.infra.entity.contents_entity import ContentsEntity
+from src.content.infra.entity.contents_entity import ContentsEntity
 from src.core.exceptions.exceptions import (
     ConsistencyException,
     NotFoundException,
     PolicyException,
 )
+from src.message.service.message_reserve_controller import MessageReserveController
 from src.message_template.enums.message_type import MessageType
 from src.message_template.infra.entity.message_template_entity import (
     MessageTemplateEntity,
 )
-from src.messages.service.message_reserve_controller import MessageReserveController
-from src.offers.infra.entity.offers_entity import OffersEntity
-from src.users.domain.user import User
+from src.offer.infra.entity.offers_entity import OffersEntity
+from src.user.domain.user import User
 
 pd.set_option("display.max_columns", None)
 
@@ -322,7 +322,7 @@ class TestMessageSendService(TestSendMessageUseCase):
     def get_group_message_with_offers(self, db, campaign_id: str, test_send_list: list = []):
         """테스트 메시지 발송 오퍼 정보와 메시지 발송 정보 조회 쿼리"""
 
-        # messages
+        # message
         filter_cond = [
             CampaignSetsEntity.campaign_id == campaign_id,
             SetGroupMessagesEntity.is_used.is_(True),  # 사용 설정된 메세지만 필터링
@@ -399,7 +399,7 @@ class TestMessageSendService(TestSendMessageUseCase):
         )
 
         subquery = set_group_message.subquery()
-        # recipients & messages
+        # recipients & message
         rsv_msg_filter = [
             CustomerMasterEntity.hp_no is not None,
             CustomerMasterEntity.hp_no != "",

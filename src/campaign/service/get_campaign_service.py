@@ -51,14 +51,14 @@ from src.campaign.utils.utils import set_summary_sentence
 from src.common.enums.campaign_media import CampaignMedia
 from src.common.utils.data_converter import DataConverter
 from src.core.exceptions.exceptions import PolicyException
-from src.message_template.enums.message_type import MessageType
-from src.messages.routes.dto.response.kakao_carousel_card_response import (
+from src.message.routes.dto.response.kakao_carousel_card_response import (
     KakaoCarouselCardResponse,
 )
-from src.messages.routes.dto.response.kakao_carousel_more_link_response import (
+from src.message.routes.dto.response.kakao_carousel_more_link_response import (
     KakaoCarouselMoreLinkResponse,
 )
-from src.users.domain.user import User
+from src.message_template.enums.message_type import MessageType
+from src.user.domain.user import User
 
 
 class GetCampaignService(GetCampaignUseCase):

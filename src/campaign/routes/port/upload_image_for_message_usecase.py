@@ -4,8 +4,8 @@ from fastapi import UploadFile
 from sqlalchemy.orm import Session
 
 from src.campaign.domain.vo.carousel_upload_link import CarouselUploadLinks
-from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
-from src.users.domain.user import User
+from src.message.domain.kakao_carousel_card import KakaoCarouselCard
+from src.user.domain.user import User
 
 
 class UploadImageForMessageUseCase(ABC):

@@ -4,8 +4,8 @@ from pydantic import BaseModel
 
 from src.campaign.enums.message_send_type import MessageSendType
 from src.common.enums.campaign_media import CampaignMedia
+from src.message.domain.kakao_carousel_card import KakaoCarouselCard
 from src.message_template.enums.message_type import MessageType
-from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
 
 
 class GeneratedMessage(BaseModel):

@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 
-from src.audiences.infra.entity.audience_entity import AudienceEntity
-from src.audiences.infra.entity.audience_stats_entity import AudienceStatsEntity
-from src.audiences.infra.entity.strategy_theme_audience_entity import (
+from src.audience.infra.entity.audience_entity import AudienceEntity
+from src.audience.infra.entity.audience_stats_entity import AudienceStatsEntity
+from src.audience.infra.entity.strategy_theme_audience_entity import (
     StrategyThemeAudienceMappingEntity,
 )
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity

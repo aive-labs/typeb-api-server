@@ -8,7 +8,7 @@ from src.payment.routes.dto.response.cafe24_order_response import Cafe24OrderRes
 from src.payment.routes.use_case.create_cafe24_order_usecase import (
     CreateCafe24OrderUseCase,
 )
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class Cafe24OrderService(CreateCafe24OrderUseCase):

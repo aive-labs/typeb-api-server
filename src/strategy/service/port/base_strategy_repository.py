@@ -9,7 +9,7 @@ from src.strategy.domain.strategy_theme import StrategyTheme
 from src.strategy.routes.dto.response.strategy_with_campaign_theme_response import (
     StrategyThemeSelectV2,
 )
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class BaseStrategyRepository(ABC):

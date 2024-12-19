@@ -59,8 +59,8 @@ from src.core.transactional import transactional
 from src.payment.domain.credit_history import CreditHistory
 from src.payment.enum.credit_status import CreditStatus
 from src.payment.service.port.base_credit_repository import BaseCreditRepository
-from src.users.domain.user import User
-from src.users.infra.entity.user_entity import UserEntity
+from src.user.domain.user import User
+from src.user.infra.entity.user_entity import UserEntity
 
 
 class CreateRecurringCampaign(CreateRecurringCampaignUseCase):

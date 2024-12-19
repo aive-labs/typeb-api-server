@@ -7,7 +7,7 @@ from src.admin.routes.port.get_personal_variables_usecase import (
     GetPersonalVariablesUseCase,
 )
 from src.admin.service.port.base_admin_repository import BaseAdminRepository
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class GetPersonalVariablesService(GetPersonalVariablesUseCase):

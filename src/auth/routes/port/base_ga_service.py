@@ -7,7 +7,7 @@ from src.auth.routes.dto.response.ga_script_response import (
     GAScriptResponse,
 )
 from src.core.transactional import transactional
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class BaseGAIntegrationService(ABC):

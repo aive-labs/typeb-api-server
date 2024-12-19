@@ -12,7 +12,7 @@ from src.payment.enum.cafe24_payment_status import Cafe24PaymentStatus
 from src.payment.routes.dto.request.cafe24_order_request import Cafe24OrderRequest
 from src.payment.service.cafe24_order_service import Cafe24OrderService
 from src.payment.service.get_cafe24_payment_service import GetCafe24PaymentService
-from src.users.service.user_service import UserService
+from src.user.service.user_service import UserService
 from test.unit.auth.fixtures.mock_cafe24_repository import get_mock_cafe24_repository
 from test.unit.auth.fixtures.mock_onboarding_repository import (
     get_mock_onboarding_repository,

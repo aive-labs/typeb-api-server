@@ -2,7 +2,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import coalesce
 
-from src.offers.infra.entity.offers_entity import OffersEntity
+from src.offer.infra.entity.offers_entity import OffersEntity
 
 
 def get_coupons_by_ids(coupon_no_list: list, db: Session):

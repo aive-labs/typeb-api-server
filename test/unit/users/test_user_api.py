@@ -16,7 +16,7 @@ from src.core.db_dependency import get_db
 from src.main import app
 from src.payment.domain.subscription import Subscription, SubscriptionPlan
 from src.payment.service.get_subscription_service import GetSubscriptionService
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 @pytest.fixture
@@ -137,7 +137,7 @@ def test__내_정보_요청__성공하면_응답코드_200과_데이터를_응�
 ):
     headers = {"Authorization": f"Bearer {access_token}"}
 
-    response = test_client.get("/api/v1/users/me", headers=headers)
+    response = test_client.get("/api/v1/user/me", headers=headers)
     assert response.status_code == 200
     data = response.json()
 
@@ -160,7 +160,7 @@ def test__내_정보_요청__카페24_연동이_안된_경우_온보딩_상태�
     # Cafe24 서비스의 반환 값을 None으로 설정
     mock_cafe24_service.get_connected_info_by_user.return_value = None
 
-    response = test_client.get("/api/v1/users/me", headers=headers)
+    response = test_client.get("/api/v1/user/me", headers=headers)
 
     assert response.status_code == 200
     data = response.json()
@@ -183,7 +183,7 @@ def test__내_정보_요청__온보딩_상태가_없는_경우_온보딩_상태�
     # Cafe24 서비스의 반환 값을 None으로 설정
     mock_onboarding_service.get_onboarding_status.return_value = None
 
-    response = test_client.get("/api/v1/users/me", headers=headers)
+    response = test_client.get("/api/v1/user/me", headers=headers)
 
     assert response.status_code == 200
     data = response.json()

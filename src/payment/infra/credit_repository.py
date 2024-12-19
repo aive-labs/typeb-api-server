@@ -9,7 +9,7 @@ from src.payment.domain.credit_history import CreditHistory
 from src.payment.infra.entity.credit_history_entity import CreditHistoryEntity
 from src.payment.infra.entity.remaining_credit_entity import RemainingCreditEntity
 from src.payment.service.port.base_credit_repository import BaseCreditRepository
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class CreditRepository(BaseCreditRepository):

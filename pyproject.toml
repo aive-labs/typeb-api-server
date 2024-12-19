@@ -13,14 +13,14 @@ exclude = '''
   | buck-out
   | build
   | dist
-  | src/offers/enums/
+  | src/offer/enums/
 )/
 '''
 
 
 [tool.ruff]
 exclude = [
-    "src/offers/enums/*", # 카페24 enum 값으로 인해 E741 Ambiguous variable name 발생
+    "src/offer/enums/*", # 카페24 enum 값으로 인해 E741 Ambiguous variable name 발생
     ".git",
     ".hg",
     ".mypy_cache",

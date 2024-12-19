@@ -6,7 +6,7 @@ from src.strategy.routes.dto.response.strategy_response import StrategyResponse
 from src.strategy.routes.dto.response.strategy_with_campaign_theme_response import (
     StrategyWithStrategyThemeResponse,
 )
-from src.users.domain.user import User
+from src.user.domain.user import User
 
 
 class GetStrategyUseCase(ABC):

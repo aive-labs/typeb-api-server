@@ -64,16 +64,16 @@ from src.core.exceptions.exceptions import (
     NotFoundException,
     ValidationException,
 )
-from src.message_template.enums.message_type import MessageType
-from src.messages.domain.kakao_carousel_card import KakaoCarouselCard
-from src.messages.domain.kakao_carousel_more_link import KakaoCarouselMoreLink
-from src.messages.infra.entity.kakao_carousel_card_entity import KakaoCarouselCardEntity
-from src.messages.infra.entity.kakao_carousel_link_button_entity import (
+from src.message.domain.kakao_carousel_card import KakaoCarouselCard
+from src.message.domain.kakao_carousel_more_link import KakaoCarouselMoreLink
+from src.message.infra.entity.kakao_carousel_card_entity import KakaoCarouselCardEntity
+from src.message.infra.entity.kakao_carousel_link_button_entity import (
     KakaoCarouselLinkButtonsEntity,
 )
-from src.messages.infra.entity.kakao_carousel_more_link_entity import (
+from src.message.infra.entity.kakao_carousel_more_link_entity import (
     KakaoCarouselMoreLinkEntity,
 )
+from src.message_template.enums.message_type import MessageType
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity
 
 
