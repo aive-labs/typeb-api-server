@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, func
 
-from src.core.database import Base
+from src.main.database import Base
 
 
 class ApproverEntity(Base):

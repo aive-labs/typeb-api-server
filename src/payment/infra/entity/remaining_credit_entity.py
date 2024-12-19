@@ -1,6 +1,6 @@
 from sqlalchemy import BigInteger, Column, event
 
-from src.core.database import Base
+from src.main.database import Base
 
 
 class RemainingCreditEntity(Base):

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from src.core.exceptions.exceptions import ConsistencyException, NotFoundException
+from src.main.exceptions.exceptions import ConsistencyException, NotFoundException
 from src.payment.domain.subscription import Subscription
 from src.payment.enum.product_type import ProductType
 from src.payment.enum.subscription_status import SubscriptionStatus

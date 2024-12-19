@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import pytz
 
 from src.campaign.enums.message_send_type import MessageSendType
-from src.core.exceptions.exceptions import ConsistencyException
+from src.main.exceptions.exceptions import ConsistencyException
 
 
 def get_localtime():

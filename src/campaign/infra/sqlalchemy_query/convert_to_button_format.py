@@ -9,7 +9,7 @@ from src.campaign.infra.entity.kakao_link_buttons_entity import KakaoLinkButtons
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.string_utils import replace_multiple
-from src.core.exceptions.exceptions import PolicyException
+from src.main.exceptions.exceptions import PolicyException
 from src.message.domain.send_kakao_carousel import (
     Attachment,
     Button,

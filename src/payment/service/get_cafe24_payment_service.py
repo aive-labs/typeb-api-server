@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from src.auth.routes.port.base_oauth_service import BaseOauthService
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 from src.payment.domain.subscription import Subscription
 from src.payment.enum.subscription_status import SubscriptionStatus
 from src.payment.routes.dto.response.cafe24_payment_response import (

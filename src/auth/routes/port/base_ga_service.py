@@ -6,7 +6,7 @@ from src.auth.domain.ga_integration import GAIntegration
 from src.auth.routes.dto.response.ga_script_response import (
     GAScriptResponse,
 )
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.user.domain.user import User
 
 

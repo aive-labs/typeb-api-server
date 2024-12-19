@@ -12,7 +12,7 @@ from sqlalchemy.orm import relationship
 
 from src.campaign.infra.entity.kakao_link_buttons_entity import KakaoLinkButtonsEntity
 from src.campaign.infra.entity.message_resource_entity import MessageResourceEntity
-from src.core.database import Base as Base
+from src.main.database import Base as Base
 
 
 class SetGroupMessagesEntity(Base):

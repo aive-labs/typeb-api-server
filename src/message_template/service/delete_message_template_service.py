@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.message_template.infra.message_template_repository import (
     MessageTemplateRepository,
 )

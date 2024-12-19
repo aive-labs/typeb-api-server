@@ -7,8 +7,8 @@ from sqlalchemy.orm import Session
 from src.auth.utils.permission_checker import get_permission_checker
 from src.common.pagination.pagination_base import PaginationBase
 from src.common.pagination.pagination_response import PaginationResponse
-from src.core.container import Container
-from src.core.db_dependency import get_db
+from src.main.container import Container
+from src.main.db_dependency import get_db
 from src.offer.routes.dto.response.offer_detail_response import OfferDetailResponse
 from src.offer.routes.dto.response.offer_response import OfferResponse
 from src.offer.routes.port.get_offer_usecase import GetOfferUseCase

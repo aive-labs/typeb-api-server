@@ -19,12 +19,12 @@ from src.campaign.routes.campaign_router import campaign_router
 from src.common.utils.get_env_variable import get_env_variable
 from src.content.routes.contents_router import contents_router
 from src.content.routes.creatives_router import creatives_router
-from src.core.container import Container
-from src.core.contextvars_context import correlation_id_var
-from src.core.exceptions.register_exception_handler import register_exception_handlers
-from src.core.logging import logger
-from src.core.middleware.prometheus import PrometheusMiddleware, metrics
 from src.dashboard.routes.dashboard_router import dashboard_router
+from src.main.container import Container
+from src.main.contextvars_context import correlation_id_var
+from src.main.exceptions.register_exception_handler import register_exception_handlers
+from src.main.logging import logger
+from src.main.middleware.prometheus import PrometheusMiddleware, metrics
 from src.message.routes.message_router import message_router
 from src.message.routes.ppurio_message_router import ppurio_message_router
 from src.message_template.routes.message_template_router import message_template_router
@@ -50,7 +50,7 @@ env_profile = get_env_variable("env")
 
 if env_profile != "local":
     sentry_sdk.init(
-        dsn="https://2d53fe5b3523ee71d36b86baa929a6f6@o4508169200205824.ingest.us.sentry.io/4508169206235136",
+        dsn=get_env_variable("sentry_dsn"),
         integrations=[FastApiIntegration()],
         traces_sample_rate=1.0,  # traces_sample_rate to 1.0 to capture 100%
         _experiments={

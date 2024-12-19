@@ -2,7 +2,7 @@ import pytest
 from fastapi import HTTPException
 
 from src.common.utils.get_env_variable import get_env_variable
-from src.core.exceptions.exceptions import ConsistencyException
+from src.main.exceptions.exceptions import ConsistencyException
 from src.payment.routes.dto.request.cafe24_order_request import Cafe24OrderRequest
 from src.payment.routes.dto.response.cafe24_order_response import Cafe24OrderResponse
 from src.user.domain.user import User

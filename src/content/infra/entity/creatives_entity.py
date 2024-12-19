@@ -10,7 +10,7 @@ from sqlalchemy import (
 )
 
 from src.content.domain.creatives import Creatives
-from src.core.database import Base
+from src.main.database import Base
 
 
 class CreativesEntity(Base):

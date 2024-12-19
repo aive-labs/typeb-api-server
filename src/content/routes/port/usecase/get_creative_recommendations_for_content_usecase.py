@@ -4,7 +4,7 @@ from typing import Union
 from sqlalchemy.orm import Session
 
 from src.content.infra.dto.response.creative_recommend import CreativeRecommend
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 
 
 class GetCreativeRecommendationsForContentUseCase(ABC):

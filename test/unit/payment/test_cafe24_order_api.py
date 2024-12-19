@@ -5,7 +5,7 @@ from dependency_injector import providers
 
 from src.auth.utils.get_current_user import get_current_user
 from src.auth.utils.permission_checker import get_permission_checker
-from src.core.db_dependency import get_db
+from src.main.db_dependency import get_db
 from src.main import app
 from src.payment.routes.dto.request.cafe24_order_request import Cafe24OrderRequest
 from src.payment.routes.dto.response.cafe24_order_response import Cafe24OrderResponse

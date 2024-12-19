@@ -1,7 +1,7 @@
 from sqlalchemy import func, or_, update
 from sqlalchemy.orm import Session
 
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 from src.product.domain.product import Product
 from src.product.enums.product_link_type import ProductLinkType
 from src.product.infra.dto.product_search_condition import ProductSearchCondition

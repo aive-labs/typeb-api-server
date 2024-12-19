@@ -63,7 +63,7 @@ from src.common.enums.role import RoleEnum
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.model_converter import ModelConverter
 from src.common.utils.string_utils import is_convertible_to_int
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 from src.search.routes.dto.id_with_label_response import IdWithLabel
 from src.strategy.infra.entity.strategy_entity import StrategyEntity
 from src.strategy.infra.entity.strategy_theme_entity import StrategyThemesEntity

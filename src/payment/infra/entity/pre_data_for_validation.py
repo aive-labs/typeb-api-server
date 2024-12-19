@@ -1,6 +1,6 @@
 from sqlalchemy import BigInteger, Boolean, Column, DateTime, String, func
 
-from src.core.database import Base
+from src.main.database import Base
 
 
 class PreDataForValidationEntity(Base):

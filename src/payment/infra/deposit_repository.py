@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 from src.payment.domain.pending_deposit import PendingDeposit
 from src.payment.infra.entity.pending_deposit_entity import PendingDepositEntity
 from src.payment.service.port.base_deposit_repository import BaseDepositRepository

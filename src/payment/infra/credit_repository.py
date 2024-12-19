@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from src.campaign.infra.entity.campaign_credit_payment_entity import (
     CampaignCreditPaymentEntity,
 )
-from src.core.exceptions.exceptions import ConsistencyException, NotFoundException
+from src.main.exceptions.exceptions import ConsistencyException, NotFoundException
 from src.payment.domain.credit_history import CreditHistory
 from src.payment.infra.entity.credit_history_entity import CreditHistoryEntity
 from src.payment.infra.entity.remaining_credit_entity import RemainingCreditEntity

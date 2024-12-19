@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from fastapi import UploadFile
 
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 
 
 class CampaignMessageImageUploadUseCase(ABC):

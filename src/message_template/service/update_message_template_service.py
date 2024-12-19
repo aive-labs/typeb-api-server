@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 
 from src.common.enums.access_level import AccessLevel
-from src.core.exceptions.exceptions import AuthorizationException
-from src.core.transactional import transactional
+from src.main.exceptions.exceptions import AuthorizationException
+from src.main.transactional import transactional
 from src.message_template.domain.message_template import MessageTemplate
 from src.message_template.domain.message_template_button_detail import (
     MessageTemplateButtonDetail,

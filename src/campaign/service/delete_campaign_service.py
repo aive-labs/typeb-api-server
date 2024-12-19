@@ -7,8 +7,8 @@ from src.campaign.service.port.base_campaign_repository import BaseCampaignRepos
 from src.campaign.service.port.base_campaign_set_repository import (
     BaseCampaignSetRepository,
 )
-from src.core.exceptions.exceptions import PolicyException
-from src.core.transactional import transactional
+from src.main.exceptions.exceptions import PolicyException
+from src.main.transactional import transactional
 from src.user.domain.user import User
 
 

@@ -7,8 +7,8 @@ from sqlalchemy.orm import Session
 from src.auth.routes.port.base_onboarding_service import BaseOnboardingService
 from src.auth.utils.permission_checker import get_permission_checker
 from src.common.enums.campaign_media import CampaignMedia
-from src.core.container import Container
-from src.core.db_dependency import get_db
+from src.main.container import Container
+from src.main.db_dependency import get_db
 from src.message_template.domain.message_template import MessageTemplate
 from src.message_template.routes.dto.request.message_template_create import (
     TemplateCreate,

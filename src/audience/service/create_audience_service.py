@@ -35,8 +35,8 @@ from src.audience.utils.query_builder import (
     group_where_conditions,
     transform_visit_count_category_to_visit_count,
 )
-from src.core.exceptions.exceptions import DuplicatedException
-from src.core.transactional import transactional
+from src.main.exceptions.exceptions import DuplicatedException
+from src.main.transactional import transactional
 from src.user.domain.user import User
 
 

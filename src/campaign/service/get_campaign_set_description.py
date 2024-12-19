@@ -29,7 +29,7 @@ from src.campaign.service.port.base_campaign_set_repository import (
     BaseCampaignSetRepository,
 )
 from src.common.utils.data_converter import DataConverter
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 
 
 class GetCampaignSetDescription(GetCampaignSetDescriptionUseCase):

@@ -24,8 +24,8 @@ from src.content.routes.port.usecase.update_contents_usecase import (
     UpdateContentsUseCase,
 )
 from src.content.service.generate_contents_service import GenerateContentsService
-from src.core.container import Container
-from src.core.db_dependency import get_db
+from src.main.container import Container
+from src.main.db_dependency import get_db
 
 contents_router = APIRouter(
     tags=["Contents"],

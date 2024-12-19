@@ -1,6 +1,6 @@
 from sqlalchemy import ARRAY, Boolean, Column, DateTime, String, func, text
 
-from src.core.database import Base
+from src.main.database import Base
 
 
 class OffersEntity(Base):

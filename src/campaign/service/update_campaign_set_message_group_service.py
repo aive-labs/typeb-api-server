@@ -90,12 +90,12 @@ from src.common.utils.date_utils import get_localtime, localtime_converter
 from src.common.utils.get_env_variable import get_env_variable
 from src.common.utils.get_values_from_dict import get_values_from_dict
 from src.common.utils.validate_url import validate_url
-from src.core.exceptions.exceptions import (
+from src.main.exceptions.exceptions import (
     ConsistencyException,
     NotFoundException,
     PolicyException,
 )
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.message.domain.kakao_carousel_card import KakaoCarouselCard
 from src.message.service.port.base_message_repository import BaseMessageRepository
 from src.message_template.enums.kakao_button_type import KakaoButtonType

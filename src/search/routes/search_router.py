@@ -5,8 +5,8 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from src.auth.utils.permission_checker import get_permission_checker
-from src.core.container import Container
-from src.core.db_dependency import get_db
+from src.main.container import Container
+from src.main.db_dependency import get_db
 from src.search.routes.dto.id_with_item_response import (
     IdWithItem,
     IdWithItemDescription,

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from src.common.timezone_setting import selected_timezone
 from src.common.utils.string_utils import is_convertible_to_int
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 from src.offer.domain.cafe24_coupon import Cafe24CouponResponse
 from src.offer.domain.offer import Offer
 from src.offer.enums.cafe24_coupon_benefit_type import Cafe24CouponBenefitType

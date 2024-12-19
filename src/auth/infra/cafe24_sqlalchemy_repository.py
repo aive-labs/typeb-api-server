@@ -10,7 +10,7 @@ from src.auth.infra.dto.cafe24_mall_info import Cafe24MallInfo
 from src.auth.infra.dto.cafe24_state_token import Cafe24StateToken
 from src.auth.infra.dto.cafe24_token import Cafe24TokenData
 from src.auth.infra.entity.cafe24_integration_entity import Cafe24IntegrationEntity
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 
 
 class Cafe24SqlAlchemyRepository:

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.offer.routes.dto.response.offer_detail_response import OfferDetailResponse
 from src.offer.routes.dto.response.offer_response import OfferResponse
 from src.user.domain.user import User

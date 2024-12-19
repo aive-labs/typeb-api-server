@@ -7,8 +7,8 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 
-from src.core.contextvars_context import correlation_id_var
-from src.core.logging import logger
+from src.main.contextvars_context import correlation_id_var
+from src.main.logging import logger
 
 local_timezone = pytz.timezone("Asia/Seoul")
 

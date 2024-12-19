@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 
 
 class UpdateMessageUseStatusUseCase(ABC):

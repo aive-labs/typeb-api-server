@@ -12,7 +12,7 @@ from src.auth.routes.port.base_oauth_service import BaseOauthService
 from src.auth.routes.port.base_onboarding_service import BaseOnboardingService
 from src.auth.utils.get_current_user import get_current_user
 from src.auth.utils.permission_checker import get_permission_checker
-from src.core.db_dependency import get_db
+from src.main.db_dependency import get_db
 from src.main import app
 from src.payment.domain.subscription import Subscription, SubscriptionPlan
 from src.payment.service.get_subscription_service import GetSubscriptionService

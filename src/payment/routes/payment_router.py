@@ -7,8 +7,8 @@ from sqlalchemy.orm import Session
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.common.pagination.pagination_response import PaginationResponse
-from src.core.container import Container
-from src.core.db_dependency import get_db
+from src.main.container import Container
+from src.main.db_dependency import get_db
 from src.payment.routes.dto.request.cafe24_order_request import Cafe24OrderRequest
 from src.payment.routes.dto.request.deposit_without_account import DepositWithoutAccount
 from src.payment.routes.dto.request.payment_request import (

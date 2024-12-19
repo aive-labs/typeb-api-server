@@ -11,7 +11,7 @@ from src.common.utils.get_env_variable import get_env_variable
 
 class CreateDataDict:
     def __init__(self) -> None:
-        self.file_path = "src/core/data/"
+        self.file_path = "src/main/data/"
 
     def load_yaml(self):
         # YAML 파일을 읽어서 딕셔너리로 반환
@@ -210,7 +210,7 @@ class CreateDataDict:
 
 class generate_message:
     def __init__(self) -> None:
-        self.file_path = "src/core/data/"
+        self.file_path = "src/main/data/"
         self.msg_data = pd.read_csv(self.file_path + "msg_data.csv", encoding="utf-8")
         self.msg_data["age"] = self.msg_data["age"].fillna(0)
         self.msg_data["age"] = self.msg_data["age"].astype(int).astype(str)

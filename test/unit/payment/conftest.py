@@ -5,7 +5,7 @@ import pytest
 
 from src.auth.service.cafe24_service import Cafe24Service
 from src.common.utils.get_env_variable import get_env_variable
-from src.core.exceptions.exceptions import Cafe24Exception
+from src.main.exceptions.exceptions import Cafe24Exception
 from src.payment.domain.cafe24_order import Cafe24Order
 from src.payment.domain.cafe24_payment import Cafe24Payment
 from src.payment.enum.cafe24_payment_status import Cafe24PaymentStatus

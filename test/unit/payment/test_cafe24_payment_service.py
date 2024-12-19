@@ -1,7 +1,7 @@
 import pytest
 from fastapi import HTTPException
 
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 from src.payment.enum.cafe24_payment_status import Cafe24PaymentStatus
 from src.user.domain.user import User
 

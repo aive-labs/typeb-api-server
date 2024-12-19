@@ -45,8 +45,8 @@ from src.common.enums.campaign_media import CampaignMedia
 from src.common.timezone_setting import selected_timezone
 from src.common.utils import repeat_date
 from src.common.utils.date_utils import calculate_remind_date
-from src.core.exceptions.exceptions import PolicyException
-from src.core.transactional import transactional
+from src.main.exceptions.exceptions import PolicyException
+from src.main.transactional import transactional
 from src.message_template.enums.message_type import MessageType
 from src.user.domain.user import User
 

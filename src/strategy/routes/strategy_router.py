@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 
 from src.auth.utils.permission_checker import get_permission_checker
 from src.campaign.routes.port.generate_message_usecase import GenerateMessageUsecase  ##
-from src.core.container import Container
-from src.core.db_dependency import get_db
+from src.main.container import Container
+from src.main.db_dependency import get_db
 from src.strategy.routes.dto.request.preview_message_create import PreviewMessageCreate
 from src.strategy.routes.dto.request.strategy_create import StrategyCreate
 from src.strategy.routes.dto.response.preview_message_response import (

@@ -60,8 +60,8 @@ from src.audience.service.background.execute_target_audience_summary import (
     execute_target_audience_summary,
 )
 from src.auth.utils.permission_checker import get_permission_checker
-from src.core.container import Container
-from src.core.db_dependency import get_db
+from src.main.container import Container
+from src.main.db_dependency import get_db
 
 audience_router = APIRouter(tags=["Audience-management"])
 

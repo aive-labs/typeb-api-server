@@ -25,7 +25,7 @@ from src.campaign.infra.sqlalchemy_query.recurring_campaign.get_set_portion impo
     get_set_portion,
 )
 from src.campaign.utils.utils import set_summary_sentence
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 
 
 def get_campaigns_api_logic(db, campaign_id):

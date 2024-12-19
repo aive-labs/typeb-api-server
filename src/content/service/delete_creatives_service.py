@@ -5,8 +5,8 @@ from src.content.infra.creatives_repository import CreativesRepository
 from src.content.routes.port.usecase.delete_creatives_usecase import (
     DeleteCreativesUseCase,
 )
-from src.core.exceptions.exceptions import PolicyException
-from src.core.transactional import transactional
+from src.main.exceptions.exceptions import PolicyException
+from src.main.transactional import transactional
 
 
 class DeleteCreativesService(DeleteCreativesUseCase):

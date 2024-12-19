@@ -6,8 +6,8 @@ from sqlalchemy.orm import Session
 from src.auth.service.port.base_cafe24_repository import BaseOauthRepository
 from src.common.timezone_setting import selected_timezone
 from src.common.utils.get_env_variable import get_env_variable
-from src.core.exceptions.exceptions import NotFoundException
-from src.core.transactional import transactional
+from src.main.exceptions.exceptions import NotFoundException
+from src.main.transactional import transactional
 from src.offer.domain.cafe24_coupon import Cafe24CouponResponse
 from src.offer.infra.offer_repository import OfferRepository
 from src.offer.routes.dto.response.offer_detail_response import OfferDetailResponse

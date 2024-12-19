@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from src.admin.routes.dto.response.PersonalInformationAgreeStatus import (
     PersonalInformationAgreeStatus,
 )
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.user.domain.user import User
 
 

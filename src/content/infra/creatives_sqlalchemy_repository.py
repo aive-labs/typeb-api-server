@@ -7,7 +7,7 @@ from src.content.infra.dto.response.creative_recommend import CreativeRecommend
 from src.content.infra.entity.creatives_entity import CreativesEntity
 from src.content.routes.dto.request.contents_create import StyleObject
 from src.content.routes.dto.response.creative_base import CreativeBase
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 from src.product.infra.entity.product_master_entity import ProductMasterEntity
 
 

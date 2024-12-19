@@ -22,13 +22,13 @@ from src.common.utils.date_utils import (
 )
 from src.common.utils.file.s3_service import S3Service
 from src.common.utils.get_env_variable import get_env_variable
-from src.core.database import get_mall_url_by_user
-from src.core.exceptions.exceptions import (
+from src.main.database import get_mall_url_by_user
+from src.main.exceptions.exceptions import (
     ConsistencyException,
     GoogleTagException,
     NotFoundException,
 )
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.user.domain.user import User
 
 

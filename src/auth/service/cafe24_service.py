@@ -23,12 +23,12 @@ from src.auth.service.port.base_onboarding_repository import BaseOnboardingRepos
 from src.auth.utils.hash_password import generate_hash
 from src.common.utils.get_env_variable import get_env_variable
 from src.common.utils.s3_token_service import S3TokenService
-from src.core.exceptions.exceptions import (
+from src.main.exceptions.exceptions import (
     Cafe24Exception,
     ConvertException,
     ValidationException,
 )
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.payment.domain.cafe24_order import Cafe24Order
 from src.payment.domain.cafe24_payment import Cafe24Payment
 from src.payment.routes.dto.request.cafe24_order_request import Cafe24OrderRequest

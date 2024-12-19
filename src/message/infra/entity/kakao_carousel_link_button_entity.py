@@ -1,7 +1,7 @@
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
 from sqlalchemy.orm import relationship
 
-from src.core.database import Base
+from src.main.database import Base
 
 
 class KakaoCarouselLinkButtonsEntity(Base):

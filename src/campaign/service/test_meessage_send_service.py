@@ -36,7 +36,7 @@ from src.common.infra.entity.customer_master_entity import CustomerMasterEntity
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import localtime_converter
 from src.content.infra.entity.contents_entity import ContentsEntity
-from src.core.exceptions.exceptions import (
+from src.main.exceptions.exceptions import (
     ConsistencyException,
     NotFoundException,
     PolicyException,

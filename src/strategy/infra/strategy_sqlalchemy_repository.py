@@ -8,7 +8,7 @@ from src.audience.infra.entity.strategy_theme_audience_entity import (
 )
 from src.common.enums.role import RoleEnum
 from src.common.utils.date_utils import localtime_converter
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 from src.search.routes.dto.id_with_item_response import IdWithItem
 from src.search.routes.dto.strategy_search_response import StrategySearchResponse
 from src.strategy.domain.strategy import Strategy

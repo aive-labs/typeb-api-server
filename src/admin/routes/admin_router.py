@@ -15,8 +15,8 @@ from src.admin.routes.port.get_personal_variables_usecase import (
     GetPersonalVariablesUseCase,
 )
 from src.auth.utils.permission_checker import get_permission_checker
-from src.core.container import Container
-from src.core.db_dependency import get_db
+from src.main.container import Container
+from src.main.db_dependency import get_db
 
 admin_router = APIRouter(tags=["Admin"])
 

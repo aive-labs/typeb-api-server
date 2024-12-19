@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy import Column, DateTime, Float, String, func
 
-from src.core.database import Base
+from src.main.database import Base
 from src.payment.domain.cafe24_payment import Cafe24Payment
 from src.user.domain.user import User
 

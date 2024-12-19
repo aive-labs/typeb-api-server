@@ -543,7 +543,7 @@
     │       ├── create_html.py
     │       ├── generate_input_handler.py
     │       └── generation_template.py
-    ├── core
+    ├── main
     │   ├── __init__.py
     │   ├── container.py
     │   ├── contextvars_context.py
@@ -608,7 +608,7 @@
     │       └── port
     │           ├── __init__.py
     │           └── base_dashboard_repository.py
-    ├── main.py
+    ├── app.py
     ├── message_template
     │   ├── domain
     │   │   ├── message_template.py

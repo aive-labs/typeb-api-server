@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 from src.campaign.enums.message_send_type import MessageSendType
-from src.core.exceptions.exceptions import ConsistencyException
+from src.main.exceptions.exceptions import ConsistencyException
 
 
 def get_resv_date(msg_send_type, start_date, send_date, remind_date):

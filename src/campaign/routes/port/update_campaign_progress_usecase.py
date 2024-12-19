@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 
 from src.campaign.enums.campaign_progress import CampaignProgress
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 
 
 class UpdateCampaignProgressUseCase(ABC):

@@ -10,11 +10,11 @@ from src.auth.routes.port.base_onboarding_service import BaseOnboardingService
 from src.auth.service.auth_service import AuthService
 from src.auth.service.token_service import TokenService
 from src.auth.utils.permission_checker import get_permission_checker
-from src.core.container import Container
-from src.core.database import (
+from src.main.container import Container
+from src.main.database import (
     get_mall_id_by_user,
 )
-from src.core.db_dependency import get_db, get_db_for_with_mall_id
+from src.main.db_dependency import get_db, get_db_for_with_mall_id
 from src.payment.routes.use_case.get_subscription import GetSubscriptionUseCase
 from src.user.domain.gnb_permission import GNBPermissions
 from src.user.domain.resource_permission import ResourcePermission

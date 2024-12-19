@@ -50,7 +50,7 @@ from src.campaign.service.port.base_campaign_set_repository import (
 from src.campaign.utils.utils import set_summary_sentence
 from src.common.enums.campaign_media import CampaignMedia
 from src.common.utils.data_converter import DataConverter
-from src.core.exceptions.exceptions import PolicyException
+from src.main.exceptions.exceptions import PolicyException
 from src.message.routes.dto.response.kakao_carousel_card_response import (
     KakaoCarouselCardResponse,
 )

@@ -1,7 +1,7 @@
 import pytest
 from fastapi import HTTPException
 
-from src.core.exceptions.exceptions import DuplicatedException, NotFoundException
+from src.main.exceptions.exceptions import DuplicatedException, NotFoundException
 from src.user.routes.dto.request.user_create import UserCreate
 from src.user.routes.dto.request.user_modify import UserModify
 

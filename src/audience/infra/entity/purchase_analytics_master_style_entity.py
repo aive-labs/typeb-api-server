@@ -1,6 +1,6 @@
 from sqlalchemy import TIMESTAMP, BigInteger, Column, Date, Integer, String
 
-from src.core.database import Base
+from src.main.database import Base
 
 
 class PurchaseAnalyticsMasterStyle(Base):

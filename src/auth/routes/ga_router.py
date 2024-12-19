@@ -6,8 +6,8 @@ from src.auth.enums.ga_script_status import GAScriptStatus
 from src.auth.routes.dto.response.ga_script_response import GAScriptResponse
 from src.auth.routes.port.base_ga_service import BaseGAIntegrationService
 from src.auth.utils.permission_checker import get_permission_checker
-from src.core.container import Container
-from src.core.db_dependency import get_db
+from src.main.container import Container
+from src.main.db_dependency import get_db
 
 ga_router = APIRouter(
     tags=["Google Analytics"],

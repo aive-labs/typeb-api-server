@@ -7,7 +7,7 @@ from src.campaign.routes.port.upload_image_for_message_usecase import (
 )
 from src.common.utils.get_env_variable import get_env_variable
 from src.common.utils.validate_url import validate_url
-from src.core.exceptions.exceptions import PolicyException
+from src.main.exceptions.exceptions import PolicyException
 from src.message.domain.kakao_carousel_card import KakaoCarouselCard
 from src.message.routes.dto.request.kakao_carousel_card_request import (
     KakaoCarouselCardRequest,

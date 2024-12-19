@@ -14,7 +14,7 @@ from src.content.infra.dto.response.contents_response import ContentsResponse
 from src.content.infra.entity.contents_entity import ContentsEntity
 from src.content.infra.entity.contents_menu_entity import ContentsMenuEntity
 from src.content.infra.entity.creatives_entity import CreativesEntity
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 from src.product.infra.entity.comment_master_entity import (
     ProductReviewEntity,
 )

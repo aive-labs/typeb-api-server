@@ -5,7 +5,7 @@ from src.content.routes.port.usecase.delete_contents_usecase import (
     DeleteContentsUseCase,
 )
 from src.content.service.port.base_contents_repository import BaseContentsRepository
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 
 
 class DeleteContentsService(DeleteContentsUseCase):

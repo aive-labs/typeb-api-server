@@ -8,7 +8,7 @@ from src.auth.routes.dto.request.message_sender_request import MessageSenderRequ
 from src.auth.routes.dto.response.kakao_channel_response import KakaoChannelResponse
 from src.auth.routes.dto.response.message_sender_response import MessageSenderResponse
 from src.auth.routes.dto.response.onboarding_response import OnboardingResponse
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.message_template.routes.dto.response.opt_out_phone_number_response import (
     OptOutPhoneNumberResponse,
 )

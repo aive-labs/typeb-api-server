@@ -9,7 +9,7 @@ from src.content.infra.dto.response.creative_recommend import CreativeRecommend
 from src.content.routes.port.usecase.get_creative_recommendations_for_content_usecase import (
     GetCreativeRecommendationsForContentUseCase,
 )
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 
 
 class GetCreativeRecommendationsForContent(GetCreativeRecommendationsForContentUseCase):

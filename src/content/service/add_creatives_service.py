@@ -13,8 +13,8 @@ from src.content.routes.dto.request.s3_presigned_url_request import (
 )
 from src.content.routes.port.usecase.add_creatives_usecase import AddCreativesUseCase
 from src.content.service.port.base_creatives_repository import BaseCreativesRepository
-from src.core.exceptions.exceptions import NotFoundException
-from src.core.transactional import transactional
+from src.main.exceptions.exceptions import NotFoundException
+from src.main.transactional import transactional
 
 
 class AddCreativesService(AddCreativesUseCase):

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from src.core.exceptions.exceptions import ConvertException
+from src.main.exceptions.exceptions import ConvertException
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.routes.dto.response.strategy_response import StrategyResponse
 from src.strategy.routes.dto.response.strategy_with_campaign_theme_response import (

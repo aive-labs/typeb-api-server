@@ -7,7 +7,7 @@ from sqlalchemy import (
     func,
 )
 
-from src.core.database import Base
+from src.main.database import Base
 
 
 class UserEntity(Base):

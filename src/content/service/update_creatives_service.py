@@ -8,7 +8,7 @@ from src.content.routes.dto.request.creatives_create import CreativeCreate
 from src.content.routes.port.usecase.update_creatives_usecase import (
     UpdateCreativesUseCase,
 )
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.user.domain.user import User
 
 

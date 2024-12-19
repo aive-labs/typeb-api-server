@@ -14,7 +14,7 @@ from sqlalchemy.orm import relationship
 
 from src.campaign.infra.entity.campaign_remind_entity import CampaignRemindEntity
 from src.campaign.infra.entity.campaign_sets_entity import CampaignSetsEntity
-from src.core.database import Base
+from src.main.database import Base
 
 
 class CampaignEntity(Base):

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, DateTime, String, func
 
-from src.core.database import Base
+from src.main.database import Base
 
 
 class MallCustomerKeyMappingEntity(Base):

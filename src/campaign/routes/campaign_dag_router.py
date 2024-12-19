@@ -6,8 +6,8 @@ from src.campaign.routes.port.create_recurring_campaign_usecase import (
     CreateRecurringCampaignUseCase,
 )
 from src.campaign.routes.port.reserve_campaigns_usecase import ReserveCampaignsUseCase
-from src.core.container import Container
-from src.core.db_dependency import get_db
+from src.main.container import Container
+from src.main.db_dependency import get_db
 
 campaign_dag_router = APIRouter(
     tags=["Campaign-Dag"],

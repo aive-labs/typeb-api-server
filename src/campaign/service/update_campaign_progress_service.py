@@ -5,7 +5,7 @@ from src.campaign.routes.port.update_campaign_progress_usecase import (
     UpdateCampaignProgressUseCase,
 )
 from src.campaign.service.port.base_campaign_repository import BaseCampaignRepository
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 
 
 class UpdateCampaignProgressService(UpdateCampaignProgressUseCase):

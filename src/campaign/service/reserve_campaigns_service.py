@@ -16,7 +16,7 @@ from src.campaign.routes.port.approve_campaign_usecase import ApproveCampaignUse
 from src.campaign.routes.port.reserve_campaigns_usecase import ReserveCampaignsUseCase
 from src.campaign.service.campaign_manager import CampaignManager
 from src.common.utils.data_converter import DataConverter
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 from src.message.service.message_reserve_controller import MessageReserveController
 from src.user.domain.user import User
 

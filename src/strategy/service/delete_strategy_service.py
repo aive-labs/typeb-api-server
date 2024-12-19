@@ -2,10 +2,10 @@ from sqlalchemy.orm import Session
 
 from src.campaign.enums.campagin_status import CampaignStatus
 from src.campaign.infra.campaign_repository import CampaignRepository
-from src.core.exceptions.exceptions import (
+from src.main.exceptions.exceptions import (
     LinkedCampaignException,
 )
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.strategy.infra.strategy_repository import StrategyRepository
 from src.strategy.routes.port.delete_strategy_usecase import DeleteStrategyUseCase
 

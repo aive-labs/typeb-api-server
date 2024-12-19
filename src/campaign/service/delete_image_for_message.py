@@ -11,7 +11,7 @@ from src.campaign.service.port.base_campaign_set_repository import (
     BaseCampaignSetRepository,
 )
 from src.common.utils.file.s3_service import S3Service
-from src.core.exceptions.exceptions import ConsistencyException
+from src.main.exceptions.exceptions import ConsistencyException
 from src.message_template.enums.message_type import MessageType
 
 

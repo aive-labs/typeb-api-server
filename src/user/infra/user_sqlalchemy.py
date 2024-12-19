@@ -1,7 +1,7 @@
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 from src.search.routes.dto.send_user_response import SendUserResponse
 from src.user.domain.user import User
 from src.user.infra.entity.user_entity import UserEntity

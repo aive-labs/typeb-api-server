@@ -65,13 +65,13 @@ from src.common.utils.date_utils import (
     localtime_converter,
 )
 from src.content.infra.entity.contents_entity import ContentsEntity
-from src.core.exceptions.exceptions import (
+from src.main.exceptions.exceptions import (
     ConsistencyException,
     DuplicatedException,
     NotFoundException,
     PolicyException,
 )
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.message.service.message_reserve_controller import MessageReserveController
 from src.message_template.infra.entity.message_template_entity import (
     MessageTemplateEntity,

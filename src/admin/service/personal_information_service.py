@@ -12,7 +12,7 @@ from src.admin.routes.port.base_personal_information_service import (
 from src.admin.service.port.base_personal_information_repository import (
     BasePersonalInformationRepository,
 )
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.user.domain.user import User
 
 

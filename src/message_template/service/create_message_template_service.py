@@ -3,8 +3,8 @@ from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 
 from src.common.enums.campaign_media import CampaignMedia
-from src.core.exceptions.exceptions import ValidationException
-from src.core.transactional import transactional
+from src.main.exceptions.exceptions import ValidationException
+from src.main.transactional import transactional
 from src.message_template.domain.message_template import MessageTemplate
 from src.message_template.domain.message_template_button_detail import (
     MessageTemplateButtonDetail,

@@ -1,8 +1,8 @@
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, HTTPException, Request
 
-from src.core.container import Container
-from src.core.db_dependency import get_db_for_with_mall_id
+from src.main.container import Container
+from src.main.db_dependency import get_db_for_with_mall_id
 from src.message.routes.dto.ppurio_message_result import PpurioMessageResult
 from src.message.service.message_service import MessageService
 

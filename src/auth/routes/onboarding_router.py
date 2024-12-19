@@ -10,8 +10,8 @@ from src.auth.routes.dto.response.message_sender_response import MessageSenderRe
 from src.auth.routes.dto.response.onboarding_response import OnboardingResponse
 from src.auth.routes.port.base_onboarding_service import BaseOnboardingService
 from src.auth.utils.permission_checker import get_permission_checker
-from src.core.container import Container
-from src.core.db_dependency import get_db
+from src.main.container import Container
+from src.main.db_dependency import get_db
 
 onboarding_router = APIRouter(
     tags=["Onboarding"],

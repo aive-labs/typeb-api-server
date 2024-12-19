@@ -10,7 +10,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 
 from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessagesEntity
-from src.core.database import Base as Base
+from src.main.database import Base as Base
 
 
 class CampaignSetGroupsEntity(Base):

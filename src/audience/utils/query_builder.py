@@ -17,7 +17,7 @@ from src.audience.infra.entity.variable_table_list import (
     CustomerProductPurchaseSummaryEntity,
     GaViewMasterEntity,
 )
-from src.core.exceptions.exceptions import ConsistencyException, ValidationException
+from src.main.exceptions.exceptions import ConsistencyException, ValidationException
 
 
 def set_query_type_lv2(and_condition):

@@ -1,7 +1,7 @@
 from sqlalchemy import update
 from sqlalchemy.orm import Session
 
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 from src.message_template.domain.message_template import MessageTemplate
 from src.message_template.infra.entity.message_template_button_detail_entity import (
     MessageTemplateButtonDetailEntity,

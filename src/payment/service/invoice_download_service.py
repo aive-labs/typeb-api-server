@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from weasyprint import HTML
 
 from src.common.utils.date_utils import format_datetime
-from src.core.exceptions.exceptions import ConsistencyException, ConvertException
+from src.main.exceptions.exceptions import ConsistencyException, ConvertException
 from src.payment.enum.charging_type import ChargingType
 from src.payment.enum.credit_status import CreditStatus
 

@@ -7,7 +7,7 @@ from src.campaign.service.port.base_campaign_repository import BaseCampaignRepos
 from src.campaign.service.port.base_campaign_set_repository import (
     BaseCampaignSetRepository,
 )
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 
 
 class UpdateCampaignStatusToConfirm(UpdateCampaignSetStatusToConfirmUseCase):

@@ -59,7 +59,7 @@ from src.common.infra.entity.customer_master_entity import CustomerMasterEntity
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import localtime_converter
 from src.common.utils.get_env_variable import get_env_variable
-from src.core.exceptions.exceptions import (
+from src.main.exceptions.exceptions import (
     ConsistencyException,
     NotFoundException,
     ValidationException,

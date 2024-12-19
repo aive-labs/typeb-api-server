@@ -5,8 +5,8 @@ from src.audience.routes.port.usecase.delete_audience_usecase import (
 )
 from src.audience.service.port.base_audience_repository import BaseAudienceRepository
 from src.campaign.enums.campagin_status import CampaignStatus
-from src.core.exceptions.exceptions import LinkedCampaignException, PolicyException
-from src.core.transactional import transactional
+from src.main.exceptions.exceptions import LinkedCampaignException, PolicyException
+from src.main.transactional import transactional
 
 
 class DeleteAudienceService(DeleteAudienceUseCase):

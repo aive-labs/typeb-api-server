@@ -1,6 +1,6 @@
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func, text
 
-from src.core.database import Base
+from src.main.database import Base
 
 
 class StrategyThemeOfferMappingEntity(Base):

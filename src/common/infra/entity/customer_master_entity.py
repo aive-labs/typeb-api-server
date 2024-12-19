@@ -1,6 +1,6 @@
 from sqlalchemy import TIMESTAMP, BigInteger, Column, Date, DateTime, String, func
 
-from src.core.database import Base
+from src.main.database import Base
 
 
 class CustomerMasterEntity(Base):

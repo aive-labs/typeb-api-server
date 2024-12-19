@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from typing_extensions import Self
 
 from src.common.enums.campaign_media import CampaignMedia
-from src.core.exceptions.exceptions import ValidationException
+from src.main.exceptions.exceptions import ValidationException
 from src.message_template.enums.kakao_button_type import KakaoButtonType
 
 

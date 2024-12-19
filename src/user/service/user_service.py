@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from src.core.exceptions.exceptions import DuplicatedException, NotFoundException
+from src.main.exceptions.exceptions import DuplicatedException, NotFoundException
 from src.user.domain.user import User
 from src.user.routes.dto.request.user_create import UserCreate
 from src.user.routes.dto.request.user_modify import UserModify

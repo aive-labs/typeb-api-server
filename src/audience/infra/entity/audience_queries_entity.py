@@ -1,6 +1,6 @@
 from sqlalchemy import ARRAY, JSON, Column, DateTime, Integer, String, func, text
 
-from src.core.database import Base as Base
+from src.main.database import Base as Base
 
 
 class AudienceQueriesEntity(Base):

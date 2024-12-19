@@ -9,8 +9,8 @@ from src.auth.routes.dto.response.cafe24_app_execution_link import (
 from src.auth.routes.port.base_ga_service import BaseGAIntegrationService
 from src.auth.routes.port.base_oauth_service import BaseOauthService
 from src.auth.utils.permission_checker import get_permission_checker
-from src.core.container import Container
-from src.core.db_dependency import get_db
+from src.main.container import Container
+from src.main.db_dependency import get_db
 
 auth_router = APIRouter(
     tags=["Auth"],

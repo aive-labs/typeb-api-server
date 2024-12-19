@@ -15,8 +15,8 @@ from src.content.routes.port.usecase.update_contents_usecase import (
     UpdateContentsUseCase,
 )
 from src.content.utils.create_html import create_contents_html
-from src.core.exceptions.exceptions import NotFoundException
-from src.core.transactional import transactional
+from src.main.exceptions.exceptions import NotFoundException
+from src.main.transactional import transactional
 from src.user.domain.user import User
 from src.user.infra.user_repository import UserRepository
 

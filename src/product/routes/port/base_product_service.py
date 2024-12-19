@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.product.infra.dto.product_search_condition import ProductSearchCondition
 from src.product.routes.dto.request.product_link_update import ProductLinkUpdate
 from src.product.routes.dto.request.product_update import ProductUpdate

@@ -7,7 +7,7 @@ from sqlalchemy import (
     func,
 )
 
-from src.core.database import Base as Base
+from src.main.database import Base as Base
 
 
 class KakaoLinkButtonsEntity(Base):

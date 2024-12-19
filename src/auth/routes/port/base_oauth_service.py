@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from src.auth.infra.dto.external_integration import ExternalIntegration
 from src.auth.routes.dto.request.cafe24_token_request import OauthAuthenticationRequest
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.payment.domain.cafe24_order import Cafe24Order
 from src.payment.domain.cafe24_payment import Cafe24Payment
 from src.payment.routes.dto.request.cafe24_order_request import Cafe24OrderRequest

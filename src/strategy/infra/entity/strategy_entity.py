@@ -11,7 +11,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 
-from src.core.database import Base
+from src.main.database import Base
 
 
 class StrategyEntity(Base):

@@ -4,7 +4,7 @@ from src.audience.routes.port.usecase.update_cycle_usecase import (
     AudienceUpdateCycleUseCase,
 )
 from src.audience.service.port.base_audience_repository import BaseAudienceRepository
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 
 
 class AudienceUpdateCycleService(AudienceUpdateCycleUseCase):

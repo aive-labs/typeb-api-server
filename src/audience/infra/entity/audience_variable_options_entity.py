@@ -8,7 +8,7 @@ from sqlalchemy import (
     text,
 )
 
-from src.core.database import Base
+from src.main.database import Base
 
 
 class AudienceVariableOptionsEntity(Base):

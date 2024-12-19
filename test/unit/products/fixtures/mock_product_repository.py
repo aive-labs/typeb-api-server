@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock
 
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 from src.product.domain.product import Product
 from src.product.infra.dto.product_search_condition import ProductSearchCondition
 from src.product.routes.dto.request.product_link_update import ProductLinkUpdate

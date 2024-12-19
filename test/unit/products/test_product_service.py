@@ -2,7 +2,7 @@ import pytest
 from fastapi import HTTPException
 
 from src.common.enums.yes_no import YesNo
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 from src.product.routes.dto.request.product_update import ProductUpdate
 from src.user.domain.user import User
 

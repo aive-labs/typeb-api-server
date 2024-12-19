@@ -13,8 +13,8 @@ from src.content.infra.dto.response.contents_response import ContentsResponse
 from src.content.routes.dto.request.contents_create import ContentsCreate
 from src.content.routes.port.usecase.add_contents_usecase import AddContentsUseCase
 from src.content.utils.create_html import create_contents_html
-from src.core.exceptions.exceptions import NotFoundException
-from src.core.transactional import transactional
+from src.main.exceptions.exceptions import NotFoundException
+from src.main.transactional import transactional
 from src.user.domain.user import User
 from src.user.infra.user_repository import UserRepository
 

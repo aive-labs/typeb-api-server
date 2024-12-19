@@ -2,8 +2,8 @@ from sqlalchemy.orm import Session
 
 from src.common.utils.get_env_variable import get_env_variable
 from src.content.service.port.base_creatives_repository import BaseCreativesRepository
-from src.core.exceptions.exceptions import ValidationException
-from src.core.transactional import transactional
+from src.main.exceptions.exceptions import ValidationException
+from src.main.transactional import transactional
 from src.product.domain.product import Product
 from src.product.enums.product_link_type import ProductLinkType
 from src.product.infra.dto.product_search_condition import ProductSearchCondition

@@ -5,7 +5,7 @@ from dependency_injector.wiring import Provide, inject
 from sqlalchemy.orm import Session
 
 from src.common.utils.data_converter import DataConverter
-from src.core.container import Container
+from src.main.container import Container
 
 
 @inject

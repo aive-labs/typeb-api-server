@@ -35,12 +35,12 @@ from src.campaign.utils.utils import set_summary_sentence
 from src.common.timezone_setting import selected_timezone
 from src.common.utils.date_utils import calculate_remind_date
 from src.common.utils.repeat_date import calculate_dates
-from src.core.exceptions.exceptions import (
+from src.main.exceptions.exceptions import (
     ConsistencyException,
     DuplicatedException,
     ValidationException,
 )
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.strategy.service.port.base_strategy_repository import BaseStrategyRepository
 from src.user.domain.user import User
 

@@ -2,7 +2,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from src.common.utils.model_converter import ModelConverter
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 from src.message.domain.kakao_carousel_card import KakaoCarouselCard
 from src.message.domain.kakao_carousel_more_link import KakaoCarouselMoreLink
 from src.message.infra.entity.kakao_carousel_card_entity import KakaoCarouselCardEntity

@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from sqlalchemy import BigInteger, Column, DateTime, String, func
 
 from src.auth.domain.ga_integration import GAIntegration
-from src.core.database import Base
+from src.main.database import Base
 
 
 class GAIntegrationEntity(Base):

@@ -16,7 +16,7 @@ from src.campaign.routes.dto.request.campaign_set_update import CampaignSetUpdat
 from src.common.enums.campaign_media import CampaignMedia
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import localtime_converter
-from src.core.exceptions.exceptions import PolicyException
+from src.main.exceptions.exceptions import PolicyException
 from src.message_template.enums.message_type import MessageType
 
 

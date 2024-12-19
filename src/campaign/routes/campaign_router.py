@@ -87,8 +87,8 @@ from src.campaign.routes.port.update_message_use_status_usecase import (
 from src.campaign.routes.port.upload_image_for_message_usecase import (
     UploadImageForMessageUseCase,
 )
-from src.core.container import Container
-from src.core.db_dependency import get_db
+from src.main.container import Container
+from src.main.db_dependency import get_db
 from src.search.routes.port.base_search_service import BaseSearchService
 
 campaign_router = APIRouter(tags=["Campaign-management"])

@@ -14,7 +14,7 @@ from src.campaign.infra.campaign_repository import CampaignRepository
 from src.common.infra.recommend_products_repository import RecommendProductsRepository
 from src.common.timezone_setting import selected_timezone
 from src.content.infra.contents_repository import ContentsRepository
-from src.core.exceptions.exceptions import ConsistencyException, NotFoundException
+from src.main.exceptions.exceptions import ConsistencyException, NotFoundException
 from src.offer.infra.entity.offers_entity import OffersEntity
 from src.offer.infra.offer_repository import OfferRepository
 from src.product.infra.product_repository import ProductRepository

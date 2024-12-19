@@ -1,6 +1,6 @@
 from sqlalchemy import Column, DateTime, Integer, String, func
 
-from src.core.database import Base as Base
+from src.main.database import Base as Base
 
 
 class Cafe24IntegrationEntity(Base):

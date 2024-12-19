@@ -1,11 +1,11 @@
 from sqlalchemy.orm import Session
 
-from src.core.exceptions.exceptions import (
+from src.main.exceptions.exceptions import (
     DuplicatedException,
     LinkedCampaignException,
     ValidationException,
 )
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.strategy.domain.strategy import Strategy
 from src.strategy.domain.strategy_theme import (
     StrategyTheme,

@@ -3,8 +3,8 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy.orm import Session
 
 from src.common.slack.slack_message import send_slack_message
-from src.core.exceptions.exceptions import BadRequestException
-from src.core.transactional import transactional
+from src.main.exceptions.exceptions import BadRequestException
+from src.main.transactional import transactional
 from src.payment.domain.credit_history import CreditHistory
 from src.payment.domain.pending_deposit import PendingDeposit
 from src.payment.enum.credit_status import CreditStatus

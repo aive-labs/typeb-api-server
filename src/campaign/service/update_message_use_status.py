@@ -10,8 +10,8 @@ from src.campaign.service.port.base_campaign_set_repository import (
     BaseCampaignSetRepository,
 )
 from src.common.timezone_setting import selected_timezone
-from src.core.exceptions.exceptions import NotFoundException, PolicyException
-from src.core.transactional import transactional
+from src.main.exceptions.exceptions import NotFoundException, PolicyException
+from src.main.transactional import transactional
 
 
 class UpdateMessageUseStatus(UpdateMessageUseStatusUseCase):

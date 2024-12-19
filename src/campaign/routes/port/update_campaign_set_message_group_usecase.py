@@ -14,7 +14,7 @@ from src.campaign.routes.dto.response.campaign_set_group_update_response import 
 from src.campaign.routes.dto.response.update_campaign_set_group_message_response import (
     UpdateCampaignSetGroupMessageResponse,
 )
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.user.domain.user import User
 
 

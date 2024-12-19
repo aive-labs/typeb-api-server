@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy.orm import Session
 
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.message.routes.dto.request.kakao_carousel_more_link_request import (
     KakaoCarouselMoreLinkRequest,
 )

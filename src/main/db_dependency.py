@@ -5,7 +5,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 from src.auth.service.auth_service import reuseable_oauth
 from src.common.utils.get_env_variable import get_env_variable
-from src.core.exceptions.exceptions import AuthException, CredentialException
+from src.main.exceptions.exceptions import AuthException, CredentialException
 
 db_engine = {}
 

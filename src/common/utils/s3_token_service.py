@@ -6,7 +6,7 @@ import boto3
 import pytz
 import yaml
 
-from src.core.exceptions.exceptions import Cafe24Exception, ValidationException
+from src.main.exceptions.exceptions import Cafe24Exception, ValidationException
 
 
 class S3TokenService:

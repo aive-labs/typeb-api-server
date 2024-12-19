@@ -6,7 +6,7 @@ from src.campaign.routes.dto.request.campaign_create import CampaignCreate
 from src.campaign.routes.dto.response.campaign_basic_response import (
     CampaignBasicResponse,
 )
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.user.domain.user import User
 
 

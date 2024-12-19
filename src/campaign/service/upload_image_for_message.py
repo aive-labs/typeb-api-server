@@ -22,7 +22,7 @@ from src.campaign.service.port.base_campaign_set_repository import (
 )
 from src.common.utils.file.s3_service import S3Service
 from src.common.utils.get_env_variable import get_env_variable
-from src.core.exceptions.exceptions import (
+from src.main.exceptions.exceptions import (
     ConsistencyException,
     NotFoundException,
     PolicyException,

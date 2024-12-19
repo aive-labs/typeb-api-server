@@ -1,7 +1,7 @@
 from sqlalchemy import Boolean, Column, DateTime, Sequence, String, event, func, text
 from sqlalchemy.orm import relationship
 
-from src.core.database import Base as Base
+from src.main.database import Base as Base
 
 
 class AudienceEntity(Base):

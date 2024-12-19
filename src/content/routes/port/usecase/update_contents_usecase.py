@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from src.content.infra.dto.response.contents_response import ContentsResponse
 from src.content.routes.dto.request.contents_create import ContentsCreate
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.user.domain.user import User
 
 

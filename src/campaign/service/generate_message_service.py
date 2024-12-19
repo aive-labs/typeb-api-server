@@ -29,7 +29,7 @@ from src.common.service.port.base_common_repository import BaseCommonRepository
 from src.common.utils.calculate_ratios import calculate_ratios
 from src.common.utils.repeat_date import get_last_day_of_month
 from src.content.service.port.base_contents_repository import BaseContentsRepository
-from src.core.exceptions.exceptions import PolicyException
+from src.main.exceptions.exceptions import PolicyException
 from src.message.infra.entity.kakao_carousel_link_button_entity import (
     KakaoCarouselLinkButtonsEntity,
 )
@@ -69,7 +69,7 @@ class GenerateMessageService(GenerateMessageUsecase):
         self, preview_message_create: PreviewMessageCreate, user: User, db: Session
     ) -> PreviewMessageResponse:
 
-        with open("src/campaign/core/preview_data.yaml", encoding="utf-8") as file:
+        with open("src/campaign/main/preview_data.yaml", encoding="utf-8") as file:
             yaml_data = yaml.safe_load(file)
 
         campaign_base_obj = CampaignReadBase(**yaml_data["campaign_read"])

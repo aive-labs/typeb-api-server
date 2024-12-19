@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from src.core.exceptions.exceptions import ConsistencyException
-from src.core.transactional import transactional
+from src.main.exceptions.exceptions import ConsistencyException
+from src.main.transactional import transactional
 from src.payment.infra.payment_repository import PaymentRepository
 from src.payment.routes.use_case.change_card_to_primary_usecase import (
     ChangeCardToPrimaryUseCase,

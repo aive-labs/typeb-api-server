@@ -8,7 +8,7 @@ from src.content.routes.dto.request.creatives_create import CreativeCreate
 from src.content.routes.dto.request.s3_presigned_url_request import (
     S3PresignedUrlRequest,
 )
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.user.domain.user import User
 
 

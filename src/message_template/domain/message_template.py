@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 from src.common.enums.campaign_media import CampaignMedia
-from src.core.exceptions.exceptions import ValidationException
+from src.main.exceptions.exceptions import ValidationException
 from src.message_template.domain.message_template_button_detail import (
     MessageTemplateButtonDetail,
 )

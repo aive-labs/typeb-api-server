@@ -6,9 +6,9 @@ from sqlalchemy.orm import Session
 from src.auth.infra.cafe24_repository import Cafe24Repository
 from src.auth.service.auth_service import reuseable_oauth
 from src.common.utils.get_env_variable import get_env_variable
-from src.core.container import Container
-from src.core.db_dependency import get_db
-from src.core.exceptions.exceptions import AuthException, CredentialException
+from src.main.container import Container
+from src.main.db_dependency import get_db
+from src.main.exceptions.exceptions import AuthException, CredentialException
 from src.payment.routes.dto.response.my_subscription import MySubscription
 from src.user.infra.user_repository import UserRepository
 

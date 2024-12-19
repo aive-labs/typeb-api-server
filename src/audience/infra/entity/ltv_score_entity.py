@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Float, Integer, String
 
-from src.core.database import Base
+from src.main.database import Base
 
 
 class LTVScoreEntity(Base):

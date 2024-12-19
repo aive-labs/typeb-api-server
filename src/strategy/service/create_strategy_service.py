@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from src.core.exceptions.exceptions import DuplicatedException, ValidationException
+from src.main.exceptions.exceptions import DuplicatedException, ValidationException
 from src.strategy.domain.strategy import Strategy
 from src.strategy.domain.strategy_theme import (
     StrategyTheme,

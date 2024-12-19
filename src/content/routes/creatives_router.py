@@ -21,8 +21,8 @@ from src.content.routes.port.usecase.get_creatives_usecase import GetCreativesUs
 from src.content.routes.port.usecase.update_creatives_usecase import (
     UpdateCreativesUseCase,
 )
-from src.core.container import Container
-from src.core.db_dependency import get_db
+from src.main.container import Container
+from src.main.db_dependency import get_db
 
 creatives_router = APIRouter(
     tags=["Creatives"],

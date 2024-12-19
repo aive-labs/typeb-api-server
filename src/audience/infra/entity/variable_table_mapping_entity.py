@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String
 
-from src.core.database import Base as Base
+from src.main.database import Base as Base
 
 
 class VariableTableMappingEntity(Base):

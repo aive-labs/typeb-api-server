@@ -1,7 +1,7 @@
 from sqlalchemy import asc, desc, exists, func
 from sqlalchemy.orm import Session
 
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 from src.payment.domain.cafe24_order import Cafe24Order
 from src.payment.domain.card import Card
 from src.payment.domain.payment import Payment

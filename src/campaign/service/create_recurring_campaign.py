@@ -54,8 +54,8 @@ from src.common.utils import repeat_date
 from src.common.utils.add_vat_to_price import add_vat_to
 from src.common.utils.data_converter import DataConverter
 from src.common.utils.date_utils import calculate_remind_date, localtime_converter
-from src.core.exceptions.exceptions import NotFoundException
-from src.core.transactional import transactional
+from src.main.exceptions.exceptions import NotFoundException
+from src.main.transactional import transactional
 from src.payment.domain.credit_history import CreditHistory
 from src.payment.enum.credit_status import CreditStatus
 from src.payment.service.port.base_credit_repository import BaseCreditRepository

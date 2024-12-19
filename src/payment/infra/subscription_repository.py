@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy.orm import Session
 
-from src.core.exceptions.exceptions import NotFoundException
+from src.main.exceptions.exceptions import NotFoundException
 from src.payment.domain.subscription import Subscription, SubscriptionPlan
 from src.payment.infra.entity.subscription_entity import (
     SubscriptionEntity,

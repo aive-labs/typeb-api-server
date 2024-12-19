@@ -5,7 +5,7 @@ from src.campaign.infra.entity.approver_entity import ApproverEntity
 from src.campaign.infra.entity.campaign_status_history_entity import (
     CampaignStatusHistoryEntity,
 )
-from src.core.database import Base
+from src.main.database import Base
 
 
 class CampaignApprovalEntity(Base):

@@ -10,7 +10,7 @@ from src.audience.routes.dto.response.audience_variable_combinations import (
 from src.audience.routes.dto.response.target_strategy_combination import (
     TargetStrategyCombination,
 )
-from src.core.transactional import transactional
+from src.main.transactional import transactional
 from src.user.domain.user import User
 
 

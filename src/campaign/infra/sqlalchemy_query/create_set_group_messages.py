@@ -6,7 +6,7 @@ from src.campaign.infra.entity.set_group_messages_entity import SetGroupMessages
 from src.campaign.infra.sqlalchemy_query.get_campaign_remind import get_campaign_remind
 from src.common.enums.campaign_media import CampaignMedia
 from src.common.utils.date_utils import get_reservation_date
-from src.core.exceptions.exceptions import PolicyException
+from src.main.exceptions.exceptions import PolicyException
 from src.message_template.enums.message_type import MessageType
 
 

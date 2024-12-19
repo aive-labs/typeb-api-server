@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from src.audience.infra.entity.strategy_theme_audience_entity import (
     StrategyThemeAudienceMappingEntity,
 )
-from src.core.database import Base
+from src.main.database import Base
 from src.strategy.infra.entity.strategy_theme_offers_entity import (
     StrategyThemeOfferMappingEntity,
 )

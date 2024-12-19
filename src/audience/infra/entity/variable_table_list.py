@@ -12,7 +12,7 @@ from sqlalchemy import (
     String,
 )
 
-from src.core.database import Base
+from src.main.database import Base
 
 
 class CustomerInfoStatusEntity(Base):
